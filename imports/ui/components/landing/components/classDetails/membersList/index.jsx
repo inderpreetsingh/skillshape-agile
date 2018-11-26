@@ -110,6 +110,8 @@ class MembersListContainer extends Component {
           onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
           classData={classData}
           popUp={popUp}
+          instructorsIds={instructorsIds}
+
         />
         <MembersList
           viewType={currentView}
@@ -120,6 +122,8 @@ class MembersListContainer extends Component {
           searchedValue={this.state.studentsFilterWith}
           classData={classData}
           popUp={popUp}
+          instructorsIds={instructorsIds}
+
         />
       </Fragment>
     );

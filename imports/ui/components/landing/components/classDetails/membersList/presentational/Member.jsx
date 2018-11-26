@@ -149,6 +149,7 @@ const Member = props => {
     let payLoad = {
       instructorId: get(props, '_id', 0),
       _id: get(props.classData[0], "_id", 0),
+      instructorIds:get(props,"instructorsIds",[]),
       action: 'remove'
     }
     Meteor.call("classes.handleInstructors", payLoad, (err, res) => {

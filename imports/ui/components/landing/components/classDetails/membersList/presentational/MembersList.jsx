@@ -76,6 +76,7 @@ const MembersList = props => {
                                     classTimeForm={props.classTimeForm}
                                     instructorsIdsSetter={props.instructorsIdsSetter}
                                     instructorsData={props.instructorsData}
+                                    instructorsIds={props.instructorsIds}
                                 />
                             ) : (
                                     <Member
@@ -86,6 +87,8 @@ const MembersList = props => {
                                         classTimeForm={props.classTimeForm}
                                         instructorsIdsSetter={props.instructorsIdsSetter}
                                         instructorsData={props.instructorsData}
+                                        instructorsIds={props.instructorsIds}
+
                                     />
                                 )}
                         </MemberWrapper>
@@ -103,6 +106,8 @@ const MembersList = props => {
                                 classTimeForm={props.classTimeForm}
                                 instructorsIdsSetter={props.instructorsIdsSetter}
                                 instructorsData={props.instructorsData}
+                                instructorsIds={props.instructorsIds}
+
                             />
                         </MemberWrapper>
                     )}

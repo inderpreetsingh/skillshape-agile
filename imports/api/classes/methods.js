@@ -3,6 +3,8 @@ import {get,isEmpty,uniq,includes,flatten} from 'lodash';
 
 Meteor.methods({
     "classes.handleInstructors":function(payLoad){
+		console.log("​payLoad", payLoad)
+		
         if(payLoad.action=='add'){
             if(payLoad.classTimeForm ){
                 return "record._id;"
@@ -15,6 +17,9 @@ Meteor.methods({
            
         }
         else if(payLoad.action =='remove'){
+            if(payLoad.instructorIds){
+                Classes.update({_id:payLoad._id},{$set:{instructors:payLoad.instructorIds}});
+            }
             Classes.update({_id:payLoad._id},{$pull:{instructors:payLoad.instructorId}});
             return true;
         }
