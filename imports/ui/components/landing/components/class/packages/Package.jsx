@@ -6,7 +6,14 @@ import get from 'lodash/get';
 
 import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
-import { formatMoney, maximumClasses, capitalizeString, calcRenewalDate, formatDate } from '/imports/util';
+import {
+	formatMoney,
+	maximumClasses,
+	capitalizeString,
+	calcRenewalDate,
+	calcContractEnd,
+	formatDate
+} from '/imports/util';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -178,6 +185,19 @@ const Package = (props) => {
 		return stringToPrint + formatDate(props.endDate);
 	};
 
+	const getExplainationBasedOnType = (props) => {
+		if (props.payAsYouGo) {
+			return (<React.Fragment>
+				<ClassDetailsText>
+					Payment due: {props.fee - props.amount}
+				</ClassDetailsText>
+				<ClassDetailsText>
+					Contract ends: {calcContractEnd(props)} days
+				</ClassDetailsText>
+			</React.Fragment>)
+		}
+	}
+
 	if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
 		return (
 			<OuterWrapper
@@ -192,9 +212,12 @@ const Package = (props) => {
 						<ClassDetailsText>
 							{getDateForSubscriptions(props)}
 						</ClassDetailsText>
+
 						{/*<ClassDetailsText>
 							<b>Covers:</b> {getCovers(props.selectedClassType)}
 						</ClassDetailsText>*/}
+						{getExplainationBasedOnType(props)}
+
 					</ClassDetailsSection>
 					<RightSection>
 						<AddToCartSection>
