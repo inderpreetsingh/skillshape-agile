@@ -82,7 +82,7 @@ class MembersListContainer extends Component {
     return studentsData;
   }
   render() {
-    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds } = this.props;
+    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId } = this.props;
     const { addInstructorDialogBoxState,studentsData } = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
