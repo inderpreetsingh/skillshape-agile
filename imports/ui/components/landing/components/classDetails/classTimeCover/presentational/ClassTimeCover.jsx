@@ -5,13 +5,6 @@ import { rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss
 import { coverSrc, schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
 
-
-
-const imageExistsConfigSchoolSrc = {
-  originalImagePath: "schoolCoverSrc",
-  defaultImage: coverSrc
-};
-
 const imageExistsConfigClassSrc = {
   originalImagePath: "classTypeCoverSrc",
   defaultImage: schoolDetailsImgSrc
