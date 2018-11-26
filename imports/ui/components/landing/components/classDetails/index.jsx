@@ -101,6 +101,7 @@ const ClassDetails = props => {
             schoolCoverSrc={classTypeImage}
             locationData={state.location}
             website={school.website}
+            classType={state.classType}
           />
         </ClassTimeWrapper>
         {/* <TimeLine {...dataProps.eventData} /> */}

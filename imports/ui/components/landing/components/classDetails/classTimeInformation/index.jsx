@@ -29,8 +29,8 @@ const HideOnLargeScreen = styled.div`
 class ClassTimeInformation extends Component {
 
   getTitle = () => {
-    const { classTimeData } = this.props;
-    return get(classTimeData, 'classTypeName', '');
+    const { classType } = this.props;
+    return get(classType, 'name', '');
   }
   getTime = () => {
     const { classTimeData } = this.props;
