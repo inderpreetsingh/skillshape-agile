@@ -3,8 +3,6 @@ import {get,isEmpty,uniq,includes,flatten} from 'lodash';
 
 Meteor.methods({
     "classes.handleInstructors":function(payLoad){
-		console.log("​payLoad", payLoad)
-		
         if(payLoad.action=='add'){
             if(payLoad.classTimeForm ){
                 return "record._id;"
@@ -65,14 +63,12 @@ Meteor.methods({
                             found = true;
                         }
                       })
+                      if(!found)
+                     filter.students.push(obj);
+                     filter.students = uniq(filter.students);
                       if (index > -1) {
                         filter.students.splice(index, 1);
                       }
-                     if(!found)
-                    filter.students.push(obj);
-                    filter.students = uniq(filter.students);
-                    
-                    
                     return Classes.update({_id:filter._id},{$set:filter});
                 }
                 else{

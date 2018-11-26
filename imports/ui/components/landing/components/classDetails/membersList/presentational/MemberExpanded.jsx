@@ -215,7 +215,7 @@ const PaymentAndStatus = props => (
      else if(status=='checkIn') status='signIn';
     }
     else{
-      if(status=='signIn') status='signOut';
+      if(status=='signIn' || status=='checkIn') status='signOut';
     }
     let filter = props.classData[0];
     filter.userId = props._id;
