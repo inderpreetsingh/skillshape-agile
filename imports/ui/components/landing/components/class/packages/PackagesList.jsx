@@ -84,10 +84,7 @@ const PackagesWrapper = styled.div`
 const PackagesInnerWrapper = styled.div`
 	${helpers.flexCenter}  
 	flex-wrap: wrap;
-	justify-content: ${props => {
-       console.log(props,"..........................")
-       return props.packagesLength > 1 ? 'space-between' : 'center'
-    }}; 
+	justify-content: ${props => props.packagesLength > 1 ? 'space-between' : 'center'}; 
     width: 100%;
 	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
 	margin: 0 auto;
