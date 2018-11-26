@@ -93,7 +93,7 @@ const MembersList = props => {
                                         viewType={props.viewType}
                                         {...obj}
                                         type={type}
-                                        designation={type == 'instructor' && 'assistant'}
+                                        designation={'instructor'}
                                         popUp={props.popUp}
                                         classData={props.classData}
                                         classTimeForm={props.classTimeForm}
