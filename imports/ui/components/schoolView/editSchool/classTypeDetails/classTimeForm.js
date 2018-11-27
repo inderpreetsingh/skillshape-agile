@@ -561,6 +561,8 @@ class ClassTimeForm extends React.Component {
                     popUp={popUp}
                     classTimeForm
                     instructorsIdsSetter={this.instructorsIdsSetter}
+                    addInstructor
+                    text={'Instructor'}
                   />
                   <Instructors>
                     Instructors changes will show here after saving this class time.
