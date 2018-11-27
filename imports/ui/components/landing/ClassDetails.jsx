@@ -15,18 +15,18 @@ class ClassDetailsContainer extends Component {
     super(props);
   }
 
-  getSchoolImage() {
-    const { state } = this.props.location.state;
-    const { school } = state;
+  getBgImage() {
+    const { state: { school, classType } } = this.props.location.state;
+
     console.group("CLASSTYPE, SCHOOL");
-    console.log(state, school);
+    console.log(classType, school, get(classType, 'classTypeImg', get(classType, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc)))));
     console.groupEnd();
-    return get(school, 'logoImgMedium', get(school, 'logoImg', get(state, 'classImg', classTypeImgSrc)));
+    return get(classType, 'classTypeImg', get(classType, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc))));
   }
 
-  getClassTypeImage() {
-    const { state } = this.props.location.state;
-    return get(state, 'classImg', "");
+  getLogoImage() {
+    const { state: { school } } = this.props.location.state;
+    return get(school, 'logoImg', get(school, "logoImgMedium", ""));
   }
 
   render() {
@@ -38,8 +38,8 @@ class ClassDetailsContainer extends Component {
           isUserSubsReady
         }}
         headerProps={{
-          bgImg: this.getClassTypeImage(),
-          logoImg: this.getSchoolImage()
+          bgImg: this.getBgImage(),
+          logoImg: this.getLogoImage()
         }}
         timeLineProps={{
           startTime: classTimeData.startTime,

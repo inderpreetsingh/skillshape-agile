@@ -14,7 +14,7 @@ import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar
 import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
 
-const imageExistsBackgroundImage = {
+const imageExistsBgImage = {
   originalImagePath: "headerProps.bgImg",
   defaultImage: classTypeImgSrc
 };
@@ -141,4 +141,4 @@ ClassDetails.defaultProps = {
 
 export default withImageExists(
   withRouter(ClassDetails),
-  imageExistsBackgbgImage
+  imageExistsBgImage);
