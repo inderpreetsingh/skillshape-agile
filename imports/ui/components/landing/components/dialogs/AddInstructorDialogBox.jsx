@@ -191,7 +191,6 @@ class AddInstructorDialogBox extends Component {
   }
   onSubmit = (e) => {
     e.preventDefault();
-    debugger;
     this.setState({ isLoading: true });
     const { popUp } = this.props;
     let { selectedOption } = this.state;
@@ -249,18 +248,19 @@ class AddInstructorDialogBox extends Component {
     let birthYears = [];
     let adminView = true;
     let { selectedOption, emailList } = this.state;
+    let text = props.text ? props.text : 'Instructor';
     return (
       <Dialog
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
-        aria-labelledby={`add ${props.text}`}
+        aria-labelledby={`add ${text}`}
         classes={{ paper: props.classes.dialogRoot }}
       >
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-              <Title>Add {props.text}</Title>
+              <Title>Add {text}</Title>
 
               <IconButton
                 color="primary"
@@ -275,7 +275,7 @@ class AddInstructorDialogBox extends Component {
             <form id="addUser" onSubmit={this.onSubmit}>
               <Select
                 name="filters"
-                placeholder={`Select ${props.text}`}
+                placeholder={`Select ${text}`}
                 value={selectedOption}
                 options={emailList}
                 onChange={this.handleEmail}
@@ -327,10 +327,10 @@ class AddInstructorDialogBox extends Component {
                 {this.state.selectedOption.length ? <PrimaryButton
                   formId="addUser"
                   type="submit"
-                  label={`Add a New ${props.text}`} />
+                  label={`Add a New ${text}`} />
                   : <SecondaryButton
                     disabled
-                    label={`Add a New ${props.text}`} />}
+                    label={`Add a New ${text}`} />}
 
                 <PrimaryButton formId="cancelUser"
                   label="Cancel"

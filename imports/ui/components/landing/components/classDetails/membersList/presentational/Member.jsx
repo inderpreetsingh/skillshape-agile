@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty ,remove} from 'lodash';
 import styled from "styled-components";
 import { withStyles } from 'material-ui/styles';
 
@@ -176,13 +176,43 @@ const Member = props => {
       instructorId: get(props, '_id', 0),
       _id: get(props.classData[0], "_id", 0),
       instructorIds: get(props, "instructorsIds", []),
-      action: 'remove'
+      action: 'remove',
+      classTimeId:get(props.classData[0], "classTimeId", 0)
     }
-    Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
-      if (res) {
-        this.removePopUp(popUp)
-      }
-    })
+    popUp.appear("inform", {
+      title: "Remove Instructor",
+      content: `Remove this instructor to this class only, or to this and all future classes?`,
+      RenderActions: (
+        <div>
+          <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+          <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleRemove(popUp, payLoad) }} applyClose />
+          <FormGhostButton label={'Whole series'} onClick={() => { this.handleRemove(popUp, payLoad,"whole") }} applyClose />
+        </div>
+      )
+    }, true);
+   
+  }
+  handleRemove = (popUp,payLoad,from) =>{
+    if(!from){
+      Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
+        if (res) {
+          this.removePopUp(popUp);
+        }
+      })
+    }
+    else{
+      console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
+      payLoad.instructors=remove(payLoad.instructorIds,(n)=>{
+        return n!=payLoad.instructorId;
+      })
+      console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
+      Meteor.call("classTimes.editClassTimes", { doc_id: payLoad.classTimeId, doc: payLoad }, (err, res) => {
+        if (res) {
+          this.removePopUp(popUp);
+        }
+      })
+    }
+    
   }
   handleMenuItemClick = (option) => {
     let { popUp } = props;
