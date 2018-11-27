@@ -84,8 +84,8 @@ const PackagesWrapper = styled.div`
 const PackagesInnerWrapper = styled.div`
 	${helpers.flexCenter}  
 	flex-wrap: wrap;
-	justify-content: space-between;
-
+	justify-content: ${props => props.packagesLength > 1 ? 'space-between' : 'center'}; 
+    width: 100%;
 	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
 	margin: 0 auto;
 
@@ -123,7 +123,7 @@ const PackageList = (props) => (
             classPackages={props.classPackages}
             onPriceEdit={props.onPriceEdit}>
             <Title>{props.packageListName}</Title>
-            <PackagesInnerWrapper>
+            <PackagesInnerWrapper packagesLength={props.packagesData.length}>
                 {props.packagesData.map((packageData) => (
                     <PackageWrapper key={packageData._id}>
                         <Package
@@ -150,23 +150,27 @@ const EnrollmentPackagesList = (props) => (
     <EnrollMentListWrapper forIframes={props.forIframes}>
         <PackagesWrapper onPriceEdit={props.onPriceEdit}>
             <Title>{props.packageListName}</Title>
-            {props.packagesData.map((packageData) => (
-                <PackageWrapper key={packageData._id}>
-                    <Package
-                        {...packageData}
-                        {...props.packageProps}
-                        classPackages={props.classPackages}
-                        schoolCurrency={props.schoolCurrency}
-                        onSchoolEdit={props.onSchoolEdit}
-                        onEditClick={() => {
-                            props.onEditClick();
-                        }}
-                        setFormData={() => {
-                            props.setFormData(packageData);
-                        }}
-                    />
-                </PackageWrapper>
-            ))}
+            <PackagesInnerWrapper packagesLength={props.packagesData.length}>
+
+                {props.packagesData.map((packageData) => (
+                    <PackageWrapper key={packageData._id}>
+                        <Package
+                            {...packageData}
+                            {...props.packageProps}
+                            classPackages={props.classPackages}
+                            schoolCurrency={props.schoolCurrency}
+                            onSchoolEdit={props.onSchoolEdit}
+                            onEditClick={() => {
+                                props.onEditClick();
+                            }}
+                            setFormData={() => {
+                                props.setFormData(packageData);
+                            }}
+                        />
+                    </PackageWrapper>
+                ))}
+            </PackagesInnerWrapper>
+
         </PackagesWrapper>
     </EnrollMentListWrapper>
 );
