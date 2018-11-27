@@ -105,12 +105,10 @@ const MembersList = props => {
                                 )}
                         </MemberWrapper>
                     ))}
-                {/* Adding add instructors box*/}
-                {props.entityType === "teachers" &&
-                    props.viewType === "instructorsView" && (
                         <MemberWrapper expanded={expanded} type={"instructor"}>
                             <Member
-                                addInstructor
+                                addInstructor = {props.addInstructor}
+                                addStudent = {props.addStudent}
                                 onAddIconClick={props.onAddIconClick}
                                 type="instructor"
                                 popUp={props.popUp}
@@ -122,7 +120,6 @@ const MembersList = props => {
 
                             />
                         </MemberWrapper>
-                    )}
             </MembersGrid>
         </Wrapper>
     );

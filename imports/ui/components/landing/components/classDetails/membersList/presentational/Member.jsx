@@ -148,8 +148,8 @@ const onMenuItemClick = value => {
 
 const Member = props => {
   const profile = props.profile;
-  const profileSrc = props.addInstructor ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
-  const name = props.addInstructor ? 'Add Instructor' : `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
+  const profileSrc = props.addInstructor || props.addStudent ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
+  const name = props.addInstructor ? 'Add Instructor' : props.addStudent ? 'Add Student' :`${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 

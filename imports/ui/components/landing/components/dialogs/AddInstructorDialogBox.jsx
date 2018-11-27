@@ -17,7 +17,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import Select from "react-select";
-import { isEmpty, flatten, get } from "lodash";
+import { isEmpty, flatten, get,uniq } from "lodash";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = theme => {
@@ -85,15 +85,27 @@ class AddInstructorDialogBox extends Component {
   initializeStates = () => {
     let emailList = [];
     const { schoolId } = this.props;
-    Meteor.call('school.getAdminsEmail', schoolId, (err, res) => {
-      if (res) {
-        // console.log(res, "METEOR>>.")
-        res.map((obj, index) => {
-          emailList.push({ value: obj._id, label: obj.emails[0].address });
-        })
-      }
-      this.setState({ emailList });
-    })
+    if(this.props.text=='Student'){
+      Meteor.call('user.getSelectedUsersEmail', 'All', (err, res) => {
+        if (res) {
+          // console.log(res, "METEOR>>.")
+          res.map((obj, index) => {
+            emailList.push({ value: obj._id, label: obj.emails[0].address });
+          })
+        }
+        this.setState({ emailList });
+      })
+    }else{
+      Meteor.call('school.getAdminsEmail', schoolId, (err, res) => {
+        if (res) {
+          // console.log(res, "METEOR>>.")
+          res.map((obj, index) => {
+            emailList.push({ value: obj._id, label: obj.emails[0].address });
+          })
+        }
+        this.setState({ emailList });
+      })
+    }
     return { selectedOption: [] }
   }
   handleClassesAndClassTime = (popUp, payLoad) => {
@@ -163,8 +175,23 @@ class AddInstructorDialogBox extends Component {
 
     })
   }
+  handleAddStudent = (popUp,payLoad) => {
+    Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
+      this.setState({ isLoading: false });
+      if (res =='added') {
+        popUp.appear("success", {
+          title: "Added Successfully",
+          content: <div>Successfully added as an {this.props.text}.</div>,
+          RenderActions: (
+            <FormGhostButton label={'Ok'} onClick={() => { this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors, 'add') : this.props.onModalClose() }} applyClose />
+          )
+        }, true);
+      }
+    })
+  }
   onSubmit = (e) => {
     e.preventDefault();
+    debugger;
     this.setState({ isLoading: true });
     const { popUp } = this.props;
     let { selectedOption } = this.state;
@@ -172,17 +199,22 @@ class AddInstructorDialogBox extends Component {
       action: "add",
       _id: !isEmpty(this.props.classData) ? get(this.props.classData[0], '_id', null) : '',
       instructors: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'instructors', this.props.instructorsIds) : [],
-      classTimeForm: this.props.classTimeForm
+      classTimeForm: this.props.classTimeForm,
+      students:!isEmpty(this.props.classData) ? get(this.props.classData[0], 'students',[]) : []
     };
+    selectedOption.map((obj,index)=>{
+      payLoad.students.push({status:'signIn',userId:obj.value})
+    })
+    payLoad.students=uniq(payLoad.students);
     payLoad.instructors.push(selectedOption.map(ele => ele.value));
     payLoad.instructors = flatten(payLoad.instructors);
     popUp.appear("inform", {
       title: "Confirmation",
-      content: `Do you really want to add  these users as an instructor.`,
+      content: `Do you really want to add  these users as an ${this.props.text}.`,
       RenderActions: (
         <div>
           <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
-          <FormGhostButton label={'Yes'} onClick={() => { !payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp, payLoad) : this.handleInstructors(popUp, payLoad) }} applyClose />
+          <FormGhostButton label={'Yes'} onClick={() => { this.props.text=="Student" ? this.handleAddStudent(popUp,payLoad):!payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp, payLoad) : this.handleInstructors(popUp, payLoad) }} applyClose />
         </div>
       )
     }, true);
@@ -222,13 +254,13 @@ class AddInstructorDialogBox extends Component {
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
-        aria-labelledby="add instructor"
+        aria-labelledby={`add ${props.text}`}
         classes={{ paper: props.classes.dialogRoot }}
       >
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-              <Title>Add Instructor</Title>
+              <Title>Add {props.text}</Title>
 
               <IconButton
                 color="primary"
@@ -243,7 +275,7 @@ class AddInstructorDialogBox extends Component {
             <form id="addUser" onSubmit={this.onSubmit}>
               <Select
                 name="filters"
-                placeholder="Select Instructors"
+                placeholder={`Select ${props.text}`}
                 value={selectedOption}
                 options={emailList}
                 onChange={this.handleEmail}
@@ -295,10 +327,10 @@ class AddInstructorDialogBox extends Component {
                 {this.state.selectedOption.length ? <PrimaryButton
                   formId="addUser"
                   type="submit"
-                  label={`Add a New ${!adminView ? "Member" : 'Instructor'}`} />
+                  label={`Add a New ${props.text}`} />
                   : <SecondaryButton
                     disabled
-                    label={`Add a New ${!adminView ? "Member" : 'Instructor'}`} />}
+                    label={`Add a New ${props.text}`} />}
 
                 <PrimaryButton formId="cancelUser"
                   label="Cancel"

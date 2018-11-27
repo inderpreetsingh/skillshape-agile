@@ -139,13 +139,10 @@ Meteor.methods({
   },
   "school.getAdminsEmail": function (schoolId) {
     check(schoolId, String);
-    // console.log(schoolId, ">>>>>>>>>>>>>")
     const schoolData = Meteor.call('school.getMySchool', schoolId);
     if (schoolData) {
       adminIds = uniq(schoolData.admins.concat(schoolData.superAdmin));
-      console.log(adminIds, "users adminId >>>>>>>>>>>>>")
       const emails = Meteor.call('user.getSelectedUsersEmail', adminIds);
-      console.log(emails, " usres email >>>>>>>>>>>>>>")
       return emails;
     } else {
       throw new Meteor.Error("No school found")
@@ -450,7 +447,6 @@ Meteor.methods({
             School.update({ _id: schoolId }, { $push: { admins: res.user._id } })
             // sendSkillShapeJoinInvitation(to,userName,schoolName,res.password);
           } catch (error) {
-            console.log('TCL: }catch -> error', error);
             throw new Meteor.Error(error);
           }
 
