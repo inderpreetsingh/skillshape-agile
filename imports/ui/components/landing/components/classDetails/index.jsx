@@ -14,8 +14,8 @@ import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar
 import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
 
-const imageExistsConfigSchoolSrc = {
-  originalImagePath: "headerProps.schoolCoverSrc",
+const imageExistsBackgroundImage = {
+  originalImagePath: "headerProps.bgImg",
   defaultImage: classTypeImgSrc
 };
 
@@ -97,37 +97,37 @@ const ClassDetails = props => {
         <InnerWrapper>
           <ClassTimeWrapper bgImg={bgImg}>
             <ClassTimeCover
-              classTypeCoverSrc={headerProps.classTypeCoverSrc}
-              schoolCoverSrc={bgImg}
+              bgImg={bgImg}
+              logoImg={headerProps.logoImg}
               classTypeName={get(state.classType, 'name', null)}
               classTypeId={get(state.classType, '_id', null)}
               slug={get(school, 'slug', '')}
             />
-          
-          <ClassTimeInformation
-            {...dataProps.eventData}
-            schoolName={school.name}
-            schoolCoverSrc={bgImg}
-            locationData={state.location}
-            website={school.website}
-            classType={state.classType}
+
+            <ClassTimeInformation
+              {...dataProps.eventData}
+              schoolName={school.name}
+              schoolCoverSrc={bgImg}
+              locationData={state.location}
+              website={school.website}
+              classType={state.classType}
+              schoolId={school._id}
+              popUp={props.popUp}
+              params={{ slug: school.slug }}
+            />
+          </ClassTimeWrapper>
+          {/* <TimeLine {...dataProps.eventData} /> */}
+          <MembersList
             schoolId={school._id}
-            popUp={props.popUp}
-            params={{slug:school.slug}}
+            currentView={currentView}
+            classData={classData}
+            instructorsData={instructorsData}
+            popUp={popUp}
+            instructorsIds={instructorsIds}
           />
-        </ClassTimeWrapper>
-        {/* <TimeLine {...dataProps.eventData} /> */}
-        <MembersList
-          schoolId={school._id}
-          currentView={currentView}
-          classData={classData}
-          instructorsData={instructorsData}
-          popUp={popUp}
-          instructorsIds={instructorsIds}
-        />
-      </InnerWrapper>
-      <Footer />
+        </InnerWrapper>
       </PageContent>
+      <Footer />
     </Wrapper>
   );
 };
@@ -141,5 +141,4 @@ ClassDetails.defaultProps = {
 
 export default withImageExists(
   withRouter(ClassDetails),
-  imageExistsConfigSchoolSrc
-);
+  imageExistsBackgbgImage

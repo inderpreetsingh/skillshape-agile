@@ -24,8 +24,10 @@ const menuOptions = [
 const styles = {
   menuButtonClass: {
     cursor: "pointer",
-    width: 8,
+    width: 24,
     height: 24,
+    backgroundColor: 'white',
+    borderRadius: '50%',
     fontSize: helpers.baseFontSize,
     position: 'absolute',
     top: 8,
@@ -38,7 +40,7 @@ const styles = {
   },
   menuIconClass: {
     height: 24,
-    width: 24
+    width: 24,
   }
 };
 
@@ -61,13 +63,14 @@ const Profile = styled.div`
   width: 100%;
   flex-grow: 1; 
   flex-shrink: 1;
+  padding-top: 0;
+  padding: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     flex-direction: column;
     justify-content: flex-start;  
     flex-shrink: 0;
-    padding: ${helpers.rhythmDiv * 2}px;
-    padding-top: 0;
+    padding: 0;
   }
 `;
 
@@ -80,7 +83,7 @@ const ProfilePic = styled.div`
   height: 100px;
   display: flex;
   flex-shrink: 0;
-  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
+  // padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 
   ${props => props.addInstructor &&
     `cursor: pointer; 
@@ -88,6 +91,7 @@ const ProfilePic = styled.div`
     background-position: 50% 70%;`
   };
   @media screen and (min-width: ${helpers.mobile - 50}px) {
+    width: 100%;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     flex-shrink: 1;
   }
@@ -98,11 +102,12 @@ const DetailsWrapper = styled.div`
   width: 100%;
   flex-shrink: 1;
   justify-content: flex-start;
-  padding-left: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 2}px;
+  // padding-left: ${helpers.rhythmDiv * 2}px;
 
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     flex-shrink: 0;
-    padding-left: 0;
+    padding-top: 0;
     justify-content: center;
   }
 `;
@@ -149,7 +154,7 @@ const onMenuItemClick = value => {
 const Member = props => {
   const profile = props.profile;
   const profileSrc = props.addInstructor || props.addStudent ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
-  const name = props.addInstructor ? 'Add Instructor' : props.addStudent ? 'Add Student' :`${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
+  const name = props.addInstructor ? 'Add Instructor' : props.addStudent ? 'Add Student' : `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 
