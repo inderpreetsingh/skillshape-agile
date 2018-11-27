@@ -81,7 +81,7 @@ export default class MyCalender extends React.Component {
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
     this.setState({ classDetailModal: false });
     const { routeName, classTimesData, classTypeData, schoolData } = this.props
-    const { originalEvent } = jsEvent;
+    const originalEvent  = get(jsEvent,"originalEvent",'');
     this.setState({status:'Sign In'})
     classTimesData && classTimesData.map((obj)=>{
       if(obj._id==eventData.classTimeId){

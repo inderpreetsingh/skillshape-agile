@@ -102,6 +102,9 @@ const ClassDetails = props => {
             locationData={state.location}
             website={school.website}
             classType={state.classType}
+            schoolId={school._id}
+            popUp={props.popUp}
+            params={{slug:school.slug}}
           />
         </ClassTimeWrapper>
         {/* <TimeLine {...dataProps.eventData} /> */}

@@ -86,7 +86,6 @@ const ProfilePic = styled.div`
     background-size: 75px; 
     background-position: 50% 70%;`
   };
-  
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     padding-top: 0;
