@@ -4,7 +4,6 @@ import styled from "styled-components";
 import Description from "./presentational/Description";
 import LocationDetails from "./presentational/LocationDetails";
 import NameBar from "./presentational/NameBar";
-import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
 import { rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/classTimeData";
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
@@ -18,12 +17,6 @@ const Wrapper = styled.div`
     flex: 1;
     margin-right: ${rhythmDiv * 2}px;
     border-radius: 5px;
-  }
-`;
-
-const HideOnLargeScreen = styled.div`
-  @media screen and (min-width: ${tablet}px) {
-    display: none;
   }
 `;
 
@@ -237,15 +230,14 @@ class ClassTimeInformation extends Component {
         />
         <Description description={desc} />
         <LocationDetails
+          website={website}
           time={this.getTime()}
           timePeriod={this.getTimePeriod()}
           startDate={start}
           address={locationName()}
           locationData={{ lat: get(locationData, 'loc[1]', ''), lng: get(locationData, "loc[0]", '') }}
         />
-        <HideOnLargeScreen>
-          <ActionButtons website={website} />
-        </HideOnLargeScreen>
+
       </Wrapper>
     );
   }

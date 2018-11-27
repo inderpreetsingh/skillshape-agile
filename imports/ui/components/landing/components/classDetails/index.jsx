@@ -11,20 +11,24 @@ import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import { danger, maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
-import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
+import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
-
-
-
 
 const imageExistsConfigSchoolSrc = {
   originalImagePath: "headerProps.schoolCoverSrc",
-  defaultImage: coverSrc
+  defaultImage: classTypeImgSrc
 };
-
 
 const Wrapper = styled.div`
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+`;
+
+const PageContent = styled.div`
+
 `;
 
 const InnerWrapper = styled.div`
@@ -58,47 +62,52 @@ const ClassTimeWrapper = styled.div`
   @media screen and (min-width: ${tablet}px) {
     display: flex;
     flex-direction: row-reverse;
-    margin-bottom: ${rhythmDiv * 4}px;
   }
 `;
 
 const ClassDetails = props => {
-  const { location,headerProps,classData,instructorsData,popUp,instructorsIds} = props;
-  const {state} = props.location.state;
-  const dataProps =  props.location.state.props;
-  const {school} = state;
-  let schoolImage,classTypeImage;
-  schoolImage = get(school,'logoImgMedium',get(school,'logoImg',config.defaultSchoolImage))
-	classTypeImage = get(state,'classImg',config.defaultSchoolImage)
+  const { location,
+    headerProps,
+    classData,
+    instructorsData,
+    popUp,
+    instructorsIds,
+    bgImg,
+  } = props;
+  const { state } = props.location.state;
+  const dataProps = props.location.state.props;
+  const { school } = state;
 
   const currentView =
     location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
-   
+
   return (
     <Wrapper>
-      <TopSearchBar {...props.topSearchBarProps} />
-      {props.noPurchasedClasses &&
-        currentView === "studentsView" && (
-          <Notification
-            notificationContent="You do not have any packages that will cover this class."
-            bgColor={danger}
-            buttonLabel="Purchase Classes"
-            onButtonClick={props.onPurchaseButtonClick}
-          />
-        )}
-      <InnerWrapper>
-        <ClassTimeWrapper bgImg={classTypeImage}>
-          <ClassTimeCover
-            classTypeCoverSrc={schoolImage}
-            schoolCoverSrc={classTypeImage}
-            classTypeName={get(state.classType, 'name', null)}
-            classTypeId={get(state.classType, '_id', null)}
-            slug={get(school, 'slug', '')}
-          />
+      <PageContent>
+        <TopSearchBar {...props.topSearchBarProps} />
+        {props.noPurchasedClasses &&
+          currentView === "studentsView" && (
+            <Notification
+              notificationContent="You do not have any packages that will cover this class."
+              bgColor={danger}
+              buttonLabel="Purchase Classes"
+              onButtonClick={props.onPurchaseButtonClick}
+            />
+          )}
+        <InnerWrapper>
+          <ClassTimeWrapper bgImg={bgImg}>
+            <ClassTimeCover
+              classTypeCoverSrc={headerProps.classTypeCoverSrc}
+              schoolCoverSrc={bgImg}
+              classTypeName={get(state.classType, 'name', null)}
+              classTypeId={get(state.classType, '_id', null)}
+              slug={get(school, 'slug', '')}
+            />
+          
           <ClassTimeInformation
             {...dataProps.eventData}
             schoolName={school.name}
-            schoolCoverSrc={classTypeImage}
+            schoolCoverSrc={bgImg}
             locationData={state.location}
             website={school.website}
             classType={state.classType}
@@ -118,6 +127,7 @@ const ClassDetails = props => {
         />
       </InnerWrapper>
       <Footer />
+      </PageContent>
     </Wrapper>
   );
 };
