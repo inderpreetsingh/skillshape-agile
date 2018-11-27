@@ -957,10 +957,6 @@ export default createContainer(props => {
   const currentClassTypeData = props.classTypeData;
   let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
 
-  debugger;
-  console.group("CLASS TYPE VIEW CALANDER")
-  console.log(classCalendar, currentClassTypeData);
-  console.groupEnd();
   if (classCalendar && currentClassTypeData) {
     classTimesData = ClassTimes.find({ classTypeId: currentClassTypeData._id }).fetch();
   } else if (schoolCalendar && schoolId) {
