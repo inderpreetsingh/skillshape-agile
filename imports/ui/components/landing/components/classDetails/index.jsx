@@ -124,6 +124,7 @@ const ClassDetails = props => {
           instructorsData={instructorsData}
           popUp={popUp}
           instructorsIds={instructorsIds}
+          params={{slug:school.slug}}
         />
       </InnerWrapper>
       <Footer />

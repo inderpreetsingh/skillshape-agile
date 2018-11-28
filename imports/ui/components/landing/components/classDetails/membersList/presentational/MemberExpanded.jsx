@@ -10,6 +10,7 @@ import { formatDate } from "/imports/util/formatSchedule";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import {get,isEmpty} from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import { browserHistory, Link } from "react-router";
 
 const styles = {
   iconButton: {
@@ -18,10 +19,6 @@ const styles = {
 };
 
 const menuOptions = [
-  {
-    name: "Evaluate",
-    value: "evalute"
-  },
   {
     name: "View Student",
     value: "view_student"
@@ -156,13 +153,11 @@ const ExpiryDate = Text.extend`
   font-style: italic;
 `;
 
-const onMenuItemClick = value => {
-  console.log(value, "---", props.history);
-  if (value === "remove_teacher") {
-    props.history.push("/remove_teacher");
-  } else {
-    props.history.push("/some-random-link");
-  }
+const onMenuItemClick = (value,slug) => {
+  value = value.value;
+  if (value === "view_student") {
+    browserHistory.push(`/schools/${slug}/members`);
+  } 
 };
 
 const getStatusColor = status => {
@@ -197,6 +192,7 @@ const PaymentAndStatus = props => (
           danger
           fullWidth
           label="Accept Payment"
+          onClick={()=>{props.onViewStudentClick(props._id)}}
         />
       </PaymentDetails>
     ) : (
@@ -261,7 +257,7 @@ const MemberExpanded = props => {
   const profile = props.profile;
   const profileSrc = get(profile,'medium',get(profile,'pic',config.defaultProfilePicOptimized))
   const name = `${get(profile,'firstName',get(profile,'name','Old Data'))} ${get(profile,'lastName',"")}`
-   
+  const slug = get(props,"params.slug",null);
   return (
     <Wrapper>
       <InnerWrapper>
@@ -279,7 +275,7 @@ const MemberExpanded = props => {
           </MemberDetailsInner>
 
           <DropDownMenu
-            onMenuItemClick={onMenuItemClick}
+            onMenuItemClick={(value)=>{onMenuItemClick(value,slug)}}
             menuButtonClass={props.classes.iconButton}
             menuOptions={menuOptions}
           />

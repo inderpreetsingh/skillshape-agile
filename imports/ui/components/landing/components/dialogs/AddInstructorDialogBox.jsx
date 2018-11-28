@@ -197,16 +197,21 @@ class AddInstructorDialogBox extends Component {
     let payLoad = {
       action: "add",
       _id: !isEmpty(this.props.classData) ? get(this.props.classData[0], '_id', null) : '',
-      instructors: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'instructors', this.props.instructorsIds) : [],
       classTimeForm: this.props.classTimeForm,
       students:!isEmpty(this.props.classData) ? get(this.props.classData[0], 'students',[]) : []
     };
-    selectedOption.map((obj,index)=>{
-      payLoad.students.push({status:'signIn',userId:obj.value})
-    })
-    payLoad.students=uniq(payLoad.students);
-    payLoad.instructors.push(selectedOption.map(ele => ele.value));
-    payLoad.instructors = flatten(payLoad.instructors);
+    if(this.props.text=='Student'){
+      selectedOption.map((obj,index)=>{
+        payLoad.students.push({status:'signIn',userId:obj.value})
+      })
+      payLoad.students=uniq(payLoad.students);
+    }else{
+      payLoad.instructors= !isEmpty(this.props.classData) ? get(this.props.classData[0], 'instructors', this.props.instructorsIds) : [],
+      payLoad.instructors.push(selectedOption.map(ele => ele.value));
+      payLoad.instructors = flatten(payLoad.instructors);
+
+    }
+
     popUp.appear("inform", {
       title: "Confirmation",
       content: `Do you really want to add  these users as an ${this.props.text}.`,
