@@ -19,10 +19,6 @@ const styles = {
 
 const menuOptions = [
   {
-    name: "Evaluate",
-    value: "evalute"
-  },
-  {
     name: "View Student",
     value: "view_student"
   }
@@ -157,7 +153,6 @@ const ExpiryDate = Text.extend`
 `;
 
 const onMenuItemClick = value => {
-  console.log(value, "---", props.history);
   if (value === "remove_teacher") {
     props.history.push("/remove_teacher");
   } else {
