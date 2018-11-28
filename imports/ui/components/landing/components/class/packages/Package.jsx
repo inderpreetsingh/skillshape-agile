@@ -96,7 +96,7 @@ const ClassDetailsSection = styled.div`
 	}
 `;
 
-const ClassDetailsText = styled.p`
+const CdText = styled.p`
 	margin: 0;
 	font-size: 14px;
 	font-family: ${helpers.specialFont};
@@ -188,12 +188,12 @@ const Package = (props) => {
 	const getExplainationBasedOnType = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
-				<ClassDetailsText>
-					Payment due: {props.fee - props.amount}
-				</ClassDetailsText>
-				<ClassDetailsText>
+				<CdText>
+					Payment due: {calcContractEnd(props)} days
+				</CdText>
+				<CdText>
 					Contract ends: {calcContractEnd(props)} days
-				</ClassDetailsText>
+				</CdText>
 			</React.Fragment>)
 		}
 	}
@@ -209,14 +209,19 @@ const Package = (props) => {
 				<Wrapper>
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
-						<ClassDetailsText>
+						<CdText>
 							{getDateForSubscriptions(props)}
-						</ClassDetailsText>
+						</CdText>
 
-						{/*<ClassDetailsText>
+						<CdText>
 							<b>Covers:</b> {getCovers(props.selectedClassType)}
-						</ClassDetailsText>*/}
-						{/*getExplainationBasedOnType(props)*/}
+						</CdText>
+						{/* For monthly packages we need to have paid until date*/}
+						{props.monthlyPackage && <CdText>
+							<b>Paid Until: {calcContractEnd(props)}</b>
+						</CdText>}
+						{/* Depending upon the type of payment method */}
+						{getExplainationBasedOnType(props)}
 
 					</ClassDetailsSection>
 					<RightSection>
@@ -236,21 +241,21 @@ const Package = (props) => {
 					<Title>{props.packageName || props.name}</Title>
 
 					{props.classPackages || props.packageType == 'EP' ? (
-						<ClassDetailsText>
+						<CdText>
 							<b>Expiration:</b>{' '}
 							{props.expDuration && props.expPeriod && !props.noExpiration ? (
 								`${props.expDuration} ${props.expPeriod}`
 							) : (
 									'None'
 								)}
-						</ClassDetailsText>
+						</CdText>
 					) : (
-							<ClassDetailsText>{getPaymentType(props.pymtType) || 'NA'}</ClassDetailsText>
+							<CdText>{getPaymentType(props.pymtType) || 'NA'}</CdText>
 						)}
-					<ClassDetailsText>
+					<CdText>
 						<b>Covers:</b> {getCovers(props.selectedClassType)}
-					</ClassDetailsText>
-					{props.packageType == 'MP' && <ClassDetailsText>{maximumClasses(props)}</ClassDetailsText>}
+					</CdText>
+					{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 				</ClassDetailsSection>
 				<RightSection>
 					{props.packageType !== 'EP' ? (

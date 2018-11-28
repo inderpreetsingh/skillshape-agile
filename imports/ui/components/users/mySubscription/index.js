@@ -10,6 +10,7 @@ import concat from 'lodash/concat';
 
 import School from '/imports/api/school/fields';
 import Purchases from '/imports/api/purchases/fields';
+import EnrollmentFees from '/imports/api/enrollmentFee/fields';
 import ClassPricing from '/imports/api/classPricing/fields';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import ClassSubscription from '/imports/api/classSubscription/fields';
@@ -115,6 +116,7 @@ export default createContainer((props) => {
 		purchaseData = [],
 		isLoading = true,
 		schoolSubscription,
+		packagesDataSubscription,
 		classSubscription,
 		purchaseSubscription,
 		adminsDataSubscriptions,
@@ -127,18 +129,28 @@ export default createContainer((props) => {
 	if (purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
 		purchaseData = Purchases.find().fetch();
 		classSubscriptionData = ClassSubscription.find().fetch();
-		console.log(purchaseData, classSubscription, ' in purchase subscription');
+		// console.log(purchaseData, classSubscription, ' in purchase subscription');
 
 		if (!isEmpty(purchaseData)) {
 			purchaseData.map((current) => {
 				schoolIds.push(current.schoolId);
 			});
+
+			const packagesData = purchaseData.map(data => {
+				return {
+					packageId: data.packageId,
+					packageType: data.packageType
+				}
+			});
+
 			if (!isEmpty(classSubscriptionData)) {
 				classSubscriptionData.map((current) => {
 					schoolIds.push(current.schoolId);
 				});
 			}
 			schoolSubscription = Meteor.subscribe('school.findSchoolByIds', uniq(schoolIds));
+			// NOTE: not working as returning array of cursors seems causing issue with parek:join package.
+			// packagesDataSubscription = Meteor.subscribe('packages.findPackagesByData', packagesData);
 			if (
 				schoolSubscription &&
 				classSubscription.ready() &&
