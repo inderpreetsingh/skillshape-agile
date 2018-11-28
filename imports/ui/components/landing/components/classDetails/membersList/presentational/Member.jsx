@@ -87,13 +87,18 @@ const ProfilePic = styled.div`
 
   ${props => props.addMember &&
     `cursor: pointer; 
-    background-size: 75px; 
-    background-position: 50% 70%;`
+    background-size: 100px; 
+    background-position: 50% 50%;`
   };
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     width: 100%;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     flex-shrink: 1;
+    ${props => props.addMember &&
+    `
+      background-size: 75px; 
+      background-position: 50% 70%;`
+    };
   }
 `;
 

@@ -107,12 +107,12 @@ const MemberStatus = styled.div``;
 
 const PaymentAndStatusDetails = styled.div`
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: space-between;
   margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (min-width: ${helpers.mobile - 50}px) {
-    flex-direction: column;
     flex-wrap: none;
     justify-content: space-between;
     margin-bottom: 0;
@@ -124,22 +124,24 @@ const PaymentDetails = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  margin-right: ${helpers.rhythmDiv * 2}px;
-
+  
   @media screen and (min-width: ${helpers.mobile - 50}px) {
-    margin-right: 0;
+  
   }
 `;
 
 const StatusDetails = styled.div`
   ${helpers.flexCenter}
+  justify-content: space-between;
   
-  // @media screen and (min-width: ${helpers.mobile - 50}px) {
-  //   flex-direction: column;
-  // }
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 `;
 
-const ButtonWrapper = styled.div`
+const StatusButton = styled.div`
+  display: flex;
   width: 100%;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -235,15 +237,15 @@ updateStatus = (n, props) => {
 }
 const StatusOptions = props => (
   <StatusDetails>
-    <ButtonWrapper>
+    <StatusButton>
       <PrimaryButton
         noMarginBottom
         fullWidth
         label={props.status == 'signIn' ? "Check in" : "Check out"}
         onClick={() => { this.updateStatus(1, props) }}
       />
-    </ButtonWrapper>
-    <ButtonWrapper>
+    </StatusButton>
+    <StatusButton>
       <SkillShapeButton
         noMarginBottom
         caution
@@ -251,7 +253,7 @@ const StatusOptions = props => (
         label={"Sign Out"}
         onClick={() => { this.updateStatus(2, props) }}
       />
-    </ButtonWrapper>
+    </StatusButton>
   </StatusDetails>
 );
 
