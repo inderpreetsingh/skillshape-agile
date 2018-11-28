@@ -19,6 +19,7 @@ import EditMemberDialogBox from '/imports/ui/components/landing/components/dialo
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import SubscriptionBox from '/imports/ui/componentHelpers/boxes/subscriptionBox.js';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 
 const styles = (theme) => ({
 	avatarCss: {
@@ -352,8 +353,14 @@ class SchoolMemberInfo extends Component {
 									<Typography>{memberInfo.email}</Typography>
 								</React.Fragment>
 							)}
+								<ActionButtonsWrapper>
+		<ActionButton onClick={()=>{}}>
+			<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
+		</ActionButton>
+	</ActionButtonsWrapper>
 						</Grid>
 					</Grid>
+				
 					<Grid item sm={3} xs={12} md={3} style={{ padding: '28px' }}>
 						<div className="notes">{view === 'admin' ? 'Admin Notes' : 'My Private Notes'}</div>
 						<Input
