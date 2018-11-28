@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import { get, isEmpty ,remove} from 'lodash';
+import { get, isEmpty, remove } from 'lodash';
 import styled from "styled-components";
 import { withStyles } from 'material-ui/styles';
 
@@ -85,7 +85,7 @@ const ProfilePic = styled.div`
   flex-shrink: 0;
   // padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 
-  ${props => props.addInstructor &&
+  ${props => props.addMember &&
     `cursor: pointer; 
     background-size: 75px; 
     background-position: 50% 70%;`
@@ -153,8 +153,11 @@ const onMenuItemClick = value => {
 
 const Member = props => {
   const profile = props.profile;
-  const profileSrc = props.addInstructor || props.addStudent ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
-  const name = props.addInstructor ? 'Add Instructor' : props.addStudent ? 'Add Student' : `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
+  const profileSrc = props.addMember ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
+  let name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`;
+  if (props.addMember) {
+    name = props.type === 'instructor' ? 'Add Instructor' : 'Add Student';
+  }
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
 
@@ -182,7 +185,7 @@ const Member = props => {
       _id: get(props.classData[0], "_id", 0),
       instructorIds: get(props, "instructorsIds", []),
       action: 'remove',
-      classTimeId:get(props.classData[0], "classTimeId", 0)
+      classTimeId: get(props.classData[0], "classTimeId", 0)
     }
     popUp.appear("inform", {
       title: "Remove Instructor",
@@ -191,24 +194,24 @@ const Member = props => {
         <div>
           <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
           <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleRemove(popUp, payLoad) }} applyClose />
-          <FormGhostButton label={'Whole series'} onClick={() => { this.handleRemove(popUp, payLoad,"whole") }} applyClose />
+          <FormGhostButton label={'Whole series'} onClick={() => { this.handleRemove(popUp, payLoad, "whole") }} applyClose />
         </div>
       )
     }, true);
-   
+
   }
-  handleRemove = (popUp,payLoad,from) =>{
-    if(!from){
+  handleRemove = (popUp, payLoad, from) => {
+    if (!from) {
       Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
         if (res) {
           this.removePopUp(popUp);
         }
       })
     }
-    else{
+    else {
       console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
-      payLoad.instructors=remove(payLoad.instructorIds,(n)=>{
-        return n!=payLoad.instructorId;
+      payLoad.instructors = remove(payLoad.instructorIds, (n) => {
+        return n != payLoad.instructorId;
       })
       console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
       Meteor.call("classTimes.editClassTimes", { doc_id: payLoad.classTimeId, doc: payLoad }, (err, res) => {
@@ -217,7 +220,7 @@ const Member = props => {
         }
       })
     }
-    
+
   }
   handleMenuItemClick = (option) => {
     let { popUp } = props;
@@ -243,7 +246,7 @@ const Member = props => {
     <Wrapper>
       <Profile>
         <ProfilePic
-          addInstructor={props.addInstructor}
+          addMember={props.addMember}
           src={profileSrc}
           onClick={props.onAddIconClick}
         />
@@ -251,7 +254,7 @@ const Member = props => {
           <Details>
             <SubHeading fontSize="20">{cutString(name, 20)}</SubHeading>
             {props.type !== "student" &&
-              !props.addInstructor && (
+              !props.addMember && (
                 <Text>
                   <Capitalize>{props.designation}</Capitalize>
                 </Text>
@@ -259,7 +262,7 @@ const Member = props => {
           </Details>
         </DetailsWrapper>
         {props.viewType === "instructorsView" &&
-          !props.addInstructor && <DropDownMenu
+          !props.addMember && <DropDownMenu
             menuIconClass={props.classes.menuIconClass}
             menuButtonClass={props.classes.menuButtonClass}
             menuOptions={menuOptions}
