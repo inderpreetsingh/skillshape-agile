@@ -198,7 +198,9 @@ class AddInstructorDialogBox extends Component {
       action: "add",
       _id: !isEmpty(this.props.classData) ? get(this.props.classData[0], '_id', null) : '',
       classTimeForm: this.props.classTimeForm,
-      students:!isEmpty(this.props.classData) ? get(this.props.classData[0], 'students',[]) : []
+      students:!isEmpty(this.props.classData) ? get(this.props.classData[0], 'students',[]) : [],
+      classTypeId: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'classTypeId','') : "",
+      schoolId: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'schoolId','') : "",
     };
     if(this.props.text=='Student'){
       selectedOption.map((obj,index)=>{

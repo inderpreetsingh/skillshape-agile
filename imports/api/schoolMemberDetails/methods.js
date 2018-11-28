@@ -1,6 +1,5 @@
 import SchoolMemberDetails from "./fields";
-import isArray from "lodash/isArray";
-import get from "lodash/get";
+import {get,isArray,isEmpty} from "lodash";
 import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
 import School from "/imports/api/school/fields.js";
 import { check } from 'meteor/check';
@@ -138,11 +137,17 @@ Meteor.methods({
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
     check(memberData,Object);
-    
-    let userData = SchoolMemberDetails.findOne({
+    let filter = {
       schoolId: memberData.schoolId,
       activeUserId: memberData.activeUserId
-    });
+    }
+    if(memberData.from=="classes"){
+      filter.classTypeId= memberData.classTypeId;
+      let record = SchoolMemberDetails.findOne(filter);
+      if(!record) SchoolMemberDetails.insert(memberData) ;
+      return;
+    }
+    let userData = SchoolMemberDetails.findOne(filter);
     if (userData) {
       if (memberData && memberData.packageDetails) {
         let packageDetails = userData.packageDetails || {};
