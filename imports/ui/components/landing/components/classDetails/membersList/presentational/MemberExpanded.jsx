@@ -144,6 +144,10 @@ const StatusButton = styled.div`
   display: flex;
   width: 100%;
   margin-bottom: ${helpers.rhythmDiv}px;
+
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    display: block;
+  }
 `;
 
 const PaymentExpires = Text.extend`

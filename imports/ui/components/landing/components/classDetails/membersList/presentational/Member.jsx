@@ -86,19 +86,19 @@ const ProfilePic = styled.div`
   // padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 
   ${props => props.addMember &&
-    `cursor: pointer; 
-    background-size: 100px; 
-    background-position: 50% 50%;`
+    `cursor: pointer;
+    width: 75px;
+    height: 75px; 
+    background-size: 75px; 
+    background-position: 50% 70%;`
   };
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     width: 100%;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     flex-shrink: 1;
     ${props => props.addMember &&
-    `
-      background-size: 75px; 
-      background-position: 50% 70%;`
-    };
+    ` height: 100px;`
+  };
   }
 `;
 
