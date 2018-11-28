@@ -189,10 +189,10 @@ const Package = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
 				<CdText>
-					Payment due: {calcContractEnd(props)} days
+					Payment due: {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
 				</CdText>
 				<CdText>
-					Contract ends: {calcContractEnd(props)} days
+					Contract ends: {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
 				</CdText>
 			</React.Fragment>)
 		}
@@ -216,9 +216,9 @@ const Package = (props) => {
 						<CdText>
 							<b>Covers:</b> {getCovers(props.selectedClassType)}
 						</CdText>
-						{/* For monthly packages we need to have paid until date*/}
-						{props.monthlyPackage && <CdText>
-							<b>Paid Until: {calcContractEnd(props)}</b>
+						{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
+						{props.packageType === 'MP' && <CdText>
+							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
 						</CdText>}
 						{/* Depending upon the type of payment method */}
 						{getExplainationBasedOnType(props)}
