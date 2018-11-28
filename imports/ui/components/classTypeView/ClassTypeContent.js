@@ -68,7 +68,7 @@ const MainInner = styled.div`
     props.reviews || props.classTimes ? "hidden" : "initial"};
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${props =>
-      props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
+    props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
   }
 `;
 
@@ -88,7 +88,7 @@ const ClassWrapper = styled.div`
   margin: 0 auto;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     padding-bottom: ${props =>
-      props.paddingBottom ? props.paddingBottom : 0}px;
+    props.paddingBottom ? props.paddingBottom : 0}px;
   }
 `;
 
@@ -107,7 +107,7 @@ const ClassTimesInnerWrapper = styled.div`
   overflow: hidden;
   @media screen and (max-width: ${helpers.mobile}px) {
     padding: ${props =>
-      props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
+    props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
     padding-top: 0;
   }
 `;
@@ -165,7 +165,7 @@ const ClassContainer = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter} flex-direction: column;
     padding-bottom: ${props =>
-      props.smallPadding ? props.smallPadding : props.paddingBottom}px;
+    props.smallPadding ? props.smallPadding : props.paddingBottom}px;
   }
 `;
 
@@ -336,10 +336,10 @@ class ClassTypeContent extends Component {
       let currentUserName = getUserFullName(Meteor.user());
       emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
         text ? text : pricing
-      }%3F %0D%0A%0D%0A Thanks`;
+        }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
-    
+
       // const mailToNormalized = encodeURI(mailTo);
       // window.location.href = mailToNormalized;
       openMailToInNewTab(mailTo);
@@ -447,14 +447,14 @@ class ClassTypeContent extends Component {
         : this.props.params.classTypeName;
     });
   };
-  handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
-    ) => {
-      try {
-        stripePaymentHelper.call(this,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
-      } catch (error) {
-        console.log('Error in handlePurchasePackage', error);
-      }
-    };
+  handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
+  ) => {
+    try {
+      stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
+    } catch (error) {
+      console.log('Error in handlePurchasePackage', error);
+    }
+  };
   render() {
     const {
       bgImg,
@@ -479,6 +479,8 @@ class ClassTypeContent extends Component {
       );
     }
 
+
+
     /*if (isEmpty(classTypeData)) {
       return (
         <Typography type="display2" gutterBottom align="center">
@@ -497,7 +499,7 @@ class ClassTypeContent extends Component {
       data => data.formattedClassTimesDetails.totalClassTimes > 0
     );
 
-    
+
     if (manageRequestTitle) {
       submitBtnLabel =
         manageRequestTitle != "Pricing"
@@ -639,11 +641,11 @@ class ClassTypeContent extends Component {
                     </GenericButtonWrapper>
                   </ClassContainer>
                 ) : (
-                  <ClassTimesBoxes
-                    classTimesData={formattedClassTimesData}
-                    classInterestData={classInterestData}
-                  />
-                )}
+                    <ClassTimesBoxes
+                      classTimesData={formattedClassTimesData}
+                      classInterestData={classInterestData}
+                    />
+                  )}
               </ClassTimesWrapper>
             </ClassTimesInnerWrapper>
           </MainInnerFixedContainer>
@@ -674,18 +676,18 @@ class ClassTypeContent extends Component {
                   </GenericButtonWrapper>
                 </ClassContainer>
               ) : (
-                <PackagesList
-                onAddToCartIconButtonClick={this.handlePurchasePackage}
-                  schoolId={classTypeData.schoolId}
-                  enrollMentPackages
-                  enrollMentPackagesData={enrollmentFeeData}
-                  perClassPackagesData={classPricingData}
-                  monthlyPackagesData={this.normalizeMonthlyPricingData(
-                    monthlyPricingData
-                  )}
-                  currency={currency}
-                />
-              )}
+                  <PackagesList
+                    onAddToCartIconButtonClick={this.handlePurchasePackage}
+                    schoolId={classTypeData.schoolId}
+                    enrollMentPackages
+                    enrollMentPackagesData={enrollmentFeeData}
+                    perClassPackagesData={classPricingData}
+                    monthlyPackagesData={this.normalizeMonthlyPricingData(
+                      monthlyPricingData
+                    )}
+                    currency={currency}
+                  />
+                )}
             </PackagesWrapper>
           </Element>
 
@@ -711,7 +713,10 @@ class ClassTypeContent extends Component {
             {
               /*<MyCalender {...this.props}/>*/
               <CalendarWrapper>
-                <ManageMyCalendar classCalendar={true} {...this.props} />
+                <ManageMyCalendar
+                  classCalendar={true}
+                  {...this.props}
+                />
               </CalendarWrapper>
             }
           </MainInnerFixedContainer>
