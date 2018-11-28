@@ -9,6 +9,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import School from '/imports/api/school/fields';
 
+import LogoImage from '/imports/ui/components/landing/components/helpers/LogoImage.jsx';
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
@@ -59,18 +60,6 @@ const Wrapper = styled.div`
 	margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
-const ImageContainer = styled.div`
-  width: 100px;
-  height: 100px;
-  flex-shrink: 0;
-  ${helpers.coverBg};
-  margin-right: ${helpers.rhythmDiv * 2}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-  background-position: 50% 50%;
-  background-image: url('${(props) => props.src}');
-  background-size: contain;
-  transition: background-image 1s linear;
-`;
 
 const ActionButtonsWrapper = styled.div`
 	${helpers.flexCenter} left: ${helpers.rhythmDiv * 2}px;
@@ -113,17 +102,9 @@ const SchoolProfile = styled.div`
 	${helpers.flexCenter}
 `;
 
-const SchoolImage = withImageExists((props) => {
-	return (
-		<ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
-			{(src) => <ImageContainer src={src} />}
-		</ProgressiveImage>
-	);
-}, imageExistsConfig);
-
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
-		<ActionButton onClick={()=>{}}>
+		<ActionButton onClick={() => { }}>
 			<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
 		</ActionButton>
 		<ActionButton onClick={props.handleSchoolVisit(props.schoolSlug)}>
@@ -207,7 +188,7 @@ const MySubscriptionRender = (props) => {
 									expandIcon={<ExpandMoreIcon />}
 								>
 									<SchoolProfile>
-										<SchoolImage src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} />
+										<LogoImage src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} />
 										<SubHeading> {school.name} </SubHeading>
 									</SchoolProfile>
 
