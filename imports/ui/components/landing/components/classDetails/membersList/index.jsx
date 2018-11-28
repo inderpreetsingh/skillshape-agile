@@ -5,6 +5,7 @@ import MembersList from "./presentational/MembersList.jsx";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import {isEmpty,get} from 'lodash';
+import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 
 class MembersListContainer extends Component {
   constructor(props) {
@@ -83,8 +84,8 @@ class MembersListContainer extends Component {
     return studentsData;
   }
   render() {
-    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId } = this.props;
-    const { addInstructorDialogBoxState,studentsData ,text} = this.state;
+    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params } = this.props;
+    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId} = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -103,6 +104,14 @@ class MembersListContainer extends Component {
             text={text}
           />
         )}
+        {classTypePackages && <ClassTypePackages 
+                    schoolId = {schoolId}
+                    open={classTypePackages}
+                    onClose={()=>{this.setState({classTypePackages:false})}}
+                    params= {params}
+                    classTypeId = {get(classData[0],'classTypeId',null)}
+                    userId={userId}
+                    />}
         <MembersList
           viewType={currentView}
           onSearchChange={this.handleSearchChange("teachersFilterWith")}
@@ -128,7 +137,9 @@ class MembersListContainer extends Component {
           instructorsIds={instructorsIds}
           onAddIconClick={this.handleAddInstructorDialogBoxState(true,"Student")}
           addStudent
-        />
+          onViewStudentClick={(userId)=>{this.setState({classTypePackages:true,userId})}}
+          params= {params}
+       />
       </Fragment>
     );
   }

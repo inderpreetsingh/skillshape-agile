@@ -3,6 +3,17 @@ import {get,isEmpty,uniq,includes,flatten} from 'lodash';
 
 Meteor.methods({
     "classes.handleInstructors":function(payLoad){
+        if(payLoad && payLoad.students && !isEmpty(payLoad.students)){
+            payLoad.students.map((obj,index)=>{
+            let memberData = {
+                activeUserId:obj.userId,
+                schoolId:payLoad.schoolId,
+                classTypeId:payLoad.classTypeId,
+                from:'classes'
+            }
+            Meteor.call("schoolMemberDetails.addNewMember",memberData);
+            })
+        }
         if(payLoad.action=='add'){
             if(payLoad.classTimeForm ){
                 return "record._id;"
@@ -36,6 +47,7 @@ Meteor.methods({
     },
     "classes.updateClassData":function(filter,status){
         try{
+          
             if(filter == null)
             filter = {};
             let obj = {userId:this.userId,status};
@@ -77,6 +89,17 @@ Meteor.methods({
                     return Classes.update({_id:filter._id},{$set:filter});
                 }
             }  
+            if(filter && filter.students && !isEmpty(filter.students)){
+                filter.students.map((obj,index)=>{
+                let memberData = {
+                    activeUserId:obj.userId,
+                    schoolId:filter.schoolId,
+                    classTypeId:filter.classTypeId,
+                    from:'classes'
+                }
+                Meteor.call("schoolMemberDetails.addNewMember",memberData);
+                })
+            }
         }catch(error){
 		console.log("classes.updateClassData in error", error)
 

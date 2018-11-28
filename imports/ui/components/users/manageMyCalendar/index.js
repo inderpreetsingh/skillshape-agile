@@ -952,7 +952,19 @@ class ManageMyCalendar extends React.Component {
 }
 
 export default createContainer(props => {
-  const classTimesData = ClassTimes.find({}).fetch();
+  let classTimesData = [];
+  const { classCalendar, schoolCalendar } = props;
+  const currentClassTypeData = props.classTypeData;
+  let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
+
+  if (classCalendar && currentClassTypeData) {
+    classTimesData = ClassTimes.find({ classTypeId: currentClassTypeData._id }).fetch();
+  } else if (schoolCalendar && schoolId) {
+    classTimesData = ClassTimes.find({ schoolId }).fetch();
+  }
+  else {
+    classTimesData = ClassTimes.find({}).fetch();
+  }
   let classTypeIds = classTimesData.map(item => item.classTypeId);
   Meteor.subscribe("classTime.getclassType", {
     classTypeIds
@@ -975,7 +987,6 @@ export default createContainer(props => {
   // Class Times of current School.
   let schoolClassTimes = [];
   let schoolClassTypesData = [];
-  let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
   if (schoolId) {
     schoolClassTimes = ClassTimes.find({ schoolId: schoolId }).fetch();
     schoolClassTypesData = ClassType.find({ schoolId: schoolId }).fetch();
