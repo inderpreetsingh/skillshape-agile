@@ -192,6 +192,7 @@ const PaymentAndStatus = props => (
           danger
           fullWidth
           label="Accept Payment"
+          onClick={()=>{props.onViewStudentClick(props._id)}}
         />
       </PaymentDetails>
     ) : (

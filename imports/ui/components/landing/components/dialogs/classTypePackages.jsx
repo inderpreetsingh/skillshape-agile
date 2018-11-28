@@ -50,7 +50,8 @@ class ClassTypePackages extends React.Component {
     handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
         ) => {
           try {
-            stripePaymentHelper.call(this,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
+            let userId = this.props.userId;
+            stripePaymentHelper.call(this,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,userId);
           } catch (error) {
             console.log('Error in handlePurchasePackage', error);
           }
