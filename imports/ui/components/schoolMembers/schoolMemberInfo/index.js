@@ -353,11 +353,11 @@ class SchoolMemberInfo extends Component {
 									<Typography>{memberInfo.email}</Typography>
 								</React.Fragment>
 							)}
-								<ActionButtonsWrapper>
-		<ActionButton onClick={()=>{}}>
-			<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
-		</ActionButton>
-	</ActionButtonsWrapper>
+							<ActionButtonsWrapper>
+								<ActionButton onClick={() => { }}>
+									<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
+								</ActionButton>
+							</ActionButtonsWrapper>
 						</Grid>
 					</Grid>
 				
