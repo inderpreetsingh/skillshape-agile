@@ -138,7 +138,8 @@ class MembersListContainer extends Component {
           onAddIconClick={this.handleAddInstructorDialogBoxState(true,"Student")}
           addStudent
           onViewStudentClick={(userId)=>{this.setState({classTypePackages:true,userId})}}
-        />
+          params= {params}
+       />
       </Fragment>
     );
   }

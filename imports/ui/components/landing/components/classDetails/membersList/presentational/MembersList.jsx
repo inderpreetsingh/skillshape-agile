@@ -89,6 +89,7 @@ const MembersList = props => {
                                     instructorsData={props.instructorsData}
                                     instructorsIds={props.instructorsIds}
                                     onViewStudentClick={props.onViewStudentClick}
+                                    params= {props.params}
                                 />
                             ) : (
                                     <Member
