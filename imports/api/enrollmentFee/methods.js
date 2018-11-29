@@ -1,5 +1,5 @@
 import EnrollmentFees from "./fields";
-import isEmpty from "lodash/isEmpty";
+import {get,isEmpty} from "lodash";
 import { check } from 'meteor/check';
 
 Meteor.methods({
@@ -57,5 +57,9 @@ Meteor.methods({
         catch (error) {
             throw new Meteor.Error(error);
         }
+    },
+    "enrollmentFee.getCover": function(_id){
+      let record = EnrollmentFees.findOne({_id});
+      return get(record,'selectedClassType',[]);   
     }
 });

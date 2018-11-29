@@ -166,7 +166,5 @@ Meteor.methods({
   "monthlyPricing.getCover": function(_id){
     let record = MonthlyPricing.findOne({_id});
     return get(record,'selectedClassType',[]);   
-    ;
-    
   }
 });
