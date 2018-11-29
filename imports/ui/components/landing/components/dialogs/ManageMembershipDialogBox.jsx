@@ -1,18 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { withStyles, MuiThemeProvider } from "material-ui/styles";
+import IconButton from "material-ui/IconButton";
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import LogoImage from '/imports/ui/components/landing/components'
 import PrimaryButton from "../buttons/PrimaryButton";
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import PhoneIcon from "material-ui-icons/Phone";
+import LogoImage from '/imports/ui/components/landing/components/helpers/LogoImage.jsx';
 
-import { MuiThemeProvider } from "material-ui/styles";
-import { withStyles } from "material-ui/styles";
-
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 
@@ -123,13 +120,15 @@ const ClassProfile = styled.div`
 	${helpers.flexCenter}
 `;
 
-const SchoolImage = withImageExists((props) => {
-    return (
-        <ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
-            {(src) => <ImageContainer src={src} />}
-        </ProgressiveImage>
-    );
-}, imageExistsConfig);
+const ClassTimesList = styled.ul`
+  margin: ${helpers.rhythmDiv}px;
+`;
+
+const ClassTimesListItem = styled.li`
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+`;
 
 
 const ManageMemberShipDialogBox = props => {
@@ -172,13 +171,17 @@ const ManageMemberShipDialogBox = props => {
                                     expandIcon={<ExpandMoreIcon />}
                                 >
                                     <ClassProfile>
-                                        <LogoImage src={get(classTypeData, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} />
+                                        <LogoImage src={get(classTypeData, 'logoImgMedium', get(classTypeData, 'logoImg', ""))} />
                                         <SubHeading> {classTypeData.name} </SubHeading>
                                     </ClassProfile>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
-
+                                    <ClassTimeList>
+                                        {classData.classTimesData.map(classTimeData => <ClassTimesListItem>
+                                            <Text>{classTimeData.name}</Text>,
+                                        </ClassTimesListItem>)}
+                                    </ClassTimeList>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>)}
                     </ContentWrapper>

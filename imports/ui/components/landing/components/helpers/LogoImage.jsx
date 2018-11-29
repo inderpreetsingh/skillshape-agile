@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import ProgressiveImage from 'react-progressive-image';
 
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 

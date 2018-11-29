@@ -9,13 +9,15 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import School from '/imports/api/school/fields';
 
+import { withImageExists } from '/imports/util';
 import LogoImage from '/imports/ui/components/landing/components/helpers/LogoImage.jsx';
+import ManageMemberShipDialogBox from '/imports/ui/components/landing/components/dialogs/ManageMembershipDialogBox.jsx';
 import CallUsDialogBox from '/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx';
 import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
 import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
-import { withImageExists } from '/imports/util';
+import { subscriptionsData } from '/imports/ui/components/landing/constants/mySubscriptions/subscriptionsData.js';
 
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 
@@ -27,11 +29,6 @@ import {
 } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-const imageExistsConfig = {
-	originalImagePath: 'src',
-	defaultImage: schoolLogo
-};
 
 const styles = {
 	expansionPanelRoot: {
@@ -104,18 +101,18 @@ const SchoolProfile = styled.div`
 
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
-		<ActionButton onClick={() => { }}>
+		<ActionButton onClick={props.onEditMemberShip}>
 			<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
 		</ActionButton>
-		<ActionButton onClick={props.handleSchoolVisit(props.schoolSlug)}>
+		<ActionButton onClick={props.onSchoolVisit(props.schoolSlug)}>
 			<FormGhostButton icon iconName="school" label="Visit School" />
 		</ActionButton>
 
-		{props.phone && props.phone.length && <ActionButton onClick={props.handleCall(props.phone)}>
+		{props.phone && props.phone.length && <ActionButton onClick={props.onCall(props.phone)}>
 			<FormGhostButton icon iconName="phone" label="Call" />
 		</ActionButton>}
 
-		{props.email && <ActionButton onClick={props.handleEmail(props.email, props.data)}>
+		{props.email && <ActionButton onClick={props.onEmail(props.email, props.data)}>
 			<FormGhostButton icon iconName="email" label="Email" noMarginBottom />
 		</ActionButton>}
 	</ActionButtonsWrapper>
@@ -141,11 +138,19 @@ const MySubscriptionRender = (props) => {
 		selectedSchool,
 		getContactNumbers,
 		handleModelState,
-		handleSchoolVisit
+		handleSchoolVisit,
+		manageMemberShipDialog
 	} = props;
 
 	return (
 		<Fragment>
+			{/*manageMemberShipDialog && (
+				<ManageMemberShipDialogBox
+					schoolData={selectedSchool}
+					open={manageMemberShip}
+					classTypeData={subscriptionsData}
+					onModalClose={handleModelState('manageMembershipDialog', false)} />
+			)*/}
 			{callUsDialog && (
 				<CallUsDialogBox
 					contactNumbers={[phone]}
@@ -197,9 +202,10 @@ const MySubscriptionRender = (props) => {
 										email={getOurEmail(school)}
 										phone={getContactNumbers(school)}
 										schoolSlug={school.slug}
-										handleCall={props.handleCall}
-										handleEmail={props.handleEmail}
-										handleSchoolVisit={props.handleSchoolVisit}
+										onEditMemberShip={() => handleModelState('manageMembershipDialog', true)}
+										onCall={props.handleCall}
+										onEmail={props.handleEmail}
+										onSchoolVisit={props.handleSchoolVisit}
 									/>
 								</ExpansionPanelSummary>
 

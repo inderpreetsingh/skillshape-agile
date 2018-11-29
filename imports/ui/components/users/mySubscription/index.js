@@ -73,7 +73,7 @@ class MySubscription extends React.Component {
 	};
 
 	render() {
-		const { callUsDialog, phone, emailUsDialog, email, selectedSchool } = this.state;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool } = this.state;
 		const { isLoading, schoolData, purchaseData } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -96,6 +96,7 @@ class MySubscription extends React.Component {
 					purchaseData={purchaseData}
 					callUsDialog={callUsDialog}
 					emailUsDialog={emailUsDialog}
+					manageMemberShipDialog={manageMemberShipDialog}
 					handleModelState={this.handleModelState}
 					handleEmail={this.handleEmail}
 					handleCall={this.handleCall}
