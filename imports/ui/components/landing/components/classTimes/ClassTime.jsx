@@ -636,7 +636,8 @@ class ClassTime extends Component {
       onEditClassTimesClick,
       schoolId,
       params,
-      classTypeId
+      classTypeId,
+      popUp
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
@@ -692,6 +693,7 @@ class ClassTime extends Component {
                   name= {name}
                   params = {params}
                   classTypeId = {classTypeId}
+                  popUp={popUp}
                 />
               )}
             <div>
