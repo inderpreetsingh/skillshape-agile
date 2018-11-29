@@ -18,7 +18,7 @@ import ClassSubscription from '/imports/api/classSubscription/fields';
 import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js';
 import MySubscriptionRender from './MySubscriptionRender.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { withPopUp } from '/imports/util';
+import { withPopUp ,packageCoverProvider} from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const Wrapper = styled.div`background: white;`;
@@ -168,6 +168,7 @@ export default createContainer((props) => {
 	}
 
 	purchaseData = concat(purchaseData, classSubscriptionData);
+	purchaseData = packageCoverProvider(purchaseData);
 
 	return {
 		isLoading,

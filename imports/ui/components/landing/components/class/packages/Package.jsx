@@ -149,7 +149,7 @@ const Status = Text.extend`
 function getCovers(data) {
 	let str = '';
 	if (!isEmpty(data)) {
-		str = data.map((classType) => classType.name);
+		str = data.map((classType) => classType);
 		str = str.join(', ');
 	}
 	return str.toLowerCase();
@@ -214,7 +214,7 @@ const Package = (props) => {
 						</CdText>
 
 						<CdText>
-							<b>Covers:</b> {getCovers(props.selectedClassType)}
+							<b>Covers:</b> {getCovers(props.covers)}
 						</CdText>
 						{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
 						{props.packageType === 'MP' && <CdText>
@@ -253,7 +253,7 @@ const Package = (props) => {
 							<CdText>{getPaymentType(props.pymtType) || 'NA'}</CdText>
 						)}
 					<CdText>
-						<b>Covers:</b> {getCovers(props.selectedClassType)}
+						<b>Covers:</b> {getCovers(props.covers)}
 					</CdText>
 					{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 				</ClassDetailsSection>
