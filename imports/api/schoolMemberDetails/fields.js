@@ -63,6 +63,10 @@ SchoolMemberDetails.attachSchema(
       type: [String],
       optional: true
     },
+    classTypeId:{
+      optional: true,
+      type: String
+    },
     schoolId: {
       type: String,
       optional: true

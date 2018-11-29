@@ -15,7 +15,9 @@ import ClassTypePackages from './classTypePackages.jsx';
 import Button from 'material-ui/Button';
 import Events from "/imports/util/events";
 import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
-
+import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
+import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
+import {get} from "lodash";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -93,7 +95,7 @@ class ThinkingAboutAttending extends React.Component {
         });
       };
       handleSignUpSubmit = (payload, event) => {
-        event.preventDefault();
+        event && event.preventDefault();
         let obj = {};
         if (!payload.name || !payload.email) {
           obj.errorText = "* fields are mandatory";
@@ -105,6 +107,48 @@ class ThinkingAboutAttending extends React.Component {
           obj.userData = { ...this.state.userData, ...payload };
         }
         this.setState(obj);
+      };
+      handleServiceAgreementSubmit = () => {
+        this.setState({ emailConfirmationDialogBox: true });
+      };
+    
+      handleEmailConfirmationSubmit = () => {
+        this.setState({ isBusy: true });
+        const { popUp } = this.props;
+        Meteor.call(
+          "user.createUser",
+          { ...this.state.userData, signUpType: "skillshape-signup" },
+          (err, res) => {
+            let modalObj = {
+              open: false,
+              signUpDialogBox: false,
+              termsOfServiceDialogBox: false,
+              emailConfirmationDialogBox: false,
+              isBusy: false
+            };
+            if (err) {
+              modalObj.errorText = err.reason || err.message;
+              modalObj.signUpDialogBox = true;
+              this.setState(modalObj);
+            }
+    
+            if (res) {
+              this.setState(modalObj, () => {
+                popUp.appear("success", {
+                  content: "Successfully registered, Please check your email."
+                });
+              });
+            }
+          }
+        );
+      };
+    
+      handleTermsOfServiceDialogBoxState = state => {
+        this.setState({ termsOfServiceDialogBox: state });
+      };
+    
+      handleEmailConfirmationDialogBoxState = state => {
+        this.setState({ emailConfirmationDialogBox: state });
       };
       unsetError = () => this.setState({ errorText: null });
       handleLoginGoogle = () => {
@@ -159,6 +203,28 @@ class ThinkingAboutAttending extends React.Component {
                     onRequestClose={onModalClose}
                     aria-labelledby="Thinking About Attending"
                     >
+                      {this.state.emailConfirmationDialogBox && (
+          <EmailConfirmationDialogBox
+            open={this.state.emailConfirmationDialogBox}
+            schoolEmail={get(this.state, "userData.email")}
+            onModalClose={() =>
+              this.handleEmailConfirmationDialogBoxState(false)
+            }
+            onDisAgreeButtonClick={() =>
+              this.handleEmailConfirmationDialogBoxState(false)
+            }
+            onAgreeButtonClick={this.handleEmailConfirmationSubmit}
+            isLoading={this.state.isBusy}
+          />
+        )}
+
+        {this.state.termsOfServiceDialogBox && (
+          <TermsOfServiceDialogBox
+            open={this.state.termsOfServiceDialogBox}
+            onModalClose={() => this.handleTermsOfServiceDialogBoxState(false)}
+            onAgreeButtonClick={this.handleServiceAgreementSubmit}
+          />
+        )}
                      {this.state.signUpDialogBox && (
           <SignUpDialogBox
             open={this.state.signUpDialogBox}

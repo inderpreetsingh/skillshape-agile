@@ -13,12 +13,11 @@ import Typography from "material-ui/Typography";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import Select from "react-select";
-import { isEmpty, flatten, get,uniq } from "lodash";
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { isEmpty, flatten, get, uniq } from "lodash";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const styles = theme => {
   return {
@@ -37,13 +36,13 @@ const styles = theme => {
       display: "flex",
       justifyContent: "center",
       minHeight: 200,
-      "@media screen and (max-width : 500px)": {
-        // minHeight: "150px"
-      }
     },
     dialogRoot: {
       width: "100%",
-      maxWidth: 400
+      maxWidth: 400,
+      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+        margin: helpers.rhythmDiv
+      }
     },
     iconButton: {
       height: "auto",
@@ -52,16 +51,20 @@ const styles = theme => {
   };
 };
 
-const ButtonsWrapper = styled.div`
+const ActionButtons = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
-  margin-top: ${rhythmDiv * 2}px;
-  `;
+  margin-top: ${helpers.rhythmDiv * 2}px;
+`;
+
+const ActionButton = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
 
 const ErrorWrapper = styled.span`
   color: red;
-  margin: ${rhythmDiv * 2}px;
+  margin: ${helpers.rhythmDiv * 2}px;
 `;
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -85,7 +88,7 @@ class AddInstructorDialogBox extends Component {
   initializeStates = () => {
     let emailList = [];
     const { schoolId } = this.props;
-    if(this.props.text=='Student'){
+    if (this.props.text == 'Student') {
       Meteor.call('user.getSelectedUsersEmail', 'All', (err, res) => {
         if (res) {
           // console.log(res, "METEOR>>.")
@@ -95,7 +98,7 @@ class AddInstructorDialogBox extends Component {
         }
         this.setState({ emailList });
       })
-    }else{
+    } else {
       Meteor.call('school.getAdminsEmail', schoolId, (err, res) => {
         if (res) {
           // console.log(res, "METEOR>>.")
@@ -113,11 +116,17 @@ class AddInstructorDialogBox extends Component {
       title: "Add Instructor",
       content: `Add this instructor to this class only, or to this and all future classes?`,
       RenderActions: (
-        <div>
-          <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
-          <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
-          <FormGhostButton label={'Whole series'} onClick={() => { this.handleWholeSeries(popUp, payLoad) }} applyClose />
-        </div>
+        <ActionButtons>
+          <ActionButton>
+            <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
+          </ActionButton>
+          <ActionButton>
+            <FormGhostButton label={'Whole series'} onClick={() => { this.handleWholeSeries(popUp, payLoad) }} applyClose />
+          </ActionButton>
+          <ActionButton>
+            <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+          </ActionButton>
+        </ActionButtons>
       )
     }, true);
   }
@@ -175,10 +184,10 @@ class AddInstructorDialogBox extends Component {
 
     })
   }
-  handleAddStudent = (popUp,payLoad) => {
+  handleAddStudent = (popUp, payLoad) => {
     Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
       this.setState({ isLoading: false });
-      if (res =='added') {
+      if (res == 'added') {
         popUp.appear("success", {
           title: "Added Successfully",
           content: <div>Successfully added as an {this.props.text}.</div>,
@@ -198,16 +207,18 @@ class AddInstructorDialogBox extends Component {
       action: "add",
       _id: !isEmpty(this.props.classData) ? get(this.props.classData[0], '_id', null) : '',
       classTimeForm: this.props.classTimeForm,
-      students:!isEmpty(this.props.classData) ? get(this.props.classData[0], 'students',[]) : []
+      students: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'students', []) : [],
+      classTypeId: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'classTypeId', '') : "",
+      schoolId: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'schoolId', '') : "",
     };
-    if(this.props.text=='Student'){
-      selectedOption.map((obj,index)=>{
-        payLoad.students.push({status:'signIn',userId:obj.value})
+    if (this.props.text == 'Student') {
+      selectedOption.map((obj, index) => {
+        payLoad.students.push({ status: 'signIn', userId: obj.value })
       })
-      payLoad.students=uniq(payLoad.students);
-    }else{
-      payLoad.instructors= !isEmpty(this.props.classData) ? get(this.props.classData[0], 'instructors', this.props.instructorsIds) : [],
-      payLoad.instructors.push(selectedOption.map(ele => ele.value));
+      payLoad.students = uniq(payLoad.students);
+    } else {
+      payLoad.instructors = !isEmpty(this.props.classData) ? get(this.props.classData[0], 'instructors', this.props.instructorsIds) : [],
+        payLoad.instructors.push(selectedOption.map(ele => ele.value));
       payLoad.instructors = flatten(payLoad.instructors);
 
     }
@@ -218,7 +229,7 @@ class AddInstructorDialogBox extends Component {
       RenderActions: (
         <div>
           <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
-          <FormGhostButton label={'Yes'} onClick={() => { this.props.text=="Student" ? this.handleAddStudent(popUp,payLoad):!payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp, payLoad) : this.handleInstructors(popUp, payLoad) }} applyClose />
+          <FormGhostButton label={'Yes'} onClick={() => { this.props.text == "Student" ? this.handleAddStudent(popUp, payLoad) : !payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp, payLoad) : this.handleInstructors(popUp, payLoad) }} applyClose />
         </div>
       )
     }, true);
@@ -327,21 +338,21 @@ class AddInstructorDialogBox extends Component {
 
 
 
-              <ButtonsWrapper>
+              <ActionButtons>
                 {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
                 {this.state.selectedOption.length ? <PrimaryButton
                   formId="addUser"
                   type="submit"
-                  label={`Add a New ${text}`} />
+                  label={`Add new ${text}`} />
                   : <SecondaryButton
                     disabled
-                    label={`Add a New ${text}`} />}
+                    label={`Add new ${text}`} />}
 
                 <PrimaryButton formId="cancelUser"
                   label="Cancel"
                   onClick={props.onModalClose}
                 />
-              </ButtonsWrapper>
+              </ActionButtons>
 
             </form>
           </DialogContent>

@@ -16,7 +16,7 @@ const styles = {
 		color: helpers.primaryColor,
 		textTransform: 'none',
 		fontWeight: 500,
-		height: '100%',
+		// height: '100%',
 		marginRight: helpers.rhythmDiv,
 		'&:hover': {
 			backgroundColor: helpers.primaryColor,
@@ -98,16 +98,16 @@ const FormGhostButton = (props) => {
 	// debugger;
 	/* prettier-ignore */
 	if (props.blackColor || (props.color == "black")) {
-    rootClass = rootClass + " " + props.classes.blackColor;
-  } else if (props.greyColor || (props.color == "grey")) {
-    rootClass = rootClass + " " + props.classes.greyColor;
-  } else if (props.darkGreyColor || (props.color == "dark-grey")) {
-    rootClass = rootClass + " " + props.classes.darkGreyColor;
-  } else if (props.alertColor || (props.color == "alert")) {
-    rootClass = rootClass + " " + props.classes.redColor;
-  }else if(props.whiteColor || (props.color == 'white')) {
-    rootClass = rootClass + " " + props.classes.whiteColor;
-  }
+		rootClass = rootClass + " " + props.classes.blackColor;
+	} else if (props.greyColor || (props.color == "grey")) {
+		rootClass = rootClass + " " + props.classes.greyColor;
+	} else if (props.darkGreyColor || (props.color == "dark-grey")) {
+		rootClass = rootClass + " " + props.classes.darkGreyColor;
+	} else if (props.alertColor || (props.color == "alert")) {
+		rootClass = rootClass + " " + props.classes.redColor;
+	} else if (props.whiteColor || (props.color == 'white')) {
+		rootClass = rootClass + " " + props.classes.whiteColor;
+	}
 	return (
 		<Button
 			type={props.type}

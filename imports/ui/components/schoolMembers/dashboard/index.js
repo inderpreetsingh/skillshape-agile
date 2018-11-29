@@ -163,8 +163,6 @@ class DashBoardView extends React.Component {
     }
   }
  
-    
- 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
@@ -495,8 +493,8 @@ class DashBoardView extends React.Component {
 
   handleMemberDetailsToRightPanel = (memberId,superAdminId) => {
     const { adminView, schoolData, adminsData, purchaseByUserId } = this.props;
-    let memberInfo, profile, pic, schoolId = schoolData[0]._id, email, _id,superAdmin;
-    let schoolName = schoolData[0].name;
+    let memberInfo, profile, pic, schoolId = get(schoolData[0],"_id",''), email, _id,superAdmin;
+    let schoolName = get(schoolData[0],"name",'');
     if (!adminView) {
       memberInfo = SchoolMemberDetails.findOne(memberId);
       profile = memberInfo.profile.profile;

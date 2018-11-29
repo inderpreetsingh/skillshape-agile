@@ -123,6 +123,9 @@ const SchoolImage = withImageExists((props) => {
 
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
+		<ActionButton onClick={()=>{}}>
+			<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
+		</ActionButton>
 		<ActionButton onClick={props.handleSchoolVisit(props.schoolSlug)}>
 			<FormGhostButton icon iconName="school" label="Visit School" />
 		</ActionButton>
