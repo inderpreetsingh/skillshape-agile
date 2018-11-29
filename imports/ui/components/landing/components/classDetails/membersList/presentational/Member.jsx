@@ -78,7 +78,7 @@ const ProfilePic = styled.div`
   background-image: url(${props => props.src});
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: contain;
+  background-size: cover;
   width: 100px;
   height: 100px;
   display: flex;
@@ -106,7 +106,7 @@ const DetailsWrapper = styled.div`
   ${helpers.flexCenter}
   width: 100%;
   flex-shrink: 1;
-  justify-content: flex-start;
+  justify-content: center;
   padding: ${helpers.rhythmDiv * 2}px;
   // padding-left: ${helpers.rhythmDiv * 2}px;
 
@@ -119,6 +119,7 @@ const DetailsWrapper = styled.div`
 
 const Details = styled.div`
   display: flex;
+  align-items: center;
   flex-direction: column;
 `;
 
@@ -257,10 +258,10 @@ const Member = props => {
         />
         <DetailsWrapper type={props.type}>
           <Details>
-            <SubHeading fontSize="20">{cutString(name, 20)}</SubHeading>
+            <SubHeading align="center" fontSize="20">{cutString(name, 20)}</SubHeading>
             {props.type !== "student" &&
               !props.addMember && (
-                <Text>
+                <Text align="center">
                   <Capitalize>{props.designation}</Capitalize>
                 </Text>
               )}
