@@ -40,6 +40,18 @@ export const SubHeading = GenericText.withComponent('h3').extend`
   }
 `;
 
+/* We will tell on large screen what action we wanna perform
+  based on that our small screen will respond
+*/
+export const ToggleVisibility = styled.div`
+  display: ${props => props.show ? 'flex' : 'none'};
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+	display: ${props => props.show ? 'none' : 'flex'};
+  }
+`;
+
+
 export const Capitalize = styled.span`text-transform: capitalize;`;
 
 export const Bold = styled.span`font-weight: 500;`;

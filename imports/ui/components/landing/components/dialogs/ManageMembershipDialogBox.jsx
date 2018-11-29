@@ -12,7 +12,7 @@ import ProfileImage from '/imports/ui/components/landing/components/helpers/Prof
 import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
 
 import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
-import { Text, SubHeading, Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 
@@ -36,10 +36,9 @@ const styles = theme => {
         },
         dialogContent: {
             padding: `0 ${helpers.rhythmDiv * 3}px`,
+            paddingBottom: helpers.rhythmDiv,
             flexShrink: 0,
-            '@media screen and (max-width : 500px)': {
-                minHeight: '150px'
-            }
+
         },
         dialogPaper: {
             maxWidth: 600,
@@ -49,9 +48,9 @@ const styles = theme => {
         dialogActionsRoot: {
             padding: `0 ${helpers.rhythmDiv}px`,
             display: 'flex',
-            flexDirection: 'column',
+            flexWrap: 'wrap',
             alignItems: 'flex-end',
-            justifyContent: 'flex-start'
+            justifyContent: 'flex-end'
         },
         dialogActions: {
             width: '100%',
@@ -72,7 +71,6 @@ const styles = theme => {
         },
         expansionPanelDetails: {
             padding: 0,
-            marginTop: helpers.rhythmDiv
         },
         expansionPanelSummary: {
             margin: 0,
@@ -99,6 +97,7 @@ const WrapperContact = styled.li`
 
 const Title = SubHeading.extend`
     font-style: italic;
+    text-align: center;
     font-weight: 300;
 `;
 
@@ -108,17 +107,50 @@ const ClassProfile = styled.div`
 `;
 
 const ClassTimesList = styled.ul`
-  margin: ${helpers.rhythmDiv}px;
+  width: 100%;
+  padding: 0;
+  margin-bottom: ${helpers.rhythmDiv}px;
+
 `;
 
 const ClassTimesListItem = styled.li`
   list-style: none;
+  width: 100%;
   display: flex;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 0 ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv}px;  
   justify-content: space-between;
+  :first-child {
+    border-top: 1px solid #333;
+    padding-top: ${helpers.rhythmDiv}px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile - 100}px) {
+    flex-direction: column;
+  }
+`;
+
+const ActionButtons = styled.div`
+    ${helpers.flexCenter}
+    flex-direction: column;
 `;
 
 const ButtonWrapper = styled.div`
-  display: flex;
+    display: flex;
+    margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const ClassNameWrapper = styled.div`
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: flex;
+    flex-direction: column;   
+  }
+`;
+
+const ClassName = Text.extend`
+    font-size: ${helpers.baseFontSize * 1.5}px;
 `;
 
 
@@ -144,7 +176,7 @@ const ManageMemberShipDialogBox = props => {
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
                     <DialogBoxTitleBar
-                        title={"Manage Heading"}
+                        title={"Manage Membership"}
                         onModalClose={onModalClose}
                         classes={classes}
                     />
@@ -166,23 +198,51 @@ const ManageMemberShipDialogBox = props => {
                                     }}
                                     expandIcon={<ExpandMoreIcon />}
                                 >
+
                                     <ClassProfile>
                                         <ProfileImage src={get(classData, 'logoImgMedium', get(classData, 'logoImg', ""))} />
-                                        <Title> {classData.name} </Title>
+
+                                        <ClassNameWrapper>
+                                            <ClassName> {classData.name} </ClassName>
+                                            <ToggleVisibility>
+                                                <ButtonWrapper>
+                                                    <FormGhostButton
+                                                        color="alert"
+                                                        label="Remove all"
+                                                    />
+                                                </ButtonWrapper>
+                                            </ToggleVisibility>
+                                        </ClassNameWrapper>
+
                                     </ClassProfile>
 
-                                    <ButtonWrapper>
-                                        <FormGhostButton
-                                            color="alert"
-                                            label="Remove All"
-                                        />
-                                    </ButtonWrapper>
+                                    <ToggleVisibility show>
+                                        <ButtonWrapper>
+                                            <FormGhostButton
+                                                color="alert"
+                                                label="Remove all"
+                                            />
+                                        </ButtonWrapper>
+                                    </ToggleVisibility>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
                                     <ClassTimesList>
                                         {classData.classTimes.map(classTimeData => <ClassTimesListItem>
-                                            <Text>{classTimeData.name}</Text>,
+                                            <Text fontSize="18">{classTimeData.name}</Text>
+                                            <ActionButtons>
+                                                <ButtonWrapper>
+                                                    <FormGhostButton
+                                                        color="alert"
+                                                        label="Remove from calendar" />
+                                                </ButtonWrapper>
+                                                <ButtonWrapper>
+                                                    <FormGhostButton
+                                                        color="caution"
+                                                        label="Stop notifications"
+                                                    />
+                                                </ButtonWrapper>
+                                            </ActionButtons>
                                         </ClassTimesListItem>)}
                                     </ClassTimesList>
                                 </ExpansionPanelDetails>
@@ -192,7 +252,15 @@ const ManageMemberShipDialogBox = props => {
 
                 <DialogActions
                     classes={{ root: classes.dialogActionsRoot, action: classes.dialogAction }}>
-
+                    <ButtonWrapper>
+                        <FormGhostButton color="alert" label="Leave school" />
+                    </ButtonWrapper>
+                    <ButtonWrapper>
+                        <FormGhostButton color="caution" label="Remove all notifications" />
+                    </ButtonWrapper>
+                    <ButtonWrapper>
+                        <FormGhostButton color="primary" label="Save changes" />
+                    </ButtonWrapper>
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>
