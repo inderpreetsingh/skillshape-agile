@@ -150,7 +150,7 @@ const MySubscriptionRender = (props) => {
 
     return (
         <Fragment>
-            {manageMemberShipDialog && (
+            {/*manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
                     schoolData={selectedSchool}
                     studentName={getUserFullName(currentUser)}
@@ -158,7 +158,7 @@ const MySubscriptionRender = (props) => {
                     subscriptionsData={subscriptionsData}
                     onModalClose={handleManageMemberShipDialogBox(false, {})}
                 />
-            )}
+            )*/}
             {callUsDialog && (
                 <CallUsDialogBox
                     contactNumbers={[phone]}

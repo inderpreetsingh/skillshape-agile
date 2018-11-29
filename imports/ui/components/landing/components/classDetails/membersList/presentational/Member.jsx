@@ -26,7 +26,7 @@ const styles = {
     cursor: "pointer",
     width: 24,
     height: 24,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: '50%',
     fontSize: helpers.baseFontSize,
     position: 'absolute',
