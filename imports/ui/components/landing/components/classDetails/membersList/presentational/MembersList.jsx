@@ -89,7 +89,7 @@ const MembersList = props => {
                                     instructorsData={props.instructorsData}
                                     instructorsIds={props.instructorsIds}
                                     onViewStudentClick={props.onViewStudentClick}
-                                    params= {props.params}
+                                    params={props.params}
                                 />
                             ) : (
                                     <Member
@@ -108,21 +108,20 @@ const MembersList = props => {
                                 )}
                         </MemberWrapper>
                     ))}
-                        <MemberWrapper expanded={expanded} type={"instructor"}>
-                            <Member
-                                addInstructor = {props.addInstructor}
-                                addStudent = {props.addStudent}
-                                onAddIconClick={props.onAddIconClick}
-                                type="instructor"
-                                popUp={props.popUp}
-                                classData={props.classData}
-                                classTimeForm={props.classTimeForm}
-                                instructorsIdsSetter={props.instructorsIdsSetter}
-                                instructorsData={props.instructorsData}
-                                instructorsIds={props.instructorsIds}
+                <MemberWrapper expanded={expanded}>
+                    <Member
+                        addMember={props.addInstructor || props.addStudent}
+                        onAddIconClick={props.onAddIconClick}
+                        type={type}
+                        popUp={props.popUp}
+                        classData={props.classData}
+                        classTimeForm={props.classTimeForm}
+                        instructorsIdsSetter={props.instructorsIdsSetter}
+                        instructorsData={props.instructorsData}
+                        instructorsIds={props.instructorsIds}
 
-                            />
-                        </MemberWrapper>
+                    />
+                </MemberWrapper>
             </MembersGrid>
         </Wrapper>
     );

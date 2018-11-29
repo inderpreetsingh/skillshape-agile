@@ -25,7 +25,7 @@ class ClassTimeCoverContainer extends Component {
   };
 
   render() {
-    const { classTypeCoverSrc, schoolCoverSrc ,classTypeName,classTypeId,slug} = this.props;
+    const { bgImg, logoImg, classTypeName, classTypeId, slug } = this.props;
 
     return (
       <Fragment>
@@ -36,12 +36,12 @@ class ClassTimeCoverContainer extends Component {
           />
         )}
         <ClassTimeCover
-          classTypeCoverSrc={classTypeCoverSrc}
-          schoolCoverSrc={schoolCoverSrc}
+          ctBgImg={bgImg}
+          logoImg={logoImg}
           onPurchaseButtonClick={this.handleDialogBoxState(true)}
-          classTypeName = {classTypeName}
-          classTypeId = {classTypeId}
-          slug = {slug}
+          classTypeName={classTypeName}
+          classTypeId={classTypeId}
+          slug={slug}
         />
       </Fragment>
     );
@@ -49,13 +49,13 @@ class ClassTimeCoverContainer extends Component {
 }
 
 ClassTimeCoverContainer.propTypes = {
-  classTypeCoverSrc: PropTypes.string,
-  schoolCoverSrc: PropTypes.string
+  bgImg: PropTypes.string,
+  logoImg: PropTypes.string
 };
 
 ClassTimeCoverContainer.defaultProps = {
-  classTypeCoverSrc: coverSrc,
-  schoolCoverSrc: coverSrc
+  bgImg: coverSrc,
+  logoImg: coverSrc
 };
 
 export default ClassTimeCoverContainer;

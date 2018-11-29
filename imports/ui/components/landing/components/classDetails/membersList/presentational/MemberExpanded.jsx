@@ -8,7 +8,7 @@ import DropDownMenu from "/imports/ui/components/landing/components/form/DropDow
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { formatDate } from "/imports/util/formatSchedule";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import {get,isEmpty} from 'lodash';
+import { get, isEmpty } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
 
@@ -96,6 +96,7 @@ const MemberDetailsInner = styled.div`
 const MemberPic = styled.div`
   height: 50px;
   width: 50px;
+  margin-right: ${helpers.rhythmDiv}px;
   background-image: url('${props => props.url}');
   background-position: 50% 50%;
   background-size: cover;
@@ -106,12 +107,12 @@ const MemberStatus = styled.div``;
 
 const PaymentAndStatusDetails = styled.div`
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: space-between;
   margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (min-width: ${helpers.mobile - 50}px) {
-    flex-direction: column;
     flex-wrap: none;
     justify-content: space-between;
     margin-bottom: 0;
@@ -123,23 +124,30 @@ const PaymentDetails = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  margin-right: ${helpers.rhythmDiv * 2}px;
-
+  
   @media screen and (min-width: ${helpers.mobile - 50}px) {
-    margin-right: 0;
+  
   }
 `;
 
 const StatusDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  ${helpers.flexCenter}
+  justify-content: space-between;
+  
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 `;
 
-const ButtonWrapper = styled.div`
+const StatusButton = styled.div`
+  display: flex;
   width: 100%;
   margin-bottom: ${helpers.rhythmDiv}px;
+
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    display: block;
+  }
 `;
 
 const PaymentExpires = Text.extend`
@@ -153,11 +161,11 @@ const ExpiryDate = Text.extend`
   font-style: italic;
 `;
 
-const onMenuItemClick = (value,slug) => {
+const onMenuItemClick = (value, slug) => {
   value = value.value;
   if (value === "view_student") {
     browserHistory.push(`/schools/${slug}/members`);
-  } 
+  }
 };
 
 const getStatusColor = status => {
@@ -169,15 +177,15 @@ const getStatusColor = status => {
 };
 
 const getStatusInfo = status => {
-  if(status == 'signIn'){
+  if (status == 'signIn') {
     return 'Signed In';
-  }else if(status == 'signOut'){
+  } else if (status == 'signOut') {
     return 'Singed Out';
   }
-  else if(status == 'checkIn'){
+  else if (status == 'checkIn') {
     return 'Checked In';
   }
-  else{
+  else {
     return 'Checked Out';
   }
 };
@@ -192,72 +200,72 @@ const PaymentAndStatus = props => (
           danger
           fullWidth
           label="Accept Payment"
-          onClick={()=>{props.onViewStudentClick(props._id)}}
+          onClick={() => { props.onViewStudentClick(props._id) }}
         />
       </PaymentDetails>
     ) : (
-      <PaymentDetails>
-        <PaymentExpires>Payment Expires on</PaymentExpires>
-        <ExpiryDate>{formatDate(new Date())}</ExpiryDate>
-      </PaymentDetails>
-    )}
+        <PaymentDetails>
+          <PaymentExpires>Payment Expires on</PaymentExpires>
+          <ExpiryDate>{formatDate(new Date())}</ExpiryDate>
+        </PaymentDetails>
+      )}
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>
 );
-  updateStatus = (n,props)=>{
-    let {status,popUp} = props;
-    if(n==1){
-    if(status=='signIn') status='checkIn';
-     else if(status=='checkIn') status='signIn';
-    }
-    else{
-      if(status=='signIn' || status=='checkIn') status='signOut';
-    }
-    let filter = props.classData[0];
-    filter.userId = props._id;
-    Meteor.call("classes.updateClassData",filter,status,(err,res)=>{
-      if(res){
-        popUp.appear("success", {
-          title: `Successfully`,
-          content: `${status} Performed Successfully.`,
-          RenderActions: (<ButtonWrapper>
-            <FormGhostButton
-                label={'Ok'}
-                onClick={() => { }}
-                applyClose
-            />
+updateStatus = (n, props) => {
+  let { status, popUp } = props;
+  if (n == 1) {
+    if (status == 'signIn') status = 'checkIn';
+    else if (status == 'checkIn') status = 'signIn';
+  }
+  else {
+    if (status == 'signIn' || status == 'checkIn') status = 'signOut';
+  }
+  let filter = props.classData[0];
+  filter.userId = props._id;
+  Meteor.call("classes.updateClassData", filter, status, (err, res) => {
+    if (res) {
+      popUp.appear("success", {
+        title: `Successfully`,
+        content: `${status} Performed Successfully.`,
+        RenderActions: (<ButtonWrapper>
+          <FormGhostButton
+            label={'Ok'}
+            onClick={() => { }}
+            applyClose
+          />
         </ButtonWrapper>)
-        }, true);
-      }
-    })
+      }, true);
     }
+  })
+}
 const StatusOptions = props => (
   <StatusDetails>
-    <ButtonWrapper>
+    <StatusButton>
       <PrimaryButton
         noMarginBottom
         fullWidth
-        label={props.status =='signIn'? "Check in" : "Check out"}
-        onClick ={()=>{this.updateStatus(1,props)}}
+        label={props.status == 'signIn' ? "Check in" : "Check out"}
+        onClick={() => { this.updateStatus(1, props) }}
       />
-    </ButtonWrapper>
-    <ButtonWrapper>
+    </StatusButton>
+    <StatusButton>
       <SkillShapeButton
         noMarginBottom
         caution
         fullWidth
         label={"Sign Out"}
-        onClick ={()=>{this.updateStatus(2,props)}}
+        onClick={() => { this.updateStatus(2, props) }}
       />
-    </ButtonWrapper>
+    </StatusButton>
   </StatusDetails>
 );
 
 const MemberExpanded = props => {
   const profile = props.profile;
-  const profileSrc = get(profile,'medium',get(profile,'pic',config.defaultProfilePicOptimized))
-  const name = `${get(profile,'firstName',get(profile,'name','Old Data'))} ${get(profile,'lastName',"")}`
-  const slug = get(props,"params.slug",null);
+  const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
+  const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
+  const slug = get(props, "params.slug", null);
   return (
     <Wrapper>
       <InnerWrapper>
@@ -275,7 +283,7 @@ const MemberExpanded = props => {
           </MemberDetailsInner>
 
           <DropDownMenu
-            onMenuItemClick={(value)=>{onMenuItemClick(value,slug)}}
+            onMenuItemClick={(value) => { onMenuItemClick(value, slug) }}
             menuButtonClass={props.classes.iconButton}
             menuOptions={menuOptions}
           />

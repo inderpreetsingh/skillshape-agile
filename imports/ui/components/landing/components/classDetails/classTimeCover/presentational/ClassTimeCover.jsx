@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
 import { rhythmDiv, tablet, panelColor } from "/imports/ui/components/landing/components/jss/helpers.js";
-import { coverSrc, schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import { schoolDetailsImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
 
 const imageExistsConfigClassSrc = {
-  originalImagePath: "classTypeCoverSrc",
+  originalImagePath: "logoImg",
   defaultImage: schoolDetailsImgSrc
 };
 
@@ -53,15 +53,15 @@ const ButtonsWrapper = styled.div`
   }
 `;
 
-const ClassTypeProfileWithDefaultImage = withImageExists(props => {
-  const { bgImg, classTypeCoverSrc } = props;
-  return <ClassTypeProfile url={bgImg || classTypeCoverSrc} />;
+const LogoImage = withImageExists(props => {
+  const { bgImg } = props;
+  return <ClassTypeProfile url={bgImg} />;
 }, imageExistsConfigClassSrc);
 
 const ClassTimeCover = props => (
-  <Wrapper url={props.schoolCoverSrc}>
-    {props.classTypeCoverSrc && <ClassTypeProfileWithDefaultImage
-      classTypeCoverSrc={props.classTypeCoverSrc}
+  <Wrapper url={props.ctBgImg}>
+    {props.logoImg && <LogoImage
+      logoImg={props.logoImg}
     />}
     <ButtonsWrapper>
       <ActionButtons
