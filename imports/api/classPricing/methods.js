@@ -1,6 +1,5 @@
-import isEmpty from "lodash/isEmpty";
 import { check } from 'meteor/check';
-
+import {get,isEmpty} from "lodash";
 import ClassPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
 import PriceInfoRequest from "/imports/api/priceInfoRequest/fields";
@@ -109,5 +108,9 @@ Meteor.methods({
     catch (error) {
         throw new Meteor.Error(error);
     }
-}
+},
+  "classPricing.getCover": function(_id){
+    let record = ClassPricing.findOne({_id});
+    return get(record,'selectedClassType',[]);   
+  }
 });

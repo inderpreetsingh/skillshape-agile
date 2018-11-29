@@ -1,6 +1,6 @@
 import MonthlyPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
-import isEmpty from "lodash/isEmpty";
+import {get,isEmpty} from "lodash";
 import { check } from 'meteor/check';
 
 function updateHookForClassType({ classTypeId, doc }) {
@@ -162,5 +162,9 @@ Meteor.methods({
     catch (error) {
       throw new Meteor.Error(error);
     }
+  },
+  "monthlyPricing.getCover": function(_id){
+    let record = MonthlyPricing.findOne({_id});
+    return get(record,'selectedClassType',[]);   
   }
 });

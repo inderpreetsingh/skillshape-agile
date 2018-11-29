@@ -36,7 +36,7 @@ import "/imports/api/classes/methods";
 import "/imports/api/attendance/methods";
 
 // All publication imported over here
-
+import '/imports/api/packages/server/publication';
 import "/imports/api/modules/server/publication";
 import "/imports/api/skill/server/publication";
 import "/imports/api/skillCategory/server/publication";

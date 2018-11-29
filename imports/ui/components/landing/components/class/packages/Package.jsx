@@ -96,7 +96,7 @@ const ClassDetailsSection = styled.div`
 	}
 `;
 
-const ClassDetailsText = styled.p`
+const CdText = styled.p`
 	margin: 0;
 	font-size: 14px;
 	font-family: ${helpers.specialFont};
@@ -149,7 +149,7 @@ const Status = Text.extend`
 function getCovers(data) {
 	let str = '';
 	if (!isEmpty(data)) {
-		str = data.map((classType) => classType.name);
+		str = data.map((classType) => classType);
 		str = str.join(', ');
 	}
 	return str.toLowerCase();
@@ -188,12 +188,12 @@ const Package = (props) => {
 	const getExplainationBasedOnType = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
-				<ClassDetailsText>
-					Payment due: {props.fee - props.amount}
-				</ClassDetailsText>
-				<ClassDetailsText>
-					Contract ends: {calcContractEnd(props)} days
-				</ClassDetailsText>
+				<CdText>
+					Payment due: {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
+				</CdText>
+				<CdText>
+					Contract ends: {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
+				</CdText>
 			</React.Fragment>)
 		}
 	}
@@ -209,14 +209,19 @@ const Package = (props) => {
 				<Wrapper>
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
-						<ClassDetailsText>
+						<CdText>
 							{getDateForSubscriptions(props)}
-						</ClassDetailsText>
+						</CdText>
 
-						{/*<ClassDetailsText>
-							<b>Covers:</b> {getCovers(props.selectedClassType)}
-						</ClassDetailsText>*/}
-						{/*getExplainationBasedOnType(props)*/}
+						<CdText>
+							<b>Covers:</b> {getCovers(props.covers)}
+						</CdText>
+						{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
+						{props.packageType === 'MP' && <CdText>
+							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
+						</CdText>}
+						{/* Depending upon the type of payment method */}
+						{getExplainationBasedOnType(props)}
 
 					</ClassDetailsSection>
 					<RightSection>
@@ -236,21 +241,21 @@ const Package = (props) => {
 					<Title>{props.packageName || props.name}</Title>
 
 					{props.classPackages || props.packageType == 'EP' ? (
-						<ClassDetailsText>
+						<CdText>
 							<b>Expiration:</b>{' '}
 							{props.expDuration && props.expPeriod && !props.noExpiration ? (
 								`${props.expDuration} ${props.expPeriod}`
 							) : (
 									'None'
 								)}
-						</ClassDetailsText>
+						</CdText>
 					) : (
-							<ClassDetailsText>{getPaymentType(props.pymtType) || 'NA'}</ClassDetailsText>
+							<CdText>{getPaymentType(props.pymtType) || 'NA'}</CdText>
 						)}
-					<ClassDetailsText>
-						<b>Covers:</b> {getCovers(props.selectedClassType)}
-					</ClassDetailsText>
-					{props.packageType == 'MP' && <ClassDetailsText>{maximumClasses(props)}</ClassDetailsText>}
+					<CdText>
+						<b>Covers:</b> {getCovers(props.covers)}
+					</CdText>
+					{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 				</ClassDetailsSection>
 				<RightSection>
 					{props.packageType !== 'EP' ? (
