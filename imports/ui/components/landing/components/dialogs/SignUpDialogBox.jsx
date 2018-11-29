@@ -220,7 +220,8 @@ class SignUpDialogBox extends Component {
       onLoginButtonClick,
       onSignUpButtonClick,
       onSignUpWithGoogleButtonClick,
-      onSignUpWithFacebookButtonClick
+      onSignUpWithFacebookButtonClick,
+      onSubmit
     } = this.props;
 
     const {
@@ -344,7 +345,7 @@ class SignUpDialogBox extends Component {
               <PrimaryButton
                 type="submit"
                 label="Sign Up"
-                onClick={onSignUpButtonClick}
+                onClick={onSubmit}
                 noMarginBottom
               />
             </DialogActions>
