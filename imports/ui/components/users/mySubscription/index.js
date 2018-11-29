@@ -72,9 +72,21 @@ class MySubscription extends React.Component {
 		});
 	};
 
+	handleManageMemberShipDialogBox = (modelState, schoolData) => (e) => {
+		e.stopPropagation();
+
+		this.setState(state => {
+			return {
+				...state,
+				manageMemberShipDialog: modelState,
+				selectedSchool: schoolData
+			}
+		});
+	}
+
 	render() {
 		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool } = this.state;
-		const { isLoading, schoolData, purchaseData } = this.props;
+		const { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
 		// console.groupEnd();
@@ -91,12 +103,14 @@ class MySubscription extends React.Component {
 					getOurEmail={this.getOurEmail}
 					email={email}
 					phone={phone}
+					currentUser={currentUser}
 					selectedSchool={selectedSchool}
 					schoolData={schoolData}
 					purchaseData={purchaseData}
 					callUsDialog={callUsDialog}
 					emailUsDialog={emailUsDialog}
 					manageMemberShipDialog={manageMemberShipDialog}
+					handleManageMemberShipDialogBox={this.handleManageMemberShipDialogBox}
 					handleModelState={this.handleModelState}
 					handleEmail={this.handleEmail}
 					handleCall={this.handleCall}
@@ -159,6 +173,7 @@ export default createContainer((props) => {
 	purchaseData = concat(purchaseData, classSubscriptionData);
 
 	return {
+		currentUser,
 		isLoading,
 		schoolData,
 		purchaseData

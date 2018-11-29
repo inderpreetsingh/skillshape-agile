@@ -1,21 +1,25 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { get } from 'lodash';
 import { withStyles, MuiThemeProvider } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+
+import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
 
-import PrimaryButton from "../buttons/PrimaryButton";
-import LogoImage from '/imports/ui/components/landing/components/helpers/LogoImage.jsx';
-
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { Text, SubHeading, Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 
 import Dialog, {
     DialogContent,
     DialogTitle,
+    DialogActions,
     withMobileDialog
 } from "material-ui/Dialog";
 
@@ -24,36 +28,41 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 const styles = theme => {
     return {
         dialogTitleRoot: {
-            padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
-                3}px 0 ${helpers.rhythmDiv * 3}px`,
-            marginBottom: `${helpers.rhythmDiv * 2}px`
+            padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+            marginBottom: `${helpers.rhythmDiv * 2}px`,
+            '@media screen and (max-width : 500px)': {
+                padding: `0 ${helpers.rhythmDiv * 3}px`
+            }
         },
         dialogContent: {
             padding: `0 ${helpers.rhythmDiv * 3}px`,
-            flexShrink: 0
+            flexShrink: 0,
+            '@media screen and (max-width : 500px)': {
+                minHeight: '150px'
+            }
+        },
+        dialogPaper: {
+            maxWidth: 600,
+            width: '100%',
+            margin: helpers.rhythmDiv
         },
         dialogActionsRoot: {
-            padding: "0 8px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            justifyContent: "flex-start"
+            padding: `0 ${helpers.rhythmDiv}px`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-start'
         },
         dialogActions: {
-            width: "100%",
+            width: '100%',
             paddingLeft: `${helpers.rhythmDiv * 2}px`
-        },
-        dialogRoot: {
-            minHeight: "400px",
-            maxWidth: "300px",
-            width: "100%",
-            [`@media screen and (max-width : ${helpers.mobile}px)`]: {
-                maxWidth: "100%"
-            }
         },
         iconButton: {
             height: "auto",
-            width: "auto"
+            width: "auto",
+            position: 'absolute',
+            right: helpers.rhythmDiv * 2,
+            top: helpers.rhythmDiv * 2
         },
         expansionPanelRoot: {
             border: 'none'
@@ -71,6 +80,7 @@ const styles = theme => {
         },
         expansionPanelSummaryContent: {
             margin: 0,
+            alignItems: 'center',
             justifyContent: 'space-between'
         }
     };
@@ -78,29 +88,6 @@ const styles = theme => {
 
 const ContentWrapper = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const DialogTitleWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  font-family: ${helpers.specialFont};
-  width: 100%;
-`;
-
-const Title = styled.h2`
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-  margin: ${helpers.rhythmDiv * 4}px 0;
-  color: ${helpers.primaryColor};
-  line-height: 1;
-  font-weight: 300;
-  font-style: italic;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize * 1.5}px;
 `;
 
 const WrapperContact = styled.li`
@@ -110,9 +97,9 @@ const WrapperContact = styled.li`
   border: 1px solid ${helpers.primaryColor};
 `;
 
-const ContactNumbersWrapper = styled.ul`d {
-    color: ${helpers.primaryColor};
-  }
+const Title = SubHeading.extend`
+    font-style: italic;
+    font-weight: 300;
 `;
 
 const ClassProfile = styled.div`
@@ -130,34 +117,43 @@ const ClassTimesListItem = styled.li`
   justify-content: space-between;
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+`;
+
 
 const ManageMemberShipDialogBox = props => {
     // console.log(props,"...");
+    const {
+        classes,
+        onModalClose,
+        schoolName,
+        studentName,
+        selectedSchool,
+        subscriptionsData,
+        open,
+    } = props;
     return (
         <Dialog
-            open={props.open}
-            onClose={props.onModalClose}
-            onRequestClose={props.onModalClose}
+            open={open}
+            onClose={onModalClose}
+            onRequestClose={onModalClose}
             aria-labelledby="contact us"
-            classes={{ paper: props.classes.dialogRoot }}
+            classes={{ paper: classes.dialogPaper }}
         >
             <MuiThemeProvider theme={muiTheme}>
-                <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
-                    <DialogTitleWrapper>
-                        <IconButton
-                            color="primary"
-                            onClick={props.onModalClose}
-                            classes={{ root: props.classes.iconButton }}
-                        >
-                            <ClearIcon />
-                        </IconButton>
-                    </DialogTitleWrapper>
+                <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
+                    <DialogBoxTitleBar
+                        title={"Manage Heading"}
+                        onModalClose={onModalClose}
+                        classes={classes}
+                    />
                 </DialogTitle>
 
-                <DialogContent classes={{ root: props.classes.dialogContent }}>
+                <DialogContent classes={{ root: classes.dialogContent }}>
+                    <Title>Edit Membership for {studentName} at {schoolName}</Title>
                     <ContentWrapper>
-                        <Title>Edit Membership for {props.studentName} at {props.schoolName}</Title>
-                        {props.classTypeData.map(classData =>
+                        {subscriptionsData.map(classData =>
                             <ExpansionPanel
                                 classes={{
                                     root: classes.expansionPanelRoot
@@ -171,17 +167,24 @@ const ManageMemberShipDialogBox = props => {
                                     expandIcon={<ExpandMoreIcon />}
                                 >
                                     <ClassProfile>
-                                        <LogoImage src={get(classTypeData, 'logoImgMedium', get(classTypeData, 'logoImg', ""))} />
-                                        <SubHeading> {classTypeData.name} </SubHeading>
+                                        <ProfileImage src={get(classData, 'logoImgMedium', get(classData, 'logoImg', ""))} />
+                                        <Title> {classData.name} </Title>
                                     </ClassProfile>
+
+                                    <ButtonWrapper>
+                                        <FormGhostButton
+                                            color="alert"
+                                            label="Remove All"
+                                        />
+                                    </ButtonWrapper>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
-                                    <ClassTimeList>
-                                        {classData.classTimesData.map(classTimeData => <ClassTimesListItem>
+                                    <ClassTimesList>
+                                        {classData.classTimes.map(classTimeData => <ClassTimesListItem>
                                             <Text>{classTimeData.name}</Text>,
                                         </ClassTimesListItem>)}
-                                    </ClassTimeList>
+                                    </ClassTimesList>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>)}
                     </ContentWrapper>

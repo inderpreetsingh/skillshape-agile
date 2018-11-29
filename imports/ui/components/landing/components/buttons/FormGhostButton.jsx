@@ -97,7 +97,7 @@ const FormGhostButton = (props) => {
 	}
 	// debugger;
 	/* prettier-ignore */
-	if (props.blackColor || (props.color == "black")) {
+	if (props.blackColor || (props.color == "black") || ) {
 		rootClass = rootClass + " " + props.classes.blackColor;
 	} else if (props.greyColor || (props.color == "grey")) {
 		rootClass = rootClass + " " + props.classes.greyColor;

@@ -25,18 +25,20 @@ const ImageContainer = styled.div`
   transition: background-image 1s linear;
 `;
 
-
-const LogoImage = withImageExists((props) => {
+export const ssImage = (props) => {
     return (
         <ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
             {(src) => <ImageContainer src={src} {...props.imageContainerProps} />}
         </ProgressiveImage>
     );
-}, imageExistsConfig);
+}
 
-LogoImage.defaultProps = {
+
+const ProfileImage = withImageExists(ssImage, imageExistsConfig);
+
+ProfileImage.defaultProps = {
     imageContainerProps: PropTypes.object,
     src: PropTypes.string,
 }
 
-export default LogoImage;
+export default ProfileImage;
