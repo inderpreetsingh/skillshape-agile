@@ -126,6 +126,7 @@ const ClassDetails = props => {
             instructorsData={instructorsData}
             popUp={popUp}
             instructorsIds={instructorsIds}
+            params={dataProps.params}
           />
         </InnerWrapper>
       </PageContent>
