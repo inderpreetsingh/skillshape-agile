@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import get from 'lodash/get';
-
+import ReactHtmlParser from 'react-html-parser';
 import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
 import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
 import {
@@ -182,7 +182,7 @@ const Package = (props) => {
 		} else {
 			if(props.packageType == 'CP'){
 				props.combinedData.map((obj,index)=>{
-					stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} `;
+					stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
 				})
 				return stringToPrint;
 			}
@@ -218,7 +218,7 @@ const Package = (props) => {
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
 						<CdText>
-							{getDateForSubscriptions(props)}
+							{ReactHtmlParser(getDateForSubscriptions(props))}
 						</CdText>
 
 						<CdText>
