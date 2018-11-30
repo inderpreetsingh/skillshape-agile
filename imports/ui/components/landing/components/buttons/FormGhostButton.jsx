@@ -6,6 +6,17 @@ import React from 'react';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
+const createButtonStyles = (mainColor, textColor) => {
+	return {
+		color: mainColor,
+		borderColor: mainColor,
+		'&:hover': {
+			backgroundColor: mainColor,
+			color: textColor
+		}
+	}
+}
+
 const styles = {
 	formGhostButton: {
 		fontFamily: helpers.specialFont,
@@ -26,46 +37,12 @@ const styles = {
 	fullWidth: {
 		width: '100%'
 	},
-	whiteColor: {
-		color: 'white',
-		borderColor: 'white',
-		'&:hover': {
-			backgroundColor: 'white',
-			color: 'black'
-		}
-	},
-	redColor: {
-		color: helpers.alertColor,
-		borderColor: helpers.alertColor,
-		'&:hover': {
-			backgroundColor: helpers.alertColor,
-			color: 'white'
-		}
-	},
-	blackColor: {
-		color: helpers.black,
-		borderColor: helpers.black,
-		'&:hover': {
-			backgroundColor: helpers.black,
-			color: 'white'
-		}
-	},
-	greyColor: {
-		color: helpers.cancel,
-		borderColor: helpers.cancel,
-		'&:hover': {
-			backgroundColor: helpers.cancel,
-			color: 'white'
-		}
-	},
-	darkGreyColor: {
-		color: helpers.darkBgColor,
-		borderColor: helpers.darkBgColor,
-		'&:hover': {
-			backgroundColor: helpers.darkBgColor,
-			color: 'white'
-		}
-	},
+	whiteColor: createButtonStyles('white', helpers.black),
+	redColor: createButtonStyles(helpers.alertColor, 'white'),
+	blackColor: createButtonStyles(helpers.black, 'white'),
+	greyColor: createButtonStyles(helpers.cancel, 'white'),
+	darkGreyColor: createButtonStyles(helpers.darkBgColor, 'white'),
+	cautionColor: createButtonStyles(helpers.caution, 'black'),
 	icon: {
 		display: 'inline-block',
 		marginRight: '5px',
@@ -107,7 +84,10 @@ const FormGhostButton = (props) => {
 		rootClass = rootClass + " " + props.classes.redColor;
 	} else if (props.whiteColor || (props.color == 'white')) {
 		rootClass = rootClass + " " + props.classes.whiteColor;
+	} else if (props.cautionColor || props.color == 'caution') {
+		rootClass = rootClass + " " + props.classes.cautionColor;
 	}
+	
 	return (
 		<Button
 			type={props.type}

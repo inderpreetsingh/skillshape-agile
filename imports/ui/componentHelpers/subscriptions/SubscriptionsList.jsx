@@ -45,7 +45,7 @@ const SubscriptionsTitle = Text.withComponent('h3').extend`
 const AllSubscriptions = styled.div`
 	max-width: 500px;
 	max-height: ${props => props.maxListHeight}px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	width: 100%;
 	margin: 0 auto;
 

@@ -24,7 +24,7 @@ const styles = {
     display: 'flex',
     fontFamily: `${helpers.specialFont}`
   },
-  dialogContent :  {
+  dialogContent: {
     '@media screen and (max-width : 500px)': {
       minHeight: '150px',
     }
@@ -83,45 +83,45 @@ const DialogTitleWrapper = styled.h1`
 
 class MemberDialogBox extends Component {
 
-    render() {
+  render() {
 
-        const {
-            classes,
-            open,
-            fullScreen,
-            onModalClose,
-            filterPanelProps,
-            renderStudentAddModal,
-            adminView
-        } = this.props;
+    const {
+      classes,
+      open,
+      fullScreen,
+      onModalClose,
+      filterPanelProps,
+      renderStudentAddModal,
+      adminView
+    } = this.props;
 
-        return(
-            <Dialog
-              fullScreen={fullScreen}
-              open={open}
-              onClose={onModalClose}
-              onRequestClose={onModalClose}
-              aria-labelledby="sign-up"
-              classes={{paper: classes.dialogPaper}}
-            >
-                <MuiThemeProvider theme={muiTheme}>
-                  <DialogTitleContainer>
-                    <DialogTitleWrapper>
-                     {!adminView ?"Add New Member" :"Add New Admin"} 
-                    </DialogTitleWrapper>
-                    <IconButton color="primary" onClick={onModalClose} classes={{root: classes.iconButton}}>
-                        <ClearIcon/>
-                    </IconButton >
-                  </DialogTitleContainer>
+    return (
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={onModalClose}
+        onRequestClose={onModalClose}
+        aria-labelledby="sign-up"
+        classes={{ paper: classes.dialogPaper }}
+      >
+        <MuiThemeProvider theme={muiTheme}>
+          <DialogTitleContainer>
+            <DialogTitleWrapper>
+              {!adminView ? "Add New Member" : "Add New Admin"}
+            </DialogTitleWrapper>
+            <IconButton color="primary" onClick={onModalClose} classes={{ root: classes.iconButton }}>
+              <ClearIcon />
+            </IconButton >
+          </DialogTitleContainer>
 
-                  <DialogActions classes={{root : classes.dialogActionsRoot, action: classes.dialogAction}}>
-                    <AddSchoolMember addNewMember={this.props.addNewMember} renderStudentModal={open} renderStudentAddModal={renderStudentAddModal}/>
-                  </DialogActions>
+          <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogAction }}>
+            <AddSchoolMember addNewMember={this.props.addNewMember} renderStudentModal={open} renderStudentAddModal={renderStudentAddModal} />
+          </DialogActions>
 
-                </MuiThemeProvider>
-            </Dialog>
-        )
-    }
+        </MuiThemeProvider>
+      </Dialog>
+    )
+  }
 }
 
 MemberDialogBox.propTypes = {
