@@ -7,19 +7,29 @@ import Input from 'material-ui/Input';
 import isEmpty from 'lodash/isEmpty';
 import { withStyles } from 'material-ui/styles';
 import styled from 'styled-components';
-import { verifyImageURL } from '/imports/util';
+import { verifyImageURL, getUserFullName } from '/imports/util';
 import FileUpload from 'material-ui-icons/FileUpload';
 import MobileDetect from 'mobile-detect';
 import ProgressiveImage from 'react-progressive-image';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
-import CallMemberDialogBox from '/imports/ui/components/landing/components/dialogs/CallMemberDialogBox.js';
-import EmailMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EmailMemberDialogBox.jsx';
-import EditMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EditMemberDialogBox.js';
+
+import {
+	CallMemberDialogBox,
+	EmailMemberDialogBox,
+	EditMemberDialogBox,
+	ManageMemberShipDialogBox,
+} from '/imports/ui/components/landing/components/dialogs/';
+import {
+	FormGhostButton,
+	MemberActionButton
+} from '/imports/ui/components/landing/components/buttons/';
+
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import SubscriptionBox from '/imports/ui/componentHelpers/boxes/subscriptionBox.js';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+
+import { subscriptionsData } from '/imports/ui/components/landing/constants/mySubscriptions/subscriptionsData.js';
 
 const styles = (theme) => ({
 	avatarCss: {
@@ -38,7 +48,6 @@ const styles = (theme) => ({
 	}
 });
 
-import MemberActionButton from '/imports/ui/components/landing/components/buttons/MemberActionButton.jsx';
 
 const ActionButtonsWrapper = styled.div`
 	left: ${helpers.rhythmDiv * 2}px;
@@ -124,7 +133,18 @@ const ActionButtons = (props) => (
 		</ActionButton>
 
 		<ActionButton>
-			<MemberActionButton noMarginBottom label="Edit" icon iconName="edit" onClick={props.openEditMemberModal} />
+			{/*<MemberActionButton
+				noMarginBottom
+				label="Edit"
+				icon
+				iconName="edit"
+			onClick={props.openEditMemberModal} /> */}
+			<MemberActionButton
+				noMarginBottom
+				label="Edit"
+				icon
+				iconName="edit"
+				onClick={props.onEditMemberClick} />
 		</ActionButton>
 		{props.adminView &&
 			!props.superAdmin && (
@@ -214,6 +234,7 @@ class SchoolMemberInfo extends Component {
 	};
 
 	handleDialogState = (dialogName, state) => {
+		//debugger;
 		this.setState({
 			[dialogName]: state
 		});
@@ -221,7 +242,6 @@ class SchoolMemberInfo extends Component {
 	getContactNumber = () => {
 		return this.props.memberInfo && this.props.memberInfo.phone;
 	};
-	componentWillReceiveProps() { }
 	componentWillMount = () => {
 		const { memberInfo } = this.props;
 
@@ -259,7 +279,7 @@ class SchoolMemberInfo extends Component {
 		});
 	};
 	render() {
-		const { memberInfo, view, classes, adminView } = this.props;
+		const { memberInfo, view, classes, adminView, currentUser } = this.props;
 		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation } = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
@@ -273,6 +293,14 @@ class SchoolMemberInfo extends Component {
 						message="You will remove this admin, Are you sure?"
 						onSubmit={this.handleRemove}
 						onClose={() => this.setState({ showConfirmation: false })}
+					/>
+				)}
+				{this.state.manageMemberShipDialog && (
+					<ManageMemberShipDialogBox
+						subscriptionsData={subscriptionsData}
+						studentName={getUserFullName(memberInfo)}
+						open={this.state.manageMemberShipDialog}
+						onModalClose={() => this.handleDialogState('manageMemberShipDialog', false)}
 					/>
 				)}
 				{this.state.callMemberDialog && (
@@ -355,12 +383,12 @@ class SchoolMemberInfo extends Component {
 							)}
 							<ActionButtonsWrapper>
 								<ActionButton onClick={() => { }}>
-									<FormGhostButton icon iconName="remove_from_queue" label="Edit" />
+									<FormGhostButton icon iconName="remove_from_queue" label="Edit" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
 								</ActionButton>
 							</ActionButtonsWrapper>
 						</Grid>
 					</Grid>
-				
+
 					<Grid item sm={3} xs={12} md={3} style={{ padding: '28px' }}>
 						<div className="notes">{view === 'admin' ? 'Admin Notes' : 'My Private Notes'}</div>
 						<Input
@@ -381,6 +409,7 @@ class SchoolMemberInfo extends Component {
 								memberInfo={this.props.memberInfo}
 								handleCall={this.handleCall}
 								handleEmail={this.handleEmail}
+								onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
 								openEditMemberModal={(event) => {
 									this.setState({ openEditMemberModal: true });
 								}}
