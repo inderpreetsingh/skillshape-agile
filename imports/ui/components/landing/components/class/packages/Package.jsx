@@ -180,19 +180,27 @@ const Package = (props) => {
 		} else if (props.payAsYouGo) {
 			stringToPrint += `Contract active : `;
 		} else {
-			stringToPrint += 'Expiration Date : ';
+			if(props.packageType == 'CP'){
+				props.combinedData.map((obj,index)=>{
+					stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} `;
+				})
+				return stringToPrint;
+			}
+			else{
+				stringToPrint += 'Expiration Date : ';
+			}
 		}
-		return stringToPrint + formatDate(props.endDate);
+		return stringToPrint + (props.packageType == 'EP' && props.expiry =='none' ? 'None' : formatDate(props.endDate));
 	};
 
 	const getExplainationBasedOnType = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
 				<CdText>
-					Payment due: {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
+					Payment due: {calcRenewalDate(props.endDate, props.packageType === 'MP', 2)}
 				</CdText>
 				<CdText>
-					Contract ends: {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
+					Contract ends: {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
 				</CdText>
 			</React.Fragment>)
 		}
