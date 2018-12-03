@@ -57,7 +57,11 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
               planId: classSubscriptionData.subscriptionRequest.items[0].plan,
               packageStatus: 'active',
               emailId:classSubscriptionData.emailId,
-              packageType:'MP'
+              packageType:'MP',
+              autoWithdraw:true,
+              fee:classSubscriptionData.fee,
+              currency:classSubscriptionData.currency,
+              contractLength:classSubscriptionData.contractLength
             }
            packageName = payload.packageName;
            userId = payload.userId;

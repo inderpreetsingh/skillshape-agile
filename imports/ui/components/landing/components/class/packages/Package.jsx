@@ -178,16 +178,25 @@ const Package = (props) => {
 		if(get(props,'payUpFront',false)){
 			return ;
 		}
+		if(get(props,'autoWithdraw',false)){
+			let fee = get(props,'fee',0);
+			let currency = get(props,'currency','$')
+			return stringToPrint+=`<b>Automatic Payment</b> of ${formatMoney( fee.toFixed(2), props.currency )} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
+		}
 		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
 			return (stringToPrint += `Renewal Date : ` + calcRenewalDate(props.endDate, props.packageType === 'MP', 1));
 		} else if (props.payAsYouGo) {
 			stringToPrint += `Contract active : `;
 		} else {
 			if(props.packageType == 'CP'){
+				// props.combinedData.map((obj,index)=>{
+				// 	stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
+				// })
+				let noClasses = 0;
 				props.combinedData.map((obj,index)=>{
-					stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
+					noClasses += get(obj,"noClasses",0); 
 				})
-				return stringToPrint;
+				return stringToPrint+= `${noClasses} ${noClasses <=1 ? 'Class' : 'Classes'} Remaining`;
 			}
 			else{
 				stringToPrint += 'Expiration Date : ';
@@ -200,15 +209,39 @@ const Package = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
 				<CdText>
-					Payment due: {calcRenewalDate(props.endDate, props.packageType === 'MP', 2)}
+				
+				<b>Payment due:</b>  {calcRenewalDate(props.endDate, props.packageType === 'MP', 2)}
 				</CdText>
 				<CdText>
-					Contract ends: {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
+				<b>Contract ends:</b>  {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
+				</CdText>
+			</React.Fragment>)
+		}
+		if(props.autoWithdraw){
+			return(<React.Fragment>
+				<CdText>
+					<b>Contract ends:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
 				</CdText>
 			</React.Fragment>)
 		}
 	}
-
+	getPaymentTypeName = (props)=>{
+		if(props.autoWithdraw){
+			return `  (AutoWithdraw Payment)`;
+		}
+		else if(props.payAsYouGo){
+			return ` (Pay As You Go)`;
+		}
+		else if(props.payUpFront){
+			 return ` (Pay Up Front)`;
+		}
+		else if(props.packageType=='CP'){
+			return ` (Per Class Package)`;
+		}
+		else{
+			return ` (Enrollment Package)`;
+		}
+	}
 	if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
 		return (
 			<OuterWrapper
@@ -219,7 +252,7 @@ const Package = (props) => {
 			>
 				<Wrapper>
 					<ClassDetailsSection>
-						<Title>{props.packageName || props.name}</Title>
+						<Title>{props.packageName || props.name} {getPaymentTypeName(props)}</Title>
 						<CdText>
 							{ReactHtmlParser(getDateForSubscriptions(props))}
 						</CdText>
@@ -228,7 +261,7 @@ const Package = (props) => {
 							<b>Covers:</b> {getCovers(props.covers)}
 						</CdText>
 						{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
-						{props.packageType === 'MP' && <CdText>
+						{props.packageType === 'MP' && !props.autoWithdraw && <CdText>
 							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
 						</CdText>}
 						{/* Depending upon the type of payment method */}

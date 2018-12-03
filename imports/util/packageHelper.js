@@ -2,9 +2,10 @@ import {get,uniq,filter} from 'lodash';
 perClassPackageMaker = purchaseData =>{
     let latest = [],newObj = {},pId,uId;
     purchaseData.map((obj,index)=>{
-        if(get(obj,'packageType','MP') == 'CP'){
+        if(get(obj,'packageType','MP') == 'CP' || get(obj,'payAsYouGo',false)){
             pId = obj.packageId;
             uId = obj.userId;
+            newObj = {}
             purchaseData.map((obj1,index)=>{
                 if(pId == obj1.packageId && uId == obj1.userId){
                     newObj = {
@@ -19,7 +20,7 @@ perClassPackageMaker = purchaseData =>{
             obj.combinedData = uniq(latest);    
         }
     })
-    return filter(purchaseData,(o)=>{ return get(o,'packageType','MP') == 'CP' && o.packageStatus=='active' || get(o,'packageType','MP') == 'MP' || get(o,'packageType','MP') == 'EP'});
+    return filter(purchaseData,(o)=>{ return get(o,'packageStatus','inActive')=='active'});
 }
 export const  packageCoverProvider = purchaseData => {
     let packageType,packageId,covers=[],methodName;
