@@ -65,6 +65,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         }
       })
       payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
+      payUpFront = get(MonthlyData,'pymtType.payUpFront',false);
       expPeriod = 'Months';
       if(contract == 'useOldContract'){
         Meteor.call('purchases.isAlreadyPurchased', { userId : this.userId, planId, packageId, packageType,pymtType:get(MonthlyData,'pymtType',{}) },async (err,res)=>{
@@ -134,6 +135,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         amount:amount/100,
         contractLength,
         payAsYouGo,
+        payUpFront,
         currency : currencySymbol
       };
       recordId = Meteor.call("purchases.addPurchase", payload);

@@ -175,6 +175,9 @@ const Package = (props) => {
 	const ourPackageStatus = props.packageStatus || props.status;
 	const getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
+		if(get(props,'payUpFront',false)){
+			return ;
+		}
 		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
 			return (stringToPrint += `Renewal Date : ` + calcRenewalDate(props.endDate, props.packageType === 'MP', 1));
 		} else if (props.payAsYouGo) {
