@@ -141,7 +141,7 @@ const ActionButtons = (props) => (
 			onClick={props.openEditMemberModal} /> */}
 			<MemberActionButton
 				noMarginBottom
-				label="Edit"
+				label="Edit Membership"
 				icon
 				iconName="edit"
 				onClick={props.onEditMemberClick} />
@@ -235,6 +235,12 @@ class SchoolMemberInfo extends Component {
 
 	handleDialogState = (dialogName, state) => {
 		//debugger;
+		if(dialogName == 'manageMemberShipDialog'){
+			let {schoolId,activeUserId} = this.props.memberInfo;
+			Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
+			console.log("​handleDialogState -> res", res)
+			})	
+		}
 		this.setState({
 			[dialogName]: state
 		});
@@ -433,9 +439,7 @@ class SchoolMemberInfo extends Component {
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
 					)}
-				{console.log(subscriptionList, '=========')
-					/*<SubscriptionBox subscriptionList={subscriptionList} />*/
-				}
+				
 			</Grid>
 		);
 	}

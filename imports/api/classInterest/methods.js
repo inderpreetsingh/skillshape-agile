@@ -6,6 +6,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { check } from 'meteor/check';
+import {isEmpty} from 'lodash';
 
 Meteor.methods({
   "classInterest.addClassInterest": function({ doc }) {
@@ -86,5 +87,28 @@ Meteor.methods({
       { classTimeId: classTimeId, userId: this.userId },
       { $push: { deletedEvents: clickedDate } }
     );
+  },
+  "classInterest.findClassTypes":function(schoolId,userId){
+   let classData = [],current,indexLoc = -1;
+   let records = ClassInterest.find({schoolId,userId}).fetch();
+    if(!isEmpty(records)){
+      records.map((obj,index)=>{
+       classData.map((obj1,index1)=>{
+         if(obj1._id == obj.classTypeId){
+           indexLoc = index1
+         }
+       })
+       if(indexLoc != -1){
+        classData[indexLoc].classTimes.push(ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}}));
+       }
+       else{
+        current = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1}});
+        current.classTimes = [];
+        current.classTimes.push(ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}}));
+        classData.push(current);                   
+      }
+      })
+    }
+    return classData;
   }
 });
