@@ -155,7 +155,12 @@ const ClassName = Text.extend`
 
 
 const ManageMemberShipDialogBox = props => {
-    // console.log(props,"...");
+    labelMaker = (notification)=>{
+        if(get(notification,'status',false)){
+            return 'Stop Notification';
+        }
+        return 'Resume Notification';
+    }
     const {
         classes,
         onModalClose,
@@ -164,6 +169,7 @@ const ManageMemberShipDialogBox = props => {
         selectedSchool,
         subscriptionsData,
         open,
+        stopNotification,
     } = props;
     return (
         <Dialog
@@ -211,6 +217,13 @@ const ManageMemberShipDialogBox = props => {
                                                         label="Remove all"
                                                     />
                                                 </ButtonWrapper>
+                                                <ButtonWrapper>
+                                                    <FormGhostButton
+                                                        color="caution"
+                                                        label={labelMaker(classData.notification)}
+                                                        onClick={()=>{stopNotification(classData.notification)}}
+                                                    />
+                                                </ButtonWrapper>
                                             </ToggleVisibility>
                                         </ClassNameWrapper>
 
@@ -223,6 +236,13 @@ const ManageMemberShipDialogBox = props => {
                                                 label="Remove all"
                                             />
                                         </ButtonWrapper>
+                                        <ButtonWrapper>
+                                                    <FormGhostButton
+                                                        color="caution"
+                                                        label={labelMaker(classData.notification)}
+                                                        onClick={()=>{stopNotification(classData.notification)}}
+                                                    />
+                                                </ButtonWrapper>
                                     </ToggleVisibility>
                                 </ExpansionPanelSummary>
 
@@ -236,12 +256,7 @@ const ManageMemberShipDialogBox = props => {
                                                         color="alert"
                                                         label="Remove from calendar" />
                                                 </ButtonWrapper>
-                                                <ButtonWrapper>
-                                                    <FormGhostButton
-                                                        color="caution"
-                                                        label="Stop notifications"
-                                                    />
-                                                </ButtonWrapper>
+                                             
                                             </ActionButtons>
                                         </ClassTimesListItem>)}
                                     </ClassTimesList>
@@ -253,13 +268,10 @@ const ManageMemberShipDialogBox = props => {
                 <DialogActions
                     classes={{ root: classes.dialogActionsRoot, action: classes.dialogAction }}>
                     <ButtonWrapper>
+                        <FormGhostButton color="primary" label="Close" onClick = {onModalClose}/>
+                    </ButtonWrapper>
+                    <ButtonWrapper>
                         <FormGhostButton color="alert" label="Leave school" />
-                    </ButtonWrapper>
-                    <ButtonWrapper>
-                        <FormGhostButton color="caution" label="Remove all notifications" />
-                    </ButtonWrapper>
-                    <ButtonWrapper>
-                        <FormGhostButton color="primary" label="Save changes" />
                     </ButtonWrapper>
                 </DialogActions>
             </MuiThemeProvider>

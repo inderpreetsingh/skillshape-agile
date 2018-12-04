@@ -7,7 +7,8 @@ import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { check } from 'meteor/check';
 import {isEmpty} from 'lodash';
-
+import ClassTimesRequest from '/imports/api/classTimesRequest/fields.js';
+import ClassTypeLocationRequest from '/imports/api/classTypeLocationRequest/fields.js';
 Meteor.methods({
   "classInterest.addClassInterest": function({ doc }) {
     check(doc,Object);
@@ -89,7 +90,7 @@ Meteor.methods({
     );
   },
   "classInterest.findClassTypes":function(schoolId,userId){
-   let classData = [],current,indexLoc = -1;
+   let classData = [],current,indexLoc = -1,classTimeRecord;
    let records = ClassInterest.find({schoolId,userId}).fetch();
     if(!isEmpty(records)){
       records.map((obj,index)=>{
@@ -99,12 +100,16 @@ Meteor.methods({
          }
        })
        if(indexLoc != -1){
-        classData[indexLoc].classTimes.push(ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}}));
+        classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+        classData[indexLoc].classTimes.push(classTimeRecord);
+        classData[indexLoc].notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1}});
        }
        else{
         current = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1}});
         current.classTimes = [];
-        current.classTimes.push(ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}}));
+        classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+        current.classTimes.push(classTimeRecord);
+        current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1}});
         classData.push(current);                   
       }
       })

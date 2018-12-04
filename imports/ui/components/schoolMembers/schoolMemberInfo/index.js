@@ -13,6 +13,7 @@ import MobileDetect from 'mobile-detect';
 import ProgressiveImage from 'react-progressive-image';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
+import { withPopUp } from "/imports/util";
 
 import {
 	CallMemberDialogBox,
@@ -178,12 +179,7 @@ class SchoolMemberInfo extends Component {
 			//     ""
 			//   );
 		}
-			let {schoolId,activeUserId} = this.props.memberInfo;
-			Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
-				if(res)
-				this.setState({subscriptionsData:res})
-			})	
-	
+				
 		return state;
 	};
 
@@ -240,7 +236,15 @@ class SchoolMemberInfo extends Component {
 
 	handleDialogState = (dialogName, state) => {
 		//debugger;
-		
+		if(dialogName=='manageMemberShipDialog'){
+			let {schoolId,activeUserId} = this.props.memberInfo;
+				Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
+					if(res)
+					this.setState({subscriptionsData:res})
+					else
+					this.setState({subscriptionsData:[]})
+				})
+		}
 		this.setState({
 			[dialogName]: state
 		});
@@ -250,7 +254,6 @@ class SchoolMemberInfo extends Component {
 	};
 	componentWillMount = () => {
 		const { memberInfo } = this.props;
-
 		verifyImageURL(memberInfo.pic, (res) => {
 			if (res) {
 				this.setState({ bgImg: memberInfo.pic });
@@ -284,11 +287,28 @@ class SchoolMemberInfo extends Component {
 			}
 		});
 	};
+	removeAll = ()=>{
+
+	}
+	stopNotification = (_id,status)=>{
+
+	}
+	leaveSchool = ()=>{
+
+	}
+	removeFromCalendar = ()=>{
+
+	}
+	closeManageMemberShipDialogBox = ()=>{
+
+	}
 	render() {
 		const { memberInfo, view, classes, adminView, currentUser } = this.props;
 		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation,subscriptionsData } = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
+		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
+		let studentName = get(memberInfo,'firstName',get(memberInfo,'name','Old Data'))
 		return (
 			<Grid container>
 				{showConfirmation && (
@@ -303,10 +323,15 @@ class SchoolMemberInfo extends Component {
 				)}
 				{this.state.manageMemberShipDialog && (
 					<ManageMemberShipDialogBox
-						subscriptionsData={subscriptionsData}
-						studentName={getUserFullName(memberInfo)}
+						subscriptionsData={subscriptionsData || []}
+						studentName={studentName}
 						open={this.state.manageMemberShipDialog}
 						onModalClose={() => this.handleDialogState('manageMemberShipDialog', false)}
+						removeAll = {this.removeAll}
+						stopNotification = {this.stopNotification}
+						leaveSchool = {this.leaveSchool}
+						removeFromCalendar = {this.props.removeFromCalendar}
+						schoolName = {schoolName}
 					/>
 				)}
 				{this.state.callMemberDialog && (
@@ -444,5 +469,4 @@ class SchoolMemberInfo extends Component {
 		);
 	}
 }
-
-export default withStyles(styles, { withTheme: true })(SchoolMemberInfo);
+export default withStyles(styles, { withTheme: true })(withPopUp(SchoolMemberInfo));
