@@ -175,13 +175,19 @@ const Package = (props) => {
 	const ourPackageStatus = props.packageStatus || props.status;
 	const getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
+		let fee = get(props,'fee',0).toFixed(2);
+		let currency = get(props,'currency','$')
 		if(get(props,'payUpFront',false)){
-			return ;
+			stringToPrint += `<b>Paid until:</b> `;
+			let contractLength = props.combinedData.length > 1 ? props.contractLength * props.combinedData.length-1 : 0
+			return stringToPrint += calcRenewalDate(props.endDate, props.packageType === 'MP',contractLength);
+		}
+		if(get(props,'payAsYouGo',false)){
+			return `Payment of ${formatMoney( fee, currency )} due ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length-1)}`
 		}
 		if(get(props,'autoWithdraw',false)){
-			let fee = get(props,'fee',0);
-			let currency = get(props,'currency','$')
-			return stringToPrint+=`<b>Automatic Payment</b> of ${formatMoney( fee.toFixed(2), props.currency )} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
+			
+			return stringToPrint+=`<b>Automatic Payment</b> of ${formatMoney( fee, currency )} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
 		}
 		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
 			return (stringToPrint += `Renewal Date : ` + calcRenewalDate(props.endDate, props.packageType === 'MP', 1));
@@ -208,10 +214,6 @@ const Package = (props) => {
 	const getExplainationBasedOnType = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
-				<CdText>
-				
-				<b>Payment due:</b>  {calcRenewalDate(props.endDate, props.packageType === 'MP', 2)}
-				</CdText>
 				<CdText>
 				<b>Contract ends:</b>  {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
 				</CdText>
@@ -261,9 +263,9 @@ const Package = (props) => {
 							<b>Covers:</b> {getCovers(props.covers)}
 						</CdText>
 						{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
-						{props.packageType === 'MP' && !props.autoWithdraw && <CdText>
+						{/* {props.packageType === 'MP' && !props.autoWithdraw && !props.payAsYouGo && <CdText>
 							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
-						</CdText>}
+						</CdText>} */}
 						{/* Depending upon the type of payment method */}
 						{getExplainationBasedOnType(props)}
 

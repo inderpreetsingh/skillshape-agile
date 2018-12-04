@@ -290,10 +290,10 @@ export const userRegistrationAndVerifyEmail = function(
     from: fromEmail,
     to: toEmail,
     replyTo: fromEmail,
-    subject: "skillshape Registration",
+    subject: "SkillShape Registration",
     html: `Hi ${user.profile.firstName || user.profile.name},
             <br/><br/>
-                Your Email: ${user.emails[0].address} has been registered ${schoolName && `with ${schoolName}`}.
+                Your Email: ${user.emails[0].address} has been registered ${schoolName ? `with ${schoolName}` : ''}.
             <br/>
                 Please click on the button below to verify your email address and set your password.
             <br/><br/>

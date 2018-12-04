@@ -29,8 +29,6 @@ import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import SubscriptionBox from '/imports/ui/componentHelpers/boxes/subscriptionBox.js';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
 
-import { subscriptionsData } from '/imports/ui/components/landing/constants/mySubscriptions/subscriptionsData.js';
-
 const styles = (theme) => ({
 	avatarCss: {
 		minWidth: '100%',
@@ -172,6 +170,7 @@ class SchoolMemberInfo extends Component {
 		state.showConfirmation = false;
 		if (view === 'admin') {
 			state.notes = get(memberInfo, 'adminNotes', '');
+			state.subscriptionsData = [];
 			// } else {
 			//   state.notes = get(
 			//     memberInfo,
@@ -179,6 +178,12 @@ class SchoolMemberInfo extends Component {
 			//     ""
 			//   );
 		}
+			let {schoolId,activeUserId} = this.props.memberInfo;
+			Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
+				if(res)
+				this.setState({subscriptionsData:res})
+			})	
+	
 		return state;
 	};
 
@@ -235,12 +240,7 @@ class SchoolMemberInfo extends Component {
 
 	handleDialogState = (dialogName, state) => {
 		//debugger;
-		if(dialogName == 'manageMemberShipDialog'){
-			let {schoolId,activeUserId} = this.props.memberInfo;
-			Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
-			console.log("​handleDialogState -> res", res)
-			})	
-		}
+		
 		this.setState({
 			[dialogName]: state
 		});
@@ -286,7 +286,7 @@ class SchoolMemberInfo extends Component {
 	};
 	render() {
 		const { memberInfo, view, classes, adminView, currentUser } = this.props;
-		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation } = this.state;
+		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation,subscriptionsData } = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
 		return (

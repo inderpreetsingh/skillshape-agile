@@ -2,7 +2,7 @@ import {get,uniq,filter} from 'lodash';
 perClassPackageMaker = purchaseData =>{
     let latest = [],newObj = {},pId,uId;
     purchaseData.map((obj,index)=>{
-        if(get(obj,'packageType','MP') == 'CP' || get(obj,'payAsYouGo',false)){
+        if(get(obj,'packageType','MP') == 'CP' || get(obj,'payAsYouGo',false) || get(obj,'payUpFront',false)){
             pId = obj.packageId;
             uId = obj.userId;
             newObj = {}
