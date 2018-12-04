@@ -179,7 +179,8 @@ const Package = (props) => {
 		let currency = get(props,'currency','$')
 		if(get(props,'payUpFront',false)){
 			stringToPrint += `<b>Paid until:</b> `;
-			let contractLength = props.combinedData.length > 1 ? props.contractLength * props.combinedData.length-1 : 0
+			let contractLength = get(props,'contractLength',0);
+			contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length-1 : 0
 			return stringToPrint += calcRenewalDate(props.endDate, props.packageType === 'MP',contractLength);
 		}
 		if(get(props,'payAsYouGo',false)){
