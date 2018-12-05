@@ -3,8 +3,17 @@ import styled from 'styled-components';
 import { Heading } from '/imports/ui/components/landing/components/jss/helpers.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+
+
 export const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
+  ${props => {
+    switch (props.variant) {
+      case 'text-left-aligned': return `justify-content: space-between`;
+        break;
+      default: '';
+    }
+  }}
   padding: 0 ${helpers.rhythmDiv}px;
 `;
 

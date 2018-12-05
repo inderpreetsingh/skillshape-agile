@@ -84,22 +84,26 @@ const SubscriptionsDetailsDialogBox = () => {
         selectedSchool,
         subscriptionsData,
         open,
+        fullScreen,
     } = props;
+    debugger;
     return (
         <Dialog
+            fullScreen={fullScreen}
             open={open}
             onClose={onModalClose}
             onRequestClose={onModalClose}
-            aria-labelledby="contact us"
+            aria-labelledby="Subscriptions Details"
             classes={{ paper: classes.dialogPaper }}
         >
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
-                    <DialogBoxTitleBar
-                        title={"Manage Membership"}
+                    {/*<DialogBoxTitleBar
+                        variant="text-left-aligned"
+                        title={"Subscriptions Details"}
                         onModalClose={onModalClose}
                         classes={classes}
-                    />
+                    />*/}
                 </DialogTitle>
 
                 <DialogContent classes={{ root: classes.dialogContent }}>
@@ -122,11 +126,8 @@ const SubscriptionsDetailsDialogBox = () => {
 };
 
 SubscriptionsDetailsDialogBox.propTypes = {
-    onFormSubmit: PropTypes.func,
-    onHandleInputChange: PropTypes.func,
-    contactNumbers: PropTypes.arrayOf(PropTypes.strings),
     onModalClose: PropTypes.func,
     loading: PropTypes.bool
 };
 
-export default withMobileDialog()(withStyles(styles)(SubscriptionsDetailsDialogBox));
+export default SubscriptionsDetailsDialogBox;

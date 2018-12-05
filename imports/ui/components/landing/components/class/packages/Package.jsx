@@ -247,6 +247,7 @@ class Package extends React.Component {
 	handleModelState = (modelName, modelState) => {
 		this.setState(state => {
 			return {
+				...state,
 				[modelName]: modelState
 			}
 		})
@@ -258,11 +259,12 @@ class Package extends React.Component {
 		const ourPackageStatus = props.packageStatus || props.status;
 
 		if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
+
 			return (<Fragment>
 				{subscriptionsDetailsDialog &&
 					<SubscriptionsDetailsDialogBox
 						open={subscriptionsDetailsDialog}
-						onModalClose={() => this.handleModelState('subsscriptionsDetailsDialog')}
+						onModalClose={() => this.handleModelState('subscriptionsDetailsDialog', false)}
 					/>}
 				<OuterWrapper
 					opacity={props.opacity}
