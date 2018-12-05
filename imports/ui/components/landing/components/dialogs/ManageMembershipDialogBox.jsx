@@ -15,7 +15,6 @@ import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
-
 import Dialog, {
     DialogContent,
     DialogTitle,
@@ -156,7 +155,7 @@ const ClassName = Text.extend`
 
 const ManageMemberShipDialogBox = props => {
     labelMaker = (notification)=>{
-        if(get(notification,'status',false)){
+        if(get(notification,'notification',false)){
             return 'Stop Notification';
         }
         return 'Resume Notification';
@@ -170,6 +169,7 @@ const ManageMemberShipDialogBox = props => {
         subscriptionsData,
         open,
         stopNotification,
+        isBusy
     } = props;
     return (
         <Dialog
@@ -179,6 +179,7 @@ const ManageMemberShipDialogBox = props => {
             aria-labelledby="contact us"
             classes={{ paper: classes.dialogPaper }}
         >
+            {isBusy && <ContainerLoader/>}
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
                     <DialogBoxTitleBar
@@ -206,7 +207,7 @@ const ManageMemberShipDialogBox = props => {
                                 >
 
                                     <ClassProfile>
-                                        <ProfileImage src={get(classData, 'logoImgMedium', get(classData, 'logoImg', ""))} />
+                                        <ProfileImage src={get(classData, 'medium', get(classData, 'classTypeImg', ""))} />
 
                                         <ClassNameWrapper>
                                             <ClassName> {classData.name} </ClassName>

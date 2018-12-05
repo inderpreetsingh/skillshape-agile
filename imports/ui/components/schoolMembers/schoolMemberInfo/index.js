@@ -290,8 +290,31 @@ class SchoolMemberInfo extends Component {
 	removeAll = ()=>{
 
 	}
-	stopNotification = (_id,status)=>{
-
+	stopNotification = (payload)=>{
+		this.setState({isBusy:true});
+		let data = {};
+		data.classTypeId = payload.classTypeId;
+		data.userId = payload.userId;
+		data.notification = !payload.notification;
+		Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+			const { popUp } = this.props;
+			if (res) {
+			  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+				if (res1) {
+					this.setState({isBusy:false});
+				  popUp.appear("success", {
+					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully. Changes will reflect after closing the dialog.`
+				  });
+				}
+			  });
+			}
+			else{
+				this.setState({isBusy:false});
+				  popUp.appear("success", {
+					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully. Changes will reflect after closing the dialog.`
+				  });
+			}
+		  });
 	}
 	leaveSchool = ()=>{
 
@@ -304,7 +327,7 @@ class SchoolMemberInfo extends Component {
 	}
 	render() {
 		const { memberInfo, view, classes, adminView, currentUser } = this.props;
-		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation,subscriptionsData } = this.state;
+		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation,subscriptionsData,isBusy } = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
 		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
@@ -332,6 +355,7 @@ class SchoolMemberInfo extends Component {
 						leaveSchool = {this.leaveSchool}
 						removeFromCalendar = {this.props.removeFromCalendar}
 						schoolName = {schoolName}
+						isBusy = {isBusy}
 					/>
 				)}
 				{this.state.callMemberDialog && (
@@ -414,7 +438,7 @@ class SchoolMemberInfo extends Component {
 							)}
 							<ActionButtonsWrapper>
 								<ActionButton onClick={() => { }}>
-									<FormGhostButton icon iconName="remove_from_queue" label="Edit" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
+									<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
 								</ActionButton>
 							</ActionButtonsWrapper>
 						</Grid>

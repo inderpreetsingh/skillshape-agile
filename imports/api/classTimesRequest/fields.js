@@ -20,6 +20,7 @@ export const ClassTimesRequestSchema = new SimpleSchema({
     },
     schoolId: {
         type: String,
+        optional: true
     },
     classTypeId: {
         type: String,
