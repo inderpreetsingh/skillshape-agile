@@ -9,12 +9,11 @@ export const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
   ${props => {
     switch (props.variant) {
-      case 'text-left-aligned': return `justify-content: space-between`;
+      case 'text-left-aligned': return `justify-content: space-between;`;
         break;
       default: '';
     }
   }}
-  padding: 0 ${helpers.rhythmDiv}px;
 `;
 
 export const DialogTitleWrapper = styled.h1`

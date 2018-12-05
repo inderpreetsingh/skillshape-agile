@@ -7,11 +7,13 @@ import { Heading } from '/imports/ui/components/landing/components/jss/sharedSty
 import { DialogTitleContainer } from './sharedDialogBoxStyles';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+const TitleBarHeading = Heading.withComponent('span').extend``;
+
 export const DialogBoxTitleBar = (props) => (
     <DialogTitleContainer variant={props.variant}>
-        <Heading>
+        <TitleBarHeading>
             {props.title}
-        </Heading>
+        </TitleBarHeading>
         <IconButton
             color="primary"
             onClick={props.onModalClose}
