@@ -1,17 +1,14 @@
 import React from "react";
 import styled from 'styled-components';
-import isEmpty from "lodash/isEmpty";
-
+import ClassTypeExpansionRender from './classTypeExpansionRender';
+import UploadMedia from '/imports/ui/componentHelpers/schoolViewBanner/uploadMedia.js';
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import ClassTimeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm.js";
 import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm.js";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import PanelWithTable from "/imports/ui/componentHelpers/panelWithTable";
-import UploadMedia from '/imports/ui/componentHelpers/schoolViewBanner/uploadMedia.js';
+import { ContainerLoader } from "/imports/ui/loading/container";
 
-import ClassTypeExpansion from './classTypeExpansion.jsx';
-import ClassTypeExpansionRender from './classTypeExpansionRender';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-import classTypeSettings from "./classTypeSettings";
+
 
 const Wrapper = styled.div`
   padding: ${rhythmDiv * 2}px;
