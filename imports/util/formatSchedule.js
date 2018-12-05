@@ -29,10 +29,10 @@ export const formatDateNoYear = (date) => {
 // This function helps us calculate the renewal date for subscription data
 export const calcRenewalDate = (date, monthToAdd, noOfMonths) => {
 	if (monthToAdd) {
-		return moment(date).add(noOfMonths, 'M').format('Do MMMM YYYY');
+		return moment(date).add(noOfMonths, 'M').format("MMM Do YYYY");;
 	}
 
-	return moment(date).format('Do MMMM YYYY');
+	return moment(date).format("MMM Do YYYY");;
 };
 
 export const formatClassTimesData = (classTimesData, hidePastDates = true) => {

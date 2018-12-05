@@ -12,6 +12,10 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  contractLength: {
+    type: Number,
+    optional: true
+  },
   subscriptionRequest: {
     type: Object,
     optional: true,
@@ -21,6 +25,14 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type: Object,
     optional: true,
     blackbox: true
+  },
+  currency: {
+    type: String,
+    optional: true
+  },
+  fee: {
+    type: Number,
+    optional: true
   },
   startDate: {
     type: Date,

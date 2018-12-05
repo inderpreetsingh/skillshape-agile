@@ -20,6 +20,7 @@ export const ClassTypeLocationRequestSchema = new SimpleSchema({
   },
   schoolId: {
     type: String,
+    optional: true
   },
   classTypeId: {
     type: String,

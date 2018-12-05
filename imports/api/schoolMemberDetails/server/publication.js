@@ -59,7 +59,6 @@ Meteor.publish("MembersBySchool", function ({
   // console.log(schoolId, memberName, classTypeIds, limit)
   if (this.userId) {
     const classfilter = {
-      activeUserId: { $ne: this.userId }
     };
 
     //findout current user classmates
@@ -77,7 +76,7 @@ Meteor.publish("MembersBySchool", function ({
       } else {
         classfilter["classTypeIds"] = { $in: [] };
       }
-      classfilter["activeUserId"] = { $ne: activeUserId };
+     // classfilter["activeUserId"] = { $ne: activeUserId };
     }
 
     if (memberName) {

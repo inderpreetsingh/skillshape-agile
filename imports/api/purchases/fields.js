@@ -77,6 +77,14 @@ export const PurchasesSchema = new SimpleSchema({
     optional: true,
     decimal: true
   },
+  autoWithdraw: {
+    type: Boolean,
+    optional: true
+  },
+  payUpFront: {
+    type: Boolean,
+    optional: true
+  },
   payAsYouGo: {
     type: Boolean,
     optional: true

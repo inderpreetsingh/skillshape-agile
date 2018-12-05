@@ -508,7 +508,7 @@ class DashBoardView extends React.Component {
       _id = memberInfo._id;
     }
     superAdmin = superAdminId == _id ? true :false ;
-     pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
+    pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic :config.defaultProfilePic ;
     // memberInfo = this.state.memberInfo
     let subscriptionList = get(purchaseByUserId,_id,[]);
     this.handleDrawerToggle();
@@ -519,6 +519,7 @@ class DashBoardView extends React.Component {
         name: profile.firstName,
         phone: profile.phone,
         email: email,
+        activeUserId: get(memberInfo,'activeUserId',null),
         schoolId: schoolId,
         adminNotes: memberInfo.adminNotes,
         classmatesNotes: memberInfo.classmatesNotes,
@@ -803,6 +804,7 @@ class DashBoardView extends React.Component {
                   this.handleMemberDetailsToRightPanel
                 }
                 adminView={adminView}
+                notClassmatePage={get(this.props.location,'pathname',null)!="/classmates"?true:false}
               />
               
               {/* <div

@@ -6,7 +6,9 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { check } from 'meteor/check';
-
+import {isEmpty} from 'lodash';
+import ClassTimesRequest from '/imports/api/classTimesRequest/fields.js';
+import ClassTypeLocationRequest from '/imports/api/classTypeLocationRequest/fields.js';
 Meteor.methods({
   "classInterest.addClassInterest": function({ doc }) {
     check(doc,Object);
@@ -66,11 +68,10 @@ Meteor.methods({
       throw new Meteor.Error("Permission denied!!");
     }
   },
-  "classInterest.removeClassInterestByClassTimeId": function({ classTimeId }) {
+  "classInterest.removeClassInterestByClassTimeId": function({ classTimeId,userId }) {
     check(classTimeId,String);
-    // console.log("classInterest.removeClassInterestByClassTimeId -->>",classTimeId)
-    if (this.userId && classTimeId) {
-      return ClassInterest.remove({ userId: this.userId, classTimeId });
+    if (userId && classTimeId) {
+      return ClassInterest.remove({ userId, classTimeId });
     } else {
       throw new Meteor.Error(
         "Unable to delete due to insufficient information!!"
@@ -86,5 +87,32 @@ Meteor.methods({
       { classTimeId: classTimeId, userId: this.userId },
       { $push: { deletedEvents: clickedDate } }
     );
+  },
+  "classInterest.findClassTypes":function(schoolId,userId){
+   let classData = [],current,indexLoc = -1,classTimeRecord;
+   let records = ClassInterest.find({schoolId,userId}).fetch();
+    if(!isEmpty(records)){
+      records.map((obj,index)=>{
+       classData.map((obj1,index1)=>{
+         if(obj1._id == obj.classTypeId){
+           indexLoc = index1
+         }
+       })
+       if(indexLoc != -1){
+        classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+        classData[indexLoc].classTimes.push(classTimeRecord);
+        classData[indexLoc].notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
+       }
+       else{
+        current = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1,classTypeImg:1,medium:1}});
+        current.classTimes = [];
+        classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+        current.classTimes.push(classTimeRecord);
+        current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
+        classData.push(current);                   
+      }
+      })
+    }
+    return classData;
   }
 });

@@ -102,7 +102,7 @@ Meteor.methods({
       }
     }
 
-    if (doc.classmatesNotes && memberData.classmatesNotes) {
+    if (doc.classmatesNotes && memberData && memberData.classmatesNotes) {
       doc.classmatesNotes = {
         ...memberData.classmatesNotes,
         ...doc.classmatesNotes
