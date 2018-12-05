@@ -92,6 +92,7 @@ const ClassesCovers = styled.div`
 `;
 
 const ContentHead = SubHeading.extend`
+    font-size: 20px;
     margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
@@ -182,7 +183,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                 <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
                     <DialogBoxTitleBar
                         variant="text-left-aligned"
-                        title={props.packageName || props.name}
+                        title={capitalizeString(props.packageName || props.name)}
                         onModalClose={onModalClose}
                         classes={classes}
                     />

@@ -317,9 +317,9 @@ class Package extends React.Component {
 								{ReactHtmlParser(this.getDateForSubscriptions(props))}
 							</CdText>
 
-							<CdText>
+							{/* <CdText>
 								<b>Covers:</b> {this.getCovers(props.covers)}
-							</CdText>
+							</CdText> */}
 							{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
 							{/* {props.packageType === 'MP' && !props.autoWithdraw && !props.payAsYouGo && <CdText>
 							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
