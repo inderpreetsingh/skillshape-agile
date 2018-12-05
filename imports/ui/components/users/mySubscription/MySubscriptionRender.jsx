@@ -14,7 +14,8 @@ import ProfileImage from '/imports/ui/components/landing/components/helpers/Prof
 import {
     ManageMemberShipDialogBox,
     CallUsDialogBox,
-    EmailUsDialogBox
+    EmailUsDialogBox,
+    SubscriptionsDetailsDialogBox
 } from '/imports/ui/components/landing/components/dialogs/';
 import { MemberActionButton, FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
 
@@ -150,7 +151,7 @@ const MySubscriptionRender = (props) => {
 
     return (
         <Fragment>
-            {/*manageMemberShipDialog && (
+            {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
                     schoolData={selectedSchool}
                     studentName={getUserFullName(currentUser)}
@@ -158,7 +159,7 @@ const MySubscriptionRender = (props) => {
                     subscriptionsData={subscriptionsData}
                     onModalClose={handleManageMemberShipDialogBox(false, {})}
                 />
-            )*/}
+            )}
             {callUsDialog && (
                 <CallUsDialogBox
                     contactNumbers={[phone]}

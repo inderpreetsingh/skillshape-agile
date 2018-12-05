@@ -6,3 +6,4 @@ export { default as ManageMemberShipDialogBox } from './ManageMembershipDialogBo
 import { default as CallMemberDialogBox } from './CallMemberDialogBox.js';
 import { default as EmailMemberDialogBox } from './EmailMemberDialogBox.jsx';
 import { default as EditMemberDialogBox } from './EditMemberDialogBox.js';
+import { default as SubscriptionsDetailsDialogBox } from './SubscriptionsDetailsDialogBox';
