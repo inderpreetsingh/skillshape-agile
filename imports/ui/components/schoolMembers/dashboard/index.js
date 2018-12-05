@@ -804,6 +804,7 @@ class DashBoardView extends React.Component {
                   this.handleMemberDetailsToRightPanel
                 }
                 adminView={adminView}
+                notClassmatePage={get(this.props.location,'pathname',null)!="/classmates"?true:false}
               />
               
               {/* <div

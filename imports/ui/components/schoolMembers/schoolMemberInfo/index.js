@@ -169,7 +169,7 @@ class SchoolMemberInfo extends Component {
 	initializeState = ({ memberInfo, view }) => {
 		let state = {};
 		state.showConfirmation = false;
-		if (view === 'admin') {
+		// if (view === 'admin') {
 			state.notes = get(memberInfo, 'adminNotes', '');
 			state.subscriptionsData = [];
 			// } else {
@@ -178,8 +178,8 @@ class SchoolMemberInfo extends Component {
 			//     `classmatesNotes[${Meteor.userId()}].notes`,
 			//     ""
 			//   );
-		}
-				
+		// }
+		this.classDataFinder();	
 		return state;
 	};
 
@@ -187,18 +187,18 @@ class SchoolMemberInfo extends Component {
 		const { memberInfo, view } = this.props;
 		let payload = {};
 
-		if (view === 'admin' && Meteor.userId()) {
+		// if (view === 'admin' && Meteor.userId()) {
 			payload.adminNotes = this.state.notes;
-		} else if (view === 'classmates' && Meteor.userId()) {
-			payload.classmatesNotes = {
-				[Meteor.userId()]: {
-					notes: this.state.notes
-				}
-			};
-		}
+		// } else if (view === 'classmates' && Meteor.userId()) {
+		// 	payload.classmatesNotes = {
+		// 		[Meteor.userId()]: {
+		// 			notes: this.state.notes
+		// 		}
+		// 	};
+		// }
 		Meteor.call(
 			'schoolMemberDetails.editSchoolMemberDetails',
-			{ doc_id: memberInfo._id, doc: payload },
+			{ doc_id: memberInfo.memberId, doc: payload },
 			(err, res) => {
 				if (res) {
 				}
@@ -237,18 +237,21 @@ class SchoolMemberInfo extends Component {
 	handleDialogState = (dialogName, state) => {
 		//debugger;
 		if(dialogName=='manageMemberShipDialog'){
-			let {schoolId,activeUserId} = this.props.memberInfo;
-				Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
-					if(res)
-					this.setState({subscriptionsData:res})
-					else
-					this.setState({subscriptionsData:[]})
-				})
+			this.classDataFinder();
 		}
 		this.setState({
 			[dialogName]: state
 		});
 	};
+	classDataFinder = ()=>{
+		let {schoolId,activeUserId} = this.props.memberInfo;
+		Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
+			if(res)
+			this.setState({subscriptionsData:res})
+			else
+			this.setState({subscriptionsData:[]})
+		})
+	}
 	getContactNumber = () => {
 		return this.props.memberInfo && this.props.memberInfo.phone;
 	};
@@ -287,12 +290,16 @@ class SchoolMemberInfo extends Component {
 			}
 		});
 	};
-	removeAll = (classTimes)=>{
+	removeAll = (classTimes,classTypeName)=>{
 	const { memberInfo} = this.props;
 	let userId = get(memberInfo,'activeUserId',null),data={};
+	this.setState({all:true});
 	classTimes.map((obj,index)=>{
 		data.userId = userId;
 		data.classTimeId = obj._id;
+		data.classTypeName = classTypeName;
+		data.classTimeName = obj.name;
+		data.all = true ;
 		this.removeFromCalendar(data);
 	})
 	}
@@ -309,7 +316,7 @@ class SchoolMemberInfo extends Component {
 				if (res1) {
 					this.setState({isBusy:false});
 				  popUp.appear("success", {
-					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully. Changes will reflect after closing the dialog.`
+					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
 				  });
 				}
 			  });
@@ -317,15 +324,24 @@ class SchoolMemberInfo extends Component {
 			else{
 				this.setState({isBusy:false});
 				  popUp.appear("success", {
-					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully. Changes will reflect after closing the dialog.`
+					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
 				  });
 			}
 		  });
 	}
 	leaveSchool = ()=>{
-
+	let {subscriptionsData} = this.state;
+	this.setState({all:true});
+	if(!isEmpty(subscriptionsData)){
+		subscriptionsData.map((obj,index)=>{
+			this.removeAll(obj.classTimes,obj.name);
+		})
+	}
 	}
 	removeFromCalendar = (data)=>{
+		let {memberInfo} = this.props;
+		let {classTimeName,classTypeName} = data;
+		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
 		this.setState({ isBusy: true});
 		Meteor.call(
 			"classInterest.removeClassInterestByClassTimeId",
@@ -335,18 +351,15 @@ class SchoolMemberInfo extends Component {
 				  this.setState({ isBusy: false});
 				  const { popUp } = this.props;
 				  popUp.appear("success", {
-					content: `Removed from calendar successfully. Changes will reflect after closing the dialog.`
+					content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`
 				  });
 			  }
 			 
 			}
 		  );
 	}
-	closeManageMemberShipDialogBox = ()=>{
-
-	}
 	render() {
-		const { memberInfo, view, classes, adminView, currentUser } = this.props;
+		const { memberInfo, view, classes, adminView, currentUser,notClassmatePage } = this.props;
 		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation,subscriptionsData,isBusy } = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
@@ -465,9 +478,8 @@ class SchoolMemberInfo extends Component {
 							</ActionButtonsWrapper>
 						</Grid>
 					</Grid>
-
-					<Grid item sm={3} xs={12} md={3} style={{ padding: '28px' }}>
-						<div className="notes">{view === 'admin' ? 'Admin Notes' : 'My Private Notes'}</div>
+					{notClassmatePage && (<Grid item sm={3} xs={12} md={3} style={{ padding: '28px' }}>
+						<div className="notes">Admin Notes</div>
 						<Input
 							onBlur={this.saveMyNotesInMembers}
 							value={this.state.notes}
@@ -477,7 +489,8 @@ class SchoolMemberInfo extends Component {
 							rows={4}
 							fullWidth
 						/>
-					</Grid>
+					</Grid>)}
+					
 				</Grid>
 				{view === 'admin' && (
 					<Grid container style={{ backgroundColor: 'darkgray', marginTop: '22px' }}>

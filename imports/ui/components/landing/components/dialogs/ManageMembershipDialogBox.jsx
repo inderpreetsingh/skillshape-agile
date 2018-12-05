@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { get } from 'lodash';
+import { get ,isEmpty} from 'lodash';
 import { withStyles, MuiThemeProvider } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
@@ -172,7 +172,8 @@ const ManageMemberShipDialogBox = props => {
         isBusy,
         removeFromCalendar,
         userId,
-        removeAll
+        removeAll,
+        leaveSchool
     } = props;
     return (
         <Dialog
@@ -219,7 +220,7 @@ const ManageMemberShipDialogBox = props => {
                                                     <FormGhostButton
                                                         color="alert"
                                                         label="Remove all"
-                                                        onClick ={()=>{removeAll(classData.classTimes)}}
+                                                        onClick ={()=>{removeAll(classData.classTimes,classData.name)}}
                                                     />
                                                 </ButtonWrapper>
                                                 <ButtonWrapper>
@@ -239,7 +240,7 @@ const ManageMemberShipDialogBox = props => {
                                             <FormGhostButton
                                                 color="alert"
                                                 label="Remove all"
-                                                onClick ={()=>{removeAll(classData.classTimes)}}
+                                                onClick ={()=>{removeAll(classData.classTimes,classData.name)}}
                                             />
                                         </ButtonWrapper>
                                         <ButtonWrapper>
@@ -261,7 +262,7 @@ const ManageMemberShipDialogBox = props => {
                                                     <FormGhostButton
                                                         color="alert"
                                                         label="Remove from calendar" 
-                                                        onClick = {()=>{removeFromCalendar({userId,classTimeId:classTimeData._id})}}
+                                                        onClick = {()=>{removeFromCalendar({userId,classTimeId:classTimeData._id,classTypeName:classData.name,classTimeName:classTimeData.name})}}
                                                         />
                                                 </ButtonWrapper>
                                              
@@ -278,9 +279,10 @@ const ManageMemberShipDialogBox = props => {
                     <ButtonWrapper>
                         <FormGhostButton color="primary" label="Close" onClick = {onModalClose}/>
                     </ButtonWrapper>
-                    <ButtonWrapper>
-                        <FormGhostButton color="alert" label="Leave school" />
-                    </ButtonWrapper>
+                    {(!isEmpty(subscriptionsData))&& (<ButtonWrapper>
+                        <FormGhostButton color="alert" label="Leave school" onClick = {leaveSchool}/>
+                    </ButtonWrapper>)}
+                    
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>
