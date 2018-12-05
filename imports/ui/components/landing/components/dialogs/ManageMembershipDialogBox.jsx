@@ -169,7 +169,10 @@ const ManageMemberShipDialogBox = props => {
         subscriptionsData,
         open,
         stopNotification,
-        isBusy
+        isBusy,
+        removeFromCalendar,
+        userId,
+        removeAll
     } = props;
     return (
         <Dialog
@@ -216,6 +219,7 @@ const ManageMemberShipDialogBox = props => {
                                                     <FormGhostButton
                                                         color="alert"
                                                         label="Remove all"
+                                                        onClick ={()=>{removeAll(classData.classTimes)}}
                                                     />
                                                 </ButtonWrapper>
                                                 <ButtonWrapper>
@@ -235,6 +239,7 @@ const ManageMemberShipDialogBox = props => {
                                             <FormGhostButton
                                                 color="alert"
                                                 label="Remove all"
+                                                onClick ={()=>{removeAll(classData.classTimes)}}
                                             />
                                         </ButtonWrapper>
                                         <ButtonWrapper>
@@ -255,7 +260,9 @@ const ManageMemberShipDialogBox = props => {
                                                 <ButtonWrapper>
                                                     <FormGhostButton
                                                         color="alert"
-                                                        label="Remove from calendar" />
+                                                        label="Remove from calendar" 
+                                                        onClick = {()=>{removeFromCalendar({userId,classTimeId:classTimeData._id})}}
+                                                        />
                                                 </ButtonWrapper>
                                              
                                             </ActionButtons>

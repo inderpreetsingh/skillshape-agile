@@ -287,8 +287,14 @@ class SchoolMemberInfo extends Component {
 			}
 		});
 	};
-	removeAll = ()=>{
-
+	removeAll = (classTimes)=>{
+	const { memberInfo} = this.props;
+	let userId = get(memberInfo,'activeUserId',null),data={};
+	classTimes.map((obj,index)=>{
+		data.userId = userId;
+		data.classTimeId = obj._id;
+		this.removeFromCalendar(data);
+	})
 	}
 	stopNotification = (payload)=>{
 		this.setState({isBusy:true});
@@ -319,8 +325,22 @@ class SchoolMemberInfo extends Component {
 	leaveSchool = ()=>{
 
 	}
-	removeFromCalendar = ()=>{
-
+	removeFromCalendar = (data)=>{
+		this.setState({ isBusy: true});
+		Meteor.call(
+			"classInterest.removeClassInterestByClassTimeId",
+			data,
+			(error, res) => {
+			  if(res){
+				  this.setState({ isBusy: false});
+				  const { popUp } = this.props;
+				  popUp.appear("success", {
+					content: `Removed from calendar successfully. Changes will reflect after closing the dialog.`
+				  });
+			  }
+			 
+			}
+		  );
 	}
 	closeManageMemberShipDialogBox = ()=>{
 
@@ -332,6 +352,7 @@ class SchoolMemberInfo extends Component {
 		let superAdmin = get(memberInfo, 'superAdmin', false);
 		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
 		let studentName = get(memberInfo,'firstName',get(memberInfo,'name','Old Data'))
+		let userId = get(memberInfo,'activeUserId',null);
 		return (
 			<Grid container>
 				{showConfirmation && (
@@ -353,9 +374,10 @@ class SchoolMemberInfo extends Component {
 						removeAll = {this.removeAll}
 						stopNotification = {this.stopNotification}
 						leaveSchool = {this.leaveSchool}
-						removeFromCalendar = {this.props.removeFromCalendar}
+						removeFromCalendar = {this.removeFromCalendar}
 						schoolName = {schoolName}
 						isBusy = {isBusy}
+						userId = {userId}
 					/>
 				)}
 				{this.state.callMemberDialog && (

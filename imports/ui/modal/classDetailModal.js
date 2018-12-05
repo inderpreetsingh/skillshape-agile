@@ -360,7 +360,7 @@ class ClassDetailModal extends React.Component {
     this.setState({ isLoading: true });
     Meteor.call(
       "classInterest.removeClassInterestByClassTimeId",
-      { classTimeId },
+      { userId:Meteor.userId(),classTimeId },
       (error, res) => {
         this.setState({ isLoading: false, error });
         this.props.closeEventModal(false, null);
