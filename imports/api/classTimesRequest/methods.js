@@ -155,7 +155,7 @@ Meteor.methods({
     'classTimesRequest.updateRequest': function(data) {
       let old= ClassTimesRequest.findOne({userId:data.userId,classTypeId:data.classTypeId});
       if(old && old.notification== data.notification){
-        return 0;
+        return 1;
       }
       try{
       let res=  ClassTimesRequest.update({userId:data.userId,classTypeId:data.classTypeId},{$set:data},{upsert:true})

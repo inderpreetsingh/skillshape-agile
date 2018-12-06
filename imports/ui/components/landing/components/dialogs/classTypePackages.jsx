@@ -47,8 +47,8 @@ class ClassTypePackages extends React.Component {
     }
 
     componentDidUpdate() {
-        const { popUp } = this.props;
-        if (Meteor.user()) {
+        const { popUp, currentUser } = this.props;
+        if (currentUser) {
             if (popUp.details.purpose === 'login-alert' && popUp.isPopupActive())
                 popUp.close();
         }
@@ -120,7 +120,7 @@ class ClassTypePackages extends React.Component {
 
 
 export default createContainer(props => {
-    let { schoolId, classTypeId, currentUser } = props;
+    let { schoolId, classTypeId } = props;
     const { slug } = props.params;
     let schoolData, currency;
     userBySchoolSubscription = Meteor.subscribe("UserSchoolbySlug", slug);
@@ -131,6 +131,7 @@ export default createContainer(props => {
                 ? schoolData.currency
                 : config.defaultCurrency;
     }
+    const currentUser = Meteor.user();
     Meteor.subscribe("classPricing.getClassPricing", { schoolId });
     Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
     Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });

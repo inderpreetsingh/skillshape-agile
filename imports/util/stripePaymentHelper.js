@@ -26,15 +26,15 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
         title: 'Wait',
         content: 'Please Wait One Sec...',
         RenderActions: <span />
-    }, true, {
-            purpose: 'payment-success'
-        }); /* , true, { autoClose: true, autoTimeout: 4000 } */
+    }, true); /* , true, { autoClose: true, autoTimeout: 4000 } */
+
     config.currency.map((data, index) => {
         if (data.value == currency) {
             currency = data.label;
             amount = amount * data.multiplyFactor;
         }
     });
+
     let self = this;
     let userId = Meteor.userId();
     if (!userId) {

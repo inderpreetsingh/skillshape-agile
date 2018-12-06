@@ -14,6 +14,7 @@ import ProgressiveImage from 'react-progressive-image';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import { withPopUp } from "/imports/util";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 import {
 	CallMemberDialogBox,
@@ -47,6 +48,7 @@ const styles = (theme) => ({
 	}
 });
 
+const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 const ActionButtonsWrapper = styled.div`
 	left: ${helpers.rhythmDiv * 2}px;
@@ -330,13 +332,39 @@ class SchoolMemberInfo extends Component {
 		  });
 	}
 	leaveSchool = ()=>{
-	let {subscriptionsData} = this.state;
-	this.setState({all:true});
-	if(!isEmpty(subscriptionsData)){
+		let {popUp,memberInfo} = this.props;
+		let studentName = get(memberInfo,'firstName',get(memberInfo,'name','No Name'));
+		popUp.appear(
+			'inform',
+			{
+				title: 'Confirmation',
+				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				RenderActions: (
+					<ButtonWrapper>
+					<FormGhostButton
+						label={'Cancel'}
+						applyClose
+					/>
+					<FormGhostButton
+						label={'Yes'}
+						onClick={this.leaveSchoolHandler}
+						applyClose
+					/>
+				</ButtonWrapper>
+				)
+			},
+			true
+		);
+	}
+	leaveSchoolHandler = ()=>{
+		let {subscriptionsData} = this.state;
+		this.setState({all:true});
+		if(!isEmpty(subscriptionsData)){
 		subscriptionsData.map((obj,index)=>{
 			this.removeAll(obj.classTimes,obj.name);
 		})
 	}
+		"You are about to remove {studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?"
 	}
 	removeFromCalendar = (data)=>{
 		let {memberInfo} = this.props;

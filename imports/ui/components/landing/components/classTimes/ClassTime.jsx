@@ -344,7 +344,7 @@ class ClassTime extends Component {
           });
         else
           popUp.appear("success", {
-            content: `Hi ${userName}, Class added to your calendar`
+            content: `Hi ${userName}, Class added successfully to your calendar`
           });
       }
     });
@@ -502,7 +502,7 @@ class ClassTime extends Component {
 
   handleNotification = CheckBoxes => {
     this.setState({ isLoading: true });
-    const { schoolId, classTypeId, classTypeName } = this.props;
+    const { schoolId, classTypeId, classTypeName,schoolName } = this.props;
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     if(!isEmpty(currentUser)){
@@ -523,10 +523,11 @@ class ClassTime extends Component {
         Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
           if (res1) {
             popUp.appear("success", {
-              content: `Hi ${userName}, You are ${
+              content: `Hi ${userName}, You are now ${
                 CheckBoxes[1] ? "subscribed" : "unsubscribed"
               } to  notification related to the
-            location and time update of class type ${classTypeName.name}.
+            location and time updates for ${schoolName} ${classTypeName.name}.
+             You can change this in the My Subscriptions area.
             `
             });
             this.componentWillMount();

@@ -312,7 +312,8 @@ export default class MyCalender extends React.Component {
       status,
       isLoading
     } = this.state;
-    const { routeName } = this.props;
+    const { routeName,schoolData } = this.props;
+    let {name} = schoolData;
     let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
     return (
       <div>
@@ -336,6 +337,7 @@ export default class MyCalender extends React.Component {
             routeName={this.props.route && this.props.route.name}
             type={this.props.type}
             params={this.props.params}
+            schoolName = {name}
           />
         )}
         {isOpen && (

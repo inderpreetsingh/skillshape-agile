@@ -282,20 +282,8 @@ class ThinkingAboutAttending extends React.Component {
               <FormGhostButton
                 darkGreyColor
                 onClick={onModalClose}
-                label="Not Yet, Thanks!"
+                label="Close!"
               />
-            </ButtonWrapper>
-            <ButtonWrapper>
-              <Button
-                onClick={() => { this.setState({ classTypePackages: true }) }}
-                classes={{ root: this.props.classes.StyleForButton }}
-              >
-                Purchase Package Now
-		                        </Button>
-              {/* <FormGhostButton
-                                onClick={purchaseThisPackage}
-                                label="Purchase Package Now"
-                            /> */}
             </ButtonWrapper>
             <ButtonWrapper>
               <FormGhostButton
@@ -308,8 +296,10 @@ class ThinkingAboutAttending extends React.Component {
                     handleCheckBoxes(checkBoxes);
                   }
                 }}
-                label={"Purchase at School"}
+                label={"Purchase Later"}
               />
+
+
             </ButtonWrapper>
 
           </DialogActions>

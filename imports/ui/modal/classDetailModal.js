@@ -466,6 +466,7 @@ class ClassDetailModal extends React.Component {
       clickedDate,
       classInterestData,
       params,
+      schoolName
     } = this.props;
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
@@ -638,6 +639,7 @@ class ClassDetailModal extends React.Component {
                             onClick={() => {
                               this.setState({ removeFromCalendarPopUp: true });
                             }}
+                           
                           />
                         </Grid>
                       )}
@@ -682,6 +684,7 @@ class ClassDetailModal extends React.Component {
                         classInterestData={classInterestData}
                         onModalClose ={()=>{this.props.closeEventModal(false, null)}}
                         params= {params}
+                        schoolName = {schoolName}
                       />
                     </div>
                   </div>
@@ -838,6 +841,7 @@ class ClassDetailModal extends React.Component {
                         classInterestData={classInterestData}
                         onModalClose ={()=>{this.props.closeEventModal(false, null)}}
                         params= {params}
+                        schoolName = {schoolName}
                       />
                     </div>
                   </div>
