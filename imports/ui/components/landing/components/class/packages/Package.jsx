@@ -1,11 +1,16 @@
-import isEmpty from 'lodash/isEmpty';
-import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import get from 'lodash/get';
 import ReactHtmlParser from 'react-html-parser';
-import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
-import EditButton from '/imports/ui/components/landing/components/buttons/EditButton.jsx';
+import isEmpty from 'lodash/isEmpty';
+import PropTypes from 'prop-types';
+import get from 'lodash/get';
+
+import {
+	EditButton,
+	SecondaryButton,
+	FormGhostButton
+} from '/imports/ui/components/landing/components/buttons/';
+
 import {
 	formatMoney,
 	maximumClasses,
@@ -14,19 +19,20 @@ import {
 	calcContractEnd,
 	formatDate
 } from '/imports/util';
+
+import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
+import {
+	SubscriptionsDetailsDialogBox
+} from '/imports/ui/components/landing/components/dialogs/';
+
+import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
+
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const ADMIN_SUBSCRIPTIONS = 'adminSubscriptions';
 const MY_SUBSCRIPTIONS = 'mySubscriptions';
 
-const packageStatus = {
-	active: helpers.primaryColor,
-	inactive: helpers.caution,
-	inProgress: helpers.information,
-	in_Progress: helpers.information,
-	expired: helpers.danger
-};
 
 const Wrapper = styled.div`
 	${helpers.flexCenter} justify-content: space-between;
@@ -40,8 +46,8 @@ const OuterWrapper = styled.div`
 	${(props) => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
 	padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
 	padding-right: ${helpers.rhythmDiv * 2}px;
-	border-radius: ${helpers.rhythmDiv * 6}px;
 	width: 100%;
+	border-radius: ${helpers.rhythmDiv * 6}px;
 	color: ${helpers.textColor};
 	z-index: 1;
 	position: relative;
@@ -66,7 +72,8 @@ const OuterWrapper = styled.div`
 		opacity: ${(props) => (props.forIframes ? 0.1 : 1)};
 		${(props) =>
 		props.forSubscription && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
-		border-radius: ${helpers.rhythmDiv * 6}px;
+		border-radius: ${props => props.forSubscription ? helpers.rhythmDiv : helpers.rhythmDiv * 6}px;
+	
 	}
 `;
 
@@ -139,176 +146,283 @@ const AddToCartSection = styled.div`
 	cursor: pointer;
 `;
 
-const RightSection = styled.div`${helpers.flexCenter};`;
+const RightSection = styled.div`
+	${helpers.flexCenter};
+	@media screen and (max-width: ${helpers.mobile}px) {
+		width: 100%; 
+	}
+`;
+
+const StatusWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	
+	@media screen and (max-width: ${helpers.mobile}px) {
+		flex-direction: row;
+		width: 100%;
+		justify-content: space-evenly;
+	}
+`;
+
+const ButtonWrapper = styled.div`
+	display: flex;
+`;
 
 const Status = Text.extend`
 	font-weight: 500;
 	color: ${(props) => packageStatus[props.packageStatus]};
 `;
 
-function getCovers(data) {
-	let str = '';
-	if (!isEmpty(data)) {
-		str = data.map((classType) => classType);
-		str = str.join(', ');
-	}
-	return str.toLowerCase();
-}
-
-function getPaymentType(payment) {
-	let paymentType = '';
-	if (payment) {
-		if (payment['autoWithDraw'] && payment['payAsYouGo']) {
-			paymentType += 'Automatic Withdrawal and Pay As You Go';
-		} else if (payment['autoWithDraw']) {
-			paymentType += 'Automatic Withdrawal';
-		} else if (payment['payAsYouGo']) {
-			paymentType += 'Pay As You Go';
-		} else if (payment['payUpFront']) {
-			paymentType += 'Pay Up Front';
+class Package extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			subscriptionsDetailsDialog: false
 		}
 	}
-	return paymentType;
-}
 
-const Package = (props) => {
-	const ourPackageStatus = props.packageStatus || props.status;
-	const getDateForSubscriptions = (props) => {
+	getPaymentType(payment) {
+		let paymentType = '';
+		if (payment) {
+			if (payment['autoWithDraw'] && payment['payAsYouGo']) {
+				paymentType += 'Automatic Withdrawal and Pay As You Go';
+			} else if (payment['autoWithDraw']) {
+				paymentType += 'Automatic Withdrawal';
+			} else if (payment['payAsYouGo']) {
+				paymentType += 'Pay As You Go';
+			} else if (payment['payUpFront']) {
+				paymentType += 'Pay Up Front';
+			}
+		}
+		return paymentType;
+	}
+
+	getPaymentTypeName = (props) => {
+		if (props.autoWithdraw) {
+			return `  (AutoWithdraw Payment)`;
+		}
+		else if (props.payAsYouGo) {
+			return ` (Pay As You Go)`;
+		}
+		else if (props.payUpFront) {
+			return ` (Pay Up Front)`;
+		}
+		else if (props.packageType == 'CP') {
+			return ` (Per Class Package)`;
+		}
+		else {
+			return ` (Enrollment Package)`;
+		}
+	}
+
+	getCovers(data) {
+		let str = '';
+		if (!isEmpty(data)) {
+			str = data.map((classType) => classType);
+			str = str.join(', ');
+		}
+		return str.toLowerCase();
+	}
+
+	getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
-		let fee = get(props,'fee',0).toFixed(2);
-		let currency = get(props,'currency','$')
-		if(get(props,'payUpFront',false)){
+		let fee = get(props, 'fee', 0).toFixed(2);
+		let currency = get(props, 'currency', '$')
+		if (get(props, 'payUpFront', false)) {
 			stringToPrint += `<b>Paid until:</b> `;
-			let contractLength = get(props,'contractLength',0);
-			contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length-1 : 0
-			return stringToPrint += calcRenewalDate(props.endDate, props.packageType === 'MP',contractLength);
+			let contractLength = get(props, 'contractLength', 0);
+			contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
+			return stringToPrint += calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength);
 		}
-		if(get(props,'payAsYouGo',false)){
-			return `Payment of ${formatMoney( fee, currency )} due ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length-1)}`
+		if (get(props, 'payAsYouGo', false)) {
+			return `Payment of ${formatMoney(fee, currency)} due ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}`
 		}
-		if(get(props,'autoWithdraw',false)){
-			
-			return stringToPrint+=`<b>Automatic Payment</b> of ${formatMoney( fee, currency )} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
+		if (get(props, 'autoWithdraw', false)) {
+
+			return stringToPrint += `<b>Automatic Payment</b> of ${formatMoney(fee, currency)} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
 		}
 		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
 			return (stringToPrint += `Renewal Date : ` + calcRenewalDate(props.endDate, props.packageType === 'MP', 1));
 		} else if (props.payAsYouGo) {
 			stringToPrint += `Contract active : `;
 		} else {
-			if(props.packageType == 'CP'){
+			if (props.packageType == 'CP') {
 				// props.combinedData.map((obj,index)=>{
 				// 	stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
 				// })
 				let noClasses = 0;
-				props.combinedData.map((obj,index)=>{
-					noClasses += get(obj,"noClasses",0); 
+				props.combinedData.map((obj, index) => {
+					noClasses += get(obj, "noClasses", 0);
 				})
-				return stringToPrint+= `${noClasses} ${noClasses <=1 ? 'Class' : 'Classes'} Remaining`;
+				return stringToPrint += `${noClasses} ${noClasses <= 1 ? 'Class' : 'Classes'} Remaining`;
 			}
-			else{
+			else {
 				stringToPrint += 'Expiration Date : ';
 			}
 		}
-		return stringToPrint + (props.packageType == 'EP' && props.expiry =='none' ? 'None' : formatDate(props.endDate));
+		return stringToPrint + (props.packageType == 'EP' && props.expiry == 'none' ? 'None' : formatDate(props.endDate));
 	};
 
-	const getExplainationBasedOnType = (props) => {
+	getExplainationBasedOnType = (props) => {
 		if (props.payAsYouGo) {
 			return (<React.Fragment>
 				<CdText>
-				<b>Contract ends:</b>  {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
+					<b>Contract ends:</b>  {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
 				</CdText>
 			</React.Fragment>)
 		}
-		if(props.autoWithdraw){
-			return(<React.Fragment>
+		if (props.autoWithdraw) {
+			return (<React.Fragment>
 				<CdText>
 					<b>Contract ends:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
 				</CdText>
 			</React.Fragment>)
 		}
 	}
-	getPaymentTypeName = (props)=>{
-		if(props.autoWithdraw){
-			return `  (AutoWithdraw Payment)`;
-		}
-		else if(props.payAsYouGo){
-			return ` (Pay As You Go)`;
-		}
-		else if(props.payUpFront){
-			 return ` (Pay Up Front)`;
-		}
-		else if(props.packageType=='CP'){
-			return ` (Per Class Package)`;
-		}
-		else{
-			return ` (Enrollment Package)`;
-		}
-	}
-	if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
-		return (
-			<OuterWrapper
-				opacity={props.opacity}
-				forSubscription={props.forSubscription}
-				forIframes={props.forIframes}
-				bgColor={props.bgColor}
-			>
-				<Wrapper>
-					<ClassDetailsSection>
-						<Title>{props.packageName || props.name} {getPaymentTypeName(props)}</Title>
-						<CdText>
-							{ReactHtmlParser(getDateForSubscriptions(props))}
-						</CdText>
 
-						<CdText>
-							<b>Covers:</b> {getCovers(props.covers)}
-						</CdText>
-						{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
-						{/* {props.packageType === 'MP' && !props.autoWithdraw && !props.payAsYouGo && <CdText>
+	handleModelState = (modelName, modelState) => {
+		this.setState(state => {
+			return {
+				...state,
+				[modelName]: modelState
+			}
+		})
+	}
+
+	render() {
+		const props = this.props;
+		const { subscriptionsDetailsDialog } = this.state;
+		const ourPackageStatus = props.packageStatus || props.status;
+
+		if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
+
+			return (<Fragment>
+				{subscriptionsDetailsDialog &&
+					<SubscriptionsDetailsDialogBox
+						{...props}
+						open={subscriptionsDetailsDialog}
+						onModalClose={() => this.handleModelState('subscriptionsDetailsDialog', false)}
+					/>}
+				<OuterWrapper
+					opacity={props.opacity}
+					forSubscription={props.forSubscription}
+					forIframes={props.forIframes}
+					bgColor={props.bgColor}
+				>
+					<Wrapper>
+						<ClassDetailsSection>
+							<Title>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>
+							<CdText>
+								{ReactHtmlParser(this.getDateForSubscriptions(props))}
+							</CdText>
+
+							{/* <CdText>
+								<b>Covers:</b> {this.getCovers(props.covers)}
+							</CdText> */}
+							{/* For monthly packages we need to have paid until date, some purchase data is not showing packageType*/}
+							{/* {props.packageType === 'MP' && !props.autoWithdraw && !props.payAsYouGo && <CdText>
 							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
 						</CdText>} */}
-						{/* Depending upon the type of payment method */}
-						{getExplainationBasedOnType(props)}
+							{/* Depending upon the type of payment method */}
+							{this.getExplainationBasedOnType(props)}
 
+						</ClassDetailsSection>
+						<RightSection>
+							<StatusWrapper>
+								<Status packageStatus={ourPackageStatus}>
+									{capitalizeString(ourPackageStatus)}
+								</Status>
+								<ButtonWrapper>
+									<SecondaryButton
+										onClick={() => this.handleModelState('subscriptionsDetailsDialog', true)}
+										label="Details"
+									/>
+
+								</ButtonWrapper>
+							</StatusWrapper>
+						</RightSection>
+					</Wrapper>
+				</OuterWrapper >
+			</Fragment>
+			);
+		}
+		let BB = { backgroundColor: 'black' };
+		return (<Fragment>
+			<OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
+				<Wrapper>
+					<ClassDetailsSection>
+						<Title>{props.packageName || props.name}</Title>
+
+						{props.classPackages || props.packageType == 'EP' ? (
+							<CdText>
+								<b>Expiration:</b>{' '}
+								{props.expDuration && props.expPeriod && !props.noExpiration ? (
+									`${props.expDuration} ${props.expPeriod}`
+								) : (
+										'None'
+									)}
+							</CdText>
+						) : (
+								<CdText>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
+							)}
+						<CdText>
+							<b>Covers:</b> {this.getCovers(props.covers)}
+						</CdText>
+						{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 					</ClassDetailsSection>
 					<RightSection>
-						<AddToCartSection>
-							<Status packageStatus={ourPackageStatus}>{capitalizeString(ourPackageStatus)}</Status>
-						</AddToCartSection>
-					</RightSection>
-				</Wrapper>
-			</OuterWrapper>
-		);
-	}
-	let BB = { backgroundColor: 'black' };
-	return (
-		<OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
-			<Wrapper>
-				<ClassDetailsSection>
-					<Title>{props.packageName || props.name}</Title>
-
-					{props.classPackages || props.packageType == 'EP' ? (
-						<CdText>
-							<b>Expiration:</b>{' '}
-							{props.expDuration && props.expPeriod && !props.noExpiration ? (
-								`${props.expDuration} ${props.expPeriod}`
-							) : (
-									'None'
-								)}
-						</CdText>
-					) : (
-							<CdText>{getPaymentType(props.pymtType) || 'NA'}</CdText>
-						)}
-					<CdText>
-						<b>Covers:</b> {getCovers(props.covers)}
-					</CdText>
-					{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
-				</ClassDetailsSection>
-				<RightSection>
-					{props.packageType !== 'EP' ? (
-						<Fragment>
-							{props.classPackages ? (
+						{props.packageType !== 'EP' ? (
+							<Fragment>
+								{props.classPackages ? (
+									<PriceSection>
+										<Price>
+											{props.cost &&
+												`${formatMoney(
+													Number.parseFloat(props.cost).toFixed(2),
+													props.currency ? props.currency : props.schoolCurrency
+												)}`}
+										</Price>
+										<NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
+									</PriceSection>
+								) : (
+										!isEmpty(props.uiPayment) &&
+										props.uiPayment.map((payment, index) => {
+											return (
+												<PriceSection key={`${payment.cost}-${index}`}>
+													<Price>
+														{payment.cost &&
+															`${formatMoney(
+																Number.parseFloat(
+																	get(props.pymtType, 'payUpFront', false)
+																		? payment.cost * payment.month
+																		: payment.cost
+																).toFixed(2),
+																payment.currency ? payment.currency : props.schoolCurrency
+															)}`}
+													</Price>
+													<NoOfClasses>
+														{payment.month &&
+															`${get(props.pymtType, 'payUpFront', false)
+																? ''
+																: 'per month'} for ${payment.month} ${payment.month > 1
+																	? 'months'
+																	: ' month'} ${get(props.pymtType, 'payUpFront', false)
+																		? `(${formatMoney(
+																			Number.parseFloat(payment.cost).toFixed(2),
+																			payment.currency ? payment.currency : props.schoolCurrency
+																		)} per month)`
+																		: ''}`}
+													</NoOfClasses>
+												</PriceSection>
+											);
+										})
+									)}
+							</Fragment>
+						) : (
 								<PriceSection>
+									{' '}
+									{/* used for enrollment packages */}
 									<Price>
 										{props.cost &&
 											`${formatMoney(
@@ -316,94 +430,49 @@ const Package = (props) => {
 												props.currency ? props.currency : props.schoolCurrency
 											)}`}
 									</Price>
-									<NoOfClasses>{props.noClasses && `for ${props.noClasses} classes`}</NoOfClasses>
+									<NoOfClasses>{props.cost && 'For Enrollment'}</NoOfClasses>
 								</PriceSection>
-							) : (
-									!isEmpty(props.uiPayment) &&
-									props.uiPayment.map((payment, index) => {
-										return (
-											<PriceSection key={`${payment.cost}-${index}`}>
-												<Price>
-													{payment.cost &&
-														`${formatMoney(
-															Number.parseFloat(
-																get(props.pymtType, 'payUpFront', false)
-																	? payment.cost * payment.month
-																	: payment.cost
-															).toFixed(2),
-															payment.currency ? payment.currency : props.schoolCurrency
-														)}`}
-												</Price>
-												<NoOfClasses>
-													{payment.month &&
-														`${get(props.pymtType, 'payUpFront', false)
-															? ''
-															: 'per month'} for ${payment.month} ${payment.month > 1
-																? 'months'
-																: ' month'} ${get(props.pymtType, 'payUpFront', false)
-																	? `(${formatMoney(
-																		Number.parseFloat(payment.cost).toFixed(2),
-																		payment.currency ? payment.currency : props.schoolCurrency
-																	)} per month)`
-																	: ''}`}
-												</NoOfClasses>
-											</PriceSection>
-										);
-									})
-								)}
-						</Fragment>
-					) : (
-							<PriceSection>
-								{' '}
-								{/* used for enrollment packages */}
-								<Price>
-									{props.cost &&
-										`${formatMoney(
-											Number.parseFloat(props.cost).toFixed(2),
-											props.currency ? props.currency : props.schoolCurrency
-										)}`}
-								</Price>
-								<NoOfClasses>{props.cost && 'For Enrollment'}</NoOfClasses>
-							</PriceSection>
-						)}
-					{props.onSchoolEdit ? (
-						<EditButton
-							label={'Edit'}
-							onClick={() => {
-								props.setFormData();
-								props.onEditClick();
-							}}
-						/>
-					) : (
-							<AddToCartSection>
-								<Cart
-									onClick={() => {
-										props.onAddToCartIconButtonClick(
-											props.packageType,
-											props._id,
-											props.schoolId,
-											props.packageName || props.name,
-											props.cost ? props.cost : props.pymtDetails[0].cost,
-											props.pymtDetails,
-											props.expDuration,
-											props.expPeriod || props.duPeriod,
-											props.noClasses,
-											props.pymtDetails && props.pymtDetails[0].planId,
-											props.currency
-												? props.currency
-												: props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
-											props.pymtType
-										);
-									}}
-								/>
-								{/* </a> */}
-							</AddToCartSection>
-						)}
-				</RightSection>
-			</Wrapper>
-		</OuterWrapper>
-	);
-};
+							)}
+						{props.onSchoolEdit ? (
+							<EditButton
+								label={'Edit'}
+								onClick={() => {
+									props.setFormData();
+									props.onEditClick();
+								}}
+							/>
+						) : (
+								<AddToCartSection>
+									<Cart
+										onClick={() => {
+											props.onAddToCartIconButtonClick(
+												props.packageType,
+												props._id,
+												props.schoolId,
+												props.packageName || props.name,
+												props.cost ? props.cost : props.pymtDetails[0].cost,
+												props.pymtDetails,
+												props.expDuration,
+												props.expPeriod || props.duPeriod,
+												props.noClasses,
+												props.pymtDetails && props.pymtDetails[0].planId,
+												props.currency
+													? props.currency
+													: props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
+												props.pymtType
+											);
+										}}
+									/>
+									{/* </a> */}
+								</AddToCartSection>
+							)}
+					</RightSection>
+				</Wrapper>
+			</OuterWrapper>
+		</Fragment >
+		);
+	}
+}
 
 Package.propTypes = {
 	title: PropTypes.string,

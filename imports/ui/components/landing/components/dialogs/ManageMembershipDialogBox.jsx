@@ -181,7 +181,7 @@ const ManageMemberShipDialogBox = props => {
             open={open}
             onClose={onModalClose}
             onRequestClose={onModalClose}
-            aria-labelledby="contact us"
+            aria-labelledby="Manage Membership"
             classes={{ paper: classes.dialogPaper }}
         >
             {isBusy && <ContainerLoader/>}
@@ -296,9 +296,6 @@ const ManageMemberShipDialogBox = props => {
 };
 
 ManageMemberShipDialogBox.propTypes = {
-    onFormSubmit: PropTypes.func,
-    onHandleInputChange: PropTypes.func,
-    contactNumbers: PropTypes.arrayOf(PropTypes.strings),
     onModalClose: PropTypes.func,
     loading: PropTypes.bool
 };
