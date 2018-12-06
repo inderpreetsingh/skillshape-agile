@@ -104,6 +104,7 @@ const ClassTimesBar = props => {
               classInterestData={classInterestData}
               onModalClose={onModalClose}
               params ={params}
+              schoolName = {schoolName}
             />
           </GridItem>
         );
@@ -117,6 +118,7 @@ const ClassTimesBar = props => {
               classInterestData={classInterestData}
               onModalClose={onModalClose}
               params ={params}
+              schoolName = {schoolName}
             />
           </GridItem>
         );
@@ -152,6 +154,7 @@ const ClassTimesBar = props => {
                 classInterestData={classInterestData}
                 onModalClose={onModalClose}
                 params ={params}
+                schoolName = {schoolName}
               />
             </GridItem>
           );
@@ -161,10 +164,6 @@ const ClassTimesBar = props => {
   };
 
   displayAll = classTimesData => {
-    console.group("CLASS TIME DATA IN BAR");
-    console.info(props);
-    console.groupEnd();
-
     return classTimesData.map(classTimeObj => (
       <GridItem key={classTimeObj._id} spacing={32} inPopUp={inPopUp}>
         <ClassTime
@@ -176,6 +175,7 @@ const ClassTimesBar = props => {
           classInterestData={classInterestData}
           onModalClose={onModalClose}
           params = {params}
+          schoolName = {schoolName}
         />
       </GridItem>
     ));
@@ -190,7 +190,8 @@ const ClassTimesBar = props => {
     handleRemoveFromCalendarButtonClick,
     onModalClose,
     onEditClassTimesClick,
-    params
+    params,
+    schoolName
   } = props;
   let addToCalender;
   return (

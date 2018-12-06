@@ -1,4 +1,4 @@
-import {get,uniq,filter} from 'lodash';
+import {get,uniq,filter,isEmpty} from 'lodash';
 perClassPackageMaker = purchaseData =>{
     let latest = [],newObj = {},pId,uId;
     purchaseData.map((obj,index)=>{
@@ -14,8 +14,10 @@ perClassPackageMaker = purchaseData =>{
                         noClasses : obj1.noClasses,
                         _id: obj1._id
                     }
+                    if(!isEmpty(newObj))
                     latest.push(newObj);
                 }
+                newObj = {};
             })  
             obj.combinedData = uniq(latest);    
         }

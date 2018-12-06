@@ -281,9 +281,23 @@ class ThinkingAboutAttending extends React.Component {
                             <FormGhostButton
                                 darkGreyColor
                                 onClick={onModalClose}
-                                label="Not Yet, Thanks!"
+                                label="Close!"
                             />
                             </ButtonWrapper>
+                            <ButtonWrapper>
+                            <FormGhostButton
+                                onClick={() => {
+                                    
+                                    if(addToCalendar== 'closed'){
+                                        handleClassClosed();
+                                    }
+                                    else{
+                                        handleCheckBoxes(checkBoxes);
+                                    }
+                                }}
+                                label={"Purchase Later"}
+                            />
+                        </ButtonWrapper>
                             <ButtonWrapper>
                                 <Button
                                     onClick={()=>{this.setState({classTypePackages:true})}}
@@ -296,20 +310,7 @@ class ThinkingAboutAttending extends React.Component {
                                 label="Purchase Package Now"
                             /> */}
                         </ButtonWrapper>
-                        <ButtonWrapper>
-                            <FormGhostButton
-                                onClick={() => {
-                                    
-                                    if(addToCalendar== 'closed'){
-                                        handleClassClosed();
-                                    }
-                                    else{
-                                        handleCheckBoxes(checkBoxes);
-                                    }
-                                }}
-                                label={"Purchase at School"}
-                            />
-                        </ButtonWrapper>
+                       
                     
                     </DialogActions>
 

@@ -122,7 +122,7 @@ Meteor.methods({
    'classTypeLocationRequest.updateRequest': function(data) {
     let old= ClassTypeLocationRequest.findOne({userId:data.userId,classTypeId:data.classTypeId});
     if(old && old.notification== data.notification){
-      return 0;
+      return 1;
     }
      try{
      let res=  ClassTypeLocationRequest.update({userId:data.userId,classTypeId:data.classTypeId},{$set:data},{upsert:true})
