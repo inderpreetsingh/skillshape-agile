@@ -87,7 +87,7 @@ const Status = Text.withComponent('span').extend`
 	color: ${(props) => packageStatus[props.packageStatus]};
 `;
 
-const ClassesCovers = styled.div`
+const ClassesCovers = styled.div`   
     margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -96,24 +96,27 @@ const ContentHead = SubHeading.extend`
     margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
-const ClassesRemaining = styled.div`
-    margin-top: ${helpers.rhythmDiv * 2}px;
+const ClassesRemaining = Text.withComponent('div').extend`
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
     background: ${helpers.panelColor};
-    padding: ${helpers.rhythmDiv / 2}px ${helpers.rhythmDiv}px;
+    padding: ${helpers.rhythmDiv}px;
+`;
+
+const ClassesList = styled.ul`
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 100px;
+`;
+
+const ClassListItem = Text.withComponent('li').extend`
+    list-style: dot;
+    list-style-position: outside;
+    margin-left: 17px;
 `;
 
 
 const SubscriptionsDetailsDialogBox = (props) => {
-
-    const getCovers = (data) => {
-        let str = '';
-        if (!isEmpty(data)) {
-            str = data.map((classType) => classType);
-            str = str.join(', ');
-        }
-        return str.toLowerCase();
-
-    }
 
     const getRemainingClasses = (props) => {
         let noClasses = 0;
@@ -129,25 +132,23 @@ const SubscriptionsDetailsDialogBox = (props) => {
         let fee = get(props, 'fee', 0).toFixed(2);
         let currency = get(props, 'currency', '$')
         if (props.payAsYouGo) {
-            return (<React.Fragment>
+            return (
                 <Text>
-                    <b>Payment until</b> and payment of {formatMoney(fee, currency)} <b>due:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}
-                </Text>
-            </React.Fragment>)
+                    <b>Payment</b> of {formatMoney(fee, currency)} <b>is due on</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}
+                </Text>)
         } else if (props.autoWithdraw) {
-            return (<React.Fragment>
+            return (
                 <Text>
                     <b>Automatic Payment</b> of {formatMoney(fee, currency)} will process {calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}
-                </Text>
-            </React.Fragment>)
+                </Text>)
         } else if (props.payUpFront) {
             let contractLength = get(props, 'contractLength', 0);
             contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
-            return <React.Fragment>
-                <Text>
-                    <b>Paid until</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength)}
-                </Text>
-            </React.Fragment>
+            return
+            <Text>
+                <b>Paid until</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength)}
+            </Text>
+
         }
     }
 
@@ -168,7 +169,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
     } = props;
 
     const ourPackageStatus = props.packageStatus || props.status;
-
+    const classesCovered = props.covers || []
 
     return (
         <Dialog
@@ -200,28 +201,29 @@ const SubscriptionsDetailsDialogBox = (props) => {
                             </Text>
                         </StatusWrapper>
 
-                        <ClassesCovers>
+                        {props.packageType == 'CP' && <ClassesRemaining>
+                            {getRemainingClasses(props)}
+                        </ClassesRemaining>}
+
+                        {classesCovered.length > 1 && <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>
-                            <Text>
-                                {getCovers(props.covers)}
-                            </Text>
-                        </ClassesCovers>
+                            <ClassesList>
+                                {classesCovered.map(classCovered => (
+                                    <ClassListItem>
+                                        {capitalizeString(classCovered)}
+                                    </ClassListItem>
+                                ))}
+                            </ClassesList>
+                        </ClassesCovers>}
 
                         {/* Depending upon the type of payment method */}
                         {getDatesBasedOnSubscriptions(props)}
 
                         {getContractEnds(props)}
 
-                        {props.packageType == 'CP' && <ClassesRemaining>
-                            <ContentHead>
-                                Classes Remaining :
-                            </ContentHead>
-                            <Text>
-                                {getRemainingClasses(props)}
-                            </Text>
-                        </ClassesRemaining>}
+
 
                     </ContentWrapper>
                 </DialogContent>
