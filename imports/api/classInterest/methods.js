@@ -100,6 +100,7 @@ Meteor.methods({
        })
        if(indexLoc != -1){
         classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+        if(classTimeRecord)
         classData[indexLoc].classTimes.push(classTimeRecord);
         classData[indexLoc].notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
        }
@@ -107,6 +108,7 @@ Meteor.methods({
         current = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1,classTypeImg:1,medium:1}});
         current.classTimes = [];
         classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+        if(classTimeRecord)
         current.classTimes.push(classTimeRecord);
         current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
         classData.push(current);                   
