@@ -257,7 +257,11 @@ const ManageMemberShipDialogBox = props => {
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
                                     <ClassTimesList>
-                                        {classData.classTimes.map(classTimeData => <ClassTimesListItem>
+                                        {classData.classTimes.map(classTimeData => {
+                                            if(classTimeData==null){
+                                                return;
+                                            }
+                                        return (<ClassTimesListItem>
                                             <Text fontSize="18">{get(classTimeData,"name",'Class Time Name')}</Text>
                                             <ActionButtons>
                                                 <ButtonWrapper>
@@ -269,7 +273,7 @@ const ManageMemberShipDialogBox = props => {
                                                 </ButtonWrapper>
                                              
                                             </ActionButtons>
-                                        </ClassTimesListItem>)}
+                                        </ClassTimesListItem>)})}
                                     </ClassTimesList>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>)}
