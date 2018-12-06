@@ -4,7 +4,7 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 import styled from 'styled-components';
 import React from 'react';
 import moment from 'moment';
-import {  formatMoney } from '/imports/util';
+import { formatMoney } from '/imports/util';
 import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
 import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
 const ButtonsWrapper = styled.div`
@@ -18,15 +18,17 @@ const Div = styled.div`
     justify-content: center;
 `;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
-export const stripePaymentHelper = async function(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
-    
+export const stripePaymentHelper = async function (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
+
     resetStates(this);
     const { popUp } = this.props;
     popUp.appear('success', {
         title: 'Wait',
         content: 'Please Wait One Sec...',
         RenderActions: <span />
-    }); /* , true, { autoClose: true, autoTimeout: 4000 } */
+    }, true, {
+            purpose: 'payment-success'
+        }); /* , true, { autoClose: true, autoTimeout: 4000 } */
     config.currency.map((data, index) => {
         if (data.value == currency) {
             currency = data.label;
@@ -35,16 +37,18 @@ export const stripePaymentHelper = async function(packageType, packageId, school
     });
     let self = this;
     let userId = Meteor.userId();
-    if(!userId){
+    if (!userId) {
         popUp.appear("alert", {
-          title: "Login Required",
-          content: `To purchase any package you must be logged.`,
-          RenderActions: ( <Div > <LoginButton {...this.props} fromPurchase={true}/>  
-            <JoinButton label="Sign Up" {...this.props} />
-       </Div>)
-        }, true);
-        return ;
-      }
+            title: "Login Required",
+            content: `To purchase any package you must be logged.`,
+            RenderActions: (<Div > <LoginButton {...this.props} fromPurchase={true} />
+                <JoinButton label="Sign Up" {...this.props} />
+            </Div>)
+        }, true, {
+                purpose: 'login-alert'
+            });
+        return;
+    }
     //check is package is already purchased
 
     await isAlreadyPurchased({
@@ -128,7 +132,7 @@ export const stripePaymentHelper = async function(packageType, packageId, school
         return;
     }
     //this will handle charge and subscription both
-    handleChargeAndSubscription( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self );
+    handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
 };
 contractLengthFinder = (res, monthlyPymtDetails) => {
     let oldContractLength, newContractLength;
@@ -148,7 +152,7 @@ schoolLogoFinder = (schoolData) => {
 };
 noThanksButton = () => (
     <ButtonWrapper>
-        <FormGhostButton label={'No, thanks'} onClick={() => {}} greyColor applyClose />
+        <FormGhostButton label={'No, thanks'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
 );
 purchaseButton = (
@@ -166,30 +170,30 @@ purchaseButton = (
     pymtType,
     self
 ) => (
-    <ButtonWrapper>
-        <FormGhostButton
-            label={'Purchase Now'}
-            onClick={() => {
-                handleChargeAndSubscription(
-                    packageType,
-                    packageId,
-                    schoolId,
-                    packageName,
-                    amount,
-                    monthlyPymtDetails,
-                    expDuration,
-                    expPeriod,
-                    noClasses,
-                    planId,
-                    currency,
-                    pymtType,
-                    self
-                );
-            }}
-            applyClose
-        />
-    </ButtonWrapper>
-);
+        <ButtonWrapper>
+            <FormGhostButton
+                label={'Purchase Now'}
+                onClick={() => {
+                    handleChargeAndSubscription(
+                        packageType,
+                        packageId,
+                        schoolId,
+                        packageName,
+                        amount,
+                        monthlyPymtDetails,
+                        expDuration,
+                        expPeriod,
+                        noClasses,
+                        planId,
+                        currency,
+                        pymtType,
+                        self
+                    );
+                }}
+                applyClose
+            />
+        </ButtonWrapper>
+    );
 purchaseOldContract = (
     packageType,
     packageId,
@@ -205,31 +209,31 @@ purchaseOldContract = (
     pymtType,
     self
 ) => (
-    <ButtonWrapper>
-        <FormGhostButton
-            label={'Make Payment on Existing Plan'}
-            onClick={() => {
-                handleChargeAndSubscription(
-                    packageType,
-                    packageId,
-                    schoolId,
-                    packageName,
-                    amount,
-                    monthlyPymtDetails,
-                    expDuration,
-                    expPeriod,
-                    noClasses,
-                    planId,
-                    currency,
-                    pymtType,
-                    self,
-                    'useOldContract'
-                );
-            }}
-            applyClose
-        />
-    </ButtonWrapper>
-);
+        <ButtonWrapper>
+            <FormGhostButton
+                label={'Make Payment on Existing Plan'}
+                onClick={() => {
+                    handleChargeAndSubscription(
+                        packageType,
+                        packageId,
+                        schoolId,
+                        packageName,
+                        amount,
+                        monthlyPymtDetails,
+                        expDuration,
+                        expPeriod,
+                        noClasses,
+                        planId,
+                        currency,
+                        pymtType,
+                        self,
+                        'useOldContract'
+                    );
+                }}
+                applyClose
+            />
+        </ButtonWrapper>
+    );
 purchaseNewContract = (
     packageType,
     packageId,
@@ -245,37 +249,37 @@ purchaseNewContract = (
     pymtType,
     self
 ) => (
-    <ButtonWrapper>
-        <FormGhostButton
-            label={'Purchase New Contract'}
-            onClick={() => {
-            handleChargeAndSubscription(
-                    packageType,
-                    packageId,
-                    schoolId,
-                    packageName,
-                    amount,
-                    monthlyPymtDetails,
-                    expDuration,
-                    expPeriod,
-                    noClasses,
-                    planId,
-                    currency,
-                    pymtType,
-                    self
-                );
-            }}
-            applyClose
-        />
-    </ButtonWrapper>
-);
+        <ButtonWrapper>
+            <FormGhostButton
+                label={'Purchase New Contract'}
+                onClick={() => {
+                    handleChargeAndSubscription(
+                        packageType,
+                        packageId,
+                        schoolId,
+                        packageName,
+                        amount,
+                        monthlyPymtDetails,
+                        expDuration,
+                        expPeriod,
+                        noClasses,
+                        planId,
+                        currency,
+                        pymtType,
+                        self
+                    );
+                }}
+                applyClose
+            />
+        </ButtonWrapper>
+    );
 pastSubscriptionButton = () => (
     <ButtonWrapper>
         <FormGhostButton
             label={'View My Subscriptions'}
             onClick={() => {
                 const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
-                 window.open(url, '_blank');
+                window.open(url, '_blank');
             }}
             applyClose
         />
@@ -891,7 +895,7 @@ handleChargeAndSubscription = (
                 image: schoolLogoFinder(schoolData),
                 currency: currency,
                 locale: 'auto',
-                closed: function() {
+                closed: function () {
                     if (!self.state.closed)
                         popUp.appear('alert', {
                             title: 'Canceled ',
@@ -899,7 +903,7 @@ handleChargeAndSubscription = (
                             RenderActions: <span />
                         });
                 },
-                token: function(token) {
+                token: function (token) {
                     self.setState({ closed: true });
                     popUp.appear('success', {
                         title: 'Wait',
@@ -943,7 +947,7 @@ handleChargeAndSubscription = (
                 amount: amount
             });
             // Close Checkout on page navigation:
-            window.addEventListener('popstate', function() {
+            window.addEventListener('popstate', function () {
                 handler.close();
             });
             // }
