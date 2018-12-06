@@ -175,6 +175,7 @@ const ManageMemberShipDialogBox = props => {
         removeAll,
         leaveSchool
     } = props;
+    console.log("​subscriptionsData", subscriptionsData)
     return (
         <Dialog
             open={open}
@@ -214,13 +215,13 @@ const ManageMemberShipDialogBox = props => {
                                         <ProfileImage src={get(classData, 'medium', get(classData, 'classTypeImg', ""))} />
 
                                         <ClassNameWrapper>
-                                            <ClassName> {classData.name} </ClassName>
+                                            <ClassName> {get(classData,'name','Test Class Type')} </ClassName>
                                             <ToggleVisibility>
                                                 <ButtonWrapper>
                                                     <FormGhostButton
                                                         color="alert"
                                                         label="Remove all"
-                                                        onClick ={()=>{removeAll(classData.classTimes,classData.name)}}
+                                                        onClick ={()=>{removeAll(get(classData,'classTimes',[]),get(classData,'name','Test Class Type'))}}
                                                     />
                                                 </ButtonWrapper>
                                                 <ButtonWrapper>
@@ -240,7 +241,8 @@ const ManageMemberShipDialogBox = props => {
                                             <FormGhostButton
                                                 color="alert"
                                                 label="Remove all"
-                                                onClick ={()=>{removeAll(classData.classTimes,classData.name)}}
+                                                onClick ={()=>{removeAll(get(classData,'classTimes',[]),get(classData,'name','Test Class Type'))}}
+
                                             />
                                         </ButtonWrapper>
                                         <ButtonWrapper>
@@ -256,13 +258,13 @@ const ManageMemberShipDialogBox = props => {
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
                                     <ClassTimesList>
                                         {classData.classTimes.map(classTimeData => <ClassTimesListItem>
-                                            <Text fontSize="18">{classTimeData.name}</Text>
+                                            <Text fontSize="18">{get(classTimeData,"name",'Class Time Name')}</Text>
                                             <ActionButtons>
                                                 <ButtonWrapper>
                                                     <FormGhostButton
                                                         color="alert"
                                                         label="Remove from calendar" 
-                                                        onClick = {()=>{removeFromCalendar({userId,classTimeId:classTimeData._id,classTypeName:classData.name,classTimeName:classTimeData.name})}}
+                                                        onClick = {()=>{removeFromCalendar({userId,classTimeId:classTimeData._id,classTypeName:get(classData,'name','Test Class Type'),classTimeName:get(classTimeData,"name",'Class Time Name')})}}
                                                         />
                                                 </ButtonWrapper>
                                              
