@@ -100,7 +100,7 @@ const Subscriptions = styled.div`
 `;
 
 const ListWrapper = styled.div`
-	width: 50%;
+	width: 100%;
 	@media screen and (max-width: ${helpers.tablet}px) {
 		width: 100%;
 	}
@@ -267,7 +267,7 @@ const MySubscriptionRender = (props) => {
                                                 }
                                             />
                                         </ListWrapper>
-                                        <ListWrapper>
+                                        {/* <ListWrapper>
                                             <SubscriptionsList
                                                 subsType="mySubscriptions"
                                                 maxListHeight={300}
@@ -284,7 +284,7 @@ const MySubscriptionRender = (props) => {
                                                         )
                                                 }
                                             />
-                                        </ListWrapper>
+                                        </ListWrapper> */}
                                     </Subscriptions>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>
