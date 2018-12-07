@@ -122,7 +122,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
     const getRemainingClasses = (props) => {
         let stringToPrint = '';
         props.combinedData.map((obj,index)=>{
-					stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
+					stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expire ${formatDate(obj.endDate)} <br/>`;
 				})
         return stringToPrint;
     }
@@ -195,7 +195,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                 <DialogContent classes={{ root: classes.dialogContent }}>
                     <ContentWrapper>
                         <StatusWrapper>
-                            <Text>Status:{" "}
+                            <Text><b>Status:{" "}</b>
                                 <Status packageStatus={ourPackageStatus}>
                                     {capitalizeString(ourPackageStatus)}
                                 </Status>
@@ -206,7 +206,14 @@ const SubscriptionsDetailsDialogBox = (props) => {
                             {ReactHtmlParser(getRemainingClasses(props))}
                         </ClassesRemaining>}
 
-                        {classesCovered.length >= 1 && <ClassesCovers>
+                      
+
+                        {/* Depending upon the type of payment method */}
+                        {getDatesBasedOnSubscriptions(props)}
+
+                        {getContractEnds(props)}
+
+                          {classesCovered.length >= 1 && <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>
@@ -218,13 +225,6 @@ const SubscriptionsDetailsDialogBox = (props) => {
                                 ))}
                             </ClassesList>
                         </ClassesCovers>}
-
-                        {/* Depending upon the type of payment method */}
-                        {getDatesBasedOnSubscriptions(props)}
-
-                        {getContractEnds(props)}
-
-
 
                     </ContentWrapper>
                 </DialogContent>

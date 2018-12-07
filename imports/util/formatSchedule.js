@@ -17,9 +17,9 @@ export const formatAmPm = (startTime) => {
 	}
 };
 
-export const formatDate = (date, monthFormat = 'MMMM') => {
+export const formatDate = (date, monthFormat = 'MMM') => {
 	// console.info(date, moment(date).format('DD-MM-YYYY'), ";;;;;;;;;;");
-	return moment(date).format(`${monthFormat} DD, YYYY`);
+	return moment(date).format(`${monthFormat} Do, YYYY`);
 };
 
 export const formatDateNoYear = (date) => {
