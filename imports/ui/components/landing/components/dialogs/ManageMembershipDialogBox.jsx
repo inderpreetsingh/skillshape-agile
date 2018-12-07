@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { get ,isEmpty} from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { withStyles, MuiThemeProvider } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
@@ -17,7 +17,6 @@ import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 import Dialog, {
     DialogContent,
-    DialogTitle,
     DialogActions,
     withMobileDialog
 } from "material-ui/Dialog";
@@ -65,9 +64,6 @@ const styles = theme => {
         expansionPanelRoot: {
             border: 'none'
         },
-        expansionPanelRootExpanded: {
-            border: `1px solid black`
-        },
         expansionPanelDetails: {
             padding: 0,
         },
@@ -96,7 +92,7 @@ const WrapperContact = styled.li`
 
 const Title = SubHeading.extend`
     font-style: italic;
-    text-align: center;
+    font-size: ${helpers.baseFontSize * 1.25}px;
     font-weight: 300;
 `;
 
@@ -117,12 +113,12 @@ const ClassTimesListItem = styled.li`
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #e3e3e3;
   padding: 0 ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv}px;  
   justify-content: space-between;
   :first-child {
-    border-top: 1px solid #333;
+    border-top: 1px solid #e3e3e3;
     padding-top: ${helpers.rhythmDiv}px;
   }
 
@@ -149,13 +145,42 @@ const ClassNameWrapper = styled.div`
 `;
 
 const ClassName = Text.extend`
-    font-size: ${helpers.baseFontSize * 1.5}px;
+    font-size: ${helpers.baseFontSize * 1.25}px;
 `;
+
+const DialogTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+`;
+
+const TitleWrapper = styled.div`
+
+`;
+
+const ClassDataButtons = (props) => (
+    <React.Fragment>
+        <ButtonWrapper>
+            <FormGhostButton
+                color="alert"
+                label={`Leave ${get(props.classData, 'name', 'Test Class Type')}`}
+                onClick={props.onLeaveClassButtonClick}
+            />
+        </ButtonWrapper>
+        <ButtonWrapper>
+            <FormGhostButton
+                color="caution"
+                label={labelMaker(props.classData.notification)}
+                onClick={props.onNotificationsButtonClick}
+            />
+        </ButtonWrapper>
+    </React.Fragment>
+)
 
 
 const ManageMemberShipDialogBox = props => {
-    labelMaker = (notification)=>{
-        if(get(notification,'notification',false)){
+    labelMaker = (notification) => {
+        if (get(notification, 'notification', false)) {
             return 'Stop Notification';
         }
         return 'Resume Notification';
@@ -165,7 +190,7 @@ const ManageMemberShipDialogBox = props => {
         onModalClose,
         schoolName,
         studentName,
-        selectedSchool,
+        selectedSchoolData,
         subscriptionsData,
         open,
         stopNotification,
@@ -175,7 +200,7 @@ const ManageMemberShipDialogBox = props => {
         removeAll,
         leaveSchool
     } = props;
-    console.log("​subscriptionsData", subscriptionsData)
+    // console.log("​subscriptionsData", subscriptionsData)
     return (
         <Dialog
             open={open}
@@ -184,18 +209,27 @@ const ManageMemberShipDialogBox = props => {
             aria-labelledby="Manage Membership"
             classes={{ paper: classes.dialogPaper }}
         >
-            {isBusy && <ContainerLoader/>}
+            {isBusy && <ContainerLoader />}
             <MuiThemeProvider theme={muiTheme}>
-                <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
-                    <DialogBoxTitleBar
-                        title={"Manage Membership"}
-                        onModalClose={onModalClose}
-                        classes={classes}
-                    />
-                </DialogTitle>
+                <DialogTitleContainer>
+                    <ProfileImage
+                        containerProps={{
+                            borderRadius: `5px`
+                        }}
+                        src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
+                    <TitleWrapper>
+                        <Title>{schoolName}</Title>
+                        <Title>Edit Membership for {studentName}</Title>
+                    </TitleWrapper>
+                    <IconButton
+                        color="primary"
+                        onClick={props.onModalClose}
+                        classes={{ root: props.classes.iconButton }}>
+                        <ClearIcon />
+                    </IconButton >
+                </DialogTitleContainer>
 
                 <DialogContent classes={{ root: classes.dialogContent }}>
-                    <Title>Edit Membership for {studentName} at {schoolName}</Title>
                     <ContentWrapper>
                         {subscriptionsData.map(classData =>
                             <ExpansionPanel
@@ -215,65 +249,47 @@ const ManageMemberShipDialogBox = props => {
                                         <ProfileImage src={get(classData, 'medium', get(classData, 'classTypeImg', ""))} />
 
                                         <ClassNameWrapper>
-                                            <ClassName> {get(classData,'name','Test Class Type')} </ClassName>
+                                            <ClassName> {get(classData, 'name', 'Test Class Type')} </ClassName>
                                             <ToggleVisibility>
-                                                <ButtonWrapper>
-                                                    <FormGhostButton
-                                                        color="alert"
-                                                        label="Remove all"
-                                                        onClick ={()=>{removeAll(get(classData,'classTimes',[]),get(classData,'name','Test Class Type'))}}
-                                                    />
-                                                </ButtonWrapper>
-                                                <ButtonWrapper>
-                                                    <FormGhostButton
-                                                        color="caution"
-                                                        label={labelMaker(classData.notification)}
-                                                        onClick={()=>{stopNotification(classData.notification)}}
-                                                    />
-                                                </ButtonWrapper>
+                                                <ClassDataButtons
+                                                    classData={classData}
+                                                    onLeaveClassButtonClick={() => { removeAll(get(props.classData, 'classTimes', []), get(props.classData, 'name', 'Test Class Type')) }}
+                                                    onNotificationsButtonClick={() => { stopNotification(props.classData.notification) }}
+                                                />
                                             </ToggleVisibility>
                                         </ClassNameWrapper>
 
                                     </ClassProfile>
 
                                     <ToggleVisibility show>
-                                        <ButtonWrapper>
-                                            <FormGhostButton
-                                                color="alert"
-                                                label="Remove all"
-                                                onClick ={()=>{removeAll(get(classData,'classTimes',[]),get(classData,'name','Test Class Type'))}}
-
-                                            />
-                                        </ButtonWrapper>
-                                        <ButtonWrapper>
-                                                    <FormGhostButton
-                                                        color="caution"
-                                                        label={labelMaker(classData.notification)}
-                                                        onClick={()=>{stopNotification(classData.notification)}}
-                                                    />
-                                                </ButtonWrapper>
+                                        <ClassDataButtons
+                                            classData={classData}
+                                            onLeaveClassButtonClick={() => { removeAll(get(props.classData, 'classTimes', []), get(props.classData, 'name', 'Test Class Type')) }}
+                                            onNotificationsButtonClick={() => { stopNotification(props.classData.notification) }}
+                                        />
                                     </ToggleVisibility>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
                                     <ClassTimesList>
                                         {classData.classTimes.map(classTimeData => {
-                                            if(classTimeData==null){
+                                            if (classTimeData == null) {
                                                 return;
                                             }
-                                        return (<ClassTimesListItem>
-                                            <Text fontSize="18">{get(classTimeData,"name",'Class Time Name')}</Text>
-                                            <ActionButtons>
-                                                <ButtonWrapper>
-                                                    <FormGhostButton
-                                                        color="alert"
-                                                        label="Remove from calendar" 
-                                                        onClick = {()=>{removeFromCalendar({userId,classTimeId:classTimeData._id,classTypeName:get(classData,'name','Test Class Type'),classTimeName:get(classTimeData,"name",'Class Time Name')})}}
+                                            return (<ClassTimesListItem>
+                                                <Text fontSize="18">{get(classTimeData, "name", 'Class Time Name')}</Text>
+                                                <ActionButtons>
+                                                    <ButtonWrapper>
+                                                        <FormGhostButton
+                                                            color="alert"
+                                                            label="Remove from calendar"
+                                                            onClick={() => { removeFromCalendar({ userId, classTimeId: classTimeData._id, classTypeName: get(classData, 'name', 'Test Class Type'), classTimeName: get(classTimeData, "name", 'Class Time Name') }) }}
                                                         />
-                                                </ButtonWrapper>
-                                             
-                                            </ActionButtons>
-                                        </ClassTimesListItem>)})}
+                                                    </ButtonWrapper>
+
+                                                </ActionButtons>
+                                            </ClassTimesListItem>)
+                                        })}
                                     </ClassTimesList>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>)}
@@ -281,14 +297,17 @@ const ManageMemberShipDialogBox = props => {
                 </DialogContent>
 
                 <DialogActions
-                    classes={{ root: classes.dialogActionsRoot, action: classes.dialogAction }}>
+                    classes={{
+                        root: classes.dialogActionsRoot,
+                        action: classes.dialogAction
+                    }}>
                     <ButtonWrapper>
-                        <FormGhostButton color="primary" label="Close" onClick = {onModalClose}/>
+                        <FormGhostButton color="primary" label="Close" onClick={onModalClose} />
                     </ButtonWrapper>
-                    {(!isEmpty(subscriptionsData))&& (<ButtonWrapper>
-                        <FormGhostButton color="alert" label="Leave school" onClick = {leaveSchool}/>
+                    {(!isEmpty(subscriptionsData)) && (<ButtonWrapper>
+                        <FormGhostButton color="alert" label="Leave school" onClick={leaveSchool} />
                     </ButtonWrapper>)}
-                    
+
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>

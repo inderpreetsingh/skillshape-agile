@@ -172,16 +172,16 @@ class SchoolMemberInfo extends Component {
 		let state = {};
 		state.showConfirmation = false;
 		// if (view === 'admin') {
-			state.notes = get(memberInfo, 'adminNotes', '');
-			state.subscriptionsData = [];
-			// } else {
-			//   state.notes = get(
-			//     memberInfo,
-			//     `classmatesNotes[${Meteor.userId()}].notes`,
-			//     ""
-			//   );
+		state.notes = get(memberInfo, 'adminNotes', '');
+		state.subscriptionsData = [];
+		// } else {
+		//   state.notes = get(
+		//     memberInfo,
+		//     `classmatesNotes[${Meteor.userId()}].notes`,
+		//     ""
+		//   );
 		// }
-		this.classDataFinder();	
+		this.classDataFinder();
 		return state;
 	};
 
@@ -190,7 +190,7 @@ class SchoolMemberInfo extends Component {
 		let payload = {};
 
 		// if (view === 'admin' && Meteor.userId()) {
-			payload.adminNotes = this.state.notes;
+		payload.adminNotes = this.state.notes;
 		// } else if (view === 'classmates' && Meteor.userId()) {
 		// 	payload.classmatesNotes = {
 		// 		[Meteor.userId()]: {
@@ -238,20 +238,20 @@ class SchoolMemberInfo extends Component {
 
 	handleDialogState = (dialogName, state) => {
 		//debugger;
-		if(dialogName=='manageMemberShipDialog'){
+		if (dialogName == 'manageMemberShipDialog') {
 			this.classDataFinder();
 		}
 		this.setState({
 			[dialogName]: state
 		});
 	};
-	classDataFinder = ()=>{
-		let {schoolId,activeUserId} = this.props.memberInfo;
-		Meteor.call('classInterest.findClassTypes',schoolId,activeUserId,(err,res)=>{
-			if(res)
-			this.setState({subscriptionsData:res})
+	classDataFinder = () => {
+		let { schoolId, activeUserId } = this.props.memberInfo;
+		Meteor.call('classInterest.findClassTypes', schoolId, activeUserId, (err, res) => {
+			if (res)
+				this.setState({ subscriptionsData: res })
 			else
-			this.setState({subscriptionsData:[]})
+				this.setState({ subscriptionsData: [] })
 		})
 	}
 	getContactNumber = () => {
@@ -292,21 +292,21 @@ class SchoolMemberInfo extends Component {
 			}
 		});
 	};
-	removeAll = (classTimes,classTypeName)=>{
-	const { memberInfo} = this.props;
-	let userId = get(memberInfo,'activeUserId',null),data={};
-	this.setState({all:true});
-	classTimes.map((obj,index)=>{
-		data.userId = userId;
-		data.classTimeId = obj._id;
-		data.classTypeName = classTypeName;
-		data.classTimeName = obj.name;
-		data.all = true ;
-		this.removeFromCalendar(data);
-	})
+	removeAll = (classTimes, classTypeName) => {
+		const { memberInfo } = this.props;
+		let userId = get(memberInfo, 'activeUserId', null), data = {};
+		this.setState({ all: true });
+		classTimes.map((obj, index) => {
+			data.userId = userId;
+			data.classTimeId = obj._id;
+			data.classTypeName = classTypeName;
+			data.classTimeName = obj.name;
+			data.all = true;
+			this.removeFromCalendar(data);
+		})
 	}
-	stopNotification = (payload)=>{
-		this.setState({isBusy:true});
+	stopNotification = (payload) => {
+		this.setState({ isBusy: true });
 		let data = {};
 		data.classTypeId = payload.classTypeId;
 		data.userId = payload.userId;
@@ -314,26 +314,26 @@ class SchoolMemberInfo extends Component {
 		Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
 			const { popUp } = this.props;
 			if (res) {
-			  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-				if (res1) {
-					this.setState({isBusy:false});
-				  popUp.appear("success", {
-					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-				  });
-				}
-			  });
+				Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+					if (res1) {
+						this.setState({ isBusy: false });
+						popUp.appear("success", {
+							content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+						});
+					}
+				});
 			}
-			else{
-				this.setState({isBusy:false});
-				  popUp.appear("success", {
+			else {
+				this.setState({ isBusy: false });
+				popUp.appear("success", {
 					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-				  });
+				});
 			}
-		  });
+		});
 	}
-	leaveSchool = ()=>{
-		let {popUp,memberInfo} = this.props;
-		let studentName = get(memberInfo,'firstName',get(memberInfo,'name','No Name'));
+	leaveSchool = () => {
+		let { popUp, memberInfo } = this.props;
+		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
 		popUp.appear(
 			'inform',
 			{
@@ -341,59 +341,59 @@ class SchoolMemberInfo extends Component {
 				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
 				RenderActions: (
 					<ButtonWrapper>
-					<FormGhostButton
-						label={'Cancel'}
-						applyClose
-					/>
-					<FormGhostButton
-						label={'Yes'}
-						onClick={this.leaveSchoolHandler}
-						applyClose
-					/>
-				</ButtonWrapper>
+						<FormGhostButton
+							label={'Cancel'}
+							applyClose
+						/>
+						<FormGhostButton
+							label={'Yes'}
+							onClick={this.leaveSchoolHandler}
+							applyClose
+						/>
+					</ButtonWrapper>
 				)
 			},
 			true
 		);
 	}
-	leaveSchoolHandler = ()=>{
-		let {subscriptionsData} = this.state;
-		this.setState({all:true});
-		if(!isEmpty(subscriptionsData)){
-		subscriptionsData.map((obj,index)=>{
-			this.removeAll(obj.classTimes,obj.name);
-		})
-	}
+	leaveSchoolHandler = () => {
+		let { subscriptionsData } = this.state;
+		this.setState({ all: true });
+		if (!isEmpty(subscriptionsData)) {
+			subscriptionsData.map((obj, index) => {
+				this.removeAll(obj.classTimes, obj.name);
+			})
+		}
 		"You are about to remove {studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?"
 	}
-	removeFromCalendar = (data)=>{
-		let {memberInfo} = this.props;
-		let {classTimeName,classTypeName} = data;
-		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
-		this.setState({ isBusy: true});
+	removeFromCalendar = (data) => {
+		let { memberInfo } = this.props;
+		let { classTimeName, classTypeName } = data;
+		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
+		this.setState({ isBusy: true });
 		Meteor.call(
 			"classInterest.removeClassInterestByClassTimeId",
 			data,
 			(error, res) => {
-			  if(res){
-				  this.setState({ isBusy: false});
-				  const { popUp } = this.props;
-				  popUp.appear("success", {
-					content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`
-				  });
-			  }
-			 
+				if (res) {
+					this.setState({ isBusy: false });
+					const { popUp } = this.props;
+					popUp.appear("success", {
+						content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`
+					});
+				}
+
 			}
-		  );
+		);
 	}
 	render() {
-		const { memberInfo, view, classes, adminView, currentUser,notClassmatePage } = this.props;
-		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation,subscriptionsData,isBusy } = this.state;
+		const { memberInfo, view, classes, adminView, currentUser, notClassmatePage, selectedSchoolData } = this.props;
+		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation, subscriptionsData, isBusy } = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
-		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
-		let studentName = get(memberInfo,'firstName',get(memberInfo,'name','Old Data'))
-		let userId = get(memberInfo,'activeUserId',null);
+		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
+		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'Old Data'))
+		let userId = get(memberInfo, 'activeUserId', null);
 		return (
 			<Grid container>
 				{showConfirmation && (
@@ -412,13 +412,14 @@ class SchoolMemberInfo extends Component {
 						studentName={studentName}
 						open={this.state.manageMemberShipDialog}
 						onModalClose={() => this.handleDialogState('manageMemberShipDialog', false)}
-						removeAll = {this.removeAll}
-						stopNotification = {this.stopNotification}
-						leaveSchool = {this.leaveSchool}
-						removeFromCalendar = {this.removeFromCalendar}
-						schoolName = {schoolName}
-						isBusy = {isBusy}
-						userId = {userId}
+						removeAll={this.removeAll}
+						stopNotification={this.stopNotification}
+						leaveSchool={this.leaveSchool}
+						removeFromCalendar={this.removeFromCalendar}
+						schoolName={schoolName}
+						selectedSchoolData={selectedSchoolData}
+						isBusy={isBusy}
+						userId={userId}
 					/>
 				)}
 				{this.state.callMemberDialog && (
@@ -518,7 +519,7 @@ class SchoolMemberInfo extends Component {
 							fullWidth
 						/>
 					</Grid>)}
-					
+
 				</Grid>
 				{view === 'admin' && (
 					<Grid container style={{ backgroundColor: 'darkgray', marginTop: '22px' }}>
@@ -551,7 +552,7 @@ class SchoolMemberInfo extends Component {
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
 					)}
-				
+
 			</Grid>
 		);
 	}
