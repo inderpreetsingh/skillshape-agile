@@ -1,35 +1,24 @@
-import React, { Component, Fragment } from 'react';
 import get from 'lodash/get';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
+import isEmpty from 'lodash/isEmpty';
+import FileUpload from 'material-ui-icons/FileUpload';
 import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
-import isEmpty from 'lodash/isEmpty';
 import { withStyles } from 'material-ui/styles';
-import styled from 'styled-components';
-import { verifyImageURL, getUserFullName } from '/imports/util';
-import FileUpload from 'material-ui-icons/FileUpload';
+import Typography from 'material-ui/Typography';
 import MobileDetect from 'mobile-detect';
+import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
-import { withPopUp } from "/imports/util";
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-
-import {
-	CallMemberDialogBox,
-	EmailMemberDialogBox,
-	EditMemberDialogBox,
-	ManageMemberShipDialogBox,
-} from '/imports/ui/components/landing/components/dialogs/';
-import {
-	FormGhostButton,
-	MemberActionButton
-} from '/imports/ui/components/landing/components/buttons/';
-
-import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import SubscriptionBox from '/imports/ui/componentHelpers/boxes/subscriptionBox.js';
+import styled from 'styled-components';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
+import { FormGhostButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
+import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import { verifyImageURL, withPopUp } from '/imports/util';
+
+
 
 const styles = (theme) => ({
 	avatarCss: {
@@ -364,7 +353,6 @@ class SchoolMemberInfo extends Component {
 				this.removeAll(obj.classTimes, obj.name);
 			})
 		}
-		"You are about to remove {studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?"
 	}
 	removeFromCalendar = (data) => {
 		let { memberInfo } = this.props;
