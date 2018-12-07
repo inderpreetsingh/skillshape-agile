@@ -17,6 +17,7 @@ import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
+import ReactHtmlParser from 'react-html-parser';
 
 import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { Text, SubHeading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
@@ -119,11 +120,11 @@ const ClassListItem = Text.withComponent('li').extend`
 const SubscriptionsDetailsDialogBox = (props) => {
 
     const getRemainingClasses = (props) => {
-        let noClasses = 0;
-        props.combinedData.map((obj, index) => {
-            noClasses += get(obj, "noClasses", 0) || 0;
-        });
-        return `${noClasses} ${noClasses <= 1 ? 'Class' : 'Classes'} Remaining`;
+        let stringToPrint = '';
+        props.combinedData.map((obj,index)=>{
+					stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
+				})
+        return stringToPrint;
     }
 
 
@@ -153,7 +154,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
     }
 
     const getContractEnds = () => {
-        if (props.autoWithdraw || props.payUpFront) {
+        if (props.autoWithdraw || props.payUpFront || props.payAsYouGo) {
             return (<Text>
                 <b>Contract ends:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
             </Text>)
@@ -202,10 +203,10 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         </StatusWrapper>
 
                         {props.packageType == 'CP' && <ClassesRemaining>
-                            {getRemainingClasses(props)}
+                            {ReactHtmlParser(getRemainingClasses(props))}
                         </ClassesRemaining>}
 
-                        {classesCovered.length > 1 && <ClassesCovers>
+                        {classesCovered.length >= 1 && <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>
