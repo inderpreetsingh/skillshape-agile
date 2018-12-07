@@ -1,39 +1,50 @@
-import React from 'react';
-import styled from 'styled-components';
-import { browserHistory } from 'react-router';
-import { createContainer } from 'meteor/react-meteor-data';
-
+import concat from 'lodash/concat';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import uniq from 'lodash/uniq';
-import concat from 'lodash/concat';
-
-import School from '/imports/api/school/fields';
-import Purchases from '/imports/api/purchases/fields';
-import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import ClassPricing from '/imports/api/classPricing/fields';
-import MonthlyPricing from '/imports/api/monthlyPricing/fields';
-import ClassSubscription from '/imports/api/classSubscription/fields';
-
-import SchoolBox from '/imports/ui/componentHelpers/boxes/schoolBox.js';
+import { createContainer } from 'meteor/react-meteor-data';
+import React from 'react';
+import { browserHistory } from 'react-router';
+import styled from 'styled-components';
 import MySubscriptionRender from './MySubscriptionRender.jsx';
+import ClassSubscription from '/imports/api/classSubscription/fields';
+import Purchases from '/imports/api/purchases/fields';
+import School from '/imports/api/school/fields';
+import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { withPopUp ,packageCoverProvider} from '/imports/util';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { packageCoverProvider, withPopUp } from '/imports/util';
+
+
 
 const Wrapper = styled.div`background: white;`;
+const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 class MySubscription extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			subscriptionsData:[]
+		};
 	}
 
 	getContactNumbers = (data) => {
 		// console.info('data for phones', data);
 		return (data.phone && data.phone.split(/[\|\,\\]/));
 	};
-
+	
+	
+	classDataFinder = ()=>{
+		let {schoolData,currentUser} = this.props;
+		let schoolId = get(schoolData[0],'_id',null);
+		let userId = get(currentUser,'_id',null);
+		Meteor.call('classInterest.findClassTypes',schoolId,userId,(err,res)=>{
+			if(res)
+			this.setState({subscriptionsData:res})
+			else
+			this.setState({subscriptionsData:[]})
+		})
+	}
 	getOurEmail = (data) => {
 		return data.email;
 	};
@@ -75,7 +86,7 @@ class MySubscription extends React.Component {
 
 	handleManageMemberShipDialogBox = (modelState, schoolData) => (e) => {
 		e.stopPropagation();
-
+		this.classDataFinder();
 		this.setState(state => {
 			return {
 				...state,
@@ -84,10 +95,102 @@ class MySubscription extends React.Component {
 			}
 		});
 	}
-
+	removeAll = (classTimes,classTypeName)=>{
+		const { currentUser} = this.props;
+		let userId = get(currentUser,'_id',null),data={};
+		this.setState({all:true});
+		classTimes.map((obj,index)=>{
+			data.userId = userId;
+			data.classTimeId = obj._id;
+			data.classTypeName = classTypeName;
+			data.classTimeName = obj.name;
+			data.all = true ;
+			this.removeFromCalendar(data);
+		})
+		}
+	leaveSchool = ()=>{
+			let {popUp,currentUser} = this.props;
+			let studentName = get(currentUser,'profile.firstName',get(currentUser,'profile.name','Old Data'));
+			popUp.appear(
+				'inform',
+				{
+					title: 'Confirmation',
+					content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+					RenderActions: (
+						<ButtonWrapper>
+						<FormGhostButton
+							label={'Cancel'}
+							applyClose
+						/>
+						<FormGhostButton
+							label={'Yes'}
+							onClick={this.leaveSchoolHandler}
+							applyClose
+						/>
+					</ButtonWrapper>
+					)
+				},
+				true
+			);
+		}
+	leaveSchoolHandler = ()=>{
+			let {subscriptionsData} = this.state;
+			this.setState({all:true});
+			if(!isEmpty(subscriptionsData)){
+			subscriptionsData.map((obj,index)=>{
+				this.removeAll(obj.classTimes,obj.name);
+			})
+		}
+		}
+	removeFromCalendar = (data)=>{
+			let {schoolData} = this.props;
+			let {classTimeName,classTypeName} = data;
+			let schoolName = get(schoolData[0],'name','Hidden Leaf');
+			this.setState({ isBusy: true});
+			Meteor.call(
+				"classInterest.removeClassInterestByClassTimeId",
+				data,
+				(error, res) => {
+				  if(res){
+					  this.setState({ isBusy: false});
+					  const { popUp } = this.props;
+					  popUp.appear("success", {
+						content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`
+					  });
+				  }
+				 
+				}
+			  );
+		}
+	stopNotification = (payload)=>{
+			this.setState({isBusy:true});
+			let data = {};
+			data.classTypeId = payload.classTypeId;
+			data.userId = payload.userId;
+			data.notification = !payload.notification;
+			Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+				const { popUp } = this.props;
+				if (res) {
+				  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+					if (res1) {
+						this.setState({isBusy:false});
+					  popUp.appear("success", {
+						content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+					  });
+					}
+				  });
+				}
+				else{
+					this.setState({isBusy:false});
+					  popUp.appear("success", {
+						content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+					  });
+				}
+			  });
+		}
 	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool } = this.state;
-		const { isLoading, schoolData, purchaseData, currentUser } = this.props;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool,isBusy,subscriptionsData } = this.state;
+		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
 		// console.groupEnd();
@@ -115,7 +218,13 @@ class MySubscription extends React.Component {
 					handleModelState={this.handleModelState}
 					handleEmail={this.handleEmail}
 					handleCall={this.handleCall}
+					isBusy = {isBusy}
+					subscriptionsData = {subscriptionsData}
 					handleSchoolVisit={this.handleSchoolVisit}
+					removeAll = {this.removeAll}
+					stopNotification = {this.stopNotification}
+					leaveSchool = {this.leaveSchool}
+					removeFromCalendar = {this.removeFromCalendar}
 				/>
 			</Wrapper>
 		);
