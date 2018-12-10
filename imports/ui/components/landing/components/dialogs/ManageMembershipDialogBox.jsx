@@ -1,5 +1,10 @@
-import React, { Component } from "react";
+import { get, isEmpty } from 'lodash';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
 import PropTypes from "prop-types";
+import React from "react";
 import styled from "styled-components";
 import { get, isEmpty } from 'lodash';
 import { withStyles, MuiThemeProvider } from "material-ui/styles";
@@ -244,7 +249,18 @@ const ClassDataButtons = (props) => (
 
 
 const ManageMemberShipDialogBox = props => {
-
+    labelMaker = (notification) => {
+        if (get(notification, 'notification', false)) {
+            return 'Stop Notification';
+        }
+        return 'Resume Notification';
+    }
+    colorMaker = (notification) => {
+        if (get(notification, 'notification', false)) {
+            return 'caution';
+        }
+        return null;
+    }
     const {
         classes,
         onModalClose,
@@ -258,7 +274,8 @@ const ManageMemberShipDialogBox = props => {
         removeFromCalendar,
         userId,
         removeAll,
-        leaveSchool
+        leaveSchool,
+        schoolImg
     } = props;
     // console.log("​subscriptionsData", subscriptionsData)
     return (

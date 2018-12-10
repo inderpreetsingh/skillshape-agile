@@ -1,39 +1,22 @@
-import React, { Component } from "react";
+import { get } from 'lodash';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
 import PropTypes from "prop-types";
+import React from "react";
+import ReactHtmlParser from 'react-html-parser';
 import styled from "styled-components";
-import { get, isEmpty } from 'lodash';
-import { withStyles, MuiThemeProvider } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-import Dialog, {
-    DialogContent,
-    DialogTitle,
-    DialogActions,
-    withMobileDialog
-} from "material-ui/Dialog";
-
-
-import ClearIcon from 'material-ui-icons/Clear';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
-
-import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
-import { Text, SubHeading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-
-import {
-    formatMoney,
-    maximumClasses,
-    capitalizeString,
-    calcRenewalDate,
-    calcContractEnd,
-    formatDate
-} from '/imports/util';
-
-import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
-
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
+import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
+import { calcRenewalDate, capitalizeString, formatDate, formatMoney } from '/imports/util';
+
+
+
+
+
+
 
 const styles = theme => {
     return {
@@ -119,11 +102,11 @@ const ClassListItem = Text.withComponent('li').extend`
 const SubscriptionsDetailsDialogBox = (props) => {
 
     const getRemainingClasses = (props) => {
-        let noClasses = 0;
-        props.combinedData.map((obj, index) => {
-            noClasses += get(obj, "noClasses", 0) || 0;
-        });
-        return `${noClasses} ${noClasses <= 1 ? 'Class' : 'Classes'} Remaining`;
+        let stringToPrint = '';
+        props.combinedData.map((obj,index)=>{
+					stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expire ${formatDate(obj.endDate)} <br/>`;
+				})
+        return stringToPrint;
     }
 
 
@@ -153,7 +136,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
     }
 
     const getContractEnds = () => {
-        if (props.autoWithdraw || props.payUpFront) {
+        if (props.autoWithdraw || props.payUpFront || props.payAsYouGo) {
             return (<Text>
                 <b>Contract ends:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.contractLength)}
             </Text>)
@@ -194,7 +177,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                 <DialogContent classes={{ root: classes.dialogContent }}>
                     <ContentWrapper>
                         <StatusWrapper>
-                            <Text>Status:{" "}
+                            <Text><b>Status:{" "}</b>
                                 <Status packageStatus={ourPackageStatus}>
                                     {capitalizeString(ourPackageStatus)}
                                 </Status>
@@ -202,10 +185,17 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         </StatusWrapper>
 
                         {props.packageType == 'CP' && <ClassesRemaining>
-                            {getRemainingClasses(props)}
+                            {ReactHtmlParser(getRemainingClasses(props))}
                         </ClassesRemaining>}
 
-                        {classesCovered.length > 1 && <ClassesCovers>
+                      
+
+                        {/* Depending upon the type of payment method */}
+                        {getDatesBasedOnSubscriptions(props)}
+
+                        {getContractEnds(props)}
+
+                          {classesCovered.length >= 1 && <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>
@@ -217,13 +207,6 @@ const SubscriptionsDetailsDialogBox = (props) => {
                                 ))}
                             </ClassesList>
                         </ClassesCovers>}
-
-                        {/* Depending upon the type of payment method */}
-                        {getDatesBasedOnSubscriptions(props)}
-
-                        {getContractEnds(props)}
-
-
 
                     </ContentWrapper>
                 </DialogContent>

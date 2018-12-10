@@ -257,7 +257,7 @@ class Package extends React.Component {
 				return stringToPrint += `${noClasses} ${noClasses <= 1 ? 'Class' : 'Classes'} Remaining`;
 			}
 			else {
-				stringToPrint += 'Expiration Date : ';
+				stringToPrint += '<b>Expiration Date :</b> ';
 			}
 		}
 		return stringToPrint + (props.packageType == 'EP' && props.expiry == 'none' ? 'None' : formatDate(props.endDate));

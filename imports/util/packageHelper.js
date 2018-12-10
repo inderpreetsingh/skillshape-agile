@@ -20,6 +20,7 @@ perClassPackageMaker = purchaseData =>{
                 newObj = {};
             })  
             obj.combinedData = uniq(latest);    
+            latest = [];
         }
     })
     return filter(purchaseData,(o)=>{ return get(o,'packageStatus','inActive')=='active'});
