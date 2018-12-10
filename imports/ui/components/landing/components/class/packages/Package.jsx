@@ -215,14 +215,14 @@ class Package extends React.Component {
 		}
 	}
 
-	getCovers(data) {
-		let str = '';
-		if (!isEmpty(data)) {
-			str = data.map((classType) => classType);
-			str = capitalizeString(str).join(', ');
+	getCovers=(data)=> {
+		let str = ""
+		if(!isEmpty(data)) {
+		  str = data.map(classType => classType.name);
+		  str = str.join(", ");
 		}
-		return str;
-	}
+		return str.toLowerCase();
+	  }
 
 	getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
@@ -366,7 +366,7 @@ class Package extends React.Component {
 								<CdText>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
 							)}
 						<CdText>
-							<b>Covers:</b> {this.getCovers(props.covers)}
+							<b>Covers:</b> {this.getCovers(props.selectedClassType)}
 						</CdText>
 						{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 					</ClassDetailsSection>
