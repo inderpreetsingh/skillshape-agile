@@ -275,7 +275,7 @@ const ManageMemberShipDialogBox = props => {
                         src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
                     <DialogTitleWrapper>
                         <SchoolName>{capitalizeString(schoolName)}</SchoolName>
-                        {studentName && <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>}
+                        <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>
                     </DialogTitleWrapper>
                     <IconButton
                         color="primary"

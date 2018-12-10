@@ -176,6 +176,7 @@ const MySubscriptionRender = (props) => {
             {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
                     subscriptionsData={subscriptionsData || []}
+                    studentName={studentName}
                     open={manageMemberShipDialog}
                     onModalClose={handleManageMemberShipDialogBox(false, schoolData)}
                     removeAll={removeAll}
