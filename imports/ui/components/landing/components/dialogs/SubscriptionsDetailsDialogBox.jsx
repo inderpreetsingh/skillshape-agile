@@ -13,11 +13,6 @@ import { packageStatus } from '/imports/ui/components/landing/constants/packages
 import { calcRenewalDate, capitalizeString, formatDate, formatMoney } from '/imports/util';
 
 
-
-
-
-
-
 const styles = theme => {
     return {
         dialogTitleRoot: {
@@ -29,6 +24,8 @@ const styles = theme => {
         },
         dialogPaper: {
             maxWidth: 600,
+            minHeight: 300,
+            maxHeight: 400,
             padding: helpers.rhythmDiv * 3,
             width: '100%',
             margin: helpers.rhythmDiv
@@ -79,7 +76,7 @@ const ContentHead = SubHeading.extend`
     margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
-const ClassesRemaining = Text.withComponent('div').extend`
+const HighlightedBg = Text.withComponent('div').extend`
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     background: ${helpers.panelColor};
     padding: ${helpers.rhythmDiv}px;
@@ -88,8 +85,6 @@ const ClassesRemaining = Text.withComponent('div').extend`
 const ClassesList = styled.ul`
     margin: 0;
     padding: 0;
-    overflow-y: auto;
-    max-height: 100px;
 `;
 
 const ClassListItem = Text.withComponent('li').extend`
@@ -103,37 +98,12 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
     const getRemainingClasses = (props) => {
         let stringToPrint = '';
-        props.combinedData.map((obj,index)=>{
-					stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expire ${formatDate(obj.endDate)} <br/>`;
-				})
+        props.combinedData.map((obj, index) => {
+            stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expire ${formatDate(obj.endDate)} <br/>`;
+        })
         return stringToPrint;
     }
 
-
-    const getDatesBasedOnSubscriptions = (props) => {
-        let stringToPrint = '';
-        let fee = get(props, 'fee', 0).toFixed(2);
-        let currency = get(props, 'currency', '$')
-        if (props.payAsYouGo) {
-            return (
-                <Text>
-                    <b>Payment</b> of {formatMoney(fee, currency)} <b>is due on</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}
-                </Text>)
-        } else if (props.autoWithdraw) {
-            return (
-                <Text>
-                    <b>Automatic Payment</b> of {formatMoney(fee, currency)} will process {calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}
-                </Text>)
-        } else if (props.payUpFront) {
-            let contractLength = get(props, 'contractLength', 0);
-            contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
-            return
-            <Text>
-                <b>Paid until</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength)}
-            </Text>
-
-        }
-    }
 
     const getContractEnds = () => {
         if (props.autoWithdraw || props.payUpFront || props.payAsYouGo) {
@@ -143,12 +113,49 @@ const SubscriptionsDetailsDialogBox = (props) => {
         }
     }
 
+
+
+    const getDatesBasedOnSubscriptions = (props) => {
+        let stringToPrint = '';
+        let fee = get(props, 'fee', 0).toFixed(2);
+        let currency = get(props, 'currency', '$')
+        if (props.payAsYouGo) {
+            return (<HighlightedBg>
+                <Text>
+                    <b>Payment</b> of {formatMoney(fee, currency)} <b>is due on</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}
+                </Text>
+                {getContractEnds()}
+            </HighlightedBg>
+            )
+        } else if (props.autoWithdraw) {
+            return (
+                <HighlightedBg>
+                    <Text>
+                        <b>Automatic Payment</b> of {formatMoney(fee, currency)} will process {calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}
+                    </Text>
+                    {getContractEnds()}
+                </HighlightedBg>
+            )
+        } else if (props.payUpFront) {
+            let contractLength = get(props, 'contractLength', 0);
+            contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
+            return (
+                <HighlightedBg>
+                    <Text>
+                        <b>Paid until</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength)}
+                    </Text>
+                    {getContractEnds()}
+                </HighlightedBg>
+            )
+        }
+    }
+
     const {
+        open,
         classes,
+        fullScreen,
         onModalClose,
         subscriptionsData,
-        open,
-        fullScreen,
     } = props;
 
     const ourPackageStatus = props.packageStatus || props.status;
@@ -184,18 +191,14 @@ const SubscriptionsDetailsDialogBox = (props) => {
                             </Text>
                         </StatusWrapper>
 
-                        {props.packageType == 'CP' && <ClassesRemaining>
+                        {props.packageType == 'CP' && <HighlightedBg>
                             {ReactHtmlParser(getRemainingClasses(props))}
-                        </ClassesRemaining>}
-
-                      
+                        </HighlightedBg>}
 
                         {/* Depending upon the type of payment method */}
                         {getDatesBasedOnSubscriptions(props)}
 
-                        {getContractEnds(props)}
-
-                          {classesCovered.length >= 1 && <ClassesCovers>
+                        {classesCovered.length && <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>
