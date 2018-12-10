@@ -1,28 +1,21 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { get ,isEmpty} from 'lodash';
-import { withStyles, MuiThemeProvider } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-
-import ClearIcon from 'material-ui-icons/Clear';
+import { get, isEmpty } from 'lodash';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
-
-import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
-import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
-import Dialog, {
-    DialogContent,
-    DialogTitle,
-    DialogActions,
-    withMobileDialog
-} from "material-ui/Dialog";
-
+import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
+import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import { SubHeading, Text, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
+
+
+
 
 const styles = theme => {
     return {
@@ -160,6 +153,12 @@ const ManageMemberShipDialogBox = props => {
         }
         return 'Resume Notification';
     }
+    colorMaker = (notification)=>{
+        if(get(notification,'notification',false)){
+            return 'caution';
+        }
+        return null;
+    }
     const {
         classes,
         onModalClose,
@@ -173,9 +172,9 @@ const ManageMemberShipDialogBox = props => {
         removeFromCalendar,
         userId,
         removeAll,
-        leaveSchool
+        leaveSchool,
+        schoolImg
     } = props;
-    console.log("​subscriptionsData", subscriptionsData)
     return (
         <Dialog
             open={open}
@@ -192,10 +191,14 @@ const ManageMemberShipDialogBox = props => {
                         onModalClose={onModalClose}
                         classes={classes}
                     />
+                     <ClassProfile>
+                    <ProfileImage src={schoolImg} />
+                    {schoolName}
+                     </ClassProfile>
                 </DialogTitle>
 
                 <DialogContent classes={{ root: classes.dialogContent }}>
-                    <Title>Edit Membership for {studentName} at {schoolName}</Title>
+                    <Title>Edit Membership for {studentName} </Title>
                     <ContentWrapper>
                         {subscriptionsData.map(classData =>
                             <ExpansionPanel
@@ -220,13 +223,13 @@ const ManageMemberShipDialogBox = props => {
                                                 <ButtonWrapper>
                                                     <FormGhostButton
                                                         color="alert"
-                                                        label="Remove all"
+                                                        label={`Leave ${get(classData,'name','Test Class Type')}`}
                                                         onClick ={()=>{removeAll(get(classData,'classTimes',[]),get(classData,'name','Test Class Type'))}}
                                                     />
                                                 </ButtonWrapper>
                                                 <ButtonWrapper>
                                                     <FormGhostButton
-                                                        color="caution"
+                                                        color={colorMaker(classData.notification)}
                                                         label={labelMaker(classData.notification)}
                                                         onClick={()=>{stopNotification(classData.notification)}}
                                                     />
@@ -240,14 +243,14 @@ const ManageMemberShipDialogBox = props => {
                                         <ButtonWrapper>
                                             <FormGhostButton
                                                 color="alert"
-                                                label="Remove all"
+                                                label={`Leave ${get(classData,'name','Test Class Type')}`}
                                                 onClick ={()=>{removeAll(get(classData,'classTimes',[]),get(classData,'name','Test Class Type'))}}
 
                                             />
                                         </ButtonWrapper>
                                         <ButtonWrapper>
                                                     <FormGhostButton
-                                                        color="caution"
+                                                        color={colorMaker(classData.notification)}
                                                         label={labelMaker(classData.notification)}
                                                         onClick={()=>{stopNotification(classData.notification)}}
                                                     />

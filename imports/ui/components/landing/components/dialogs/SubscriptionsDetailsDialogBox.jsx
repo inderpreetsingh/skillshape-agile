@@ -1,40 +1,22 @@
-import React, { Component } from "react";
+import { get } from 'lodash';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-import { get, isEmpty } from 'lodash';
-import { withStyles, MuiThemeProvider } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-import Dialog, {
-    DialogContent,
-    DialogTitle,
-    DialogActions,
-    withMobileDialog
-} from "material-ui/Dialog";
-
-
-import ClearIcon from 'material-ui-icons/Clear';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
+import React from "react";
 import ReactHtmlParser from 'react-html-parser';
-
-import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
-import { Text, SubHeading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-
-import {
-    formatMoney,
-    maximumClasses,
-    capitalizeString,
-    calcRenewalDate,
-    calcContractEnd,
-    formatDate
-} from '/imports/util';
-
-import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
-
+import styled from "styled-components";
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
+import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
+import { calcRenewalDate, capitalizeString, formatDate, formatMoney } from '/imports/util';
+
+
+
+
+
+
 
 const styles = theme => {
     return {

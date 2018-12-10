@@ -382,6 +382,7 @@ class SchoolMemberInfo extends Component {
 		let schoolName = get(memberInfo,'schoolName','Hidden Leaf');
 		let studentName = get(memberInfo,'firstName',get(memberInfo,'name','Old Data'))
 		let userId = get(memberInfo,'activeUserId',null);
+		let schoolImg = (get(memberInfo,'schoolImg',null));
 		return (
 			<Grid container>
 				{showConfirmation && (
@@ -407,6 +408,7 @@ class SchoolMemberInfo extends Component {
 						schoolName = {schoolName}
 						isBusy = {isBusy}
 						userId = {userId}
+						schoolImg = {schoolImg}
 					/>
 				)}
 				{this.state.callMemberDialog && (
