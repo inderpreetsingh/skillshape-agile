@@ -17,10 +17,6 @@ class ClassDetailsContainer extends Component {
 
   getBgImage() {
     const { state: { school, classType } } = this.props.location.state;
-
-    console.group("CLASSTYPE, SCHOOL");
-    console.log(classType, school, get(classType, 'classTypeImg', get(classType, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc)))));
-    console.groupEnd();
     return get(classType, 'classTypeImg', get(classType, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc))));
   }
 

@@ -11,12 +11,14 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { get, isEmpty } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
   iconButton: {
     color: "white"
   }
 };
+const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 const menuOptions = [
   {
@@ -239,6 +241,31 @@ updateStatus = (n, props) => {
     }
   })
 }
+handleClassUpdate = (n,props)=>{
+	console.log("​handleClassUpdate -> props", props)
+  let {classData,popUp} = props;
+    let filter ={
+      classTypeId:get(classData[0],'classTypeId',null)
+    }
+  Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
+     console.log("​handleClassUpdate -> res", res)
+     if(!isEmpty(res)){
+      popUp.appear("inform", {
+        title: `Confirmation`,
+        content: `${res.map((obj)=>obj.packageName)}`,
+        RenderActions: (<ButtonWrapper>
+          <FormGhostButton
+            label={'Ok'}
+            onClick={() => { }}
+            applyClose
+          />
+        </ButtonWrapper>)
+      }, true);
+     }else{
+       this.updateStatus(n,props);
+     }
+   })
+ }
 const StatusOptions = props => (
   <StatusDetails>
     <StatusButton>
@@ -246,7 +273,7 @@ const StatusOptions = props => (
         noMarginBottom
         fullWidth
         label={props.status == 'signIn' ? "Check in" : "Check out"}
-        onClick={() => { this.updateStatus(1, props) }}
+        onClick={() => { this.handleClassUpdate(1, props) }}
       />
     </StatusButton>
     <StatusButton>
@@ -255,7 +282,7 @@ const StatusOptions = props => (
         caution
         fullWidth
         label={"Sign Out"}
-        onClick={() => { this.updateStatus(2, props) }}
+        onClick={() => { this.handleClassUpdate(2, props) }}
       />
     </StatusButton>
   </StatusDetails>

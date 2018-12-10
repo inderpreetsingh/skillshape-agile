@@ -66,6 +66,8 @@ export default class MyCalender extends React.Component {
 
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
   getStudentStatus = (filter) =>{
+    //classes.getClassData
+    //classPricing.signInHandler
     Meteor.call("classes.getClassData",filter,(err,res)=>{
       if(res){
         res.students && res.students.map((obj,index)=>{
@@ -162,6 +164,8 @@ export default class MyCalender extends React.Component {
       }
     })
   }
+
+
   updateClass = (filter,status,popUp)=>{
     this.setState({isLoading:true});
     Meteor.call("classes.updateClassData",filter,status,(err,res)=>{
@@ -182,6 +186,7 @@ export default class MyCalender extends React.Component {
         }, true);
       }
     })
+  
   }
   handleSignIn = () => {
     const {popUp} = this.props;

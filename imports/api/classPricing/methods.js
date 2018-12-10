@@ -1,12 +1,12 @@
 import { check } from 'meteor/check';
-import {get,isEmpty} from "lodash";
+import {get,isEmpty,concat} from "lodash";
 import ClassPricing from "./fields";
 import ClassType from "/imports/api/classType/fields";
 import PriceInfoRequest from "/imports/api/priceInfoRequest/fields";
 import PricingRequest from "/imports/api/pricingRequest/fields"
 import School from "/imports/api/school/fields";
 import { sendEmailToStudentForPriceInfoUpdate } from "/imports/api/email";
-
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 
 
 Meteor.methods({
@@ -112,5 +112,24 @@ Meteor.methods({
   "classPricing.getCover": function(_id){
     let record = ClassPricing.findOne({_id});
     return get(record,'selectedClassType',[]);   
+  },
+  "classPricing.signInHandler":function(filter){
+    let records=[],packageIds=[];
+    records = ClassPricing.find({classTypeId:filter.classTypeId}).fetch();
+    packageIds = records.map((obj)=>obj._id);
+    records = MonthlyPricing.find({classTypeId:filter.classTypeId}).fetch();
+    packageIds = concat(records.map((obj)=>obj._id),packageIds);
+	records = Meteor.call("purchases.getPackagesFromIds",packageIds);
+	return records;
   }
 });
+/* 
+1. Call to classPricing method.
+2. Get all package ids which includes class type id.
+3. Call to classPricing method.
+4. Get all package ids which includes class type id.
+5. Get package active list of those packages.
+6. If one then handle that.
+7. If more than one ask user which one to use.
+8. Follow step 6.
+*/

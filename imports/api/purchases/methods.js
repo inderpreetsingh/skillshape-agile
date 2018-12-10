@@ -72,5 +72,8 @@ Meteor.methods({
     }catch(error){
     console.log('Error in purchases.isAlreadyPurchased', error);
     }
+  },
+  "purchases.getPackagesFromIds":function(packageIds){
+    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active'}).fetch();
   }
 });
