@@ -495,6 +495,7 @@ class DashBoardView extends React.Component {
     const { adminView, schoolData, adminsData, purchaseByUserId } = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0],"_id",''), email, _id,superAdmin;
     let schoolName = get(schoolData[0],"name",'');
+    let schoolImg = get(schoolData[0],'mainImageMedium',get(schoolData[0],'mainImage',config.defaultSchoolImage));
     if (!adminView) {
       memberInfo = SchoolMemberDetails.findOne(memberId);
       profile = memberInfo.profile.profile;
@@ -532,7 +533,8 @@ class DashBoardView extends React.Component {
         packageDetails: memberInfo.packageDetails,
         schoolName:schoolName,
         subscriptionList,
-        superAdmin
+        superAdmin,
+        schoolImg
       },
       schoolMemberDetailsFilters: { _id: memberId }
     });

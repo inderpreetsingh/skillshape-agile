@@ -1,20 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { formatDate } from '/imports/util/formatSchedule.js';
 
-import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
-import {
-	Heading,
-	SubHeading,
-	Text,
-	Italic
-} from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const Wrapper = styled.div`
 	position: relative;

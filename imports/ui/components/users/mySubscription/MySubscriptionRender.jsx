@@ -1,39 +1,25 @@
+import { get, isEmpty } from "lodash";
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import { withStyles } from 'material-ui/styles';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import { isEmpty, get } from "lodash";
-import ProgressiveImage from 'react-progressive-image';
-
-import { withStyles } from 'material-ui/styles';
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-
-import School from '/imports/api/school/fields';
-
-import { withImageExists, getUserFullName } from '/imports/util';
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import {
-    ManageMemberShipDialogBox,
-    CallUsDialogBox,
-    EmailUsDialogBox,
-    SubscriptionsDetailsDialogBox
-} from '/imports/ui/components/landing/components/dialogs/';
-import { MemberActionButton, FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
-
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
-
-import { subscriptionsData } from '/imports/ui/components/landing/constants/mySubscriptions/subscriptionsData.js';
-
+import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
+import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Heading, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 
 
-import {
-    Heading,
-    SubHeading,
-    Text,
-    Italic
-} from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
+
+
+
+
+
 
 const styles = {
     expansionPanelRoot: {
@@ -62,6 +48,33 @@ const Wrapper = styled.div`
 	margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
+	stopNotification = (payload)=>{
+		this.setState({isBusy:true});
+		let data = {};
+		data.classTypeId = payload.classTypeId;
+		data.userId = payload.userId;
+		data.notification = !payload.notification;
+		Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+			const { popUp } = this.props;
+			if (res) {
+			  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+				if (res1) {
+					this.setState({isBusy:false});
+				  popUp.appear("success", {
+					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+				  });
+				}
+			  });
+			}
+			else{
+				this.setState({isBusy:false});
+				  popUp.appear("success", {
+					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+				  });
+			}
+		  });
+	}
+
 
 const ActionButtonsWrapper = styled.div`
 	${helpers.flexCenter} left: ${helpers.rhythmDiv * 2}px;
@@ -87,7 +100,7 @@ const Subscriptions = styled.div`
 `;
 
 const ListWrapper = styled.div`
-	width: 50%;
+	width: 100%;
 	@media screen and (max-width: ${helpers.tablet}px) {
 		width: 100%;
 	}
@@ -107,7 +120,7 @@ const SchoolProfile = styled.div`
 const ActionButtons = (props) => (
     <ActionButtonsWrapper>
         <ActionButton onClick={props.onEditMemberShip}>
-            <FormGhostButton icon iconName="remove_from_queue" label="Edit" />
+            <FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" />
         </ActionButton>
         <ActionButton onClick={props.onSchoolVisit(props.schoolSlug)}>
             <FormGhostButton icon iconName="school" label="Visit School" />
@@ -146,18 +159,33 @@ const MySubscriptionRender = (props) => {
         handleModelState,
         handleSchoolVisit,
         manageMemberShipDialog,
-        handleManageMemberShipDialogBox
+        handleManageMemberShipDialogBox,
+        removeAll,
+        stopNotification,
+        leaveSchool,
+        removeFromCalendar,
+        isBusy,
+        subscriptionsData
     } = props;
-
+   
+    let studentName = get(currentUser,'profile.firstName',get(currentUser,'profile.name','Old Data'));
+    let userId = get(currentUser,'_id',null);
+    let schoolName = get(schoolData[0],'name',null);
     return (
         <Fragment>
             {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
-                    schoolData={selectedSchool}
-                    studentName={getUserFullName(currentUser)}
-                    open={manageMemberShipDialog}
-                    subscriptionsData={subscriptionsData}
-                    onModalClose={handleManageMemberShipDialogBox(false, {})}
+                subscriptionsData={subscriptionsData || []}
+                studentName={studentName}
+                open={manageMemberShipDialog}
+                onModalClose={handleManageMemberShipDialogBox(false,schoolData)}
+                removeAll = {removeAll}
+                stopNotification = {stopNotification}
+                leaveSchool = {leaveSchool}
+                removeFromCalendar = {removeFromCalendar}
+                schoolName = {schoolName}
+                isBusy = {isBusy}
+                userId = {userId}
                 />
             )}
             {callUsDialog && (
@@ -239,7 +267,7 @@ const MySubscriptionRender = (props) => {
                                                 }
                                             />
                                         </ListWrapper>
-                                        <ListWrapper>
+                                        {/* <ListWrapper>
                                             <SubscriptionsList
                                                 subsType="mySubscriptions"
                                                 maxListHeight={300}
@@ -256,7 +284,7 @@ const MySubscriptionRender = (props) => {
                                                         )
                                                 }
                                             />
-                                        </ListWrapper>
+                                        </ListWrapper> */}
                                     </Subscriptions>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>

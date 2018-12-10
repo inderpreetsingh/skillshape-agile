@@ -109,7 +109,6 @@ const CdText = styled.p`
 	font-family: ${helpers.specialFont};
 	font-weight: 400;
 	line-height: 1;
-	text-transform: capitalize;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		text-align: center;
@@ -220,9 +219,9 @@ class Package extends React.Component {
 		let str = '';
 		if (!isEmpty(data)) {
 			str = data.map((classType) => classType);
-			str = str.join(', ');
+			str = capitalizeString(str).join(', ');
 		}
-		return str.toLowerCase();
+		return str;
 	}
 
 	getDateForSubscriptions = (props) => {
@@ -236,7 +235,7 @@ class Package extends React.Component {
 			return stringToPrint += calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength);
 		}
 		if (get(props, 'payAsYouGo', false)) {
-			return `Payment of ${formatMoney(fee, currency)} due ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}`
+			return `Payment of ${formatMoney(fee, currency)} is due on ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}`
 		}
 		if (get(props, 'autoWithdraw', false)) {
 
@@ -258,7 +257,7 @@ class Package extends React.Component {
 				return stringToPrint += `${noClasses} ${noClasses <= 1 ? 'Class' : 'Classes'} Remaining`;
 			}
 			else {
-				stringToPrint += 'Expiration Date : ';
+				stringToPrint += '<b>Expiration Date :</b> ';
 			}
 		}
 		return stringToPrint + (props.packageType == 'EP' && props.expiry == 'none' ? 'None' : formatDate(props.endDate));
@@ -325,7 +324,7 @@ class Package extends React.Component {
 							<b>Paid Until:</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', 1)}
 						</CdText>} */}
 							{/* Depending upon the type of payment method */}
-							{this.getExplainationBasedOnType(props)}
+							{/*this.getExplainationBasedOnType(props)*/}
 
 						</ClassDetailsSection>
 						<RightSection>

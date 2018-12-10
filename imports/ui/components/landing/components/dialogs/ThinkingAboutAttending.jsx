@@ -298,9 +298,20 @@ class ThinkingAboutAttending extends React.Component {
                 }}
                 label={"Purchase Later"}
               />
-
-
             </ButtonWrapper>
+            <ButtonWrapper>
+              <Button
+                onClick={() => { this.setState({ classTypePackages: true }) }}
+                classes={{ root: this.props.classes.StyleForButton }}
+              >
+                Purchase Package Now
+		                        </Button>
+              {/* <FormGhostButton
+                                onClick={purchaseThisPackage}
+                                label="Purchase Package Now"
+                            /> */}
+            </ButtonWrapper>
+
 
           </DialogActions>
 
