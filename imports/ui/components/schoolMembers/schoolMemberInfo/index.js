@@ -375,8 +375,25 @@ class SchoolMemberInfo extends Component {
 		);
 	}
 	render() {
-		const { memberInfo, view, classes, adminView, currentUser, notClassmatePage, selectedSchoolData } = this.props;
-		const { showUploadAvatarModal, mediaFormData, filterStatus, limit, bgImg, showConfirmation, subscriptionsData, isBusy } = this.state;
+		const {
+			memberInfo,
+			view,
+			classes,
+			adminView,
+			currentUser,
+			notClassmatePage,
+			selectedSchoolData
+		} = this.props;
+		const {
+			showUploadAvatarModal,
+			mediaFormData,
+			filterStatus,
+			limit,
+			bgImg,
+			showConfirmation,
+			subscriptionsData,
+			isBusy
+		} = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
 		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');

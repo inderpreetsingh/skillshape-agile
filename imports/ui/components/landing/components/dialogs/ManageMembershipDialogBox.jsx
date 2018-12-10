@@ -6,22 +6,28 @@ import { withStyles, MuiThemeProvider } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 
-import ClearIcon from 'material-ui-icons/Clear';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
-
-import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
-import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
 import Dialog, {
     DialogContent,
     DialogActions,
     withMobileDialog
 } from "material-ui/Dialog";
 
+
+import ClearIcon from 'material-ui-icons/Clear';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
+
+import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
+
+import {
+    capitalizeString
+} from '/imports/util';
+
+import muiTheme from "../jss/muitheme.jsx";
+import * as helpers from "../jss/helpers.js";
 
 const styles = theme => {
     return {
@@ -47,8 +53,8 @@ const styles = theme => {
             padding: `0 ${helpers.rhythmDiv}px`,
             display: 'flex',
             flexWrap: 'wrap',
-            alignItems: 'flex-end',
-            justifyContent: 'flex-end'
+            alignItems: 'center',
+            justifyContent: 'space-between'
         },
         dialogActions: {
             width: '100%',
@@ -90,10 +96,31 @@ const WrapperContact = styled.li`
   border: 1px solid ${helpers.primaryColor};
 `;
 
-const Title = SubHeading.extend`
-    font-style: italic;
+const DialogTitleContainer = styled.div`
+  display: flex;
+  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
+`;
+
+
+const DialogTitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+
+const ClassName = SubHeading.extend`
     font-size: ${helpers.baseFontSize * 1.25}px;
+    margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
+const SchoolName = ClassName..withComponent('h2').extend`
+`;
+
+const DialogTitleText = SchoolName.extend`
+    font-style: italic;
     font-weight: 300;
+    margin-bottom: 0;
 `;
 
 const ClassProfile = styled.div`
@@ -112,14 +139,41 @@ const ClassTimesListItem = styled.li`
   list-style: none;
   width: 100%;
   display: flex;
+  position: relative;
+  z-index: 0;
   align-items: center;
   border-bottom: 1px solid #e3e3e3;
   padding: 0 ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv}px;  
   justify-content: space-between;
+  
   :first-child {
     border-top: 1px solid #e3e3e3;
     padding-top: ${helpers.rhythmDiv}px;
+  }
+
+  :after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+
+  &:nth-child(2n) {
+    :after {   
+        background-color: ${helpers.panelColor};
+        opacity: 1;
+    }
+  }
+
+  &:nth-child(2n + 1) {
+    :after {
+        background-color: ${helpers.primaryColor};
+        opacity: 0.1;
+    }
   }
 
   @media screen and (max-width: ${helpers.mobile - 100}px) {
@@ -135,56 +189,62 @@ const ActionButtons = styled.div`
 const ButtonWrapper = styled.div`
     display: flex;
     margin-bottom: ${helpers.rhythmDiv}px;
+    ${props => props.left && `padding-right: ${helpers.rhythmDiv}px;`}
+    ${props => props.noMarginBottom && 'margin-bottom: 0;'}
 `;
 
 const ClassNameWrapper = styled.div`
-  @media screen and (max-width: ${helpers.mobile}px) {
+@media screen and(max - width: ${ helpers.mobile}px) {
     display: flex;
-    flex-direction: column;   
-  }
+    flex-direction: column;
+}
 `;
 
-const ClassName = Text.extend`
-    font-size: ${helpers.baseFontSize * 1.25}px;
+// Class data buttons
+const CDButtonsWrapper = styled.div`
+display: flex;
+align-items: center;
+flex-wrap: wrap;
 `;
 
-const DialogTitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 ${helpers.rhythmDiv * 2}px;
-`;
+const labelMaker = (notification) => {
+    if (get(notification, 'notification', false)) {
+        return 'Stop Notifications';
+    }
+    return 'Get Notifications';
+}
 
-const TitleWrapper = styled.div`
-
-`;
 
 const ClassDataButtons = (props) => (
-    <React.Fragment>
-        <ButtonWrapper>
-            <FormGhostButton
-                color="alert"
-                label={`Leave ${get(props.classData, 'name', 'Test Class Type')}`}
+    <CDButtonsWrapper>
+        <ButtonWrapper left>
+            {props.notification ?
+                <SkillShapeButton
+                    caution
+                    fullWidth
+                    label={labelMaker(props.classData.notification)}
+                    onClick={props.onNotificationsButtonClick}
+                /> :
+                <SkillShapeButton
+                    primary
+                    fullWidth
+                    label={labelMaker(props.classData.notification)}
+                    onClick={props.onNotificationsButtonClick}
+                />}
+        </ButtonWrapper>
+        <ButtonWrapper noMarginBottom>
+            <SecondaryButton
+                fullWidth
+                label={`Leave class`}
                 onClick={props.onLeaveClassButtonClick}
             />
         </ButtonWrapper>
-        <ButtonWrapper>
-            <FormGhostButton
-                color="caution"
-                label={labelMaker(props.classData.notification)}
-                onClick={props.onNotificationsButtonClick}
-            />
-        </ButtonWrapper>
-    </React.Fragment>
+    </CDButtonsWrapper>
 )
 
 
 const ManageMemberShipDialogBox = props => {
-    labelMaker = (notification) => {
-        if (get(notification, 'notification', false)) {
-            return 'Stop Notification';
-        }
-        return 'Resume Notification';
-    }
+
     const {
         classes,
         onModalClose,
@@ -213,14 +273,11 @@ const ManageMemberShipDialogBox = props => {
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitleContainer>
                     <ProfileImage
-                        containerProps={{
-                            borderRadius: `5px`
-                        }}
                         src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
-                    <TitleWrapper>
-                        <Title>{schoolName}</Title>
-                        <Title>Edit Membership for {studentName}</Title>
-                    </TitleWrapper>
+                    <DialogTitleWrapper>
+                        <SchoolName>{capitalizeString(schoolName)}</SchoolName>
+                        <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>
+                    </DialogTitleWrapper>
                     <IconButton
                         color="primary"
                         onClick={props.onModalClose}
@@ -246,28 +303,30 @@ const ManageMemberShipDialogBox = props => {
                                 >
 
                                     <ClassProfile>
-                                        <ProfileImage src={get(classData, 'medium', get(classData, 'classTypeImg', ""))} />
+                                        <ProfileImage
+                                            imageContainerProps={{
+                                                borderRadius: `50 % `,
+                                                width: 84,
+                                                height: 84
+                                            }}
+                                            src={get(classData, 'medium', get(classData, 'classTypeImg', get(selectedSchoolData)))} />
 
                                         <ClassNameWrapper>
-                                            <ClassName> {get(classData, 'name', 'Test Class Type')} </ClassName>
-                                            <ToggleVisibility>
-                                                <ClassDataButtons
-                                                    classData={classData}
-                                                    onLeaveClassButtonClick={() => { removeAll(get(props.classData, 'classTimes', []), get(props.classData, 'name', 'Test Class Type')) }}
-                                                    onNotificationsButtonClick={() => { stopNotification(props.classData.notification) }}
-                                                />
-                                            </ToggleVisibility>
+                                            <ClassName> {capitalizeString(get(classData, 'name', 'Test Class Type'))} </ClassName>
+                                            <ClassDataButtons
+                                                classData={classData}
+                                                notification={get(classData.notification, 'notification', false)}
+                                                onLeaveClassButtonClick={(e) => {
+                                                    e.stopPropagation();
+                                                    removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                                }}
+                                                onNotificationsButtonClick={(e) => {
+                                                    e.stopPropagation();
+                                                    stopNotification(classData.notification)
+                                                }}
+                                            />
                                         </ClassNameWrapper>
-
                                     </ClassProfile>
-
-                                    <ToggleVisibility show>
-                                        <ClassDataButtons
-                                            classData={classData}
-                                            onLeaveClassButtonClick={() => { removeAll(get(props.classData, 'classTimes', []), get(props.classData, 'name', 'Test Class Type')) }}
-                                            onNotificationsButtonClick={() => { stopNotification(props.classData.notification) }}
-                                        />
-                                    </ToggleVisibility>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
@@ -280,10 +339,13 @@ const ManageMemberShipDialogBox = props => {
                                                 <Text fontSize="18">{get(classTimeData, "name", 'Class Time Name')}</Text>
                                                 <ActionButtons>
                                                     <ButtonWrapper>
-                                                        <FormGhostButton
-                                                            color="alert"
+                                                        <SkillShapeButton
+                                                            white
                                                             label="Remove from calendar"
-                                                            onClick={() => { removeFromCalendar({ userId, classTimeId: classTimeData._id, classTypeName: get(classData, 'name', 'Test Class Type'), classTimeName: get(classTimeData, "name", 'Class Time Name') }) }}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                removeFromCalendar({ userId, classTimeId: classTimeData._id, classTypeName: get(classData, 'name', 'Test Class Type'), classTimeName: get(classTimeData, "name", 'Class Time Name') })
+                                                            }}
                                                         />
                                                     </ButtonWrapper>
 
@@ -301,13 +363,13 @@ const ManageMemberShipDialogBox = props => {
                         root: classes.dialogActionsRoot,
                         action: classes.dialogAction
                     }}>
-                    <ButtonWrapper>
-                        <FormGhostButton color="primary" label="Close" onClick={onModalClose} />
-                    </ButtonWrapper>
                     {(!isEmpty(subscriptionsData)) && (<ButtonWrapper>
-                        <FormGhostButton color="alert" label="Leave school" onClick={leaveSchool} />
+                        <FormGhostButton alertColor label="Leave school" onClick={leaveSchool} />
                     </ButtonWrapper>)}
 
+                    <ButtonWrapper>
+                        <FormGhostButton darkGreyColor label="Close" onClick={onModalClose} />
+                    </ButtonWrapper>
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>
