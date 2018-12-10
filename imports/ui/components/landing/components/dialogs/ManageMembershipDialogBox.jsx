@@ -1,28 +1,17 @@
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+
 import { get, isEmpty } from 'lodash';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
-import React from "react";
-import styled from "styled-components";
-import { get, isEmpty } from 'lodash';
-import { withStyles, MuiThemeProvider } from "material-ui/styles";
 import IconButton from "material-ui/IconButton";
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-
-import Dialog, {
-    DialogContent,
-    DialogActions,
-    withMobileDialog
-} from "material-ui/Dialog";
-
-
 import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
-
 import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
@@ -119,7 +108,7 @@ const ClassName = SubHeading.extend`
     margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const SchoolName = ClassName..withComponent('h2').extend`
+const SchoolName = ClassName.withComponent('h2').extend`
 `;
 
 const DialogTitleText = SchoolName.extend`
@@ -165,13 +154,6 @@ const ClassTimesListItem = styled.li`
     left: 0;
     right: 0;
     z-index: -1;
-  }
-
-  &:nth-child(2n) {
-    :after {   
-        background-color: ${helpers.panelColor};
-        opacity: 1;
-    }
   }
 
   &:nth-child(2n + 1) {
@@ -249,18 +231,18 @@ const ClassDataButtons = (props) => (
 
 
 const ManageMemberShipDialogBox = props => {
-    labelMaker = (notification) => {
-        if (get(notification, 'notification', false)) {
-            return 'Stop Notification';
-        }
-        return 'Resume Notification';
-    }
-    colorMaker = (notification) => {
-        if (get(notification, 'notification', false)) {
-            return 'caution';
-        }
-        return null;
-    }
+    // labelMaker = (notification) => {
+    //     if (get(notification, 'notification', false)) {
+    //         return 'Stop Notification';
+    //     }
+    //     return 'Resume Notification';
+    // }
+    // colorMaker = (notification) => {
+    //     if (get(notification, 'notification', false)) {
+    //         return 'caution';
+    //     }
+    //     return null;
+    // }
     const {
         classes,
         onModalClose,
@@ -293,7 +275,7 @@ const ManageMemberShipDialogBox = props => {
                         src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
                     <DialogTitleWrapper>
                         <SchoolName>{capitalizeString(schoolName)}</SchoolName>
-                        <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>
+                        {studentName && <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>}
                     </DialogTitleWrapper>
                     <IconButton
                         color="primary"
@@ -356,8 +338,7 @@ const ManageMemberShipDialogBox = props => {
                                                 <Text fontSize="18">{get(classTimeData, "name", 'Class Time Name')}</Text>
                                                 <ActionButtons>
                                                     <ButtonWrapper>
-                                                        <SkillShapeButton
-                                                            white
+                                                        <SecondaryButton
                                                             label="Remove from calendar"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();

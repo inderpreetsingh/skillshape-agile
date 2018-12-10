@@ -493,14 +493,9 @@ class DashBoardView extends React.Component {
 
   handleMemberDetailsToRightPanel = (memberId, superAdminId) => {
     const { adminView, schoolData, adminsData, purchaseByUserId } = this.props;
-<<<<<<< HEAD
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
-=======
-    let memberInfo, profile, pic, schoolId = get(schoolData[0],"_id",''), email, _id,superAdmin;
-    let schoolName = get(schoolData[0],"name",'');
-    let schoolImg = get(schoolData[0],'mainImageMedium',get(schoolData[0],'mainImage',config.defaultSchoolImage));
->>>>>>> 31f85ce23a887fa58c81fd076a248e855bc10bd4
+    let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
     if (!adminView) {
       memberInfo = SchoolMemberDetails.findOne(memberId);
       profile = memberInfo.profile.profile;
