@@ -216,15 +216,32 @@ const PaymentAndStatus = props => (
 );
 updateStatus = (n, props) => {
   let { status, popUp } = props;
+  let inc=0,purchaseId,packageType;
   if (n == 1) {
-    if (status == 'signIn') status = 'checkIn';
-    else if (status == 'checkIn') status = 'signIn';
+    if (status == 'signIn') {
+      inc = -1;
+      status = 'checkIn';
+    }
+    else if (status == 'checkIn'){
+      inc = 1;
+      status = 'signIn';
+    } 
   }
   else {
-    if (status == 'signIn' || status == 'checkIn') status = 'signOut';
+    if (status == 'signIn' || status == 'checkIn'){
+      inc = 1;
+      status = 'signOut';
+    } 
   }
   let filter = props.classData[0];
   filter.userId = props._id;
+  props.classData[0].students.map((obj)=>{
+    if(obj.userId==props._id){
+      purchaseId = obj.purchaseId;
+      packageType = obj.packageType;
+    }
+  })
+  Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
   Meteor.call("classes.updateClassData", filter, status, (err, res) => {
     if (res) {
       popUp.appear("success", {
@@ -241,31 +258,7 @@ updateStatus = (n, props) => {
     }
   })
 }
-handleClassUpdate = (n,props)=>{
-	console.log("​handleClassUpdate -> props", props)
-  let {classData,popUp} = props;
-    let filter ={
-      classTypeId:get(classData[0],'classTypeId',null)
-    }
-  Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
-     console.log("​handleClassUpdate -> res", res)
-     if(!isEmpty(res)){
-      popUp.appear("inform", {
-        title: `Confirmation`,
-        content: `${res.map((obj)=>obj.packageName)}`,
-        RenderActions: (<ButtonWrapper>
-          <FormGhostButton
-            label={'Ok'}
-            onClick={() => { }}
-            applyClose
-          />
-        </ButtonWrapper>)
-      }, true);
-     }else{
-       this.updateStatus(n,props);
-     }
-   })
- }
+
 const StatusOptions = props => (
   <StatusDetails>
     <StatusButton>
@@ -273,7 +266,7 @@ const StatusOptions = props => (
         noMarginBottom
         fullWidth
         label={props.status == 'signIn' ? "Check in" : "Check out"}
-        onClick={() => { this.handleClassUpdate(1, props) }}
+        onClick={() => { this.updateStatus(1, props) }}
       />
     </StatusButton>
     <StatusButton>
@@ -282,7 +275,7 @@ const StatusOptions = props => (
         caution
         fullWidth
         label={"Sign Out"}
-        onClick={() => { this.handleClassUpdate(2, props) }}
+        onClick={() => { this.updateStatus(2, props) }}
       />
     </StatusButton>
   </StatusDetails>

@@ -75,5 +75,16 @@ Meteor.methods({
   },
   "purchases.getPackagesFromIds":function(packageIds){
     return Purchases.find({packageId:{$in:packageIds},packageStatus:'active'}).fetch();
+  },
+  "purchase.manageAttendance":function(_id,packageType,inc){
+  if(_id){
+    let record;
+    if(packageType == 'CP'){
+      Purchases.update({_id},{$inc:{noClasses:inc}});
+    }
+    
+
+
+  }
   }
 });

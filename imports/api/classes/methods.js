@@ -45,12 +45,12 @@ Meteor.methods({
           return filter;
         }
     },
-    "classes.updateClassData":function(filter,status){
+    "classes.updateClassData":function(filter,status,purchaseId,packageType){
         try{
           
             if(filter == null)
             filter = {};
-            let obj = {userId:this.userId,status};
+            let obj = {userId:this.userId,status,purchaseId,packageType};
             if(status=='checkIn' || status=='checkOut'){
                 Meteor.call("attendance.updateData",filter,(err,res)=>{
 

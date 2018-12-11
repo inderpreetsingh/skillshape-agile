@@ -14,6 +14,7 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
+import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
     display: flex;
     width: 100%;
@@ -164,30 +165,85 @@ export default class MyCalender extends React.Component {
       }
     })
   }
-
-
-  updateClass = (filter,status,popUp)=>{
-    this.setState({isLoading:true});
-    Meteor.call("classes.updateClassData",filter,status,(err,res)=>{
-      if(res){
-        this.setState({status:'Sign In',isLoading:false});
-        popUp.appear("success", {
-          title: `${this.state.status} successfully`,
-          content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+  handleClassUpdate = (filter,status,popUp)=>{
+    Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
+       if(!isEmpty(res)){
+        popUp.appear("inform", {
+          title: `Confirmation`,
+          content: `You have the followings packages. Please select one from which you are going to use.`,
           RenderActions: (<ButtonWrapper>
-            <FormGhostButton
-                label={'Ok'}
-                onClick={() => {
-                  this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
-                }}
-                applyClose
-            />
-        </ButtonWrapper>)
+            {res.map((obj)=>
+             <FormGhostButton
+             label={obj.packageName}
+             onClick={() => {this.updateClass(filter,status,obj,popUp)}}
+             applyClose
+           />
+              )}
+          </ButtonWrapper>)
         }, true);
-      }
-    })
+       }
+       else{
+        popUp.appear("inform", {
+          title: `No Package Purchased Yet.`,
+          content: `You haven't purchased any package please purchase one first. `,
+          RenderActions: (<ButtonWrapper>
+          {this.purchaseLaterButton()}
+           {this.purchaseNowButton()}
+          </ButtonWrapper>)
+        }, true);
+       }
+     })
+   }
+
+  updateClass = (filter,status,purchaseData,popUp)=>{
+    let {packageType,noClasses,_id,packageName} = purchaseData;
+    if(noClasses>0){
+      this.setState({isLoading:true});
+      Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
+        if(res){
+          this.setState({status:'Sign In',isLoading:false});
+          popUp.appear("success", {
+            title: `${this.state.status} successfully`,
+            content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+            RenderActions: (<ButtonWrapper>
+              <FormGhostButton
+                  label={'Ok'}
+                  onClick={() => {
+                    this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
+                  }}
+                  applyClose
+              />
+          </ButtonWrapper>)
+          }, true);
+        }
+      })
+    }
+    else{
+      popUp.appear("alert", {
+        title: `Caution`,
+        content: `You have ${noClasses} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
+        RenderActions: (<ButtonWrapper>
+            {this.purchaseLaterButton()}
+           {this.purchaseNowButton()}
+      </ButtonWrapper>)
+      }, true);
+    }
   
   }
+  purchaseNowButton = ()=>(
+    <FormGhostButton
+    label={'Purchase Now'}
+    onClick={() => {this.setState({classTypePackages:true})}}
+    applyClose
+  />
+  )
+  purchaseLaterButton = ()=>(
+    <FormGhostButton
+             label={'Purchase Later'}
+             onClick={() => {}}
+             applyClose
+           />
+  )
   handleSignIn = () => {
     const {popUp} = this.props;
     const {classDetails,filter,status} = this.state;
@@ -209,7 +265,7 @@ export default class MyCalender extends React.Component {
             <FormGhostButton
                 label={'Yes'}
                 onClick={() => {
-                  this.updateClass(classDetails ?classDetails : filter,'signIn',popUp)
+                  this.handleClassUpdate(classDetails ?classDetails : filter,'signIn',popUp)
                 }}
                 applyClose
             />
@@ -234,7 +290,7 @@ export default class MyCalender extends React.Component {
             <FormGhostButton
                 label={'Yes'}
                 onClick={() => {
-                  this.updateClass(classDetails ?classDetails : filter,'signOut',popUp)
+                  this.handleClassUpdate(classDetails ?classDetails : filter,'signOut',popUp)
                 }}
                 applyClose
             />
@@ -315,10 +371,20 @@ export default class MyCalender extends React.Component {
       isAdmin,
       classDetailModal,
       status,
-      isLoading
+      isLoading,
+      classTypePackages,
+      filter,
+      classDetails
     } = this.state;
     const { routeName,schoolData } = this.props;
-    let {name} = schoolData;
+    let {name,_id} = schoolData;
+    let classTypeId;
+    if(!isEmpty(classDetails)){
+      classTypeId = get(classDetails,'classTypeId',null);
+    }
+    else{
+      classTypeId = get(filter,'classTypeId',null);
+    }
     let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
     return (
       <div>
@@ -345,6 +411,14 @@ export default class MyCalender extends React.Component {
             schoolName = {name}
           />
         )}
+        {classTypePackages && <ClassTypePackages 
+                    schoolId = {_id}
+                    open={classTypePackages}
+                    onClose={()=>{this.setState({classTypePackages:false})}}
+                    params= {this.props.params}
+                    classTypeId = {classTypeId}
+                    userId={Meteor.userId()}
+                    />}
         {isOpen && (
           <SkillshapePopover
             anchorEl={anchorEl}
