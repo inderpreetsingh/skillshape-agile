@@ -17,12 +17,13 @@ const ImageContainer = styled.div`
   height: ${props => props.height || 100}px;
   flex-shrink: 0;
   ${helpers.coverBg};
-  margin-right: ${helpers.rhythmDiv * 2}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-  background-position: 50% 50%;
-  background-image: url('${(props) => props.src}');
-  background-size: contain;
-  transition: background-image 1s linear;
+  margin-right: ${props => props.marginRight || helpers.rhythmDiv * 2}px;
+    margin-bottom: ${ helpers.rhythmDiv}px;
+    background-position: 50% 50%;
+    background-image: url('${(props) => props.src}');
+    background-size: contain;
+    border-radius: ${ props => props.borderRadius || '3px'};
+    transition: background-image 1s linear;
 `;
 
 export const ssImage = (props) => {

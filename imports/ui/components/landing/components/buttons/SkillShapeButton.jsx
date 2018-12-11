@@ -15,9 +15,9 @@ const styles = {
     marginBottom: helpers.rhythmDiv,
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    backgroundColor: helpers.action,
+    backgroundColor: helpers.primary,
     "&:hover": {
-      backgroundColor: helpers.action
+      backgroundColor: helpers.primary
     }
   },
   skillShapeButton: {
@@ -46,6 +46,12 @@ const styles = {
   skillShapeButtonCustomIcon: {
     display: "inline-block",
     fontSize: "inherit"
+  },
+  primary: {
+    backgroundColor: helpers.primaryColor,
+    "&:hover": {
+      backgroundColor: helpers.primaryColor
+    }
   },
   action: {
     backgroundColor: helpers.action,
@@ -83,6 +89,13 @@ const styles = {
       backgroundColor: helpers.black
     }
   },
+  white: {
+    border: `1px solid ${helpers.black}`,
+    backgroundColor: 'white',
+    "&:hover": {
+      backgroundColor: "white"
+    }
+  },
   ["@media (max-width:" + helpers.mobile + "px)"]: {
     skillShapeButton: {
       width: "100%"
@@ -107,17 +120,19 @@ const getIconForButton = props => {
 
 const getColor = (props, rootClass) => {
   if (props.action) return rootClass + " " + props.classes.action;
+  else if (props.primary) return rootClass + " " + props.classes.primary;
   else if (props.information)
     return rootClass + " " + props.classes.information;
   else if (props.danger) return rootClass + " " + props.classes.danger;
   else if (props.caution) return rootClass + " " + props.classes.caution;
   else if (props.cancel) return rootClass + " " + props.classes.cancel;
   else if (props.black) return rootClass + " " + props.classes.black;
+  else if (props.white) return rootClass + " " + props.classes.white;
   else return rootClass + " " + props.classes.action;
 };
 
 const getLabelColor = (props, labelClass) => {
-  if (props.caution) return labelClass + " " + props.classes.darkLabelColor;
+  if (props.caution || props.white) return labelClass + " " + props.classes.darkLabelColor;
   else return labelClass;
 };
 
@@ -129,13 +144,13 @@ const SkillShapeButton = props => {
   if (props.fullWidth && props.noMarginBottom) {
     rootClass = `${props.classes.skillShapeButton} ${props.classes.fullWidth} ${
       props.classes.noMarginBottom
-    }`;
+      }`;
   } else if (props.fullWidth) {
     rootClass = `${props.classes.skillShapeButton} ${props.classes.fullWidth}`;
   } else if (props.noMarginBottom) {
     rootClass = `${props.classes.skillShapeButton} ${
       props.classes.noMarginBottom
-    }`;
+      }`;
   } else {
     rootClass = props.classes.skillShapeButton;
   }

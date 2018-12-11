@@ -48,32 +48,32 @@ const Wrapper = styled.div`
 	margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
-	stopNotification = (payload)=>{
-		this.setState({isBusy:true});
-		let data = {};
-		data.classTypeId = payload.classTypeId;
-		data.userId = payload.userId;
-		data.notification = !payload.notification;
-		Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-			const { popUp } = this.props;
-			if (res) {
-			  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-				if (res1) {
-					this.setState({isBusy:false});
-				  popUp.appear("success", {
-					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-				  });
-				}
-			  });
-			}
-			else{
-				this.setState({isBusy:false});
-				  popUp.appear("success", {
-					content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-				  });
-			}
-		  });
-	}
+stopNotification = (payload) => {
+    this.setState({ isBusy: true });
+    let data = {};
+    data.classTypeId = payload.classTypeId;
+    data.userId = payload.userId;
+    data.notification = !payload.notification;
+    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+        const { popUp } = this.props;
+        if (res) {
+            Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+                if (res1) {
+                    this.setState({ isBusy: false });
+                    popUp.appear("success", {
+                        content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+                    });
+                }
+            });
+        }
+        else {
+            this.setState({ isBusy: false });
+            popUp.appear("success", {
+                content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
+            });
+        }
+    });
+}
 
 
 const ActionButtonsWrapper = styled.div`
@@ -167,25 +167,25 @@ const MySubscriptionRender = (props) => {
         isBusy,
         subscriptionsData
     } = props;
-   
-    let studentName = get(currentUser,'profile.firstName',get(currentUser,'profile.name','Old Data'));
-    let userId = get(currentUser,'_id',null);
-    let schoolName = get(schoolData[0],'name',null);
+
+    let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
+    let userId = get(currentUser, '_id', null);
+    let schoolName = get(schoolData[0], 'name', null);
     return (
         <Fragment>
             {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
-                subscriptionsData={subscriptionsData || []}
-                studentName={studentName}
-                open={manageMemberShipDialog}
-                onModalClose={handleManageMemberShipDialogBox(false,schoolData)}
-                removeAll = {removeAll}
-                stopNotification = {stopNotification}
-                leaveSchool = {leaveSchool}
-                removeFromCalendar = {removeFromCalendar}
-                schoolName = {schoolName}
-                isBusy = {isBusy}
-                userId = {userId}
+                    subscriptionsData={subscriptionsData || []}
+                    studentName={studentName}
+                    open={manageMemberShipDialog}
+                    onModalClose={handleManageMemberShipDialogBox(false, schoolData)}
+                    removeAll={removeAll}
+                    stopNotification={stopNotification}
+                    leaveSchool={leaveSchool}
+                    removeFromCalendar={removeFromCalendar}
+                    schoolName={schoolName}
+                    isBusy={isBusy}
+                    userId={userId}
                 />
             )}
             {callUsDialog && (
