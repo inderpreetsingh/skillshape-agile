@@ -7,15 +7,25 @@ export function withPopUp(WrappedComponent) {
   return class extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        open: false,
-        applyClose: true
-      };
+      this.state = this._initializeState();
     }
 
     _startTimer = autoTimeout => {
       Meteor.setTimeout(this.handleClose, autoTimeout);
     };
+
+    _initializeState = () => {
+      return {
+        open: false,
+        type: '',
+        applyClose: true,
+        dialogBoxProps: {},
+        popUpProps: {
+          purpose: '',
+          autoClose: false
+        }
+      }
+    }
 
     handleClose = () => {
       this.setState({ open: false });
@@ -24,11 +34,28 @@ export function withPopUp(WrappedComponent) {
         this.props.onPopUpClose();
     };
 
+
+
+    close = () => {
+      const initialState = this._initializeState();
+      this.setState(currentState => {
+        return {
+          ...currentState,
+          ...initialState
+        }
+      });
+    }
+
+    isPopupActive = () => {
+      return this.state.open;
+    }
+
     appear = (
       type,
       dialogBoxProps = {},
       applyClose = true,
       popUpProps = {
+        purpose: "", //This prop can help us track the purpose of the popup
         autoClose: false
       }
     ) => {
@@ -36,7 +63,8 @@ export function withPopUp(WrappedComponent) {
         open: true,
         type,
         applyClose,
-        dialogBoxProps
+        dialogBoxProps,
+        popUpProps
       });
 
       if (popUpProps.autoClose) {
@@ -55,7 +83,7 @@ export function withPopUp(WrappedComponent) {
     };
 
     render() {
-      const { open, type, dialogBoxProps } = this.state;
+      const { open, type, dialogBoxProps, popUpProps } = this.state;
       return (
         <Fragment>
           {open && (
@@ -68,7 +96,16 @@ export function withPopUp(WrappedComponent) {
               onAffirmationButtonClick={this.handleAffirmationButtonClick}
             />
           )}
-          <WrappedComponent {...this.props} popUp={{ appear: this.appear }} />
+          <WrappedComponent
+            {...this.props}
+            popUp={{
+              appear: this.appear,
+              close: this.close,
+              isPopupActive: this.isPopupActive,
+              details: {
+                type: type, purpose: popUpProps.purpose
+              }
+            }} />
         </Fragment>
       );
     }
