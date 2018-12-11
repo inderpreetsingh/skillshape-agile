@@ -14,6 +14,8 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
+import { capitalizeString } from '/imports/util';
+
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
     display: flex;
@@ -73,7 +75,7 @@ export default class MyCalender extends React.Component {
       if(res){
         res.students && res.students.map((obj,index)=>{
           if(obj.userId == Meteor.userId()){
-            if(obj.status=='signIn')
+            if(obj.status=='signIn' || obj.status=='checkIn')
             this.setState({status:'Sign Out'});
           }
         })
@@ -174,7 +176,7 @@ export default class MyCalender extends React.Component {
           RenderActions: (<ButtonWrapper>
             {res.map((obj)=>
              <FormGhostButton
-             label={obj.packageName}
+             label={capitalizeString(obj.packageName)}
              onClick={() => {this.updateClass(filter,status,obj,popUp)}}
              applyClose
            />
@@ -196,38 +198,54 @@ export default class MyCalender extends React.Component {
    }
 
   updateClass = (filter,status,purchaseData,popUp)=>{
-    let {packageType,noClasses,_id,packageName} = purchaseData;
-    if(noClasses>0){
-      this.setState({isLoading:true});
-      Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
-        if(res){
-          this.setState({status:'Sign In',isLoading:false});
-          popUp.appear("success", {
-            title: `${this.state.status} successfully`,
-            content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
-            RenderActions: (<ButtonWrapper>
-              <FormGhostButton
-                  label={'Ok'}
-                  onClick={() => {
-                    this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
-                  }}
-                  applyClose
-              />
-          </ButtonWrapper>)
-          }, true);
-        }
-      })
-    }
-    else{
-      popUp.appear("alert", {
-        title: `Caution`,
-        content: `You have ${noClasses} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
-        RenderActions: (<ButtonWrapper>
-            {this.purchaseLaterButton()}
-           {this.purchaseNowButton()}
-      </ButtonWrapper>)
-      }, true);
-    }
+    let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
+    let condition=0;
+    if(packageType == 'CP'){
+      condition = noClasses;
+    }else if(packageType == 'MP'){
+      condition = get(monthlyAttendance,'noClasses',0);
+      }
+    
+        Meteor.call('purchase.manageAttendance',_id,packageType,0,(err,res)=>{
+          if(res){
+            if(condition==0 && packageType=='MP'){
+              condition = res;
+            }
+            if(condition>0){
+              this.setState({isLoading:true});
+              Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
+                if(res){
+                  this.setState({status:'Sign In',isLoading:false});
+                  popUp.appear("success", {
+                    title: `${this.state.status} successfully`,
+                    content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+                    RenderActions: (<ButtonWrapper>
+                      <FormGhostButton
+                          label={'Ok'}
+                          onClick={() => {
+                            this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
+                          }}
+                          applyClose
+                      />
+                  </ButtonWrapper>)
+                  }, true);
+                }
+              })
+            }
+            else{
+              popUp.appear("alert", {
+                title: `Caution`,
+                content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
+                RenderActions: (<ButtonWrapper>
+                    {this.purchaseLaterButton()}
+                   {this.purchaseNowButton()}
+              </ButtonWrapper>)
+              }, true);
+            }
+          }
+        });
+    
+   
   
   }
   purchaseNowButton = ()=>(
@@ -377,7 +395,11 @@ export default class MyCalender extends React.Component {
       classDetails
     } = this.state;
     const { routeName,schoolData } = this.props;
-    let {name,_id} = schoolData;
+    let name,_id;
+    if( !isEmpty(schoolData)){
+      name = get (schoolData,'name','School Name');
+      _id = get(schoolData,'_id',null);
+    }
     let classTypeId;
     if(!isEmpty(classDetails)){
       classTypeId = get(classDetails,'classTypeId',null);

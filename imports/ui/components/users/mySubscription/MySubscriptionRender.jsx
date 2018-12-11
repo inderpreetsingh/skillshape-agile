@@ -186,6 +186,7 @@ const MySubscriptionRender = (props) => {
                     schoolName={schoolName}
                     isBusy={isBusy}
                     userId={userId}
+                    selectedSchoolData = {schoolData[0]}
                 />
             )}
             {callUsDialog && (
