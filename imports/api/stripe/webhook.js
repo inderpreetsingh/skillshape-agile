@@ -61,7 +61,8 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
               autoWithdraw:true,
               fee:classSubscriptionData.fee,
               currency:classSubscriptionData.currency,
-              contractLength:classSubscriptionData.contractLength
+              contractLength:classSubscriptionData.contractLength,
+              monthlyAttendance:classSubscriptionData.monthlyAttendance
             }
            packageName = payload.packageName;
            userId = payload.userId;

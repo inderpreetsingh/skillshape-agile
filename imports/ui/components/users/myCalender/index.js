@@ -435,3 +435,6 @@ export default class MyCalender extends React.Component {
     );
   }
 }
+/*
+{max,duration,current,startDate}
+*/

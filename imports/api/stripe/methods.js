@@ -21,7 +21,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,currencySymbol = '$';
+    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,currencySymbol = '$',monthlyAttendance={};
     packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
@@ -62,6 +62,11 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
           }
           currency = current.currency;
           contractLength = current.month;
+        }
+        if(MonthlyData.duPeriod){
+          monthlyAttendance.duPeriod = MonthlyData.duPeriod;
+          monthlyAttendance.noClasses = MonthlyData.noClasses;
+          monthlyAttendance.startDate = new Date();
         }
       })
       payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
@@ -136,7 +141,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         contractLength,
         payAsYouGo,
         payUpFront,
-        currency : currencySymbol
+        currency : currencySymbol,
+        monthlyAttendance
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripeRequest);
@@ -313,7 +319,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(monthlyPymtDetails,[Object]);
     //customer creation and subscribe if new otherwise straight to subscribe
-    let startDate, expiryDate, subscriptionRequest, subscriptionDbId, payload, subscriptionResponse, stripeCusId,stripeCusIds=[],fee,currency,contractLength;
+    let startDate, expiryDate, subscriptionRequest, subscriptionDbId, payload, subscriptionResponse, stripeCusId,stripeCusIds=[],fee,currency,contractLength,monthlyAttendance={};
     try {
       let userId = this.userId;
       let emailId=Meteor.user().emails[0].address;
@@ -338,6 +344,11 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         items: [{ plan: planId }]
       };
       let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
+      if(MonthlyData.duPeriod){
+        monthlyAttendance.duPeriod = MonthlyData.duPeriod;
+        monthlyAttendance.duPeriod = MonthlyData.noClasses;
+        monthlyAttendance.startDate = new Date();
+      }
       MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){
          fee = parseInt(String(current.cost).split(".").join(""));
@@ -358,7 +369,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         planId,
         fee,
         currency,
-        contractLength
+        contractLength,
+        monthlyAttendance
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);

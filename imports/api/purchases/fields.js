@@ -108,7 +108,12 @@ export const PurchasesSchema = new SimpleSchema({
   subscriptionId: {
     type: String,
     optional: true
-  }
+  },
+  monthlyAttendance:{
+    type:Object,
+    optional:true,
+    blackbox: true
+  },
 });
 
 Purchases.attachSchema(PurchasesSchema);
