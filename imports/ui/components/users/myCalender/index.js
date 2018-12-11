@@ -395,7 +395,11 @@ export default class MyCalender extends React.Component {
       classDetails
     } = this.state;
     const { routeName,schoolData } = this.props;
-    let {name,_id} = schoolData;
+    let name,_id;
+    if( !isEmpty(schoolData)){
+      name = get (schoolData,'name','School Name');
+      _id = get(schoolData,'_id',null);
+    }
     let classTypeId;
     if(!isEmpty(classDetails)){
       classTypeId = get(classDetails,'classTypeId',null);
