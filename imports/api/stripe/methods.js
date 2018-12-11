@@ -67,6 +67,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
           monthlyAttendance.duPeriod = MonthlyData.duPeriod;
           monthlyAttendance.noClasses = MonthlyData.noClasses;
           monthlyAttendance.startDate = new Date();
+          monthlyAttendance.max = MonthlyData.noClasses;
         }
       })
       payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
@@ -348,6 +349,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         monthlyAttendance.duPeriod = MonthlyData.duPeriod;
         monthlyAttendance.duPeriod = MonthlyData.noClasses;
         monthlyAttendance.startDate = new Date();
+        monthlyAttendance.max = MonthlyData.noClasses;
       }
       MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){

@@ -4,6 +4,7 @@ import isEmpty from "lodash/isEmpty";
 import { check } from 'meteor/check';
 import moment from "moment";
 import get from 'lodash/get';
+import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
   "purchases.addPurchase": function(payload) {
     check(payload,Object);
@@ -74,17 +75,44 @@ Meteor.methods({
     }
   },
   "purchases.getPackagesFromIds":function(packageIds){
-    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active'}).fetch();
+    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',packageType:{$ne:'EP'}}).fetch();
   },
   "purchase.manageAttendance":function(_id,packageType,inc){
-  if(_id){
-    let record;
-    if(packageType == 'CP'){
-      Purchases.update({_id},{$inc:{noClasses:inc}});
+  try{
+    if(_id){
+      let record,monthlyAttendance,startDate;
+      if(packageType == 'CP'){
+        Purchases.update({_id},{$inc:{noClasses:inc}});
+      }
+      else if(packageType == 'MP'){
+        record = Purchases.findOne({_id});
+        if(!isEmpty(record)){
+          monthlyAttendance = get(record,'monthlyAttendance',{});
+          if(monthlyAttendance.noClasses>0){
+            monthlyAttendance.noClasses= monthlyAttendance.noClasses+inc;
+           }else{
+            startDate = monthlyAttendance.startDate;
+            startDate = getExpiryDateForPackages(startDate, monthlyAttendance.duPeriod,monthlyAttendance.max);
+            if(startDate<record.endDate){
+              monthlyAttendance.noClasses= monthlyAttendance.max+inc;
+            }
+          }
+          Purchases.update({_id},{$set:{monthlyAttendance}});
+          return monthlyAttendance.noClasses;
+        }
+      }
     }
+  }catch(error){
+		console.log("​error in purchase.manageAttendance", error)
     
-
-
   }
+  
   }
 });
+/* 
+1. Find the no of classes in monthly package.
+2. If not zero then update.
+3. If zero then check start date+duperiord == date  is less then end right.
+3.1 if less then set start date == startDate+duPeriord and set noClasses = max+inc;.
+3.2 If greater then do nothing.
+*/
