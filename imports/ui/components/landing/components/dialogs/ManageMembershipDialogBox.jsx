@@ -66,6 +66,9 @@ const styles = theme => {
         },
         expansionPanelDetails: {
             padding: 0,
+            [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+                flexDirection: 'column'
+            }
         },
         expansionPanelSummary: {
             margin: 0,
@@ -125,6 +128,7 @@ const ClassProfile = styled.div`
 const ClassTimesList = styled.ul`
   width: 100%;
   padding: 0;
+  margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
 
 `;
@@ -189,9 +193,10 @@ const ClassNameWrapper = styled.div`
 
 // Class data buttons
 const CDButtonsWrapper = styled.div`
-display: flex;
-align-items: center;
-flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-left: ${helpers.rhythmDiv}px;
 `;
 
 const labelMaker = (notification) => {
@@ -312,23 +317,39 @@ const ManageMemberShipDialogBox = props => {
 
                                         <ClassNameWrapper>
                                             <ClassName> {capitalizeString(get(classData, 'name', 'Test Class Type'))} </ClassName>
-                                            <ClassDataButtons
-                                                classData={classData}
-                                                notification={get(classData.notification, 'notification', false)}
-                                                onLeaveClassButtonClick={(e) => {
-                                                    e.stopPropagation();
-                                                    removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
-                                                }}
-                                                onNotificationsButtonClick={(e) => {
-                                                    e.stopPropagation();
-                                                    stopNotification(classData.notification)
-                                                }}
-                                            />
+                                            <ToggleVisibility show>
+                                                <ClassDataButtons
+                                                    classData={classData}
+                                                    notification={get(classData.notification, 'notification', false)}
+                                                    onLeaveClassButtonClick={(e) => {
+                                                        e.stopPropagation();
+                                                        removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                                    }}
+                                                    onNotificationsButtonClick={(e) => {
+                                                        e.stopPropagation();
+                                                        stopNotification(classData.notification)
+                                                    }}
+                                                />
+                                            </ToggleVisibility>
                                         </ClassNameWrapper>
                                     </ClassProfile>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
+                                    <ToggleVisibility>
+                                        <ClassDataButtons
+                                            classData={classData}
+                                            notification={get(classData.notification, 'notification', false)}
+                                            onLeaveClassButtonClick={(e) => {
+                                                e.stopPropagation();
+                                                removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                            }}
+                                            onNotificationsButtonClick={(e) => {
+                                                e.stopPropagation();
+                                                stopNotification(classData.notification)
+                                            }}
+                                        />
+                                    </ToggleVisibility>
                                     <ClassTimesList>
                                         {classData.classTimes.map(classTimeData => {
                                             if (classTimeData == null) {
