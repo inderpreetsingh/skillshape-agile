@@ -26,9 +26,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 const styles = theme => {
   return {
     dialogRoot: {
-      top: '50%',
-      transform: 'translateY(-50%)',
-      height: 'auto',
+      height: '100vh',
     },
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
