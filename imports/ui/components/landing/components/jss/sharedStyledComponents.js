@@ -40,7 +40,7 @@ export const SubHeading = GenericText.withComponent('h3').extend`
   }
 `;
 
-/* We will tell on large screen what action we wanna perform
+/* We will describe for large screen what action we wanna perform
   based on that our small screen will respond
 */
 export const ToggleVisibility = styled.div`

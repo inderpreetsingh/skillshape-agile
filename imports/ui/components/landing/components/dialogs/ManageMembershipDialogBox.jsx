@@ -10,11 +10,12 @@ import IconButton from "material-ui/IconButton";
 import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import ProfileImage, { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
 import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
+import { coverSrc } from '/imports/ui/components/landing/site-settings.js';
 
 import {
     capitalizeString
@@ -66,6 +67,9 @@ const styles = theme => {
         },
         expansionPanelDetails: {
             padding: 0,
+            [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+                flexDirection: 'column'
+            }
         },
         expansionPanelSummary: {
             margin: 0,
@@ -125,6 +129,7 @@ const ClassProfile = styled.div`
 const ClassTimesList = styled.ul`
   width: 100%;
   padding: 0;
+  margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
 
 `;
@@ -189,9 +194,10 @@ const ClassNameWrapper = styled.div`
 
 // Class data buttons
 const CDButtonsWrapper = styled.div`
-display: flex;
-align-items: center;
-flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-left: ${helpers.rhythmDiv}px;
 `;
 
 const labelMaker = (notification) => {
@@ -201,6 +207,12 @@ const labelMaker = (notification) => {
     return 'Get Notifications';
 }
 
+const imageExistsConfig = {
+    originalImagePath: 'src',
+    defaultImage: coverSrc
+};
+
+const ClassImage = withImageExists(SSImage, imageExistsConfig);
 
 const ClassDataButtons = (props) => (
     <CDButtonsWrapper>
@@ -302,33 +314,49 @@ const ManageMemberShipDialogBox = props => {
                                 >
 
                                     <ClassProfile>
-                                        <ProfileImage
+                                        <ClassImage
                                             imageContainerProps={{
-                                                borderRadius: `50 % `,
+                                                borderRadius: `50%`,
                                                 width: 84,
                                                 height: 84
                                             }}
-                                            src={get(classData, 'medium', get(classData, 'classTypeImg', get(selectedSchoolData)))} />
+                                            src={get(classData, 'medium', get(classData, 'classTypeImg', get(selectedSchoolData, 'mainImage', get(selectedSchoolData, 'mainImageMedium', ''))))} />
 
                                         <ClassNameWrapper>
                                             <ClassName> {capitalizeString(get(classData, 'name', 'Test Class Type'))} </ClassName>
-                                            <ClassDataButtons
-                                                classData={classData}
-                                                notification={get(classData.notification, 'notification', false)}
-                                                onLeaveClassButtonClick={(e) => {
-                                                    e.stopPropagation();
-                                                    removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
-                                                }}
-                                                onNotificationsButtonClick={(e) => {
-                                                    e.stopPropagation();
-                                                    stopNotification(classData.notification)
-                                                }}
-                                            />
+                                            <ToggleVisibility show>
+                                                <ClassDataButtons
+                                                    classData={classData}
+                                                    notification={get(classData.notification, 'notification', false)}
+                                                    onLeaveClassButtonClick={(e) => {
+                                                        e.stopPropagation();
+                                                        removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                                    }}
+                                                    onNotificationsButtonClick={(e) => {
+                                                        e.stopPropagation();
+                                                        stopNotification(classData.notification)
+                                                    }}
+                                                />
+                                            </ToggleVisibility>
                                         </ClassNameWrapper>
                                     </ClassProfile>
                                 </ExpansionPanelSummary>
 
                                 <ExpansionPanelDetails classes={{ root: classes.expansionPanelDetails }}>
+                                    <ToggleVisibility>
+                                        <ClassDataButtons
+                                            classData={classData}
+                                            notification={get(classData.notification, 'notification', false)}
+                                            onLeaveClassButtonClick={(e) => {
+                                                e.stopPropagation();
+                                                removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                            }}
+                                            onNotificationsButtonClick={(e) => {
+                                                e.stopPropagation();
+                                                stopNotification(classData.notification)
+                                            }}
+                                        />
+                                    </ToggleVisibility>
                                     <ClassTimesList>
                                         {classData.classTimes.map(classTimeData => {
                                             if (classTimeData == null) {

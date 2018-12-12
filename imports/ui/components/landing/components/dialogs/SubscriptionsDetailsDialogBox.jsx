@@ -99,7 +99,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
     const getRemainingClasses = (props) => {
         let stringToPrint = '';
         props.combinedData.map((obj, index) => {
-            stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expire ${formatDate(obj.endDate)} <br/>`;
+            stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(obj.endDate)} <br/>`;
         })
         return stringToPrint;
     }
@@ -118,8 +118,16 @@ const SubscriptionsDetailsDialogBox = (props) => {
     const getDatesBasedOnSubscriptions = (props) => {
         let stringToPrint = '';
         let fee = get(props, 'fee', 0).toFixed(2);
-        let currency = get(props, 'currency', '$')
-        if (props.payAsYouGo) {
+        let currency = get(props, 'currency', '$');
+
+        if (props.packageType == 'EP') {
+            return (<HighlightedBg>
+                <Text>
+                    <b>Expiration Date :</b> {formatDate(props.endDate)}
+                </Text>
+            </HighlightedBg>)
+        }
+        else if (props.payAsYouGo) {
             return (<HighlightedBg>
                 <Text>
                     <b>Payment</b> of {formatMoney(fee, currency)} <b>is due on</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}
@@ -228,7 +236,6 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
 SubscriptionsDetailsDialogBox.propTypes = {
     onModalClose: PropTypes.func,
-    loading: PropTypes.bool
 };
 
 export default withStyles(styles)(SubscriptionsDetailsDialogBox);
