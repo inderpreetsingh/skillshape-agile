@@ -1,20 +1,18 @@
-import React from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router";
-
 import get from 'lodash/get';
-
+import PropTypes from "prop-types";
+import React from "react";
+import { withRouter } from "react-router";
+import styled from "styled-components";
 import ClassTimeCover from "./classTimeCover/index.jsx";
 import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import MembersList from "./membersList/index.jsx";
-import TimeLine from "./timeline/index.jsx";
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
-import { danger, maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
-import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
+
+
 
 const imageExistsBgImage = {
   originalImagePath: "headerProps.bgImg",
@@ -82,20 +80,12 @@ const ClassDetails = props => {
 
   const currentView =
     location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
-
+  
   return (
     <Wrapper>
       <PageContent>
         <TopSearchBar {...props.topSearchBarProps} />
-        {props.noPurchasedClasses &&
-          currentView === "studentsView" && (
-            <Notification
-              notificationContent="You do not have any packages that will cover this class."
-              bgColor={danger}
-              buttonLabel="Purchase Classes"
-              onButtonClick={props.onPurchaseButtonClick}
-            />
-          )}
+        
         <InnerWrapper>
           <ClassTimeWrapper bgImg={bgImg}>
             <ClassTimeCover

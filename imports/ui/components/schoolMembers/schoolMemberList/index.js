@@ -16,4 +16,4 @@ class SchoolMemberListItems extends React.Component {
   }
 }
 
-export default withSubscriptionAndPagination(SchoolMemberListItems, {collection: SchoolMemberDetails, subscriptionName: "MembersBySchool", recordLimit: 20});
+export default withSubscriptionAndPagination(SchoolMemberListItems, {collection: SchoolMemberDetails, subscriptionName: "MembersBySchool", recordLimit: 50});

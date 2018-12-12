@@ -67,7 +67,7 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
         pymtType,
         self
     });
-
+    //check if the package type is CP or MP then any enrollment package is purchased or not.
     if (self.state.isAlreadyPurchased) {
         return;
     }

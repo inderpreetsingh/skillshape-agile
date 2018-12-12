@@ -163,6 +163,9 @@ const Member = props => {
   let name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`;
   if (props.addMember) {
     name = props.type === 'instructor' ? 'Add Instructor' : 'Add Student';
+   if(props.type=='joinClass'){
+     name = 'Join Class'
+   }
   }
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
@@ -215,11 +218,9 @@ const Member = props => {
       })
     }
     else {
-      console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
       payLoad.instructors = remove(payLoad.instructorIds, (n) => {
         return n != payLoad.instructorId;
       })
-      console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
       Meteor.call("classTimes.editClassTimes", { doc_id: payLoad.classTimeId, doc: payLoad }, (err, res) => {
         if (res) {
           this.removePopUp(popUp);

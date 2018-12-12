@@ -1,12 +1,22 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-
+import styled from "styled-components";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import MembersList from "./presentational/MembersList.jsx";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import {isEmpty,get} from 'lodash';
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
-
+import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
+import { danger } from "/imports/ui/components/landing/components/jss/helpers.js";
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import { capitalizeString } from '/imports/util';
+const Div = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+`;
+const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 class MembersListContainer extends Component {
   constructor(props) {
     super(props);
@@ -39,8 +49,129 @@ class MembersListContainer extends Component {
  componentWillReceiveProps(nextProps) {
   this.studentsData(nextProps);
  }
+ updateClass = (filter,status,purchaseData,popUp)=>{
+  let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
+  let condition=0;
+  if(packageType == 'CP'){
+    condition = noClasses;
+  }else if(packageType == 'MP'){
+    condition = get(monthlyAttendance,'noClasses',0);
+    }
+  
+      Meteor.call('purchase.manageAttendance',_id,packageType,0,(err,res)=>{
+        
+          if(condition==0 && packageType=='MP' && res){
+            condition = res;
+          }
+          if(condition>0){
+            this.setState({isLoading:true});
+            Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
+              if(res){
+                this.setState({status:'Sign In',isLoading:false});
+                popUp.appear("success", {
+                  title: `Sign in successfully`,
+                  content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+                  RenderActions: (<ButtonWrapper>
+                    <FormGhostButton
+                        label={'Ok'}
+                        onClick={() => {
+                          this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
+                        }}
+                        applyClose
+                    />
+                </ButtonWrapper>)
+                }, true);
+              }
+            })
+          }
+          else{
+            popUp.appear("alert", {
+              title: `Caution`,
+              content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
+              RenderActions: (<ButtonWrapper>
+                  {this.purchaseLaterButton()}
+                 {this.purchaseNowButton()}
+            </ButtonWrapper>)
+            }, true);
+          }
+        
+      });
+  
  
+
+}
+purchaseNowButton = ()=>(
+  <FormGhostButton
+  label={'Purchase Now'}
+  onClick={() => {this.setState({classTypePackages:true})}}
+  applyClose
+/>
+)
+purchaseLaterButton = ()=>(
+  <FormGhostButton
+           label={'Purchase Later'}
+           onClick={() => {}}
+           applyClose
+         />
+)
+ handleClassUpdate = (filter,status,popUp)=>{
+  Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
+     if(!isEmpty(res)){
+      popUp.appear("inform", {
+        title: `Confirmation`,
+        content: `You have the followings packages. Please select one from which you are going to use.`,
+        RenderActions: (<ButtonWrapper>
+          {res.map((obj)=>
+           <FormGhostButton
+           label={capitalizeString(obj.packageName)}
+           onClick={() => {this.updateClass(filter,status,obj,popUp)}}
+           applyClose
+         />
+            )}
+        </ButtonWrapper>)
+      }, true);
+     }
+     else{
+      popUp.appear("inform", {
+        title: `No Package Purchased Yet.`,
+        content: `You haven't purchased any package please purchase one first. `,
+        RenderActions: (<ButtonWrapper>
+        {this.purchaseLaterButton()}
+         {this.purchaseNowButton()}
+        </ButtonWrapper>)
+      }, true);
+     }
+   })
+ }
+ handleSignIn = () => {
+  const {popUp,classData} = this.props;
+  let classDetails = classData[0];
+    popUp.appear("success", {
+      title: "Confirmation",
+      content: `You are going to sign in into this class.`,
+      RenderActions: ( <Div > 
+        <ButtonWrapper>
+          <FormGhostButton
+              label={'No'}
+              onClick={() => {
+              }}
+              applyClose
+          />
+      </ButtonWrapper>
+      <ButtonWrapper>
+          <FormGhostButton
+              label={'Yes'}
+              onClick={() => {
+                this.handleClassUpdate(classDetails,'signIn',popUp)
+              }}
+              applyClose
+          />
+      </ButtonWrapper>
+      </Div>)
+    }, true);
+  
  
+}
   handleAddInstructorDialogBoxState = (dialogBoxState,text) => () => {
     this.setState(state => {
       return {
@@ -91,6 +222,12 @@ class MembersListContainer extends Component {
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
+  let notification = true;
+  !isEmpty(classData) && classData[0].students && classData[0].students.map((obj)=>{
+    if(obj.userId == Meteor.userId()){
+      notification = !obj.purchaseId ? true : false;
+    }
+  })
     return (
       <Fragment>
         {addInstructorDialogBoxState && (
@@ -104,6 +241,15 @@ class MembersListContainer extends Component {
             text={text}
           />
         )}
+        {notification &&
+          currentView === "studentsView" && (
+            <Notification
+              notificationContent="You do not have any packages that will cover this class."
+              bgColor={danger}
+              buttonLabel="Purchase Classes"
+              onButtonClick={()=>{this.setState({classTypePackages:true})}}
+            />
+          )}
         {classTypePackages && <ClassTypePackages 
                     schoolId = {schoolId}
                     open={classTypePackages}
@@ -139,6 +285,7 @@ class MembersListContainer extends Component {
           addStudent
           onViewStudentClick={(userId)=>{this.setState({classTypePackages:true,userId})}}
           params= {params}
+          onJoinClassClick = {this.handleSignIn}
        />
       </Fragment>
     );

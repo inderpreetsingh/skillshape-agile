@@ -207,10 +207,10 @@ export default class MyCalender extends React.Component {
       }
     
         Meteor.call('purchase.manageAttendance',_id,packageType,0,(err,res)=>{
-          if(res){
-            if(condition==0 && packageType=='MP'){
+         
+            if(condition==0 && packageType=='MP' && res){
               condition = res;
-            }
+            
             if(condition>0){
               this.setState({isLoading:true});
               Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
