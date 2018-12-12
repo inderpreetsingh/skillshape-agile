@@ -163,6 +163,9 @@ const Member = props => {
   let name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`;
   if (props.addMember) {
     name = props.type === 'instructor' ? 'Add Instructor' : 'Add Student';
+   if(props.type=='joinClass'){
+     name = 'Join Class'
+   }
   }
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.

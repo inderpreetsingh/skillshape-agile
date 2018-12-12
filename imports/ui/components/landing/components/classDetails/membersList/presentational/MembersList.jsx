@@ -61,20 +61,40 @@ const MembersList = props => {
     const expanded =
         props.viewType === "instructorsView" && props.entityType === "students";
     const type = props.entityType === 'students' ? 'student' : 'instructor';
-
+    let studentsView = props.viewType === "studentsView" && props.entityType === "students";
+    let joinClass = studentsView;
+    !isEmpty(props.data) && studentsView && props.data.map((obj)=>{
+        if(obj._id == Meteor.userId()){
+            joinClass = false;
+        }
+    })
     return (
         <Wrapper>
-             {!isEmpty(props.data) && ( <ListHeadWrapper>
-                <Title>
-                  <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
-                </Title>
                 {/* <SearchList
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
         /> */}
-            </ListHeadWrapper>)} 
+             {!isEmpty(props.data) || expanded ? ( <ListHeadWrapper>
+                <Title>
+                  <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
+                </Title>
+            </ListHeadWrapper>) : ''} 
            
             <MembersGrid expanded={expanded}>
+            {joinClass &&   <MemberWrapper >
+                    <Member
+                        addMember={true}
+                        onAddIconClick={props.onAddIconClick}
+                        type={'joinClass'}
+                        popUp={props.popUp}
+                        classData={props.classData}
+                        classTimeForm={props.classTimeForm}
+                        instructorsIdsSetter={props.instructorsIdsSetter}
+                        instructorsData={props.instructorsData}
+                        instructorsIds={props.instructorsIds}
+
+                    />
+                </MemberWrapper>}
                 {!isEmpty(props.data) &&
                     props.data.map(obj => (
                         <MemberWrapper expanded={expanded} type={obj.type}>
@@ -123,6 +143,7 @@ const MembersList = props => {
 
                     />
                 </MemberWrapper>}
+              
               
             </MembersGrid>
         </Wrapper>
