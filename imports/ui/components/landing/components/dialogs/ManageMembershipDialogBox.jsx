@@ -10,11 +10,12 @@ import IconButton from "material-ui/IconButton";
 import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import ProfileImage, { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
 import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
+import { coverSrc } from '/imports/ui/components/landing/site-settings.js';
 
 import {
     capitalizeString
@@ -206,6 +207,12 @@ const labelMaker = (notification) => {
     return 'Get Notifications';
 }
 
+const imageExistsConfig = {
+    originalImagePath: 'src',
+    defaultImage: coverSrc
+};
+
+const ClassImage = withImageExists(SSImage, imageExistsConfig);
 
 const ClassDataButtons = (props) => (
     <CDButtonsWrapper>
@@ -307,13 +314,13 @@ const ManageMemberShipDialogBox = props => {
                                 >
 
                                     <ClassProfile>
-                                        <ProfileImage
+                                        <ClassImage
                                             imageContainerProps={{
-                                                borderRadius: `50 % `,
+                                                borderRadius: `50%`,
                                                 width: 84,
                                                 height: 84
                                             }}
-                                            src={get(classData, 'medium', get(classData, 'classTypeImg', get(selectedSchoolData)))} />
+                                            src={get(classData, 'medium', get(classData, 'classTypeImg', get(selectedSchoolData, 'mainImage', get(selectedSchoolData, 'mainImageMedium', ''))))} />
 
                                         <ClassNameWrapper>
                                             <ClassName> {capitalizeString(get(classData, 'name', 'Test Class Type'))} </ClassName>
