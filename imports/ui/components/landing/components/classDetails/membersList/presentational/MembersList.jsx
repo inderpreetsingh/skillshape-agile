@@ -74,7 +74,7 @@ const MembersList = props => {
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
         /> */}
-             {!isEmpty(props.data) || expanded ? ( <ListHeadWrapper>
+             {props.viewType === "instructorsView" || !isEmpty(props.data) || props.entityType === 'students' ? ( <ListHeadWrapper>
                 <Title>
                   <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
                 </Title>
@@ -84,7 +84,7 @@ const MembersList = props => {
             {joinClass &&   <MemberWrapper >
                     <Member
                         addMember={true}
-                        onAddIconClick={props.onAddIconClick}
+                        onAddIconClick={props.onJoinClassClick}
                         type={'joinClass'}
                         popUp={props.popUp}
                         classData={props.classData}
