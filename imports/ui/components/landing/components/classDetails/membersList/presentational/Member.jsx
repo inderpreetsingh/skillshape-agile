@@ -215,11 +215,9 @@ const Member = props => {
       })
     }
     else {
-      console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
       payLoad.instructors = remove(payLoad.instructorIds, (n) => {
         return n != payLoad.instructorId;
       })
-      console.log("​payLoad.instructorIds -> payLoad.instructorIds", payLoad.instructorIds)
       Meteor.call("classTimes.editClassTimes", { doc_id: payLoad.classTimeId, doc: payLoad }, (err, res) => {
         if (res) {
           this.removePopUp(popUp);

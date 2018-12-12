@@ -64,15 +64,16 @@ const MembersList = props => {
 
     return (
         <Wrapper>
-            <ListHeadWrapper>
+             {!isEmpty(props.data) && ( <ListHeadWrapper>
                 <Title>
-                    <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
+                  <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
                 </Title>
                 {/* <SearchList
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
         /> */}
-            </ListHeadWrapper>
+            </ListHeadWrapper>)} 
+           
             <MembersGrid expanded={expanded}>
                 {!isEmpty(props.data) &&
                     props.data.map(obj => (
