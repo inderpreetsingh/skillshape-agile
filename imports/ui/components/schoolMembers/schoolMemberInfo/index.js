@@ -400,6 +400,7 @@ class SchoolMemberInfo extends Component {
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'Old Data'))
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
+		let userName = get(memberInfo,'name',get(memberInfo,'firstName',get(memberInfo,'lastName','Old Data')));
 		return (
 			<Grid container>
 				{showConfirmation && (
@@ -499,18 +500,25 @@ class SchoolMemberInfo extends Component {
 						}
 
 						<Grid item sm={4} xs={4} md={4}>
-							<Typography>{memberInfo.name}</Typography>
+							<Typography>{userName}</Typography>
 							{view === 'admin' && (
 								<React.Fragment>
 									<Typography>{memberInfo.phone}</Typography>
 									<Typography>{memberInfo.email}</Typography>
 								</React.Fragment>
 							)}
-							<ActionButtonsWrapper>
+							{userId === Meteor.userId() && (<ActionButtonsWrapper>
 								<ActionButton onClick={() => { }}>
 									<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
 								</ActionButton>
-							</ActionButtonsWrapper>
+							</ActionButtonsWrapper>) }
+							{adminView && (<ActionButtonsWrapper>
+							<ActionButton onClick={() => { }}>
+									<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
+								</ActionButton>
+							</ActionButtonsWrapper>)}
+							
+							
 						</Grid>
 					</Grid>
 					{notClassmatePage && (<Grid item sm={3} xs={12} md={3} style={{ padding: '28px' }}>

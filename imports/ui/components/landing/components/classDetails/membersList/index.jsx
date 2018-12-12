@@ -6,6 +6,8 @@ import AddInstructorDialogBox from "/imports/ui/components/landing/components/di
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import {isEmpty,get} from 'lodash';
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
+import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
+import { danger } from "/imports/ui/components/landing/components/jss/helpers.js";
 
 class MembersListContainer extends Component {
   constructor(props) {
@@ -91,6 +93,12 @@ class MembersListContainer extends Component {
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
+  let notification = true;
+  !isEmpty(classData) && classData[0].students.map((obj)=>{
+    if(obj.userId == Meteor.userId()){
+      notification = !obj.purchaseId ? true : false;
+    }
+  })
     return (
       <Fragment>
         {addInstructorDialogBoxState && (
@@ -104,6 +112,15 @@ class MembersListContainer extends Component {
             text={text}
           />
         )}
+        {notification &&
+          currentView === "studentsView" && (
+            <Notification
+              notificationContent="You do not have any packages that will cover this class."
+              bgColor={danger}
+              buttonLabel="Purchase Classes"
+              onButtonClick={()=>{this.setState({classTypePackages:true})}}
+            />
+          )}
         {classTypePackages && <ClassTypePackages 
                     schoolId = {schoolId}
                     open={classTypePackages}

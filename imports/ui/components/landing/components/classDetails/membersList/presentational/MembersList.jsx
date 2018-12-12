@@ -108,7 +108,7 @@ const MembersList = props => {
                                 )}
                         </MemberWrapper>
                     ))}
-                <MemberWrapper expanded={expanded}>
+                    {type != 'student' &&   <MemberWrapper expanded={expanded}>
                     <Member
                         addMember={props.addInstructor || props.addStudent}
                         onAddIconClick={props.onAddIconClick}
@@ -121,7 +121,8 @@ const MembersList = props => {
                         instructorsIds={props.instructorsIds}
 
                     />
-                </MemberWrapper>
+                </MemberWrapper>}
+              
             </MembersGrid>
         </Wrapper>
     );
