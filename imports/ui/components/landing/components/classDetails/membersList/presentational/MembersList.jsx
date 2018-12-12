@@ -108,7 +108,7 @@ const MembersList = props => {
                                 )}
                         </MemberWrapper>
                     ))}
-                    {type != 'student' &&   <MemberWrapper expanded={expanded}>
+                    {props.viewType != "studentsView" &&   <MemberWrapper expanded={expanded}>
                     <Member
                         addMember={props.addInstructor || props.addStudent}
                         onAddIconClick={props.onAddIconClick}

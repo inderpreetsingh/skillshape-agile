@@ -94,7 +94,7 @@ class MembersListContainer extends Component {
     //     ? "studentsView"
     //     : "instructorsView";
   let notification = true;
-  !isEmpty(classData) && classData[0].students.map((obj)=>{
+  !isEmpty(classData) && classData[0].students && classData[0].students.map((obj)=>{
     if(obj.userId == Meteor.userId()){
       notification = !obj.purchaseId ? true : false;
     }
