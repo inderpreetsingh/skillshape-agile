@@ -236,7 +236,6 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
 SubscriptionsDetailsDialogBox.propTypes = {
     onModalClose: PropTypes.func,
-    loading: PropTypes.bool
 };
 
 export default withStyles(styles)(SubscriptionsDetailsDialogBox);

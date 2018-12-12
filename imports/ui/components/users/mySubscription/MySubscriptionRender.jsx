@@ -1,27 +1,30 @@
-import { get, isEmpty } from "lodash";
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-import { withStyles } from 'material-ui/styles';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
+import { withStyles } from 'material-ui/styles';
+import { get, isEmpty } from "lodash";
+
+import Call from 'material-ui-icons/Call';
+import Email from 'material-ui-icons/Email';
+import IconButton from 'material-ui/IconButton';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
 import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+
+import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { Heading, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+
+import { Heading, SubHeading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
-
-
-
-
-
-
-
-
-
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = {
+    profileIconButton: {
+        background: 'white',
+        width: 24,
+        height: 24,
+        fontSize: helpers.baseFontSize,
+    },
     expansionPanelRoot: {
         border: 'none'
     },
@@ -38,7 +41,13 @@ const styles = {
     },
     expansionPanelSummaryContent: {
         margin: 0,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+            flexDirection: 'column',
+            "& > :last-child": {
+                paddingRight: 0
+            }
+        }
     }
 };
 
@@ -114,7 +123,22 @@ const PageTitle = Heading.extend`
 
 const SchoolProfile = styled.div`
 	/* prettier-ignore */
-	${helpers.flexCenter}
+    ${helpers.flexCenter}
+    
+    @media screen and (max-width: ${helpers.mobile}px) {
+        justify-content: flex-start;
+        padding-left: ${helpers.rhythmDiv}px;
+    }
+`;
+
+const Profile = styled.div``;
+
+const ProfileIcons = styled.div`
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 `;
 
 const ActionButtons = (props) => (
@@ -125,7 +149,7 @@ const ActionButtons = (props) => (
         <ActionButton onClick={props.onSchoolVisit(props.schoolSlug)}>
             <FormGhostButton icon iconName="school" label="Visit School" />
         </ActionButton>
-
+        {/*
         {props.phone && props.phone.length && <ActionButton onClick={props.onCall(props.phone)}>
             <FormGhostButton icon iconName="phone" label="Call" />
         </ActionButton>}
@@ -133,6 +157,7 @@ const ActionButtons = (props) => (
         {props.email && <ActionButton onClick={props.onEmail(props.email, props.data)}>
             <FormGhostButton icon iconName="email" label="Email" noMarginBottom />
         </ActionButton>}
+        */}
     </ActionButtonsWrapper>
 );
 
@@ -186,7 +211,7 @@ const MySubscriptionRender = (props) => {
                     schoolName={schoolName}
                     isBusy={isBusy}
                     userId={userId}
-                    selectedSchoolData = {schoolData[0]}
+                    selectedSchoolData={schoolData[0]}
                 />
             )}
             {callUsDialog && (
@@ -231,7 +256,22 @@ const MySubscriptionRender = (props) => {
                                     expandIcon={<ExpandMoreIcon />}
                                 >
                                     <SchoolProfile>
-                                        <ProfileImage src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} />
+                                        <Profile>
+                                            <ProfileImage
+                                                imageContainerProps={{
+                                                    position: 'relative'
+                                                }}
+                                                src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} >
+                                                <ProfileIcons>
+                                                    {props.phone && props.phone.length && <IconButton classes={{ root: classes.profileIconButton }}>
+                                                        <Call onClick={props.handleCall(props.phone)} />
+                                                    </IconButton>}
+                                                    {props.email && <IconButton classes={{ root: classes.profileIconButton }}>
+                                                        <Email onClick={props.handleEmail(props.email, props.data)} />
+                                                    </IconButton>}
+                                                </ProfileIcons>
+                                            </ProfileImage>
+                                        </Profile>
                                         <SubHeading> {school.name} </SubHeading>
                                     </SchoolProfile>
 
@@ -241,8 +281,7 @@ const MySubscriptionRender = (props) => {
                                         phone={getContactNumbers(school)}
                                         schoolSlug={school.slug}
                                         onEditMemberShip={handleManageMemberShipDialogBox(true, schoolData)}
-                                        onCall={props.handleCall}
-                                        onEmail={props.handleEmail}
+
                                         onSchoolVisit={props.handleSchoolVisit}
                                     />
                                 </ExpansionPanelSummary>

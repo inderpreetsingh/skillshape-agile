@@ -13,29 +13,32 @@ const imageExistsConfig = {
 };
 
 const ImageContainer = styled.div`
+  ${helpers.coverBg};
+  flex-shrink: 0;
   width: ${props => props.width || 100}px;
   height: ${props => props.height || 100}px;
-  flex-shrink: 0;
-  ${helpers.coverBg};
   margin-right: ${props => props.marginRight || helpers.rhythmDiv * 2}px;
-    margin-bottom: ${ helpers.rhythmDiv}px;
-    background-position: 50% 50%;
-    background-image: url('${(props) => props.src}');
-    background-size: contain;
-    border-radius: ${ props => props.borderRadius || '3px'};
-    transition: background-image 1s linear;
+  position: ${props => props.position || 'static'};  
+  margin-bottom: ${ helpers.rhythmDiv}px;
+  background-position: 50% 50%;
+  background-image: url('${(props) => props.src}');
+  background-size: contain;
+  border-radius: ${ props => props.borderRadius || '3px'};
+  transition: background-image 1s linear;
 `;
 
-export const ssImage = (props) => {
+export const SSImage = (props) => {
     return (
         <ProgressiveImage src={props.bgImg} placeholder={config.blurImage}>
-            {(src) => <ImageContainer src={src} {...props.imageContainerProps} />}
+            {(src) => <ImageContainer src={src} {...props.imageContainerProps}>
+                {props.children}
+            </ImageContainer>}
         </ProgressiveImage>
     );
 }
 
 
-const ProfileImage = withImageExists(ssImage, imageExistsConfig);
+const ProfileImage = withImageExists(SSImage, imageExistsConfig);
 
 ProfileImage.defaultProps = {
     imageContainerProps: PropTypes.object,
