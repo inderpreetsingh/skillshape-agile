@@ -3,6 +3,7 @@ import DocumentTitle from 'react-document-title';
 import get from 'lodash/get';
 import styled from 'styled-components';
 import Typography from 'material-ui/Typography';
+import { browserHistory } from "react-router";
 
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 

@@ -95,8 +95,8 @@ class PublicLayout extends React.Component {
               this.setState(
                 { showSetPasswordDialogBox: false, isBusy: false },
                 () => {
-                  if (currentUser.roles.indexOf("School") !== -1) {
-                    browserHistory.push(`/claimSchool`);
+                  if (currentUser) {
+                    browserHistory.push(`/profile/${get(currentUser,'_id',null)}`);
                   }
                 }
               );
