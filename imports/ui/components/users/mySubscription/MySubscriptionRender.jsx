@@ -161,6 +161,17 @@ const ActionButtons = (props) => (
     </ActionButtonsWrapper>
 );
 
+const ContactSchool = (props) => (
+    <ProfileIcons>
+        {props.phone && props.phone.length && <IconButton classes={{ root: props.classes.profileIconButton }}>
+            <Call onClick={props.onCallClick(props.phone)} />
+        </IconButton>}
+        {props.email && <IconButton classes={{ root: props.classes.profileIconButton }}>
+            <Email onClick={props.onEmailClick(props.email, props.data)} />
+        </IconButton>}
+    </ProfileIcons>
+);
+
 const MySubscriptionRender = (props) => {
     const getSubsDataBasedOnSchool = (schoolId, purchaseData) => {
         return purchaseData.filter((sbsData) => sbsData.schoolId === schoolId);
@@ -262,14 +273,13 @@ const MySubscriptionRender = (props) => {
                                                     position: 'relative'
                                                 }}
                                                 src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} >
-                                                <ProfileIcons>
-                                                    {props.phone && props.phone.length && <IconButton classes={{ root: classes.profileIconButton }}>
-                                                        <Call onClick={props.handleCall(props.phone)} />
-                                                    </IconButton>}
-                                                    {props.email && <IconButton classes={{ root: classes.profileIconButton }}>
-                                                        <Email onClick={props.handleEmail(props.email, props.data)} />
-                                                    </IconButton>}
-                                                </ProfileIcons>
+                                                <ContactSchool
+                                                    data={school}
+                                                    email={getOurEmail(school)}
+                                                    phone={getContactNumbers(school)}
+                                                    onCallClick={handleCall}
+                                                    onEmailClick={handleEmail}
+                                                />
                                             </ProfileImage>
                                         </Profile>
                                         <SubHeading> {school.name} </SubHeading>
