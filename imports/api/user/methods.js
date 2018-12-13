@@ -22,14 +22,19 @@ Meteor.methods({
                 length: 10,
                 numbers: true
             });
-
+/* 
+'Paul Steve Panakkal'.split(' ').slice(0, -1).join(' '); // returns "Paul Steve"
+'Paul Steve Panakkal'.split(' ').slice(-1).join(' '); // returns "Panakkal"
+'Paul Steve Panakkal'.split(' '); // retutrns ["Paul", "Steve", "Panakkal"]
+*/
             const accessType = userType || "Anonymous";
-
+            let finalName=name.split(' '); 
             const userObj = {
                 email: email,
                 password: password,
                 profile: {
-                    firstName: name,
+                    firstName: finalName[0],
+                    lastName:finalName[1],
                     passwordSetByUser: false,
                     userType: accessType,
                     sendMeSkillShapeNotification: sendMeSkillShapeNotification
