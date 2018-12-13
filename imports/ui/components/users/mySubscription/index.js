@@ -142,6 +142,9 @@ class MySubscription extends React.Component {
 			})
 		}
 		}
+	okClick = ()=>{
+		this.classDataFinder();
+	}
 	removeFromCalendar = (data)=>{
 			let {schoolData} = this.props;
 			let {classTimeName,classTypeName} = data;
@@ -154,9 +157,24 @@ class MySubscription extends React.Component {
 				  if(res){
 					  this.setState({ isBusy: false});
 					  const { popUp } = this.props;
-					  popUp.appear("success", {
-						content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`
-					  });
+					  popUp.appear(
+						'success',
+						{
+							title: 'Success',
+							content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`,
+							RenderActions: (
+								<ButtonWrapper>
+								<FormGhostButton
+									label={'Ok'}
+									onClick={this.okClick}
+									applyClose
+								/>
+							</ButtonWrapper>
+							)
+						},
+						true
+					);
+					
 				  }
 				 
 				}
@@ -174,17 +192,46 @@ class MySubscription extends React.Component {
 				  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
 					if (res1) {
 						this.setState({isBusy:false});
-					  popUp.appear("success", {
-						content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-					  });
+						popUp.appear(
+							'success',
+							{
+								title: 'Success',
+								content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
+								RenderActions: (
+									<ButtonWrapper>
+									<FormGhostButton
+										label={'Ok'}
+										onClick={this.okClick}
+										applyClose
+									/>
+								</ButtonWrapper>
+								)
+							},
+							true
+						);
+					
 					}
 				  });
 				}
 				else{
 					this.setState({isBusy:false});
-					  popUp.appear("success", {
-						content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-					  });
+					popUp.appear(
+						'success',
+						{
+							title: 'Success',
+							content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
+							RenderActions: (
+								<ButtonWrapper>
+								<FormGhostButton
+									label={'Ok'}
+									onClick={this.okClick}
+									applyClose
+								/>
+							</ButtonWrapper>
+							)
+						},
+						true
+					);
 				}
 			  });
 		}

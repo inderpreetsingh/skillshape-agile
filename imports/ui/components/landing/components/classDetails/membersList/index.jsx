@@ -146,31 +146,7 @@ purchaseLaterButton = ()=>(
  handleSignIn = () => {
   const {popUp,classData} = this.props;
   let classDetails = classData[0];
-    popUp.appear("success", {
-      title: "Confirmation",
-      content: `You are going to sign in into this class.`,
-      RenderActions: ( <Div > 
-        <ButtonWrapper>
-          <FormGhostButton
-              label={'No'}
-              onClick={() => {
-              }}
-              applyClose
-          />
-      </ButtonWrapper>
-      <ButtonWrapper>
-          <FormGhostButton
-              label={'Yes'}
-              onClick={() => {
-                this.handleClassUpdate(classDetails,'signIn',popUp)
-              }}
-              applyClose
-          />
-      </ButtonWrapper>
-      </Div>)
-    }, true);
-  
- 
+  this.handleClassUpdate(classDetails,'signIn',popUp)
 }
   handleAddInstructorDialogBoxState = (dialogBoxState,text) => () => {
     this.setState(state => {

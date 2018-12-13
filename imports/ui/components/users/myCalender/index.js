@@ -267,29 +267,7 @@ export default class MyCalender extends React.Component {
     const {classDetails,filter,status} = this.state;
    
     if(status == "Sign In"){
-      popUp.appear("success", {
-        title: "Confirmation",
-        content: `You are going to sign in into this class.`,
-        RenderActions: ( <Div > 
-          <ButtonWrapper>
-            <FormGhostButton
-                label={'No'}
-                onClick={() => {
-                }}
-                applyClose
-            />
-        </ButtonWrapper>
-        <ButtonWrapper>
-            <FormGhostButton
-                label={'Yes'}
-                onClick={() => {
-                  this.handleClassUpdate(classDetails ?classDetails : filter,'signIn',popUp)
-                }}
-                applyClose
-            />
-        </ButtonWrapper>
-        </Div>)
-      }, true);
+          this.handleClassUpdate(classDetails ?classDetails : filter,'signIn',popUp)
     }
     else {
       popUp.appear("inform", {
