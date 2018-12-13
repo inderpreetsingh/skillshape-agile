@@ -10,13 +10,13 @@ import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 
 
-
-
-
-
-
 const styles = theme => {
   return {
+    dialogRoot: {
+      height: '100vh',
+      top: '50%',
+      transform: 'translateY(-50%)'
+    },
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
       marginBottom: `${helpers.rhythmDiv * 2}px`,
@@ -50,7 +50,7 @@ const styles = theme => {
     },
   }
 }
-const DialogActionWrapper = styled.div `
+const DialogActionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 ${helpers.rhythmDiv * 3}px;
@@ -86,60 +86,60 @@ const DialogTitleWrapper = styled.h1`
 const ButtonWrapper = styled.div`
   width: 100%;
   text-align: center;
-  margin-bottom: ${helpers.rhythmDiv+'px'};
+  margin-bottom: ${helpers.rhythmDiv + 'px'};
 `;
 
 
 const SignUpTypeDialogBox = (props) => (
-	<Dialog
-	    fullScreen={props.fullScreen}
-	    open={props.open}
-	    onClose={props.onModalClose}
-	    onRequestClose={props.onModalClose}
-	    aria-labelledby="join"
-	    itemScope
-      itemType="http://schema.org/CheckInAction"
-      style = {{height:'auto',top:'50%'}}
-	>
-		<MuiThemeProvider theme={muiTheme}>
+  <Dialog
+    fullScreen={props.fullScreen}
+    open={props.open}
+    onClose={props.onModalClose}
+    onRequestClose={props.onModalClose}
+    aria-labelledby="join"
+    itemScope
+    itemType="http://schema.org/CheckInAction"
+    classes={{ root: props.classes.dialogRoot }}
+  >
+    <MuiThemeProvider theme={muiTheme}>
 
-		    <DialogTitleContainer>
-                <DialogTitleWrapper>
-                  <span>Would you like to manage a school Listing?</span>
-                </DialogTitleWrapper>
-                <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
-                    <ClearIcon/>
-                </IconButton>
-            </DialogTitleContainer>
+      <DialogTitleContainer>
+        <DialogTitleWrapper>
+          <span>Would you like to manage a school Listing?</span>
+        </DialogTitleWrapper>
+        <IconButton color="primary" onClick={props.onModalClose} classes={{ root: props.classes.iconButton }}>
+          <ClearIcon />
+        </IconButton>
+      </DialogTitleContainer>
 
-		    <DialogActionWrapper>
-		        <ButtonWrapper>
-		        	<PrimaryButton
-		        		label="I manage a school"
-		        		fullWidth={true}
-		        		onClick={() => props.openSignUpModal("School")}
-		        		textCenter
-		        	/>
-		        </ButtonWrapper>
-		        <ButtonWrapper>
-		        	<PrimaryButton
-		        		label="I'm a student"
-		        		fullWidth={true}
-		        		onClick={() => props.openSignUpModal("Student")}
-		        		textCenter
-		        	/>
-		      	</ButtonWrapper>
-		    </DialogActionWrapper>
-		</MuiThemeProvider>
-	</Dialog>
+      <DialogActionWrapper>
+        <ButtonWrapper>
+          <PrimaryButton
+            label="I manage a school"
+            fullWidth={true}
+            onClick={() => props.openSignUpModal("School")}
+            textCenter
+          />
+        </ButtonWrapper>
+        <ButtonWrapper>
+          <PrimaryButton
+            label="I'm a student"
+            fullWidth={true}
+            onClick={() => props.openSignUpModal("Student")}
+            textCenter
+          />
+        </ButtonWrapper>
+      </DialogActionWrapper>
+    </MuiThemeProvider>
+  </Dialog>
 )
 
 SignUpTypeDialogBox.propTypes = {
-    fullWidth: PropTypes.bool,
-    open: PropTypes.bool,
-    onModalClose: PropTypes.func,
-    classes: PropTypes.object.isRequired,
-    openSignUpModal: PropTypes.func,
+  fullWidth: PropTypes.bool,
+  open: PropTypes.bool,
+  onModalClose: PropTypes.func,
+  classes: PropTypes.object.isRequired,
+  openSignUpModal: PropTypes.func,
 }
 
 export default withMobileDialog()(withStyles(styles)(SignUpTypeDialogBox));

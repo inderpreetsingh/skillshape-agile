@@ -274,6 +274,7 @@ const MySubscriptionRender = (props) => {
                                                 }}
                                                 src={get(school, 'logoImgMedium', get(school, 'logoImg', schoolLogo))} >
                                                 <ContactSchool
+                                                    classes={classes}
                                                     data={school}
                                                     email={getOurEmail(school)}
                                                     phone={getContactNumbers(school)}
