@@ -32,10 +32,12 @@ class MembersListContainer extends Component {
   }
   studentsData = (props)=>{
     let studentsIds = [];
+    let purchaseIds = [];
     const {classData} = props;
     if(classData){
     get(classData[0],'students',[]).map((obj,index)=>{
       studentsIds.push(obj.userId);
+      purchaseIds.push(obj.purchaseId);
        })
     if(!isEmpty(studentsIds)){
       Meteor.call('user.getUsersFromIds',studentsIds,(err,res)=>{
@@ -43,7 +45,13 @@ class MembersListContainer extends Component {
           this.setState({studentsData:res});
         }
       })
-    }   
+    }  
+    if(!isEmpty(purchaseIds)){
+      Meteor.call("purchases.getPackagesFromPurchaseIds",purchaseIds,(err,res)=>{
+        if(res)
+        this.setState({purchaseData:res});
+      });
+    } 
   }
   }
  componentWillReceiveProps(nextProps) {
@@ -179,12 +187,23 @@ purchaseLaterButton = ()=>(
     // console.groupEnd();
     return entities;
   };
-  studentsListMaker = (studentsData,classData) =>{
+  getPurchaseData = _id =>{
+    Meteor.call("purchase.getDataFromPurchaseId",_id,(err,res)=>{
+      this.setState({purchaseData:res});
+    });
+  }
+  studentsListMaker = (studentsData,classData,purchaseData) =>{
     let studentStatus = classData && classData[0] ? classData[0].students :[];
     studentsData && studentsData.map((obj,index)=>{
       studentStatus.map((obj1,index2)=>{
         if(obj1.userId == obj._id){
           obj.status = obj1.status;
+         !isEmpty(purchaseData) && purchaseData.map((purchaseRec)=>{
+            if(purchaseRec._id==obj1.purchaseId){
+              obj.purchaseData = purchaseRec;
+            }
+          })
+           
         }
       })
     })
@@ -192,7 +211,7 @@ purchaseLaterButton = ()=>(
   }
   render() {
     const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params } = this.props;
-    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId} = this.state;
+    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData} = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -251,7 +270,7 @@ purchaseLaterButton = ()=>(
           viewType={currentView}
           searchedValue={this.state.studentsFilterWith}
           onSearchChange={this.handleSearchChange("studentsFilterWith")}
-          data={ this.studentsListMaker(studentsData,classData) }
+          data={ this.studentsListMaker(studentsData,classData,purchaseData) }
           entityType={"students"}
           searchedValue={this.state.studentsFilterWith}
           classData={classData}

@@ -12,7 +12,6 @@ import { get, isEmpty } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-
 const styles = {
   iconButton: {
     color: "white"
@@ -192,28 +191,49 @@ const getStatusInfo = status => {
   }
 };
 
-const PaymentAndStatus = props => (
-  <PaymentAndStatusDetails>
-    {"expired" === "expired" ? (
-      <PaymentDetails>
-        <Text color={helpers.alertColor}>Payment Expired</Text>
-        <SkillShapeButton
-          noMarginBottom
-          danger
-          fullWidth
-          label="Accept Payment"
-          onClick={() => { props.onViewStudentClick(props._id) }}
-        />
-      </PaymentDetails>
-    ) : (
-        <PaymentDetails>
-          <PaymentExpires>Payment Expires on</PaymentExpires>
-          <ExpiryDate>{formatDate(new Date())}</ExpiryDate>
-        </PaymentDetails>
-      )}
-    <StatusOptions {...props} />
-  </PaymentAndStatusDetails>
-);
+PaymentAndStatus = (props) => {
+  if(props.purchaseData){
+    res = props.purchaseData;
+        return (<PaymentAndStatusDetails>
+          {res.status === "expired" ? (
+            <PaymentDetails>
+              <Text color={helpers.alertColor}>Payment Expired</Text>
+              <SkillShapeButton
+                noMarginBottom
+                danger
+                fullWidth
+                label="Accept Payment"
+                onClick={() => { props.onViewStudentClick(props._id) }}
+              />
+            </PaymentDetails>
+          ) : (
+              <PaymentDetails>
+                <PaymentExpires>Payment Expires on</PaymentExpires>
+                <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
+              </PaymentDetails>
+            )}
+          <StatusOptions {...props} />
+        </PaymentAndStatusDetails>
+      )
+  }
+  return 0;
+//   return <PaymentAndStatusDetails>
+ 
+//     <PaymentDetails>
+//       <Text color={helpers.alertColor}>Payment Expired</Text>
+//       <SkillShapeButton
+//         noMarginBottom
+//         danger
+//         fullWidth
+//         label="Accept Payment"
+//         onClick={() => { props.onViewStudentClick(props._id) }}
+//       />
+//     </PaymentDetails>
+//   )
+// </PaymentAndStatusDetails>
+
+}
+
 updateStatus = (n, props) => {
   let { status, popUp } = props;
   let inc=0,purchaseId,packageType;

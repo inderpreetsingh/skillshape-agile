@@ -107,6 +107,9 @@ Meteor.methods({
     
   }
   
+  },
+  "purchases.getPackagesFromPurchaseIds":function(purchaseIds){
+    return Purchases.find({_id:{$in:purchaseIds},packageStatus:'active',packageType:{$ne:'EP'}}).fetch();
   }
 });
 /* 
