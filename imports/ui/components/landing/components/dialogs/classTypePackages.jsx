@@ -14,6 +14,7 @@ import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import School from "/imports/api/school/fields";
+import {get} from 'lodash';
 import { withPopUp, stripePaymentHelper, normalizeMonthlyPricingData } from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -121,9 +122,9 @@ class ClassTypePackages extends React.Component {
 
 export default createContainer(props => {
     let { schoolId, classTypeId } = props;
-    const { slug } = props.params;
+	let slug = get(props.params,'slug',null);
     let schoolData, currency;
-    userBySchoolSubscription = Meteor.subscribe("UserSchoolbySlug", slug);
+    userBySchoolSubscription = Meteor.subscribe("UserSchoolbySlug", slug,schoolId);
     if (userBySchoolSubscription.ready()) {
         schoolData = School.findOne({ slug: slug });
         currency =
