@@ -157,15 +157,21 @@ const onMenuItemClick = value => {
   }
 };
 
+const ButtonsWrapper = styled.div`
+  width: 100%;
+  flex-wrap: wrap;
+  ${helpers.flexCenter}
+`;
+
 const Member = props => {
   const profile = props.profile;
   const profileSrc = props.addMember ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
   let name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`;
   if (props.addMember) {
     name = props.type === 'instructor' ? 'Add Instructor' : 'Add Student';
-   if(props.type=='joinClass'){
-     name = 'Join Class'
-   }
+    if (props.type == 'joinClass') {
+      name = 'Join Class'
+    }
   }
   // This is the basic card returned for students in case the view
   // is not instructorsView && for teachers in both the cases.
@@ -177,8 +183,9 @@ const Member = props => {
     popUp.appear("success", {
       title: "Removed Successfully",
       content: <div>Successfully removed from instructor listing.<br /> {classTime ? 'Changes will show in the Class Times Editor after saving.' : ''}</div>,
-      RenderActions: (
+      RenderActions: (<ButtonsWrapper>
         <FormGhostButton label={'Ok'} onClick={() => { }} applyClose />
+      </ButtonsWrapper>
       )
     }, true);
   }
@@ -200,11 +207,11 @@ const Member = props => {
       title: "Remove Instructor",
       content: `Remove this instructor to this class only, or to this and all future classes?`,
       RenderActions: (
-        <div>
+        <ButtonsWrapper>
           <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
           <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleRemove(popUp, payLoad) }} applyClose />
           <FormGhostButton label={'Whole series'} onClick={() => { this.handleRemove(popUp, payLoad, "whole") }} applyClose />
-        </div>
+        </ButtonsWrapper>
       )
     }, true);
 
@@ -235,14 +242,14 @@ const Member = props => {
     if (operation == 'remove_teacher') {
       popUp.appear("inform", {
         title: "Confirmation",
-        content: `Do you really want to remove from instructor list.`,
+        content: `Do you really want to remove from instructor list ?`,
         RenderActions: (
-          <div>
-            <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
-            <FormGhostButton label={'Remove'}
+          <ButtonsWrapper>
+            <FormGhostButton alertColor label={'Remove'}
               onClick={() => { this.handleRemoveInstructor(props) }}
               applyClose />
-          </div>
+            <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+          </ButtonsWrapper>
         )
       }, true);
       ;
