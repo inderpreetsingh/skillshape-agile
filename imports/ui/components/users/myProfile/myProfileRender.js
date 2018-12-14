@@ -40,7 +40,7 @@ const ErrorWrapper = styled.span`
   float: right;
 `;
 
-export default function() {
+export default function () {
   let { currentUser, classes, isUserSubsReady } = this.props;
   let {
     firstName,
@@ -63,7 +63,7 @@ export default function() {
     );
   }
   const pic = currentUser.profile && currentUser.profile.medium ? currentUser.profile.medium :
-  currentUser.profile && currentUser.profile.pic ?currentUser.profile.pic : config.defaultProfilePic;
+    currentUser.profile && currentUser.profile.pic ? currentUser.profile.pic : config.defaultProfilePic;
   if (this.validateUser()) {
     return (
       <DocumentTitle title={this.props.route.name}>
@@ -97,15 +97,15 @@ export default function() {
                 <CardContent>
                   <Grid container>
                     <Grid item xs={12} sm={12} md={4}>
-                
-                   
+
+
                       <MediaUpload
-                          fullScreen={false}
-                          onChange={this.handleUserImageChange}
-                          minWidth={201}
-                          data={{ file: pic, isUrl: true }}
-                          showVideoOption={false}
-                        />
+                        fullScreen={false}
+                        onChange={this.handleUserImageChange}
+                        minWidth={201}
+                        data={{ file: pic, isUrl: true }}
+                        showVideoOption={false}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={12} md={8}>
                       <form onSubmit={this.submitUserDetails}>
@@ -163,20 +163,20 @@ export default function() {
                           We use this data for analysis and never share it with
                           other users.
                         </Typography>
-                        <FormControl fullWidth margin="dense">
+                        <InputLabel fullWidth margin="dense">
                           <MaterialDatePicker
                             classes={classes.datePickerProps}
                             required={false}
                             emptyLabel="Select a Date"
                             floatingLabelText={"Birth Date"}
                             hintText={"Birth Date"}
-                            value={dob}
-                            onChange={date => this.setState({ dob: date })}
+                            value={dob || new Date(new Date().setHours(0, 0, 0, 0)).toISOString()}
+                            onChange={this.handleDobChange}
                             fullWidth={true}
                             format={"DD-MM-YYYY"}
                             style={{ fontWeight: 600 }}
                           />
-                        </FormControl>
+                        </InputLabel>
                         <Typography
                           className={classes.inputCaption}
                           type="caption"
@@ -206,15 +206,15 @@ export default function() {
                           value={phone}
                           onChange={this.handleTextChange.bind(this, "phone")}
                         /> */}
-                          <ReactPhoneInput 
-                          defaultCountry={'us'} 
+                        <ReactPhoneInput
+                          defaultCountry={'us'}
                           value={phone ? phone.toString() : ''}
                           onChange={phone => this.setState({ phone })}
-                          inputStyle={{width:'100%'}}
+                          inputStyle={{ width: '100%' }}
                           placeHolder={'Phone Number'}
-                          containerStyle={{marginTop:'10px'}}
+                          containerStyle={{ marginTop: '10px' }}
                           disableAreaCodes={true}
-                          />
+                        />
                         <Typography
                           className={classes.inputCaption}
                           type="caption"
@@ -270,8 +270,8 @@ export default function() {
                             Save
                           </Button> */}
                           <FormGhostButton
-                          type="submit"
-                          label='Save'
+                            type="submit"
+                            label='Save'
                           />
                         </SaveBtnWrapper>
                         {this.state.errorText && (

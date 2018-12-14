@@ -4,7 +4,7 @@ import { browserHistory } from "react-router";
 import moment from "moment";
 import { createContainer } from "meteor/react-meteor-data";
 import MyProfileRender from "./myProfileRender";
-import { withStyles, imageRegex, emailRegex, toastrModal,compressImage } from "/imports/util";
+import { withStyles, imageRegex, emailRegex, toastrModal, compressImage } from "/imports/util";
 import { resolve } from "url";
 
 const style = theme => {
@@ -95,6 +95,11 @@ class MyProfile extends React.Component {
     this.setState({ [fieldName]: event.target.value });
   };
 
+  handleDobChange = date => {
+    console.log(date, "..........selectedtion...");
+    this.setState({ dob: date })
+  }
+
   onLocationChange = location => {
     this.setState({
       loc: location.coords,
@@ -132,19 +137,19 @@ class MyProfile extends React.Component {
         "profile.coords": this.state.loc
       };
       const { file } = this.state;
-      try{
-        compressImage(file['org'],file.file,file.isUrl).then((result) => {
-        console.group("MyProfile");
-          if(_.isArray(result)){
-          console.log('Non-cors');
+      try {
+        compressImage(file['org'], file.file, file.isUrl).then((result) => {
+          console.group("MyProfile");
+          if (_.isArray(result)) {
+            console.log('Non-cors');
             for (let i = 0; i <= 1; i++) {
-              allUploadPromise.push(new Promise((resolve,reject)=>{
+              allUploadPromise.push(new Promise((resolve, reject) => {
                 S3.upload({ files: { "0": result[i] }, path: "compressed" }, (err, res) => {
                   if (res) {
-                    if(i==0){
+                    if (i == 0) {
                       userData['profile.medium'] = res.secure_url;
                       resolve();
-                    }else{
+                    } else {
                       userData['profile.low'] = res.secure_url;
                       resolve();
                     }
@@ -152,7 +157,7 @@ class MyProfile extends React.Component {
                 });
               }))
             }
-            Promise.all(allUploadPromise).then(()=>{
+            Promise.all(allUploadPromise).then(() => {
               if (file && file.fileData && !file.isUrl) {
                 S3.upload(
                   { files: { "0": file.fileData }, path: "profile" },
@@ -177,8 +182,8 @@ class MyProfile extends React.Component {
               }
             })
           }
-          else{
-          console.log('cors');
+          else {
+            console.log('cors');
             if (file && file.fileData && !file.isUrl) {
               S3.upload(
                 { files: { "0": file.fileData }, path: "profile" },
@@ -202,11 +207,11 @@ class MyProfile extends React.Component {
               this.editUserCall(userData);
             }
           }
-        console.groupEnd("MyProfile");
+          console.groupEnd("MyProfile");
         })
-      }catch(error){
-      this.editUserCall(userData);
-      throw new Meteor.Error(error);
+      } catch (error) {
+        this.editUserCall(userData);
+        throw new Meteor.Error(error);
       }
     } else {
       this.setState({ isBusy: false, errorText: "Access Denied" });
