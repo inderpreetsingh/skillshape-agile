@@ -163,6 +163,11 @@ const ButtonsWrapper = styled.div`
   ${helpers.flexCenter}
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
 const Member = props => {
   const profile = props.profile;
   const profileSrc = props.addMember ? addInstructorImgSrc : get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
@@ -184,7 +189,9 @@ const Member = props => {
       title: "Removed Successfully",
       content: <div>Successfully removed from instructor listing.<br /> {classTime ? 'Changes will show in the Class Times Editor after saving.' : ''}</div>,
       RenderActions: (<ButtonsWrapper>
-        <FormGhostButton label={'Ok'} onClick={() => { }} applyClose />
+        <ButtonWrapper>
+          <FormGhostButton label={'Ok'} onClick={() => { }} applyClose />
+        </ButtonWrapper>
       </ButtonsWrapper>
       )
     }, true);
@@ -208,9 +215,15 @@ const Member = props => {
       content: `Remove this instructor to this class only, or to this and all future classes?`,
       RenderActions: (
         <ButtonsWrapper>
-          <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
-          <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleRemove(popUp, payLoad) }} applyClose />
-          <FormGhostButton label={'Whole series'} onClick={() => { this.handleRemove(popUp, payLoad, "whole") }} applyClose />
+          <ButtonWrapper>
+            <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+          </ButtonWrapper>
+          <ButtonWrapper>
+            <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleRemove(popUp, payLoad) }} applyClose />
+          </ButtonWrapper>
+          <ButtonWrapper>
+            <FormGhostButton label={'Whole series'} onClick={() => { this.handleRemove(popUp, payLoad, "whole") }} applyClose />
+          </ButtonWrapper>
         </ButtonsWrapper>
       )
     }, true);
@@ -245,10 +258,14 @@ const Member = props => {
         content: `Do you really want to remove from instructor list ?`,
         RenderActions: (
           <ButtonsWrapper>
-            <FormGhostButton alertColor label={'Remove'}
-              onClick={() => { this.handleRemoveInstructor(props) }}
-              applyClose />
-            <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+            <ButtonWrapper>
+              <FormGhostButton alertColor label={'Remove'}
+                onClick={() => { this.handleRemoveInstructor(props) }}
+                applyClose />
+            </ButtonWrapper>
+            <ButtonWrapper>
+              <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+            </ButtonWrapper>
           </ButtonsWrapper>
         )
       }, true);
