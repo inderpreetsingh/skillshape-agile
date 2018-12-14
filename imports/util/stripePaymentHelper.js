@@ -71,6 +71,11 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
     if (self.state.isAlreadyPurchased) {
         return;
     }
+    await isEnrollmentPurchase(packageId,userId,packageType,self);
+    if(!self.state.enrollmentPurchase.pass){
+        popUpForEnrollment(popUp,self.state.enrollmentPurchase.enrollmentPackage);
+        return;
+    }
     if (self.state.payAsYouGo) {
         let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], 'currency', '$'));
         let months = get(monthlyPymtDetails[0], 'month', 0);
@@ -134,6 +139,35 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
     //this will handle charge and subscription both
     handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
 };
+// check if the enrollment package is purchased or not
+isEnrollmentPurchase = (packageId,userId,packageType,self)=>{
+        return new Promise((resolve,reject)=>{
+            Meteor.call("enrollment.checkIsEnrollmentPurchased",packageId,userId,packageType,(err,res)=>{
+				console.log("​isEnrollmentPurchase -> err,res", err,res)
+                self.setState({enrollmentPurchase:res});
+                resolve();
+            })
+        })
+    }
+//UI for enrollment package again purchase message
+popUpForEnrollment = (popUp,res) =>{
+    popUp.appear(
+        'inform',
+        {
+            title: 'First Enrollment Package First',
+            content: `Please first purchase an enrollment package `,
+            RenderActions: (
+                <ButtonsWrapper>
+                    {res.map((obj)=>{
+                        return (<FormGhostButton label={obj.packageName} onClick={() => { }} greyColor applyClose />
+                        )
+                    })}
+                </ButtonsWrapper>
+            )
+        },
+        true
+    );
+}
 contractLengthFinder = (res, monthlyPymtDetails) => {
     let oldContractLength, newContractLength;
     oldContractLength = get(res, 'contractLength', 0);
