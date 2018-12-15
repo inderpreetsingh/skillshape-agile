@@ -10,8 +10,12 @@ Meteor.methods({
         const user = Meteor.users.findOne(this.userId);
 
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "enrollmentFee_CUD" })) {
-
-            return EnrollmentFees.insert(doc);
+            let id = EnrollmentFees.insert(doc);
+            let classTypeIds = get(doc,"classTypeId",[])
+            if(!isEmpty(classTypeIds)){
+                Meteor.call("classType.handleEnrollmentIds",id,classTypeIds,"add");
+            }
+            return true;
         } else {
             throw new Meteor.Error("Permission denied!!");
         }
