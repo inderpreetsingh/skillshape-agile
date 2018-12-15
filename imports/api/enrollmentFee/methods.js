@@ -74,34 +74,47 @@ Meteor.methods({
       return get(record,'selectedClassType',[]);   
     },
     "enrollment.checkIsEnrollmentPurchased":function(_id,userId,packageType){
-      let currentPackage={},enrollmentPackage={},enrollmentIds=[];
+      let currentPackage={},enrollmentPackage={},enrollmentIds=[],classTypeIds=[],classTypeData;
       if(packageType=='CP'){
             currentPackage = ClassPricing.findOne({_id},{fields:{"classTypeId":1}});
       }else{
             currentPackage = MonthlyPricing.findOne({_id},{fields:{"classTypeId":1}});
       }
-      if(currentPackage && !isEmpty(currentPackage.classTypeId)){
-          enrollmentPackage = EnrollmentFees.find({classTypeId:{$all:currentPackage.classTypeId, $size:currentPackage.classTypeId.length }}).fetch();
+      classTypeIds = get(currentPackage,"classTypeId",[]);
+      if(!isEmpty(classTypeIds)){
+         classTypeData = Meteor.call("classType.getClassTypesFromIds",classTypeIds);
+            if(!isEmpty(classTypeData)){
+                classTypeData.map((obj)=>{
+                    let enrollmentIds = get(obj,"enrollmentIds",[]);
+                    if(!isEmpty(enrollmentIds)){
+                        obj.purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
+                    }else{
+                        obj.noEP=true;
+                    }
+                })
+            }
         }
-      if(!isEmpty(enrollmentPackage)){
-        enrollmentPackage.map((obj)=>{
-            enrollmentIds.push(obj._id);
-        })
-       let res = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
-       if(!isEmpty(res)){
-           return {pass:true,res}
-       }else {
-           return {pass:false,enrollmentPackage}
-       }
+        return classTypeData;
+    //   if(!isEmpty(enrollmentPackage)){
+    //     enrollmentPackage.map((obj)=>{
+    //         enrollmentIds.push(obj._id);
+    //     })
+    //    let res = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
+    //    if(!isEmpty(res)){
+    //        return {pass:true,res}
+    //    }else {
+    //        return {pass:false,enrollmentPackage}
+    //    }
        
-      }
+    //   }
         return {pass:true}
     }
 });
 /* 
-1.Class covers in current packages.
-2.Check is any enrollment package have same covers.
-3.if yes check is user purchase any of them.
-4.if not do nothing.
+1. Find ClassTypesIds.
+2. Map on classTypeIds and find classtype details.
+3. x=make array of object {classTypeIds:[enrollmentsIds]}.
+4. map on x and then on enrollmentsIds and find active package from purchases and save results on the obj.res=res;
+5. send result to frontEnd.
 
 */
