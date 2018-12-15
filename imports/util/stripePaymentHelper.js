@@ -155,13 +155,10 @@ popUpForEnrollment = (popUp,res) =>{
         'inform',
         {
             title: 'First Enrollment Package First',
-            content: `Please first purchase an enrollment package `,
+            content: `Please first purchase one of these enrollment packages named ${res.map((obj)=>obj.name)} `,
             RenderActions: (
                 <ButtonsWrapper>
-                    {res.map((obj)=>{
-                        return (<FormGhostButton label={obj.packageName} onClick={() => { }} greyColor applyClose />
-                        )
-                    })}
+                        <FormGhostButton label={"Ok"} onClick={() => { }} greyColor applyClose />
                 </ButtonsWrapper>
             )
         },
