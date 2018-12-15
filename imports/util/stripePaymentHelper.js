@@ -71,11 +71,11 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
     if (self.state.isAlreadyPurchased) {
         return;
     }
-    await isEnrollmentPurchase(packageId,userId,packageType,self);
-    if(!self.state.enrollmentPurchase.pass){
-        popUpForEnrollment(popUp,self.state.enrollmentPurchase.enrollmentPackage);
-        return;
-    }
+    // await isEnrollmentPurchase(packageId,userId,packageType,self);
+    // if(!self.state.enrollmentPurchase.pass){
+    //     popUpForEnrollment(popUp,self.state.enrollmentPurchase.enrollmentPackage);
+    //     return;
+    // }
     if (self.state.payAsYouGo) {
         let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], 'currency', '$'));
         let months = get(monthlyPymtDetails[0], 'month', 0);
