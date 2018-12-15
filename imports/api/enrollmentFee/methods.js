@@ -1,14 +1,12 @@
 import EnrollmentFees from "./fields";
-import {get,isEmpty} from "lodash";
+import {get,isEmpty,difference} from "lodash";
 import { check } from 'meteor/check';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields.js';
 import ClassPricing from '/imports/api/classPricing/fields.js';
 Meteor.methods({
     "enrollmentFee.addEnrollmentFee": function ({ doc }) {
         check(doc, Object);
-
         const user = Meteor.users.findOne(this.userId);
-
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "enrollmentFee_CUD" })) {
             let id = EnrollmentFees.insert(doc);
             let classTypeIds = get(doc,"classTypeId",[])
@@ -24,9 +22,17 @@ Meteor.methods({
         check(doc, Object);
         check(doc_id, String);
         const user = Meteor.users.findOne(this.userId);
-
+        let record = EnrollmentFees.findOne({_id:doc_id});
+        let oldClassTypeIds = get(record,'classTypeId',[]);
+        let classTypeIds = get(doc,"classTypeId",[]);
+        let removeClassTypeIds = difference(oldClassTypeIds,classTypeIds);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "enrollmentFee_CUD" })) {
-
+            if(!isEmpty(removeClassTypeIds)){
+                Meteor.call("classType.handleEnrollmentIds",doc_id,removeClassTypeIds,"remove");
+            }
+            if(!isEmpty(classTypeIds)){
+                Meteor.call("classType.handleEnrollmentIds",doc_id,classTypeIds,"add");
+            }
             return EnrollmentFees.update({ _id: doc_id }, { $set: doc });
         } else {
             throw new Meteor.Error("Permission denied!!");

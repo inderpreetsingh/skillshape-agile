@@ -369,11 +369,14 @@ Meteor.methods({
     return ClassType.find({medium:{$exists:false},low:{$exists:false},classTypeImg:{$exists:true}}).fetch();
   },
   "classType.handleEnrollmentIds":function(id,classTypeIds,operation){
-    if(operation=='add'){
+			console.log("​id,classTypeIds,operation", id,classTypeIds,operation)
       classTypeIds.map((_id)=>{
-        ClassType.update({_id},{$addToSet:{enrollmentIds:id}})
+        if(operation=='add'){
+        ClassType.update({_id},{$addToSet:{enrollmentIds:id}});
+        }else if(operation=='remove'){
+          ClassType.update({_id},{$pull:{enrollmentIds:id}});
+        }
       })
-    }
   }
 });
  
