@@ -4,9 +4,9 @@ import TextField from 'material-ui/TextField';
 
 
 export class MaterialDatePicker extends React.PureComponent {
-    componentWillReceiveProps(nextProps, nextState) {
-        console.info('info,,,,,', nextProps, this.props);
-    }
+    // componentWillReceiveProps(nextProps, nextState) {
+    //     console.info('info,,,,,', nextProps, this.props);
+    // }
 
     render() {
         const {
@@ -18,7 +18,7 @@ export class MaterialDatePicker extends React.PureComponent {
             fullWidth,
             format
         } = this.props;
-        console.log("RENDERING >>>>>>>>>>>>>>>>> ")
+        // console.log("RENDERING >>>>>>>>>>>>>>>>> ")
         return (
             <div className="picker">
                 <DatePicker

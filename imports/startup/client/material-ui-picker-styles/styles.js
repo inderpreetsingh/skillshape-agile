@@ -17,15 +17,15 @@ export default {
       fontSize: helpers.baseFontSize * 1.5
     }
   },
-  MuiPickersClockPointer : {
-    pointer : {
+  MuiPickersClockPointer: {
+    pointer: {
       backgroundColor: helpers.primaryColor,
     },
     thumb: {
       border: `14px solid ${helpers.primaryColor}`
     }
   },
-  MuiPickersClockNumber : {
+  MuiPickersClockNumber: {
     selected: {
       backgroundColor: helpers.primaryColor
     }
@@ -35,12 +35,17 @@ export default {
       fontSize: helpers.baseFontSize * 1.5,
     }
   },
-  MuiPickersDay: {
+  MuiPickersCalendar: {
     day: {
-      color: helpers.black,
+      backgroundColor: helpers.primaryColor
     },
     selected: {
-      backgroundColor: helpers.primaryColor,
+      backgroundColor: helpers.primaryColor
     },
-  }
+    week: {
+      ['[class*="Day-"]']: {
+        backgroundColor: helpers.primaryColor
+      }
+    }
+  },
 }
