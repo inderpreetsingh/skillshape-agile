@@ -170,7 +170,7 @@ export default function () {
                             emptyLabel="Select a Date"
                             floatingLabelText={"Birth Date"}
                             hintText={"Birth Date"}
-                            value={dob || new Date(new Date().setHours(0, 0, 0, 0)).toISOString()}
+                            value={dob}
                             onChange={this.handleDobChange}
                             fullWidth={true}
                             format={"DD-MM-YYYY"}

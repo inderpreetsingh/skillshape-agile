@@ -35,11 +35,20 @@ export default {
       fontSize: helpers.baseFontSize * 1.5,
     }
   },
-  MuiPickersCalendar: {
+
+  MuiPickersDay: {
     day: {
-      backgroundColor: helpers.primaryColor
+      color: 'black',
     },
     selected: {
+      backgroundColor: 'black',
+    },
+    current: {
+      color: 'black',
+    },
+  },
+  MuiPickersCalendar: { //NOTE: The styles for day was not working so overridden it in scss file.
+    day: {
       backgroundColor: helpers.primaryColor
     },
     week: {
