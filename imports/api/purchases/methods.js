@@ -75,7 +75,7 @@ Meteor.methods({
     }
   },
   "purchases.getPackagesFromIds":function(packageIds){
-    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',packageType:{$ne:'EP'}}).fetch();
+    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',packageType:{$ne:'EP'},userId:this.userId}).fetch();
   },
   "purchase.manageAttendance":function(_id,packageType,inc){
   try{

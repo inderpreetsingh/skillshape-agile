@@ -124,12 +124,14 @@ purchaseLaterButton = ()=>(
 )
  handleClassUpdate = (filter,status,popUp)=>{
   Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
-     if(!isEmpty(res)){
+    let purchased = get(res,'purchased',[]);
+    let epStatus = get(res,"epStatus",false);
+     if(epStatus && !isEmpty(purchased)){
       popUp.appear("inform", {
         title: `Confirmation`,
         content: `You have the followings packages. Please select one from which you are going to use.`,
         RenderActions: (<ButtonWrapper>
-          {res.map((obj)=>
+          {purchased.map((obj)=>
            <FormGhostButton
            label={capitalizeString(obj.packageName)}
            onClick={() => {this.updateClass(filter,status,obj,popUp)}}
@@ -140,9 +142,10 @@ purchaseLaterButton = ()=>(
       }, true);
      }
      else{
+      let packageType = 'Package';
       popUp.appear("inform", {
-        title: `No Package Purchased Yet.`,
-        content: `You haven't purchased any package please purchase one first. `,
+        title: `No ${packageType} Purchased Yet.`,
+        content: `You haven't purchased any ${packageType} please purchase one first. `,
         RenderActions: (<ButtonWrapper>
         {this.purchaseLaterButton()}
          {this.purchaseNowButton()}
