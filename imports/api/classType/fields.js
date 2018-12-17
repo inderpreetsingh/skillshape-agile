@@ -23,6 +23,10 @@ ClassType.attachSchema(
       type: String,
       optional: true
     },
+    enrollmentIds: {
+      type: [String],
+      optional: true
+    },
     desc: {
       type: String,
       optional: true

@@ -114,22 +114,40 @@ Meteor.methods({
     return get(record,'selectedClassType',[]);   
   },
   "classPricing.signInHandler":function(filter){
-    let records=[],packageIds=[];
-    records = ClassPricing.find({classTypeId:filter.classTypeId}).fetch();
-    packageIds = records.map((obj)=>obj._id);
-    records = MonthlyPricing.find({classTypeId:filter.classTypeId}).fetch();
-    packageIds = concat(records.map((obj)=>obj._id),packageIds);
-	records = Meteor.call("purchases.getPackagesFromIds",packageIds);
-	return records;
+      try{
+        let records=[],packageIds=[],classTypeData={},enrollmentIds=[],purchasedEP=[],epStatus=false;
+        classTypeData = ClassType.findOne({_id:filter.classTypeId});
+        enrollmentIds = get(classTypeData,'enrollmentIds',[]);
+        if(!isEmpty(enrollmentIds)){
+            purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,this.userId);
+            if(!isEmpty(purchasedEP)){
+                epStatus=true;
+            }
+            else{
+                epStatus=false;
+            }
+        }else{
+            epStatus=true;
+        }
+        records = ClassPricing.find({classTypeId:filter.classTypeId}).fetch();
+        packageIds = records.map((obj)=>obj._id);
+        records = MonthlyPricing.find({classTypeId:filter.classTypeId}).fetch();
+        packageIds = concat(records.map((obj)=>obj._id),packageIds);
+        records = Meteor.call("purchases.getPackagesFromIds",packageIds);
+        return {epStatus,purchased:records,purchasedEP};
+      }catch(error){
+          console.log("​classPricing.signInHandler}catch -> error", error)
+          throw new Meteor.Error(error);
+      }
+   
   }
 });
 /* 
-1. Call to classPricing method.
-2. Get all package ids which includes class type id.
-3. Call to classPricing method.
-4. Get all package ids which includes class type id.
-5. Get package active list of those packages.
-6. If one then handle that.
-7. If more than one ask user which one to use.
-8. Follow step 6.
+1. On send link entry in packageRequest Collection with info {userId,PackageId,classDetails_id,valid:true};
+2. Send Email to that userEmailId.
+3. Link in the email.
+3. Click on link packagePurchase/packageRequest_id.
+4. UI of package on the that page.
+5. Update the class detail page purchase id field of that user.
+6. Update packageRequest record with valid:false.
 */

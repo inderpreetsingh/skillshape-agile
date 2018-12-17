@@ -192,46 +192,30 @@ const getStatusInfo = status => {
 };
 
 PaymentAndStatus = (props) => {
-  if(props.purchaseData){
+  if (props.purchaseData) {
     res = props.purchaseData;
-        return (<PaymentAndStatusDetails>
-          {res.status === "expired" ? (
-            <PaymentDetails>
-              <Text color={helpers.alertColor}>Payment Expired</Text>
-              <SkillShapeButton
-                noMarginBottom
-                danger
-                fullWidth
-                label="Accept Payment"
-                onClick={() => { props.onViewStudentClick(props._id) }}
-              />
-            </PaymentDetails>
-          ) : (
-              <PaymentDetails>
-                <PaymentExpires>Payment Expires on</PaymentExpires>
-                <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
-              </PaymentDetails>
-            )}
-          <StatusOptions {...props} />
-        </PaymentAndStatusDetails>
-      )
+    return (<PaymentAndStatusDetails>
+      <PaymentDetails>
+        <PaymentExpires>Payment Expires on</PaymentExpires>
+        <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
+      </PaymentDetails>
+      <StatusOptions {...props} />
+    </PaymentAndStatusDetails>
+    )
   }
-  return 0;
-//   return <PaymentAndStatusDetails>
- 
-//     <PaymentDetails>
-//       <Text color={helpers.alertColor}>Payment Expired</Text>
-//       <SkillShapeButton
-//         noMarginBottom
-//         danger
-//         fullWidth
-//         label="Accept Payment"
-//         onClick={() => { props.onViewStudentClick(props._id) }}
-//       />
-//     </PaymentDetails>
-//   )
-// </PaymentAndStatusDetails>
-
+  return (<PaymentAndStatusDetails>
+    <PaymentDetails>
+      <Text color={helpers.alertColor}>No Purchased</Text>
+      <SkillShapeButton
+        noMarginBottom
+        danger
+        fullWidth
+        label="Accept Payment"
+        onClick={() => { props.onViewStudentClick(props._id) }}
+      />
+    </PaymentDetails>
+    <StatusOptions {...props} />
+  </PaymentAndStatusDetails>)
 }
 
 updateStatus = (n, props) => {

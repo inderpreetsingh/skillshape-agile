@@ -32,10 +32,12 @@ Meteor.publish("UserSchool", function (schoolId) {
 
 });
 
-Meteor.publish("UserSchoolbySlug", function (slug) {
+Meteor.publish("UserSchoolbySlug", function (slug,_id) {
     
-
-    const schoolCursor = School.find({ slug: slug })
+    let filter = {};
+    if(slug) filter={slug};
+    else filter={_id};
+    const schoolCursor = School.find(filter);
     const schoolData = schoolCursor.fetch();
     if (!isEmpty(schoolData)) {
 

@@ -30,6 +30,11 @@ import isEmpty from "lodash/isEmpty";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
+const EnrollmentText = styled.div`
+font-style: italic;
+margin: 27px;
+margin-bottom: 0px;
+`;
 const formId = "ClassPriceForm";
 
 const styles = theme => {
@@ -55,7 +60,7 @@ const styles = theme => {
     }
   };
 };
-
+const enrollmentText = ` If you add a Class Type to an enrollment fee, students will need to purchase the Enrollment Fee before they can purchase Per Class or Monthly packages for that Class Type, or sign in to that class.`;
 class EnrollmentFeeForm extends React.Component {
   constructor(props) {
     super(props);
@@ -170,6 +175,9 @@ class EnrollmentFeeForm extends React.Component {
         fullScreen={fullScreen}
       >
         <DialogTitle id="form-dialog-title">Add Enrollment Fee</DialogTitle>
+        <EnrollmentText>
+        {enrollmentText}
+        </EnrollmentText>
         {this.state.showConfirmationModal && (
           <ConfirmationModal
             open={this.state.showConfirmationModal}
