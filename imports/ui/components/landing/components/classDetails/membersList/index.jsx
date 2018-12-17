@@ -213,7 +213,7 @@ purchaseLaterButton = ()=>(
     return studentsData;
   }
   render() {
-    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params } = this.props;
+    const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params,schoolName,classTypeName } = this.props;
     const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData} = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
@@ -284,6 +284,8 @@ purchaseLaterButton = ()=>(
           onViewStudentClick={(userId)=>{this.setState({classTypePackages:true,userId})}}
           params= {params}
           onJoinClassClick = {this.handleSignIn}
+          schoolName={schoolName}
+          classTypeName = {classTypeName}
        />
       </Fragment>
     );

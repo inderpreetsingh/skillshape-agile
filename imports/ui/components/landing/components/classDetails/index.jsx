@@ -111,6 +111,8 @@ const ClassDetails = props => {
           {/* <TimeLine {...dataProps.eventData} /> */}
           <MembersList
             schoolId={school._id}
+            schoolName={school.name}
+            classTypeName={get(state.classType, 'name', null)}
             currentView={currentView}
             classData={classData}
             instructorsData={instructorsData}

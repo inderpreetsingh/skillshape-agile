@@ -12,6 +12,10 @@ export const PackageRequestSchema = new SimpleSchema({
         type: String,
         optional: true
     },
+    classesId: {
+        type: String,
+        optional: true
+    },
     packageId: {
         type: String,
         optional: true
@@ -25,11 +29,33 @@ export const PackageRequestSchema = new SimpleSchema({
         optional: true
     },
     createdAt: {
-        type: Date
+        type: Date,
+        optional: true
     },
     notification: { // True indicates that package request is not approved
-        type: Boolean
+        type: Boolean,
+        optional: true
     },
+    valid:{
+        type: Boolean,
+        optional: true
+    },
+    userEmail:{
+        type: String,
+        optional: true
+    },
+    userName:{
+        type: String,
+        optional: true
+    },
+    className:{
+        type: String,
+        optional: true
+    },
+    schoolName:{
+        type: String,
+        optional: true
+    }
 });
 
 PackageRequest.attachSchema(PackageRequestSchema);

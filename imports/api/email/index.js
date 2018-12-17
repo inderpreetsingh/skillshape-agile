@@ -676,3 +676,36 @@ export const sendEmailToRequester = (userEmail,userName,schoolName)=>{
     `
   })
 }
+export const sendPackageLink = function({
+  userEmail,
+  userName,
+  link,
+  schoolName,
+  className
+}) {
+  if (Meteor.isServer) {
+    let to;
+    if(platform == 'local'){
+      to ='ramesh.bansal@daffodilsw.com';
+    }
+    else if(platform == 'dev'){
+      to = config.skillshapeAdminEmail;
+    }
+    else{
+      to = userEmail;
+    }
+    Email.send({
+      to: to, //emailObj.to
+      from: "Notices@SkillShape.com",
+      subject: "Package Purchase Invitation",
+      html: `Hi ${userName}\n
+                Please purchase the package by <a href=${link}>clicking here </a>to join the class ${className}
+                of school ${schoolName}\n.
+                Thanks\n
+              The SkillShape Team\n
+              ${EmailSignature}
+
+      `
+    });
+  }
+};

@@ -52,7 +52,11 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
         return;
     }
     //check is package is already purchased
-
+    await isEnrollmentPurchase(packageId,userId,packageType,self);
+    if(!self.state.epStatus){
+        popUpForEnrollment(popUp,self.state.epData,self);
+        return;
+    }
     await isAlreadyPurchased({
         userId,
         packageType,
@@ -73,11 +77,7 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
     if (self.state.isAlreadyPurchased) {
         return;
     }
-    await isEnrollmentPurchase(packageId,userId,packageType,self);
-    if(!self.state.epStatus){
-        popUpForEnrollment(popUp,self.state.epData,self);
-        return;
-    }
+   
     if (self.state.payAsYouGo) {
         let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], 'currency', '$'));
         let months = get(monthlyPymtDetails[0], 'month', 0);

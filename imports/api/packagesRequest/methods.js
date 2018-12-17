@@ -1,12 +1,12 @@
 import PackageRequest, { PackageRequestSchema } from "./fields.js";
-import { sendPackagePurchaseEmail } from "/imports/api/email";
+import { sendPackagePurchaseEmail ,sendPackageLink} from "/imports/api/email";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "/imports/api/school/fields";
 import { getUserFullName } from "/imports/util/getUserData";
 import { check } from 'meteor/check';
-
+import {get,isEmpty} from 'lodash';
 Meteor.methods({
   "packageRequest.addRequest": function({ typeOfTable, tableId, schoolId }) {
     check(typeOfTable, String);
@@ -85,5 +85,36 @@ Meteor.methods({
       // User must be signed in to purchase packages.
       throw new Meteor.Error("Please login to purchase packages");
     }
+  },
+  "packageRequest.addRecord":function(data){
+    check(data,Object);
+    let {userId,packageId,classesId,valid} = data,record,result;
+    record = PackageRequest.findOne(data);
+    if(!isEmpty(record)){
+     result = {status:false,record};
+    }
+    else{
+      data.createdAt = new Date();
+      record = PackageRequest.insert(data);
+      result = {status:true,record};
+      data.link='google.com'
+      Meteor.call("packageRequest.sendPurchaseRequest",data);
+    }
+    return result;
+  },
+  "packageRequest.sendPurchaseRequest":function(data){
+		console.log("​data", data)
+    console.log('packageRequest.sendPurchaseRequest')
+    let { userEmail, userName,  schoolName, className,link } = data;
+    sendPackageLink({ userEmail, userName, link, schoolName, className });
   }
 });
+/* 
+1. On send link entry in packageRequest Collection with info {userId,PackageId,classDetails_id,valid:true};
+2. Send Email to that userEmailId.
+3. Link in the email.
+3. Click on link packagePurchase/packageRequest_id.
+4. UI of package on the that page.
+5. Update the class detail page purchase id field of that user.
+6. Update packageRequest record with valid:false.
+*/
