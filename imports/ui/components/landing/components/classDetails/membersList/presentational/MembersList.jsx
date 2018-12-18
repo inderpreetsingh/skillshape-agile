@@ -111,6 +111,8 @@ const MembersList = props => {
                                     instructorsIds={props.instructorsIds}
                                     onViewStudentClick={props.onViewStudentClick}
                                     params={props.params}
+                                    schoolName={props.schoolName}
+                                    classTypeName={props.classTypeName}
                                 />
                             ) : (
                                     <Member

@@ -1,16 +1,19 @@
 import EnrollmentFees from "./fields";
-import {get,isEmpty} from "lodash";
+import {get,isEmpty,difference} from "lodash";
 import { check } from 'meteor/check';
-
+import MonthlyPricing from '/imports/api/monthlyPricing/fields.js';
+import ClassPricing from '/imports/api/classPricing/fields.js';
 Meteor.methods({
     "enrollmentFee.addEnrollmentFee": function ({ doc }) {
         check(doc, Object);
-
         const user = Meteor.users.findOne(this.userId);
-
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "enrollmentFee_CUD" })) {
-
-            return EnrollmentFees.insert(doc);
+            let id = EnrollmentFees.insert(doc);
+            let classTypeIds = get(doc,"classTypeId",[])
+            if(!isEmpty(classTypeIds)){
+                Meteor.call("classType.handleEnrollmentIds",id,classTypeIds,"add");
+            }
+            return true;
         } else {
             throw new Meteor.Error("Permission denied!!");
         }
@@ -19,9 +22,17 @@ Meteor.methods({
         check(doc, Object);
         check(doc_id, String);
         const user = Meteor.users.findOne(this.userId);
-
+        let record = EnrollmentFees.findOne({_id:doc_id});
+        let oldClassTypeIds = get(record,'classTypeId',[]);
+        let classTypeIds = get(doc,"classTypeId",[]);
+        let removeClassTypeIds = difference(oldClassTypeIds,classTypeIds);
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "enrollmentFee_CUD" })) {
-
+            if(!isEmpty(removeClassTypeIds)){
+                Meteor.call("classType.handleEnrollmentIds",doc_id,removeClassTypeIds,"remove");
+            }
+            if(!isEmpty(classTypeIds)){
+                Meteor.call("classType.handleEnrollmentIds",doc_id,classTypeIds,"add");
+            }
             return EnrollmentFees.update({ _id: doc_id }, { $set: doc });
         } else {
             throw new Meteor.Error("Permission denied!!");
@@ -61,5 +72,49 @@ Meteor.methods({
     "enrollmentFee.getCover": function(_id){
       let record = EnrollmentFees.findOne({_id});
       return get(record,'selectedClassType',[]);   
+    },
+    "enrollment.checkIsEnrollmentPurchased":function(_id,userId,packageType){
+      let currentPackage={},enrollmentPackage={},enrollmentIds=[],classTypeIds=[],classTypeData;
+      if(packageType=='CP'){
+            currentPackage = ClassPricing.findOne({_id},{fields:{"classTypeId":1}});
+      }else{
+            currentPackage = MonthlyPricing.findOne({_id},{fields:{"classTypeId":1}});
+      }
+      classTypeIds = get(currentPackage,"classTypeId",[]);
+      if(!isEmpty(classTypeIds)){
+         classTypeData = Meteor.call("classType.getClassTypesFromIds",classTypeIds);
+            if(!isEmpty(classTypeData)){
+                classTypeData.map((obj)=>{
+                    let enrollmentIds = get(obj,"enrollmentIds",[]);
+                    if(!isEmpty(enrollmentIds)){
+                        obj.purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
+                    }else{
+                        obj.noEP=true;
+                    }
+                })
+            }
+        }
+        return classTypeData;
+    //   if(!isEmpty(enrollmentPackage)){
+    //     enrollmentPackage.map((obj)=>{
+    //         enrollmentIds.push(obj._id);
+    //     })
+    //    let res = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
+    //    if(!isEmpty(res)){
+    //        return {pass:true,res}
+    //    }else {
+    //        return {pass:false,enrollmentPackage}
+    //    }
+       
+    //   }
+        return {pass:true}
     }
 });
+/* 
+1. Find ClassTypesIds.
+2. Map on classTypeIds and find classtype details.
+3. x=make array of object {classTypeIds:[enrollmentsIds]}.
+4. map on x and then on enrollmentsIds and find active package from purchases and save results on the obj.res=res;
+5. send result to frontEnd.
+
+*/

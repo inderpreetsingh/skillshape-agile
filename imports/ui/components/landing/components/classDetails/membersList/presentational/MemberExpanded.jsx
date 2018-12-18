@@ -192,48 +192,58 @@ const getStatusInfo = status => {
 };
 
 PaymentAndStatus = (props) => {
-  if(props.purchaseData){
+  if (props.purchaseData) {
     res = props.purchaseData;
-        return (<PaymentAndStatusDetails>
-          {res.status === "expired" ? (
-            <PaymentDetails>
-              <Text color={helpers.alertColor}>Payment Expired</Text>
-              <SkillShapeButton
-                noMarginBottom
-                danger
-                fullWidth
-                label="Accept Payment"
-                onClick={() => { props.onViewStudentClick(props._id) }}
-              />
-            </PaymentDetails>
-          ) : (
-              <PaymentDetails>
-                <PaymentExpires>Payment Expires on</PaymentExpires>
-                <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
-              </PaymentDetails>
-            )}
-          <StatusOptions {...props} />
-        </PaymentAndStatusDetails>
-      )
+    return (<PaymentAndStatusDetails>
+      <PaymentDetails>
+        <PaymentExpires>Payment Expires on</PaymentExpires>
+        <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
+      </PaymentDetails>
+      <StatusOptions {...props} />
+    </PaymentAndStatusDetails>
+    )
   }
-  return 0;
-//   return <PaymentAndStatusDetails>
- 
-//     <PaymentDetails>
-//       <Text color={helpers.alertColor}>Payment Expired</Text>
-//       <SkillShapeButton
-//         noMarginBottom
-//         danger
-//         fullWidth
-//         label="Accept Payment"
-//         onClick={() => { props.onViewStudentClick(props._id) }}
-//       />
-//     </PaymentDetails>
-//   )
-// </PaymentAndStatusDetails>
-
+  return (<PaymentAndStatusDetails>
+    <PaymentDetails>
+      <Text color={helpers.alertColor}>No Purchased</Text>
+      <SkillShapeButton
+        noMarginBottom
+        danger
+        fullWidth
+        label="Accept Payment"
+        onClick={() => { sendLink(props) }}
+      />
+    </PaymentDetails>
+    <StatusOptions {...props} />
+  </PaymentAndStatusDetails>)
 }
-
+sendLink = (props,packageId=null) =>{
+  try{
+    let userId,classesId,valid,data={},schoolName,className;
+    userId = props._id;
+    classesId = props.classData[0]._id;
+    valid = true;
+    userName = get(props.profile,"firstName",get(props.profile,"name",get(props.profile,"lastName","Old Data")));
+    userEmail =get(props.emails[0],'address',null);
+    schoolName = props.schoolName;
+    className = props.classTypeName;
+   
+    data ={ userId, packageId,classesId,valid,userEmail,userName,schoolName,className }
+    Meteor.call("packageRequest.addRecord",data,(err,res)=>{
+				console.log("​sendLink -> err,res", err,res)
+        if(res && res.status){
+          
+        }
+        else if(res && !res.status){
+          data.link = `${Meteor.absoluteUrl()+res.record._id}}`;
+          Meteor.call("packageRequest.sendPurchaseRequest",data);
+        }
+    })
+  }catch(error){
+		console.log("​sendLink error", error)
+  }
+   
+    }
 updateStatus = (n, props) => {
   let { status, popUp } = props;
   let inc=0,purchaseId,packageType;

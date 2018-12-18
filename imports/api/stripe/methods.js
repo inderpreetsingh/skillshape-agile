@@ -29,11 +29,11 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       currency = enrollmentData.currency;
       amount = enrollmentData.cost;
       if(get(enrollmentData,'noExpiration',false)){
-        expDuration = 100;
+        expDuration = 30;
         expPeriod = 'Years';
       }
       else{
-        expDuration = get(enrollmentData,'expDuration',100);
+        expDuration = get(enrollmentData,'expDuration',30);
         expPeriod = get(enrollmentData,'expPeriod','Years');
       }
      
@@ -43,11 +43,11 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       currency = get(classData,"currency",'$');
       amount = get(classData,'cost',0);
       if(get(classData,'noExpiration',false)){
-        expDuration = 100;
+        expDuration = 30;
         expPeriod = 'Years';
       }
       else{
-        expDuration = get(classData,'expDuration',100);
+        expDuration = get(classData,'expDuration',30);
         expPeriod = get(classData,'expPeriod','Years');
       }
 

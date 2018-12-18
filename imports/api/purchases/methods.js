@@ -75,7 +75,7 @@ Meteor.methods({
     }
   },
   "purchases.getPackagesFromIds":function(packageIds){
-    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',packageType:{$ne:'EP'}}).fetch();
+    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',packageType:{$ne:'EP'},userId:this.userId}).fetch();
   },
   "purchase.manageAttendance":function(_id,packageType,inc){
   try{
@@ -110,6 +110,9 @@ Meteor.methods({
   },
   "purchases.getPackagesFromPurchaseIds":function(purchaseIds){
     return Purchases.find({_id:{$in:purchaseIds},packageStatus:'active',packageType:{$ne:'EP'}}).fetch();
+  },
+  "purchases.getPurchasedFromPackageIds":function(packageIds,userId){
+    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',userId}).fetch();
   }
 });
 /* 

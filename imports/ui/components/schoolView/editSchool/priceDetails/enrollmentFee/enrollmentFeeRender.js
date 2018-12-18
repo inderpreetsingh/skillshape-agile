@@ -21,7 +21,7 @@ export default function () {
 					currency={currency}
 				/>
 			}
-			<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption="Cost of Enrollment" icon="assignment" onAddButtonClicked={() => { this.setState({ showForm: true, formData: null }) }} />
+			<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption=" If you add a Class Type to an enrollment fee, students will need to purchase the Enrollment Fee before they can purchase Per Class or Monthly packages for that Class Type, or sign in to that class." icon="assignment" onAddButtonClicked={() => { this.setState({ showForm: true, formData: null }) }} />
 
 			{/* <Grid container className={classes.enrollmentFeeContainer}>
 	          	{
