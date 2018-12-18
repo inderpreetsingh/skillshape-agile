@@ -53,7 +53,9 @@ const styles = theme => {
 
 const ActionButtons = styled.div`
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   margin-top: ${helpers.rhythmDiv * 2}px;
 `;
@@ -141,8 +143,9 @@ class AddInstructorDialogBox extends Component {
         popUp.appear("success", {
           title: "Added Successfully",
           content: `Successfully added as an instructor.`,
-          RenderActions: (
+          RenderActions: (<ActionButtons>
             <FormGhostButton label={'Ok'} onClick={() => { this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors, 'add') : this.props.onModalClose() }} applyClose />
+          </ActionButtons>
           )
         }, true);
       }
@@ -150,9 +153,9 @@ class AddInstructorDialogBox extends Component {
         popUp.appear("alert", {
           title: "Email not found",
           content: `No account found with this email. Please create one and try again.`,
-          RenderActions: (
+          RenderActions: (<ActionButtons>
             <FormGhostButton label={'Ok'} onClick={() => { }} applyClose />
-
+          </ActionButtons>
           )
         }, true);
       }
@@ -166,8 +169,10 @@ class AddInstructorDialogBox extends Component {
         popUp.appear("success", {
           title: "Added Successfully",
           content: <div>Successfully added as an instructor.<br />{payLoad.classTimeForm ? "Changes will show in the Class Times Editor after saving." : ''}</div>,
-          RenderActions: (
+          RenderActions: (<ActionButtons>
             <FormGhostButton label={'Ok'} onClick={() => { this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors, 'add') : this.props.onModalClose() }} applyClose />
+
+          </ActionButtons>
           )
         }, true);
       }
@@ -175,9 +180,9 @@ class AddInstructorDialogBox extends Component {
         popUp.appear("alert", {
           title: "Email not found",
           content: `No account found with this email. Please create one and try again.`,
-          RenderActions: (
+          RenderActions: (<ActionButtons>
             <FormGhostButton label={'Ok'} onClick={() => { }} applyClose />
-
+          </ActionButtons>
           )
         }, true);
       }
@@ -191,8 +196,9 @@ class AddInstructorDialogBox extends Component {
         popUp.appear("success", {
           title: "Added Successfully",
           content: <div>Successfully added as an {this.props.text}.</div>,
-          RenderActions: (
+          RenderActions: (<ActionButtons>
             <FormGhostButton label={'Ok'} onClick={() => { this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors, 'add') : this.props.onModalClose() }} applyClose />
+          </ActionButtons>
           )
         }, true);
       }
@@ -227,10 +233,10 @@ class AddInstructorDialogBox extends Component {
       title: "Confirmation",
       content: `Do you really want to add  these users as an ${this.props.text}.`,
       RenderActions: (
-        <div>
+        <ActionButtons>
           <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
           <FormGhostButton label={'Yes'} onClick={() => { this.props.text == "Student" ? this.handleAddStudent(popUp, payLoad) : !payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp, payLoad) : this.handleInstructors(popUp, payLoad) }} applyClose />
-        </div>
+        </ActionButtons>
       )
     }, true);
   };
