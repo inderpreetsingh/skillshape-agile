@@ -14,3 +14,8 @@ Meteor.publish("enrollmentFee.getClassTypeEnrollMentFree",function({ classTypeId
 	let cursor = EnrollmentFees.find({classTypeId: {$in : [classTypeId]}});
 		return EnrollmentFees.publishJoinedCursors(cursor, {reactive: true}, this);
 });
+Meteor.publish("enrollmentFee.getEnrollmentFeeFromId", function({ _id }) {
+	// console.log("enrollmentFee.getEnrollmentFee -->>",schoolId)
+	let cursor = EnrollmentFees.find({_id});
+    return EnrollmentFees.publishJoinedCursors(cursor,{ reactive: true }, this);
+});

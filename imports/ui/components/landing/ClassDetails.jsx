@@ -13,6 +13,7 @@ import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-s
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
+    this.state={isBusy:false}
   }
 
   getBgImage() {
@@ -24,7 +25,9 @@ class ClassDetailsContainer extends Component {
     const { state: { school } } = this.props.location.state;
     return get(school, 'logoImg', get(school, "logoImgMedium", ""));
   }
-
+  toggleIsBusy = ()=>{
+    this.setState({isBusy:!this.state.isBusy});
+  }
   render() {
     const { currentUser, isUserSubsReady, classData, instructorsData, popUp, instructorsIds } = this.props;
     return (
@@ -47,6 +50,8 @@ class ClassDetailsContainer extends Component {
         instructorsData={instructorsData}
         popUp={popUp}
         instructorsIds={instructorsIds}
+        toggleIsBusy={this.toggleIsBusy}
+        isBusy={this.state.isBusy}
       />
     );
   }

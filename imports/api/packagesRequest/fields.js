@@ -55,6 +55,10 @@ export const PackageRequestSchema = new SimpleSchema({
     schoolName:{
         type: String,
         optional: true
+    },
+    packageType:{
+        type: String,
+        optional: true
     }
 });
 

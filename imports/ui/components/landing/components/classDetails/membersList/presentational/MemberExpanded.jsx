@@ -217,9 +217,11 @@ PaymentAndStatus = (props) => {
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
-sendLink = (props,packageId=null) =>{
+sendLink = (props,packageId=null,packageType=null) =>{
   try{
-    let userId,classesId,valid,data={},schoolName,className;
+    let userId,classesId,valid,data={},schoolName,className,schoolId;
+    let {popUp} = props;
+    props.toggleIsBusy();
     userId = props._id;
     classesId = props.classData[0]._id;
     valid = true;
@@ -227,16 +229,16 @@ sendLink = (props,packageId=null) =>{
     userEmail =get(props.emails[0],'address',null);
     schoolName = props.schoolName;
     className = props.classTypeName;
-   
-    data ={ userId, packageId,classesId,valid,userEmail,userName,schoolName,className }
+    schoolId = props.schoolId;
+    data ={ userId, packageId,classesId,valid,userEmail,userName,schoolName,className,schoolId,packageType }
     Meteor.call("packageRequest.addRecord",data,(err,res)=>{
-				console.log("​sendLink -> err,res", err,res)
+      props.toggleIsBusy();
         if(res && res.status){
-          
+         this.successPopUp(popUp,userName)
         }
         else if(res && !res.status){
-          data.link = `${Meteor.absoluteUrl()+res.record._id}}`;
-          Meteor.call("packageRequest.sendPurchaseRequest",data);
+          data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+res.record._id}`;
+          this.confirmationPopUp(popUp,data);
         }
     })
   }catch(error){
@@ -244,6 +246,52 @@ sendLink = (props,packageId=null) =>{
   }
    
     }
+successPopUp = (popUp,userName)=>{
+    popUp.appear(
+      'success',
+      {
+        title: 'Success',
+        content: `Email with purchase link send to ${userName} successfully.`,
+        RenderActions: (
+          <ButtonWrapper>
+          <FormGhostButton
+            label={'Ok'}
+            applyClose
+          />
+        </ButtonWrapper>
+        )
+      },
+      true
+    );
+  }
+confirmationPopUp = (popUp,data)=>{
+  popUp.appear(
+    'inform',
+    {
+      title: 'Confirmation',
+      content: `An email is already sent to ${data.userName}.Do you want to send the email again.`,
+      RenderActions: (
+        <ButtonWrapper>
+          <FormGhostButton
+            label={'Cancel'}
+            applyClose
+          />
+          <FormGhostButton
+            label={'Yes'}
+            onClick={()=>{this.sendEmailAgain(data);
+              this.successPopUp(popUp,data.userName);
+            }}
+            applyClose
+          />
+        </ButtonWrapper>
+      )
+    },
+    true
+  );
+}
+sendEmailAgain = (data)=>{
+  Meteor.call("packageRequest.sendPurchaseRequest",data);
+}
 updateStatus = (n, props) => {
   let { status, popUp } = props;
   let inc=0,purchaseId,packageType;

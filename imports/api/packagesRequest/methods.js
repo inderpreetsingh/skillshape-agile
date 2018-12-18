@@ -97,14 +97,12 @@ Meteor.methods({
       data.createdAt = new Date();
       record = PackageRequest.insert(data);
       result = {status:true,record};
-      data.link='google.com'
+      data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+record}`;
       Meteor.call("packageRequest.sendPurchaseRequest",data);
     }
     return result;
   },
   "packageRequest.sendPurchaseRequest":function(data){
-		console.log("​data", data)
-    console.log('packageRequest.sendPurchaseRequest')
     let { userEmail, userName,  schoolName, className,link } = data;
     sendPackageLink({ userEmail, userName, link, schoolName, className });
   }

@@ -27,7 +27,7 @@ import MyMedia from "/imports/ui/components/users/myMedia";
 import MyProfile from "/imports/ui/components/users/myProfile";
 import MySubscription from "/imports/ui/components/users/mySubscription";
 import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
-
+import PurchasePackage from '/imports/ui/components/purchasePackage';
 //layout
 import AdminLayout from "/imports/ui/layout/adminLayout";
 import EmbedLayout from "/imports/ui/layout/embedLayout";
@@ -87,12 +87,13 @@ export default (Routes = componentLoader(props => (
       />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
-
+      
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
         <Route path="/Contactus" name="Contactus" component={ContactUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
+        <Route path="/purchasePackage/:packageRequestId" name="Purchase Package" component={PurchasePackage} />
         <Route
           path="/mySubscription/:id"
           name="MySubscription"
