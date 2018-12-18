@@ -11,7 +11,7 @@ import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/lan
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
 import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { withImageExists } from "/imports/util";
-
+import { ContainerLoader } from "/imports/ui/loading/container";
 
 
 const imageExistsBgImage = {
@@ -73,6 +73,8 @@ const ClassDetails = props => {
     popUp,
     instructorsIds,
     bgImg,
+    toggleIsBusy,
+    isBusy
   } = props;
   const { state } = props.location.state;
   const dataProps = props.location.state.props;
@@ -85,7 +87,7 @@ const ClassDetails = props => {
     <Wrapper>
       <PageContent>
         <TopSearchBar {...props.topSearchBarProps} />
-        
+        {isBusy && <ContainerLoader />}
         <InnerWrapper>
           <ClassTimeWrapper bgImg={bgImg}>
             <ClassTimeCover
@@ -119,6 +121,7 @@ const ClassDetails = props => {
             popUp={popUp}
             instructorsIds={instructorsIds}
             params={dataProps.params}
+            toggleIsBusy={toggleIsBusy}
           />
         </InnerWrapper>
       </PageContent>

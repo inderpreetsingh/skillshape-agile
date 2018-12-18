@@ -113,6 +113,7 @@ const MembersList = props => {
                                     params={props.params}
                                     schoolName={props.schoolName}
                                     classTypeName={props.classTypeName}
+                                    toggleIsBusy={props.toggleIsBusy}
                                 />
                             ) : (
                                     <Member
