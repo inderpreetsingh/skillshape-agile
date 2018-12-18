@@ -287,6 +287,7 @@ purchaseLaterButton = ()=>(
           schoolName={schoolName}
           classTypeName = {classTypeName}
           toggleIsBusy = {toggleIsBusy}
+          schoolId = {schoolId}
        />
       </Fragment>
     );

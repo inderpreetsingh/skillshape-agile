@@ -217,9 +217,9 @@ PaymentAndStatus = (props) => {
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
-sendLink = (props,packageId=null) =>{
+sendLink = (props,packageId=null,packageType=null) =>{
   try{
-    let userId,classesId,valid,data={},schoolName,className;
+    let userId,classesId,valid,data={},schoolName,className,schoolId;
     let {popUp} = props;
     props.toggleIsBusy();
     userId = props._id;
@@ -229,14 +229,15 @@ sendLink = (props,packageId=null) =>{
     userEmail =get(props.emails[0],'address',null);
     schoolName = props.schoolName;
     className = props.classTypeName;
-    data ={ userId, packageId,classesId,valid,userEmail,userName,schoolName,className }
+    schoolId = props.schoolId;
+    data ={ userId, packageId,classesId,valid,userEmail,userName,schoolName,className,schoolId,packageType }
     Meteor.call("packageRequest.addRecord",data,(err,res)=>{
       props.toggleIsBusy();
         if(res && res.status){
          this.successPopUp(popUp,userName)
         }
         else if(res && !res.status){
-          data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+res.record._id}}`;
+          data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+res.record._id}`;
           this.confirmationPopUp(popUp,data);
         }
     })

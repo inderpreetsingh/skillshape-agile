@@ -62,3 +62,4 @@ import "/imports/api/schoolSuggestion/server/publication";
 import "/imports/api/classSubscription/server/publication";
 import "/imports/api/classes/server/publication";
 import "/imports/api/attendance/server/publication";
+import '/imports/api/packagesRequest/server/publication';

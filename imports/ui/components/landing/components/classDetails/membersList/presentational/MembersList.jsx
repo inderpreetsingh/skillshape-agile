@@ -114,6 +114,7 @@ const MembersList = props => {
                                     schoolName={props.schoolName}
                                     classTypeName={props.classTypeName}
                                     toggleIsBusy={props.toggleIsBusy}
+                                    schoolId = {props.schoolId}
                                 />
                             ) : (
                                     <Member

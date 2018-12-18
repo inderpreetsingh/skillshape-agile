@@ -97,7 +97,7 @@ Meteor.methods({
       data.createdAt = new Date();
       record = PackageRequest.insert(data);
       result = {status:true,record};
-      data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+record}}`;
+      data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+record}`;
       Meteor.call("packageRequest.sendPurchaseRequest",data);
     }
     return result;
