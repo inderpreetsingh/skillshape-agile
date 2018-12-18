@@ -74,7 +74,7 @@ Meteor.methods({
       return get(record,'selectedClassType',[]);   
     },
     "enrollment.checkIsEnrollmentPurchased":function(_id,userId,packageType){
-      let currentPackage={},enrollmentPackage={},enrollmentIds=[],classTypeIds=[],classTypeData;
+      let currentPackage={},enrollmentPackage={},enrollmentIds=[],classTypeIds=[],classTypeData,classTypeDataWithPurchaseInfo;
       if(packageType=='CP'){
             currentPackage = ClassPricing.findOne({_id},{fields:{"classTypeId":1}});
       }else{
@@ -84,30 +84,18 @@ Meteor.methods({
       if(!isEmpty(classTypeIds)){
          classTypeData = Meteor.call("classType.getClassTypesFromIds",classTypeIds);
             if(!isEmpty(classTypeData)){
-                classTypeData.map((obj)=>{
+                classTypeDataWithPurchaseInfo = classTypeData.map((obj)=>{
                     let enrollmentIds = get(obj,"enrollmentIds",[]);
                     if(!isEmpty(enrollmentIds)){
                         obj.purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
                     }else{
                         obj.noEP=true;
                     }
+                    return obj;    
                 })
             }
         }
-        return classTypeData;
-    //   if(!isEmpty(enrollmentPackage)){
-    //     enrollmentPackage.map((obj)=>{
-    //         enrollmentIds.push(obj._id);
-    //     })
-    //    let res = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
-    //    if(!isEmpty(res)){
-    //        return {pass:true,res}
-    //    }else {
-    //        return {pass:false,enrollmentPackage}
-    //    }
-       
-    //   }
-        return {pass:true}
+        return classTypeDataWithPurchaseInfo;
     }
 });
 /* 

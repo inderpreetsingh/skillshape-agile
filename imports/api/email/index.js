@@ -698,11 +698,10 @@ export const sendPackageLink = function({
       to: to, //emailObj.to
       from: "Notices@SkillShape.com",
       subject: "Package Purchase Invitation",
-      html: `Hi ${userName}\n
-                Please purchase the package by <a href=${link}>clicking here </a>to join the class ${className}
-                of school ${schoolName}\n.
-                Thanks\n
-              The SkillShape Team\n
+      html: `Hi ${userName}<br/>
+              You can <a href=${link}>click here </a> to purchase a package to join ${className} at ${schoolName}.<br/>
+              Thanks.<br/>
+              ${schoolName} at SkillShape.<br/>
               ${EmailSignature}
 
       `
