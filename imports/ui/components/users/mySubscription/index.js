@@ -24,7 +24,7 @@ class MySubscription extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			subscriptionsData:[]
+			subscriptionsData: []
 		};
 	}
 
@@ -32,24 +32,25 @@ class MySubscription extends React.Component {
 		// console.info('data for phones', data);
 		return (data.phone && data.phone.split(/[\|\,\\]/));
 	};
-	
-	
-	classDataFinder = ()=>{
-		let {schoolData,currentUser} = this.props;
-		let schoolId = get(schoolData[0],'_id',null);
-		let userId = get(currentUser,'_id',null);
-		Meteor.call('classInterest.findClassTypes',schoolId,userId,(err,res)=>{
-			if(res)
-			this.setState({subscriptionsData:res})
+
+
+	classDataFinder = () => {
+		let { schoolData, currentUser } = this.props;
+		let schoolId = get(schoolData[0], '_id', null);
+		let userId = get(currentUser, '_id', null);
+		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
+			if (res)
+				this.setState({ subscriptionsData: res })
 			else
-			this.setState({subscriptionsData:[]})
+				this.setState({ subscriptionsData: [] })
 		})
 	}
 	getOurEmail = (data) => {
 		return data.email;
 	};
 
-	handleCall = (phone) => () => {
+	handleCall = (phone) => (e) => {
+		e.preventDefault();
 		// console.info('data.....', data);
 		this.setState((state) => {
 			return {
@@ -60,7 +61,8 @@ class MySubscription extends React.Component {
 		});
 	};
 
-	handleEmail = (email, schoolData) => () => {
+	handleEmail = (email, schoolData) => (e) => {
+		e.preventDefault();
 		this.setState((state) => {
 			return {
 				...state,
@@ -95,29 +97,29 @@ class MySubscription extends React.Component {
 			}
 		});
 	}
-	removeAll = (classTimes,classTypeName)=>{
-		const { currentUser} = this.props;
-		let userId = get(currentUser,'_id',null),data={};
-		this.setState({all:true});
-		classTimes.map((obj,index)=>{
+	removeAll = (classTimes, classTypeName) => {
+		const { currentUser } = this.props;
+		let userId = get(currentUser, '_id', null), data = {};
+		this.setState({ all: true });
+		classTimes.map((obj, index) => {
 			data.userId = userId;
 			data.classTimeId = obj._id;
 			data.classTypeName = classTypeName;
 			data.classTimeName = obj.name;
-			data.all = true ;
+			data.all = true;
 			this.removeFromCalendar(data);
 		})
-		}
-	leaveSchool = ()=>{
-			let {popUp,currentUser} = this.props;
-			let studentName = get(currentUser,'profile.firstName',get(currentUser,'profile.name','Old Data'));
-			popUp.appear(
-				'inform',
-				{
-					title: 'Confirmation',
-					content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
-					RenderActions: (
-						<ButtonWrapper>
+	}
+	leaveSchool = () => {
+		let { popUp, currentUser } = this.props;
+		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
+		popUp.appear(
+			'inform',
+			{
+				title: 'Confirmation',
+				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				RenderActions: (
+					<ButtonWrapper>
 						<FormGhostButton
 							label={'Cancel'}
 							applyClose
@@ -128,70 +130,70 @@ class MySubscription extends React.Component {
 							applyClose
 						/>
 					</ButtonWrapper>
-					)
-				},
-				true
-			);
-		}
-	leaveSchoolHandler = ()=>{
-			let {subscriptionsData} = this.state;
-			this.setState({all:true});
-			if(!isEmpty(subscriptionsData)){
-			subscriptionsData.map((obj,index)=>{
-				this.removeAll(obj.classTimes,obj.name);
+				)
+			},
+			true
+		);
+	}
+	leaveSchoolHandler = () => {
+		let { subscriptionsData } = this.state;
+		this.setState({ all: true });
+		if (!isEmpty(subscriptionsData)) {
+			subscriptionsData.map((obj, index) => {
+				this.removeAll(obj.classTimes, obj.name);
 			})
 		}
-		}
-	okClick = ()=>{
+	}
+	okClick = () => {
 		this.classDataFinder();
 	}
-	removeFromCalendar = (data)=>{
-			let {schoolData} = this.props;
-			let {classTimeName,classTypeName} = data;
-			let schoolName = get(schoolData[0],'name','Hidden Leaf');
-			this.setState({ isBusy: true});
-			Meteor.call(
-				"classInterest.removeClassInterestByClassTimeId",
-				data,
-				(error, res) => {
-				  if(res){
-					  this.setState({ isBusy: false});
-					  const { popUp } = this.props;
-					  popUp.appear(
+	removeFromCalendar = (data) => {
+		let { schoolData } = this.props;
+		let { classTimeName, classTypeName } = data;
+		let schoolName = get(schoolData[0], 'name', 'Hidden Leaf');
+		this.setState({ isBusy: true });
+		Meteor.call(
+			"classInterest.removeClassInterestByClassTimeId",
+			data,
+			(error, res) => {
+				if (res) {
+					this.setState({ isBusy: false });
+					const { popUp } = this.props;
+					popUp.appear(
 						'success',
 						{
 							title: 'Success',
 							content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`,
 							RenderActions: (
 								<ButtonWrapper>
-								<FormGhostButton
-									label={'Ok'}
-									onClick={this.okClick}
-									applyClose
-								/>
-							</ButtonWrapper>
+									<FormGhostButton
+										label={'Ok'}
+										onClick={this.okClick}
+										applyClose
+									/>
+								</ButtonWrapper>
 							)
 						},
 						true
 					);
-					
-				  }
-				 
+
 				}
-			  );
-		}
-	stopNotification = (payload)=>{
-			this.setState({isBusy:true});
-			let data = {};
-			data.classTypeId = payload.classTypeId;
-			data.userId = payload.userId;
-			data.notification = !payload.notification;
-			Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-				const { popUp } = this.props;
-				if (res) {
-				  Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+
+			}
+		);
+	}
+	stopNotification = (payload) => {
+		this.setState({ isBusy: true });
+		let data = {};
+		data.classTypeId = payload.classTypeId;
+		data.userId = payload.userId;
+		data.notification = !payload.notification;
+		Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+			const { popUp } = this.props;
+			if (res) {
+				Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
 					if (res1) {
-						this.setState({isBusy:false});
+						this.setState({ isBusy: false });
 						popUp.appear(
 							'success',
 							{
@@ -199,44 +201,44 @@ class MySubscription extends React.Component {
 								content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
 								RenderActions: (
 									<ButtonWrapper>
-									<FormGhostButton
-										label={'Ok'}
-										onClick={this.okClick}
-										applyClose
-									/>
-								</ButtonWrapper>
+										<FormGhostButton
+											label={'Ok'}
+											onClick={this.okClick}
+											applyClose
+										/>
+									</ButtonWrapper>
 								)
 							},
 							true
 						);
-					
+
 					}
-				  });
-				}
-				else{
-					this.setState({isBusy:false});
-					popUp.appear(
-						'success',
-						{
-							title: 'Success',
-							content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
-							RenderActions: (
-								<ButtonWrapper>
+				});
+			}
+			else {
+				this.setState({ isBusy: false });
+				popUp.appear(
+					'success',
+					{
+						title: 'Success',
+						content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
+						RenderActions: (
+							<ButtonWrapper>
 								<FormGhostButton
 									label={'Ok'}
 									onClick={this.okClick}
 									applyClose
 								/>
 							</ButtonWrapper>
-							)
-						},
-						true
-					);
-				}
-			  });
-		}
+						)
+					},
+					true
+				);
+			}
+		});
+	}
 	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool,isBusy,subscriptionsData } = this.state;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData } = this.state;
 		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -265,13 +267,13 @@ class MySubscription extends React.Component {
 					handleModelState={this.handleModelState}
 					handleEmail={this.handleEmail}
 					handleCall={this.handleCall}
-					isBusy = {isBusy}
-					subscriptionsData = {subscriptionsData}
+					isBusy={isBusy}
+					subscriptionsData={subscriptionsData}
 					handleSchoolVisit={this.handleSchoolVisit}
-					removeAll = {this.removeAll}
-					stopNotification = {this.stopNotification}
-					leaveSchool = {this.leaveSchool}
-					removeFromCalendar = {this.removeFromCalendar}
+					removeAll={this.removeAll}
+					stopNotification={this.stopNotification}
+					leaveSchool={this.leaveSchool}
+					removeFromCalendar={this.removeFromCalendar}
 				/>
 			</Wrapper>
 		);
