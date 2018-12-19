@@ -28,6 +28,8 @@ import MyProfile from "/imports/ui/components/users/myProfile";
 import MySubscription from "/imports/ui/components/users/mySubscription";
 import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
 import PurchasePackage from '/imports/ui/components/purchasePackage';
+import SkillShapeButtonsCollection from '/imports/ui/components/landing/SkillShapeButtonsCollection';
+
 //layout
 import AdminLayout from "/imports/ui/layout/adminLayout";
 import EmbedLayout from "/imports/ui/layout/embedLayout";
@@ -42,7 +44,6 @@ import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import { componentLoader } from "/imports/util";
 
 
-
 export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
     <Route name="SkillShape" path="/" component={MainLayout}>
@@ -53,6 +54,7 @@ export default (Routes = componentLoader(props => (
         name="classtype"
         component={ClassTypeView}
       />
+      <Route path="/skillshape-buttons-dev" component={SkillShapeButtonsCollection} />
       <Route
         path="/skillshape-for-school"
         name="Skillshape-for-school"

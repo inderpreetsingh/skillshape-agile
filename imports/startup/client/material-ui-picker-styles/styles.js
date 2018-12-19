@@ -17,15 +17,15 @@ export default {
       fontSize: helpers.baseFontSize * 1.5
     }
   },
-  MuiPickersClockPointer : {
-    pointer : {
+  MuiPickersClockPointer: {
+    pointer: {
       backgroundColor: helpers.primaryColor,
     },
     thumb: {
       border: `14px solid ${helpers.primaryColor}`
     }
   },
-  MuiPickersClockNumber : {
+  MuiPickersClockNumber: {
     selected: {
       backgroundColor: helpers.primaryColor
     }
@@ -35,12 +35,26 @@ export default {
       fontSize: helpers.baseFontSize * 1.5,
     }
   },
+
   MuiPickersDay: {
     day: {
-      color: helpers.black,
+      color: 'black',
     },
     selected: {
-      backgroundColor: helpers.primaryColor,
+      backgroundColor: 'black',
     },
-  }
+    current: {
+      color: 'black',
+    },
+  },
+  MuiPickersCalendar: { //NOTE: The styles for day was not working so overridden it in scss file.
+    day: {
+      backgroundColor: helpers.primaryColor
+    },
+    week: {
+      ['[class*="Day-"]']: {
+        backgroundColor: helpers.primaryColor
+      }
+    }
+  },
 }

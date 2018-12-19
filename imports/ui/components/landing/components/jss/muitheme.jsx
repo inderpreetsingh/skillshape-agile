@@ -318,7 +318,7 @@ const muiThemeObj = {
     modal: 1300,
     snackbar: 1400,
     tooltip: 1500
-  }
+  },
 };
 
 var muiInputThemeObj = Object.create(muiThemeObj);
