@@ -39,7 +39,7 @@ const PackagesListWrapper = styled.section`
 		width: 100%;
 		z-index: 0;
 		background-color: ${(props) => (props.classPackages ? helpers.primaryColor : helpers.panelColor)};
-		${(props) => (props.forIframes ? 'background-color: transparent' : '')};
+		${(props) => (props.variant === 'light' ? 'background-color: transparent' : '')};
 		opacity: ${(props) => (props.classPackages ? 0.1 : 1)};
 	}
 
@@ -57,7 +57,7 @@ const EnrollMentListWrapper = PackagesListWrapper.extend`
 	
 	&::after {
 		background-color: #dddd;
-		${(props) => (props.forIframes ? 'background-color: transparent' : '')};
+		${(props) => (props.variant === 'light' ? 'background-color: transparent' : '')};
 		opacity: 1;
 	}
 `;
@@ -115,7 +115,7 @@ const Title = styled.h2`
 
 const PackageList = (props) => (
     <PackagesListWrapper
-        forIframes={props.forIframes}
+        variant={props.variant}
         fullScreen={props.fullScreen}
         classPackages={props.classPackages}
     >
@@ -147,7 +147,7 @@ const PackageList = (props) => (
 );
 
 const EnrollmentPackagesList = (props) => (
-    <EnrollMentListWrapper forIframes={props.forIframes}>
+    <EnrollMentListWrapper variant={props.variant}>
         <PackagesWrapper onPriceEdit={props.onPriceEdit}>
             <Title>{props.packageListName}</Title>
             <PackagesInnerWrapper packagesLength={props.packagesData.length}>
@@ -186,13 +186,14 @@ const PackagesList = (props) => {
                 !enrollMentPackagesEmpty && (
                     <Wrapper>
                         <EnrollmentPackagesList
-                            forIframes={props.forIframes}
+                            variant={props.variant}
                             packageProps={{
                                 bgColor: '#dddd',
-                                forIframes: props.forIframes,
+                                variant: props.variant,
                                 packageType: 'EP',
                                 onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-                                schoolId: props.schoolId
+                                schoolId: props.schoolId,
+                                usedFor: props.usedFor
                             }}
                             packageListName="Enrollment Packages"
                             packagesData={props.enrollMentPackagesData}
@@ -211,13 +212,14 @@ const PackagesList = (props) => {
             <Wrapper>
                 {!classPackagesEmpty && (
                     <PackageList
-                        forIframes={props.forIframes}
+                        variant={props.variant}
                         packageProps={{
                             bgColor: '#dddd',
-                            forIframes: props.forIframes,
+                            variant: props.variant,
                             packageType: 'CP',
                             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-                            schoolId: props.schoolId
+                            schoolId: props.schoolId,
+                            usedFor: props.usedFor
                         }}
                         onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
                         classPackages
@@ -238,13 +240,14 @@ const PackagesList = (props) => {
 
                 {!monthlyPackagesEmpty && (
                     <PackageList
-                        forIframes={props.forIframes}
+                        variant={props.variant}
                         packageProps={{
                             bgColor: '#dddd',
-                            forIframes: props.forIframes,
+                            variant=props.variant,
                             packageType: 'MP',
                             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-                            schoolId: props.schoolId
+                            schoolId: props.schoolId,
+                            usedFor: props.usedFor
                         }}
                         packageListName="Monthly Packages"
                         fullScreen={classPackagesEmpty}
@@ -265,17 +268,21 @@ const PackagesList = (props) => {
     );
 };
 
+//NOTE: usedFor defines in what situation we are using this package. 
+//Like using it for iframes, mysubscriptions etc.
 PackagesList.propTypes = {
     perClassPackagesData: PropTypes.arrayOf(PackageStructure),
     monthlyPackagesData: PropTypes.arrayOf(PackageStructure),
     enrollMentPackages: PropTypes.bool,
-    forIframes: PropTypes.bool,
-    schoolId: PropTypes.string
+    variant: PropTypes.string,
+    schoolId: PropTypes.string,
+    usedFor: PropTypes.string,
 };
 
 PackagesList.defaultProps = {
     enrollMentPackages: false,
-    forIframes: false
+    variant: 'normal',
+    usedFor: 'default'
 };
 
 export default PackagesList;
