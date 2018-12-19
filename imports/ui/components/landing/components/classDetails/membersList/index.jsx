@@ -154,10 +154,13 @@ purchaseLaterButton = ()=>(
      }
    })
  }
- handleSignIn = () => {
+ handleSignIn = (userId,status='signIn') => {
   const {popUp,classData} = this.props;
   let classDetails = classData[0];
-  this.handleClassUpdate(classDetails,'signIn',popUp)
+  if(userId){
+    classDetails.userId=userId;
+  }
+  this.handleClassUpdate(classDetails,status,popUp)
 }
   handleAddInstructorDialogBoxState = (dialogBoxState,text) => () => {
     this.setState(state => {
@@ -199,8 +202,10 @@ purchaseLaterButton = ()=>(
     let studentStatus = classData && classData[0] ? classData[0].students :[];
     studentsData && studentsData.map((obj,index)=>{
       studentStatus.map((obj1,index2)=>{
-        if(obj1.userId == obj._id){
-          obj.status = obj1.status;
+        if(obj1.userId == obj._id){{
+          obj.status = get(obj1,"status",null);
+          obj.purchaseId = get(obj1,"purchaseId",null);
+        }
          !isEmpty(purchaseData) && purchaseData.map((purchaseRec)=>{
             if(purchaseRec._id==obj1.purchaseId){
               obj.purchaseData = purchaseRec;

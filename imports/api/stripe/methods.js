@@ -489,7 +489,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       autoWithdraw,
       currency ,
       monthlyAttendance,
-      paymentMethod
+      paymentMethod,
+      packageStatus:'active'
     };
     recordId = Meteor.call("purchases.addPurchase", payload);
     return recordId;

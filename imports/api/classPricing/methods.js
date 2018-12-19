@@ -119,7 +119,7 @@ Meteor.methods({
         classTypeData = ClassType.findOne({_id:filter.classTypeId});
         enrollmentIds = get(classTypeData,'enrollmentIds',[]);
         if(!isEmpty(enrollmentIds)){
-            purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,this.userId);
+            purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,filter.userId ? filter.userId :this.userId);
             if(!isEmpty(purchasedEP)){
                 epStatus=true;
             }
