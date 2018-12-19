@@ -393,9 +393,7 @@ class Package extends React.Component {
 														{payment.cost &&
 															`${formatMoney(
 																Number.parseFloat(
-																	get(props.pymtType, 'payUpFront', false)
-																		? payment.cost * payment.month
-																		: payment.cost
+																		 payment.cost
 																).toFixed(2),
 																payment.currency ? payment.currency : props.schoolCurrency
 															)}`}
@@ -408,7 +406,7 @@ class Package extends React.Component {
 																	? 'months'
 																	: ' month'} ${get(props.pymtType, 'payUpFront', false)
 																		? `(${formatMoney(
-																			Number.parseFloat(payment.cost).toFixed(2),
+																			Number.parseFloat(payment.cost/payment.month).toFixed(2),
 																			payment.currency ? payment.currency : props.schoolCurrency
 																		)} per month)`
 																		: ''}`}
