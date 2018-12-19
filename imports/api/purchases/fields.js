@@ -114,6 +114,10 @@ export const PurchasesSchema = new SimpleSchema({
     optional:true,
     blackbox: true
   },
+  paymentMethod:{
+    type: String,
+    optional: true
+  }
 });
 
 Purchases.attachSchema(PurchasesSchema);

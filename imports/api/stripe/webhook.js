@@ -62,7 +62,8 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
               fee:classSubscriptionData.fee,
               currency:classSubscriptionData.currency,
               contractLength:classSubscriptionData.contractLength,
-              monthlyAttendance:classSubscriptionData.monthlyAttendance
+              monthlyAttendance:classSubscriptionData.monthlyAttendance,
+              paymentMethod:'stripe'
             }
            packageName = payload.packageName;
            userId = payload.userId;

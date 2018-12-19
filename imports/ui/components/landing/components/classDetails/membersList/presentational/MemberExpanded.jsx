@@ -217,6 +217,21 @@ PaymentAndStatus = (props) => {
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
+acceptPayment = (packageData,props,paymentMethod) => {
+    let userId,packageId,packageType,schoolId,data,noClasses,packageName;
+    userId = props._id;
+    packageId = get(packageData,'_id',null);
+    packageType = get(packageData,'packageType',null);
+    schoolId = props.schoolId;
+    noClasses = get(packageData,'noClasses',0);
+    packageName = get(packageData,'name','packageName');
+    data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName};
+    Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
+
+    })
+
+
+}
 sendLink = (props,packageId=null,packageType=null) =>{
   try{
     let userId,classesId,valid,data={},schoolName,className,schoolId;

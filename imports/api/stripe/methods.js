@@ -21,7 +21,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,currencySymbol = '$',monthlyAttendance={};
+    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,monthlyAttendance={};
     packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
@@ -80,7 +80,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         })
       }
     }
-    currencySymbol = currency;
     //Get currency name and correct amount using multipleFactor from config
     config.currency.map((data, index) => {
       if (data.value == currency) {
@@ -140,10 +139,10 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         fee: Math.round(amount * (2.9 / 100) + 30),
         amount:amount/100,
         contractLength,
-        payAsYouGo,
         payUpFront,
-        currency : currencySymbol,
-        monthlyAttendance
+        currency ,
+        monthlyAttendance,
+        paymentMethod:'stripe'
       };
       recordId = Meteor.call("purchases.addPurchase", payload);
       let charge = await stripe.charges.create(stripeRequest);
@@ -396,5 +395,106 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         (error && error.message) || "Something went wrong"
       );
     }
+  },
+  "stripe.handleOtherPaymentMethods":function(data){
+    let {userId,packageId,schoolId,packageType,paymentMethod,packageName,noClasses} = data;
+    let user = Meteor.users.findOne({_id:userId});
+    let payload,status,userName,emailId,fee,amount,
+    monthlyAttendance={},currency,expDuration,expPeriod,
+    contractLength = 0,payAsYouGo = false,payUpFront = false,
+    autoWithdraw=false,startDate,endDate,recordId;
+    emailId = user.emails[0].address;
+    userName = user.profile.firstName || user.profile.name;
+    paymentMethod = data.paymentMethod;
+    status = 'succeeded';
+    if (packageType == "EP") {
+      let enrollmentData = EnrollmentFees.findOne({ _id: packageId });
+      currency = enrollmentData.currency;
+      amount = enrollmentData.cost;
+      if(get(enrollmentData,'noExpiration',false)){
+        expDuration = 30;
+        expPeriod = 'Years';
+      }
+      else{
+        expDuration = get(enrollmentData,'expDuration',30);
+        expPeriod = get(enrollmentData,'expPeriod','Years');
+      }
+     
+    }
+    else if(packageType == 'CP'){
+      let classData = ClassPricing.findOne({ _id: packageId })
+      currency = get(classData,"currency",'$');
+      amount = get(classData,'cost',0);
+      if(get(classData,'noExpiration',false)){
+        expDuration = 30;
+        expPeriod = 'Years';
+      }
+      else{
+        expDuration = get(classData,'expDuration',30);
+        expPeriod = get(classData,'expPeriod','Years');
+      }
+
+    }
+    else {
+      let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
+      MonthlyData.pymtDetails.map((current,index)=>{
+        if(current.planId == planId){
+          amount = current.cost ;
+          if(get(MonthlyData,'pymtType.payUpFront',false)){
+            amount = amount * current.month;
+          }
+          currency = current.currency;
+          contractLength = current.month;
+        }
+        if(MonthlyData.duPeriod){
+          monthlyAttendance.duPeriod = MonthlyData.duPeriod;
+          monthlyAttendance.noClasses = MonthlyData.noClasses;
+          monthlyAttendance.startDate = new Date();
+          monthlyAttendance.max = MonthlyData.noClasses;
+        }
+      })
+      payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
+      payUpFront = get(MonthlyData,'pymtType.payUpFront',false);
+      autoWithdraw = get(MonthlyData,'pymtType.autoWithdraw',false);
+      expPeriod = 'Months';
+    }
+     //Get currency name and correct amount using multipleFactor from config
+     config.currency.map((data, index) => {
+      if (data.value == currency) {
+        currency = data.label;
+        amount = String(amount);
+        if(amount.indexOf('.') == -1)
+        amount = parseInt(String(amount).split(".").join("")) * data.multiplyFactor;
+        else
+        amount = parseInt(String(amount).split(".").join(""));
+      }
+    })
+    startDate = new Date();
+    endDate = getExpiryDateForPackages(startDate, expPeriod, expDuration);
+    payload = {
+      userId,
+      emailId,
+      userName,
+      packageName,
+      createdOn: new Date(),
+      packageId,
+      packageType,
+      schoolId,
+      status,
+      startDate,
+      endDate,
+      noClasses,
+      fee: Math.round(amount * (2.9 / 100) + 30),
+      amount:amount/100,
+      contractLength,
+      payAsYouGo,
+      payUpFront,
+      autoWithdraw,
+      currency ,
+      monthlyAttendance,
+      paymentMethod
+    };
+    recordId = Meteor.call("purchases.addPurchase", payload);
+    return recordId;
   }
 });
