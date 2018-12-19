@@ -71,7 +71,10 @@ const PackagesWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 1;
-  ${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'}
+  ${props => props.onPriceEdit &&
+        `flex-direction: row; 
+    flex-wrap: wrap; 
+    justify-content: space-around;`}
 
   @media screen and (max-width: ${helpers.tablet}px) {
   	max-width: ${PACKAGE_WIDTH}px;
@@ -243,7 +246,7 @@ const PackagesList = (props) => {
                         variant={props.variant}
                         packageProps={{
                             bgColor: '#dddd',
-                            variant=props.variant,
+                            variant: props.variant,
                             packageType: 'MP',
                             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
                             schoolId: props.schoolId,

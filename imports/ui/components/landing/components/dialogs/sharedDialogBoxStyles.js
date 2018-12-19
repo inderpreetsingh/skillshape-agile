@@ -1,6 +1,3 @@
-import styled from 'styled-components';
-
-import { Heading } from '/imports/ui/components/landing/components/jss/helpers.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 export const dialogStyles = {

@@ -1,18 +1,25 @@
+import React from "react";
+import styled from "styled-components";
 import get from 'lodash/get';
 import PropTypes from "prop-types";
-import React from "react";
 import { withRouter } from "react-router";
-import styled from "styled-components";
-import ClassTimeCover from "./classTimeCover/index.jsx";
-import ClassTimeInformation from "./classTimeInformation/index.jsx";
-import MembersList from "./membersList/index.jsx";
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { createContainer } from 'meteor/react-meteor-data';
+
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
-import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
+
+import ClassTimeInformation from "./classTimeInformation/index.jsx";
+import ClassTimeCover from "./classTimeCover/index.jsx";
+import MembersList from "./membersList/index.jsx";
 import { withImageExists } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 
+import ClassPricing from '/imports/api/classPricing/fields';
+import EnrollmentFees from '/imports/api/enrollmentFee/fields';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
+
+import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 
 const imageExistsBgImage = {
   originalImagePath: "headerProps.bgImg",
@@ -82,7 +89,7 @@ const ClassDetails = props => {
 
   const currentView =
     location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
-  
+
   return (
     <Wrapper>
       <PageContent>
@@ -137,6 +144,41 @@ ClassDetails.defaultProps = {
   noPurchasedClasses: true
 };
 
-export default withImageExists(
-  withRouter(ClassDetails),
-  imageExistsBgImage);
+export default withImageExists(withRouter(createContainer(props => {
+  const { classData } = props;
+  const classTypeId = classData && classData[0].classTypeId;
+  let purchasesData = 
+  let monthlyPricingSubscription;
+  let classPricingSubscription;
+  let enrollmentSubscription;
+  let isLoading = true;
+  let currency = config.defaultCurrency;
+  //console.log(classData,props,'classTYpeid')
+  if (classTypeId) {
+    monthlyPricingSubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricingWithClassId', {classTypeId});
+    classPricingSubscription = Meteor.subscribe('classPricing.getClassPricingWithClassId', {classTypeId});
+    enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypeEnrollMentFree', { classTypeId });
+
+    const sub1Ready = monthlyPricingSubscription && monthlyPricingSubscription.ready();
+    const sub2Ready = classPricingSubscription && classPricingSubscription.ready();
+    const sub3Ready = enrollmentSubscription && enrollmentSubscription.ready();
+    if (sub1Ready && sub2Ready && sub3Ready) {
+      isLoading = false;
+    }
+  }
+
+  const classPricingData = ClassPricing.find().fetch();
+  const monthlyPricingData = MonthlyPricing.find().fetch();
+  const enrollmentFeeData = EnrollmentFees.find().fetch();
+  
+  return {
+    ...props,
+    isLoading,
+    packagesListData: {
+      classPricingData,
+      monthlyPricingData,
+      enrollmentFeeData,
+    },
+    currency
+  };
+}, ClassDetails)), imageExistsBgImage);

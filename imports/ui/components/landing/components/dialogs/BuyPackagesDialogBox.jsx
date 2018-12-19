@@ -62,12 +62,23 @@ const styles = theme => {
 
 class BuyPackagesDialogBox extends Component {
     constructor(props) {
-        state = {
-            options: {
-
-            }
+        super(props);
+        this.state = {
+            radioButtonGroupValue: "others"
         }
     }
+
+    handleRadioChange = (e, value) => {
+        // debugger;
+        this.setState(state => {
+            return {
+                ...state,
+                radioButtonGroupValue: e.target.value
+            }
+        });
+    };
+
+
     render() {
         const { props } = this;
         const {
@@ -83,7 +94,7 @@ class BuyPackagesDialogBox extends Component {
             open={open}
             onClose={onModalClose}
             onRequestClose={onModalClose}
-            aria-labelledby={`add ${text}`}
+            aria-labelledby={"packages"}
             classes={{ paper: classes.dialogRoot }}
         >
             <MuiThemeProvider theme={muiTheme}>
@@ -110,9 +121,7 @@ class BuyPackagesDialogBox extends Component {
                             enrollMentPackages
                             enrollMentPackagesData={enrollmentFeeData}
                             perClassPackagesData={classPricingData}
-                            monthlyPackagesData={this.normalizeMonthlyPricingData(
-                                monthlyPricingData
-                            )}
+                            monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricingData)}
                             currency={currency}
                         />}
 
@@ -124,7 +133,7 @@ class BuyPackagesDialogBox extends Component {
                             name="payment-options"
                             className={classes.radioGroup}
                             value={this.state.value}
-                            onChange={this.handleChange}
+                            onChange={this.handleRadioChange}
                         >
                             <FormControlLabel
                                 classes={{
@@ -155,12 +164,18 @@ class BuyPackagesDialogBox extends Component {
                                     root: classes.radioLabelRoot,
                                     label: classes.radioLabel
                                 }}
-                                value="bankTransfer" control={<Radio />} label="Bank Transfer" />
+                                value="other" control={<Radio />} label="Others" />
                         </RadioGroup>
                     </FormControl>
                 </DialogContent>
 
                 <DialogActions classes={{ root: classes.dialogActionsRoot }}>
+                    <ActionButtons>
+                        <ActionButton>
+                            <PrimaryButton
+                                label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
+                        </ActionButton>
+                    </ActionButtons>
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog >

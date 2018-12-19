@@ -1,7 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 import IconButton from "material-ui/IconButton";
 import ClearIcon from 'material-ui-icons/Clear';
-
 
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';

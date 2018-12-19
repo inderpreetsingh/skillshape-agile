@@ -8,3 +8,4 @@ export { default as EmailMemberDialogBox } from './EmailMemberDialogBox.jsx';
 export { default as EditMemberDialogBox } from './EditMemberDialogBox.js';
 export { default as SubscriptionsDetailsDialogBox } from './SubscriptionsDetailsDialogBox.jsx';
 export { default as ClassTimesDialogBox } from './ClassTimesDialogBox';
+export { default as BuyPackagesDialogBox } from './BuyPackagesDialogBox';
