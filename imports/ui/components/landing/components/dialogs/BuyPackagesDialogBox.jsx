@@ -27,17 +27,47 @@ import { withPopUp, stripePaymentHelper, normalizeMonthlyPricingData } from "/im
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { dialogStyles } from './sharedDialogBoxStyles';
-import { ActionButtons, ActionButton, DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { ActionButtons, DialogBoxTitleBar } from './sharedDialogBoxComponents';
 
 const PackagesListWrapper = styled.div`
     display: flex;
-    max-height: 300px;
-    overflow-y: auto;
     flex-direction: column;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const PackageWrapper = styled.div`
     margin-bottom: ${helpers.rhythmDiv}px;
+    :last-of-type {
+        margin-bottom: 0;
+    }
+`;
+
+const ActionButton = styled.div`
+    display: flex;
+    width: calc(50% - ${helpers.rhythmDiv}px);
+    margin-bottom: ${helpers.rhythmDiv}px;
+
+    @media screen and (max-width: 350px) {
+        width: 100%;
+        :last-of-type {
+            margin-bottom: 0;
+        }  
+    }
+`;
+
+const NotesContent = styled.textarea`
+  font-family: ${helpers.specialFont};
+  font-size: ${helpers.baseFontSize}px;
+  font-style: italic;
+  width: 100%;
+  height: 100px;
+  border-radius: 5px;
+`;
+
+const ContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    max-height: 300px;
 `;
 
 const styles = theme => {
@@ -48,7 +78,12 @@ const styles = theme => {
         },
         dialogContent: {
             ...dialogStyles.dialogContent,
-            flexDirection: 'column'
+            flexShrink: 0,
+            flexDirection: 'column',
+
+            [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+                padding: `0 ${helpers.rhythmDiv * 2}px`,
+            }
         },
         iconButton: {
             ...dialogStyles.iconButton,
@@ -58,7 +93,6 @@ const styles = theme => {
         },
         radioGroupWrapper: {
             margin: 0,
-            marginTop: helpers.rhythmDiv * 3,
             paddingLeft: helpers.rhythmDiv,
             [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
                 width: "auto"
@@ -175,6 +209,10 @@ class BuyPackagesDialogBox extends Component {
                             ))}
                         </PackagesListWrapper>
 
+                        <NotesContent
+                            placeholder="Notes..."
+                        />
+
                         <FormControl
                             component="fieldset"
                             className={classes.radioGroupWrapper}>
@@ -220,16 +258,18 @@ class BuyPackagesDialogBox extends Component {
                     </DialogContent>}
 
                 <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
-                    <ActionButtons
-                        justifyContent="space-evenly"
-                    >
-                        <ActionButton>
+                    <ActionButtons>
+                        <ActionButton
+                        >
                             <PrimaryButton
+                                fullWidth
                                 label={'Send Link'}
                                 onClick={this.handleSendLink} />
                         </ActionButton>
-                        <ActionButton>
+                        <ActionButton
+                        >
                             <PrimaryButton
+                                fullWidth
                                 label={'Accept Payment'}
                                 onClick={this.handlePurchasePackage} />
                         </ActionButton>

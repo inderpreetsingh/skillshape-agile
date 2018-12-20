@@ -53,6 +53,7 @@ export const ActionButtons = styled.div`
 `;
 
 export const ActionButton = styled.div`
+  display: flex;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 

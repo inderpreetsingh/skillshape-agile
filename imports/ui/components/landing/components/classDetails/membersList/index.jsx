@@ -259,7 +259,7 @@ class MembersListContainer extends Component {
         {classTypePackages && <BuyPackagesDialogBox
           schoolId={schoolId}
           open={classTypePackages}
-          onClose={() => { this.setState({ classTypePackages: false }) }}
+          onModalClose={() => { this.setState({ classTypePackages: false }) }}
           params={params}
           classTypeId={get(classData[0], 'classTypeId', null)}
           userId={userId}
