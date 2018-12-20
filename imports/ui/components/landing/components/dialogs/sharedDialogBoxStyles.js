@@ -5,9 +5,9 @@ export const dialogStyles = {
     padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
       3}px 0 ${helpers.rhythmDiv * 3}px`,
     marginBottom: `${helpers.rhythmDiv * 2}px`,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
+    // "@media screen and (max-width : 500px)": {
+    //   padding: `0 ${helpers.rhythmDiv * 3}px`
+    // }
   },
   dialogContent: {
     padding: `0 ${helpers.rhythmDiv * 3}px`,
@@ -21,6 +21,7 @@ export const dialogStyles = {
     width: "100%",
     maxWidth: 400,
     [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+      // paddingTop: helpers.rhythmDiv * 2,
       margin: helpers.rhythmDiv
     }
   },
