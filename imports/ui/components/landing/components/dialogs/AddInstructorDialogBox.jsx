@@ -120,7 +120,8 @@ class AddInstructorDialogBox extends Component {
       RenderActions: (
         <ActionButtons>
           <ActionButton>
-            <FormGhostButton label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
+            <FormGhostButton 
+            label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
           </ActionButton>
           <ActionButton>
             <FormGhostButton label={'Whole series'} onClick={() => { this.handleWholeSeries(popUp, payLoad) }} applyClose />
