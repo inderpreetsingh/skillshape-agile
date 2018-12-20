@@ -308,8 +308,12 @@ sendEmailAgain = (data)=>{
   Meteor.call("packageRequest.sendPurchaseRequest",data);
 }
 updateStatus = (n, props) => {
-  let { status, popUp } = props;
-  let inc=0,purchaseId,packageType;
+  let { status, popUp ,purchaseId} = props;
+  let inc=0,packageType;
+  if(!purchaseId){
+    props.onAddIconClick(props._id,'checkIn');
+    return;
+  }
   if (n == 1) {
     if (status == 'signIn') {
       inc = -1;

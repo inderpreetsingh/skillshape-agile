@@ -57,9 +57,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){
           amount = current.cost ;
-          if(get(MonthlyData,'pymtType.payUpFront',false)){
-            amount = amount * current.month;
-          }
           currency = current.currency;
           contractLength = current.month;
         }
@@ -492,7 +489,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       autoWithdraw,
       currency ,
       monthlyAttendance,
-      paymentMethod
+      paymentMethod,
+      packageStatus:'active'
     };
     recordId = Meteor.call("purchases.addPurchase", payload);
     return recordId;

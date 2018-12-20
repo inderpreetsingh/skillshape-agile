@@ -115,6 +115,7 @@ const MembersList = props => {
                                     classTypeName={props.classTypeName}
                                     toggleIsBusy={props.toggleIsBusy}
                                     schoolId = {props.schoolId}
+                                    onAddIconClick={props.onJoinClassClick}
                                 />
                             ) : (
                                     <Member

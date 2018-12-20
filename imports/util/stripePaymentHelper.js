@@ -352,7 +352,6 @@ handlePayUpFront = (
     title,
     content
 ) => {
-    amount = amount * monthlyPymtDetails[0].month || 1;
     expDuration = monthlyPymtDetails[0].month;
     const { popUp } = self.props;
     popUp.appear(

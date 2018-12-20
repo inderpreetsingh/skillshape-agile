@@ -69,6 +69,7 @@ Meteor.methods({
                         if(obj.userId == userId){
                             if(status!=='signOut'){
                                 obj.status = status;
+                                purchaseId ? obj.purchaseId = purchaseId : '';
                             }else if(status == 'signOut'){
                                 index = i;
                             }
