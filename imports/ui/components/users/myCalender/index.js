@@ -172,25 +172,31 @@ export default class MyCalender extends React.Component {
       let purchased = get(res,'purchased',[]);
       let epStatus = get(res,"epStatus",false);
        if(epStatus && !isEmpty(purchased)){
-        popUp.appear("inform", {
-          title: `Confirmation`,
-          content: `You have the followings packages. Please select one from which you are going to use.`,
-          RenderActions: (<ButtonWrapper>
-            {purchased.map((obj)=>
-             <FormGhostButton
-             label={capitalizeString(obj.packageName)}
-             onClick={() => {this.updateClass(filter,status,obj,popUp)}}
-             applyClose
-           />
-              )}
-          </ButtonWrapper>)
-        }, true);
+        if(purchased.length==1){
+          this.updateClass(filter,status,purchased[0],popUp)
+          return;
+        }
+        else{
+          popUp.appear("inform", {
+            title: `Confirmation`,
+            content: `You have the followings packages. Please select one from which you are going to use.`,
+            RenderActions: (<ButtonWrapper>
+              {purchased.map((obj)=>
+               <FormGhostButton
+               label={capitalizeString(obj.packageName)}
+               onClick={() => {this.updateClass(filter,status,obj,popUp)}}
+               applyClose
+             />
+                )}
+            </ButtonWrapper>)
+          }, true);
+        }
        }
        else{
         let packageType = 'Package';
         popUp.appear("inform", {
           title: `No ${packageType} Purchased Yet.`,
-          content: `You haven't purchased any ${packageType} please purchase one first. `,
+          content: `You haven't purchased any ${packageType} which includes this class type. Please purchase one first. `,
           RenderActions: (<ButtonWrapper>
           {this.purchaseLaterButton()}
            {this.purchaseNowButton()}
