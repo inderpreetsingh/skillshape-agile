@@ -144,41 +144,4 @@ ClassDetails.defaultProps = {
   noPurchasedClasses: true
 };
 
-export default withImageExists(withRouter(createContainer(props => {
-  const { classData } = props;
-  const classTypeId = classData && classData[0].classTypeId;
-  let purchasesData = 
-  let monthlyPricingSubscription;
-  let classPricingSubscription;
-  let enrollmentSubscription;
-  let isLoading = true;
-  let currency = config.defaultCurrency;
-  //console.log(classData,props,'classTYpeid')
-  if (classTypeId) {
-    monthlyPricingSubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricingWithClassId', {classTypeId});
-    classPricingSubscription = Meteor.subscribe('classPricing.getClassPricingWithClassId', {classTypeId});
-    enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypeEnrollMentFree', { classTypeId });
-
-    const sub1Ready = monthlyPricingSubscription && monthlyPricingSubscription.ready();
-    const sub2Ready = classPricingSubscription && classPricingSubscription.ready();
-    const sub3Ready = enrollmentSubscription && enrollmentSubscription.ready();
-    if (sub1Ready && sub2Ready && sub3Ready) {
-      isLoading = false;
-    }
-  }
-
-  const classPricingData = ClassPricing.find().fetch();
-  const monthlyPricingData = MonthlyPricing.find().fetch();
-  const enrollmentFeeData = EnrollmentFees.find().fetch();
-  
-  return {
-    ...props,
-    isLoading,
-    packagesListData: {
-      classPricingData,
-      monthlyPricingData,
-      enrollmentFeeData,
-    },
-    currency
-  };
-}, ClassDetails)), imageExistsBgImage);
+export default withImageExists(withRouter(ClassDetails), imageExistsBgImage);

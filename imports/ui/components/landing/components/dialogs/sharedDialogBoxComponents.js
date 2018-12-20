@@ -47,6 +47,8 @@ export const DialogTitleWrapper = styled.h1`
 
 export const ActionButtons = styled.div`
   ${helpers.flexCenter}
+  width: 100%;
+  justify-content: ${props => props.justifyContent || 'center'};
   flex-wrap: wrap;
 `;
 
