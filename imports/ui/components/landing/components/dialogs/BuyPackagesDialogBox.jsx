@@ -47,7 +47,7 @@ const ActionButton = styled.div`
     width: calc(50% - ${helpers.rhythmDiv}px);
     margin-bottom: ${helpers.rhythmDiv}px;
 
-    @media screen and (max-width: 350px) {
+    @media screen and (max-width: ${helpers.mobile - 100}px) {
         width: 100%;
         :last-of-type {
             margin-bottom: 0;
@@ -80,7 +80,7 @@ const styles = theme => {
             ...dialogStyles.dialogContent,
             flexShrink: 0,
             flexDirection: 'column',
-
+            paddingBottom: 0,
             [`@media screen and (max-width: ${helpers.mobile}px)`]: {
                 padding: `0 ${helpers.rhythmDiv * 2}px`,
             }
@@ -91,26 +91,30 @@ const styles = theme => {
             top: helpers.rhythmDiv,
             right: helpers.rhythmDiv
         },
+        radioButtonIcon: {
+            width: 24,
+            height: 24
+        },
         radioGroupWrapper: {
             margin: 0,
-            paddingLeft: helpers.rhythmDiv,
             [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
                 width: "auto"
             }
         },
+        radioButtonRoot: {
+            width: 24,
+            height: 24,
+            marginRight: helpers.rhythmDiv
+        },
         radioLabelRoot: {
-            marginRight: helpers.rhythmDiv * 3
+            margin: helpers.rhythmDiv,
+            marginLeft: 0
         },
         radioLabel: {
             fontSize: helpers.baseFontSize,
             [`@media screen and (max-width: ${helpers.mobile + 50}px)`]: {
                 fontSize: 14
             }
-        },
-        radioButton: {
-            height: helpers.rhythmDiv * 3,
-            width: helpers.rhythmDiv * 3,
-            marginRight: helpers.rhythmDiv
         },
         radioGroup: {
             display: "flex",
@@ -226,33 +230,54 @@ class BuyPackagesDialogBox extends Component {
                                 <FormControlLabel
                                     classes={{
                                         root: classes.radioLabelRoot,
-                                        label: classes.radioLabel
+                                        label: classes.radioLabel,
                                     }}
-                                    value="cash" control={<Radio />} label="Cash" />
+                                    value="cash" control={<Radio
+                                        classes={{
+                                            root: classes.radioButtonRoot
+                                        }}
+                                    />} label="Cash" />
+
                                 <FormControlLabel
                                     classes={{
                                         root: classes.radioLabelRoot,
                                         label: classes.radioLabel
                                     }}
-                                    value="check" control={<Radio />} label="Check" />
+                                    value="check" control={<Radio
+                                        classes={{
+                                            root: classes.radioButtonRoot
+                                        }}
+                                    />} label="Check" />
                                 <FormControlLabel
                                     classes={{
                                         root: classes.radioLabelRoot,
                                         label: classes.radioLabel
                                     }}
-                                    value="creditCard" control={<Radio />} label="Credit Card" />
+                                    value="creditCard" control={<Radio
+                                        classes={{
+                                            root: classes.radioButtonRoot
+                                        }}
+                                    />} label="Credit Card" />
                                 <FormControlLabel
                                     classes={{
                                         root: classes.radioLabelRoot,
                                         label: classes.radioLabel
                                     }}
-                                    value="bankTransfer" control={<Radio />} label="Bank Transfer" />
+                                    value="bankTransfer" control={<Radio
+                                        classes={{
+                                            root: classes.radioButtonRoot
+                                        }}
+                                    />} label="Bank Transfer" />
                                 <FormControlLabel
                                     classes={{
                                         root: classes.radioLabelRoot,
                                         label: classes.radioLabel
                                     }}
-                                    value="other" control={<Radio />} label="Others" />
+                                    value="other" control={<Radio
+                                        classes={{
+                                            root: classes.radioButtonRoot
+                                        }}
+                                    />} label="Others" />
                             </RadioGroup>
                         </FormControl>
                     </DialogContent>}
