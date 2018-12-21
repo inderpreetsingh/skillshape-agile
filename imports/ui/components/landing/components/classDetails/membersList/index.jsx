@@ -58,6 +58,7 @@ class MembersListContainer extends Component {
   this.studentsData(nextProps);
  }
  updateClass = (filter,status,purchaseData,popUp)=>{
+  console.log("​MembersListContainer -> updateClass -> purchaseData", purchaseData)
   let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
   let condition=0;
   if(packageType == 'CP'){
@@ -234,18 +235,19 @@ handleClassUpdate = (filter,status,popUp)=>{
     })
     return studentsData;
   }
-  handleDialogBoxState = dialogState  => {
+  handleDialogBoxState = (dialogState,currentProps)  => {
     this.setState(state => {
       return {
         ...state,
-        buyPackagesBoxState: dialogState
+        buyPackagesBoxState: dialogState,
+        currentProps
       };
     });
     console.log(this.state);
   };
   render() {
     const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params,schoolName,classTypeName,toggleIsBusy } = this.props;
-    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired,buyPackagesBoxState} = this.state;
+    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired,buyPackagesBoxState,currentProps} = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -322,10 +324,9 @@ handleClassUpdate = (filter,status,popUp)=>{
           classTypeName = {classTypeName}
           toggleIsBusy = {toggleIsBusy}
           schoolId = {schoolId}
-          onAcceptPaymentClick = {(state)=>{
-            this.handleDialogBoxState(state)}
-          }
+          onAcceptPaymentClick = { this.handleDialogBoxState}
           buyPackagesBoxState ={buyPackagesBoxState}
+          currentProps = {currentProps}
        />
       </Fragment>
     );

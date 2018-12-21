@@ -118,6 +118,7 @@ const MembersList = props => {
                                     onAddIconClick={props.onJoinClassClick}
                                     onAcceptPaymentClick={props.onAcceptPaymentClick}
                                     buyPackagesBoxState ={props.buyPackagesBoxState}
+                                    currentProps = {props.currentProps}
                                 />
                             ) : (
                                     <Member

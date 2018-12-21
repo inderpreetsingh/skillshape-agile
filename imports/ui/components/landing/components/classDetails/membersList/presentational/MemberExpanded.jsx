@@ -212,23 +212,33 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={()=>{props.onAcceptPaymentClick(true)}}
+        onClick={()=>{props.onAcceptPaymentClick(true,props)}}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
 acceptPayment = (packageData,props,paymentMethod) => {
-    let userId,packageId,packageType,schoolId,data,noClasses,packageName;
+		console.log("​acceptPayment -> packageData", packageData)
+    let userId,packageId,packageType,schoolId,data,noClasses,packageName,planId=null;
+    let {popUp} = props;
     userId = props._id;
     packageId = get(packageData,'_id',null);
     packageType = get(packageData,'packageType',null);
     schoolId = props.schoolId;
     noClasses = get(packageData,'noClasses',0);
-    packageName = get(packageData,'name','packageName');
-    data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName};
+    packageName = get(packageData,'name',get(packageData,'packageName','packageName'));
+    if(packageType=='MP' && !isEmpty(packageData.pymtDetails)){
+      planId = get(packageData.pymtDetails[0],'planId',null);
+    }
+    data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName,planId};
     Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
-
+      if(res){
+        if(packageType != 'EP')
+        this.updateStatus(1, props)
+        else
+        this.successPopUp(popUp,'prototype')
+      }
     })
 
 
@@ -393,6 +403,9 @@ const MemberExpanded = props => {
             classTypeId = {classTypeId}
             open={buyPackagesBoxState}
             onModalClose={()=>{props.onAcceptPaymentClick(false)}}
+            onSendLinkClick = {this.sendLink}
+            currentProps = {props.currentProps}
+            acceptPayment = {this.acceptPayment}
           />
         )}
       <InnerWrapper>

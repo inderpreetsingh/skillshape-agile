@@ -41,7 +41,18 @@ const PackageWrapper = styled.div`
         margin-bottom: 0;
     }
 `;
-
+const Title = styled.h2`
+	font-family: ${helpers.specialFont};
+	font-weight: 300;
+	text-align: center;
+	font-style: italic;
+	line-height: 1;
+	font-size: ${helpers.baseFontSize * 1.5}px;
+	margin: 0;
+	margin-bottom: ${helpers.rhythmDiv * 4}px;
+	color: ${helpers.textColor};
+	width: 100%;
+`;
 const ActionButton = styled.div`
     display: flex;
     width: calc(50% - ${helpers.rhythmDiv}px);
@@ -147,17 +158,46 @@ class BuyPackagesDialogBox extends Component {
         this.setState({ radioButtonGroupValue: event.target.value });
     };
 
-    handlePackageClick = (selectedPackageIndex) => (e) => {
+    handlePackageClick = (selectedPackageIndex,selectedPackageType) => (e) => {
         e.preventDefault();
 
         this.setState(state => {
             return {
                 ...state,
                 selectedPackageIndex,
+                selectedPackageType
             }
         })
     }
-
+    acceptPayment = () =>{
+        let {packageList,currentProps} = this.props;
+        let {selectedPackageIndex,selectedPackageType,radioButtonGroupValue}= this.state;
+        let packageData;
+        if(selectedPackageType){
+             packageList.map((obj)=>{
+                if(obj.title == selectedPackageType){
+                    packageData = obj.packageData;
+                }
+            })
+            packageData = packageData[selectedPackageIndex];    
+            this.props.acceptPayment(packageData,currentProps,radioButtonGroupValue);
+        } 
+    }
+    handleSendLink = () =>{
+        let {packageList,currentProps} = this.props;
+        let {selectedPackageIndex,selectedPackageType}= this.state;
+        let packageData;
+        if(selectedPackageType){
+             packageList.map((obj)=>{
+                if(obj.title == selectedPackageType){
+                    packageData = obj.packageData;
+                }
+            })
+            packageData = packageData[selectedPackageIndex];    
+            let {_id,packageType} = packageData;
+            this.props.onSendLinkClick(currentProps,_id,packageType);
+        }
+    }
 
     render() {
         const { props } = this;
@@ -166,15 +206,16 @@ class BuyPackagesDialogBox extends Component {
             open,
             onModalClose,
             schoolId,
-            packagesListData,
+            packageList,
             currency,
-            isLoading
+            isLoading,
+            onSendLinkClick
         } = props;
-			console.log("​BuyPackagesDialogBox -> render -> packagesListData", packagesListData)
-
+    
         const {
             selectedPackageIndex,
-            radioButtonGroupValue
+            radioButtonGroupValue,
+            selectedPackageType
         } = this.state;
 
 
@@ -197,22 +238,30 @@ class BuyPackagesDialogBox extends Component {
                     <ContainerLoader />
                     :
                     <DialogContent classes={{ root: classes.dialogContent }}>
-                        <PackagesListWrapper>
-                            {!isEmpty(packagesListData) && packagesListData.map((packageData, i) => (
-                                <PackageWrapper>
-                                    <Package
-                                        key={i}
-                                        {...packageData}
-                                        packageSelected={i === selectedPackageIndex}
-                                        onPackageClick={this.handlePackageClick(i)}
-                                        usedFor="buyPackagesDialogBox"
-                                        variant={'light'}
-                                        schoolId={schoolId}
-                                        currency={currency}
-                                    />
-                                </PackageWrapper>
-                            ))}
-                        </PackagesListWrapper>
+                        {!isEmpty(packageList) && packageList.map((obj)=>{
+                            return (
+                                <PackagesListWrapper>
+                                <Title>{obj.title}</Title>
+                                    {!isEmpty(obj.packageData) && obj.packageData.map((packageData, i) => (
+                                        <PackageWrapper>
+                                            <Package
+                                                key={i}
+                                                {...packageData}
+                                                packageSelected={i === selectedPackageIndex && obj.title==selectedPackageType}
+                                                onPackageClick={this.handlePackageClick(i,obj.title)}
+                                                usedFor="buyPackagesDialogBox"
+                                                variant={'light'}
+                                                schoolId={schoolId}
+                                                currency={currency}
+                                            />
+                                        </PackageWrapper>
+                                    ))}
+                                </PackagesListWrapper>
+
+                            )
+
+                        })}
+                       
 
                         <NotesContent
                             placeholder="Notes..."
@@ -297,7 +346,7 @@ class BuyPackagesDialogBox extends Component {
                             <PrimaryButton
                                 fullWidth
                                 label={'Accept Payment'}
-                                onClick={this.handlePurchasePackage} />
+                                onClick={this.acceptPayment} />
                         </ActionButton>
                     </ActionButtons>
                 </DialogActions>
@@ -338,25 +387,36 @@ export default withStyles(styles)(createContainer(props => {
 
     let classPricingData = ClassPricing.find().fetch();
     let CP = classPricingData.map((obj)=>{
-       obj.paymentType = 'CP';
+       obj.packageType = 'CP';
         return obj;
     })
     let monthlyPricingData = MonthlyPricing.find().fetch();
     monthlyPricingData = normalizeMonthlyPricingData(monthlyPricingData);
     let MP = monthlyPricingData.map((obj)=>{
-      obj.paymentType = 'MP';
+      obj.packageType = 'MP';
       return obj;
     })
     let enrollmentFeeData = EnrollmentFees.find().fetch();
     let EP = enrollmentFeeData.map((obj)=>{
-       obj.paymentType = 'EP';
+       obj.packageType = 'EP';
        return obj;
     })
+    let packageList = [];
+    if(!isEmpty(EP)){
+        packageList.push({title:'Enrollment Packages',packageData:EP})
+    }
+    if(!isEmpty(MP)){
+        packageList.push({title:'Monthly Packages',packageData:MP})
+    }
+    if(!isEmpty(CP)){
+        packageList.push({title:'Per Class Packages',packageData:CP})
+    }
+
 
     return {
         ...props,
         isLoading,
-        packagesListData: CP.concat(MP).concat(EP),
+        packageList,
         currency
     };
 }, withPopUp(BuyPackagesDialogBox)));
