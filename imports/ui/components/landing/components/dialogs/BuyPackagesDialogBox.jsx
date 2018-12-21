@@ -388,6 +388,7 @@ export default withStyles(styles)(createContainer(props => {
     let classPricingData = ClassPricing.find().fetch();
     let CP = classPricingData.map((obj)=>{
        obj.packageType = 'CP';
+       obj.classPackages = true;
         return obj;
     })
     let monthlyPricingData = MonthlyPricing.find().fetch();
