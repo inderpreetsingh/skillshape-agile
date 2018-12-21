@@ -172,28 +172,45 @@ export default class MyCalender extends React.Component {
       let purchased = get(res,'purchased',[]);
       let epStatus = get(res,"epStatus",false);
        if(epStatus && !isEmpty(purchased)){
-        popUp.appear("inform", {
-          title: `Confirmation`,
-          content: `You have the followings packages. Please select one from which you are going to use.`,
-          RenderActions: (<ButtonWrapper>
-            {purchased.map((obj)=>
-             <FormGhostButton
-             label={capitalizeString(obj.packageName)}
-             onClick={() => {this.updateClass(filter,status,obj,popUp)}}
-             applyClose
-           />
-              )}
-          </ButtonWrapper>)
-        }, true);
+        if(purchased.length==1){
+          this.updateClass(filter,status,purchased[0],popUp)
+          return;
+        }
+        else{
+          popUp.appear("inform", {
+            title: `Confirmation`,
+            content: `You have the followings packages. Please select one from which you are going to use.`,
+            RenderActions: (<ButtonWrapper>
+              {purchased.map((obj)=>
+               <FormGhostButton
+               label={capitalizeString(obj.packageName)}
+               onClick={() => {this.updateClass(filter,status,obj,popUp)}}
+               applyClose
+             />
+                )}
+            </ButtonWrapper>)
+          }, true);
+        }
        }
        else{
-        let packageType = 'Package';
+        let packageType,packagesRequired,content,title ;
+       if( !epStatus ){
+        packageType = ' Enrollment package ';
+        packagesRequired = 'enrollment';
+        title = 'Enrollment Fee Required';
+        content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
+       }else{
+        packageType = ' Class Fees Due ';
+        packagesRequired ='perClassAndMonthly';
+        title =  `No ${packageType} Purchased Yet.`
+        content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
+       }
         popUp.appear("inform", {
-          title: `No ${packageType} Purchased Yet.`,
-          content: `You haven't purchased any ${packageType} please purchase one first. `,
+          title,
+          content,
           RenderActions: (<ButtonWrapper>
           {this.purchaseLaterButton()}
-           {this.purchaseNowButton()}
+           {this.purchaseNowButton(packagesRequired)}
           </ButtonWrapper>)
         }, true);
        }
@@ -250,10 +267,10 @@ export default class MyCalender extends React.Component {
    
   
   }
-  purchaseNowButton = ()=>(
+  purchaseNowButton = (packagesRequired)=>(
     <FormGhostButton
     label={'Purchase Now'}
-    onClick={() => {this.setState({classTypePackages:true})}}
+    onClick={() => {this.setState({classTypePackages:true,packagesRequired})}}
     applyClose
   />
   )
@@ -372,7 +389,8 @@ export default class MyCalender extends React.Component {
       isLoading,
       classTypePackages,
       filter,
-      classDetails
+      classDetails,
+      packagesRequired
     } = this.state;
     const { routeName,schoolData } = this.props;
     let name,_id;
@@ -420,6 +438,8 @@ export default class MyCalender extends React.Component {
                     params= {this.props.params}
                     classTypeId = {classTypeId}
                     userId={Meteor.userId()}
+                    packagesRequired = {packagesRequired}
+                    handleSignIn = {this.handleSignIn}
                     />}
         {isOpen && (
           <SkillshapePopover

@@ -8,7 +8,7 @@ Meteor.publish("monthlyPricing.getMonthlyPricing", function ({ schoolId }) {
 
 Meteor.publish("monthlyPricing.getMonthlyPricingWithClassId", function ({ classTypeId }) {
   // console.log("monthlyPricing.getMonthlyPricing -->>",schoolId)
-  let cursor = MonthlyPricing.find({ classTypelId: { $in: classTypeId }, deleted: false });
+  let cursor = MonthlyPricing.find({ classTypeId: { $in: classTypeId }, deleted: false });
   return MonthlyPricing.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 

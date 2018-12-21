@@ -11,6 +11,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { get, isEmpty } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
+import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/dialogs/";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
@@ -211,23 +212,35 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={() => { sendLink(props) }}
+        onClick={()=>{props.onAcceptPaymentClick(true,props)}}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
 acceptPayment = (packageData,props,paymentMethod) => {
-    let userId,packageId,packageType,schoolId,data,noClasses,packageName;
+    props.toggleIsBusy();
+    let userId,packageId,packageType,schoolId,data,noClasses,packageName,planId=null;
+    let {popUp} = props;
     userId = props._id;
     packageId = get(packageData,'_id',null);
     packageType = get(packageData,'packageType',null);
     schoolId = props.schoolId;
     noClasses = get(packageData,'noClasses',0);
-    packageName = get(packageData,'name','packageName');
-    data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName};
+    packageName = get(packageData,'name',get(packageData,'packageName','packageName'));
+    if(packageType=='MP' && !isEmpty(packageData.pymtDetails)){
+      planId = get(packageData.pymtDetails[0],'planId',null);
+    }
+    data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName,planId};
     Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
-
+      if(res){
+        props.toggleIsBusy();
+        let title = 'Package Purchased Successfully';
+        if(packageType != 'EP')
+        this.updateStatus(1, props)
+        else
+        this.successPopUp(popUp,'prototype',title)
+      }
     })
 
 
@@ -261,12 +274,12 @@ sendLink = (props,packageId=null,packageType=null) =>{
   }
    
     }
-successPopUp = (popUp,userName)=>{
+successPopUp = (popUp,userName,title)=>{
     popUp.appear(
       'success',
       {
         title: 'Success',
-        content: `Email with purchase link send to ${userName} successfully.`,
+        content: title ? title :`Email with purchase link send to ${userName} successfully.`,
         RenderActions: (
           <ButtonWrapper>
           <FormGhostButton
@@ -383,8 +396,20 @@ const MemberExpanded = props => {
   const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
   const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
   const slug = get(props, "params.slug", null);
+  let classTypeId = get(props.classData[0],'classTypeId',null);
+  let buyPackagesBoxState = props.buyPackagesBoxState;
   return (
     <Wrapper>
+      {buyPackagesBoxState && (
+          <BuyPackagesDialogBox
+            classTypeId = {classTypeId}
+            open={buyPackagesBoxState}
+            onModalClose={()=>{props.onAcceptPaymentClick(false)}}
+            onSendLinkClick = {this.sendLink}
+            currentProps = {props.currentProps}
+            acceptPayment = {this.acceptPayment}
+          />
+        )}
       <InnerWrapper>
         <MemberDetails>
           <MemberDetailsInner>

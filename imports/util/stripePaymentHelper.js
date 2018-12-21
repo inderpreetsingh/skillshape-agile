@@ -21,7 +21,7 @@ const Div = styled.div`
 `;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 export const stripePaymentHelper = async function (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
-
+    
     resetStates(this);
     const { popUp } = this.props;
     popUp.appear('success', {
@@ -213,6 +213,11 @@ noThanksButton = () => (
         <FormGhostButton label={'No, thanks'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
 );
+closeButton = () =>(
+    <ButtonWrapper>
+        <FormGhostButton label={'Close'} onClick={() => { }} greyColor applyClose />
+    </ButtonWrapper>
+)
 purchaseButton = (
     packageType,
     packageId,
@@ -811,6 +816,7 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                         content: `Your Subscription is being set up. You can check the status here:`,
                         RenderActions: (
                             <ButtonsWrapper>
+                                {closeButton()}
                                 <FormGhostButton
                                     label={'My Subscriptions'}
                                     onClick={() => {
@@ -824,6 +830,7 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                     },
                     true
                 );
+                self.packagesRequired !='enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('warning', {
                     title: 'Error',
@@ -865,7 +872,6 @@ handleCharge = (
             if (result) {
                 if (result == 'Payment Successfully Done') {
                     let x = new Date().getTime();
-                    console.log('TCL: self.props', self.props);
                     let memberData = {
                         firstName: currentUser.profile.name || currentUser.profile.firstName,
                         lastName: currentUser.profile.firstName || '',
@@ -891,13 +897,15 @@ handleCharge = (
                         }
                     };
                     Meteor.call('schoolMemberDetails.addNewMember', memberData);
+                    
                     popUp.appear(
                         'success',
                         {
-                            title: 'Success',
-                            content: `Your Payment is received successfully.`,
+                            title: self.packagesRequired=='enrollment' ? self.generateTitle() :'Success',
+                            content: self.packagesRequired=='enrollment' ? self.generateContent() :`Your Payment is received successfully.`,
                             RenderActions: (
                                 <ButtonsWrapper>
+                                    {closeButton()}
                                     <FormGhostButton
                                         label={'My Subscriptions'}
                                         onClick={() => {
@@ -906,6 +914,16 @@ handleCharge = (
                                         }}
                                         applyClose
                                     />
+                                    {self.packagesRequired=='enrollment' &&
+                                (
+                                    <FormGhostButton
+                                        label={'Per Class/Monthly Package'}
+                                        onClick={self.purchasedSuccessfully}
+                                        applyClose
+                                    /> 
+                                )
+                                
+                                }
                                 </ButtonsWrapper>
                             )
                         },
@@ -914,6 +932,7 @@ handleCharge = (
                 } else {
                     popUp.appear('success', { title: 'Success', content: result.message });
                 }
+                self.packagesRequired !='enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('success', { title: 'Error', content: error.message });
             }

@@ -394,7 +394,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     }
   },
   "stripe.handleOtherPaymentMethods":function(data){
-    let {userId,packageId,schoolId,packageType,paymentMethod,packageName,noClasses} = data;
+    let {userId,packageId,schoolId,packageType,paymentMethod,packageName,noClasses,planId} = data;
     let user = Meteor.users.findOne({_id:userId});
     let payload,status,userName,emailId,fee,amount,
     monthlyAttendance={},currency,expDuration,expPeriod,
@@ -434,7 +434,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     }
     else {
       let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
-      MonthlyData.pymtDetails.map((current,index)=>{
+      MonthlyData.pymtDetails && MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){
           amount = current.cost ;
           if(get(MonthlyData,'pymtType.payUpFront',false)){
