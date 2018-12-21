@@ -234,16 +234,26 @@ handleClassUpdate = (filter,status,popUp)=>{
     })
     return studentsData;
   }
+  handleDialogBoxState = dialogState  => {
+    this.setState(state => {
+      return {
+        ...state,
+        buyPackagesBoxState: dialogState
+      };
+    });
+    console.log(this.state);
+  };
   render() {
     const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params,schoolName,classTypeName,toggleIsBusy } = this.props;
-    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired} = this.state;
+    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired,buyPackagesBoxState} = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
-  let notification = true;
+  let notification = true,classTypeId;
   !isEmpty(classData) && classData[0].students && classData[0].students.map((obj)=>{
+    classTypeId = get(classData[0],"classTypeId",null);
     if(obj.userId == Meteor.userId()){
       notification = !obj.purchaseId ? true : false;
     }
@@ -312,6 +322,10 @@ handleClassUpdate = (filter,status,popUp)=>{
           classTypeName = {classTypeName}
           toggleIsBusy = {toggleIsBusy}
           schoolId = {schoolId}
+          onAcceptPaymentClick = {(state)=>{
+            this.handleDialogBoxState(state)}
+          }
+          buyPackagesBoxState ={buyPackagesBoxState}
        />
       </Fragment>
     );

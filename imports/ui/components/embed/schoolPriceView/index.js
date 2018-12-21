@@ -8,7 +8,7 @@ import ClassType from "/imports/api/classType/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import { withPopUp, emailRegex,stripePaymentHelper,normalizeMonthlyPricingData } from "/imports/util";
+import { withPopUp, emailRegex, stripePaymentHelper, normalizeMonthlyPricingData } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
@@ -116,14 +116,14 @@ class SchoolPriceView extends React.Component {
       return "";
     }
   };
-  handlePurchasePackage = async ( packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
-    ) => {
-      try {
-        stripePaymentHelper.call(this,packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
-      } catch (error) {
-        console.log('Error in handlePurchasePackage', error);
-      }
-    };
+  handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
+  ) => {
+    try {
+      stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
+    } catch (error) {
+      console.log('Error in handlePurchasePackage', error);
+    }
+  };
 
 
   handleInputChange = (inputName, event) => {
@@ -191,7 +191,7 @@ class SchoolPriceView extends React.Component {
       this.handleLoginModalState(true);
     } else {
       Meteor.logout();
-      setTimeout(function() {
+      setTimeout(function () {
         browserHistory.push("/");
       }, 1000);
     }
@@ -200,7 +200,7 @@ class SchoolPriceView extends React.Component {
   handleLoginGoogle = () => {
     let self = this;
     this.setState({ loading: true });
-    Meteor.loginWithGoogle({}, function(err, result) {
+    Meteor.loginWithGoogle({}, function (err, result) {
       let modalObj = {
         loginModal: false,
         loading: false,
@@ -221,7 +221,7 @@ class SchoolPriceView extends React.Component {
       {
         requestPermissions: ["user_friends", "public_profile", "email"]
       },
-      function(err, result) {
+      function (err, result) {
         let modalObj = {
           loginModal: false,
           loading: false,
@@ -236,7 +236,7 @@ class SchoolPriceView extends React.Component {
     );
   };
 
-  handleSignUpModal = () => {};
+  handleSignUpModal = () => { };
 
   reSendEmailVerificationLink = () => {
     this.setState({ loading: true });
@@ -401,7 +401,7 @@ class SchoolPriceView extends React.Component {
         <PackagesList
           schoolId={schoolId}
           onAddToCartIconButtonClick={this.handlePurchasePackage}
-          forIframes
+          variant="light"
           enrollMentPackages
           enrollMentPackagesData={enrollmentFee}
           perClassPackagesData={classPricing}

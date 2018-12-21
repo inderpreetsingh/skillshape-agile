@@ -87,6 +87,7 @@ const SubscriptionsList = (props) => {
 						return (
 							<SubscriptionDetails>
 								<Package
+									usedFor="subscriptions"
 									{...subs}
 									{...packageProps}
 									subsType={subsType}

@@ -307,6 +307,7 @@ class ContactUsForm extends Component {
             />
           </InputWrapper>
 
+
           <FormControl
             component="fieldset"
             required
@@ -421,13 +422,13 @@ class ContactUsForm extends Component {
                   onClick={this.handleFormSubmit}
                 />
               ) : (
-                <button
-                  className="cancel-button full-width increase-height"
-                  disabled
-                >
-                  Send Message
+                  <button
+                    className="cancel-button full-width increase-height"
+                    disabled
+                  >
+                    Send Message
                 </button>
-              )}
+                )}
             </ButtonWrapper>
           </SubmitButtonWrapper>
         </Form>

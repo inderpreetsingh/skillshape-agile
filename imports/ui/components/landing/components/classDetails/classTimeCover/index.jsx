@@ -1,17 +1,18 @@
-import PropTypes from "prop-types";
 import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+
 import ClassTimeCover from "./presentational/ClassTimeCover.jsx";
-import SelectPackagesDialogBox from "/imports/ui/components/landing/components/dialogs/SelectPackagesDialogBox.jsx";
+
+import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/dialogs/";
 // import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { coverSrc } from "/imports/ui/components/landing/site-settings.js";
-
 
 class ClassTimeCoverContainer extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectPackagesDialogBoxState: false
+      BuyPackagesDialogBoxState: false
     };
   }
 
@@ -19,19 +20,24 @@ class ClassTimeCoverContainer extends Component {
     this.setState(state => {
       return {
         ...state,
-        selectPackagesDialogBoxState: dialogState
+        BuyPackagesDialogBoxState: dialogState
       };
     });
   };
 
   render() {
     const { bgImg, logoImg, classTypeName, classTypeId, slug } = this.props;
-
+    const {
+      buyPackagesBoxState
+    } = this.state;
     return (
       <Fragment>
-        {this.state.selectPackagesDialogBoxState && (
-          <SelectPackagesDialogBox
-            open={this.state.selectPackagesDialogBoxState}
+        {buyPackagesBoxState && (
+          <BuyPackagesDialogBox
+            packagesList={
+              enrollmentPackags
+            }
+            open={buyPackagesBoxState}
             onModalClose={this.handleDialogBoxState(false)}
           />
         )}

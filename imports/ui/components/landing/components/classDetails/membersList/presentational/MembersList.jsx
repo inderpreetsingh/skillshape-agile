@@ -116,6 +116,8 @@ const MembersList = props => {
                                     toggleIsBusy={props.toggleIsBusy}
                                     schoolId = {props.schoolId}
                                     onAddIconClick={props.onJoinClassClick}
+                                    onAcceptPaymentClick={props.onAcceptPaymentClick}
+                                    buyPackagesBoxState ={props.buyPackagesBoxState}
                                 />
                             ) : (
                                     <Member

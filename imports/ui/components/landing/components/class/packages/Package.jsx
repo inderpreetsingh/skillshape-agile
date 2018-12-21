@@ -43,7 +43,7 @@ const Wrapper = styled.div`
 `;
 
 const OuterWrapper = styled.div`
-	${(props) => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
+	${(props) => (props.variant ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
 	padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
 	padding-right: ${helpers.rhythmDiv * 2}px;
 	width: 100%;
@@ -54,7 +54,6 @@ const OuterWrapper = styled.div`
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		border-radius: ${helpers.rhythmDiv}px;
-
 		max-width: 320px;
 		width: 100%;
 		margin: 0 auto;
@@ -68,12 +67,11 @@ const OuterWrapper = styled.div`
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background-color: ${(props) => (props.forIframes || props.forSubscription ? props.bgColor : 'white')};
-		opacity: ${(props) => (props.forIframes ? 0.1 : 1)};
-		${(props) =>
-		props.forSubscription && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
-		border-radius: ${props => props.forSubscription ? helpers.rhythmDiv : helpers.rhythmDiv * 6}px;
-	
+		background-color: ${(props) => (props.variant === 'light' || props.usedFor === 'subscriptions' ? props.bgColor : 'white')};
+		opacity: ${(props) => (props.variant === 'light' ? 0.1 : 1)};
+		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
+		border-radius: ${props => props.usedFor === 'subscriptions' ? helpers.rhythmDiv : helpers.rhythmDiv * 6}px;
+		${props => props.packageSelected && `opacity: 0.1; background-color: ${helpers.primaryColor};`}	
 	}
 `;
 
@@ -215,14 +213,14 @@ class Package extends React.Component {
 		}
 	}
 
-	getCovers=(data)=> {
+	getCovers = (data) => {
 		let str = ""
-		if(!isEmpty(data)) {
-		  str = data.map(classType => classType.name);
-		  str = str.join(", ");
+		if (!isEmpty(data)) {
+			str = data.map(classType => classType.name);
+			str = str.join(", ");
 		}
 		return str.toLowerCase();
-	  }
+	}
 
 	getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
@@ -291,6 +289,7 @@ class Package extends React.Component {
 
 	render() {
 		const props = this.props;
+		const { packageSelected, onPackageClick } = this.props;
 		const { subscriptionsDetailsDialog } = this.state;
 		const ourPackageStatus = props.packageStatus || props.status;
 
@@ -305,8 +304,8 @@ class Package extends React.Component {
 					/>}
 				<OuterWrapper
 					opacity={props.opacity}
-					forSubscription={props.forSubscription}
-					forIframes={props.forIframes}
+					usedFor={props.usedFor}
+					variant={props.variant}
 					bgColor={props.bgColor}
 				>
 					<Wrapper>
@@ -348,7 +347,11 @@ class Package extends React.Component {
 		}
 		let BB = { backgroundColor: 'black' };
 		return (<Fragment>
-			<OuterWrapper forIframes={props.forIframes} bgColor={props.bgColor}>
+			<OuterWrapper
+				onClick={onPackageClick}
+				packageSelected={packageSelected}
+				variant={props.variant}
+				bgColor={props.bgColor}>
 				<Wrapper>
 					<ClassDetailsSection>
 						<Title>{props.packageName || props.name}</Title>
@@ -393,7 +396,7 @@ class Package extends React.Component {
 														{payment.cost &&
 															`${formatMoney(
 																Number.parseFloat(
-																		 payment.cost
+																	payment.cost
 																).toFixed(2),
 																payment.currency ? payment.currency : props.schoolCurrency
 															)}`}
@@ -406,7 +409,7 @@ class Package extends React.Component {
 																	? 'months'
 																	: ' month'} ${get(props.pymtType, 'payUpFront', false)
 																		? `(${formatMoney(
-																			Number.parseFloat(payment.cost/payment.month).toFixed(2),
+																			Number.parseFloat(payment.cost / payment.month).toFixed(2),
 																			payment.currency ? payment.currency : props.schoolCurrency
 																		)} per month)`
 																		: ''}`}
@@ -477,11 +480,13 @@ Package.propTypes = {
 	price: PropTypes.string,
 	noOfClasses: PropTypes.number,
 	forMySubscriptions: PropTypes.bool,
+	packageSelected: PropTypes.bool,
 	classesCovered: PropTypes.string,
 	onAddToCartIconButtonClick: PropTypes.func
 };
 
 Package.defaultProps = {
+	packageSelected: false,
 	packagePerClass: false,
 	forMySubscriptions: false,
 	onAddToCartIconButtonClick: () => { }

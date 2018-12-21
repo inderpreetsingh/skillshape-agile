@@ -11,6 +11,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { get, isEmpty } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
+import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/dialogs/";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
@@ -211,7 +212,7 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={() => { sendLink(props) }}
+        onClick={()=>{props.onAcceptPaymentClick(true)}}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
@@ -383,8 +384,17 @@ const MemberExpanded = props => {
   const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
   const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
   const slug = get(props, "params.slug", null);
+  let classTypeId = get(props.classData[0],'classTypeId',null);
+  let buyPackagesBoxState = props.buyPackagesBoxState;
   return (
     <Wrapper>
+      {buyPackagesBoxState && (
+          <BuyPackagesDialogBox
+            classTypeId = {classTypeId}
+            open={buyPackagesBoxState}
+            onModalClose={()=>{props.onAcceptPaymentClick(false)}}
+          />
+        )}
       <InnerWrapper>
         <MemberDetails>
           <MemberDetailsInner>
