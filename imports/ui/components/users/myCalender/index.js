@@ -193,13 +193,24 @@ export default class MyCalender extends React.Component {
         }
        }
        else{
-        let packageType = 'Package';
+        let packageType,packagesRequired,content,title ;
+       if( !epStatus ){
+        packageType = ' Enrollment package ';
+        packagesRequired = 'enrollment';
+        title = 'Enrollment Fee Required';
+        content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
+       }else{
+        packageType = ' Class Fees Due ';
+        packagesRequired ='perClassAndMonthly';
+        title =  `No ${packageType} Purchased Yet.`
+        content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
+       }
         popUp.appear("inform", {
-          title: `No ${packageType} Purchased Yet.`,
-          content: `You haven't purchased any ${packageType} which includes this class type. Please purchase one first. `,
+          title,
+          content,
           RenderActions: (<ButtonWrapper>
           {this.purchaseLaterButton()}
-           {this.purchaseNowButton()}
+           {this.purchaseNowButton(packagesRequired)}
           </ButtonWrapper>)
         }, true);
        }
@@ -256,10 +267,10 @@ export default class MyCalender extends React.Component {
    
   
   }
-  purchaseNowButton = ()=>(
+  purchaseNowButton = (packagesRequired)=>(
     <FormGhostButton
     label={'Purchase Now'}
-    onClick={() => {this.setState({classTypePackages:true})}}
+    onClick={() => {this.setState({classTypePackages:true,packagesRequired})}}
     applyClose
   />
   )
@@ -378,7 +389,8 @@ export default class MyCalender extends React.Component {
       isLoading,
       classTypePackages,
       filter,
-      classDetails
+      classDetails,
+      packagesRequired
     } = this.state;
     const { routeName,schoolData } = this.props;
     let name,_id;
@@ -426,6 +438,8 @@ export default class MyCalender extends React.Component {
                     params= {this.props.params}
                     classTypeId = {classTypeId}
                     userId={Meteor.userId()}
+                    packagesRequired = {packagesRequired}
+                    handleSignIn = {this.handleSignIn}
                     />}
         {isOpen && (
           <SkillshapePopover

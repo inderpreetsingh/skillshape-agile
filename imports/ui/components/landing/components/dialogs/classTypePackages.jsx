@@ -59,14 +59,29 @@ class ClassTypePackages extends React.Component {
 
         try {
             let userId = this.props.userId;
-            stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, userId);
+            this.packagesRequired = this.props.packagesRequired;
+            stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
         } catch (error) {
             console.log('Error in handlePurchasePackage', error);
         }
     }
-
+    generateTitle = () =>{
+        if(this.props.packagesRequired == 'perClassAndMonthly'){
+            return '';
+        }
+        return 'Your Enrollment Fee has been processed successfully.';
+    }
+    generateContent = () =>{
+        if(this.props.packagesRequired == 'perClassAndMonthly'){
+            return '';  
+        }
+        return 'Now you can purchase a package to pay for the classes themselves. Click Per Class/Monthly Package  button to purchase package.';
+    }
+    purchasedSuccessfully = () =>{
+       this.props.handleSignIn()
+    }
     render() {
-        let { schoolId, classPricing, monthlyPricing, enrollmentFee, currency } = this.props;
+        let { schoolId, classPricing, monthlyPricing, enrollmentFee, currency ,title} = this.props;
 
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -80,8 +95,7 @@ class ClassTypePackages extends React.Component {
                     {this.props.isLoading && <ContainerLoader />}
                     <DialogTitle>
                         <DialogTitleWrapper>
-                            Buy Packages
-
+                          {title}
                             <IconButton color="primary" onClick={() => { this.props.onClose() }}>
                                 <ClearIcon />
                             </IconButton >
@@ -121,9 +135,9 @@ class ClassTypePackages extends React.Component {
 
 
 export default createContainer(props => {
-    let { schoolId, classTypeId } = props;
+    let { schoolId, classTypeId ,packagesRequired} = props;
 	let slug = get(props.params,'slug',null);
-    let schoolData, currency;
+    let schoolData, currency,classPricing = [],monthlyPricing = [],enrollmentFee = [],title;
     userBySchoolSubscription = Meteor.subscribe("UserSchoolbySlug", slug,schoolId);
     if (userBySchoolSubscription.ready()) {
         schoolData = School.findOne({ slug: slug });
@@ -133,19 +147,36 @@ export default createContainer(props => {
                 : config.defaultCurrency;
     }
     const currentUser = Meteor.user();
-    Meteor.subscribe("classPricing.getClassPricing", { schoolId });
-    Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
-    Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
-    const classPricing = ClassPricing.find({ schoolId: schoolId, classTypeId }).fetch();
-    const monthlyPricing = MonthlyPricing.find({ schoolId: schoolId, classTypeId }).fetch();
-    const enrollmentFee = EnrollmentFees.find({ schoolId, classTypeId }).fetch();
+    title = 'Please purchase one of these package.';
+    if(packagesRequired == 'enrollment'){
+        Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
+        enrollmentFee = EnrollmentFees.find({ schoolId, classTypeId }).fetch();
+        title = 'Before purchasing any per class/monthly package covering this class you must purchase enrollment fee.';
+    }
+    else if(packagesRequired == "perClassAndMonthly"){
+        Meteor.subscribe("classPricing.getClassPricing", { schoolId });
+        Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
+        classPricing = ClassPricing.find({ schoolId: schoolId, classTypeId }).fetch();
+        monthlyPricing = MonthlyPricing.find({ schoolId: schoolId, classTypeId }).fetch();
+    }
+    else{
+        Meteor.subscribe("classPricing.getClassPricing", { schoolId });
+        Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
+        Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
+        enrollmentFee = EnrollmentFees.find({ schoolId, classTypeId }).fetch();
+        classPricing = ClassPricing.find({ schoolId: schoolId, classTypeId }).fetch();
+        monthlyPricing = MonthlyPricing.find({ schoolId: schoolId, classTypeId }).fetch();
+    }
     return {
         schoolData,
         classPricing,
         monthlyPricing,
         enrollmentFee,
         currency,
-        currentUser
+        currentUser,
+        title,
+        packagesRequired,
+        ...props
     };
 }, withStyles(styles)(withPopUp(ClassTypePackages)));
 

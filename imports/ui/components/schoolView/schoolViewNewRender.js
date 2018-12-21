@@ -329,6 +329,30 @@ export default function () {
                 params={params}
               />
             </ClassTypeListWrapper>
+                   {/* Calendar Section*/}
+                   <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
+              <Element name="schedule-section">
+                {<ManageMyCalendar schoolCalendar={true} {...this.props} />}
+              </Element>
+            </MyCalendarWrapper>
+             {/* School Extra Section -- Notes & Media*/}
+             <SchoolExtraSection>
+              {this.checkForHtmlCode(schoolData.studentNotesHtml) && <NotesWrapper>
+                <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
+              </NotesWrapper>}
+
+              <MediaWrapper>
+                <MediaDetails
+                  noMediaFound={<NoMediaFound
+                    schoolName={schoolData.name}
+                    siteLink={schoolData.website}
+                    onEmailButtonClick={() => this.handleDialogState('emailUsDialog', true)} />}
+                  schoolId={schoolId}
+                  schoolView={true}
+                />
+                {/*<Card className={classes.content}> </Card>*/}
+              </MediaWrapper>
+            </SchoolExtraSection>
 
             {/* Pricing Section*/}
             <PricingSection ref={(el) => { this.schoolPrice = el; }}>
@@ -361,32 +385,9 @@ export default function () {
               </Element>
             </PricingSection>
 
-            {/* School Extra Section -- Notes & Media*/}
-            <SchoolExtraSection>
-              {this.checkForHtmlCode(schoolData.studentNotesHtml) && <NotesWrapper>
-                <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
-              </NotesWrapper>}
+           
 
-              <MediaWrapper>
-                <MediaDetails
-                  noMediaFound={<NoMediaFound
-                    schoolName={schoolData.name}
-                    siteLink={schoolData.website}
-                    onEmailButtonClick={() => this.handleDialogState('emailUsDialog', true)} />}
-                  schoolId={schoolId}
-                  schoolView={true}
-                />
-                {/*<Card className={classes.content}> </Card>*/}
-              </MediaWrapper>
-            </SchoolExtraSection>
-
-
-            {/* Calendar Section*/}
-            <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
-              <Element name="schedule-section">
-                {<ManageMyCalendar schoolCalendar={true} {...this.props} />}
-              </Element>
-            </MyCalendarWrapper>
+     
 
 
             {/*<div className="card">

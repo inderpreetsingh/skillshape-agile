@@ -108,10 +108,10 @@ class MembersListContainer extends Component {
  
 
 }
-purchaseNowButton = ()=>(
+purchaseNowButton = (packagesRequired)=>(
   <FormGhostButton
   label={'Purchase Now'}
-  onClick={() => {this.setState({classTypePackages:true})}}
+  onClick={() => {this.setState({classTypePackages:true,packagesRequired})}}
   applyClose
 />
 )
@@ -122,11 +122,11 @@ purchaseLaterButton = ()=>(
            applyClose
          />
 )
- handleClassUpdate = (filter,status,popUp)=>{
+handleClassUpdate = (filter,status,popUp)=>{
   Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
     let purchased = get(res,'purchased',[]);
     let epStatus = get(res,"epStatus",false);
-    if(epStatus && !isEmpty(purchased)){
+     if(epStatus && !isEmpty(purchased)){
       if(purchased.length==1){
         this.updateClass(filter,status,purchased[0],popUp)
         return;
@@ -148,13 +148,24 @@ purchaseLaterButton = ()=>(
       }
      }
      else{
-      let packageType = 'Package';
+      let packageType,packagesRequired,content,title ;
+     if( !epStatus ){
+      packageType = ' Enrollment package ';
+      packagesRequired = 'enrollment';
+      title = 'Enrollment Fee Required';
+      content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
+     }else{
+      packageType = ' Class Fees Due ';
+      packagesRequired ='perClassAndMonthly';
+      title =  `No ${packageType} Purchased Yet.`
+      content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
+     }
       popUp.appear("inform", {
-        title: `No ${packageType} Purchased Yet.`,
-        content: `You haven't purchased any ${packageType} which includes this class type. Please purchase one first. `,
+        title,
+        content,
         RenderActions: (<ButtonWrapper>
         {this.purchaseLaterButton()}
-         {this.purchaseNowButton()}
+         {this.purchaseNowButton(packagesRequired)}
         </ButtonWrapper>)
       }, true);
      }
@@ -225,7 +236,7 @@ purchaseLaterButton = ()=>(
   }
   render() {
     const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params,schoolName,classTypeName,toggleIsBusy } = this.props;
-    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData} = this.state;
+    const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired} = this.state;
     // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -266,6 +277,8 @@ purchaseLaterButton = ()=>(
                     params= {params}
                     classTypeId = {get(classData[0],'classTypeId',null)}
                     userId={userId}
+                    packagesRequired = {packagesRequired}
+                    handleSignIn = {this.handleSignIn}
                     />}
         <MembersList
           viewType={currentView}
