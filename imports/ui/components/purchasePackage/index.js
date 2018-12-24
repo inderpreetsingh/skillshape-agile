@@ -37,10 +37,12 @@ handlePurchasePackage = async (packageType, packageId, schoolId, packageName, am
 }
 //After successful package purchase if the package is not EP mark that package on the class details page.
 purchasedSuccessfully = () =>{
- const {packageRequestData:{userId,packageId,_id}} = this.props;
+ const {packageRequestData:{userId,packageId,_id,packageType,classesId}} = this.props;
+ let filter = {userId,_id:classesId};
  Meteor.call("purchases.getPurchasedFromPackageIds",[packageId],userId,(err,res)=>{
     if(res && !isEmpty(res)){
       Meteor.call("packageRequest.updateRecord",{doc_id:_id,doc:{valid:false}});
+      Meteor.call('classes.updateClassData',filter,'signIn',res[0]._id,packageType,'purchasePackage');
     }   
  })
 }
@@ -64,7 +66,7 @@ render() {
       </Title>)
     }
     if(!valid){
-      titleText = `You have already purchased this package for class type <b>${className}</b>`;
+      titleText = `You have purchased this package for class type <b>${className}</b>`;
       return (<Title>
         {ReactHtmlParser(titleText)}
       </Title>)
