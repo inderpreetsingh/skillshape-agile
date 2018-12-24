@@ -30,19 +30,27 @@ class PurchasePackage extends React.Component {
   }
 handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
     try {
-        let userId = get(this.props.currentUser,'_id',null);
-        stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, userId);
+        stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
     } catch (error) {
         console.log('Error in handlePurchasePackage', error);
     }
 }
 render() {
     const {schoolId,packageType,currency,packageData,packageRequestData} = this.props;
-    let userName,schoolName,className;
+    let userName,schoolName,className,userId,titleText,userEmail;
+
     if(!isEmpty(packageRequestData)){
       userName = packageRequestData.userName;
       schoolName= packageRequestData.schoolName;
       className = packageRequestData.className;
+      userId = packageRequestData.userId;
+      userEmail = packageRequestData.userEmail;
+    }
+    if(userId != get(this.props.currentUser,'_id',null)){
+      titleText = `You seems to be using different account.Please login with the <b>${userEmail} </b> `;
+      return (  <Title>
+        {ReactHtmlParser(titleText)}
+      </Title>)
     }
     let enrollMentPackages=false,enrollMentPackagesData=[],perClassPackagesData=[],monthlyPackagesData=[];
     if(packageType=='MP'){
@@ -53,7 +61,7 @@ render() {
       enrollMentPackagesData=packageData;
       enrollMentPackages=true;
     }
-    const titleText = `${userName}, in order to attend <b>${className}</b> at school <b>${schoolName}</b>, you will need to pay for the package. After you pay one package fee associated with this class, below, you will be able to attend.`;
+    titleText = `${userName}, in order to attend <b>${className}</b> at school <b>${schoolName}</b>, you will need to pay for the package. After you pay one package fee associated with this class, below, you will be able to attend.`;
    return (<Root>
       <Title>
         {ReactHtmlParser(titleText)}
