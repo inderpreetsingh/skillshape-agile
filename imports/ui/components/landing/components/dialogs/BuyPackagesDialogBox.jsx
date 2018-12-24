@@ -169,6 +169,10 @@ class BuyPackagesDialogBox extends Component {
             }
         })
     }
+    packageSelectAlert = () => {
+        const {popUp} = this.props;
+        popUp.appear("alert", { title: "Alert", content: "Package  not selected. Please select one package first then try again." }); 
+    }
     acceptPayment = () =>{
         let {packageList,currentProps} = this.props;
         let {selectedPackageIndex,selectedPackageType,radioButtonGroupValue}= this.state;
@@ -181,6 +185,9 @@ class BuyPackagesDialogBox extends Component {
             })
             packageData = packageData[selectedPackageIndex];    
             this.props.acceptPayment(packageData,currentProps,radioButtonGroupValue);
+        }
+        else{
+            this.packageSelectAlert();
         } 
     }
     handleSendLink = () =>{
@@ -196,6 +203,9 @@ class BuyPackagesDialogBox extends Component {
             packageData = packageData[selectedPackageIndex];    
             let {_id,packageType} = packageData;
             this.props.onSendLinkClick(currentProps,_id,packageType);
+        }
+        else{
+            this.packageSelectAlert();
         }
     }
 
