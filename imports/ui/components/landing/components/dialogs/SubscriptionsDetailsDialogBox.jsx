@@ -181,7 +181,9 @@ const SubscriptionsDetailsDialogBox = (props) => {
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
                     <DialogBoxTitleBar
-                        variant="text-left-aligned"
+                        titleProps={{
+                            variant: 'text-left-aligned',
+                        }}
                         title={capitalizeString(props.packageName || props.name)}
                         onModalClose={onModalClose}
                         classes={classes}

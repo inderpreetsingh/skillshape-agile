@@ -6,11 +6,13 @@ import ClearIcon from 'material-ui-icons/Clear';
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-const TitleBarHeading = Heading.withComponent('span').extend``;
+const TitleBarHeading = Heading.withComponent('span').extend`
+    ${props => props.fontSize && `font-size: ${helpers.fontSize}px`}
+`;
 
 export const DialogBoxTitleBar = (props) => (
-    <DialogTitleContainer variant={props.variant}>
-        <TitleBarHeading>
+    <DialogTitleContainer variant={props.titleProps.variant}>
+        <TitleBarHeading fontSize={props.titleProps.fontSize}>
             {props.title}
         </TitleBarHeading>
         <IconButton

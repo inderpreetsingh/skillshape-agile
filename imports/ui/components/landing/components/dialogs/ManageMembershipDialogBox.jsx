@@ -12,7 +12,6 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import ProfileImage, { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
-import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { coverSrc } from '/imports/ui/components/landing/site-settings.js';

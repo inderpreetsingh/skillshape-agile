@@ -35,10 +35,11 @@ import { dialogStyles } from './sharedDialogBoxStyles';
 import { Heading, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { ActionButtons, DialogBoxTitleBar } from './sharedDialogBoxComponents';
 
+const PACKAGE_WIDTH = 220;
+
 const PackagesListWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
     position: relative;
     z-index: 1;
     padding: ${helpers.rhythmDiv * 2}px;
@@ -50,7 +51,6 @@ const PackagesListWrapper = styled.div`
         right: 0;
         left: 0;
         bottom: 0;
-
         z-index: 0;
 
 		background-color: ${helpers.primaryColor};
@@ -67,19 +67,36 @@ const PackagesListWrapper = styled.div`
 
 const PackageListTitle = SubHeading.extend`
     text-align: center;
+    font-size: 20px;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Packages = styled.div`
     ${helpers.flexCenter}
-    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 2}px;
+    width: 100%;
+    justify-content: ${props => props.packagesLength > 1 ? 'flex-start' : 'center'};
+
+    @media screen and (max-width: ${helpers.mobile + 50}px) {
+        max-width: auto;
+        margin: 0;
+        align-content: center;
+        flex-direction: column;
+    }
 `;
 
 const PackageWrapper = styled.div`
-    margin-bottom: ${helpers.rhythmDiv}px;
-        
-    :last-of-type {
-        margin-bottom: 0;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    margin-right: ${helpers.rhythmDiv * 2}px;
+    
+    :nth-of-type(2n) {
+        margin-right: 0;
+    }
+
+    @media screen and (max-width: ${helpers.mobile + 50}px) {
+       margin-right: 0;
     }
 `;
 
@@ -101,6 +118,10 @@ const ActionButton = styled.div`
 const styles = theme => {
     return {
         ...dialogStyles,
+        dialogRoot: {
+            ...dialogStyles.dialogRoot,
+            margin: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px`
+        },
         dialogActions: {
             width: '100%'
         },
@@ -126,7 +147,7 @@ class EnrollmentPackagesDialogBox extends Component {
     }
 
     getClassName = (classTypeId) => {
-        console.log(classTypeId, ClassType.find({ _id: classTypeId }).fetch(), '.......')
+        // console.log(classTypeId, ClassType.find({ _id: classTypeId }).fetch(), '.......')
         return ClassType.findOne({ _id: classTypeId }).name;
     }
 
@@ -152,6 +173,9 @@ class EnrollmentPackagesDialogBox extends Component {
             <MuiThemeProvider theme={muiTheme}>
                 <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
                     <DialogBoxTitleBar
+                        titleProps={{
+                            fontSize: '24px'
+                        }}
                         title="Purchase Enrollment Package First"
                         classes={classes}
                         onModalClose={onModalClose}
@@ -164,12 +188,13 @@ class EnrollmentPackagesDialogBox extends Component {
                         {packagesData.map((data, i) => (
                             <PackagesListWrapper key={i}>
                                 <PackageListTitle>For Class {this.getClassName(data.classTypeId)}</PackageListTitle>
-                                <Packages>
+                                <Packages packagesLength={data.packages.length}>
                                     {data.packages.map((packageData, i) =>
                                         <PackageWrapper key={packageData._id}>
                                             <Package
+                                                packageType="EP"
                                                 appearance="small"
-                                                usedFor="enrollmentPackageDialog"
+                                                usedFor="enrollmentPackagesDialog"
                                                 {...packageData}
                                             />
                                         </PackageWrapper>)}
@@ -194,7 +219,7 @@ EnrollmentPackagesDialogBox.propTypes = {
 };
 
 export default withStyles(styles)(createContainer(props => {
-    const { classTypeIds } = props;
+    const { classTypeIds, schoolId } = props;
     //TODO: Need to filter out packages which are already purchased..
     //let purchasesData =
     let enrollmentSubscription;
@@ -202,9 +227,13 @@ export default withStyles(styles)(createContainer(props => {
     let isLoading = true;
     let currency = config.defaultCurrency;
     //console.log(classData,props,'classTYpeid')
-    if (classTypeIds.length) {
-        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypesEnrollMentFee', { classTypeIds })
+    if (schoolId) {
+        classTypeSubscription = Meteor.subscribe('classType.getclassType', { schoolId });
+        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFee', { schoolId })
+    }
+    else if (classTypeIds.length) {
         classTypeSubscription = Meteor.subscribe('classType.getClassTypeWithIds', { classTypeIds })
+        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypesEnrollMentFee', { classTypeIds })
     }
 
     const sub1Ready = enrollmentSubscription && enrollmentSubscription.ready();
@@ -215,11 +244,13 @@ export default withStyles(styles)(createContainer(props => {
     }
 
     const enrollmentFeeData = EnrollmentFees.find().fetch();
-
+    const allClassTypeIds = ClassType.find().fetch().map(data => data._id);
+    console.info(enrollmentFeeData, allClassTypeIds, "----")
     return {
         ...props,
         isLoading,
-        packagesData: seperatePackagesPerClass(enrollmentFeeData, classTypeIds),
+        packagesData: seperatePackagesPerClass(enrollmentFeeData, allClassTypeIds),
         currency
     };
+
 }, withPopUp(EnrollmentPackagesDialogBox)));

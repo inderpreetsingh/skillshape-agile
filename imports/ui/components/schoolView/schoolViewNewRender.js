@@ -262,6 +262,7 @@ export default function () {
             this.state.enrollmentPackagesDialog &&
             <EnrollmentPackagesDialogBox
               open={this.state.enrollmentPackagesDialog}
+              schoolId={schoolId}
               onModalClose={() => {
                 this.setState(state => {
                   return {

@@ -49,8 +49,12 @@ const outerWrapperMobileStyles = `
 
 const outerWrapperSmallStyles = `
 	${outerWrapperMobileStyles}
-	max-width: 250px;
+	max-width: 220px;
 	padding: ${helpers.rhythmDiv * 2}px;
+
+	:after {
+		border-radius: ${helpers.rhythmDiv}px;
+	}
 `
 
 const OuterWrapper = styled.div`
@@ -62,12 +66,6 @@ const OuterWrapper = styled.div`
 	color: ${helpers.textColor};
 	z-index: 1;
 	position: relative;
-
-	${props => props.appearance === 'small' && outerWrapperSmallStyles}
-
-	@media screen and (max-width: ${helpers.mobile}px) {
-		${outerWrapperMobileStyles}	
-	}
 
 	&:after {
 		content: "";
@@ -85,6 +83,13 @@ const OuterWrapper = styled.div`
 		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1}`}; 
 		${props => props.packageSelected && `opacity: 0.1; background-color: ${helpers.primaryColor};`}	
 	}
+
+	${props => props.appearance === 'small' && outerWrapperSmallStyles}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		${outerWrapperMobileStyles}	
+		${props => props.appearance === 'small' && outerWrapperSmallStyles}
+	}
 `;
 
 const wrapperSmallStyles = `
@@ -101,9 +106,13 @@ const Wrapper = styled.div`
 	}
 `;
 
-const titleSmallStyles = `
+const titleMobileStyles = `
 	text-align: center;
 `;
+
+const titleSmallStyles = `
+	text-align: left;
+`
 
 const Title = styled.h3`
 	font-size: 12px;
@@ -118,7 +127,8 @@ const Title = styled.h3`
 	${props => props.appearance === 'small' && titleSmallStyles}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
-		${titleSmallStyles}	
+		${titleMobileStyles}
+		${props => props.appearance === 'small' && titleSmallStyles}	
 	}
 `;
 
@@ -137,10 +147,15 @@ const ClassDetailsSection = styled.div`
 	}
 `;
 
-const cdSmallStyles = `
-	text-align: center;
+const cdTextSmallStyles = `
 	margin-bottom: ${helpers.rhythmDiv}px;
+	text-align: left;
 `;
+
+const cdTextMobileStyles = `
+	${cdTextSmallStyles}
+	text-align: center;
+`
 
 const CdText = styled.p`
 	margin: 0;
@@ -149,10 +164,11 @@ const CdText = styled.p`
 	font-weight: 400;
 	line-height: 1;
 
-	${props => props.appearance === 'small' && cdSmallStyles}
+	${props => props.appearance === 'small' && cdTextSmallStyles}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
-		${cdSmallStyles}	
+		${cdTextMobileStyles}
+		${props => props.appearance === 'small' && cdTextSmallStyles}
 	}
 `;
 
@@ -430,9 +446,9 @@ class Package extends React.Component {
 						) : (
 								<CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
 							)}
-						<CdText appearance={appearance}>
+						{usedFor !== "enrollmentPackagesDialog" && <CdText appearance={appearance}>
 							<b>Covers:</b> {this.getCovers(props.selectedClassType)}
-						</CdText>
+						</CdText>}
 						{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 					</ClassDetailsSection>
 					<RightSection>
