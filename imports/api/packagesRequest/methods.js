@@ -105,6 +105,11 @@ Meteor.methods({
   "packageRequest.sendPurchaseRequest":function(data){
     let { userEmail, userName,  schoolName, className,link } = data;
     sendPackageLink({ userEmail, userName, link, schoolName, className });
+  },
+  "packageRequest.updateRecord":function({doc_id,doc}){
+    check(doc_id,String);
+    check(doc,Object);
+    return PackageRequest.update({_id:doc_id},{$set:doc});
   }
 });
 /* 

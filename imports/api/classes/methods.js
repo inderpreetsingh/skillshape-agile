@@ -67,7 +67,7 @@ Meteor.methods({
                     userId = filter.userId ? filter.userId : Meteor.userId();
                     filter.students.map((obj,i)=>{
                         if(obj.userId == userId){
-                            if(status!=='signOut'){
+                            if(status!='signOut'){
                                 obj.status = status;
                                 purchaseId ? obj.purchaseId = purchaseId : '';
                             }else if(status == 'signOut'){

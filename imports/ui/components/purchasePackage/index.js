@@ -35,9 +35,18 @@ handlePurchasePackage = async (packageType, packageId, schoolId, packageName, am
         console.log('Error in handlePurchasePackage', error);
     }
 }
+//After successful package purchase if the package is not EP mark that package on the class details page.
+purchasedSuccessfully = () =>{
+ const {packageRequestData:{userId,packageId,_id}} = this.props;
+ Meteor.call("purchases.getPurchasedFromPackageIds",[packageId],userId,(err,res)=>{
+    if(res && !isEmpty(res)){
+      Meteor.call("packageRequest.updateRecord",{doc_id:_id,doc:{valid:false}});
+    }   
+ })
+}
 render() {
     const {schoolId,packageType,currency,packageData,packageRequestData} = this.props;
-    let userName,schoolName,className,userId,titleText,userEmail;
+    let userName,schoolName,className,userId,titleText,userEmail,valid;
 
     if(!isEmpty(packageRequestData)){
       userName = packageRequestData.userName;
@@ -45,10 +54,18 @@ render() {
       className = packageRequestData.className;
       userId = packageRequestData.userId;
       userEmail = packageRequestData.userEmail;
+      valid = packageRequestData.valid;
     }
+   
     if(userId != get(this.props.currentUser,'_id',null)){
       titleText = `You seems to be using different account.Please login with the <b>${userEmail} </b> `;
       return (  <Title>
+        {ReactHtmlParser(titleText)}
+      </Title>)
+    }
+    if(!valid){
+      titleText = `You have already purchased this package for class type <b>${className}</b>`;
+      return (<Title>
         {ReactHtmlParser(titleText)}
       </Title>)
     }
