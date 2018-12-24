@@ -55,7 +55,7 @@ export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';
 export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
 export { maximumClasses } from './maximumClasses.js';
-export { normalizeMonthlyPricingData } from './packageFormat.js';
+export { normalizeMonthlyPricingData, seperatePackagesPerClass } from './packageFormat.js';
 export { compressImage } from './compressImage.js';
 export { inputRestriction, formatMoney } from './inputRestriction.js';
 export { stripePaymentHelper } from './stripePaymentHelper.js';

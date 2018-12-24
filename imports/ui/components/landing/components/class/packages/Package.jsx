@@ -33,14 +33,25 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 const ADMIN_SUBSCRIPTIONS = 'adminSubscriptions';
 const MY_SUBSCRIPTIONS = 'mySubscriptions';
 
-
-const Wrapper = styled.div`
-	${helpers.flexCenter} justify-content: space-between;
-
-	@media screen and (max-width: ${helpers.mobile}px) {
-		flex-direction: column;
+// NOTE: Added small styles for appearance=small
+const packageStyles = {
+	light: {
+		bgColor: helpers.panelColor,
 	}
+}
+
+const outerWrapperMobileStyles = `
+	border-radius: ${helpers.rhythmDiv}px;
+	max-width: 320px;
+	width: 100%;
+	margin: 0 auto;
 `;
+
+const outerWrapperSmallStyles = `
+	${outerWrapperMobileStyles}
+	max-width: 250px;
+	padding: ${helpers.rhythmDiv * 2}px;
+`
 
 const OuterWrapper = styled.div`
 	${(props) => (props.variant ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
@@ -52,11 +63,10 @@ const OuterWrapper = styled.div`
 	z-index: 1;
 	position: relative;
 
+	${props => props.appearance === 'small' && outerWrapperSmallStyles}
+
 	@media screen and (max-width: ${helpers.mobile}px) {
-		border-radius: ${helpers.rhythmDiv}px;
-		max-width: 320px;
-		width: 100%;
-		margin: 0 auto;
+		${outerWrapperMobileStyles}	
 	}
 
 	&:after {
@@ -67,12 +77,32 @@ const OuterWrapper = styled.div`
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background-color: ${(props) => (props.variant === 'light' || props.usedFor === 'subscriptions' ? props.bgColor : 'white')};
+		background-color: ${(props) => (props.bgColor || 'white')};
 		opacity: ${(props) => (props.variant === 'light' ? 0.1 : 1)};
-		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1}`}; /* overriding the opacity for the subscription*/
-		border-radius: ${props => props.usedFor === 'subscriptions' ? helpers.rhythmDiv : helpers.rhythmDiv * 6}px;
+		border-radius: ${props => props.roundness || helpers.rhythmDiv * 6}px;
+		/* overriding the opacity for the subscription, variant*/
+		${props => props.variant && props.variant !== 'normal' && `background-color: ${packageStyles[props.variant].bgColor}`}
+		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1}`}; 
 		${props => props.packageSelected && `opacity: 0.1; background-color: ${helpers.primaryColor};`}	
 	}
+`;
+
+const wrapperSmallStyles = `
+	flex-direction: column;
+`;
+
+const Wrapper = styled.div`
+	${helpers.flexCenter} justify-content: space-between;
+
+	${props => props.appearance === 'small' && wrapperSmallStyles}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		${wrapperSmallStyles}	
+	}
+`;
+
+const titleSmallStyles = `
+	text-align: center;
 `;
 
 const Title = styled.h3`
@@ -85,20 +115,31 @@ const Title = styled.h3`
 	color: rgba(0, 0, 0, 1);
 	line-height: 1.2;
 
+	${props => props.appearance === 'small' && titleSmallStyles}
+
 	@media screen and (max-width: ${helpers.mobile}px) {
-		text-align: center;
+		${titleSmallStyles}	
 	}
 `;
 
-const Body = styled.section`padding: ${helpers.rhythmDiv}px;`;
+const classDetailsSmallStyles = `
+	max-width: 100%;
+`
 
 const ClassDetailsSection = styled.div`
 	${helpers.flexDirectionColumn} max-width: 65%;
 	padding-right: ${helpers.rhythmDiv}px;
 
+	${props => props.appearance === 'small' && classDetailsSmallStyles}
+
 	@media screen and (max-width: ${helpers.mobile}px) {
-		max-width: 100%;
+		${classDetailsSmallStyles}	
 	}
+`;
+
+const cdSmallStyles = `
+	text-align: center;
+	margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const CdText = styled.p`
@@ -108,9 +149,10 @@ const CdText = styled.p`
 	font-weight: 400;
 	line-height: 1;
 
+	${props => props.appearance === 'small' && cdSmallStyles}
+
 	@media screen and (max-width: ${helpers.mobile}px) {
-		text-align: center;
-		margin-bottom: ${helpers.rhythmDiv}px;
+		${cdSmallStyles}	
 	}
 `;
 
@@ -150,15 +192,21 @@ const RightSection = styled.div`
 	}
 `;
 
+const statusSmallStyles = `
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-evenly;
+`
+
 const StatusWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	flex-direction: column;
 	
+	${props => props.appearance === 'small' && statusSmallStyles}
+
 	@media screen and (max-width: ${helpers.mobile}px) {
-		flex-direction: row;
-		width: 100%;
-		justify-content: space-evenly;
+		${statusSmallStyles}	
 	}
 `;
 
@@ -289,7 +337,15 @@ class Package extends React.Component {
 
 	render() {
 		const props = this.props;
-		const { packageSelected, onPackageClick } = this.props;
+		const { bgColor,
+			packageSelected,
+			onPackageClick,
+			appearance,
+			variant,
+			opacity,
+			roundness,
+			usedFor
+		} = this.props;
 		const { subscriptionsDetailsDialog } = this.state;
 		const ourPackageStatus = props.packageStatus || props.status;
 
@@ -303,15 +359,17 @@ class Package extends React.Component {
 						onModalClose={() => this.handleModelState('subscriptionsDetailsDialog', false)}
 					/>}
 				<OuterWrapper
-					opacity={props.opacity}
-					usedFor={props.usedFor}
-					variant={props.variant}
-					bgColor={props.bgColor}
+					appearance={appearance}
+					roundness={roundness}
+					opacity={opacity}
+					usedFor={usedFor}
+					variant={variant}
+					bgColor={bgColor}
 				>
-					<Wrapper>
-						<ClassDetailsSection>
-							<Title>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>
-							<CdText>
+					<Wrapper appearance={appearance}>
+						<ClassDetailsSection appearance={appearance}>
+							<Title appearance={appearance}>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>
+							<CdText appearance={appearance}>
 								{ReactHtmlParser(this.getDateForSubscriptions(props))}
 							</CdText>
 
@@ -327,7 +385,7 @@ class Package extends React.Component {
 
 						</ClassDetailsSection>
 						<RightSection>
-							<StatusWrapper>
+							<StatusWrapper appearance={appearance}>
 								<Status packageStatus={ourPackageStatus}>
 									{capitalizeString(ourPackageStatus)}
 								</Status>
@@ -348,16 +406,20 @@ class Package extends React.Component {
 		let BB = { backgroundColor: 'black' };
 		return (<Fragment>
 			<OuterWrapper
+				appearance={appearance}
+				roundness={roundness}
+				opacity={opacity}
+				usedFor={usedFor}
 				onClick={onPackageClick}
 				packageSelected={packageSelected}
-				variant={props.variant}
-				bgColor={props.bgColor}>
-				<Wrapper>
-					<ClassDetailsSection>
-						<Title>{props.packageName || props.name}</Title>
+				variant={variant}
+				bgColor={bgColor}>
+				<Wrapper appearance={appearance}>
+					<ClassDetailsSection appearance={appearance}>
+						<Title appearance={appearance}>{props.packageName || props.name}</Title>
 
 						{props.classPackages || props.packageType == 'EP' ? (
-							<CdText>
+							<CdText appearance={appearance}>
 								<b>Expiration:</b>{' '}
 								{props.expDuration && props.expPeriod && !props.noExpiration ? (
 									`${props.expDuration} ${props.expPeriod}`
@@ -366,9 +428,9 @@ class Package extends React.Component {
 									)}
 							</CdText>
 						) : (
-								<CdText>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
+								<CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
 							)}
-						<CdText>
+						<CdText appearance={appearance}>
 							<b>Covers:</b> {this.getCovers(props.selectedClassType)}
 						</CdText>
 						{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
@@ -482,10 +544,13 @@ Package.propTypes = {
 	forMySubscriptions: PropTypes.bool,
 	packageSelected: PropTypes.bool,
 	classesCovered: PropTypes.string,
+	variant: PropTypes.string,
+	appearance: PropTypes.string,
 	onAddToCartIconButtonClick: PropTypes.func
 };
 
 Package.defaultProps = {
+	appearance: 'normal',
 	packageSelected: false,
 	packagePerClass: false,
 	forMySubscriptions: false,

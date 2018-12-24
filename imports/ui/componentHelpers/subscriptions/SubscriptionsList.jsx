@@ -87,6 +87,7 @@ const SubscriptionsList = (props) => {
 						return (
 							<SubscriptionDetails>
 								<Package
+									roundness={helpers.rhythmDiv}
 									usedFor="subscriptions"
 									{...subs}
 									{...packageProps}

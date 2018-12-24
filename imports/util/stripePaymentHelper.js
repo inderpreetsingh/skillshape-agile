@@ -21,14 +21,16 @@ const Div = styled.div`
 `;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 export const stripePaymentHelper = async function (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
-    
+
     resetStates(this);
     const { popUp } = this.props;
     popUp.appear('success', {
         title: 'Wait',
         content: 'Please Wait One Sec...',
         RenderActions: <span />
-    }, true); /* , true, { autoClose: true, autoTimeout: 4000 } */
+    }, true, {
+            purpose: 'wait-for-next-steps'
+        }); /* , true, { autoClose: true, autoTimeout: 4000 } */
 
     config.currency.map((data, index) => {
         if (data.value == currency) {
@@ -169,12 +171,12 @@ popUpForEnrollment = (popUp, res, self) => {
     console.info("REST >>>>>>>>>>>>>>", res);
     let classTypeIds = compact(res.map((obj) => { if (!obj.epStatus) return obj._id; }))
     let classTypeNames = compact(res.map((obj) => { if (!obj.epStatus) return obj.name; }));
-
+    popUp.close();
     self.setState(state => {
         return {
             ...state,
-            classTypeIds,
-            purchaseEnrollmentPackageDialogBoxState: true
+            selectedClassTypeIds: classTypeIds,
+            enrollmentPackagesDialog: true
         }
     })
     // popUp.appear(
@@ -213,7 +215,7 @@ noThanksButton = () => (
         <FormGhostButton label={'No, thanks'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
 );
-closeButton = () =>(
+closeButton = () => (
     <ButtonWrapper>
         <FormGhostButton label={'Close'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
@@ -830,7 +832,7 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                     },
                     true
                 );
-                self.packagesRequired !='enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
+                self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('warning', {
                     title: 'Error',
@@ -897,12 +899,12 @@ handleCharge = (
                         }
                     };
                     Meteor.call('schoolMemberDetails.addNewMember', memberData);
-                    
+
                     popUp.appear(
                         'success',
                         {
-                            title: self.packagesRequired=='enrollment' ? self.generateTitle() :'Success',
-                            content: self.packagesRequired=='enrollment' ? self.generateContent() :`Your Payment is received successfully.`,
+                            title: self.packagesRequired == 'enrollment' ? self.generateTitle() : 'Success',
+                            content: self.packagesRequired == 'enrollment' ? self.generateContent() : `Your Payment is received successfully.`,
                             RenderActions: (
                                 <ButtonsWrapper>
                                     {closeButton()}
@@ -914,16 +916,16 @@ handleCharge = (
                                         }}
                                         applyClose
                                     />
-                                    {self.packagesRequired=='enrollment' &&
-                                (
-                                    <FormGhostButton
-                                        label={'Per Class/Monthly Package'}
-                                        onClick={self.purchasedSuccessfully}
-                                        applyClose
-                                    /> 
-                                )
-                                
-                                }
+                                    {self.packagesRequired == 'enrollment' &&
+                                        (
+                                            <FormGhostButton
+                                                label={'Per Class/Monthly Package'}
+                                                onClick={self.purchasedSuccessfully}
+                                                applyClose
+                                            />
+                                        )
+
+                                    }
                                 </ButtonsWrapper>
                             )
                         },
@@ -932,7 +934,7 @@ handleCharge = (
                 } else {
                     popUp.appear('success', { title: 'Success', content: result.message });
                 }
-                self.packagesRequired !='enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
+                self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('success', { title: 'Error', content: error.message });
             }
