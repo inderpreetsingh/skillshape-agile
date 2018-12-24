@@ -40,9 +40,11 @@ Meteor.methods({
     },
     "enrollmentFee.removeEnrollmentFee": function ({ doc }) {
         check(doc, Object);
-
+        let classTypeId = get(doc,'classTypeId',[]);
+        let id = get(doc,'_id','');
+        if(!isEmpty(classTypeId))
+        Meteor.call("classType.handleEnrollmentIds",id,classTypeId,'remove');
         const user = Meteor.users.findOne(this.userId);
-
         if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: "enrollmentFee_CUD" })) {
             return EnrollmentFees.remove({ _id: doc._id });
         } else {
