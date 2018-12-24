@@ -342,7 +342,7 @@ updateStatus = (n, props) => {
   let { status, popUp ,purchaseId} = props;
   let inc=0,packageType;
   if(!purchaseId){
-    props.onAddIconClick(props._id,'checkIn');
+    props.onAddIconClick(null,props._id,'checkIn');
     return;
   }
   if (n == 1) {

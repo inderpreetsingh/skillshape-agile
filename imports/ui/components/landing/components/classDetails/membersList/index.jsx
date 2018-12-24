@@ -58,7 +58,6 @@ class MembersListContainer extends Component {
   this.studentsData(nextProps);
  }
  updateClass = (filter,status,purchaseData,popUp)=>{
-  console.log("​MembersListContainer -> updateClass -> purchaseData", purchaseData)
   let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
   let condition=0;
   if(packageType == 'CP'){
@@ -172,7 +171,8 @@ handleClassUpdate = (filter,status,popUp)=>{
      }
    })
  }
- handleSignIn = (userId,status='signIn') => {
+ handleSignIn = (e,userId,status='signIn') => {
+  e && e.preventDefault();
   const {popUp,classData} = this.props;
   let classDetails = classData[0];
   if(userId){
