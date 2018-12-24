@@ -245,8 +245,26 @@ acceptPayment = (packageData,props,paymentMethod) => {
 
 
 }
+sendLinkConfirmation = (props,packageId=null,packageType=null)=>{
+  let {popUp} = props;
+  popUp.appear("inform", {
+    title: "Confirmation",
+    content: "Do you really want to send a package link to this student.",
+    onAffirmationButtonClick: () => {this.sendLink(props,packageId=null,packageType=null)},
+   defaultButtons: true,    
+}, true)
+}
+acceptPaymentConfirmation = (packageData,props,paymentMethod) =>{
+  let {popUp} = props;
+  popUp.appear("inform", {
+    title: "Confirmation",
+    content: "Do you really want to confirm the payment.",
+    onAffirmationButtonClick: () => {this.acceptPayment(packageData,props,paymentMethod)},
+   defaultButtons: true,    
+}, true)
+}
 sendLink = (props,packageId=null,packageType=null) =>{
-  try{
+   try{
     let userId,classesId,valid,data={},schoolName,className,schoolId;
     let {popUp} = props;
     props.toggleIsBusy();
@@ -324,7 +342,7 @@ updateStatus = (n, props) => {
   let { status, popUp ,purchaseId} = props;
   let inc=0,packageType;
   if(!purchaseId){
-    props.onAddIconClick(props._id,'checkIn');
+    props.onAddIconClick(null,props._id,'checkIn');
     return;
   }
   if (n == 1) {
@@ -405,9 +423,9 @@ const MemberExpanded = props => {
             classTypeId = {classTypeId}
             open={buyPackagesBoxState}
             onModalClose={()=>{props.onAcceptPaymentClick(false)}}
-            onSendLinkClick = {this.sendLink}
+            onSendLinkClick = {this.sendLinkConfirmation}
             currentProps = {props.currentProps}
-            acceptPayment = {this.acceptPayment}
+            acceptPayment = {this.acceptPaymentConfirmation}
           />
         )}
       <InnerWrapper>

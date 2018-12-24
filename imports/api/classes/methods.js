@@ -45,12 +45,15 @@ Meteor.methods({
           return filter;
         }
     },
-    "classes.updateClassData":function(filter,status,purchaseId,packageType){
+    "classes.updateClassData":function(filter,status,purchaseId,packageType,from){
         try{
-          
+            if(from == 'purchasePackage'){
+             filter.students = get(Classes.findOne({_id:filter._id}),"students",[]);
+
+            }
             if(filter == null)
             filter = {};
-            let obj = {userId:this.userId,status,purchaseId,packageType};
+            let obj = {userId:filter.userId ? filter.userId :this.userId,status,purchaseId,packageType};
             if(status=='checkIn' || status=='checkOut'){
                 Meteor.call("attendance.updateData",filter,(err,res)=>{
 
@@ -67,7 +70,7 @@ Meteor.methods({
                     userId = filter.userId ? filter.userId : Meteor.userId();
                     filter.students.map((obj,i)=>{
                         if(obj.userId == userId){
-                            if(status!=='signOut'){
+                            if(status!='signOut'){
                                 obj.status = status;
                                 purchaseId ? obj.purchaseId = purchaseId : '';
                             }else if(status == 'signOut'){

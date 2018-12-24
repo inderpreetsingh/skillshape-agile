@@ -58,7 +58,6 @@ class MembersListContainer extends Component {
   this.studentsData(nextProps);
  }
  updateClass = (filter,status,purchaseData,popUp)=>{
-  console.log("​MembersListContainer -> updateClass -> purchaseData", purchaseData)
   let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
   let condition=0;
   if(packageType == 'CP'){
@@ -148,6 +147,9 @@ handleClassUpdate = (filter,status,popUp)=>{
         }, true);
       }
      }
+     else if(status=='checkIn'){
+     popUp.appear("alert", { title: "Alert", content: "Oops user don't have any package. Please use Accept payment button to accept payment and send link or else ask user to purchase one itself." }); 
+     }
      else{
       let packageType,packagesRequired,content,title ;
      if( !epStatus ){
@@ -172,7 +174,8 @@ handleClassUpdate = (filter,status,popUp)=>{
      }
    })
  }
- handleSignIn = (userId,status='signIn') => {
+ handleSignIn = (e,userId,status='signIn') => {
+  e && e.preventDefault();
   const {popUp,classData} = this.props;
   let classDetails = classData[0];
   if(userId){
@@ -243,8 +246,7 @@ handleClassUpdate = (filter,status,popUp)=>{
         currentProps
       };
     });
-    console.log(this.state);
-  };
+    };
   render() {
     const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params,schoolName,classTypeName,toggleIsBusy } = this.props;
     const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired,buyPackagesBoxState,currentProps} = this.state;
