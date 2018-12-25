@@ -17,6 +17,6 @@ Meteor.publish("classPricing.getClassPricingWithClassId", function ({ classTypeI
 
 Meteor.publish("classPricing.getClassPricingFromId", function ({ _id }) {
 	// console.log("classPricing.getClassPricing -->>",schoolId)
-	let cursor = ClassPricing.find({ _id });
+	let cursor = ClassPricing.find({ _id:{$in:_id} });
 	return ClassPricing.publishJoinedCursors(cursor, { reactive: true }, this);
 });

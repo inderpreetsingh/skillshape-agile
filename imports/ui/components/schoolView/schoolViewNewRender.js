@@ -263,6 +263,7 @@ export default function () {
             <EnrollmentPackagesDialogBox
               open={this.state.enrollmentPackagesDialog}
               schoolId={schoolId}
+              onAddToCartIconButtonClick={this.handlePurchasePackage}
               onModalClose={() => {
                 this.setState(state => {
                   return {
@@ -273,6 +274,7 @@ export default function () {
                 })
               }}
               classTypeIds={this.state.selectedClassTypeIds}
+              epData = {this.state.epData}
             />
           }
           {

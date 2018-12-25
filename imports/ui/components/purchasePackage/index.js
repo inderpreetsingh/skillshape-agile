@@ -121,7 +121,7 @@ export default createContainer((props) => {
       subscriptionName = "enrollmentFee.getEnrollmentFeeFromId";
       collectionName = EnrollmentFees;
     }
-    packageDataSubscription = Meteor.subscribe(subscriptionName, { _id:packageId });
+    packageDataSubscription = Meteor.subscribe(subscriptionName, { _id:[packageId]});
    if(packageDataSubscription && packageDataSubscription.ready()){
     packageData = collectionName.find().fetch();
     if(packageType=='MP' && !isEmpty(packageData)){

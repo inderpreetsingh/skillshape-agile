@@ -15,6 +15,6 @@ Meteor.publish("monthlyPricing.getMonthlyPricingWithClassId", function ({ classT
 
 Meteor.publish("monthlyPricing.getMonthlyPricingFromId", function ({ _id }) {
   // console.log("monthlyPricing.getMonthlyPricing -->>",schoolId)
-  let cursor = MonthlyPricing.find({ _id, deleted: false });
+  let cursor = MonthlyPricing.find({ _id:{$in:_id}, deleted: false });
   return MonthlyPricing.publishJoinedCursors(cursor, { reactive: true }, this);
 });

@@ -89,6 +89,7 @@ Meteor.methods({
                 classTypeDataWithPurchaseInfo = classTypeData.map((obj)=>{
                     let enrollmentIds = get(obj,"enrollmentIds",[]);
                     if(!isEmpty(enrollmentIds)){
+                        obj.enrollmentPackages = EnrollmentFees.find({_id:{$in:enrollmentIds}}).fetch();
                         obj.purchasedEP = Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,userId);
                     }else{
                         obj.noEP=true;

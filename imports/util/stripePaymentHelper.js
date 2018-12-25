@@ -160,7 +160,6 @@ isEnrollmentPurchase = (packageId, userId, packageType, self) => {
                     }
                 })
             }
-            console.log("​isEnrollmentPurchase -> res", res)
             self.setState({ epData: res, epStatus });
             resolve();
         })
@@ -168,7 +167,6 @@ isEnrollmentPurchase = (packageId, userId, packageType, self) => {
 }
 //UI for enrollment package again purchase message
 popUpForEnrollment = (popUp, res, self) => {
-    console.info("REST >>>>>>>>>>>>>>", res);
     let classTypeIds = compact(res.map((obj) => { if (!obj.epStatus) return obj._id; }))
     let classTypeNames = compact(res.map((obj) => { if (!obj.epStatus) return obj.name; }));
     popUp.close();
