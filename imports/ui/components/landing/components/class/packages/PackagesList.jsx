@@ -131,7 +131,7 @@ const Title = styled.h2`
 	width: 100%;
 `;
 
-const PackageList = (props) => (
+const PackagesListContainer = (props) => (
     <PackagesListWrapper
         listType={props.listType}
         variant={props.variant}
@@ -165,75 +165,47 @@ const PackageList = (props) => (
     </PackagesListWrapper>
 );
 
-// const EnrollmentPackagesList = (props) => (
-//     <EnrollMentListWrapper variant={props.variant}>
-//         <PackagesWrapper onPriceEdit={props.onPriceEdit}>
-//             <Title>{props.packageListName}</Title>
-//             <PackagesInnerWrapper packagesLength={props.packagesData.length}>
-
-//                 {props.packagesData.map((packageData) => (
-//                     <PackageWrapper key={packageData._id}>
-//                         <Package
-//                             {...packageData}
-//                             {...props.packageProps}
-//                             classPackages={props.classPackages}
-//                             schoolCurrency={props.schoolCurrency}
-//                             onSchoolEdit={props.onSchoolEdit}
-//                             onEditClick={() => {
-//                                 props.onEditClick();
-//                             }}
-//                             setFormData={() => {
-//                                 props.setFormData(packageData);
-//                             }}
-//                         />
-//                     </PackageWrapper>
-//                 ))}
-//             </PackagesInnerWrapper>
-
-//         </PackagesWrapper>
-//     </EnrollMentListWrapper>
-// );
-
 const PackagesList = (props) => {
+    debugger;
     const classPackagesEmpty = isEmpty(props.perClassPackagesData);
     const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
     const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
     const schoolCurrency = props.currency;
+    console.info(props, 'PACKAGES LIST>>>>>>>>>>>>')
     return (
         <Fragment>
-            {props.enrollMentPackages &&
-                !enrollMentPackagesEmpty && (
-                    <Wrapper>
-                        <PackagesList
-                            listType="enrollmentPackages"
-                            variant={props.variant}
-                            packageProps={{
-                                usedFor: props.usedFor,
-                                appearance: props.appearance,
-                                bgColor: props.bgColor,
-                                variant: props.variant,
-                                packageType: 'EP',
-                                onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-                                schoolId: props.schoolId,
-                                usedFor: props.usedFor
-                            }}
-                            packageListName="Enrollment Packages"
-                            packagesData={props.enrollMentPackagesData}
-                            schoolCurrency={schoolCurrency}
-                            onSchoolEdit={props.onSchoolEdit}
-                            onEditClick={() => {
-                                props.onEditClick();
-                            }}
-                            setFormData={(packageData) => {
-                                props.setFormData(packageData);
-                            }}
-                            onPriceEdit={props.onPriceEdit}
-                        />
-                    </Wrapper>
-                )}
+            {!enrollMentPackagesEmpty && (
+                <Wrapper>
+                    <PackagesListContainer
+                        listType="enrollmentPackages"
+                        variant={props.variant}
+                        packageProps={{
+                            usedFor: props.usedFor,
+                            appearance: props.appearance,
+                            bgColor: props.bgColor,
+                            variant: props.variant,
+                            packageType: 'EP',
+                            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+                            schoolId: props.schoolId,
+                            usedFor: props.usedFor
+                        }}
+                        packageListName="Enrollment Packages"
+                        packagesData={props.enrollMentPackagesData}
+                        schoolCurrency={schoolCurrency}
+                        onSchoolEdit={props.onSchoolEdit}
+                        onEditClick={() => {
+                            props.onEditClick();
+                        }}
+                        setFormData={(packageData) => {
+                            props.setFormData(packageData);
+                        }}
+                        onPriceEdit={props.onPriceEdit}
+                    />
+                </Wrapper>
+            )}
             <Wrapper>
                 {!classPackagesEmpty && (
-                    <PackageList
+                    <PackagesListContainer
                         listType="classPackages"
                         classPackages
                         variant={props.variant}
@@ -264,7 +236,7 @@ const PackagesList = (props) => {
                 )}
 
                 {!monthlyPackagesEmpty && (
-                    <PackageList
+                    <PackagesListContainer
                         listType="monthlyPackages"
                         variant={props.variant}
                         packageProps={{

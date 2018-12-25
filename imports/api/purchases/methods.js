@@ -6,13 +6,13 @@ import moment from "moment";
 import get from 'lodash/get';
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
-  "purchases.addPurchase": function(payload) {
-    check(payload,Object);
+  "purchases.addPurchase": function (payload) {
+    check(payload, Object);
     return Purchases.insert(payload);
   },
-  "purchases.getAllPurchaseData": function(slug, filters) {
-    check(slug,String);
-    check(filters,Object);
+  "purchases.getAllPurchaseData": function (slug, filters) {
+    check(slug, String);
+    check(filters, Object);
 
     let schoolId = School.findOne({ slug: slug });
     let AllPurchaseData = Purchases.find(
@@ -21,9 +21,17 @@ Meteor.methods({
     ).fetch();
     return AllPurchaseData;
   },
-  "purchases.updatePurchases": function({payload, recordId}) {
-    check(recordId,String);
-    check(payload,Object);
+  "purchases.checkPurchasedPackagesWithClassId": function ({ classTypeId }) {
+    check(classTypeId, String);
+    if (!this.userId) {
+      throw new Meteor.Error("Access Denied");
+    } else {
+      return Purchases.find({ classId: classTypeId, userId: this.userId }).fetch();
+    }
+  },
+  "purchases.updatePurchases": function ({ payload, recordId }) {
+    check(recordId, String);
+    check(payload, Object);
     Purchases.update(
       { _id: recordId },
       {
@@ -31,12 +39,12 @@ Meteor.methods({
       }
     );
   },
-  "purchases.purchasePageCount": function() {
+  "purchases.purchasePageCount": function () {
     return Purchases.find().count();
   },
-  "purchases.checkExisitingPackagePurchases": function(userId, packageId) {
-    check(userId,String);
-    check(packageId,String);
+  "purchases.checkExisitingPackagePurchases": function (userId, packageId) {
+    check(userId, String);
+    check(packageId, String);
 
     let result = Purchases.findOne({
       userId: userId,
@@ -44,81 +52,75 @@ Meteor.methods({
     });
     let packageStatus = "active";
     if (result) {
-        if (result.packageStatus == "active") {
-          packageStatus = "inActive";
-        }
-    } 
+      if (result.packageStatus == "active") {
+        packageStatus = "inActive";
+      }
+    }
     return packageStatus;
   },
-  "purchases.isAlreadyPurchased": function({userId, planId,packageId,packageType,pymtType}) {
-    try{
-      check(userId,String);
-      let activePurchase,inActivePurchases,noClasses=0;
-      if(packageType == 'MP' && get(pymtType,"autoWithDraw",false) ){
-       return Purchases.findOne({userId,planId,packageStatus:'active'});
+  "purchases.isAlreadyPurchased": function ({ userId, planId, packageId, packageType, pymtType }) {
+    try {
+      check(userId, String);
+      let activePurchase, inActivePurchases, noClasses = 0;
+      if (packageType == 'MP' && get(pymtType, "autoWithDraw", false)) {
+        return Purchases.findOne({ userId, planId, packageStatus: 'active' });
       }
-      else{
-       activePurchase = Purchases.findOne({userId,packageId,packageStatus:'active'});
-       inActivePurchases = Purchases.find({userId,packageId,packageStatus:'inActive'}).count();
-       if(!isEmpty(activePurchase)){
-         if(packageType == 'CP' ){
-          noClasses = get(Purchases.findOne({userId,packageId,packageStatus:'inActive'}),'noClasses',0) * inActivePurchases;
-           activePurchase.noClasses = get(activePurchase,"noClasses",0) + noClasses;
-         }else if(inActivePurchases){
+      else {
+        activePurchase = Purchases.findOne({ userId, packageId, packageStatus: 'active' });
+        inActivePurchases = Purchases.find({ userId, packageId, packageStatus: 'inActive' }).count();
+        if (!isEmpty(activePurchase)) {
+          if (packageType == 'CP') {
+            noClasses = get(Purchases.findOne({ userId, packageId, packageStatus: 'inActive' }), 'noClasses', 0) * inActivePurchases;
+            activePurchase.noClasses = get(activePurchase, "noClasses", 0) + noClasses;
+          } else if (inActivePurchases) {
             activePurchase.inActivePurchases = inActivePurchases;
-         }
-       }
-       return activePurchase;
-      }
-    }catch(error){
-    console.log('Error in purchases.isAlreadyPurchased', error);
-    }
-  },
-  "purchases.getPackagesFromIds":function(packageIds,userId){
-    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',packageType:{$ne:'EP'},userId:userId ? userId : this.userId}).fetch();
-  },
-  "purchase.manageAttendance":function(_id,packageType,inc){
-  try{
-    if(_id){
-      let record,monthlyAttendance,startDate;
-      if(packageType == 'CP'){
-        Purchases.update({_id},{$inc:{noClasses:inc}});
-        record = Purchases.findOne({_id});
-        if(record.noClasses == 0){
-         let {packageId,userId} = record;
-         Purchases.update({userId,packageId,packageStatus:'inActive'},{$set:{packageStatus:'active'}});
-         Purchases.update({_id},{$set:{packageStatus:'expired',endDate:new Date()}});
-        }
-      }
-      else if(packageType == 'MP'){
-        record = Purchases.findOne({_id});
-        if(!isEmpty(record)){
-          monthlyAttendance = get(record,'monthlyAttendance',{});
-          if(monthlyAttendance.noClasses>0){
-            monthlyAttendance.noClasses= monthlyAttendance.noClasses+inc;
-           }else{
-            startDate = monthlyAttendance.startDate;
-            startDate = getExpiryDateForPackages(startDate, monthlyAttendance.duPeriod,monthlyAttendance.max);
-            if(startDate<record.endDate){
-              monthlyAttendance.noClasses= monthlyAttendance.max+inc;
-            }
           }
-          Purchases.update({_id},{$set:{monthlyAttendance}});
-          return monthlyAttendance.noClasses;
+        }
+        return activePurchase;
+      }
+    } catch (error) {
+      console.log('Error in purchases.isAlreadyPurchased', error);
+    }
+  },
+  "purchases.getPackagesFromIds": function (packageIds, userId) {
+    return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId }).fetch();
+  },
+  "purchase.manageAttendance": function (_id, packageType, inc) {
+    try {
+      if (_id) {
+        let record, monthlyAttendance, startDate;
+        if (packageType == 'CP') {
+          Purchases.update({ _id }, { $inc: { noClasses: inc } });
+        }
+        else if (packageType == 'MP') {
+          record = Purchases.findOne({ _id });
+          if (!isEmpty(record)) {
+            monthlyAttendance = get(record, 'monthlyAttendance', {});
+            if (monthlyAttendance.noClasses > 0) {
+              monthlyAttendance.noClasses = monthlyAttendance.noClasses + inc;
+            } else {
+              startDate = monthlyAttendance.startDate;
+              startDate = getExpiryDateForPackages(startDate, monthlyAttendance.duPeriod, monthlyAttendance.max);
+              if (startDate < record.endDate) {
+                monthlyAttendance.noClasses = monthlyAttendance.max + inc;
+              }
+            }
+            Purchases.update({ _id }, { $set: { monthlyAttendance } });
+            return monthlyAttendance.noClasses;
+          }
         }
       }
+    } catch (error) {
+      console.log("​error in purchase.manageAttendance", error)
+
     }
-  }catch(error){
-		console.log("​error in purchase.manageAttendance", error)
-    
-  }
-  
+
   },
-  "purchases.getPackagesFromPurchaseIds":function(purchaseIds){
-    return Purchases.find({_id:{$in:purchaseIds},packageStatus:'active',packageType:{$ne:'EP'}}).fetch();
+  "purchases.getPackagesFromPurchaseIds": function (purchaseIds) {
+    return Purchases.find({ _id: { $in: purchaseIds }, packageStatus: 'active', packageType: { $ne: 'EP' } }).fetch();
   },
-  "purchases.getPurchasedFromPackageIds":function(packageIds,userId){
-    return Purchases.find({packageId:{$in:packageIds},packageStatus:'active',userId}).fetch();
+  "purchases.getPurchasedFromPackageIds": function (packageIds, userId) {
+    return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', userId }).fetch();
   }
 });
 /* 

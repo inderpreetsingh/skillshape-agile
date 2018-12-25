@@ -5,19 +5,15 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import { createContainer } from 'meteor/react-meteor-data';
 
-import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-
 import ClassTimeInformation from "./classTimeInformation/index.jsx";
 import ClassTimeCover from "./classTimeCover/index.jsx";
 import MembersList from "./membersList/index.jsx";
+
+import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
+
 import { withImageExists } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
-
-import ClassPricing from '/imports/api/classPricing/fields';
-import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import MonthlyPricing from '/imports/api/monthlyPricing/fields';
-
 import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 
