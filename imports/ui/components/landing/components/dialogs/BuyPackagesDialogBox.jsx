@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { createContainer } from "meteor/react-meteor-data";
@@ -158,7 +158,7 @@ class BuyPackagesDialogBox extends Component {
         this.setState({ radioButtonGroupValue: event.target.value });
     };
 
-    handlePackageClick = (selectedPackageIndex,selectedPackageType) => (e) => {
+    handlePackageClick = (selectedPackageIndex, selectedPackageType) => (e) => {
         e.preventDefault();
 
         this.setState(state => {
@@ -170,41 +170,41 @@ class BuyPackagesDialogBox extends Component {
         })
     }
     packageSelectAlert = () => {
-        const {popUp} = this.props;
-        popUp.appear("alert", { title: "Alert", content: "Package  not selected. Please select one package first then try again." }); 
+        const { popUp } = this.props;
+        popUp.appear("alert", { title: "Alert", content: "Package  not selected. Please select one package first then try again." });
     }
-    acceptPayment = () =>{
-        let {packageList,currentProps} = this.props;
-        let {selectedPackageIndex,selectedPackageType,radioButtonGroupValue}= this.state;
+    acceptPayment = () => {
+        let { packageList, currentProps } = this.props;
+        let { selectedPackageIndex, selectedPackageType, radioButtonGroupValue } = this.state;
         let packageData;
-        if(selectedPackageType){
-             packageList.map((obj)=>{
-                if(obj.title == selectedPackageType){
+        if (selectedPackageType) {
+            packageList.map((obj) => {
+                if (obj.title == selectedPackageType) {
                     packageData = obj.packageData;
                 }
             })
-            packageData = packageData[selectedPackageIndex];    
-            this.props.acceptPayment(packageData,currentProps,radioButtonGroupValue);
+            packageData = packageData[selectedPackageIndex];
+            this.props.acceptPayment(packageData, currentProps, radioButtonGroupValue);
         }
-        else{
+        else {
             this.packageSelectAlert();
-        } 
+        }
     }
-    handleSendLink = () =>{
-        let {packageList,currentProps} = this.props;
-        let {selectedPackageIndex,selectedPackageType}= this.state;
+    handleSendLink = () => {
+        let { packageList, currentProps } = this.props;
+        let { selectedPackageIndex, selectedPackageType } = this.state;
         let packageData;
-        if(selectedPackageType){
-             packageList.map((obj)=>{
-                if(obj.title == selectedPackageType){
+        if (selectedPackageType) {
+            packageList.map((obj) => {
+                if (obj.title == selectedPackageType) {
                     packageData = obj.packageData;
                 }
             })
-            packageData = packageData[selectedPackageIndex];    
-            let {_id,packageType} = packageData;
-            this.props.onSendLinkClick(currentProps,_id,packageType);
+            packageData = packageData[selectedPackageIndex];
+            let { _id, packageType } = packageData;
+            this.props.onSendLinkClick(currentProps, _id, packageType);
         }
-        else{
+        else {
             this.packageSelectAlert();
         }
     }
@@ -219,9 +219,10 @@ class BuyPackagesDialogBox extends Component {
             packageList,
             currency,
             isLoading,
+            joinNow,
             onSendLinkClick
         } = props;
-    
+
         const {
             selectedPackageIndex,
             radioButtonGroupValue,
@@ -248,17 +249,17 @@ class BuyPackagesDialogBox extends Component {
                     <ContainerLoader />
                     :
                     <DialogContent classes={{ root: classes.dialogContent }}>
-                        {!isEmpty(packageList) && packageList.map((obj)=>{
+                        {!isEmpty(packageList) && packageList.map((obj) => {
                             return (
                                 <PackagesListWrapper>
-                                <Title>{obj.title}</Title>
+                                    <Title>{obj.title}</Title>
                                     {!isEmpty(obj.packageData) && obj.packageData.map((packageData, i) => (
                                         <PackageWrapper>
                                             <Package
                                                 key={i}
                                                 {...packageData}
-                                                packageSelected={i === selectedPackageIndex && obj.title==selectedPackageType}
-                                                onPackageClick={this.handlePackageClick(i,obj.title)}
+                                                packageSelected={i === selectedPackageIndex && obj.title == selectedPackageType}
+                                                onPackageClick={this.handlePackageClick(i, obj.title)}
                                                 usedFor="buyPackagesDialogBox"
                                                 variant={'light'}
                                                 schoolId={schoolId}
@@ -271,75 +272,77 @@ class BuyPackagesDialogBox extends Component {
                             )
 
                         })}
-                       
 
-                        <NotesContent
-                            placeholder="Notes..."
-                        />
+                        {showPaymentMethods &&
+                            <Fragment>
+                                <NotesContent
+                                    placeholder="Notes..."
+                                />
 
-                        <FormControl
-                            component="fieldset"
-                            className={classes.radioGroupWrapper}>
-                            <RadioGroup
-                                aria-label="payment-options"
-                                name="payment-options"
-                                className={classes.radioGroup}
-                                value={this.state.radioButtonGroupValue}
-                                onChange={this.handleRadioButtonChange}
-                            >
-                                <FormControlLabel
-                                    classes={{
-                                        root: classes.radioLabelRoot,
-                                        label: classes.radioLabel,
-                                    }}
-                                    value="cash" control={<Radio
-                                        classes={{
-                                            root: classes.radioButtonRoot
-                                        }}
-                                    />} label="Cash" />
+                                <FormControl
+                                    component="fieldset"
+                                    className={classes.radioGroupWrapper}>
+                                    <RadioGroup
+                                        aria-label="payment-options"
+                                        name="payment-options"
+                                        className={classes.radioGroup}
+                                        value={this.state.radioButtonGroupValue}
+                                        onChange={this.handleRadioButtonChange}
+                                    >
+                                        <FormControlLabel
+                                            classes={{
+                                                root: classes.radioLabelRoot,
+                                                label: classes.radioLabel,
+                                            }}
+                                            value="cash" control={<Radio
+                                                classes={{
+                                                    root: classes.radioButtonRoot
+                                                }}
+                                            />} label="Cash" />
 
-                                <FormControlLabel
-                                    classes={{
-                                        root: classes.radioLabelRoot,
-                                        label: classes.radioLabel
-                                    }}
-                                    value="check" control={<Radio
-                                        classes={{
-                                            root: classes.radioButtonRoot
-                                        }}
-                                    />} label="Check" />
-                                <FormControlLabel
-                                    classes={{
-                                        root: classes.radioLabelRoot,
-                                        label: classes.radioLabel
-                                    }}
-                                    value="creditCard" control={<Radio
-                                        classes={{
-                                            root: classes.radioButtonRoot
-                                        }}
-                                    />} label="Credit Card" />
-                                <FormControlLabel
-                                    classes={{
-                                        root: classes.radioLabelRoot,
-                                        label: classes.radioLabel
-                                    }}
-                                    value="bankTransfer" control={<Radio
-                                        classes={{
-                                            root: classes.radioButtonRoot
-                                        }}
-                                    />} label="Bank Transfer" />
-                                <FormControlLabel
-                                    classes={{
-                                        root: classes.radioLabelRoot,
-                                        label: classes.radioLabel
-                                    }}
-                                    value="other" control={<Radio
-                                        classes={{
-                                            root: classes.radioButtonRoot
-                                        }}
-                                    />} label="Others" />
-                            </RadioGroup>
-                        </FormControl>
+                                        <FormControlLabel
+                                            classes={{
+                                                root: classes.radioLabelRoot,
+                                                label: classes.radioLabel
+                                            }}
+                                            value="check" control={<Radio
+                                                classes={{
+                                                    root: classes.radioButtonRoot
+                                                }}
+                                            />} label="Check" />
+                                        <FormControlLabel
+                                            classes={{
+                                                root: classes.radioLabelRoot,
+                                                label: classes.radioLabel
+                                            }}
+                                            value="creditCard" control={<Radio
+                                                classes={{
+                                                    root: classes.radioButtonRoot
+                                                }}
+                                            />} label="Credit Card" />
+                                        <FormControlLabel
+                                            classes={{
+                                                root: classes.radioLabelRoot,
+                                                label: classes.radioLabel
+                                            }}
+                                            value="bankTransfer" control={<Radio
+                                                classes={{
+                                                    root: classes.radioButtonRoot
+                                                }}
+                                            />} label="Bank Transfer" />
+                                        <FormControlLabel
+                                            classes={{
+                                                root: classes.radioLabelRoot,
+                                                label: classes.radioLabel
+                                            }}
+                                            value="other" control={<Radio
+                                                classes={{
+                                                    root: classes.radioButtonRoot
+                                                }}
+                                            />} label="Others" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Fragment>}
                     </DialogContent>}
 
                 <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
@@ -368,8 +371,13 @@ class BuyPackagesDialogBox extends Component {
 
 BuyPackagesDialogBox.propTypes = {
     onModalClose: PropTypes.func,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    showPaymentMethods: PropTypes.bool
 };
+
+BuyPackagesDialogBox.defaultProps = {
+    showPaymentMethods: true
+}
 
 export default withStyles(styles)(createContainer(props => {
     const { classTypeId } = props;
@@ -396,31 +404,31 @@ export default withStyles(styles)(createContainer(props => {
     }
 
     let classPricingData = ClassPricing.find().fetch();
-    let CP = classPricingData.map((obj)=>{
-       obj.packageType = 'CP';
-       obj.classPackages = true;
+    let CP = classPricingData.map((obj) => {
+        obj.packageType = 'CP';
+        obj.classPackages = true;
         return obj;
     })
     let monthlyPricingData = MonthlyPricing.find().fetch();
     monthlyPricingData = normalizeMonthlyPricingData(monthlyPricingData);
-    let MP = monthlyPricingData.map((obj)=>{
-      obj.packageType = 'MP';
-      return obj;
+    let MP = monthlyPricingData.map((obj) => {
+        obj.packageType = 'MP';
+        return obj;
     })
     let enrollmentFeeData = EnrollmentFees.find().fetch();
-    let EP = enrollmentFeeData.map((obj)=>{
-       obj.packageType = 'EP';
-       return obj;
+    let EP = enrollmentFeeData.map((obj) => {
+        obj.packageType = 'EP';
+        return obj;
     })
     let packageList = [];
-    if(!isEmpty(EP)){
-        packageList.push({title:'Enrollment Packages',packageData:EP})
+    if (!isEmpty(EP)) {
+        packageList.push({ title: 'Enrollment Packages', packageData: EP })
     }
-    if(!isEmpty(MP)){
-        packageList.push({title:'Monthly Packages',packageData:MP})
+    if (!isEmpty(MP)) {
+        packageList.push({ title: 'Monthly Packages', packageData: MP })
     }
-    if(!isEmpty(CP)){
-        packageList.push({title:'Per Class Packages',packageData:CP})
+    if (!isEmpty(CP)) {
+        packageList.push({ title: 'Per Class Packages', packageData: CP })
     }
 
 

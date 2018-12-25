@@ -7,8 +7,8 @@ import NameBar from "./presentational/NameBar";
 import { rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { classTimeData } from "/imports/ui/components/landing/constants/classDetails/classTimeData";
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
-import {  getUserFullName,  } from "/imports/util";
-import { isEmpty,get } from "lodash";
+import { getUserFullName, } from "/imports/util";
+import { isEmpty, get } from "lodash";
 
 const Wrapper = styled.div`
   padding: 0;
@@ -37,6 +37,19 @@ class ClassTimeInformation extends Component {
     const { classTimeData } = this.props;
     return get(classTimeData, 'timePeriod', '');
   }
+
+  handleJoinNowButtonClick = () => {
+    // No package type purchased ---> packages list dialogBox should appear
+    // if ---> unlimited monthly package is purchased
+    // if not ---> show all packages 
+    const { classTypeId } = this.props;
+    Meteor.call("purchases.checkPurchasedPackagesWithClassId", classTypeId, (err, res) => {
+      if (res) {
+        const anyActivePackage = res.any
+      }
+    });
+  }
+
   handleClassClosed = () => {
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
@@ -151,37 +164,37 @@ class ClassTimeInformation extends Component {
     const { schoolId, classTypeId, classType } = this.props;
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
-    if(!isEmpty(currentUser)){
-    let data = {
-      name: userName,
-      email: currentUser.emails[0].address,
-      schoolId: schoolId,
-      classTypeId: classTypeId,
-      userId: Meteor.userId(),
-      notification: CheckBoxes[1],
-      createdAt: new Date(),
-      classType: classType.name,
-      existingUser: true
-    };
-    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-      const { popUp } = this.props;
-      if (res) {
-        Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-          if (res1) {
-            popUp.appear("success", {
-              content: `Hi ${userName}, You are ${
-                CheckBoxes[1] ? "subscribed" : "unsubscribed"
-              } to  notification related to the
+    if (!isEmpty(currentUser)) {
+      let data = {
+        name: userName,
+        email: currentUser.emails[0].address,
+        schoolId: schoolId,
+        classTypeId: classTypeId,
+        userId: Meteor.userId(),
+        notification: CheckBoxes[1],
+        createdAt: new Date(),
+        classType: classType.name,
+        existingUser: true
+      };
+      Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+        const { popUp } = this.props;
+        if (res) {
+          Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+            if (res1) {
+              popUp.appear("success", {
+                content: `Hi ${userName}, You are ${
+                  CheckBoxes[1] ? "subscribed" : "unsubscribed"
+                  } to  notification related to the
             location and time update of class type ${classType.name}.
             `
-            });
-            this.componentWillMount();
-          }
-        });
-      }
-    });
-  }
-  this.setState({ isLoading: false });
+              });
+              this.componentWillMount();
+            }
+          });
+        }
+      });
+    }
+    this.setState({ isLoading: false });
   };
   render() {
     const {
@@ -189,44 +202,44 @@ class ClassTimeInformation extends Component {
       schoolName,
       schoolCoverSrc,
       title, desc, locationData, eventStartTime,
-      website, start,schoolId,classType,params
+      website, start, schoolId, classType, params
     } = this.props;
-    const {thinkingAboutAttending} = this.state;
+    const { thinkingAboutAttending } = this.state;
     locationName = () => {
       return `${get(locationData, 'city', '')}, ${get(locationData, 'state', '')}, ${get(locationData, 'country', '')}, ${get(locationData, 'zip', '')}`
     }
 
     return (
       <Wrapper bgImg={schoolCoverSrc}>
-      {thinkingAboutAttending && (
-         <ThinkingAboutAttending
-                  schoolId = {schoolId}
-                  open={thinkingAboutAttending}
-                  onModalClose={() => {
-                    this.setState({ thinkingAboutAttending: false });
-                  }}
-                  handleClassClosed={this.handleClassClosed}
-                  handleAddToMyCalendarButtonClick={
-                    this.handleAddToMyCalendarButtonClick
-                  }
-                  handleRemoveFromCalendarButtonClick={
-                    this.handleRemoveFromCalendarButtonClick
-                  }
-                  addToCalendar={true}
-                  notification={true}
-                  purchaseThisPackage={() => {
-                    this.setState({ thinkingAboutAttending: false });
-                  }}
-                  handleCheckBoxes={this.handleCheckBoxes}
-                  name= {classType.name}
-                  params = {params}
-                  classTypeId = {classType._id}
-                />)}
-      
+        {thinkingAboutAttending && (
+          <ThinkingAboutAttending
+            schoolId={schoolId}
+            open={thinkingAboutAttending}
+            onModalClose={() => {
+              this.setState({ thinkingAboutAttending: false });
+            }}
+            handleClassClosed={this.handleClassClosed}
+            handleAddToMyCalendarButtonClick={
+              this.handleAddToMyCalendarButtonClick
+            }
+            handleRemoveFromCalendarButtonClick={
+              this.handleRemoveFromCalendarButtonClick
+            }
+            addToCalendar={true}
+            notification={true}
+            purchaseThisPackage={() => {
+              this.setState({ thinkingAboutAttending: false });
+            }}
+            handleCheckBoxes={this.handleCheckBoxes}
+            name={classType.name}
+            params={params}
+            classTypeId={classType._id}
+          />)}
+
         <NameBar
           title={this.getTitle()}
           schoolName={schoolName}
-          onJoinClassButtonClick ={()=>{this.setState({thinkingAboutAttending:true})}}
+          onJoinClassButtonClick={() => { this.setState({ thinkingAboutAttending: true }) }}
         />
         <Description description={desc} />
         <LocationDetails
