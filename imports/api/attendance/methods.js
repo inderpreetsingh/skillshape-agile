@@ -5,6 +5,7 @@ Meteor.methods({
     "attendance.updateData":function(filter,status){
         filter.attendedTime = new Date();
         filter.classId = filter._id;
+        delete filter._id;
         Attendance.insert(filter);
         return true;
     }
