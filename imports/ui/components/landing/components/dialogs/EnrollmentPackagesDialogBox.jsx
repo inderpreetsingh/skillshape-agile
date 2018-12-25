@@ -145,12 +145,6 @@ class EnrollmentPackagesDialogBox extends Component {
     constructor(props) {
         super(props);
     }
-
-    getClassName = (classTypeId) => {
-        // console.log(classTypeId, ClassType.find({ _id: classTypeId }).fetch(), '.......')
-        return ClassType.findOne({ _id: classTypeId }).name;
-    }
-
     render() {
         const { props } = this;
         const {
@@ -158,11 +152,10 @@ class EnrollmentPackagesDialogBox extends Component {
             open,
             onModalClose,
             schoolId,
-            packagesData,
-            currency,
-            isLoading
+            epData,
+            isLoading,
+            onAddToCartIconButtonClick
         } = props;
-        // console.log("RENDERING>>>>>>>>>>>> ENROLLMENT PACKAGES DIALOG BOX", this.props);
         return (<Dialog
             open={open}
             onClose={onModalClose}
@@ -185,21 +178,24 @@ class EnrollmentPackagesDialogBox extends Component {
                     <ContainerLoader />
                     :
                     (<DialogContent classes={{ root: classes.dialogContent }}>
-                        {packagesData.map((data, i) => (
-                            <PackagesListWrapper key={i}>
-                                <PackageListTitle>For Class {this.getClassName(data.classTypeId)}</PackageListTitle>
-                                <Packages packagesLength={data.packages.length}>
-                                    {data.packages.map((packageData, i) =>
+                        {!isEmpty(epData) && epData.map((data, i) => {
+                            if(data.epStatus) return;
+                            return (<PackagesListWrapper key={i}>
+                                <PackageListTitle>For Class {get(data,'name','Class Name')}</PackageListTitle>
+                                <Packages packagesLength={data.enrollmentPackages.length}>
+                                    {data.enrollmentPackages.map((packageData, i) =>
                                         <PackageWrapper key={packageData._id}>
                                             <Package
                                                 packageType="EP"
                                                 appearance="small"
+                                                onAddToCartIconButtonClick = {onAddToCartIconButtonClick}
                                                 usedFor="enrollmentPackagesDialog"
                                                 {...packageData}
                                             />
                                         </PackageWrapper>)}
                                 </Packages>
-                            </PackagesListWrapper>))}
+                            </PackagesListWrapper>)
+                            })}
                     </DialogContent>)}
 
                 <DialogActions classes={{
@@ -219,38 +215,12 @@ EnrollmentPackagesDialogBox.propTypes = {
 };
 
 export default withStyles(styles)(createContainer(props => {
-    const { classTypeIds, schoolId } = props;
-    //TODO: Need to filter out packages which are already purchased..
-    //let purchasesData =
-    let enrollmentSubscription;
-    let classTypeSubscription;
-    let isLoading = true;
-    let currency = config.defaultCurrency;
-    //console.log(classData,props,'classTYpeid')
-    if (schoolId) {
-        classTypeSubscription = Meteor.subscribe('classType.getclassType', { schoolId });
-        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFee', { schoolId })
-    }
-    else if (classTypeIds.length) {
-        classTypeSubscription = Meteor.subscribe('classType.getClassTypeWithIds', { classTypeIds })
-        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypesEnrollMentFee', { classTypeIds })
-    }
-
-    const sub1Ready = enrollmentSubscription && enrollmentSubscription.ready();
-    const sub2Ready = classTypeSubscription && classTypeSubscription.ready();
-    // console.info(sub1Ready, sub2Ready, sub3Ready, ">>>>>>>>>>>>>");
-    if (sub1Ready && sub2Ready) {
-        isLoading = false;
-    }
-
-    const enrollmentFeeData = EnrollmentFees.find().fetch();
-    const allClassTypeIds = ClassType.find().fetch().map(data => data._id);
-    console.info(enrollmentFeeData, allClassTypeIds, "----")
+    let isLoading=false;
+    const {epData} = props;
     return {
         ...props,
         isLoading,
-        packagesData: seperatePackagesPerClass(enrollmentFeeData, allClassTypeIds),
-        currency
+        epData,
+       
     };
-
 }, withPopUp(EnrollmentPackagesDialogBox)));
