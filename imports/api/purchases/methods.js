@@ -83,6 +83,12 @@ Meteor.methods({
       let record,monthlyAttendance,startDate;
       if(packageType == 'CP'){
         Purchases.update({_id},{$inc:{noClasses:inc}});
+        record = Purchases.findOne({_id});
+        if(record.noClasses == 0){
+         let {packageId,userId} = record;
+         Purchases.update({userId,packageId,packageStatus:'inActive'},{$set:{packageStatus:'active'}});
+         Purchases.update({_id},{$set:{packageStatus:'expired',endDate:new Date()}});
+        }
       }
       else if(packageType == 'MP'){
         record = Purchases.findOne({_id});
