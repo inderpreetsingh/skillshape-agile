@@ -10,6 +10,21 @@ import * as helpers from '../../jss/helpers.js';
 
 const PACKAGE_WIDTH = 500;
 
+const PACKAGE_LIST_STYLES = {
+    enrollmentPackages: {
+        bgColor: '#ddd',
+        opacity: 0.1
+    },
+    classPackages: {
+        bgColor: helpers.primaryColor,
+        opacity: 0.1
+    },
+    monthlyPackages: {
+        bgColor: helpers.panelColor,
+        opacity: 1
+    }
+}
+
 const Wrapper = styled.div`
 	width: 100%;
 	${helpers.flexCenter}
@@ -28,7 +43,8 @@ const PackagesListWrapper = styled.section`
 	align-items: center;
 	padding: ${helpers.rhythmDiv * 4}px 0;
 	${(props) => props.fullScreen && `width: 100%; align-items: center`};
-
+    ${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} 
+	
 	&:after {
 		content: "";
 		position: absolute;
@@ -37,10 +53,11 @@ const PackagesListWrapper = styled.section`
 		left: 0;
 		right: 0;
 		width: 100%;
-		z-index: 0;
-		background-color: ${(props) => (props.classPackages ? helpers.primaryColor : helpers.panelColor)};
+        z-index: 0;
+        
+		background-color: ${props => PACKAGE_LIST_STYLES[props.listType].bgColor};
+		opacity: ${props => PACKAGE_LIST_STYLES[props.listType].opacity};
 		${(props) => (props.variant === 'light' ? 'background-color: transparent' : '')};
-		opacity: ${(props) => (props.classPackages ? 0.1 : 1)};
 	}
 
 	@media screen and (max-width: ${helpers.tablet}px) {
@@ -50,17 +67,15 @@ const PackagesListWrapper = styled.section`
 	}
 `;
 
-const EnrollMentListWrapper = PackagesListWrapper.extend`
-	width: 100%;
-	align-items: center;
-	${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} 
-	
-	&::after {
-		background-color: #dddd;
-		${(props) => (props.variant === 'light' ? 'background-color: transparent' : '')};
-		opacity: 1;
-	}
-`;
+// const EnrollMentListWrapper = PackagesListWrapper.extend`
+// 	${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} 
+
+// 	&::after {
+// 		background-color: #dddd;
+// 		${(props) => (props.variant === 'light' ? 'background-color: transparent' : '')};
+// 		opacity: 1;
+// 	}
+// `;
 
 
 const PackagesWrapper = styled.div`
@@ -118,6 +133,7 @@ const Title = styled.h2`
 
 const PackageList = (props) => (
     <PackagesListWrapper
+        listType={props.listType}
         variant={props.variant}
         fullScreen={props.fullScreen}
         classPackages={props.classPackages}
@@ -149,34 +165,34 @@ const PackageList = (props) => (
     </PackagesListWrapper>
 );
 
-const EnrollmentPackagesList = (props) => (
-    <EnrollMentListWrapper variant={props.variant}>
-        <PackagesWrapper onPriceEdit={props.onPriceEdit}>
-            <Title>{props.packageListName}</Title>
-            <PackagesInnerWrapper packagesLength={props.packagesData.length}>
+// const EnrollmentPackagesList = (props) => (
+//     <EnrollMentListWrapper variant={props.variant}>
+//         <PackagesWrapper onPriceEdit={props.onPriceEdit}>
+//             <Title>{props.packageListName}</Title>
+//             <PackagesInnerWrapper packagesLength={props.packagesData.length}>
 
-                {props.packagesData.map((packageData) => (
-                    <PackageWrapper key={packageData._id}>
-                        <Package
-                            {...packageData}
-                            {...props.packageProps}
-                            classPackages={props.classPackages}
-                            schoolCurrency={props.schoolCurrency}
-                            onSchoolEdit={props.onSchoolEdit}
-                            onEditClick={() => {
-                                props.onEditClick();
-                            }}
-                            setFormData={() => {
-                                props.setFormData(packageData);
-                            }}
-                        />
-                    </PackageWrapper>
-                ))}
-            </PackagesInnerWrapper>
+//                 {props.packagesData.map((packageData) => (
+//                     <PackageWrapper key={packageData._id}>
+//                         <Package
+//                             {...packageData}
+//                             {...props.packageProps}
+//                             classPackages={props.classPackages}
+//                             schoolCurrency={props.schoolCurrency}
+//                             onSchoolEdit={props.onSchoolEdit}
+//                             onEditClick={() => {
+//                                 props.onEditClick();
+//                             }}
+//                             setFormData={() => {
+//                                 props.setFormData(packageData);
+//                             }}
+//                         />
+//                     </PackageWrapper>
+//                 ))}
+//             </PackagesInnerWrapper>
 
-        </PackagesWrapper>
-    </EnrollMentListWrapper>
-);
+//         </PackagesWrapper>
+//     </EnrollMentListWrapper>
+// );
 
 const PackagesList = (props) => {
     const classPackagesEmpty = isEmpty(props.perClassPackagesData);
@@ -188,10 +204,13 @@ const PackagesList = (props) => {
             {props.enrollMentPackages &&
                 !enrollMentPackagesEmpty && (
                     <Wrapper>
-                        <EnrollmentPackagesList
+                        <PackagesList
+                            listType="enrollmentPackages"
                             variant={props.variant}
                             packageProps={{
-                                bgColor: '#dddd',
+                                usedFor: props.usedFor,
+                                appearance: props.appearance,
+                                bgColor: props.bgColor,
                                 variant: props.variant,
                                 packageType: 'EP',
                                 onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
@@ -215,9 +234,13 @@ const PackagesList = (props) => {
             <Wrapper>
                 {!classPackagesEmpty && (
                     <PackageList
+                        listType="classPackages"
+                        classPackages
                         variant={props.variant}
                         packageProps={{
-                            bgColor: '#dddd',
+                            usedFor: props.usedFor,
+                            appearance: props.appearance,
+                            bgColor: props.bgColor,
                             variant: props.variant,
                             packageType: 'CP',
                             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
@@ -225,7 +248,6 @@ const PackagesList = (props) => {
                             usedFor: props.usedFor
                         }}
                         onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
-                        classPackages
                         fullScreen={monthlyPackagesEmpty}
                         packageListName="Per Class Packages"
                         packagesData={props.perClassPackagesData}
@@ -243,9 +265,12 @@ const PackagesList = (props) => {
 
                 {!monthlyPackagesEmpty && (
                     <PackageList
+                        listType="monthlyPackages"
                         variant={props.variant}
                         packageProps={{
-                            bgColor: '#dddd',
+                            usedFor: props.usedFor,
+                            appearance: props.appearance,
+                            bgColor: props.bgColor,
                             variant: props.variant,
                             packageType: 'MP',
                             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,

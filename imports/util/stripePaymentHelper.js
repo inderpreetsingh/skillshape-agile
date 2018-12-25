@@ -1,5 +1,5 @@
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import {get,isEmpty,compact} from 'lodash';
+import { get, isEmpty, compact } from 'lodash';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import styled from 'styled-components';
 import React from 'react';
@@ -21,14 +21,16 @@ const Div = styled.div`
 `;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 export const stripePaymentHelper = async function (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
-    
+
     resetStates(this);
     const { popUp } = this.props;
     popUp.appear('success', {
         title: 'Wait',
         content: 'Please Wait One Sec...',
         RenderActions: <span />
-    }, true); /* , true, { autoClose: true, autoTimeout: 4000 } */
+    }, true, {
+            purpose: 'wait-for-next-steps'
+        }); /* , true, { autoClose: true, autoTimeout: 4000 } */
 
     config.currency.map((data, index) => {
         if (data.value == currency) {
@@ -52,9 +54,9 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
         return;
     }
     //check is package is already purchased
-    await isEnrollmentPurchase(packageId,userId,packageType,self);
-    if(!self.state.epStatus){
-        popUpForEnrollment(popUp,self.state.epData,self);
+    await isEnrollmentPurchase(packageId, userId, packageType, self);
+    if (!self.state.epStatus) {
+        popUpForEnrollment(popUp, self.state.epData, self);
         return;
     }
     await isAlreadyPurchased({
@@ -77,7 +79,7 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
     if (self.state.isAlreadyPurchased) {
         return;
     }
-   
+
     if (self.state.payAsYouGo) {
         let money = formatMoney(amount / 100, get(monthlyPymtDetails[0], 'currency', '$'));
         let months = get(monthlyPymtDetails[0], 'month', 0);
@@ -142,46 +144,55 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
     handleChargeAndSubscription(packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType, self);
 };
 // check if the enrollment package is purchased or not
-isEnrollmentPurchase = (packageId,userId,packageType,self)=>{
-        let purchasedEP,noEP,epStatus=true;
-        return new Promise((resolve,reject)=>{
-            Meteor.call("enrollment.checkIsEnrollmentPurchased",packageId,userId,packageType,(err,res)=>{
-                if(!isEmpty(res)){
-                    res.map((obj)=>{
-                        purchasedEP = get(obj,"purchasedEP",[]);
-                        noEP = get(obj,"noEP",false);
-                        if(!isEmpty(purchasedEP) || noEP){
-                            obj.epStatus = true;
-                        }else{
-                            epStatus = false;
-                            obj.epStatus = false;
-                        }
-                    })
-                }
-                console.log("​isEnrollmentPurchase -> res", res)
-                self.setState({epData:res,epStatus});
-                resolve();
-            })
+isEnrollmentPurchase = (packageId, userId, packageType, self) => {
+    let purchasedEP, noEP, epStatus = true;
+    return new Promise((resolve, reject) => {
+        Meteor.call("enrollment.checkIsEnrollmentPurchased", packageId, userId, packageType, (err, res) => {
+            if (!isEmpty(res)) {
+                res.map((obj) => {
+                    purchasedEP = get(obj, "purchasedEP", []);
+                    noEP = get(obj, "noEP", false);
+                    if (!isEmpty(purchasedEP) || noEP) {
+                        obj.epStatus = true;
+                    } else {
+                        epStatus = false;
+                        obj.epStatus = false;
+                    }
+                })
+            }
+            console.log("​isEnrollmentPurchase -> res", res)
+            self.setState({ epData: res, epStatus });
+            resolve();
         })
-    }
+    })
+}
 //UI for enrollment package again purchase message
-popUpForEnrollment = (popUp,res,self) =>{
-    let classTypeNames = compact(res.map((obj)=>{if(!obj.epStatus) return obj.name;}));
-	
-    popUp.appear(
-        'inform',
-        {
-            title: 'Purchase Enrollment Package First',
-            content: ReactHtmlParser(`Please purchase enrollment package which covers these class types.<br/> ${classTypeNames.join("<br/>")} `),
-            RenderActions: (
-                <ButtonsWrapper>
-                        <FormGhostButton label={"Ok"} onClick={() => { }} greyColor applyClose />
-                       {/* <FormGhostButton label={"Skip For Now"} onClick={() => {self.setState({epStatus:true}) }} greyColor applyClose /> */}
-        </ButtonsWrapper>
-            )
-        },
-        true
-    );
+popUpForEnrollment = (popUp, res, self) => {
+    console.info("REST >>>>>>>>>>>>>>", res);
+    let classTypeIds = compact(res.map((obj) => { if (!obj.epStatus) return obj._id; }))
+    let classTypeNames = compact(res.map((obj) => { if (!obj.epStatus) return obj.name; }));
+    popUp.close();
+    self.setState(state => {
+        return {
+            ...state,
+            selectedClassTypeIds: classTypeIds,
+            enrollmentPackagesDialog: true
+        }
+    })
+    // popUp.appear(
+    //     'inform',
+    //     {
+    //         title: 'Purchase Enrollment Package First',
+    //         content: ReactHtmlParser(`Please purchase enrollment package which covers these class types.<br/> ${classTypeNames.join("<br/>")} `),
+    //         RenderActions: (
+    //             <ButtonsWrapper>
+    //                     <FormGhostButton label={"Ok"} onClick={() => { }} greyColor applyClose />
+    //                    {/* <FormGhostButton label={"Skip For Now"} onClick={() => {self.setState({epStatus:true}) }} greyColor applyClose /> */}
+    //     </ButtonsWrapper>
+    //         )
+    //     },
+    //     true
+    // );
 }
 contractLengthFinder = (res, monthlyPymtDetails) => {
     let oldContractLength, newContractLength;
@@ -204,7 +215,7 @@ noThanksButton = () => (
         <FormGhostButton label={'No, thanks'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
 );
-closeButton = () =>(
+closeButton = () => (
     <ButtonWrapper>
         <FormGhostButton label={'Close'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
@@ -821,7 +832,7 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                     },
                     true
                 );
-                self.packagesRequired !='enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
+                self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('warning', {
                     title: 'Error',
@@ -888,12 +899,12 @@ handleCharge = (
                         }
                     };
                     Meteor.call('schoolMemberDetails.addNewMember', memberData);
-                    
+
                     popUp.appear(
                         'success',
                         {
-                            title: self.packagesRequired=='enrollment' ? self.generateTitle() :'Success',
-                            content: self.packagesRequired=='enrollment' ? self.generateContent() :`Your Payment is received successfully.`,
+                            title: self.packagesRequired == 'enrollment' ? self.generateTitle() : 'Success',
+                            content: self.packagesRequired == 'enrollment' ? self.generateContent() : `Your Payment is received successfully.`,
                             RenderActions: (
                                 <ButtonsWrapper>
                                     {closeButton()}
@@ -905,16 +916,16 @@ handleCharge = (
                                         }}
                                         applyClose
                                     />
-                                    {self.packagesRequired=='enrollment' &&
-                                (
-                                    <FormGhostButton
-                                        label={'Per Class/Monthly Package'}
-                                        onClick={self.purchasedSuccessfully}
-                                        applyClose
-                                    /> 
-                                )
-                                
-                                }
+                                    {self.packagesRequired == 'enrollment' &&
+                                        (
+                                            <FormGhostButton
+                                                label={'Per Class/Monthly Package'}
+                                                onClick={self.purchasedSuccessfully}
+                                                applyClose
+                                            />
+                                        )
+
+                                    }
                                 </ButtonsWrapper>
                             )
                         },
@@ -923,7 +934,7 @@ handleCharge = (
                 } else {
                     popUp.appear('success', { title: 'Success', content: result.message });
                 }
-                self.packagesRequired !='enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
+                self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('success', { title: 'Error', content: error.message });
             }

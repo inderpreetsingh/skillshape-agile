@@ -10,11 +10,16 @@ import SchoolDetails from "/imports/ui/components/landing/components/class/detai
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
 import ReviewsManager from "/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx";
 import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
-import CallUsDialogBox from "/imports/ui/components/landing/components/dialogs/CallUsDialogBox.jsx";
-import EmailUsDialogBox from "/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx";
-import GiveReviewDialogBox from "/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx";
-import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
-import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
+
+import {
+  EmailUsDialogBox,
+  CallUsDialogBox,
+  GiveReviewDialogBox,
+  ManageRequestsDialogBox,
+  EnrollmentPackagesData,
+  NonUserDefaultDialogBox
+} from '/imports/ui/components/landing/components/dialogs/';
+
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
@@ -24,6 +29,7 @@ import { capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopU
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import withImageExists from "/imports/util/withImageExists.js";
+import { EnrollmentPackagesDialogBox } from "../landing/components/dialogs";
 
 const imageExistsConfig = {
   originalImagePath: "classTypeData.classTypeImg",
@@ -544,6 +550,22 @@ class ClassTypeContent extends Component {
             title={this.state.defaultDialogBoxTitle}
             open={this.state.nonUserDefaultDialog}
             onModalClose={() => this.handleDefaultDialogBox("", false)}
+          />
+        )}
+        {this.state.enrollmentPackagesDialog && (
+          <EnrollmentPackagesDialogBox
+            open={this.state.enrollmentPackagesDialog}
+            schoolId={schoolData._id}
+            onModalClose={() => {
+              this.setState(state => {
+                return {
+                  ...state,
+                  enrollmentPackagesDialog: false,
+                  selectedClassTypeIds: null
+                }
+              })
+            }}
+            classTypeIds={this.state.selectedClassTypeIds}
           />
         )}
         {this.state.manageRequestsDialog && (

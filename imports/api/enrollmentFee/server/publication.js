@@ -8,6 +8,14 @@ Meteor.publish("enrollmentFee.getEnrollmentFee", function ({ schoolId }) {
 	return EnrollmentFees.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
+// selecting based on multiple classes
+Meteor.publish("enrollmentFee.getClassTypesEnrollMentFee", function ({ classTypeIds }) {
+	check(classTypeIds, [String]);
+
+	let cursor = EnrollmentFees.find({ classTypeId: { $in: classTypeIds } });
+	return EnrollmentFees.publishJoinedCursors(cursor, { reactive: true }, this);
+});
+
 Meteor.publish("enrollmentFee.getClassTypeEnrollMentFree", function ({ classTypeId }) {
 	check(classTypeId, String);
 

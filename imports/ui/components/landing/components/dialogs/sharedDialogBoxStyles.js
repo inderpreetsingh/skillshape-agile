@@ -19,7 +19,7 @@ export const dialogStyles = {
   },
   dialogRoot: {
     width: "100%",
-    maxWidth: 400,
+    maxWidth: 600,
     [`@media screen and (max-width : ${helpers.mobile}px)`]: {
       // paddingTop: helpers.rhythmDiv * 2,
       margin: helpers.rhythmDiv

@@ -11,10 +11,15 @@ import PackagesList from '/imports/ui/components/landing/components/class/packag
 //import ReviewsSlider from '/imports/ui/components/landing/components/class/reviews/ReviewsSlider.jsx';
 import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
-import EmailUsDialogBox from '/imports/ui/components/landing/components/dialogs/EmailUsDialogBox.jsx';
-import GiveReviewDialogBox from '/imports/ui/components/landing/components/dialogs/GiveReviewDialogBox.jsx';
-import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx';
-import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx';
+
+import {
+  EmailUsDialogBox,
+  GiveReviewDialogBox,
+  ManageRequestDialogBox,
+  NonUserDefaultDialogBox,
+  EnrollmentPackagesDialogBox
+} from '/imports/ui/components/landing/components/dialogs/';
+
 import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
@@ -254,6 +259,23 @@ export default function () {
             onToastrClose={() => this.handleDialogState('manageRequestsDialog', false)}
           />}
           {
+            this.state.enrollmentPackagesDialog &&
+            <EnrollmentPackagesDialogBox
+              open={this.state.enrollmentPackagesDialog}
+              schoolId={schoolId}
+              onModalClose={() => {
+                this.setState(state => {
+                  return {
+                    ...state,
+                    enrollmentPackagesDialog: false,
+                    selectedClassTypeIds: null
+                  }
+                })
+              }}
+              classTypeIds={this.state.selectedClassTypeIds}
+            />
+          }
+          {
             this.state.showConfirmationModal && <ConfirmationModal
               open={this.state.showConfirmationModal}
               submitBtnLabel="Request pricing"
@@ -329,14 +351,14 @@ export default function () {
                 params={params}
               />
             </ClassTypeListWrapper>
-                   {/* Calendar Section*/}
-                   <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
+            {/* Calendar Section*/}
+            <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
               <Element name="schedule-section">
                 {<ManageMyCalendar schoolCalendar={true} {...this.props} />}
               </Element>
             </MyCalendarWrapper>
-             {/* School Extra Section -- Notes & Media*/}
-             <SchoolExtraSection>
+            {/* School Extra Section -- Notes & Media*/}
+            <SchoolExtraSection>
               {this.checkForHtmlCode(schoolData.studentNotesHtml) && <NotesWrapper>
                 <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
               </NotesWrapper>}
@@ -385,9 +407,9 @@ export default function () {
               </Element>
             </PricingSection>
 
-           
 
-     
+
+
 
 
             {/*<div className="card">

@@ -34,7 +34,12 @@ class TestPopUps extends Component {
 
   handleInformButtonClick = () => {
     const { popUp } = this.props;
-    popUp.appear("inform", { defaultButtons: true });
+    popUp.appear("inform", {
+      title: 'title',
+      content: 'content',
+      onAffirmationButtonClick: () => console.log("success click"),
+      defaultButtons: true
+    });
   };
 
   handleSuccessButtonClick = () => {
