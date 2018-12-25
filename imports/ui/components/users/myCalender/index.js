@@ -170,6 +170,7 @@ export default class MyCalender extends React.Component {
   handleClassUpdate = (filter,status,popUp)=>{
     Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
       let purchased = get(res,'purchased',[]);
+			console.log("​MyCalender -> handleClassUpdate -> purchased", purchased)
       let epStatus = get(res,"epStatus",false);
        if(epStatus && !isEmpty(purchased)){
         if(purchased.length==1){
