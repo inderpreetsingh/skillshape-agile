@@ -11,6 +11,7 @@ import School from "/imports/api/school/fields";
 import styled from "styled-components";
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
 import ReactHtmlParser from 'react-html-parser';
+import { EnrollmentPackagesDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 
 const Root = styled.div`
 `;
@@ -85,6 +86,25 @@ render() {
       <Title>
         {ReactHtmlParser(titleText)}
       </Title>
+      {
+            this.state.enrollmentPackagesDialog &&
+            <EnrollmentPackagesDialogBox
+              open={this.state.enrollmentPackagesDialog}
+              schoolId={schoolId}
+              onAddToCartIconButtonClick={this.handlePurchasePackage}
+              onModalClose={() => {
+                this.setState(state => {
+                  return {
+                    ...state,
+                    enrollmentPackagesDialog: false,
+                    selectedClassTypeIds: null
+                  }
+                })
+              }}
+              classTypeIds={this.state.selectedClassTypeIds}
+              epData = {this.state.epData}
+            />
+          }
       <PackagesList
         schoolId={schoolId}
         enrollMentPackages={enrollMentPackages}

@@ -15,6 +15,7 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import School from "/imports/api/school/fields";
 import {get} from 'lodash';
+import { EnrollmentPackagesDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import { withPopUp, stripePaymentHelper, normalizeMonthlyPricingData } from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -92,6 +93,25 @@ class ClassTypePackages extends React.Component {
                     onRequestClose={this.props.onClose}
                     aria-labelledby="Class Packages"
                 >
+                  {
+            this.state.enrollmentPackagesDialog &&
+            <EnrollmentPackagesDialogBox
+              open={this.state.enrollmentPackagesDialog}
+              schoolId={schoolId}
+              onAddToCartIconButtonClick={this.handlePurchasePackage}
+              onModalClose={() => {
+                this.setState(state => {
+                  return {
+                    ...state,
+                    enrollmentPackagesDialog: false,
+                    selectedClassTypeIds: null
+                  }
+                })
+              }}
+              classTypeIds={this.state.selectedClassTypeIds}
+              epData = {this.state.epData}
+            />
+          }
                     {this.props.isLoading && <ContainerLoader />}
                     <DialogTitle>
                         <DialogTitleWrapper>
