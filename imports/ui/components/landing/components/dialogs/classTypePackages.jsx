@@ -61,7 +61,7 @@ class ClassTypePackages extends React.Component {
 
         try {
             let userId = this.props.userId;
-            this.packagesRequired = this.props.packagesRequired;
+            this.packagesRequired = this.props.fromSignFunctionality ? this.props.packagesRequired : null;
             stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
         } catch (error) {
             console.log('Error in handlePurchasePackage', error);
@@ -80,7 +80,7 @@ class ClassTypePackages extends React.Component {
         return 'Now you can purchase a package to pay for the classes themselves. Click Per Class/Monthly Package  button to purchase package.';
     }
     purchasedSuccessfully = () =>{
-       this.props.handleSignIn()
+        this.props.handleSignIn && this.props.handleSignIn()
     }
     render() {
         let { schoolId, classPricing, monthlyPricing, enrollmentFee, currency ,title} = this.props;

@@ -638,7 +638,8 @@ class ClassTime extends Component {
       schoolId,
       params,
       classTypeId,
-      popUp
+      popUp,
+      enrollmentIds
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
@@ -695,6 +696,7 @@ class ClassTime extends Component {
                   params = {params}
                   classTypeId = {classTypeId}
                   popUp={popUp}
+                  enrollmentIds = {enrollmentIds}
                 />
               )}
             <div>

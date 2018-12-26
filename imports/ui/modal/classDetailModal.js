@@ -468,6 +468,7 @@ class ClassDetailModal extends React.Component {
       params,
       schoolName
     } = this.props;
+    let enrollmentIds = get(this.state.classType,'enrollmentIds',[]);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
       eventData,
@@ -685,6 +686,7 @@ class ClassDetailModal extends React.Component {
                         onModalClose ={()=>{this.props.closeEventModal(false, null)}}
                         params= {params}
                         schoolName = {schoolName}
+                        enrollmentIds = {enrollmentIds}
                       />
                     </div>
                   </div>
@@ -842,6 +844,7 @@ class ClassDetailModal extends React.Component {
                         onModalClose ={()=>{this.props.closeEventModal(false, null)}}
                         params= {params}
                         schoolName = {schoolName}
+                        enrollmentIds = {enrollmentIds}
                       />
                     </div>
                   </div>

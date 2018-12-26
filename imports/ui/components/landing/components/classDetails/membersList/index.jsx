@@ -316,6 +316,7 @@ handleClassUpdate = (filter,status,popUp)=>{
                     userId={userId}
                     packagesRequired = {packagesRequired}
                     handleSignIn = {this.handleSignIn}
+                    fromSignFunctionality
                     />}
         <MembersList
           viewType={currentView}

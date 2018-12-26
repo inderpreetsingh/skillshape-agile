@@ -462,6 +462,7 @@ export default class MyCalender extends React.Component {
                     userId={Meteor.userId()}
                     packagesRequired = {packagesRequired}
                     handleSignIn = {this.handleSignIn}
+                    fromSignFunctionality
                     />}
         {isOpen && (
           <SkillshapePopover
