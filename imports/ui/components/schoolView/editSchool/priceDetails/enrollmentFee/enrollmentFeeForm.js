@@ -208,7 +208,7 @@ class EnrollmentFeeForm extends React.Component {
                 type="text"
                 fullWidth
               />
-              <SelectArrayInput
+              {!this.state.includeAllClassTypes &&  <SelectArrayInput
                 disabled={false}
                 floatingLabelText="Class Types"
                 optionValue="_id"
@@ -221,7 +221,8 @@ class EnrollmentFeeForm extends React.Component {
                 setFilter={this.handleClassTypeInputChange}
                 dataSourceConfig={{ text: "name", value: "_id" }}
                 choices={classTypeData}
-              />
+              /> }
+             
               <FormControl fullWidth margin="dense">
                 <FormControlLabel
                   control={
