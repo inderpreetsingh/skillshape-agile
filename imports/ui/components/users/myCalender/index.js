@@ -170,12 +170,29 @@ export default class MyCalender extends React.Component {
   handleClassUpdate = (filter,status,popUp)=>{
     Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
       let purchased = get(res,'purchased',[]);
-			console.log("​MyCalender -> handleClassUpdate -> purchased", purchased)
       let epStatus = get(res,"epStatus",false);
        if(epStatus && !isEmpty(purchased)){
         if(purchased.length==1){
           this.updateClass(filter,status,purchased[0],popUp)
           return;
+        }
+        else if(status=='signOut'){
+          let {classDetails:{students}}=this.state,purchaseId,purchaseData;
+          if(!isEmpty(students) && !isEmpty(purchased)){
+            students.map((obj)=>{
+              if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+                purchaseId = obj.purchaseId;
+              }
+            })
+            purchased.map((obj)=>{
+              if(obj._id==purchaseId){
+                purchaseData = obj;
+              }
+            })
+            this.updateClass(filter,status,purchaseData,popUp);
+          return;
+          }
+
         }
         else{
           popUp.appear("inform", {

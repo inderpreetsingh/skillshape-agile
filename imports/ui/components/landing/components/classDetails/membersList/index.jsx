@@ -136,6 +136,24 @@ handleClassUpdate = (filter,status,popUp)=>{
         this.updateClass(filter,status,purchased[0],popUp)
         return;
       }
+      else if(status=='signOut'){
+        let {students}=filter,purchaseId,purchaseData;
+        if(!isEmpty(students) && !isEmpty(purchased)){
+          students.map((obj)=>{
+            if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+              purchaseId = obj.purchaseId;
+            }
+          })
+          purchased.map((obj)=>{
+            if(obj._id==purchaseId){
+              purchaseData = obj;
+            }
+          })
+          this.updateClass(filter,status,purchaseData,popUp);
+        return;
+        }
+
+      }
       else{
         popUp.appear("inform", {
           title: `Confirmation`,
