@@ -16,7 +16,6 @@ import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields.js";
 import School from '/imports/api/school/fields.js';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from '/imports/ui/loading/container';
 import { formatMoney, maximumClasses, normalizeMonthlyPricingData } from "/imports/util";
@@ -189,6 +188,15 @@ class PackageListingAttachment extends React.Component {
     }
     return { ...state }
   }
+  confirmation = () => {
+    const {popUp}= this.props;
+    popUp.appear("inform", {
+      title: "Confirmation",
+      content: "This will save Class Time and Package details. Are you sure ?",
+      onAffirmationButtonClick: this.onConnect,
+     defaultButtons: true,    
+}, true);
+  }
   packageListing = (monthlyPackageData) => {
     if (!isEmpty(monthlyPackageData)) {
       return monthlyPackageData.map((current, index) => {
@@ -318,7 +326,17 @@ class PackageListingAttachment extends React.Component {
         }
       })
     }
-    this.props.classTimeFormOnClose();
+    const {popUp} = this.props;
+    popUp.appear("success", {
+      title: "Package Connected Successfully",
+      content: `Packages Successfully connected to this class type.`,
+      RenderActions: (<ButtonWrapper>
+        <FormGhostButton
+          onClick={this.props.classTimeFormOnClose}
+          label="Ok"
+        />
+      </ButtonWrapper>)
+  }, true);
   }
   checkboxChecker = (value, props) => {
     if (value == undefined) {
@@ -444,23 +462,10 @@ class PackageListingAttachment extends React.Component {
   render() {
     let { monthlyPackageData, schoolData, enrollmentFee, perClass } = this.props;
     monthlyPackageData = normalizeMonthlyPricingData(monthlyPackageData);
+    let noPackage = false;
+    noPackage = isEmpty(monthlyPackageData) && isEmpty(enrollmentFee) && isEmpty(perClass);
     return (
       <MuiThemeProvider theme={muiTheme}>
-        {this.state.showConfirmationModal && (
-          <SkillShapeDialogBox
-            open={this.state.showConfirmationModal}
-            defaultButtons
-            onModalClose={() => this.setState({ showConfirmationModal: false })}
-            type="inform"
-            title="Save"
-            content="This will save Class Time and Package details. Are you sure ?"
-            onAffirmationButtonClick={this.onConnect}
-            onCloseButtonClick={() =>
-              this.setState({ showConfirmationModal: false })
-            }
-            fromPackageListing={true}
-          />
-        )}
         <Dialog
           title="Package Listing"
           open={this.props.open}
@@ -472,7 +477,12 @@ class PackageListingAttachment extends React.Component {
           <DialogTitle style={{backgroundColor:'#e1e1e1'}}>
            
             <DialogTitleWrapper>
-              Connect To Packages
+             
+              {noPackage ?(
+                <TitleForPackageType>No Packages Available Yet. Please create new Packages first.</TitleForPackageType>): (
+                  <TitleForPackageType>Connect To Packages</TitleForPackageType> 
+                )
+              }
            <IconButton color="primary" onClick={() => { this.props.onClose() }}>
                 <ClearIcon />
               </IconButton >
@@ -480,25 +490,37 @@ class PackageListingAttachment extends React.Component {
           </DialogTitle>
           
           <DialogContent style={{backgroundColor:'#e1e1e1'}} >
-              <TitleForPackageType>Monthly Packages</TitleForPackageType>
-              {!isEmpty(monthlyPackageData) && monthlyPackageData.map((current, index) => {
-                current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
-                current.packageType = 'MP';
-                return this.Package(current, index)
-              })}
-              <TitleForPackageType>Enrollment Packages</TitleForPackageType>
-              {!isEmpty(enrollmentFee) && enrollmentFee.map((current, index) => {
+              
+              {!isEmpty(monthlyPackageData) && (
+                <div>  <TitleForPackageType>Monthly Packages</TitleForPackageType>
+                {monthlyPackageData.map((current, index) => {
+                  current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+                  current.packageType = 'MP';
+                  return this.Package(current, index)
+                })}</div>
+              )}
+             {!isEmpty(enrollmentFee) && (
+               <div>
+                 <TitleForPackageType>Enrollment Packages</TitleForPackageType>
+              {enrollmentFee.map((current, index) => {
                 current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
                 current.packageType = 'EP';
                 return this.Package(current, index)
               })}
-              <TitleForPackageType>Class Packages</TitleForPackageType>
-              {!isEmpty(perClass) && perClass.map((current, index) => {
+               </div>
+             )}
+              {!isEmpty(perClass) &&(
+                <div>
+                <TitleForPackageType>Class Packages</TitleForPackageType>
+              {  perClass.map((current, index) => {
                 current.schoolCurrency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
                 current.packageType = 'CP';
                 current.classPackages = true;
                 return this.Package(current, index)
               })}
+                </div>
+              )}
+              
             
           </DialogContent>
           <DialogActions classes={{ action: this.props.classes.dialogAction }} style={{backgroundColor:'#e1e1e1',margin:'0px 0px'}}>
@@ -508,15 +530,16 @@ class PackageListingAttachment extends React.Component {
                 label="Connect"
                 onClick={() => { this.setState({ showConfirmationModal: true }) }}
               /> */}
-              <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              {!noPackage && ( <Grid style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <ButtonWrapper>
                   <FormGhostButton
-                    onClick={() => { this.setState({ showConfirmationModal: true }) }}
+                    onClick={this.confirmation}
                     label="Connect"
                   />
                 </ButtonWrapper>
 
-              </Grid>
+              </Grid>)}
+             
             </CenterConnect>
           </DialogActions>
         </Dialog>

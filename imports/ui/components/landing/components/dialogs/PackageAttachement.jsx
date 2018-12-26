@@ -48,7 +48,7 @@ class PackageAttachment extends React.Component {
     }
    
     render() {
-        const { schoolId, classTypeId, classTypeName, parentData, closed } = this.props;
+        const { schoolId, classTypeId, classTypeName, parentData, closed ,popUp} = this.props;
         
         return (
             <MuiThemeProvider theme={muiTheme}>
@@ -103,6 +103,7 @@ class PackageAttachment extends React.Component {
                     open={this.state.pacLisAttOpen}
                     onClose={() => { this.setState({ PackageListingAttachment: false }) }}
                     schoolId={schoolId}
+                    popUp={popUp}
                     classTypeId={classTypeId}
                     classTimeFormOnClose={() => { this.props.classTimeFormOnClose() }}
                 />}
