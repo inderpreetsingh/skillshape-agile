@@ -478,7 +478,7 @@ class PackageListingAttachment extends React.Component {
            
             <DialogTitleWrapper>
              
-              {noPackage ?(
+              {noPackage && !isLoading ?(
                 <TitleForPackageType>No Packages Available Yet. Please create new Packages first.</TitleForPackageType>): (
                   <TitleForPackageType>Connect To Packages</TitleForPackageType> 
                 )
@@ -550,30 +550,33 @@ class PackageListingAttachment extends React.Component {
 
 export default createContainer(props => {
   const { schoolId } = props;
+  isLoading = true;
   let monthlyPackageData = [], monthlySubscription, schoolDataSubscription, schoolData, isBusy = true,
     enrollmentFee = [], enrollmentSubscription, classPricingSubscription, perClass = [];
   monthlySubscription = Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
   schoolDataSubscription = Meteor.subscribe("school.getSchoolBySchoolId", schoolId)
   enrollmentSubscription = Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
   classPricingSubscription = Meteor.subscribe("classPricing.getClassPricing", { schoolId });
-
-  if (schoolDataSubscription && schoolDataSubscription.ready())
+  let subscriptionChecks = schoolDataSubscription && schoolDataSubscription.ready() &&
+  monthlySubscription && monthlySubscription.ready() && enrollmentSubscription && enrollmentSubscription.ready()
+  && classPricingSubscription && classPricingSubscription.ready();
+  if(subscriptionChecks){
     schoolData = School.findOne();
 
-  if (monthlySubscription && monthlySubscription.ready())
     monthlyPackageData = MonthlyPricing.find().fetch();
 
-  if (enrollmentSubscription && enrollmentSubscription.ready())
     enrollmentFee = EnrollmentFees.find({ schoolId }).fetch();
 
-  if (classPricingSubscription && classPricingSubscription.ready())
     perClass = ClassPricing.find({ schoolId }).fetch();
+    isLoading = false;
+  }
 
   return {
     ...props,
     schoolData,
     monthlyPackageData,
     enrollmentFee,
-    perClass
+    perClass,
+    isLoading
   };
 }, withStyles(styles)(PackageListingAttachment));
