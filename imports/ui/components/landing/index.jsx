@@ -28,7 +28,7 @@ import * as helpers from "./components/jss/helpers.js";
 import { cardsData, cardsData1 } from "./constants/cardsData.js";
 import config from "/imports/config";
 import Events from "/imports/util/events";
-import { withPopUp, redirectUserBasedOnType } from "/imports/util";
+import { withPopUp, } from "/imports/util";
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 
 const MainContentWrapper = styled.div`
@@ -315,9 +315,11 @@ class Landing extends Component {
             if (res.length == 1) {
               //if there is only 1 school, then visit it else
               const mySchoolSlug = res[0].slug;
-              browserHistory.push(`/schools/${mySchoolSlug}`);
+              // browserHistory.push(`/schools/${mySchoolSlug}`);
+              browserHistory.push("/dashboard");
             } else {
-              browserHistory.push("/skillshape-for-school");
+              // browserHistory.push("/skillshape-for-school");
+              browserHistory.push("/dashboard");
             }
           }
         });
@@ -349,7 +351,7 @@ class Landing extends Component {
 
   componentDidMount() {
     let positionCoords = this.getUsersCurrentLocation();
-    positionCoords.then(function(value) {
+    positionCoords.then(function (value) {
       localStorage.setItem("myLocation", JSON.stringify(value));
     });
     if (this.props.location.query && this.props.location.query.claimRequest) {
@@ -1062,10 +1064,10 @@ class Landing extends Component {
               {this.state.mapView ? (
                 this.renderFilterPanel()
               ) : (
-                <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                  {this.renderFilterPanel()}
-                </FilterBarDisplayWrapper>
-              )}
+                  <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                    {this.renderFilterPanel()}
+                  </FilterBarDisplayWrapper>
+                )}
             </Sticky>
           </FilterPanelWrapper>
 

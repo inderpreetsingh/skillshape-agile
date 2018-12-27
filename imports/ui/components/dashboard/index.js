@@ -1,8 +1,9 @@
 import React, { Fragment, Component } from 'react';
-import React from 
 
-import Header from './Header';
-import Body from './Body';
+import { getUserFullName } from '/imports/util';
+
+import Header from './header/index.jsx';
+import Body from './body/index.jsx';
 
 class MyDashBoard extends Component {
     constructor(props) {
@@ -39,9 +40,10 @@ class MyDashBoard extends Component {
     }
 
     render() {
+        const { mySchools } = this.state;
         return (
             <Fragment>
-                <Header />
+                <Header userName={getUserFullName(Meteor.user())} />
                 <Body
                     schoolsListProps={{
                         mySchools

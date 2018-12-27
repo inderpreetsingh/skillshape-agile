@@ -18,6 +18,8 @@ import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
 import ManageUsers from "/imports/ui/components/manage-users";
 import Optimization from '/imports/ui/components/optimization';
 import SchoolMemberView from "/imports/ui/components/schoolMembers";
+import DashBoard from '/imports/ui/components/dashboard';
+
 // import MyCalender from '/imports/ui/components/users/myCalender';
 import SchoolUpload from "/imports/ui/components/schoolUpload";
 import SchoolView from "/imports/ui/components/schoolView";
@@ -87,9 +89,14 @@ export default (Routes = componentLoader(props => (
         name="SchoolSuggestionsView"
         component={SchoolSuggestionsView}
       />
+      <Route
+        path="/dashboard"
+        name="Dashboard"
+        component={DashBoard}
+      />
       <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
-      
+
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
         <Route path="/Contactus" name="Contactus" component={ContactUs} />
