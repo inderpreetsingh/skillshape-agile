@@ -1,9 +1,32 @@
 import React, { Fragment, Component } from 'react';
-
+import styled from 'styled-components';
+import { Link } from 'react-router';
 import { getUserFullName } from '/imports/util';
 
 import Header from './header/index.jsx';
-import Body from './body/index.jsx';
+import { SchoolsList } from './schools/';
+
+import { SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { rhythmDiv, primaryColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+
+const BodyWrapper = styled.div`
+    padding: ${rhythmDiv * 4}px ${rhythmDiv * 2}px;
+`;
+
+const Content = SubHeading.extend`
+    text-align: center;
+    margin-bottom: ${rhythmDiv * 2}px;
+`;
+
+const MyLink = styled(Link)`
+    color: ${primaryColor};
+    cursor: pointer;
+    transition: color .1s linear;
+    
+    &:hover {
+        color: ${primaryColor};
+    }
+`;
 
 class MyDashBoard extends Component {
     constructor(props) {
@@ -44,11 +67,12 @@ class MyDashBoard extends Component {
         return (
             <Fragment>
                 <Header userName={getUserFullName(Meteor.user())} />
-                <Body
-                    schoolsListProps={{
-                        mySchools
-                    }}
-                />
+                <BodyWrapper>
+                    <Content>If you want to add a new school, <MyLink>click here</MyLink> </Content>
+                    <SchoolsList
+                        schools={mySchools}
+                    />
+                </BodyWrapper>
             </Fragment>
         )
     }
