@@ -227,7 +227,8 @@ export default class MyCalender extends React.Component {
           title,
           content,
           RenderActions: (<ButtonWrapper>
-          {this.purchaseLaterButton()}
+             {this.cancelSignIn()}
+           {this.signInAndPurchaseLater(filter,status,popUp)}
            {this.purchaseNowButton(packagesRequired)}
           </ButtonWrapper>)
         }, true);
@@ -278,7 +279,8 @@ export default class MyCalender extends React.Component {
                 title: `Caution`,
                 content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
                 RenderActions: (<ButtonWrapper>
-                    {this.purchaseLaterButton()}
+                    {this.cancelSignIn()}
+                    {this.signInAndPurchaseLater(filter,status,popUp)}
                    {this.purchaseNowButton()}
               </ButtonWrapper>)
               }, true);
@@ -296,13 +298,40 @@ export default class MyCalender extends React.Component {
     applyClose
   />
   )
-  purchaseLaterButton = ()=>(
+  cancelSignIn = ()=>(
     <FormGhostButton
-             label={'Purchase Later'}
+             label={'Cancel Sign In'}
              onClick={() => {}}
              applyClose
            />
   )
+  signInAndPurchaseLater = (filter,status,popUp)=>(
+    <FormGhostButton
+             label={'Sign In And Purchase Later'}
+             onClick={() => {this.handleSIgnInAndPurchaseLater(filter,status,popUp)}}
+             applyClose
+           />
+  )
+  handleSIgnInAndPurchaseLater = (filter,status,popUp) => {
+    Meteor.call("classes.updateClassData",filter,status,null,null,(err,res)=>{
+      if(res){
+        this.setState({status:'Sign In',isLoading:false});
+        popUp.appear("success", {
+          title: `${this.state.status} successfully`,
+          content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+          RenderActions: (<ButtonWrapper>
+            <FormGhostButton
+                label={'Ok'}
+                onClick={() => {
+                  this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
+                }}
+                applyClose
+            />
+        </ButtonWrapper>)
+        }, true);
+      }
+    })
+  }
   handleSignIn = () => {
     const {popUp} = this.props;
     const {classDetails,filter,status} = this.state;
