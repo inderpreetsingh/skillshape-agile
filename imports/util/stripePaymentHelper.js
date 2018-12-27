@@ -24,6 +24,7 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
 
     resetStates(this);
     const { popUp } = this.props;
+    let currentPackageData = {packageType, packageId,currency};
     popUp.appear('success', {
         title: 'Wait',
         content: 'Please Wait One Sec...',
@@ -32,14 +33,15 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
             purpose: 'wait-for-next-steps'
         }); /* , true, { autoClose: true, autoTimeout: 4000 } */
 
-    config.currency.map((data, index) => {
+        config.currency.map((data, index) => {
         if (data.value == currency) {
             currency = data.label;
             amount = amount * data.multiplyFactor;
         }
     });
-
+    
     let self = this;
+    self.setState({currentPackageData});
     let userId = Meteor.userId();
     if (!userId) {
         popUp.appear("alert", {
@@ -54,8 +56,8 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
         return;
     }
     //check is package is already purchased
-    packageType != 'EP' && await isEnrollmentPurchase(packageId, userId, packageType, self);
-    if (!self.state.epStatus && packageType != 'EP') {
+    !self.state.enrollmentPackagesDialog && packageType != 'EP' && await isEnrollmentPurchase(packageId, userId, packageType, self);
+    if (!self.state.epStatus && packageType != 'EP' && !self.state.enrollmentPackagesDialog) {
         popUpForEnrollment(popUp, self.state.epData, self);
         return;
     }

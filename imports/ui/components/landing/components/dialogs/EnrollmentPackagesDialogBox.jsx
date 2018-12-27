@@ -16,9 +16,8 @@ import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'ma
 import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
 import { PrimaryButton } from "/imports/ui/components/landing/components/buttons/";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
-
-import ClassType from '/imports/api/classType/fields';
-import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "/imports/api/school/fields";
 
 import {
@@ -154,7 +153,13 @@ class EnrollmentPackagesDialogBox extends Component {
             schoolId,
             epData,
             isLoading,
-            onAddToCartIconButtonClick
+            onAddToCartIconButtonClick,
+            currentPackage,
+            classTypeWithEp,
+            packageType,
+            classPackages,
+            classTypeWithNoEpNames,
+            classTypeWithEpNames
         } = props;
         return (<Dialog
             open={open}
@@ -178,7 +183,27 @@ class EnrollmentPackagesDialogBox extends Component {
                     <ContainerLoader />
                     :
                     (<DialogContent classes={{ root: classes.dialogContent }}>
-                        {!isEmpty(epData) && epData.map((data, i) => {
+                    {!isEmpty(currentPackage) && (
+                        <PackagesListWrapper key={packageType}>
+                       <PackageListTitle>{`If you plan to attend ${classTypeWithNoEpNames} you do not need the enrollment package.`} </PackageListTitle>
+                       { currentPackage.map((obj)=>{
+                        return (
+                            <PackageWrapper key={obj._id}>
+                            <Package
+                                onAddToCartIconButtonClick = {onAddToCartIconButtonClick}
+                                packageType = {packageType}
+                                {...obj}
+                                classPackages = {classPackages}
+                                appearance="small"
+                                usedFor="enrollmentPackagesDialog"
+                            />
+                        </PackageWrapper>
+                        )
+                      })}
+                     </PackagesListWrapper>
+                    )}
+                   <PackageListTitle>{`If you plan to attend ${classTypeWithEpNames} your will need to purchase one of the following:`}</PackageListTitle>
+                        {!isEmpty(classTypeWithEp) && classTypeWithEp.map((data, i) => {
                             if(data.epStatus) return;
                             return (<PackagesListWrapper key={i}>
                                 <PackageListTitle>For Class {get(data,'name','Class Name')}</PackageListTitle>
@@ -216,11 +241,41 @@ EnrollmentPackagesDialogBox.propTypes = {
 
 export default withStyles(styles)(createContainer(props => {
     let isLoading=false;
-    const {epData} = props;
+    const {epData,currentPackageData:{packageType, packageId,currency}} = props;
+    let classTypeWithNoEp=[],classTypeWithEp=[],classTypeWithNoEpNames=[],currentPackage=[],classPackages= false,classTypeWithEpNames=[] ;
+    !isEmpty(epData) && epData.map((obj)=>{
+        if(obj.noEP || isEmpty(get(obj,'enrollmentPackages',[]))){
+            classTypeWithNoEp.push(obj);
+            classTypeWithNoEpNames.push(obj.name);
+        }
+        else if(!isEmpty(obj.enrollmentPackages)){
+            classTypeWithEpNames.push(obj.name);
+            classTypeWithEp.push(obj);
+        }
+    })
+    if(!isEmpty(classTypeWithNoEp)){
+        if(packageType == 'CP'){
+            Meteor.subscribe("classPricing.getClassPricingFromId", { _id:[packageId] });
+            currentPackage = ClassPricing.find({_id:packageId }).fetch();
+            classPackages = true;
+        }
+        else if(packageType == 'MP'){
+            Meteor.subscribe("monthlyPricing.getMonthlyPricingFromId",  { _id:[packageId] });
+            currentPackage = MonthlyPricing.find({_id:packageId }).fetch();
+            currentPackage = normalizeMonthlyPricingData(currentPackage);
+        }
+        console.log("​currentPackage", currentPackage)
+    }
     return {
         ...props,
         isLoading,
-        epData,
+        classTypeWithNoEp,
+        classTypeWithEp,
+        classTypeWithNoEpNames,
+        currentPackage,
+        packageType,
+        classPackages,
+        classTypeWithEpNames
        
     };
 }, withPopUp(EnrollmentPackagesDialogBox)));
