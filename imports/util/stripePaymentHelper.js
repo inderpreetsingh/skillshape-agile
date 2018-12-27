@@ -54,8 +54,8 @@ export const stripePaymentHelper = async function (packageType, packageId, schoo
         return;
     }
     //check is package is already purchased
-    await isEnrollmentPurchase(packageId, userId, packageType, self);
-    if (!self.state.epStatus) {
+    packageType != 'EP' && await isEnrollmentPurchase(packageId, userId, packageType, self);
+    if (!self.state.epStatus && packageType != 'EP') {
         popUpForEnrollment(popUp, self.state.epData, self);
         return;
     }

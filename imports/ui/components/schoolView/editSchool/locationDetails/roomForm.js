@@ -157,7 +157,7 @@ class RoomForm extends React.Component {
                   defaultValue={data && data.capicity}
                   margin="dense"
                   inputRef={ref => (this.capicity = ref)}
-                  label="Capicity"
+                  label="Capacity"
                   type="number"
                   fullWidth
                   inputProps={{ min: "0"}}

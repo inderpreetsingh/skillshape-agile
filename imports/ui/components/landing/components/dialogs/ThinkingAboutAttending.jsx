@@ -17,7 +17,7 @@ import Events from "/imports/util/events";
 import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
-import { get } from "lodash";
+import { get,isEmpty } from "lodash";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -75,7 +75,7 @@ class ThinkingAboutAttending extends React.Component {
   constructor(props) {
     super(props);
     const { addToCalendar, notification } = this.props;
-    this.state = { checkBoxes: [true, true, true], classTypePackages: false }
+    this.state = { checkBoxes: [true, true, true], classTypePackages: false ,packagesRequired:'perClassAndMonthly'}
   }
   componentWillMount() {
     Events.on("loginAsUser", "123456", data => {
@@ -85,7 +85,12 @@ class ThinkingAboutAttending extends React.Component {
       let { userType, userEmail, userName } = data;
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
     });
+    this.isEnrollmentPurchase(this.props.enrollmentIds);
   }
+  componentWillReceiveProps(nextProps) {
+    !isEmpty(nextProps) && this.isEnrollmentPurchase(nextProps.enrollmentIds);
+  }
+  
   handleSignUpDialogBoxState = (state, userType, userEmail, userName) => {
     this.setState({
       signUpDialogBox: state,
@@ -112,7 +117,18 @@ class ThinkingAboutAttending extends React.Component {
   handleServiceAgreementSubmit = () => {
     this.setState({ emailConfirmationDialogBox: true });
   };
-
+  isEnrollmentPurchase = (enrollmentIds) =>{
+    if(!isEmpty(enrollmentIds)){
+      Meteor.call("purchases.getPurchasedFromPackageIds",enrollmentIds,Meteor.userId(),(err,res)=>{
+        if(isEmpty(res)){
+          this.setState({packagesRequired:'enrollment'});
+        }
+        else if(!isEmpty(res)){
+          this.setState({packagesRequired:'perClassAndMonthly'});
+        }
+      })
+    }
+  }
   handleEmailConfirmationSubmit = () => {
     this.setState({ isBusy: true });
     const { popUp } = this.props;
@@ -192,7 +208,7 @@ class ThinkingAboutAttending extends React.Component {
   };
 
   render() {
-    const { checkBoxes, classTypePackages } = this.state;
+    const { checkBoxes, classTypePackages,packagesRequired } = this.state;
     const { open, onModalClose, addToCalendar,
       handleClassClosed, handleCheckBoxes, purchaseThisPackage, name, schoolId, params, classTypeId } = this.props;
     return (
@@ -246,6 +262,7 @@ class ThinkingAboutAttending extends React.Component {
             onClose={() => { this.setState({ classTypePackages: false }) }}
             params={params}
             classTypeId={classTypeId}
+            packagesRequired = {packagesRequired}
           />}
           <DialogTitle classes={{ root: this.props.classes.dialogTitle }}>
             <DialogTitleWrapper>

@@ -624,6 +624,7 @@ class ClassTimeForm extends React.Component {
         </Dialog>
         {this.state.PackageAttachment && <PackageAttachment
           open={this.state.PackageOpen}
+          popUp = {this.props.popUp}
           onClose={() => { this.setState({ PackageOpen: false }) }}
           schoolId={schoolId}
           classTypeId={parentKey}

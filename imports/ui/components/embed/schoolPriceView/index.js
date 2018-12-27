@@ -5,6 +5,7 @@ import config from "/imports/config";
 import School from "/imports/api/school/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassType from "/imports/api/classType/fields";
+import { EnrollmentPackagesDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
@@ -362,6 +363,25 @@ class SchoolPriceView extends React.Component {
             }
           />
         )}
+          {
+            this.state.enrollmentPackagesDialog &&
+            <EnrollmentPackagesDialogBox
+              open={this.state.enrollmentPackagesDialog}
+              schoolId={schoolId}
+              onAddToCartIconButtonClick={this.handlePurchasePackage}
+              onModalClose={() => {
+                this.setState(state => {
+                  return {
+                    ...state,
+                    enrollmentPackagesDialog: false,
+                    selectedClassTypeIds: null
+                  }
+                })
+              }}
+              classTypeIds={this.state.selectedClassTypeIds}
+              epData = {this.state.epData}
+            />
+          }
         {this.state.signUpDialogBox && (
           <SignUpDialogBox
             open={this.state.signUpDialogBox}

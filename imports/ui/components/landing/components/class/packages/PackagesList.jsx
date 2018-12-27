@@ -166,12 +166,10 @@ const PackagesListContainer = (props) => (
 );
 
 const PackagesList = (props) => {
-    debugger;
     const classPackagesEmpty = isEmpty(props.perClassPackagesData);
     const monthlyPackagesEmpty = isEmpty(props.monthlyPackagesData);
     const enrollMentPackagesEmpty = isEmpty(props.enrollMentPackagesData);
     const schoolCurrency = props.currency;
-    console.info(props, 'PACKAGES LIST>>>>>>>>>>>>')
     return (
         <Fragment>
             {!enrollMentPackagesEmpty && (

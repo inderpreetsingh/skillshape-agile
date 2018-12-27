@@ -15,6 +15,7 @@ import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import School from "/imports/api/school/fields";
 import {get} from 'lodash';
+import { EnrollmentPackagesDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import { withPopUp, stripePaymentHelper, normalizeMonthlyPricingData } from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -45,6 +46,7 @@ const styles = {
 class ClassTypePackages extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {}
     }
 
     componentDidUpdate() {
@@ -59,7 +61,7 @@ class ClassTypePackages extends React.Component {
 
         try {
             let userId = this.props.userId;
-            this.packagesRequired = this.props.packagesRequired;
+            this.packagesRequired = this.props.fromSignFunctionality ? this.props.packagesRequired : null;
             stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
         } catch (error) {
             console.log('Error in handlePurchasePackage', error);
@@ -78,7 +80,7 @@ class ClassTypePackages extends React.Component {
         return 'Now you can purchase a package to pay for the classes themselves. Click Per Class/Monthly Package  button to purchase package.';
     }
     purchasedSuccessfully = () =>{
-       this.props.handleSignIn()
+        this.props.handleSignIn && this.props.handleSignIn()
     }
     render() {
         let { schoolId, classPricing, monthlyPricing, enrollmentFee, currency ,title} = this.props;
@@ -92,6 +94,25 @@ class ClassTypePackages extends React.Component {
                     onRequestClose={this.props.onClose}
                     aria-labelledby="Class Packages"
                 >
+                  {
+            this.state.enrollmentPackagesDialog &&
+            <EnrollmentPackagesDialogBox
+              open={this.state.enrollmentPackagesDialog}
+              schoolId={schoolId}
+              onAddToCartIconButtonClick={this.handlePurchasePackage}
+              onModalClose={() => {
+                this.setState(state => {
+                  return {
+                    ...state,
+                    enrollmentPackagesDialog: false,
+                    selectedClassTypeIds: null
+                  }
+                })
+              }}
+              classTypeIds={this.state.selectedClassTypeIds}
+              epData = {this.state.epData}
+            />
+          }
                     {this.props.isLoading && <ContainerLoader />}
                     <DialogTitle>
                         <DialogTitleWrapper>

@@ -105,6 +105,7 @@ const ClassTimesBar = props => {
               onModalClose={onModalClose}
               params ={params}
               schoolName = {schoolName}
+              enrollmentIds = {enrollmentIds}
             />
           </GridItem>
         );
@@ -119,6 +120,7 @@ const ClassTimesBar = props => {
               onModalClose={onModalClose}
               params ={params}
               schoolName = {schoolName}
+              enrollmentIds = {enrollmentIds}
             />
           </GridItem>
         );
@@ -155,6 +157,7 @@ const ClassTimesBar = props => {
                 onModalClose={onModalClose}
                 params ={params}
                 schoolName = {schoolName}
+                enrollmentIds = {enrollmentIds}
               />
             </GridItem>
           );
@@ -176,6 +179,7 @@ const ClassTimesBar = props => {
           onModalClose={onModalClose}
           params = {params}
           schoolName = {schoolName}
+          enrollmentIds = {enrollmentIds}
         />
       </GridItem>
     ));
@@ -191,7 +195,8 @@ const ClassTimesBar = props => {
     onModalClose,
     onEditClassTimesClick,
     params,
-    schoolName
+    schoolName,
+    enrollmentIds
   } = props;
   let addToCalender;
   return (
