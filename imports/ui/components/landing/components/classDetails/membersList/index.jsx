@@ -76,7 +76,7 @@ class MembersListContainer extends Component {
           if(condition==0 && packageType=='MP' && res){
             condition = res;
           }
-          if(condition>0){
+          if(condition>0  || res == undefined){
             this.setState({isLoading:true});
             Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
               if(res){
@@ -139,9 +139,19 @@ handleClassUpdate = (filter,status,popUp)=>{
   Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
     let purchased = get(res,'purchased',[]);
     let epStatus = get(res,"epStatus",false);
-     if(epStatus && !isEmpty(purchased)){
+    let pos = -1;
+       if(epStatus && !isEmpty(purchased)){
+        purchased.map((obj,index)=>{
+          if(obj.noClasses == null && obj.packageType == 'MP'){
+              pos = index;
+          }
+        })
       if(purchased.length==1){
         this.updateClass(filter,status,purchased[0],popUp)
+        return;
+      }
+      if(pos != -1){
+        this.updateClass(filter,status,purchased[pos],popUp)
         return;
       }
       else if(status=='signOut'){
