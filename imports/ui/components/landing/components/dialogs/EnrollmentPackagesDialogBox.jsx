@@ -66,7 +66,7 @@ const PackagesListWrapper = styled.div`
 
 const PackageListTitle = SubHeading.extend`
     text-align: center;
-    font-size: 20px;
+    font-size: 15px;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -174,7 +174,7 @@ class EnrollmentPackagesDialogBox extends Component {
                         titleProps={{
                             fontSize: '24px'
                         }}
-                        title="Purchase Enrollment Package First"
+                        title="Enrollment Package May Be Required"
                         classes={classes}
                         onModalClose={onModalClose}
                     />
@@ -185,7 +185,7 @@ class EnrollmentPackagesDialogBox extends Component {
                     (<DialogContent classes={{ root: classes.dialogContent }}>
                     {!isEmpty(currentPackage) && (
                         <PackagesListWrapper key={packageType}>
-                       <PackageListTitle>{`If you plan to attend ${classTypeWithNoEpNames} you do not need the enrollment package.`} </PackageListTitle>
+                       <PackageListTitle>If you plan to attend <b>{classTypeWithNoEpNames.join(', ')}</b> you do not need the enrollment package.</PackageListTitle>
                        { currentPackage.map((obj)=>{
                         return (
                             <PackageWrapper key={obj._id}>
@@ -202,11 +202,10 @@ class EnrollmentPackagesDialogBox extends Component {
                       })}
                      </PackagesListWrapper>
                     )}
-                   <PackageListTitle>{`If you plan to attend ${classTypeWithEpNames} your will need to purchase one of the following:`}</PackageListTitle>
                         {!isEmpty(classTypeWithEp) && classTypeWithEp.map((data, i) => {
                             if(data.epStatus) return;
                             return (<PackagesListWrapper key={i}>
-                                <PackageListTitle>For Class {get(data,'name','Class Name')}</PackageListTitle>
+                                <PackageListTitle>If you plan to attend <b>{get(data,'name','Class Name')}</b> your will need to purchase one of the following:</PackageListTitle>
                                 <Packages packagesLength={data.enrollmentPackages.length}>
                                     {data.enrollmentPackages.map((packageData, i) =>
                                         <PackageWrapper key={packageData._id}>
