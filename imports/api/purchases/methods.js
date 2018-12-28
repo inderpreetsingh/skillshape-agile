@@ -90,7 +90,23 @@ Meteor.methods({
       if (_id) {
         let record, monthlyAttendance, startDate;
         if (packageType == 'CP') {
-          Purchases.update({ _id }, { $inc: { noClasses: inc } });
+          record = Purchases.findOne({_id});
+          let {packageId,userId} = record;
+          if(record.noClasses>0){
+            Purchases.update({ _id }, { $inc: { noClasses: inc } });
+            return noClasses;
+          }else{
+            Purchases.update({_id},{$set:{packageStatus:'expired'}});
+            record = Purchases.findOne({packageId,userId,packageStatus:'inActive'});
+            if(record){
+               let days = (record.startDate-record.endDate)/(1000 * 60 * 60 * 24);
+               startDate = new Date();
+               let endDate = new Date(new Date().getTime()+(days*24*60*60*1000));
+            Purchases.update({ _id:record._id }, { $inc: { noClasses: inc },$set:{packageStatus:'active',startDate,endDate} });
+            return record.noClasses;
+          }
+          return 0;
+          }
         }
         else if (packageType == 'MP') {
           record = Purchases.findOne({ _id });

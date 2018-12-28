@@ -73,9 +73,9 @@ class MembersListContainer extends Component {
   
       Meteor.call('purchase.manageAttendance',_id,packageType,inc,(err,res)=>{
         
-          if(condition==0 && packageType=='MP' && res){
-            condition = res;
-          }
+        if(condition <= 0 ){
+          condition = res;
+        }
           if(condition>0  || res == undefined){
             this.setState({isLoading:true});
             Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
@@ -179,7 +179,7 @@ handleClassUpdate = (filter,status,popUp)=>{
           RenderActions: (<ButtonWrapper>
             {purchased.map((obj)=>
              <FormGhostButton
-             label={capitalizeString(obj.packageName)}
+             label={capitalizeString(`Sign in with ${obj.packageName}`)}
              onClick={() => {this.updateClass(filter,status,obj,popUp)}}
              applyClose
            />

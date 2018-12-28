@@ -211,7 +211,7 @@ export default class MyCalender extends React.Component {
             RenderActions: (<ButtonWrapper>
               {purchased.map((obj)=>
                <FormGhostButton
-               label={capitalizeString(obj.packageName)}
+               label={capitalizeString(`Sign in with ${obj.packageName}`)}
                onClick={() => {this.updateClass(filter,status,obj,popUp)}}
                applyClose
              />
@@ -260,10 +260,10 @@ export default class MyCalender extends React.Component {
         inc = 1;
       }
         Meteor.call('purchase.manageAttendance',_id,packageType,inc,(err,res)=>{
-            if(condition==0 && packageType=='MP' && res){
+            if(condition <= 0 ){
               condition = res;
             }
-            if(condition>0 || res == undefined){
+            if(condition>0 || res == undefined && !condition < 0){
               this.setState({isLoading:true});
               Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
                 if(res){
