@@ -25,6 +25,7 @@ const ImageContainer = styled.div`
   background-size: contain;
   border-radius: ${ props => props.borderRadius || '3px'};
   transition: background-image 1s linear;
+  ${props => props.noMarginRight && 'margin-right: 0'};
 `;
 
 export const SSImage = (props) => {
@@ -40,7 +41,7 @@ export const SSImage = (props) => {
 
 const ProfileImage = withImageExists(SSImage, imageExistsConfig);
 
-ProfileImage.defaultProps = {
+ProfileImage.propTypes = {
     imageContainerProps: PropTypes.object,
     src: PropTypes.string,
 }

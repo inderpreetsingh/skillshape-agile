@@ -56,6 +56,9 @@ const ButtonWrapper = styled.div`
 
 const Greeting = Heading.extend`
     margin-bottom: 0;
+    @media screen and (max-width: ${MED_SCREEN_GW}px) {
+        margin-bottom: ${rhythmDiv}px;
+    }
 `;
 
 const UserImage = withImageExists(SSImage, imageExistsConfig);
@@ -70,7 +73,9 @@ const Header = (props) => (
     <Wrapper>
         <InnerWrapper>
             <UserProfile>
-                <UserImage src={props.userImageSrc} />
+                <UserImage
+                    imageContainerProps={{ noMarginRight: true }}
+                    src={props.userImageSrc} />
                 {props.userName && <Greeting>Welcome back, {capitalizeString(props.userName)}</Greeting>}
             </UserProfile>
             <ButtonWrapper>

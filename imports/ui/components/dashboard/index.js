@@ -1,9 +1,10 @@
 import React, { Fragment, Component } from 'react';
 import styled from 'styled-components';
+import { get } from 'lodash';
 import { browserHistory } from 'react-router';
 import { getUserFullName } from '/imports/util';
 
-import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import Header from './header/index.jsx';
 import { SchoolsList } from './schools/';
@@ -12,6 +13,7 @@ import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { withPopUp } from '/imports/util';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { rhythmDiv, primaryColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const BodyWrapper = styled.div`
     padding: ${rhythmDiv * 4}px ${rhythmDiv * 2}px;
@@ -111,18 +113,19 @@ class MyDashBoard extends Component {
             currentUser,
             isUserSubsReady
         } = this.props;
+
+        //console.log(get(currentUser.profile, "pic", get(currentUser.profile, 'medium', get(currentUser.profile, 'low', ''))))
         if (isBusy) {
             return <ContainerLoader />
         }
         return (
             <Fragment>
-                <BrandBar
-                    positionStatic
+                <TopSearchBar
                     currentUser={currentUser}
                     isUserSubsReady={isUserSubsReady}
                 />
                 <Header
-                    userImage={currentUser && currentUser.profile.pic}
+                    userImageSrc={currentUser && get(currentUser.profile, "pic", get(currentUser.profile, 'medium', get(currentUser.profile, 'low', '')))}
                     userName={getUserFullName(currentUser)} />
                 <BodyWrapper>
                     <Content>If you want to add a new school, <MyLink onClick={this.handleCreateNewSchool}>click here.</MyLink></Content>
