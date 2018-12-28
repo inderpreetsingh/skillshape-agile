@@ -19,6 +19,14 @@ import Select from "react-select";
 import { isEmpty, flatten, get, uniq } from "lodash";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
+
+const customStyles = {
+  input: (provided, state) => ({
+    ...provided,
+    fontSize: 16
+  })
+}
+
 const styles = theme => {
   return {
     dialogTitleRoot: {
@@ -36,6 +44,9 @@ const styles = theme => {
       display: "flex",
       justifyContent: "center",
       minHeight: 200,
+      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+        padding: `0 ${helpers.rhythmDiv * 2}px`
+      }
     },
     dialogRoot: {
       width: "100%",
@@ -120,8 +131,8 @@ class AddInstructorDialogBox extends Component {
       RenderActions: (
         <ActionButtons>
           <ActionButton>
-            <FormGhostButton 
-            label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
+            <FormGhostButton
+              label={'Just to this instance'} onClick={() => { this.handleInstructors(popUp, payLoad) }} applyClose />
           </ActionButton>
           <ActionButton>
             <FormGhostButton label={'Whole series'} onClick={() => { this.handleWholeSeries(popUp, payLoad) }} applyClose />
@@ -297,6 +308,12 @@ class AddInstructorDialogBox extends Component {
           <DialogContent classes={{ root: props.classes.dialogContent }}>
             <form id="addUser" onSubmit={this.onSubmit}>
               <Select
+                styles={customStyles}
+                inputProps={{
+                  style: {
+                    fontSize: 16
+                  }
+                }}
                 name="filters"
                 placeholder={`Select ${text}`}
                 value={selectedOption}
