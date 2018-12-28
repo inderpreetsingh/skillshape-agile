@@ -103,6 +103,7 @@ render() {
               }}
               classTypeIds={this.state.selectedClassTypeIds}
               epData = {this.state.epData}
+              currentPackageData = {this.state.currentPackageData}
             />
           }
       <PackagesList
