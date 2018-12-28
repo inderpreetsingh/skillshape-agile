@@ -97,7 +97,25 @@ class MySubscription extends React.Component {
 			}
 		});
 	}
-	removeAll = (classTimes, classTypeName) => {
+	purchasePackageDataChecker = (classTimes, classTypeName,_id,schoolId) => {
+		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId',{classTypeId:_id,schoolId},(err,res)=>{
+			const {popUp} = this.props;
+			if(!isEmpty(res)){
+				let packageNames = res.map((obj)=>obj.packageName).join(', ');
+				popUp.appear("alert", {
+					title: "Purchased found related to this class.",
+					content: <div>You have some active packages  named <b>{packageNames}</b> related to this class. Do you still want to do.</div>,
+					onAffirmationButtonClick: ()=>{	_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
+					},
+				   defaultButtons: true,    
+			  }, true);
+			}
+			else{
+				_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
+			}
+		})
+	}
+	removeAll = (classTimes, classTypeName,_id) => {
 		const { currentUser } = this.props;
 		let userId = get(currentUser, '_id', null), data = {};
 		this.setState({ all: true });
@@ -111,7 +129,8 @@ class MySubscription extends React.Component {
 		})
 	}
 	leaveSchool = () => {
-		let { popUp, currentUser } = this.props;
+		let { popUp, currentUser,schoolData } = this.props;
+		let {_id:schoolId} = schoolData[0];
 		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
 		popUp.appear(
 			'inform',
@@ -126,7 +145,7 @@ class MySubscription extends React.Component {
 						/>
 						<FormGhostButton
 							label={'Yes'}
-							onClick={this.leaveSchoolHandler}
+							onClick={()=>{this.purchasePackageDataChecker(null,null,null,schoolId)}}
 							applyClose
 						/>
 					</ButtonWrapper>
@@ -140,13 +159,14 @@ class MySubscription extends React.Component {
 		this.setState({ all: true });
 		if (!isEmpty(subscriptionsData)) {
 			subscriptionsData.map((obj, index) => {
-				this.removeAll(obj.classTimes, obj.name);
+				this.removeAll(obj.classTimes, obj.name,obj._id);
 			})
 		}
 	}
 	okClick = () => {
 		this.classDataFinder();
 	}
+
 	removeFromCalendar = (data) => {
 		let { schoolData } = this.props;
 		let { classTimeName, classTypeName } = data;
@@ -270,7 +290,7 @@ class MySubscription extends React.Component {
 					isBusy={isBusy}
 					subscriptionsData={subscriptionsData}
 					handleSchoolVisit={this.handleSchoolVisit}
-					removeAll={this.removeAll}
+					removeAll={this.purchasePackageDataChecker}
 					stopNotification={this.stopNotification}
 					leaveSchool={this.leaveSchool}
 					removeFromCalendar={this.removeFromCalendar}

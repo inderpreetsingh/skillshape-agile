@@ -329,7 +329,7 @@ const ManageMemberShipDialogBox = props => {
                                                     notification={get(classData.notification, 'notification', false)}
                                                     onLeaveClassButtonClick={(e) => {
                                                         e.stopPropagation();
-                                                        removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                                        removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'),classData._id)
                                                     }}
                                                     onNotificationsButtonClick={(e) => {
                                                         e.stopPropagation();
@@ -348,7 +348,7 @@ const ManageMemberShipDialogBox = props => {
                                             notification={get(classData.notification, 'notification', false)}
                                             onLeaveClassButtonClick={(e) => {
                                                 e.stopPropagation();
-                                                removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'))
+                                                removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'),classData._id)
                                             }}
                                             onNotificationsButtonClick={(e) => {
                                                 e.stopPropagation();

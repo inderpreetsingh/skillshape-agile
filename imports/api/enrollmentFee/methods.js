@@ -1,8 +1,10 @@
 import EnrollmentFees from "./fields";
-import {get,isEmpty,difference} from "lodash";
+import {get,isEmpty,difference,concat,flatten} from "lodash";
 import { check } from 'meteor/check';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields.js';
 import ClassPricing from '/imports/api/classPricing/fields.js';
+import Purchases from '/imports/api/purchases/fields.js';
+
 Meteor.methods({
     "enrollmentFee.addEnrollmentFee": function ({ doc }) {
         check(doc, Object);
@@ -99,13 +101,19 @@ Meteor.methods({
             }
         }
         return classTypeDataWithPurchaseInfo;
+    },
+    "enrollment.checkPackagesFromClassTypeAndSchoolId":function({classTypeId,schoolId}){
+        if(classTypeId){
+            let packages=[],classPackages,monthlyPackages,packageIds,purchasedPackages;
+            classPackages = ClassPricing.find({classTypeId:classTypeId}).fetch();
+            monthlyPackages = MonthlyPricing.find({classTypeId:classTypeId}).fetch();
+            packages = flatten(concat(classPackages,monthlyPackages));
+            packageIds=packages.map((obj)=>obj._id); 
+            purchasedPackages = Meteor.call('purchases.getPackagesFromIds',packageIds,null,null);
+			return purchasedPackages;
+        }else if(schoolId){
+          return purchasedPackages = Meteor.call('purchases.getPackagesFromIds',[],null,schoolId);
+
+        }
     }
 });
-/* 
-1. Find ClassTypesIds.
-2. Map on classTypeIds and find classtype details.
-3. x=make array of object {classTypeIds:[enrollmentsIds]}.
-4. map on x and then on enrollmentsIds and find active package from purchases and save results on the obj.res=res;
-5. send result to frontEnd.
-
-*/

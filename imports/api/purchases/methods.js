@@ -82,8 +82,12 @@ Meteor.methods({
       console.log('Error in purchases.isAlreadyPurchased', error);
     }
   },
-  "purchases.getPackagesFromIds": function (packageIds, userId) {
+  "purchases.getPackagesFromIds": function (packageIds, userId,schoolId) {
+    if(!isEmpty(packageIds))
     return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId }).fetch();
+    if(schoolId)
+    return Purchases.find({ schoolId, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId }).fetch();
+
   },
   "purchase.manageAttendance": function (_id, packageType, inc) {
     try {

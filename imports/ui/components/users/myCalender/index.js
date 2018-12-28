@@ -254,11 +254,7 @@ export default class MyCalender extends React.Component {
     }else if(packageType == 'MP'){
       condition = get(monthlyAttendance,'noClasses',0);
       }
-      if(status == 'signIn'){
-        inc = -1;
-      }else if(status == 'signOut'){
-        inc = 1;
-      }
+    
         Meteor.call('purchase.manageAttendance',_id,packageType,inc,(err,res)=>{
             if(condition <= 0 ){
               condition = res;
