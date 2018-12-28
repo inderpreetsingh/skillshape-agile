@@ -5,20 +5,20 @@ import ClearIcon from 'material-ui-icons/Clear';
 
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
+import {get} from 'lodash';
 const TitleBarHeading = Heading.withComponent('span').extend`
     ${props => props.fontSize && `font-size: ${helpers.fontSize}px`}
 `;
 
 export const DialogBoxTitleBar = (props) => (
-    <DialogTitleContainer variant={props.titleProps.variant}>
-        <TitleBarHeading fontSize={props.titleProps.fontSize}>
+    <DialogTitleContainer variant={get(props.titleProps,"variant",'')}>
+        <TitleBarHeading fontSize={get(props.titleProps,"fontSize",'')}>
             {props.title}
         </TitleBarHeading>
         <IconButton
             color="primary"
             onClick={props.onModalClose}
-            classes={{ root: props.classes.iconButton }}>
+            classes={{ root: get(props.classes,"iconButton",'') }}>
             <ClearIcon />
         </IconButton >
     </DialogTitleContainer>

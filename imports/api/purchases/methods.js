@@ -98,7 +98,7 @@ Meteor.methods({
           let {packageId,userId} = record;
           if(record.noClasses>0){
             Purchases.update({ _id }, { $inc: { noClasses: inc } });
-            return noClasses;
+            return record.noClasses;
           }else{
             Purchases.update({_id},{$set:{packageStatus:'expired'}});
             record = Purchases.findOne({packageId,userId,packageStatus:'inActive'});

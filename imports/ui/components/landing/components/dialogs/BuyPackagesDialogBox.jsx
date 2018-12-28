@@ -273,7 +273,7 @@ class BuyPackagesDialogBox extends Component {
 
                         })}
 
-                        {showPaymentMethods &&
+                       
                             <Fragment>
                                 <NotesContent
                                     placeholder="Notes..."
@@ -342,7 +342,7 @@ class BuyPackagesDialogBox extends Component {
                                             />} label="Others" />
                                     </RadioGroup>
                                 </FormControl>
-                            </Fragment>}
+                            </Fragment>
                     </DialogContent>}
 
                 <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
