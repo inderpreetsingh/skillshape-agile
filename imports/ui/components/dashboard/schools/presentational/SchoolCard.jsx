@@ -11,45 +11,46 @@ import {
     rhythmDiv,
     panelColor,
     lightBoxShadow,
-    maxContainerWidth
+    maxContainerWidth,
+    coverBg
 } from '/imports/ui/components/landing/components/jss/helpers.js';
 
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+
 const Wrapper = styled.div`
+    ${flexCenter}
+    flex-direction: column;
+`;
+
+const CardWrapper = styled.div`
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
-    padding: ${rhythmDiv}px;
+    padding: ${rhythmDiv}px 0 0 ${rhythmDiv}px;
     width: 100%;
+    height: 120px;
+    border-radius: 5px;
     border: 1px solid ${panelColor};
     box-shadow: ${lightBoxShadow};
     max-width: ${maxContainerWidth}px;
+    ${coverBg}
     background-image: url(${props => props.bgImg});
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-position: 50% 50%;
     position: relative;
-
-
-    ::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
+    margin-bottom: ${rhythmDiv * 2}px;
+    
+    @media screen and (max-width: 350px) {
+        height: 160px;
     }
 `;
 const ActionButtons = styled.div`
     ${flexCenter};
+    height: 100%;
     align-items: flex-end;
-`;
 
-const ButtonWrapper = styled.div`
-    margin-right: ${rhythmDiv}px;
-
-    :last-of-type {
-        margin-right: 0;
+    @media screen and (max-width: 350px) {
+        flex-direction: column;
+        justify-content: flex-end;
     }
 `;
 
@@ -57,28 +58,36 @@ const ProfileWrapper = styled.div`
     margin-right: ${rhythmDiv * 2}px;
 `;
 
-const SchoolCard = (props) => (<Wrapper bgImg={props.schoolCover}>
-    <ProfileWrapper>
-        <ProfileImage
-            imageContainerProps={{
-                width: 75,
-                height: 75,
-            }}
-            src={props.schoolLogo}
-        />
-    </ProfileWrapper>
-    <ActionButtons>
-        <ButtonWrapper>
-            <SecondaryButton label="Visit" onClick={props.onVisitSchoolClick} />
-        </ButtonWrapper>
-        <ButtonWrapper>
-            <PrimaryButton icon iconName="edit" label="Edit" onClick={props.onEditSchoolClick} />
-        </ButtonWrapper>
-    </ActionButtons>
-</Wrapper>);
+const SchoolName = Text.extend`
+    font-size: 18px;
+    margin-bottom: 0;
+    text-transform: capitalize;
+`;
+
+const SchoolCard = (props) => (
+    <Wrapper>
+        <CardWrapper bgImg={props.schoolCover}>
+            <ProfileWrapper>
+                {props.schoolLogo && <ProfileImage
+                    imageContainerProps={{
+                        width: 75,
+                        height: 75,
+                    }}
+                    src={props.schoolLogo}
+                />}
+            </ProfileWrapper>
+            <ActionButtons>
+                <SecondaryButton icon iconName="school" label="Visit" onClick={props.onVisitSchoolClick} />
+                <PrimaryButton icon iconName="edit" label="Edit" onClick={props.onEditSchoolClick} />
+            </ActionButtons>
+        </CardWrapper>
+        <SchoolName>{props.schoolName}</SchoolName>
+    </Wrapper>
+);
 
 SchoolCard.propTypes = {
     schoolLogo: PropTypes.string,
+    schoolName: PropTypes.string,
     onVisitSchoolClick: PropTypes.func,
     onEditSchoolClick: PropTypes.func,
 }

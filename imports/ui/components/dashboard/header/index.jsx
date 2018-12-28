@@ -1,15 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
+import { browserHistory } from 'react-router';
 
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
 import { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { flexCenter, rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { flexCenter, rhythmDiv, panelColor, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { withImageExists, capitalizeString } from '/imports/util';
 import { reviewerImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
-import { withImageExists } from '/imports/util';
+import {
+    SCHOOL_CARD_WIDTH,
+    LARGE_SCREEN_GW,
+    MED_SCREEN_GW,
+    SMALL_SCREEN_GW
+} from '../constants';
 
 const imageExistsConfig = {
     originalImagePath: 'src',
@@ -17,9 +23,20 @@ const imageExistsConfig = {
 };
 
 const Wrapper = styled.div`
-    position: relative;
     background-color: ${panelColor};
     padding: ${rhythmDiv * 4}px ${rhythmDiv * 2}px;
+`;
+
+const InnerWrapper = styled.div`
+    ${flexCenter}
+    flex-direction: column;    
+    position: relative;
+    max-width: ${LARGE_SCREEN_GW}px;
+    margin: 0 auto;
+
+    @media screen and (max-width: ${LARGE_SCREEN_GW}px) {
+        max-width: ${MED_SCREEN_GW}px;    
+    }
 `;
 
 const UserProfile = styled.div`
@@ -30,24 +47,40 @@ const UserProfile = styled.div`
 const ButtonWrapper = styled.div`
     position: absolute;
     top: ${rhythmDiv}px;
-    right: ${rhythmDiv}px;
+    right: 42px;
+
+    @media screen and (max-width: ${MED_SCREEN_GW}px) {
+        position: static;
+    }
+`;
+
+const Greeting = Heading.extend`
+    margin-bottom: 0;
 `;
 
 const UserImage = withImageExists(SSImage, imageExistsConfig);
 
+const handleEditProfileClick = (e) => {
+    e.preventDefault();
+    const currentUserId = Meteor.user()._id;
+    browserHistory.push(`/profile/${currentUserId}`);
+}
+
 const Header = (props) => (
     <Wrapper>
-        <UserProfile>
-            <UserImage
-                imageContainerProps={{
-                    borderRadius: '50%'
-                }}
-                src={props.userImageSrc} />
-            {props.userName && <Heading>Welcome back, {props.userName}</Heading>}
-        </UserProfile>
-        <ButtonWrapper>
-            <FormGhostButton icon iconName="edit" label="Edit Profile" />
-        </ButtonWrapper>
+        <InnerWrapper>
+            <UserProfile>
+                <UserImage src={props.userImageSrc} />
+                {props.userName && <Greeting>Welcome back, {capitalizeString(props.userName)}</Greeting>}
+            </UserProfile>
+            <ButtonWrapper>
+                <FormGhostButton
+                    icon
+                    iconName="account_circle"
+                    label="Edit Profile"
+                    onClick={handleEditProfileClick} />
+            </ButtonWrapper>
+        </InnerWrapper>
     </Wrapper>
 );
 

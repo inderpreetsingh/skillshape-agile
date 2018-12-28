@@ -1,15 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import { isEmpty, get } from 'lodash';
+import { browserHistory } from 'react-router';
+
+import { capitalizeString } from '/imports/util';
 
 import SchoolCard from './SchoolCard';
 import { flexCenter, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
-import { SCHOOL_CARD_WIDTH } from '../../constants';
+import {
+    SCHOOL_CARD_WIDTH,
+    LARGE_SCREEN_GW,
+    MED_SCREEN_GW,
+    SMALL_SCREEN_GW
+} from '../../constants';
 
-const LARGE_SCREEN_GW = SCHOOL_CARD_WIDTH * 3 + rhythmDiv * (4 * 3);
-const MED_SCREEN_GW = SCHOOL_CARD_WIDTH * 2 + rhythmDiv * (4 * 2);
-const SMALL_SCREEN_GW = SCHOOL_CARD_WIDTH * 1;
 
 const Wrapper = styled.div`
     ${flexCenter}
@@ -30,7 +35,7 @@ const Wrapper = styled.div`
 const SchoolCardWrapper = styled.div`
     max-width: ${SCHOOL_CARD_WIDTH}px;
     width: 100%;
-    margin: 0 ${rhythmDiv * 2}px ${rhythmDiv * 2}px ${rhythmDiv * 2}px;  
+    margin: 0 ${rhythmDiv * 2}px ${rhythmDiv * 4}px ${rhythmDiv * 2}px;  
 
     :nth-of-type(3n) {
         margin-right: 0;
@@ -40,8 +45,8 @@ const SchoolCardWrapper = styled.div`
         :nth-of-type(2n) {
             margin-right: 0;
         }
-        
-        :nth-of-type(3n) {
+
+        :nth-of-type(2n + 1) {
             margin-right: ${rhythmDiv * 2}px;
         }
     }
@@ -50,6 +55,10 @@ const SchoolCardWrapper = styled.div`
         margin: 0;
         margin-bottom: ${rhythmDiv * 2}px;    
         :nth-of-type(3n) {
+            margin-right: 0;
+        }
+
+        :nth-of-type(2n + 1) {
             margin-right: 0;
         }
     }
@@ -64,14 +73,41 @@ const handleVisitSchoolClick = (schoolData) => (e) => {
 
 const handleEditSchoolClick = (schoolData) => (e) => {
     e.preventDefault();
-    browserHistory.push(`/schoolAdmin/edit/${schoolData.slug}`);
+    browserHistory.push(`${schoolData.schoolEditLink}`);
 }
+
+const handleListingOfNewSchool = () => {
+    const currentUser = Meteor.user();
+    if (currentUser) {
+        // Start Lodaing
+        this.setState({ isLoading: true });
+        Meteor.call("school.addNewSchool", currentUser, (err, res) => {
+            let state = {
+                isLoading: false
+            };
+
+            if (err) {
+                state.error = err.reason || err.message;
+            }
+            // Redirect to school Edit view
+            if (res) {
+                browserHistory.push(res);
+            }
+
+            this.setState(state);
+        });
+    } else {
+        // Show Login popup
+        Events.trigger("loginAsUser");
+    }
+};
 
 const SchoolsList = (props) => (
     <Wrapper>
         {!isEmpty(props.schools) && props.schools.map((schoolData, i) =>
             <SchoolCardWrapper key={i}>
                 <SchoolCard
+                    schoolName={schoolData.name}
                     schoolCover={get(schoolData, 'mainImage', get(schoolData, 'mainImageMedium', get(schoolData, 'mainImageLow', classTypeImgSrc)))}
                     schoolLogo={get(schoolData, 'logoImg', get(schoolData, 'logoImgMedium', ''))}
                     onVisitSchoolClick={handleVisitSchoolClick(schoolData)}
