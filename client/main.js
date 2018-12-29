@@ -7,9 +7,8 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import ReactGA from "react-ga";
-
+import ErrorBoundary from '/imports/ui/componentHelpers/errorBoundary/errorBoundary';
 import { MuiThemeProvider } from "material-ui/styles";
-
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import pickerStyles from "/imports/startup/client/material-ui-picker-styles/styles.js";
 import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
@@ -44,7 +43,9 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <div>
+        <ErrorBoundary>
           <Routes />
+				</ErrorBoundary>
         </div>
       </MuiThemeProvider>
     );
