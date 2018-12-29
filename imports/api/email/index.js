@@ -708,3 +708,27 @@ export const sendPackageLink = function({
     });
   }
 };
+export const errorBoundaryEmail = function({
+  error,
+  errorInfo
+}) {
+    Email.send({
+      to: 'ramesh.bansal@daffodilsw.com', //emailObj.to
+      from: "Notices@SkillShape.com",
+      subject: "Error handling",
+      html: `<div>
+      <center>
+        <h2>Oops Something Went Wrong.</h2>
+        <details style={{ whiteSpace: 'pre-wrap' }}>
+        <h3>	${error} at ${platform}
+          <br />
+          ${errorInfo}</h3>
+        </details>
+      </center>
+    </div>
+              Thanks.<br/>
+              ${EmailSignature}
+
+      `
+    });
+  }

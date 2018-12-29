@@ -1,4 +1,5 @@
 import React from 'react';
+import {get} from 'lodash';
 export default class ErrorBoundary extends React.Component {
 	constructor(props) {
 		super(props);
@@ -15,14 +16,18 @@ export default class ErrorBoundary extends React.Component {
   
 	render() {
 	  if (this.state.hasError) {
-		return   (
+        let error = get(this.state,'error','error name').toString();
+        let errorInfo = get(this.state,"errorInfo.componentStack",'error stack info');
+        Meteor.call("urlToBase64.errorBoundary",{error,errorInfo});
+        return   (
 			<div>
 				<center>
-					<h2>Oops Something Went Wrong.</h2>
+					<h2>Oops Something Went Wrong.</h2><br/>
+                    <h4>An Email is sent about this bug to technical team.</h4>
 					<details style={{ whiteSpace: 'pre-wrap' }}>
-					<h3>	{this.state.error && this.state.error.toString()}
+					<h3>	{error}
 						<br />
-						{this.state.errorInfo.componentStack}</h3>
+						{errorInfo}</h3>
 					</details>
 				</center>
 			</div>);
