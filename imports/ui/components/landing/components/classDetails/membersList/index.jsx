@@ -136,6 +136,10 @@ handleClassUpdate = (filter,status,popUp)=>{
     let purchased = get(res,'purchased',[]);
     let epStatus = get(res,"epStatus",false);
     let pos = -1;
+        if(!epStatus){
+          popUp.appear("alert", { title: "Alert", content: "Please purchase the enrollment package First. Before purchasing monthly and per class packages. " }); 
+          return;
+        }
        if(epStatus && !isEmpty(purchased)){
         purchased.map((obj,index)=>{
           if(obj.noClasses == null && obj.packageType == 'MP'){
