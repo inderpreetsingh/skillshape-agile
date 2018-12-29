@@ -1,4 +1,4 @@
-import {get,uniq,filter,isEmpty} from 'lodash';
+import {get,uniq,filter,isEmpty,compact} from 'lodash';
 perClassPackageMaker = purchaseData =>{
     let latest = [],newObj = {},pId,uId;
     purchaseData.map((obj,index)=>{
@@ -26,6 +26,7 @@ perClassPackageMaker = purchaseData =>{
     return filter(purchaseData,(o)=>{ return get(o,'packageStatus','inActive')=='active'});
 }
 export const  packageCoverProvider = purchaseData => {
+	purchaseData = compact(purchaseData);
     let packageType,packageId,covers=[],methodName;
     if(!isEmpty(purchaseData)){
         purchaseData.map((obj,index)=>{
