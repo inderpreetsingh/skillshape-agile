@@ -357,6 +357,7 @@ class BuyPackagesDialogBox extends Component {
                     </DialogContent>}
 
                 <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
+                    <ActionButtons>
                 <ActionButton
                         >
                             <PrimaryButton
@@ -364,7 +365,6 @@ class BuyPackagesDialogBox extends Component {
                                 label={'Accept External Payment'}
                                 onClick={this.acceptPayment} />
                         </ActionButton>
-                    <ActionButtons>
                         <ActionButton
                         >
                             <PrimaryButton
