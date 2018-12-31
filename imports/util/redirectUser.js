@@ -1,4 +1,5 @@
 import { browserHistory } from "react-router";
+import { isEmpty } from 'lodash';
 
 export const redirectUserBasedOnType = (currentUser, isUserSubsReady) => e => {
   // console.log(currentUser, isUserSubsReady, "-==================");
@@ -9,14 +10,12 @@ export const redirectUserBasedOnType = (currentUser, isUserSubsReady) => e => {
     currentUser &&
     currentUser.profile.userType === "School"
   ) {
-    const mySchoolSlug = localStorage.getItem("mySchoolSlug");
-    const multipleSchools = JSON.parse(localStorage.getItem("multipleSchools"));
-    if (mySchoolSlug !== "null" && !multipleSchools) {
-      // browserHistory.push(`/schools/${mySchoolSlug}`);
-      browserHistory.push("/dashboard");
-    } else {
-      browserHistory.push("/dashboard");
-    }
+    // const mySchoolSlug = localStorage.getItem("mySchoolSlug");
+    // const multipleSchools = JSON.parse(localStorage.getItem("multipleSchools"));
+    // if (!isEmpty(mySchoolSlug) && !multipleSchools) {
+    //   // browserHistory.push(`/schools/${mySchoolSlug}`);
+    //}
+    browserHistory.push("/dashboard");
   } else if (
     isUserSubsReady &&
     currentUser &&
