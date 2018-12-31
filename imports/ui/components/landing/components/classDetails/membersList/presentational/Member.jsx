@@ -50,6 +50,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
+  ${props => props.addMember && 'pointer: cursor;'}
 
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     width: 160px;
@@ -274,7 +275,9 @@ const Member = props => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper
+      addMember={props.addMember}
+      onClick={props.addMember ? props.onAddIconClick : () => { }}>
       <Profile>
         <ProfilePic
           addMember={props.addMember}
