@@ -9,9 +9,14 @@ import { check } from 'meteor/check';
 import {isEmpty} from 'lodash';
 import ClassTimesRequest from '/imports/api/classTimesRequest/fields.js';
 import ClassTypeLocationRequest from '/imports/api/classTypeLocationRequest/fields.js';
+import { dataURLToBlob } from "blob-util";
 Meteor.methods({
   "classInterest.addClassInterest": function({ doc }) {
     check(doc,Object);
+    let {schoolId,classTimeId,classTypeId,userId,from} = doc;
+    if(!isEmpty(ClassInterest.findOne({schoolId,classTimeId,classTypeId,userId}))){
+      return;
+    }
     doc.createdAt = new Date();
     if (this.userId && this.userId == doc.userId) {
       return ClassInterest.insert(doc, () => {
@@ -38,14 +43,16 @@ Meteor.methods({
             schoolData.slug
           }/members`;
         }
-        sendJoinClassEmail({
-          currentUserName,
-          schoolAdminName,
-          classTypeName: classTypeData.name,
-          classTimeName: classTimes.name,
-          classLink,
-          memberLink
-        });
+        if (from != 'signHandler'){
+          sendJoinClassEmail({
+            currentUserName,
+            schoolAdminName,
+            classTypeName: classTypeData.name,
+            classTimeName: classTimes.name,
+            classLink,
+            memberLink
+          });
+        }
       });
     } else {
       throw new Meteor.Error("Permission denied!!");
@@ -63,6 +70,10 @@ Meteor.methods({
   "classInterest.removeClassInterest": function({ doc }) {
     check(doc,Object);
     if (this.userId) {
+      if(doc.from == 'signHandler'){
+        let {schoolId,classTimeId,classTypeId,userId} = doc;
+        return ClassInterest.remove({schoolId,classTimeId,classTypeId,userId});
+      }
       return ClassInterest.remove({ _id: doc._id, userId: this.userId });
     } else {
       throw new Meteor.Error("Permission denied!!");

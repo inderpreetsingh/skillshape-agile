@@ -1,5 +1,6 @@
 
 import { HTTP } from 'meteor/http';
+import {errorBoundaryEmail} from '/imports/api/email';
 Meteor.methods({
     'urlToBase64.urlToBase64':(url)=>{
         try{
@@ -10,5 +11,8 @@ Meteor.methods({
           return error;
         }
       
+    },
+    'urlToBase64.errorBoundary':({error,errorInfo})=>{
+        errorBoundaryEmail({error,errorInfo});
     }
 })

@@ -74,13 +74,22 @@ const NotesContent = styled.textarea`
   height: 100px;
   border-radius: 5px;
 `;
-
+const BoxForExternalPayment = styled.div`
+    border: 2px #4caf50 solid;
+    margin-top: 8px;
+    border-radius: 13px;
+`;
 const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     max-height: 300px;
 `;
-
+const TitleForPayment = styled.div`
+text-align: center;
+font-size: initial;
+font-weight: 400;
+border-radius: 13px;
+background-color: aliceblue;`;
 const styles = theme => {
     return {
         ...dialogStyles,
@@ -278,7 +287,8 @@ class BuyPackagesDialogBox extends Component {
                                 <NotesContent
                                     placeholder="Notes..."
                                 />
-
+                                <BoxForExternalPayment>
+                              <TitleForPayment>  Accept External Payment </TitleForPayment>
                                 <FormControl
                                     component="fieldset"
                                     className={classes.radioGroupWrapper}>
@@ -342,11 +352,19 @@ class BuyPackagesDialogBox extends Component {
                                             />} label="Others" />
                                     </RadioGroup>
                                 </FormControl>
+                                </BoxForExternalPayment>
                             </Fragment>
                     </DialogContent>}
 
                 <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
                     <ActionButtons>
+                <ActionButton
+                        >
+                            <PrimaryButton
+                                fullWidth
+                                label={'Accept External Payment'}
+                                onClick={this.acceptPayment} />
+                        </ActionButton>
                         <ActionButton
                         >
                             <PrimaryButton
@@ -354,13 +372,7 @@ class BuyPackagesDialogBox extends Component {
                                 label={'Send Link'}
                                 onClick={this.handleSendLink} />
                         </ActionButton>
-                        <ActionButton
-                        >
-                            <PrimaryButton
-                                fullWidth
-                                label={'Accept Payment'}
-                                onClick={this.acceptPayment} />
-                        </ActionButton>
+                  
                     </ActionButtons>
                 </DialogActions>
             </MuiThemeProvider>
