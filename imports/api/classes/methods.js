@@ -46,6 +46,7 @@ Meteor.methods({
         }
     },
     "classes.updateClassData":function(filter,status,purchaseId,packageType,from){
+		console.log("​filter", filter)
         try{
             if(from == 'purchasePackage'){
              filter.students = get(Classes.findOne({_id:filter._id}),"students",[]);
@@ -58,6 +59,17 @@ Meteor.methods({
                 Meteor.call("attendance.updateData",filter,(err,res)=>{
 
                 })
+            }
+            // Add or remove record in the add to calendar collection.
+            let addToCalendarCondition = "classTimeId" in  filter && 'classTypeId' in filter && 'schoolId' in filter;
+            console.log("​addToCalendarCondition", addToCalendarCondition)
+            if(addToCalendarCondition){
+                let methodName;
+                let data = {classTypeId,classTimeId,schoolId} = filter;
+                data.userId = filter.userId ? filter.userId : this.userId;
+                data.from = 'signHandler';
+                status == 'signIn' ? methodName = 'classInterest.addClassInterest' : status == 'signOut' ? methodName = 'classInterest.removeClassInterest' : '';
+                Meteor.call(methodName,{doc:data});
             }
             if(!filter._id){
                 filter.students=[obj];
