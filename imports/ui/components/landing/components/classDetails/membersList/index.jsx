@@ -324,6 +324,9 @@ handleClassUpdate = (filter,status,popUp)=>{
       notification = !obj.purchaseId ? true : false;
     }
   })
+  closeClassTypePackages = () =>{
+    this.setState({classTypePackages:false});
+  }
     return (
       <Fragment>
         {addInstructorDialogBoxState && (
@@ -356,6 +359,7 @@ handleClassUpdate = (filter,status,popUp)=>{
                     packagesRequired = {packagesRequired}
                     handleSignIn = {this.handleSignIn}
                     fromSignFunctionality
+                    closeClassTypePackages = {this.closeClassTypePackages}
                     />}
         <MembersList
           viewType={currentView}
