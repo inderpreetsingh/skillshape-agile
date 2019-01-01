@@ -4,8 +4,8 @@ import { browserHistory } from 'react-router';
 
 import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import Header from './header/index.jsx';
-import { SchoolsList } from './schools/';
+import Header from './header';
+import SchoolsList from './schools/';
 
 import { getUserFullName } from '/imports/util';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
@@ -48,10 +48,9 @@ const MyLink = Text.withComponent('a').extend`
 export default (props) => {
     const { currentUser,
         isUserSubsReady,
-        schools,
-        userImage,
-        userName,
-        onCreateNewSchool
+        headerProps,
+        bodyProps,
+        onCreateNewSchoolClick
     } = props;
     return (<Wrapper>
         <BrandBar
@@ -60,12 +59,10 @@ export default (props) => {
             isUserSubsReady={isUserSubsReady}
         />
         <DashBoardContent>
-            <Header
-                userImage={userImage}
-                userName={userName} />
+            <Header {...headerProps} onCreateNewSchoolClick={onCreateNewSchoolClick} />
             <BodyWrapper>
-                <AddSchool>If you want to add a new school, <MyLink onClick={onCreateNewSchool}>click here.</MyLink></AddSchool>
-                <SchoolsList schools={schools} />
+                <SchoolsList schools={bodyProps.schools} />
+                <AddSchool>If you want to add a new school, <MyLink onClick={onCreateNewSchoolClick}>click here.</MyLink></AddSchool>
             </BodyWrapper>
             <Footer />
         </DashBoardContent>

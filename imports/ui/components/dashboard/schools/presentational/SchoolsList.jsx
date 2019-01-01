@@ -76,32 +76,6 @@ const handleEditSchoolClick = (schoolData) => (e) => {
     browserHistory.push(`${schoolData.schoolEditLink}`);
 }
 
-const handleListingOfNewSchool = () => {
-    const currentUser = Meteor.user();
-    if (currentUser) {
-        // Start Lodaing
-        this.setState({ isLoading: true });
-        Meteor.call("school.addNewSchool", currentUser, (err, res) => {
-            let state = {
-                isLoading: false
-            };
-
-            if (err) {
-                state.error = err.reason || err.message;
-            }
-            // Redirect to school Edit view
-            if (res) {
-                browserHistory.push(res);
-            }
-
-            this.setState(state);
-        });
-    } else {
-        // Show Login popup
-        Events.trigger("loginAsUser");
-    }
-};
-
 const SchoolsList = (props) => (
     <Wrapper>
         {!isEmpty(props.schools) && props.schools.map((schoolData, i) =>
