@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import { get } from 'lodash';
 
 import { withPopUp, getUserFullName } from '/imports/util';
 
@@ -12,6 +13,7 @@ class MyDashBoard extends Component {
             mySchools: null
         }
     }
+
     _createNewSchool = () => {
         const { currentUser } = this.props;
         if (currentUser) {
@@ -38,7 +40,14 @@ class MyDashBoard extends Component {
         }
     }
 
-    handleCreateNewSchool = () => {
+    handleEditProfileClick = (e) => {
+        e.preventDefault();
+        const currentUserId = Meteor.user()._id;
+        browserHistory.push(`/profile/${currentUserId}`);
+    }
+
+
+    handleCreateNewSchoolClick = () => {
         const { popUp } = this.props;
         popUp.appear('inform', {
             title: 'Confirm',
@@ -83,17 +92,25 @@ class MyDashBoard extends Component {
             currentUser,
             isUserSubsReady
         } = this.props;
+
+        // console.log()
         if (isBusy) {
             return <ContainerLoader />
         }
         return (
             <DashBoardRender
+                headerProps={{
+                    currentUser: currentUser,
+                    userImage: currentUser && get(currentUser.profile, "pic", get(currentUser.profile, 'medium', get(currentUser.profile, 'low', ''))),
+                    userName: getUserFullName(currentUser),
+                    onEditProfileClick: this.handleEditProfileClick
+                }}
+                bodyProps={{
+                    schools: mySchools
+                }}
                 currentUser={currentUser}
                 isUserSubsReady={isUserSubsReady}
-                userImage={currentUser && currentUser.profile.pic}
-                userName={getUserFullName(currentUser)}
-                schools={mySchools}
-                onCreateNewSchoolClick={this.handleCreateNewSchool}
+                onCreateNewSchoolClick={this.handleCreateNewSchoolClick}
             />
         )
     }

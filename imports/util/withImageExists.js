@@ -14,6 +14,7 @@ export default (withImageExists = (WrappedComponent, config) => {
     };
 
     _setbgImg = imgSrc => {
+
       imageExists(imgSrc)
         .then(() => {
           if (this.state.bgImg !== imgSrc) this.setState({ bgImg: imgSrc });

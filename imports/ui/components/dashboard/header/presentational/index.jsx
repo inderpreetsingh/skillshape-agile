@@ -15,7 +15,7 @@ import {
     LARGE_SCREEN_GW,
     MED_SCREEN_GW,
     SMALL_SCREEN_GW
-} from '../constants';
+} from '../../constants';
 
 const imageExistsConfig = {
     originalImagePath: 'src',
@@ -44,49 +44,73 @@ const UserProfile = styled.div`
     flex-direction: column;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonsWrapper = styled.div`
+    ${flexCenter}
     position: absolute;
     top: ${rhythmDiv}px;
     right: 42px;
 
-    @media screen and (max-width: ${MED_SCREEN_GW}px) {
+    @media screen and (max-width: ${LARGE_SCREEN_GW}px) {
         position: static;
     }
 `;
 
+const ButtonWrapper = styled.div`
+    margin-right: ${rhythmDiv}px;    
+`;
+
 const Greeting = Heading.extend`
     margin-bottom: 0;
+    @media screen and (max-width: ${LARGE_SCREEN_GW}px) {
+        margin-bottom: ${rhythmDiv}px;
+    }
 `;
 
 const UserImage = withImageExists(SSImage, imageExistsConfig);
 
-const handleEditProfileClick = (e) => {
-    e.preventDefault();
-    const currentUserId = Meteor.user()._id;
-    browserHistory.push(`/profile/${currentUserId}`);
-}
 
-const Header = (props) => (
-    <Wrapper>
+const Header = (props) => {
+    const {
+        userName,
+        userImage,
+        onCreateNewSchoolClick,
+        onEditProfileClick
+    } = props;
+    return (<Wrapper>
         <InnerWrapper>
             <UserProfile>
-                <UserImage src={props.userImageSrc} />
-                {props.userName && <Greeting>Welcome back, {capitalizeString(props.userName)}</Greeting>}
+                <UserImage
+                    imageContainerProps={{ noMarginRight: true }}
+                    src={userImage} />
+                {userName && <Greeting>Welcome back, {capitalizeString(userName)}</Greeting>}
             </UserProfile>
-            <ButtonWrapper>
-                <FormGhostButton
-                    icon
-                    iconName="account_circle"
-                    label="Edit Profile"
-                    onClick={handleEditProfileClick} />
-            </ButtonWrapper>
+            <ButtonsWrapper>
+                <ButtonWrapper>
+                    <FormGhostButton
+                        icon
+                        iconName="school"
+                        label="Add School"
+                        onClick={onCreateNewSchoolClick} />
+                </ButtonWrapper>
+                <ButtonWrapper>
+                    <FormGhostButton
+                        icon
+                        iconName="account_circle"
+                        label="Edit Profile"
+                        onClick={onEditProfileClick} />
+                </ButtonWrapper>
+            </ButtonsWrapper>
         </InnerWrapper>
     </Wrapper>
-);
+    );
+}
+
 
 Header.propTypes = {
-    userImageSrc: PropTypes.string,
-    userName: PropTypes.string
+    userImage: PropTypes.string,
+    userName: PropTypes.string,
+    onEditProfileClick: PropTypes.func,
+    onCreateNewSchoolClick: PropTypes.func
 }
 
 export default Header;
