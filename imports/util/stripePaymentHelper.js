@@ -4,11 +4,10 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { get, isEmpty, compact } from 'lodash';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { formatMoney } from '/imports/util';
 
-import { flexCenter, primaryColor } from '/imports/ui/components/landing/components/jss/helpers.js'
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { flexCenter, primaryColor, mobile, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js'
+import { Text, Italic } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
 import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
 import ReactHtmlParser from 'react-html-parser';
@@ -16,7 +15,24 @@ import ReactHtmlParser from 'react-html-parser';
 const ButtonsWrapper = styled.div`
 	display: flex;
 	justify-content: center;
-	flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-bottom: ${rhythmDiv * 2}px;
+    
+    @media screen and (max-width: ${mobile - 100}px) {
+        flex-direction: column;
+        width: 100%;
+    }
+`;
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    margin-right: ${rhythmDiv}px;
+
+    @media screen and (max-width: ${mobile - 100}px) {
+        margin-right: 0;
+        margin-bottom: ${rhythmDiv}px;
+        width: 100%;
+    }
 `;
 
 const ActionWrapper = styled.div`
@@ -35,7 +51,6 @@ const MyLink = styled(Link)`
     color: ${primaryColor}
 `;
 
-const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 export const stripePaymentHelper = async function (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) {
 
     resetStates(this);
@@ -226,14 +241,19 @@ schoolLogoFinder = (schoolData) => {
         get(schoolData, 'logoImg', get(schoolData, 'mainImage', config.defaultSchoolLogo))
     );
 };
-noThanksButton = () => (
-    <ButtonWrapper>
-        <FormGhostButton label={'No, thanks'} onClick={() => { }} greyColor applyClose />
+noThanksButton = (fullWidth = false) => (
+    <ButtonWrapper >
+        <FormGhostButton
+            fullWidth={fullWidth}
+            label={'No, thanks'}
+            onClick={() => { }}
+            greyColor
+            applyClose />
     </ButtonWrapper>
 );
 closeButton = (self) => (
     <ButtonWrapper>
-        <FormGhostButton label={'Close'} onClick={() => {self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully() }} greyColor applyClose />
+        <FormGhostButton label={'Close'} onClick={() => { self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully() }} greyColor applyClose />
     </ButtonWrapper>
 )
 purchaseButton = (
@@ -249,10 +269,12 @@ purchaseButton = (
     planId,
     currency,
     pymtType,
-    self
+    self,
+    fullWidth = false
 ) => (
         <ButtonWrapper>
             <FormGhostButton
+                fullWidth={fullWidth}
                 label={'Purchase Now'}
                 onClick={() => {
                     handleChargeAndSubscription(
@@ -355,36 +377,49 @@ purchaseNewContract = (
         </ButtonWrapper>
     );
 
-renderActionsWithText = (text) => (
-    <ActionWrapper>
-        <ButtonsWrapper>
-            {noThanksButton()}
-            {purchaseButton(
-                packageType,
-                packageId,
-                schoolId,
-                packageName,
-                amount,
-                monthlyPymtDetails,
-                expDuration,
-                expPeriod,
-                noClasses,
-                planId,
-                currency,
-                pymtType,
-                self
-            )}
-        </ButtonsWrapper>
-        <Text>
-                                                    
-            <MyLink
-                target={"_branch"}
-                to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
-                Click here </MyLink> to view your exisiting subscriptions.
-        
-        </Text>
-    </ActionWrapper>
-);
+renderActionsWithText = (packageType,
+    packageId,
+    schoolId,
+    packageName,
+    amount,
+    monthlyPymtDetails,
+    expDuration,
+    expPeriod,
+    noClasses,
+    planId,
+    currency,
+    pymtType,
+    self) => (
+        <ActionWrapper>
+            <ButtonsWrapper>
+                {purchaseButton(
+                    packageType,
+                    packageId,
+                    schoolId,
+                    packageName,
+                    amount,
+                    monthlyPymtDetails,
+                    expDuration,
+                    expPeriod,
+                    noClasses,
+                    planId,
+                    currency,
+                    pymtType,
+                    self,
+                    true
+                )}
+                {noThanksButton(true)}
+            </ButtonsWrapper>
+            <Text>
+                <Italic>
+                    <MyLink
+                        target={"_branch"}
+                        to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
+                        Click here </MyLink> to view your exisiting subscriptions.
+            </Italic>
+            </Text>
+        </ActionWrapper>
+    );
 pastSubscriptionButton = () => (
     <ButtonWrapper>
         <FormGhostButton
@@ -422,32 +457,20 @@ handlePayUpFront = (
         {
             title: 'Pay Up Front',
             content: 'When you pay for a number of monthly subscription fees at once.',
-            RenderActions: (
-                <ButtonsWrapper>
-                    {pastSubscriptionButton()}
-                    {noThanksButton()}
-                    {purchaseButton(
-                        packageType,
-                        packageId,
-                        schoolId,
-                        packageName,
-                        amount,
-                        monthlyPymtDetails,
-                        expDuration,
-                        expPeriod,
-                        noClasses,
-                        planId,
-                        currency,
-                        pymtType,
-                        self
-                    )}
-
-                    {/* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */}
-                    {/* <Button onClick={() => { this.handlePayAsYouGo(planId, schoolId, packageName, packageId, monthlyPymtDetails, title, content) }} applyClose>
-        Offline
-      </Button> */}
-                </ButtonsWrapper>
-            )
+            RenderActions:
+                renderActionsWithText(packageType,
+                    packageId,
+                    schoolId,
+                    packageName,
+                    amount,
+                    monthlyPymtDetails,
+                    expDuration,
+                    expPeriod,
+                    noClasses,
+                    planId,
+                    currency,
+                    pymtType,
+                    self)
         },
         true
     );
@@ -474,36 +497,19 @@ handlePayAsYouGo = ({
     popUp.appear('inform', {
         title: title,
         content: content,
-        RenderActions: (
-            <ActionWrapper>
-                <ButtonsWrapper>
-                    {noThanksButton()}
-                    {purchaseButton(
-                        packageType,
-                        packageId,
-                        schoolId,
-                        packageName,
-                        amount,
-                        monthlyPymtDetails,
-                        expDuration,
-                        expPeriod,
-                        noClasses,
-                        planId,
-                        currency,
-                        pymtType,
-                        self
-                    )}
-                </ButtonsWrapper>
-                <Text>
-                                                    
-                                                    <MyLink
-                                                        target={"_branch"}
-                                                        to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
-                                                        Click here </MyLink> to view your exisiting subscriptions.
-                                                
-                                                </Text>
-            </ActionWrapper>
-        )
+        RenderActions: renderActionsWithText(packageType,
+            packageId,
+            schoolId,
+            packageName,
+            amount,
+            monthlyPymtDetails,
+            expDuration,
+            expPeriod,
+            noClasses,
+            planId,
+            currency,
+            pymtType,
+            self)
     });
     {
         /* Please select one of the method of payment.Online if you want to pay all at once using stripe or Offline if you want to pay at school. */
@@ -556,36 +562,19 @@ isAlreadyPurchased = ({
                                     {
                                         title: 'Already Purchased',
                                         content: `You already have ${classesLeft} Classes left. Would you like to purchases this package to add on to your Existing Classes ?`,
-                                        RenderActions: (
-                                            <ActionWrapper>
-                                                <ButtonsWrapper>
-                                                    {noThanksButton()}
-                                                    {purchaseButton(
-                                                        packageType,
-                                                        packageId,
-                                                        schoolId,
-                                                        packageName,
-                                                        amount,
-                                                        monthlyPymtDetails,
-                                                        expDuration,
-                                                        expPeriod,
-                                                        noClasses,
-                                                        planId,
-                                                        currency,
-                                                        pymtType,
-                                                        self
-                                                    )}
-                                                </ButtonsWrapper>
-                                                <Text>
-                                                    
-                                                    <MyLink
-                                                        target={"_branch"}
-                                                        to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
-                                                        Click here </MyLink> to view your exisiting subscriptions.
-                                                
-                                                </Text>
-                                            </ActionWrapper>
-                                        )
+                                        RenderActions: renderActionsWithText(packageType,
+                                            packageId,
+                                            schoolId,
+                                            packageName,
+                                            amount,
+                                            monthlyPymtDetails,
+                                            expDuration,
+                                            expPeriod,
+                                            noClasses,
+                                            planId,
+                                            currency,
+                                            pymtType,
+                                            self)
                                     },
                                     true
                                 );
@@ -638,38 +627,19 @@ isAlreadyPurchased = ({
                                         {
                                             title: 'Already Purchased',
                                             content: `You have one or more  Monthly Subscriptions at ${schoolName} including Pay As You Go plan that expires on ${expiry}. Would you like to pay up until ${nextExpiry}?`,
-                                            RenderActions: (
-                                                <ActionWrapper>
-                                                    <ButtonsWrapper>
-                                                        {noThanksButton()}
-                                                        {purchaseButton(
-                                                            packageType,
-                                                            packageId,
-                                                            schoolId,
-                                                            packageName,
-                                                            amount,
-                                                            monthlyPymtDetails,
-                                                            expDuration,
-                                                            expPeriod,
-                                                            noClasses,
-                                                            planId,
-                                                            currency,
-                                                            pymtType,
-                                                            self
-                                                        )}
-                                                    </ButtonsWrapper>
-                                                    <Text>
-                                                        {
-                                                            <Fragment>
-                                                                <MyLink
-                                                                    target={"_branch"}
-                                                                    to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
-                                                                    Click here </MyLink> to view your exisiting subscriptions.
-                </Fragment>
-                                                        }
-                                                    </Text>
-                                                </ActionWrapper>
-                                            )
+                                            RenderActions: renderActionsWithText(packageType,
+                                                packageId,
+                                                schoolId,
+                                                packageName,
+                                                amount,
+                                                monthlyPymtDetails,
+                                                expDuration,
+                                                expPeriod,
+                                                noClasses,
+                                                planId,
+                                                currency,
+                                                pymtType,
+                                                self)
                                         },
                                         true
                                     );
@@ -741,36 +711,19 @@ isAlreadyPurchased = ({
                                     {
                                         title: 'Already Purchased',
                                         content: `You have one or more  Monthly Subscriptions at ${schoolName} including an existing Pay Up Front plan which is good until ${expiry}.Would you like to pay ahead until ${nextExpiry} on this plan?`,
-                                        RenderActions: (
-                                            <ActionWrapper>
-                                                <ButtonsWrapper>
-                                                    {noThanksButton()}
-                                                    {purchaseButton(
-                                                        packageType,
-                                                        packageId,
-                                                        schoolId,
-                                                        packageName,
-                                                        amount,
-                                                        monthlyPymtDetails,
-                                                        expDuration,
-                                                        expPeriod,
-                                                        noClasses,
-                                                        planId,
-                                                        currency,
-                                                        pymtType,
-                                                        self
-                                                    )}
-                                                </ButtonsWrapper>
-                                                <Text>
-                                                
-                                                    <MyLink
-                                                        target={"_branch"}
-                                                        to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
-                                                        Click here </MyLink> to view your exisiting subscriptions.
-                                            
-                                                </Text>
-                                            </ActionWrapper>
-                                        )
+                                        RenderActions: renderActionsWithText(packageType,
+                                            packageId,
+                                            schoolId,
+                                            packageName,
+                                            amount,
+                                            monthlyPymtDetails,
+                                            expDuration,
+                                            expPeriod,
+                                            noClasses,
+                                            planId,
+                                            currency,
+                                            pymtType,
+                                            self)
                                     },
                                     true
                                 );
@@ -836,36 +789,19 @@ checkPymtType = ({
                         {
                             title: 'Waiting for Payment',
                             content: `We are waiting for payment of ${packageName}. You can Pay Now via online payment now or go to the school to complete the payment.`,
-                            RenderActions: (
-                                <ActionWrapper>
-                                    <ButtonsWrapper>
-                                        {noThanksButton()}
-                                        {purchaseButton(
-                                            packageType,
-                                            packageId,
-                                            schoolId,
-                                            packageName,
-                                            amount,
-                                            monthlyPymtDetails,
-                                            expDuration,
-                                            expPeriod,
-                                            noClasses,
-                                            planId,
-                                            currency,
-                                            pymtType,
-                                            self
-                                        )}
-                                    </ButtonsWrapper>
-                                    <Text>
-                                                    
-                                        <MyLink
-                                            target={"_branch"}
-                                            to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
-                                            Click here </MyLink> to view your exisiting subscriptions.
-                                    
-                                    </Text>
-                                </ActionWrapper>
-                            )
+                            RenderActions: renderActionsWithText(packageType,
+                                packageId,
+                                schoolId,
+                                packageName,
+                                amount,
+                                monthlyPymtDetails,
+                                expDuration,
+                                expPeriod,
+                                noClasses,
+                                planId,
+                                currency,
+                                pymtType,
+                                self)
                         },
                         true
                     );

@@ -206,8 +206,8 @@ class ThinkingAboutAttending extends React.Component {
       }
     );
   };
-  closeClassTypePackages = () =>{
-    this.setState({classTypePackages:false});
+  closeClassTypePackages = () => {
+    this.setState({ classTypePackages: false });
   }
   render() {
     const { checkBoxes, classTypePackages, packagesRequired } = this.state;
@@ -261,15 +261,11 @@ class ThinkingAboutAttending extends React.Component {
           {classTypePackages && <ClassTypePackages
             schoolId={schoolId}
             open={classTypePackages}
-            onClose={() => { this.setState({ classTypePackages: false }) }}
+            onClose={() => this.setState({ classTypePackages: false })}
             params={params}
             classTypeId={classTypeId}
-<<<<<<< HEAD
             packagesRequired={packagesRequired}
-=======
-            packagesRequired = {packagesRequired}
-            closeClassTypePackages = {this.closeClassTypePackages}
->>>>>>> eea1e904dd8392da4d1402fb328ef52c76a31c69
+            closeClassTypePackages={this.closeClassTypePackages}
           />}
           <DialogTitle classes={{ root: this.props.classes.dialogTitle }}>
             <DialogTitleWrapper>

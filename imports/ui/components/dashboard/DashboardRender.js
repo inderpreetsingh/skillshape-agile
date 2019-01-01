@@ -11,11 +11,24 @@ import { getUserFullName } from '/imports/util';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { rhythmDiv, primaryColor } from '/imports/ui/components/landing/components/jss/helpers.js';
 
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+`;
+
+const DashBoardContent = styled.div`
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+`;
+
 const BodyWrapper = styled.div`
     padding: ${rhythmDiv * 4}px ${rhythmDiv * 2}px;
 `;
 
-const Content = SubHeading.extend`
+const AddSchool = SubHeading.extend`
     text-align: center;
     margin-bottom: ${rhythmDiv * 4}px;
 `;
@@ -38,19 +51,21 @@ export default (props) => {
         schools,
         onCreateNewSchool
     } = props;
-    return (<Fragment>
+    return (<Wrapper>
         <BrandBar
             positionStatic
             currentUser={currentUser}
             isUserSubsReady={isUserSubsReady}
         />
-        <Header
-            userImage={currentUser && currentUser.profile.pic}
-            userName={getUserFullName(currentUser)} />
-        <BodyWrapper>
-            <Content>If you want to add a new school, <MyLink onClick={onCreateNewSchool}>click here.</MyLink></Content>
-            <SchoolsList schools={schools} />
-        </BodyWrapper>
-        <Footer />
-    </Fragment>)
+        <DashBoardContent>
+            <Header
+                userImage={currentUser && currentUser.profile.pic}
+                userName={getUserFullName(currentUser)} />
+            <BodyWrapper>
+                <AddSchool>If you want to add a new school, <MyLink onClick={onCreateNewSchool}>click here.</MyLink></AddSchool>
+                <SchoolsList schools={schools} />
+            </BodyWrapper>
+            <Footer />
+        </DashBoardContent>
+    </Wrapper>)
 }
