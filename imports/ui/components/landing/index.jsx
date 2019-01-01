@@ -298,31 +298,31 @@ class Landing extends Component {
       localStorage.getItem("visitorRedirected")
     );
     // console.group("REDIRECT INDEX PAGE");
-    // console.info(Meteor.user(), localStorage.getItem("visitorRedirected"));
+    console.info(currentUser, localStorage.getItem("visitorRedirected"));
     // console.groupEnd();
-    // debugger;
+    debugger;
     if (!visitorRedirected && previousLocationPathName === "/") {
       if (
         isUserSubsReady &&
         currentUser &&
         currentUser.profile.userType === "School"
       ) {
-        Meteor.call("school.getMySchool", (err, res) => {
-          if (err) {
-            console.warn(err);
-          } else {
-            localStorage.setItem("visitorRedirected", true);
-            if (res.length == 1) {
-              //if there is only 1 school, then visit it else
-              const mySchoolSlug = res[0].slug;
-              // browserHistory.push(`/schools/${mySchoolSlug}`);
-              browserHistory.push("/dashboard");
-            } else {
-              // browserHistory.push("/skillshape-for-school");
-              browserHistory.push("/dashboard");
-            }
-          }
-        });
+        // Meteor.call("school.getMySchool", (err, res) => {
+        //   if (err) {
+        //     console.warn(err);
+        //   } else {
+        //     if (res.length == 1) {
+        //       //if there is only 1 school, then visit it else
+        //       const mySchoolSlug = res[0].slug;
+        //       // browserHistory.push(`/schools/${mySchoolSlug}`);
+        //     } else {
+        //       // browserHistory.push("/skillshape-for-school");
+        //       browserHistory.push("/dashboard");
+        //     }
+        //   }
+        // });
+        localStorage.setItem("visitorRedirected", true);
+        browserHistory.push("/dashboard");
       } else if (
         isUserSubsReady &&
         currentUser &&
