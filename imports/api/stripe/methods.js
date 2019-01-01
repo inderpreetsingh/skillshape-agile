@@ -449,6 +449,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
             monthlyAttendance.noClasses = MonthlyData.noClasses;
             monthlyAttendance.startDate = new Date();
             monthlyAttendance.max = MonthlyData.noClasses;
+            noClasses = MonthlyData.noClasses;
           }
         })
         payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
@@ -497,7 +498,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       status = result;
       payload.packageStatus = status;
       recordId = Meteor.call("purchases.addPurchase", payload);
-			console.log("​recordId", recordId)
       return recordId;
     }catch(error){
 			console.log("error in ​stripe.handleOtherPaymentMethods", error)

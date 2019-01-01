@@ -46,7 +46,6 @@ Meteor.methods({
         }
     },
     "classes.updateClassData":function(filter,status,purchaseId,packageType,from){
-		console.log("​filter", filter)
         try{
             if(from == 'purchasePackage'){
              filter.students = get(Classes.findOne({_id:filter._id}),"students",[]);
@@ -62,7 +61,6 @@ Meteor.methods({
             }
             // Add or remove record in the add to calendar collection.
             let addToCalendarCondition = "classTimeId" in  filter && 'classTypeId' in filter && 'schoolId' in filter;
-            console.log("​addToCalendarCondition", addToCalendarCondition)
             if(addToCalendarCondition){
                 let methodName;
                 let data = {classTypeId,classTimeId,schoolId} = filter;

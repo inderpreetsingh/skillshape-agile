@@ -432,7 +432,9 @@ export default class MyCalender extends React.Component {
       </ListItem>
     </List>
   )
-
+  closeClassTypePackages = () =>{
+    this.setState({classTypePackages:false});
+  }
   render() {
     const { isOpen,
       eventData,
@@ -498,6 +500,7 @@ export default class MyCalender extends React.Component {
                     packagesRequired = {packagesRequired}
                     handleSignIn = {this.handleSignIn}
                     fromSignFunctionality
+                    closeClassTypePackages = {this.closeClassTypePackages}
                     />}
         {isOpen && (
           <SkillshapePopover

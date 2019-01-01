@@ -215,9 +215,9 @@ noThanksButton = () => (
         <FormGhostButton label={'No, thanks'} onClick={() => { }} greyColor applyClose />
     </ButtonWrapper>
 );
-closeButton = () => (
+closeButton = (self) => (
     <ButtonWrapper>
-        <FormGhostButton label={'Close'} onClick={() => { }} greyColor applyClose />
+        <FormGhostButton label={'Close'} onClick={() => {self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully() }} greyColor applyClose />
     </ButtonWrapper>
 )
 purchaseButton = (
@@ -818,7 +818,7 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                         content: `Your Subscription is being set up. You can check the status here:`,
                         RenderActions: (
                             <ButtonsWrapper>
-                                {closeButton()}
+                                {closeButton(self)}
                                 <FormGhostButton
                                     label={'My Subscriptions'}
                                     onClick={() => {
@@ -832,7 +832,6 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                     },
                     true
                 );
-                self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('warning', {
                     title: 'Error',
@@ -907,7 +906,7 @@ handleCharge = (
                             content: self.packagesRequired == 'enrollment' ? self.generateContent() : `Your Payment is received successfully.`,
                             RenderActions: (
                                 <ButtonsWrapper>
-                                    {closeButton()}
+                                    {closeButton(self)}
                                     <FormGhostButton
                                         label={'My Subscriptions'}
                                         onClick={() => {
@@ -934,7 +933,6 @@ handleCharge = (
                 } else {
                     popUp.appear('success', { title: 'Success', content: result.message });
                 }
-                self.packagesRequired != 'enrollment' && self.purchasedSuccessfully && self.purchasedSuccessfully();
             } else {
                 popUp.appear('success', { title: 'Error', content: error.message });
             }
