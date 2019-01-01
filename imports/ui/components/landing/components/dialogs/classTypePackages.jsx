@@ -80,6 +80,7 @@ class ClassTypePackages extends React.Component {
         return 'Now you can purchase a package to pay for the classes themselves. Click Per Class/Monthly Package  button to purchase package.';
     }
     purchasedSuccessfully = () =>{
+        this.props.closeClassTypePackages && this.props.closeClassTypePackages(); 
         this.props.handleSignIn && this.props.handleSignIn()
     }
     render() {

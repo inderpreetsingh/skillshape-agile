@@ -75,7 +75,7 @@ const Header = (props) => (
             <UserProfile>
                 <UserImage
                     imageContainerProps={{ noMarginRight: true }}
-                    src={props.userImageSrc} />
+                    src={props.userImage} />
                 {props.userName && <Greeting>Welcome back, {capitalizeString(props.userName)}</Greeting>}
             </UserProfile>
             <ButtonWrapper>

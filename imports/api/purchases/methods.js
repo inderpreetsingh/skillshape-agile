@@ -116,6 +116,9 @@ Meteor.methods({
           record = Purchases.findOne({ _id });
           if (!isEmpty(record)) {
             monthlyAttendance = get(record, 'monthlyAttendance', {});
+            if(monthlyAttendance.max == null){
+              return 1;
+            }
             if (monthlyAttendance.noClasses > 0) {
               monthlyAttendance.noClasses = monthlyAttendance.noClasses + inc;
             } else {

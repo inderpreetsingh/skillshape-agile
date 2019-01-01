@@ -233,14 +233,14 @@ acceptPayment = (packageData,props,paymentMethod) => {
     }
     data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName,planId};
     Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
-      if(res){
+      
         props.toggleIsBusy();
         let title = 'Package Purchased Successfully';
         if(packageType != 'EP')
         this.updateStatus(1, props)
         else
         this.successPopUp(popUp,'prototype',title)
-      }
+      
     })
 
 
