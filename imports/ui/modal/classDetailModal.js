@@ -10,7 +10,7 @@ import IconButton from "material-ui/IconButton";
 import { withStyles } from "material-ui/styles";
 import moment from "moment";
 import React from "react";
-import { browserHistory,Link } from "react-router";
+import { browserHistory, Link } from "react-router";
 import styled from "styled-components";
 import "/imports/api/classInterest/methods";
 import ClassTimes from "/imports/api/classTimes/fields";
@@ -28,19 +28,14 @@ import { withPopUp } from "/imports/util";
 
 
 
-
-const ButtonWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
 const styles = theme => {
   return {
     dialogPaper: {
       overflowX: "hidden",
       padding: helpers.rhythmDiv * 2,
-      maxWidth: 400,
+      maxWidth: 450,
       maxHeight: "80vh",
-      height:'auto'
+      height: 'auto'
     },
     dialogTitleRoot: {
       width: "100%",
@@ -111,6 +106,18 @@ const styles = theme => {
 //   ${flexCenter}
 //   padding: ${rhythmDiv}px 0px;
 // `;
+
+
+
+const ActionButtons = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
 const InnerWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -260,10 +267,10 @@ class ClassDetailModal extends React.Component {
       null,
       this.props.eventData.schoolId,
       (err, res) => {
-        if(res)
-        if(get(res,'superAdmin',null) == Meteor.userId() || includes(get(res,'admins',[]),Meteor.userId())){
-          this.setState({ adminAccess: true });
-        }
+        if (res)
+          if (get(res, 'superAdmin', null) == Meteor.userId() || includes(get(res, 'admins', []), Meteor.userId())) {
+            this.setState({ adminAccess: true });
+          }
       }
     );
     if (this.props.eventData) {
@@ -360,7 +367,7 @@ class ClassDetailModal extends React.Component {
     this.setState({ isLoading: true });
     Meteor.call(
       "classInterest.removeClassInterestByClassTimeId",
-      { userId:Meteor.userId(),classTimeId },
+      { userId: Meteor.userId(), classTimeId },
       (error, res) => {
         this.setState({ isLoading: false, error });
         this.props.closeEventModal(false, null);
@@ -447,7 +454,7 @@ class ClassDetailModal extends React.Component {
     this.setState({ removeFromCalendarPopUp: false });
     props.closeEventModal(false, null);
   };
- 
+
   render() {
     const {
       isLoading,
@@ -468,7 +475,7 @@ class ClassDetailModal extends React.Component {
       params,
       schoolName
     } = this.props;
-    let enrollmentIds = get(this.state.classType,'enrollmentIds',[]);
+    let enrollmentIds = get(this.state.classType, 'enrollmentIds', []);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
     const formattedClassTimesDetails = formatDataBasedOnScheduleType(
       eventData,
@@ -513,7 +520,7 @@ class ClassDetailModal extends React.Component {
       >
         {isLoading && <ContainerLoader />}
         {error && <div style={{ color: "red" }}>{error}</div>}
-        
+
         {!isLoading &&
           !error && (
             <Grid container style={{ padding: "16px" }}>
@@ -542,7 +549,7 @@ class ClassDetailModal extends React.Component {
                     <EventName>
                       {`${classType && classType.name.toLowerCase()}: ${
                         eventData.name
-                      }`}
+                        }`}
                     </EventName>
                     {/* {this.formatScheduleType(eventData.scheduleType)} */}
                   </Event>
@@ -640,7 +647,7 @@ class ClassDetailModal extends React.Component {
                             onClick={() => {
                               this.setState({ removeFromCalendarPopUp: true });
                             }}
-                           
+
                           />
                         </Grid>
                       )}
@@ -657,8 +664,8 @@ class ClassDetailModal extends React.Component {
                         />
                       </Grid>
                     )}
-                   
-                      <Grid item xs={6} style={{ margin: "auto" }}>
+
+                    <Grid item xs={6} style={{ margin: "auto" }}>
                       {/* <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
                         <ClassTimeButton
                           fullWidth
@@ -667,7 +674,7 @@ class ClassDetailModal extends React.Component {
                           onClick={()=>{}}
                         />
                         </Link> */}
-                      </Grid>
+                    </Grid>
                   </Grid>
                 )}
               </center>
@@ -683,10 +690,10 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={[classTypeData]}
                         classInterestData={classInterestData}
-                        onModalClose ={()=>{this.props.closeEventModal(false, null)}}
-                        params= {params}
-                        schoolName = {schoolName}
-                        enrollmentIds = {enrollmentIds}
+                        onModalClose={() => { this.props.closeEventModal(false, null) }}
+                        params={params}
+                        schoolName={schoolName}
+                        enrollmentIds={enrollmentIds}
                       />
                     </div>
                   </div>
@@ -762,7 +769,7 @@ class ClassDetailModal extends React.Component {
                             <Text>
                               {location &&
                                 `${location.address}, ${location.city}, ${
-                                  location.state
+                                location.state
                                 }`}
                             </Text>
                           </div>
@@ -776,7 +783,7 @@ class ClassDetailModal extends React.Component {
                         <MetaInfo
                           data={`  ${classTypeData.ageMin} to ${
                             classTypeData.ageMax
-                          }`}
+                            }`}
                           title={"Age:" + " "}
                         />
                       )}
@@ -790,18 +797,18 @@ class ClassDetailModal extends React.Component {
                       )}
 
                     {classTypeData &&
-                    classTypeData.experienceLevel &&
-                    classTypeData.experienceLevel == "All" ? (
-                      <MetaInfo
-                        data={"  All levels are welcome"}
-                        title={"Experience:  " + " "}
-                      />
-                    ) :classTypeData.experienceLevel &&  (
-                      <MetaInfo
-                        data={`  ${classTypeData.experienceLevel}`}
-                        title={"Experience:  " + " "}
-                      />
-                    )}
+                      classTypeData.experienceLevel &&
+                      classTypeData.experienceLevel == "All" ? (
+                        <MetaInfo
+                          data={"  All levels are welcome"}
+                          title={"Experience:  " + " "}
+                        />
+                      ) : classTypeData.experienceLevel && (
+                        <MetaInfo
+                          data={`  ${classTypeData.experienceLevel}`}
+                          title={"Experience:  " + " "}
+                        />
+                      )}
                     {classType &&
                       classType.desc && (
                         <MetaInfo
@@ -841,10 +848,10 @@ class ClassDetailModal extends React.Component {
                         withSlider={false}
                         classTimesData={allFormattedClassTimeDetails}
                         classInterestData={classInterestData}
-                        onModalClose ={()=>{this.props.closeEventModal(false, null)}}
-                        params= {params}
-                        schoolName = {schoolName}
-                        enrollmentIds = {enrollmentIds}
+                        onModalClose={() => { this.props.closeEventModal(false, null) }}
+                        params={params}
+                        schoolName={schoolName}
+                        enrollmentIds={enrollmentIds}
                       />
                     </div>
                   </div>
@@ -877,8 +884,8 @@ class ClassDetailModal extends React.Component {
                     this.props.closeEventModal(false, null);
                   }}
                 /> */}
-                <Grid style={{ display: "flex", justifyContent: "flex-end" }}>
-                <ButtonWrapper>
+                <ActionButtons>
+                  <ButtonWrapper>
                     <FormGhostButton
                       darkGreyColor
                       label="Close"
@@ -904,8 +911,7 @@ class ClassDetailModal extends React.Component {
                       onClick={() => this.goToSchoolPage(school)}
                     />
                   </ButtonWrapper>
-                 
-                </Grid>
+                </ActionButtons>
               </DialogActions>
 
               {/*fullScreen && (
