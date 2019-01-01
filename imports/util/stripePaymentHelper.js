@@ -414,7 +414,7 @@ renderActionsWithText = (packageType,
                 <Italic>
                     <MyLink
                         target={"_branch"}
-                        to={`${Meteor.absoluteUrl()} mySubscription /${Meteor.userId()}`} >
+                        to={`${Meteor.absoluteUrl()}/mySubscription/${Meteor.userId()}`} >
                         Click here </MyLink> to view your exisiting subscriptions.
             </Italic>
             </Text>
