@@ -34,10 +34,12 @@ class MySubscription extends React.Component {
 	};
 
 
-	classDataFinder = () => {
-		let { schoolData, currentUser } = this.props;
-		let schoolId = get(schoolData[0], '_id', null);
+	classDataFinder = (schoolData) => {
+		let {  currentUser } = this.props;
+		let schoolId = get(schoolData, '_id', null);
 		let userId = get(currentUser, '_id', null);
+		console.log("​MySubscription -> classDataFinder -> schoolId", schoolId)
+		console.log("​MySubscription -> classDataFinder -> userId", userId)
 		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
 			if (res)
 				this.setState({ subscriptionsData: res })
@@ -88,7 +90,7 @@ class MySubscription extends React.Component {
 
 	handleManageMemberShipDialogBox = (modelState, schoolData) => (e) => {
 		e.stopPropagation();
-		this.classDataFinder();
+		this.classDataFinder(schoolData);
 		this.setState(state => {
 			return {
 				...state,
@@ -164,7 +166,7 @@ class MySubscription extends React.Component {
 		}
 	}
 	okClick = () => {
-		this.classDataFinder();
+		this.classDataFinder(this.state.selectedSchool);
 	}
 
 	removeFromCalendar = (data) => {
