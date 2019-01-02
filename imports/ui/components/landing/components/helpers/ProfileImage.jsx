@@ -20,12 +20,13 @@ const ImageContainer = styled.div`
   margin-right: ${props => props.marginRight || helpers.rhythmDiv * 2}px;
   position: ${props => props.position || 'static'};  
   margin-bottom: ${ helpers.rhythmDiv}px;
-  background-position: 50% 50%;
+  background-position: ${props => props.bgPosition || '50% 50%'};
   background-image: url('${(props) => props.src}');
-  background-size: contain;
+  background-size: ${props => props.bgSize || 'contain'};
   border-radius: ${ props => props.borderRadius || '3px'};
   transition: background-image 1s linear;
   ${props => props.noMarginRight && 'margin-right: 0'};
+  ${props => props.noMarginBottom && 'margin-bottom: 0'};
 `;
 
 export const SSImage = (props) => {

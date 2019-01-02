@@ -30,7 +30,7 @@ const BodyWrapper = styled.div`
 
 const AddSchool = SubHeading.extend`
     text-align: center;
-    margin-bottom: ${rhythmDiv * 4}px;
+    margin-bottom: 0;
 `;
 
 const MyLink = Text.withComponent('a').extend`
@@ -62,7 +62,7 @@ export default (props) => {
             <Header {...headerProps} onCreateNewSchoolClick={onCreateNewSchoolClick} />
             <BodyWrapper>
                 <SchoolsList schools={bodyProps.schools} />
-                <AddSchool>If you want to add a new school, <MyLink onClick={onCreateNewSchoolClick}>click here.</MyLink></AddSchool>
+                <AddSchool><MyLink onClick={onCreateNewSchoolClick}>click here</MyLink> to add a new school.</AddSchool>
             </BodyWrapper>
             <Footer />
         </DashBoardContent>

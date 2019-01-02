@@ -37,30 +37,15 @@ const SchoolCardWrapper = styled.div`
     width: 100%;
     margin: 0 ${rhythmDiv * 2}px ${rhythmDiv * 4}px ${rhythmDiv * 2}px;  
 
-    :nth-of-type(3n) {
-        margin-right: 0;
-    }
-
     @media screen and (max-width: ${LARGE_SCREEN_GW}px) {
-        :nth-of-type(2n) {
-            margin-right: 0;
-        }
-
-        :nth-of-type(2n + 1) {
-            margin-right: ${rhythmDiv * 2}px;
-        }
+        
+        margin-right: ${rhythmDiv * 2}px;
+        
     }
 
     @media screen and (max-width: ${MED_SCREEN_GW}px) {
         margin: 0;
-        margin-bottom: ${rhythmDiv * 2}px;    
-        :nth-of-type(3n) {
-            margin-right: 0;
-        }
-
-        :nth-of-type(2n + 1) {
-            margin-right: 0;
-        }
+        margin-bottom: ${rhythmDiv * 4}px;
     }
 `;
 

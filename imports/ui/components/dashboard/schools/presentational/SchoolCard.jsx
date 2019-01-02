@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
+import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 
 
@@ -25,10 +25,10 @@ const Wrapper = styled.div`
 const CardWrapper = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${props => props.schoolLogoExists ? 'space-between' : 'flex-end'};
     padding: ${rhythmDiv}px 0 0 ${rhythmDiv}px;
     width: 100%;
-    height: 120px;
+    height: 160px;
     border-radius: 5px;
     border: 1px solid ${panelColor};
     box-shadow: ${lightBoxShadow};
@@ -40,7 +40,6 @@ const CardWrapper = styled.div`
     margin-bottom: ${rhythmDiv * 2}px;
     
     @media screen and (max-width: 350px) {
-        height: 160px;
     }
 `;
 const ActionButtons = styled.div`
@@ -56,6 +55,9 @@ const ActionButtons = styled.div`
 
 const ProfileWrapper = styled.div`
     margin-right: ${rhythmDiv * 2}px;
+    background-color: ${panelColor};
+    border-radius: 3px;
+    padding: ${rhythmDiv}px;
 `;
 
 const SchoolName = Text.extend`
@@ -66,16 +68,18 @@ const SchoolName = Text.extend`
 
 const SchoolCard = (props) => (
     <Wrapper>
-        <CardWrapper bgImg={props.schoolCover}>
-            <ProfileWrapper>
-                {props.schoolLogo && <ProfileImage
-                    imageContainerProps={{
-                        width: 75,
-                        height: 75,
-                    }}
-                    src={props.schoolLogo}
-                />}
-            </ProfileWrapper>
+        <CardWrapper schoolLogoExists={!isEmpty(props.schoolLogo)} bgImg={props.schoolCover}>
+
+            {!isEmpty(props.schoolLogo) && <ProfileWrapper> <ProfileImage
+                imageContainerProps={{
+                    width: 50,
+                    height: 50,
+                    noMarginRight: true,
+                    noMarginBottom: true
+                }}
+                src={props.schoolLogo}
+            /></ProfileWrapper>}
+
             <ActionButtons>
                 <SecondaryButton icon iconName="school" label="Visit" onClick={props.onVisitSchoolClick} />
                 <PrimaryButton icon iconName="edit" label="Edit" onClick={props.onEditSchoolClick} />
