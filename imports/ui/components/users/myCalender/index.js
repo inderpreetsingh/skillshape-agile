@@ -14,7 +14,7 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
-import { capitalizeString } from '/imports/util';
+import { capitalizeString,confirmationDialog } from '/imports/util';
 
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
@@ -178,15 +178,7 @@ export default class MyCalender extends React.Component {
               pos = index;
           }
         })
-        if(purchased.length==1){
-          this.updateClass(filter,status,purchased[0],popUp)
-          return;
-        }
-        if(pos != -1){
-          this.updateClass(filter,status,purchased[pos],popUp)
-          return;
-        }
-        else if(status=='signOut'){
+         if(status=='signOut'){
           let {classDetails:{students}}=this.state,purchaseId,purchaseData;
           if(!isEmpty(students) && !isEmpty(purchased)){
             students.map((obj)=>{
@@ -200,10 +192,34 @@ export default class MyCalender extends React.Component {
               }
             })
             this.updateClass(filter,status,purchaseData,popUp);
-          return;
           }
-
+          return;
         }
+        if(purchased.length==1){
+          let data = {};
+          data = {
+            popUp,
+            title:'Confirmation',
+            type:'inform',
+            content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
+            buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[0],popUp)}}]
+          }
+          confirmationDialog(data);
+          return;
+        }
+        if(pos != -1){
+          let data = {};
+          data = {
+            popUp,
+            title:'Confirmation',
+            type:'inform',
+            content: <div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
+            buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[pos],popUp)}}]
+          }
+          confirmationDialog(data);
+          return;
+        }
+       
         else{
           popUp.appear("inform", {
             title: `Confirmation`,
@@ -247,7 +263,7 @@ export default class MyCalender extends React.Component {
    }
 
   updateClass = (filter,status,purchaseData,popUp)=>{
-    let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
+    let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData || {};
     let condition=0,inc=0;
     if(packageType == 'CP'){
       condition = noClasses;
@@ -259,7 +275,7 @@ export default class MyCalender extends React.Component {
             if(condition <= 0 ){
               condition = res;
             }
-            if(condition>0 || res == undefined && !condition < 0){
+            if(condition>0 || res == undefined && !condition < 0 || !purchaseData){
               this.setState({isLoading:true});
               Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
                 if(res){
@@ -348,7 +364,7 @@ export default class MyCalender extends React.Component {
     else {
       popUp.appear("inform", {
         title: "Confirmation",
-        content: `You are already sign in. Do you want to sign out?`,
+        content: `You are currently signed in. Do you want to sign out?`,
         RenderActions: ( <Div > 
           <ButtonWrapper>
             <FormGhostButton

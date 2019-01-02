@@ -358,6 +358,7 @@ class DashBoardView extends React.Component {
     payload.signUpType = "member-signup"
     payload.sendMeSkillShapeNotification = true;
     payload.schoolName = schoolName;
+		console.log("​adminView", adminView)
     if (!adminView) {
 
       let state = {
@@ -400,6 +401,7 @@ class DashBoardView extends React.Component {
   addNewMember = event => {
     event.preventDefault();
     const { schoolData, adminView, adminsIds } = this.props;
+		console.log("​adminView", adminView)
     // Check for existing user only if users has entered their email.
     if (!isEmpty(schoolData) && !this.state.studentWithoutEmail) {
       // Show Loading
@@ -420,7 +422,7 @@ class DashBoardView extends React.Component {
             // state.showConfirmationModal = fals;
             state.message = res;
             state.isLoading = false;
-            if (findIndex(adminsIds, (o) => { return o == _id }) != -1) {
+            if (findIndex(adminsIds, (o) => { return o == _id }) != -1 && adminView) {
               this.setState({ error: 'This person is already an admin.', isLoading: false });
               return;
             }

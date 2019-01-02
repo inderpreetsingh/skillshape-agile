@@ -126,7 +126,9 @@ class SchoolPriceView extends React.Component {
     }
   };
 
-
+  purchasedSuccessfully = () => {
+    this.setState({enrollmentPackagesDialog:false});
+  }
   handleInputChange = (inputName, event) => {
     if (inputName === "email") {
       const { error } = this.state;

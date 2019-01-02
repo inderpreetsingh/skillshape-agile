@@ -16,7 +16,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import { verifyImageURL, withPopUp } from '/imports/util';
+import { verifyImageURL, withPopUp,confirmationDialog } from '/imports/util';
 
 
 
@@ -173,7 +173,31 @@ class SchoolMemberInfo extends Component {
 		this.classDataFinder();
 		return state;
 	};
-
+	purchasePackageDataChecker = (classTimes, classTypeName,_id,schoolId) => {
+		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId',{classTypeId:_id,schoolId},(err,res)=>{
+			const {popUp} = this.props;
+			if(!isEmpty(res)){
+				let data = {},latestExpirationDate = get(res[0],'endDate',new Date());
+				data = {
+					popUp,
+					title: 'Confirmation',
+					type: 'inform',
+				}
+				if(_id){
+				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove this class from your calendar? If you join again before the expiration, your Packages will still be active.`
+				data.buttons = [{label:'Leave Class',onClick:()=>{this.removeAll(classTimes, classTypeName,_id)},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				}
+				else{
+				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove the school and all classes from your calendar? If you join again before the expiration, your Packages will still be active.`
+				data.buttons = [{label:'Leave School',onClick:()=>{this.leaveSchoolHandler()},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				}
+				confirmationDialog(data);
+			}
+			else{
+				_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
+			}
+		})
+	}
 	saveMyNotesInMembers = (event) => {
 		const { memberInfo, view } = this.props;
 		let payload = {};
@@ -351,6 +375,7 @@ class SchoolMemberInfo extends Component {
 	leaveSchool = () => {
 		let { popUp, memberInfo } = this.props;
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
+		let schoolId = get(memberInfo,'schoolId',null);
 		popUp.appear(
 			'inform',
 			{
@@ -364,7 +389,7 @@ class SchoolMemberInfo extends Component {
 						/>
 						<FormGhostButton
 							label={'Yes'}
-							onClick={this.leaveSchoolHandler}
+							onClick={()=>{this.purchasePackageDataChecker(null,null,null,schoolId)}}
 							applyClose
 						/>
 					</ButtonWrapper>
@@ -464,7 +489,7 @@ class SchoolMemberInfo extends Component {
 						studentName={studentName}
 						open={this.state.manageMemberShipDialog}
 						onModalClose={() => this.handleDialogState('manageMemberShipDialog', false)}
-						removeAll={this.removeAll}
+						removeAll={this.purchasePackageDataChecker}
 						stopNotification={this.stopNotification}
 						leaveSchool={this.leaveSchool}
 						removeFromCalendar={this.removeFromCalendar}

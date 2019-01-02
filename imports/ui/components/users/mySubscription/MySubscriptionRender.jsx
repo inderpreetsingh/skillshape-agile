@@ -219,10 +219,9 @@ const MySubscriptionRender = (props) => {
                     stopNotification={stopNotification}
                     leaveSchool={leaveSchool}
                     removeFromCalendar={removeFromCalendar}
-                    schoolName={schoolName}
                     isBusy={isBusy}
                     userId={userId}
-                    selectedSchoolData={schoolData[0]}
+                    selectedSchoolData={selectedSchool}
                 />
             )}
             {callUsDialog && (
@@ -291,7 +290,7 @@ const MySubscriptionRender = (props) => {
                                         email={getOurEmail(school)}
                                         phone={getContactNumbers(school)}
                                         schoolSlug={school.slug}
-                                        onEditMemberShip={handleManageMemberShipDialogBox(true, schoolData)}
+                                        onEditMemberShip={handleManageMemberShipDialogBox(true, school)}
 
                                         onSchoolVisit={props.handleSchoolVisit}
                                     />

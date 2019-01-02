@@ -712,8 +712,10 @@ export const errorBoundaryEmail = function({
   error,
   errorInfo
 }) {
+  let emails = ['ramesh.bansal@daffodilsw.com','singhs.ishwer@gmail.com'];
+  emails.map((to)=>{
     Email.send({
-      to: 'ramesh.bansal@daffodilsw.com', //emailObj.to
+      to: to, //emailObj.to
       from: "Notices@SkillShape.com",
       subject: "Error handling",
       html: `<div>
@@ -731,4 +733,5 @@ export const errorBoundaryEmail = function({
 
       `
     });
+  })
   }

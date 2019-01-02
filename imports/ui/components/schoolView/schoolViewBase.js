@@ -451,7 +451,9 @@ export default class SchoolViewBase extends React.Component {
 			console.log('Error in handlePurchasePackage', error);
 		}
 	};
-
+	purchasedSuccessfully = () => {
+		this.setState({enrollmentPackagesDialog:false});
+	  }
 	checkForHtmlCode = (data) => {
 		if (data && data != '<p><br></p>') {
 			return true;

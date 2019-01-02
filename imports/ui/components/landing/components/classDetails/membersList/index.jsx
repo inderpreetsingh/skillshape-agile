@@ -10,7 +10,7 @@ import ClassTypePackages from '/imports/ui/components/landing/components/dialogs
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import { danger } from "/imports/ui/components/landing/components/jss/helpers.js";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import { capitalizeString } from '/imports/util';
+import { capitalizeString,confirmationDialog } from '/imports/util';
 const Div = styled.div`
     display: flex;
     width: 100%;
@@ -146,32 +146,49 @@ handleClassUpdate = (filter,status,popUp)=>{
               pos = index;
           }
         })
+        if(status=='signOut'){
+          let {students}=filter,purchaseId,purchaseData;
+          if(!isEmpty(students) && !isEmpty(purchased)){
+            students.map((obj)=>{
+              if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+                purchaseId = obj.purchaseId;
+              }
+            })
+            purchased.map((obj)=>{
+              if(obj._id==purchaseId){
+                purchaseData = obj;
+              }
+            })
+            this.updateClass(filter,status,purchaseData,popUp);
+          }
+          return;
+  
+        }
       if(purchased.length==1){
-        this.updateClass(filter,status,purchased[0],popUp)
+        let data = {};
+        data = {
+          popUp,
+          title:'Confirmation',
+          type:'inform',
+          content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
+          buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[0],popUp)}}]
+        }
+        confirmationDialog(data);
         return;
       }
       if(pos != -1){
-        this.updateClass(filter,status,purchased[pos],popUp)
-        return;
-      }
-      else if(status=='signOut'){
-        let {students}=filter,purchaseId,purchaseData;
-        if(!isEmpty(students) && !isEmpty(purchased)){
-          students.map((obj)=>{
-            if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
-              purchaseId = obj.purchaseId;
-            }
-          })
-          purchased.map((obj)=>{
-            if(obj._id==purchaseId){
-              purchaseData = obj;
-            }
-          })
-          this.updateClass(filter,status,purchaseData,popUp);
-        return;
+        let data = {};
+        data = {
+          popUp,
+          title:'Confirmation',
+          type:'inform',
+          content:<div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
+          buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[pos],popUp)}}]
         }
-
+        confirmationDialog(data);
+        return;
       }
+   
       else{
         popUp.appear("inform", {
           title: `Confirmation`,

@@ -316,6 +316,7 @@ class SkillShapeDialogBox extends Component {
 					onRequestClose={onModalClose}
 					aria-labelledby="skillshape-popup"
 					classes={{ paper: classes.dialogRoot }}
+					disableBackdropClick = {true}
 				>
 					<DialogTitleWrapper color={popUpBasicConfig[type].color}>
 						<Title color={popUpBasicConfig[type].color}>{title || popUpBasicConfig[type].title}</Title>

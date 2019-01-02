@@ -38,6 +38,7 @@ handlePurchasePackage = async (packageType, packageId, schoolId, packageName, am
 }
 //After successful package purchase if the package is not EP mark that package on the class details page.
 purchasedSuccessfully = () =>{
+ this.setState({enrollmentPackagesDialog:false});
  const {packageRequestData:{userId,packageId,_id,packageType,classesId}} = this.props;
  let filter = {userId,_id:classesId};
  Meteor.call("purchases.getPurchasedFromPackageIds",[packageId],userId,(err,res)=>{
