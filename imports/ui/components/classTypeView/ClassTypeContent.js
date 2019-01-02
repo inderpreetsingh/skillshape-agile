@@ -459,6 +459,7 @@ class ClassTypeContent extends Component {
       console.log('Error in handlePurchasePackage', error);
     }
   };
+
   render() {
     const {
       bgImg,
@@ -511,7 +512,9 @@ class ClassTypeContent extends Component {
           : submitBtnLabel;
       requestFor = manageRequestTitle != "Pricing" ? "class times" : requestFor;
     }
-
+    purchasedSuccessfully = () => {
+      this.setState({enrollmentPackagesDialog:false});
+    }
     return (
       <div>
         {this.state.callUsDialog && (
