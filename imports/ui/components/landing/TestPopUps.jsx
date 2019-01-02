@@ -54,6 +54,26 @@ class TestPopUps extends Component {
     );
   };
 
+  handleOnCloseCustomClick = () => {
+    const { popUp } = this.props;
+
+    popUp.appear(
+      "success",
+      {
+        onAffirmationButtonClick: () => console.log("success click"),
+        onPopUpClose: () => {
+          popUp.appear(
+            "warning",
+            {
+              onAffirmationButtonClick: () => console.log("success click")
+            }, true
+          )
+        }
+      },
+      true
+    );
+  }
+
   handleCustomRenderButtonClick = () => {
     const { popUp } = this.props;
     popUp.appear("inform", {
@@ -107,6 +127,11 @@ class TestPopUps extends Component {
             type="warning"
           />
         )}
+
+        <PrimaryButton
+          onClick={this.handleOnCloseCustomClick}
+          label="Custom onClose"
+        />
         <PrimaryButton
           onClick={this.handleWarningButtonClick}
           label="Warning"
