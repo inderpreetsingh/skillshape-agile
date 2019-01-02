@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 
-
+import { withImageExists } from '/imports/util';
 import { PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import {
@@ -16,6 +16,12 @@ import {
 } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
+
+const imageExistsConfig = {
+    originalImagePath: 'src',
+    defaultImage: classTypeImgSrc
+};
 
 const Wrapper = styled.div`
     ${flexCenter}
@@ -32,7 +38,6 @@ const CardWrapper = styled.div`
     border-radius: 5px;
     border: 1px solid ${panelColor};
     box-shadow: ${lightBoxShadow};
-    max-width: ${maxContainerWidth}px;
     ${coverBg}
     background-image: url(${props => props.bgImg});
     background-position: 50% 50%;
@@ -42,6 +47,17 @@ const CardWrapper = styled.div`
     @media screen and (max-width: 350px) {
     }
 `;
+
+const CardWrapperEnhanced = withImageExists(props => {
+    // console.log("CARD WRAPPER ENHANCED", props);
+    return (
+        <CardWrapper
+            {...props}
+            bgImg={props.bgImg}
+        />);
+}, imageExistsConfig);
+
+
 const ActionButtons = styled.div`
     ${flexCenter};
     height: 100%;
@@ -68,23 +84,27 @@ const SchoolName = Text.extend`
 
 const SchoolCard = (props) => (
     <Wrapper>
-        <CardWrapper schoolLogoExists={!isEmpty(props.schoolLogo)} bgImg={props.schoolCover}>
+        <CardWrapperEnhanced
+            schoolLogoExists={!isEmpty(props.schoolLogo)}
+            src={props.schoolCover}>
 
-            {!isEmpty(props.schoolLogo) && <ProfileWrapper> <ProfileImage
-                imageContainerProps={{
-                    width: 50,
-                    height: 50,
-                    noMarginRight: true,
-                    noMarginBottom: true
-                }}
-                src={props.schoolLogo}
-            /></ProfileWrapper>}
+            {!isEmpty(props.schoolLogo) && <ProfileWrapper>
+                <ProfileImage
+                    imageContainerProps={{
+                        width: 50,
+                        height: 50,
+                        noMarginRight: true,
+                        noMarginBottom: true
+                    }}
+                    src={props.schoolLogo}
+                />
+            </ProfileWrapper>}
 
             <ActionButtons>
                 <SecondaryButton icon iconName="school" label="Visit" onClick={props.onVisitSchoolClick} />
                 <PrimaryButton icon iconName="edit" label="Edit" onClick={props.onEditSchoolClick} />
             </ActionButtons>
-        </CardWrapper>
+        </CardWrapperEnhanced>
         <SchoolName>{props.schoolName}</SchoolName>
     </Wrapper>
 );
