@@ -348,7 +348,7 @@ export default class MyCalender extends React.Component {
     else {
       popUp.appear("inform", {
         title: "Confirmation",
-        content: `You are already sign in. Do you want to sign out?`,
+        content: `You are currently signed in. Do you want to sign out?`,
         RenderActions: ( <Div > 
           <ButtonWrapper>
             <FormGhostButton
