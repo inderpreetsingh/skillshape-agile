@@ -84,9 +84,9 @@ Meteor.methods({
   },
   "purchases.getPackagesFromIds": function (packageIds, userId,schoolId) {
     if(!isEmpty(packageIds))
-    return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId }).fetch();
+    return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId },{$sort:{endDate:-1}}).fetch();
     if(schoolId)
-    return Purchases.find({ schoolId, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId }).fetch();
+    return Purchases.find({ schoolId, packageStatus: 'active', packageType: { $ne: 'EP' }, userId: userId ? userId : this.userId },{$sort:{endDate:-1}}).fetch();
 
   },
   "purchase.manageAttendance": function (_id, packageType, inc) {

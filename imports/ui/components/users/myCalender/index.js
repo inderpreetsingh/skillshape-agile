@@ -263,7 +263,7 @@ export default class MyCalender extends React.Component {
    }
 
   updateClass = (filter,status,purchaseData,popUp)=>{
-    let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
+    let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData || {};
     let condition=0,inc=0;
     if(packageType == 'CP'){
       condition = noClasses;
@@ -275,7 +275,7 @@ export default class MyCalender extends React.Component {
             if(condition <= 0 ){
               condition = res;
             }
-            if(condition>0 || res == undefined && !condition < 0){
+            if(condition>0 || res == undefined && !condition < 0 || !purchaseData){
               this.setState({isLoading:true});
               Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
                 if(res){

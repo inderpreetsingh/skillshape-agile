@@ -13,7 +13,7 @@ import School from '/imports/api/school/fields';
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { packageCoverProvider, withPopUp } from '/imports/util';
+import { packageCoverProvider, withPopUp,confirmationDialog,formatDate } from '/imports/util';
 
 
 
@@ -38,8 +38,6 @@ class MySubscription extends React.Component {
 		let {  currentUser } = this.props;
 		let schoolId = get(schoolData, '_id', null);
 		let userId = get(currentUser, '_id', null);
-		console.log("​MySubscription -> classDataFinder -> schoolId", schoolId)
-		console.log("​MySubscription -> classDataFinder -> userId", userId)
 		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
 			if (res)
 				this.setState({ subscriptionsData: res })
@@ -102,15 +100,23 @@ class MySubscription extends React.Component {
 	purchasePackageDataChecker = (classTimes, classTypeName,_id,schoolId) => {
 		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId',{classTypeId:_id,schoolId},(err,res)=>{
 			const {popUp} = this.props;
+			console.log("​MySubscription -> purchasePackageDataChecker -> res", res)
 			if(!isEmpty(res)){
-				let packageNames = res.map((obj)=>obj.packageName).join(', ');
-				popUp.appear("alert", {
-					title: "Purchased found related to this class.",
-					content: <div>You have some active packages  named <b>{packageNames}</b> related to this class. Do you still want to do.</div>,
-					onAffirmationButtonClick: ()=>{	_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
-					},
-				   defaultButtons: true,    
-			  }, true);
+				let data = {},latestExpirationDate = get(res[0],'endDate',new Date());
+				data = {
+					popUp,
+					title: 'Confirmation',
+					type: 'inform',
+				}
+				if(_id){
+				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove this class from your calendar? If you join again before the expiration, your Packages will still be active.`
+				data.buttons = [{label:'Leave Class',onClick:()=>{this.removeAll(classTimes, classTypeName,_id)},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				}
+				else{
+				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove the school and all classes from your calendar? If you join again before the expiration, your Packages will still be active.`
+				data.buttons = [{label:'Leave School',onClick:()=>{this.leaveSchoolHandler()},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				}
+				confirmationDialog(data);
 			}
 			else{
 				_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
