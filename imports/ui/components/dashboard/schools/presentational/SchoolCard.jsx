@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
+import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 
-
+import { withImageExists } from '/imports/util';
 import { PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import {
@@ -16,6 +16,12 @@ import {
 } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
+
+const imageExistsConfig = {
+    originalImagePath: 'src',
+    defaultImage: classTypeImgSrc
+};
 
 const Wrapper = styled.div`
     ${flexCenter}
@@ -25,14 +31,13 @@ const Wrapper = styled.div`
 const CardWrapper = styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${props => props.schoolLogoExists ? 'space-between' : 'flex-end'};
     padding: ${rhythmDiv}px 0 0 ${rhythmDiv}px;
     width: 100%;
-    height: 120px;
+    height: 160px;
     border-radius: 5px;
     border: 1px solid ${panelColor};
     box-shadow: ${lightBoxShadow};
-    max-width: ${maxContainerWidth}px;
     ${coverBg}
     background-image: url(${props => props.bgImg});
     background-position: 50% 50%;
@@ -40,9 +45,19 @@ const CardWrapper = styled.div`
     margin-bottom: ${rhythmDiv * 2}px;
     
     @media screen and (max-width: 350px) {
-        height: 160px;
     }
 `;
+
+const CardWrapperEnhanced = withImageExists(props => {
+    // console.log("CARD WRAPPER ENHANCED", props);
+    return (
+        <CardWrapper
+            {...props}
+            bgImg={props.bgImg}
+        />);
+}, imageExistsConfig);
+
+
 const ActionButtons = styled.div`
     ${flexCenter};
     height: 100%;
@@ -56,6 +71,9 @@ const ActionButtons = styled.div`
 
 const ProfileWrapper = styled.div`
     margin-right: ${rhythmDiv * 2}px;
+    background-color: ${panelColor};
+    border-radius: 3px;
+    padding: ${rhythmDiv}px;
 `;
 
 const SchoolName = Text.extend`
@@ -66,21 +84,27 @@ const SchoolName = Text.extend`
 
 const SchoolCard = (props) => (
     <Wrapper>
-        <CardWrapper bgImg={props.schoolCover}>
-            <ProfileWrapper>
-                {props.schoolLogo && <ProfileImage
+        <CardWrapperEnhanced
+            schoolLogoExists={!isEmpty(props.schoolLogo)}
+            src={props.schoolCover}>
+
+            {!isEmpty(props.schoolLogo) && <ProfileWrapper>
+                <ProfileImage
                     imageContainerProps={{
-                        width: 75,
-                        height: 75,
+                        width: 50,
+                        height: 50,
+                        noMarginRight: true,
+                        noMarginBottom: true
                     }}
                     src={props.schoolLogo}
-                />}
-            </ProfileWrapper>
+                />
+            </ProfileWrapper>}
+
             <ActionButtons>
                 <SecondaryButton icon iconName="school" label="Visit" onClick={props.onVisitSchoolClick} />
                 <PrimaryButton icon iconName="edit" label="Edit" onClick={props.onEditSchoolClick} />
             </ActionButtons>
-        </CardWrapper>
+        </CardWrapperEnhanced>
         <SchoolName>{props.schoolName}</SchoolName>
     </Wrapper>
 );

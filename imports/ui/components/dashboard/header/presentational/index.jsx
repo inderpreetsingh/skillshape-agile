@@ -48,15 +48,30 @@ const ButtonsWrapper = styled.div`
     ${flexCenter}
     position: absolute;
     top: ${rhythmDiv}px;
-    right: 42px;
+    right: 60px;
 
     @media screen and (max-width: ${LARGE_SCREEN_GW}px) {
         position: static;
+        margin-left: ${rhythmDiv}px;
+    }
+
+    @media screen and (max-width: 350px) {
+        flex-direction: column;
+        margin-left: 0;
     }
 `;
 
 const ButtonWrapper = styled.div`
     margin-right: ${rhythmDiv}px;    
+
+    :last-of-type {
+        margin-right: 0;
+    }
+
+    @media screen and (max-width: 350px) {
+        margin-right: 0;
+        margin-bottom: ${rhythmDiv}px;
+    }
 `;
 
 const Greeting = Heading.extend`
@@ -80,7 +95,12 @@ const Header = (props) => {
         <InnerWrapper>
             <UserProfile>
                 <UserImage
-                    imageContainerProps={{ noMarginRight: true }}
+                    imageContainerProps={{
+                        borderRadius: '50%',
+                        bgPosition: '50% 100%',
+                        bgSize: 'cover',
+                        noMarginRight: true
+                    }}
                     src={userImage} />
                 {userName && <Greeting>Welcome back, {capitalizeString(userName)}</Greeting>}
             </UserProfile>
