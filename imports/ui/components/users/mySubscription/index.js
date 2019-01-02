@@ -100,7 +100,6 @@ class MySubscription extends React.Component {
 	purchasePackageDataChecker = (classTimes, classTypeName,_id,schoolId) => {
 		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId',{classTypeId:_id,schoolId},(err,res)=>{
 			const {popUp} = this.props;
-			console.log("​MySubscription -> purchasePackageDataChecker -> res", res)
 			if(!isEmpty(res)){
 				let data = {},latestExpirationDate = get(res[0],'endDate',new Date());
 				data = {
