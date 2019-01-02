@@ -428,6 +428,7 @@ pastSubscriptionButton = () => (
                 const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
                 window.open(url, '_blank');
             }}
+            blueColor
             applyClose
         />
     </ButtonWrapper>
@@ -847,15 +848,16 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                         content: `Your Subscription is being set up. You can check the status here:`,
                         RenderActions: (
                             <ButtonsWrapper>
-                                {closeButton(self)}
                                 <FormGhostButton
                                     label={'My Subscriptions'}
                                     onClick={() => {
                                         const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
                                         window.open(url, '_blank');
                                     }}
+                                    blueColor
                                     applyClose
-                                />
+                                    />
+                                {closeButton(self)}
                             </ButtonsWrapper>
                         )
                     },
@@ -935,15 +937,16 @@ handleCharge = (
                             content: self.packagesRequired == 'enrollment' ? self.generateContent() : `Your Payment is received successfully.`,
                             RenderActions: (
                                 <ButtonsWrapper>
-                                    {closeButton(self)}
                                     <FormGhostButton
                                         label={'My Subscriptions'}
                                         onClick={() => {
                                             const url = `${Meteor.absoluteUrl()}mySubscription/${Meteor.userId()}`;
                                             window.open(url, '_blank');
                                         }}
+                                        blueColor
                                         applyClose
-                                    />
+                                        />
+                                    {closeButton(self)}
                                     {self.packagesRequired == 'enrollment' &&
                                         (
                                             <FormGhostButton

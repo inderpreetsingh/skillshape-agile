@@ -43,6 +43,7 @@ const styles = {
 	greyColor: createButtonStyles(helpers.cancel, 'white'),
 	darkGreyColor: createButtonStyles(helpers.darkBgColor, 'white'),
 	cautionColor: createButtonStyles(helpers.caution, 'black'),
+	blueColor:createButtonStyles("dodgerblue", 'white'),
 	icon: {
 		display: 'inline-block',
 		marginRight: '5px',
@@ -86,6 +87,8 @@ const FormGhostButton = (props) => {
 		rootClass = rootClass + " " + props.classes.whiteColor;
 	} else if (props.cautionColor || props.color == 'caution') {
 		rootClass = rootClass + " " + props.classes.cautionColor;
+	}else if(props.blueColor){
+		rootClass = rootClass + " " + props.classes.blueColor;
 	}
 
 	return (
