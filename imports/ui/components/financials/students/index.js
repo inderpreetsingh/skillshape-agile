@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { StudentsDetailsTable, getTableProps } from "./studentsDetailsTable";
-import isEmpty from "lodash/isEmpty";
+import {get,isEmpty }from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
 import Purchases from "/imports/api/purchases/fields";
 import { dateFriendly } from "/imports/util";
@@ -24,7 +24,11 @@ class Students extends React.Component {
     this.setState({ isBusy: true });
     this.getUsers({ limit: this.state.perPage, skip: skip });
   };
-
+  packageType = (purchase) =>{
+    let pt = get(purchase,'packageType','Unavailable');
+    pt == 'MP' ? pt = 'Monthly Package' : pt == 'CP' ? pt='Per Class':pt == 'EP' ? pt ='Enrollment Package' : pt='Unavailable'; 
+    return pt;
+  }
   render() {
     const { purchaseData } = this.props;
     const { pageCount } = this.props;
@@ -51,25 +55,18 @@ class Students extends React.Component {
                   <FncTableCell
                     data-th={tableHeaderColumns[1].columnName}
                   >
-                    {
-                      purchase.stripeRequest &&
-                        purchase.stripeRequest.description
-                        ? purchase.stripeRequest.description
-                        : "Unavilable"}
+                    {get(purchase,'packageName','Package Name')
+                      }
                   </FncTableCell>
                   <FncTableCell
                     data-th={tableHeaderColumns[2].columnName}
                   >
-                    {purchase && purchase.packageType
-                      ? purchase.packageType
-                      : "Unavilable"}
+                    {this.packageType(purchase)}
                   </FncTableCell>
                   <FncTableCell
                     data-th={tableHeaderColumns[3].columnName}
                   >
-                    {purchase.profile && purchase.profile.profile
-                      ? purchase.profile.profile.name
-                      : "Unavilable"}
+                    {get(purchase,'userName','User Name')}
                   </FncTableCell>
                   <FncTableCell
                     data-th={tableHeaderColumns[4].columnName}
