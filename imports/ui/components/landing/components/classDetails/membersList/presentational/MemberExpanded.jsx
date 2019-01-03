@@ -341,10 +341,7 @@ sendEmailAgain = (data)=>{
 updateStatus = (n, props) => {
   let { status, popUp ,purchaseId} = props;
   let inc=0,packageType;
-  if(!purchaseId){
-    props.onAddIconClick(null,props._id,'checkIn');
-    return;
-  }
+ 
   if (n == 1) {
     if (status == 'signIn') {
       inc = -1;
@@ -360,6 +357,10 @@ updateStatus = (n, props) => {
       inc = 1;
       status = 'signOut';
     } 
+  }
+  if(!purchaseId){
+    props.onAddIconClick(null,props._id,status);
+    return;
   }
   let filter = props.classData[0];
   filter.userId = props._id;

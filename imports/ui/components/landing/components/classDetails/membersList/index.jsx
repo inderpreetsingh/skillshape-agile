@@ -58,7 +58,7 @@ class MembersListContainer extends Component {
   this.studentsData(nextProps);
  }
  updateClass = (filter,status,purchaseData,popUp)=>{
-  let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData;
+  let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData || {};
   let condition=0,inc=0;
   if(packageType == 'CP'){
     condition = noClasses;
@@ -136,7 +136,27 @@ handleClassUpdate = (filter,status,popUp)=>{
     let purchased = get(res,'purchased',[]);
     let epStatus = get(res,"epStatus",false);
     let pos = -1;
-        if(!epStatus){
+		console.log("​MembersListContainer -> handleClassUpdate -> epStatus", epStatus)
+    console.log("​MembersListContainer -> handleClassUpdate -> status", status)
+    if(status=='signOut'){
+      let {students}=filter,purchaseId,purchaseData;
+      if(!isEmpty(students) && !isEmpty(purchased)){
+        students.map((obj)=>{
+          if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+            purchaseId = obj.purchaseId;
+          }
+        })
+        purchased.map((obj)=>{
+          if(obj._id==purchaseId){
+            purchaseData = obj;
+          }
+        })
+        this.updateClass(filter,status,purchaseData,popUp);
+      }
+      return;
+
+    }
+        if(!epStatus ){
           popUp.appear("alert", { title: "Alert", content: "Please purchase the enrollment package First. Before purchasing monthly and per class packages. " }); 
           return;
         }
@@ -146,24 +166,6 @@ handleClassUpdate = (filter,status,popUp)=>{
               pos = index;
           }
         })
-        if(status=='signOut'){
-          let {students}=filter,purchaseId,purchaseData;
-          if(!isEmpty(students) && !isEmpty(purchased)){
-            students.map((obj)=>{
-              if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
-                purchaseId = obj.purchaseId;
-              }
-            })
-            purchased.map((obj)=>{
-              if(obj._id==purchaseId){
-                purchaseData = obj;
-              }
-            })
-            this.updateClass(filter,status,purchaseData,popUp);
-          }
-          return;
-  
-        }
       if(purchased.length==1){
         let data = {};
         data = {
