@@ -368,6 +368,7 @@ class ClassTimeForm extends React.Component {
               classTimeForm
               schoolId={schoolId}
               instructorsIdsSetter={this.instructorsIdsSetter}
+              text={'Admin'}
             />
           )}
           {this.state.showConfirmationModal && (
