@@ -172,29 +172,30 @@ export default class MyCalender extends React.Component {
       let purchased = get(res,'purchased',[]);
       let epStatus = get(res,"epStatus",false);
       let pos = -1;
+      if(status=='signOut'){
+        let {classDetails:{students}}=this.state,purchaseId,purchaseData;
+        if(!isEmpty(students) ){
+          students.map((obj)=>{
+            if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+              purchaseId = obj.purchaseId;
+            }
+          })
+          purchased.map((obj)=>{
+            if(obj._id==purchaseId){
+              purchaseData = obj;
+            }
+          })
+          this.updateClass(filter,status,purchaseData,popUp);
+        }
+        return;
+      }
        if(epStatus && !isEmpty(purchased)){
         purchased.map((obj,index)=>{
           if(obj.noClasses == null && obj.packageType == 'MP'){
               pos = index;
           }
         })
-         if(status=='signOut'){
-          let {classDetails:{students}}=this.state,purchaseId,purchaseData;
-          if(!isEmpty(students) && !isEmpty(purchased)){
-            students.map((obj)=>{
-              if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
-                purchaseId = obj.purchaseId;
-              }
-            })
-            purchased.map((obj)=>{
-              if(obj._id==purchaseId){
-                purchaseData = obj;
-              }
-            })
-            this.updateClass(filter,status,purchaseData,popUp);
-          }
-          return;
-        }
+        
         if(purchased.length==1){
           let data = {};
           data = {
