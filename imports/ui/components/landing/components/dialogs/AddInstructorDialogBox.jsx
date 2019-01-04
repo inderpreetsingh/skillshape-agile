@@ -104,7 +104,6 @@ class AddInstructorDialogBox extends Component {
     if (this.props.text == 'Student') {
       Meteor.call('user.getSelectedUsersEmail', 'All', (err, res) => {
         if (res) {
-          // console.log(res, "METEOR>>.")
           res.map((obj, index) => {
             emailList.push({ value: obj._id, label: obj.emails[0].address });
           })
@@ -114,7 +113,6 @@ class AddInstructorDialogBox extends Component {
     } else {
       Meteor.call('school.getAdminsEmail', schoolId, (err, res) => {
         if (res) {
-          // console.log(res, "METEOR>>.")
           res.map((obj, index) => {
             emailList.push({ value: obj._id, label: obj.emails[0].address });
           })
@@ -240,7 +238,6 @@ class AddInstructorDialogBox extends Component {
       payLoad.instructors = flatten(payLoad.instructors);
 
     }
-
     popUp.appear("inform", {
       title: "Confirmation",
       content: `Do you really want to add  these users as an ${this.props.text}.`,

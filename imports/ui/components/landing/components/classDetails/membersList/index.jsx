@@ -54,7 +54,7 @@ class MembersListContainer extends Component {
     } 
   }
   }
- componentWillReceiveProps(nextProps) {
+ componentWillReceiveProps(nextProps,prevProps) {
   this.studentsData(nextProps);
  }
  updateClass = (filter,status,purchaseData,popUp)=>{
@@ -68,7 +68,6 @@ class MembersListContainer extends Component {
     /*  */
   
       Meteor.call('purchase.manageAttendance',_id,packageType,inc,(err,res)=>{
-        
         if(condition <= 0 ){
           condition = res;
         }
@@ -136,8 +135,6 @@ handleClassUpdate = (filter,status,popUp)=>{
     let purchased = get(res,'purchased',[]);
     let epStatus = get(res,"epStatus",false);
     let pos = -1;
-		console.log("​MembersListContainer -> handleClassUpdate -> epStatus", epStatus)
-    console.log("​MembersListContainer -> handleClassUpdate -> status", status)
     if(status=='signOut'){
       let {students}=filter,purchaseId,purchaseData;
       if(!isEmpty(students) && !isEmpty(purchased)){
@@ -331,7 +328,6 @@ handleClassUpdate = (filter,status,popUp)=>{
   render() {
     const { studentsList, instructorsList, currentView,classData,instructorsData,popUp,instructorsIds,schoolId,params,schoolName,classTypeName,toggleIsBusy } = this.props;
     const { addInstructorDialogBoxState,studentsData ,text,classTypePackages,userId,purchaseData,packagesRequired,buyPackagesBoxState,currentProps} = this.state;
-    // console.log(currentView, "From inside membersList");
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
