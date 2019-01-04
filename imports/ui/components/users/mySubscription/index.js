@@ -14,7 +14,7 @@ import { FormGhostButton } from '/imports/ui/components/landing/components/butto
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { packageCoverProvider, withPopUp,confirmationDialog,formatDate } from '/imports/util';
-
+import ClassInterest from '/imports/api/classInterest/fields.js';
 
 
 const Wrapper = styled.div`background: white;`;
@@ -184,7 +184,7 @@ class MySubscription extends React.Component {
 			data,
 			(error, res) => {
 				if (res) {
-					this.setState({ isBusy: false });
+					this.setState({ isBusy: false,manageMemberShipDialog:false });
 					const { popUp } = this.props;
 					popUp.appear(
 						'success',
@@ -318,19 +318,27 @@ export default createContainer((props) => {
 		schoolSubscription,
 		packagesDataSubscription,
 		classSubscription,
+		classInterestSubscription,
 		purchaseSubscription,
 		adminsDataSubscriptions,
-		classSubscriptionData;
+		classSubscriptionData,
+		classInterestData;
 	userId = get(currentUser, '_id', null);
 	filter = { userId };
 	purchaseSubscription = Meteor.subscribe('purchases.getPurchasesListByMemberId', filter);
 	classSubscription = Meteor.subscribe('classSubscription.findDataById', filter);
-
-	if (purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
+	classInterestSubscription = Meteor.subscribe("classInterest.getClassInterest");
+	if (classInterestSubscription && classInterestSubscription.ready() && purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
 		purchaseData = Purchases.find().fetch();
 		classSubscriptionData = ClassSubscription.find().fetch();
 		// console.log(purchaseData, classSubscription, ' in purchase subscription');
-
+		classInterestData = ClassInterest.find().fetch();
+		console.log("​classInterestData", classInterestData)
+		if(!isEmpty(classInterestData)){
+			classInterestData.map((obj)=>{
+				schoolIds.push(obj.schoolId);
+			})
+		}
 		if (!isEmpty(purchaseData)) {
 			purchaseData.map((current) => {
 				schoolIds.push(current.schoolId);
