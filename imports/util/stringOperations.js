@@ -17,5 +17,8 @@ export const addDelimiter = (str,delimiter = '_') => {
  */
 
 export const capitalizeString = (str) => {
+   if(!str){
+     return str;
+   }
    return str.toLowerCase().replace(/\b\w/g, letter => letter.toUpperCase());
 }

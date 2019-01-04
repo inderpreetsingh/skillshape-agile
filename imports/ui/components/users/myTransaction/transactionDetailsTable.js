@@ -15,13 +15,24 @@ export const getTableProps = () => {
     className: "table-header"
   };
   const tableHeaderColumns = [
+    
     {
-      columnName: "Type",
+      columnName: "Index",
       tooltip: "",
       // className: "wd-150"
     },
     {
-      columnName: "Net",
+      columnName: "User Name",
+      tooltip: "",
+      // className: "wd-150"
+    },
+    {
+      columnName: "Package Name",
+      tooltip: "",
+      // className: "wd-150"
+    },
+    {
+      columnName: "Package Type",
       tooltip: "",
       // className: "wd-150"
     },
@@ -31,20 +42,31 @@ export const getTableProps = () => {
       // className: "wd-150"
     },
     {
-      columnName: "Fee",
+      columnName: "Package Starts On",
       tooltip: "",
       // className: "wd-211"
     },
     {
-      columnName: "Description",
+      columnName: " Payment Method",
       tooltip: "",
       // className: "wd-100"
     },
     {
-      columnName: "Date",
+      columnName: "Expiration",
       tooltip: "",
       // className: "wd-100"
-    }
+    },
+    {
+      columnName: "Classes Left",
+      tooltip: "",
+      // className: "wd-100"
+    },
+    {
+      columnName: "Status",
+      tooltip: "",
+      // className: "wd-100"
+    },
+    
   ];
   const tableHeaderColumnProps = {
     className: "table-column"

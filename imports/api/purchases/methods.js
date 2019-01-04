@@ -144,6 +144,9 @@ Meteor.methods({
   },
   "purchases.getPurchasedFromPackageIds": function (packageIds, userId) {
     return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', userId }).fetch();
+  },
+  "purchases.getFilteredPurchases":function (filter,limitAndSkip){
+    return Purchases.find(filter,limitAndSkip).fetch();
   }
 });
 /* 
