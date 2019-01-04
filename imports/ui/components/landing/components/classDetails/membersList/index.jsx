@@ -78,7 +78,7 @@ class MembersListContainer extends Component {
                 this.setState({status:'Sign In',isLoading:false});
                 popUp.appear("success", {
                   title: `Sign in successfully`,
-                  content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+                  content: `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
                   RenderActions: (<ButtonWrapper>
                     <FormGhostButton
                         label={'Ok'}

@@ -235,6 +235,7 @@ acceptPayment = (packageData,props,paymentMethod) => {
     Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
       
         props.toggleIsBusy();
+        props.onAcceptPaymentClick(false);
         let title = 'Package Purchased Successfully';
         if(packageType != 'EP')
         this.updateStatus(1, props)
@@ -280,7 +281,7 @@ sendLink = (props,packageId=null,packageType=null) =>{
     Meteor.call("packageRequest.addRecord",data,(err,res)=>{
       props.toggleIsBusy();
         if(res && res.status){
-         this.successPopUp(popUp,userName)
+         this.successPopUp(popUp,userName,null,props)
         }
         else if(res && !res.status){
           data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+res.record._id}`;
@@ -292,7 +293,7 @@ sendLink = (props,packageId=null,packageType=null) =>{
   }
    
     }
-successPopUp = (popUp,userName,title)=>{
+successPopUp = (popUp,userName,title,props)=>{
     popUp.appear(
       'success',
       {
@@ -303,6 +304,7 @@ successPopUp = (popUp,userName,title)=>{
           <FormGhostButton
             label={'Ok'}
             applyClose
+            onClick = {()=>{props.onAcceptPaymentClick(false)}}
           />
         </ButtonWrapper>
         )
@@ -339,6 +341,7 @@ sendEmailAgain = (data)=>{
   Meteor.call("packageRequest.sendPurchaseRequest",data);
 }
 updateStatus = (n, props) => {
+	console.log("​updateStatus -> n, props", n, props)
   let { status, popUp ,purchaseId} = props;
   let inc=0,packageType;
  
