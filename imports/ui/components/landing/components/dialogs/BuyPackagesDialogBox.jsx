@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { createContainer } from "meteor/react-meteor-data";
 import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import { isEmpty, flatten, get, uniq } from "lodash";
+import { isEmpty, flatten, get, uniq ,isEqual} from "lodash";
 
 
 import Grid from "material-ui/Grid";
@@ -162,7 +162,9 @@ class BuyPackagesDialogBox extends Component {
         }
 
     }
-
+    shouldComponentUpdate(nextProps,nextState){
+        return !isEqual(nextProps,this.props) || !isEqual(nextState,this.state);
+      }
     handleRadioButtonChange = event => {
         this.setState({ radioButtonGroupValue: event.target.value });
     };
@@ -238,7 +240,8 @@ class BuyPackagesDialogBox extends Component {
             selectedPackageType
         } = this.state;
 
-
+	console.count("​BuyPackagesDialogBox 6")
+        
         return (<Dialog
             open={open}
             onClose={onModalClose}
