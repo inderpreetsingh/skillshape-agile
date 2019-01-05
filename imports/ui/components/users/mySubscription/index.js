@@ -6,7 +6,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import styled from 'styled-components';
-import MySubscriptionRender from './MySubscriptionRender.jsx';
+const MySubscriptionRender = React.lazy(()=>import('./MySubscriptionRender.jsx'));
 import ClassSubscription from '/imports/api/classSubscription/fields';
 import Purchases from '/imports/api/purchases/fields';
 import School from '/imports/api/school/fields';
@@ -276,6 +276,7 @@ class MySubscription extends React.Component {
 		}
 
 		return (
+			<React.Suspense fallback={<ContainerLoader/>}>
 			<Wrapper>
 				{/*<SchoolBox schoolData={schoolData} purchaseData={purchaseData} />*/}
 				<MySubscriptionRender
@@ -303,6 +304,7 @@ class MySubscription extends React.Component {
 					removeFromCalendar={this.removeFromCalendar}
 				/>
 			</Wrapper>
+			</React.Suspense>
 		);
 	}
 }
