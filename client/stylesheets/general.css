@@ -808,8 +808,7 @@ used in the skillshape eg. searchbar */
 
 
 .Select-value{
-  background-color: mediumpurple !important;
-  color: white !important;
+  color: black !important;
   font-size: 14px !important;
   font-weight: 400 !important;
 }
