@@ -76,18 +76,17 @@ export default class MyCalender extends React.Component {
         res.students && res.students.map((obj,index)=>{
           if(obj.userId == Meteor.userId()){
             if(obj.status=='signIn' || obj.status=='checkIn')
-            this.setState({status:'Sign Out',classDetails:res});
+            this.setState({status:'Sign Out'});
           }
         })
       }
-     
+      this.setState({classDetails:res,filter:filter});
     })
   }
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
-    let newState = { classDetailModal: false };
+    let newState = {classDetailModal: false,status:'Sign In'}
     const { routeName, classTimesData, classTypeData, schoolData } = this.props
     const originalEvent  = get(jsEvent,"originalEvent",'');
-    newState.status = 'Sign In';
     classTimesData && classTimesData.map((obj)=>{
       if(obj._id==eventData.classTimeId){
         newState.classTimes = obj;
@@ -98,6 +97,13 @@ export default class MyCalender extends React.Component {
         newState.classType = obj;
       }
     })
+    this.setState(state=>{
+      return {
+        ...state,
+        ...newState
+      }
+    })
+    this.setDate()
     const {schoolId,classTypeId,classTimeId,start} = eventData;
     let filter = {schoolId,classTypeId,classTimeId,scheduled_date:new Date(start)};
     this.getStudentStatus(filter);
@@ -129,9 +135,7 @@ export default class MyCalender extends React.Component {
         clickedDate,
         positionLeft: originalEvent.clientX,
         positionTop: originalEvent.clientY,
-        anchorEl: jsEvent.currentTarget,
-        filter,
-        ...newState
+        anchorEl: jsEvent.currentTarget
       }
     });
 
