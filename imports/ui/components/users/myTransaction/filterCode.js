@@ -10,7 +10,7 @@ const customStyle = {
     marginBottom: '10px',
   }
 export const filterForTransaction = function () {
-    const {selectedPackageType,packageTypeOptions} = this.state;
+    const {selectedPackageType,packageTypeOptions,selectedPackageStatus,packageStatusOptions} = this.state;
     return (
         <Wrapper>
             <Grid container spacing={24}>
@@ -18,10 +18,22 @@ export const filterForTransaction = function () {
         <ReactSelect
                     name="filters"
                     style={customStyle}
-                    placeholder="Package Type"
+                    placeholder={<b>Package Type</b>}
                     value={selectedPackageType}
                     options={packageTypeOptions}
                     onChange={(data)=>{this.handleFilter(data,'packageType','selectedPackageType')}}
+                    closeMenuOnSelect={false}
+                    clearable={false}
+                  />
+        </Grid>
+        <Grid item xs={6} sm={3}>
+        <ReactSelect
+                    name="filters"
+                    style={customStyle}
+                    placeholder={<b>Package Status</b>}
+                    value={selectedPackageStatus}
+                    options={packageStatusOptions}
+                    onChange={(data)=>{this.handleFilter(data,'packageStatus','selectedPackageStatus')}}
                     closeMenuOnSelect={false}
                     clearable={false}
                   />

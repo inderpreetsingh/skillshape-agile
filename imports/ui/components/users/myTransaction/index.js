@@ -6,7 +6,8 @@ import { dateFriendly ,capitalizeString} from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import {filterForTransaction} from './filterCode';
-const packageTypes = [{label:'All',value:0},{label:"CP",value:"CP"},{label:"MP",value:'MP'},{label:"EP",value:'EP'}]
+const packageTypes = [{label:'Package Type All',value:0},{label:"CP",value:"CP"},{label:"MP",value:'MP'},{label:"EP",value:'EP'}]
+const packageStatus = [{label:'Package Status All',value:0},{label:'Active',value:'active'},{label:'Expired',value:'expired'},{label:'In Active',value:'inActive'}]
 export default class MyTransaction extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +16,8 @@ export default class MyTransaction extends React.Component {
       perPage: 3,
       pageCount:1,
       selectedPackageType:null,
+      selectedPackageStatus:null,
+      packageStatusOptions:packageStatus,
       packageTypeOptions:packageTypes,
       filter:{
        userId:Meteor.userId()
@@ -61,14 +64,15 @@ export default class MyTransaction extends React.Component {
   handleFilter = (value,filterName,stateName) => {
     this.setState(state => {
       let {filter} = state;
-      if(value.value)
+      if(value.value && filterName)
       filter[filterName] = value.value;
       else
       delete filter[filterName];
       return {
         [stateName]: value,
         filter,
-        isLoading:true
+        isLoading:true,
+        skip:0,
       };
     },()=>{this.getPurchaseData();});
   };
