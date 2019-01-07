@@ -5,15 +5,17 @@ import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTabl
 import { dateFriendly ,capitalizeString} from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
-
-
+import {filterForTransaction} from './filterCode';
+const packageTypes = [{label:'All',value:0},{label:"CP",value:"CP"},{label:"MP",value:'MP'},{label:"EP",value:'EP'}]
 export default class MyTransaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      PurchaseData: [],
+      purchaseData: [],
       perPage: 3,
       pageCount:1,
+      selectedPackageType:null,
+      packageTypeOptions:packageTypes,
       filter:{
        userId:Meteor.userId()
       },
@@ -22,14 +24,8 @@ export default class MyTransaction extends React.Component {
       isLoading:false
     };
   }
-  
+ 
   componentWillMount() {
-    this.setState({isLoading:true});
-    let {filter} = this.state;
-    Meteor.call('purchases.getFilteredPurchases',filter,{},(err,res)=>{
-      res && this.setState({pageCount:Math.floor(res.length/3)});
-      this.setState({isLoading:false});
-    })
     this.getPurchaseData();
   }
   // get purchase data from db on page load and page number click.
@@ -39,15 +35,16 @@ export default class MyTransaction extends React.Component {
     let {limit,skip} = this.state;
     let limitAndSkip = {limit,skip};
     Meteor.call('purchases.getFilteredPurchases',filter,limitAndSkip,(err,res)=>{
-      if(!isEmpty(res)){
-        this.setState({purchaseData:res});
+      let state = {};
+      if(res){
+        state = {pageCount:Math.ceil(res.count/3),purchaseData:res.records}  
+        state.isLoading = false;
+        this.setState(state); 
       }
-      this.setState({isLoading:false});
     })
   }
   changePageClick = (skip) =>{
-    this.setState({skip:skip.skip});
-    this.getPurchaseData();
+    this.setState({skip:skip.skip,isLoading:true},()=>{this.getPurchaseData();});
   }
   getColumnValue = (data,fieldName) =>{
    let result = get(data,fieldName,'Missing');
@@ -61,6 +58,20 @@ export default class MyTransaction extends React.Component {
     pt == 'MP' ? pt = 'Monthly Package' : pt == 'CP' ? pt='Per Class':pt == 'EP' ? pt ='Enrollment Package' : pt='Unavailable'; 
     return capitalizeString(pt);
   }
+  handleFilter = (value,filterName,stateName) => {
+    this.setState(state => {
+      let {filter} = state;
+      if(value.value)
+      filter[filterName] = value.value;
+      else
+      delete filter[filterName];
+      return {
+        [stateName]: value,
+        filter,
+        isLoading:true
+      };
+    },()=>{this.getPurchaseData();});
+  };
   render() {
     const { tableHeaderColumns } = getTableProps();
    const { purchaseData,isLoading }= this.state;
@@ -71,6 +82,7 @@ export default class MyTransaction extends React.Component {
           {" "}
           <h1>My Transactions </h1>
         </center>
+        {filterForTransaction.call(this)}
         <TransactionDetailsTable>
           {isEmpty(purchaseData)
             ? "No payout found"
