@@ -8,8 +8,9 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import { filterForTransaction } from './filterCode';
 import { withStyles } from "material-ui/styles";
 import Paper from 'material-ui/Paper'
-const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "CP", value: "CP" }, { label: "MP", value: 'MP' }, { label: "EP", value: 'EP' }]
-const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }]
+const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
+const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
+const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Stripe', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'Credit card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
@@ -18,9 +19,9 @@ const styles = theme => ({
     margin: "10px",
     borderRadius: "10px"
   },
-rootGrid:{
-  margin:"0px"
-}
+  rootGrid: {
+    padding:'6px'
+  }
 })
 class MyTransaction extends React.Component {
   constructor(props) {
@@ -29,12 +30,15 @@ class MyTransaction extends React.Component {
       purchaseData: [],
       perPage: 3,
       pageCount: 1,
+      packageName: '',
       selectedPackageType: null,
       selectedPackageStatus: null,
+      selectedPaymentMethod: null,
+      paymentMethodsOptions: paymentMethods,  
       packageStatusOptions: packageStatus,
       packageTypeOptions: packageTypes,
       filter: {
-        userId: Meteor.userId()
+        userId: get(this.props.params,'id',Meteor.userId())
       },
       limit: 3,
       skip: 0,
@@ -75,11 +79,20 @@ class MyTransaction extends React.Component {
     pt == 'MP' ? pt = 'Monthly Package' : pt == 'CP' ? pt = 'Per Class' : pt == 'EP' ? pt = 'Enrollment Package' : pt = 'Unavailable';
     return capitalizeString(pt);
   }
+  handleTextFieldChange = (e) => {
+    this.setState({
+      textFieldValue: e.target.value
+    });
+  }
   handleFilter = (value, filterName, stateName) => {
+    let stringValue = get(value.target, "value", null)
+    if(filterName=='packageName'){
+     value =  stringValue ?  stringValue :  "";
+    }
     this.setState(state => {
       let { filter } = state;
-      if (value.value && filterName)
-        filter[filterName] = value.value;
+      if (value.value && filterName || typeof value == 'string' && value)
+        filter[filterName] = value.value ? value.value : new RegExp(`^${value}`,'i');
       else
         delete filter[filterName];
       return {
@@ -102,7 +115,7 @@ class MyTransaction extends React.Component {
           <h1>My Transactions </h1>
         </center>
         <Paper className={classes.root}>
-        {filterForTransaction.call(this)}
+          {filterForTransaction.call(this)}
         </Paper>
         <TransactionDetailsTable>
           {isEmpty(purchaseData)
