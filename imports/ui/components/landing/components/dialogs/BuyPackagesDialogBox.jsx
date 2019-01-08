@@ -1,33 +1,24 @@
-import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { createContainer } from "meteor/react-meteor-data";
-import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import { isEmpty, flatten, get, uniq ,isEqual} from "lodash";
-
-
-import Grid from "material-ui/Grid";
-import IconButton from "material-ui/IconButton";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import { FormLabel, FormControl, FormControlLabel } from "material-ui/Form";
+import { isEmpty, isEqual } from "lodash";
 import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
-import ClearIcon from "material-ui-icons/Clear";
-
-import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
-import { PrimaryButton } from "/imports/ui/components/landing/components/buttons/";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-
-import ClassPricing from "/imports/api/classPricing/fields";
-import MonthlyPricing from "/imports/api/monthlyPricing/fields";
-import EnrollmentFees from "/imports/api/enrollmentFee/fields";
-import School from "/imports/api/school/fields";
-
-import { withPopUp, stripePaymentHelper, normalizeMonthlyPricingData } from "/imports/util";
-
-import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { dialogStyles } from './sharedDialogBoxStyles';
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Radio, { RadioGroup } from "material-ui/Radio";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import { createContainer } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
 import { ActionButtons, DialogBoxTitleBar } from './sharedDialogBoxComponents';
+import { dialogStyles } from './sharedDialogBoxStyles';
+import ClassPricing from "/imports/api/classPricing/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
+import { PrimaryButton } from "/imports/ui/components/landing/components/buttons/";
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import { normalizeMonthlyPricingData, withPopUp } from "/imports/util";
 
 const PackagesListWrapper = styled.div`
     display: flex;
@@ -90,6 +81,11 @@ font-size: initial;
 font-weight: 400;
 border-radius: 13px;
 background-color: aliceblue;`;
+
+const ButtonWrapper = styled.div`
+text-align: center;
+margin: 3px;
+`;
 const styles = theme => {
     return {
         ...dialogStyles,
@@ -231,7 +227,8 @@ class BuyPackagesDialogBox extends Component {
             currency,
             isLoading,
             joinNow,
-            onSendLinkClick
+            onSendLinkClick,
+            currentProps
         } = props;
 
         const {
@@ -239,8 +236,8 @@ class BuyPackagesDialogBox extends Component {
             radioButtonGroupValue,
             selectedPackageType
         } = this.state;
+        let {_id:userId} = currentProps;
 
-	console.count("​BuyPackagesDialogBox 6")
         
         return (<Dialog
             open={open}
@@ -261,6 +258,17 @@ class BuyPackagesDialogBox extends Component {
                     <ContainerLoader />
                     :
                     <DialogContent classes={{ root: classes.dialogContent }}>
+                            <ButtonWrapper>
+                        <FormGhostButton
+                            label={'Student Past Purchases'}
+                            onClick={() => {
+                                const url = `${Meteor.absoluteUrl()}mySubscription/${userId}`;
+                                window.open(url, '_blank');
+                            }}
+                            blueColor
+                            applyClose
+                        />
+                        </ButtonWrapper>
                         {!isEmpty(packageList) && packageList.map((obj) => {
                             return (
                                 <PackagesListWrapper>

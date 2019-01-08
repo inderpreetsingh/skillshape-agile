@@ -325,7 +325,7 @@ export default createContainer((props) => {
 		adminsDataSubscriptions,
 		classSubscriptionData,
 		classInterestData;
-	userId = get(currentUser, '_id', null);
+	userId = get(props.params,'id',get(currentUser, '_id', null));
 	filter = { userId };
 	purchaseSubscription = Meteor.subscribe('purchases.getPurchasesListByMemberId', filter);
 	classSubscription = Meteor.subscribe('classSubscription.findDataById', filter);

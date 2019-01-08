@@ -68,7 +68,6 @@ const MembersList = props => {
             joinClass = false;
         }
     })
-    console.count("​MembersList 4")
     return (
         <Wrapper>
                 {/* <SearchList
@@ -120,6 +119,7 @@ const MembersList = props => {
                                     onAcceptPaymentClick={props.onAcceptPaymentClick}
                                     buyPackagesBoxState ={props.buyPackagesBoxState}
                                     currentProps = {props.currentProps}
+                                    updateStatus = {props.updateStatus}
                                 />
                             ) : (
                                     <Member

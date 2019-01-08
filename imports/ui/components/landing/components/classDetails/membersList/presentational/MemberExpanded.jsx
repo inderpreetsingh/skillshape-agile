@@ -218,62 +218,6 @@ PaymentAndStatus = (props) => {
   </PaymentAndStatusDetails>)
 }
 
-
-
-
-
-
-updateStatus = (n, props) => {
-	console.log("​updateStatus -> n, props", n, props)
-  let { status, popUp ,purchaseId} = props;
-  let inc=0,packageType;
- 
-  if (n == 1) {
-    if (status == 'signIn') {
-      inc = -1;
-      status = 'checkIn';
-    }
-    else if (status == 'checkIn'){
-      inc = 1;
-      status = 'signIn';
-    } 
-  }
-  else {
-    if (status == 'signIn' || status == 'checkIn'){
-      inc = 1;
-      status = 'signOut';
-    } 
-  }
-  if(!purchaseId){
-    props.onAddIconClick(null,props._id,status);
-    return;
-  }
-  let filter = props.classData[0];
-  filter.userId = props._id;
-  props.classData[0].students.map((obj)=>{
-    if(obj.userId==props._id){
-      purchaseId = obj.purchaseId;
-      packageType = obj.packageType;
-    }
-  })
-  Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
-  Meteor.call("classes.updateClassData", filter, status, (err, res) => {
-    if (res) {
-      popUp.appear("success", {
-        title: `Successfully`,
-        content: `${status} Performed Successfully.`,
-        RenderActions: (<ButtonWrapper>
-          <FormGhostButton
-            label={'Ok'}
-            onClick={() => { }}
-            applyClose
-          />
-        </ButtonWrapper>)
-      }, true);
-    }
-  })
-}
-
 const StatusOptions = props => (
   <StatusDetails>
     <StatusButton>
@@ -281,7 +225,7 @@ const StatusOptions = props => (
         noMarginBottom
         fullWidth
         label={props.status == 'signIn' ? "Check in" : "Check out"}
-        onClick={() => { this.updateStatus(1, props) }}
+        onClick={() => { props.updateStatus(1, props) }}
       />
     </StatusButton>
     <StatusButton>
@@ -290,7 +234,7 @@ const StatusOptions = props => (
         caution
         fullWidth
         label={"Sign Out"}
-        onClick={() => { this.updateStatus(2, props) }}
+        onClick={() => { props.updateStatus(2, props) }}
       />
     </StatusButton>
   </StatusDetails>
@@ -303,7 +247,6 @@ const MemberExpanded = props => {
   const slug = get(props, "params.slug", null);
   let classTypeId = get(props.classData[0],'classTypeId',null);
   let buyPackagesBoxState = props.buyPackagesBoxState;
-	console.count("​MemberExpanded 5")
   return (
     <Wrapper key = {name}>
     

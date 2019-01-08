@@ -1,16 +1,15 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router';
+import { compact, get, isEmpty } from 'lodash';
 import moment from 'moment';
+import React from 'react';
+import { Link } from 'react-router';
+import styled from 'styled-components';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import { get, isEmpty, compact } from 'lodash';
+import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
+import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
+import { flexCenter, mobile, primaryColor, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Italic, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { formatMoney } from '/imports/util';
 
-import { flexCenter, primaryColor, mobile, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js'
-import { Text, Italic } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
-import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
-import ReactHtmlParser from 'react-html-parser';
 
 const ButtonsWrapper = styled.div`
 	display: flex;

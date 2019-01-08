@@ -161,7 +161,7 @@ cancelSignIn = ()=>(
           
         }
         if(!epStatus ){
-          popUp.appear("alert", { title: "Alert", content: "Please purchase the enrollment package First. Before purchasing monthly and per class packages. " }); 
+          this.purchaseEnrollmentFirst(popUp);
           return;
         }
         if(epStatus && !isEmpty(purchased)){
@@ -277,7 +277,9 @@ handleAddInstructorDialogBoxState = (dialogBoxState,text) => () => {
     };
   });
 };
-
+purchaseEnrollmentFirst = (popUp) =>{
+  popUp.appear("alert", { title: "Alert", content: "Please purchase the enrollment package First. Before purchasing monthly and per class packages. " }); 
+}
 handleSearchChange = type => e => {
   const value = e.target.value;
   this.setState(state => {
@@ -322,6 +324,55 @@ studentsListMaker = (studentsData,classData,purchaseData) =>{
   })
 })
 return studentsData;
+}
+updateStatus = (n, props) => {
+	let { status, popUp ,purchaseId} = props;
+  let inc=0,packageType;
+ 
+  if (n == 1) {
+    if (status == 'signIn') {
+      inc = -1;
+      status = 'checkIn';
+    }
+    else if (status == 'checkIn'){
+      inc = 1;
+      status = 'signIn';
+    } 
+  }
+  else {
+    if (status == 'signIn' || status == 'checkIn'){
+      inc = 1;
+      status = 'signOut';
+    } 
+  }
+  if(!purchaseId){
+    this.handleSignIn(null,props._id,status);
+    return;
+  }
+  let filter = props.classData[0];
+  filter.userId = props._id;
+  props.classData[0].students.map((obj)=>{
+    if(obj.userId==props._id){
+      purchaseId = obj.purchaseId;
+      packageType = obj.packageType;
+    }
+  })
+  Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
+  Meteor.call("classes.updateClassData", filter, status, (err, res) => {
+    if (res) {
+      popUp.appear("success", {
+        title: `Successfully`,
+        content: `${status} Performed Successfully.`,
+        RenderActions: (<ButtonWrapper>
+          <FormGhostButton
+            label={'Ok'}
+            onClick={() => { }}
+            applyClose
+          />
+        </ButtonWrapper>)
+      }, true);
+    }
+  })
 }
 handleDialogBoxState = (dialogState,currentProps)  => {
   this.setState(state => {
@@ -432,7 +483,7 @@ handleDialogBoxState = (dialogState,currentProps)  => {
     acceptPayment = (packageData,props,paymentMethod) => {
       this.props.toggleIsBusy();
       let userId,packageId,packageType,schoolId,data,noClasses,packageName,planId=null;
-      let {popUp} = props;
+      let {popUp,classData} = props;
       userId = props._id;
       packageId = get(packageData,'_id',null);
       packageType = get(packageData,'packageType',null);
@@ -443,17 +494,27 @@ handleDialogBoxState = (dialogState,currentProps)  => {
         planId = get(packageData.pymtDetails[0],'planId',null);
       }
       data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName,planId};
-      Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
-        
+      let classDetails = classData[0];
+      classDetails.userId = userId;
+      Meteor.call('classPricing.signInHandler',classDetails,(err,res)=>{
+        let epStatus = get(res,"epStatus",false);
+        if(epStatus || packageType == 'EP'){
+          Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
+            this.props.toggleIsBusy();
+            props.onAcceptPaymentClick(false);
+            let title = 'Package Purchased Successfully';
+            if(packageType != 'EP')
+            this.updateStatus(1, props)
+            else
+            this.successPopUp(popUp,'prototype',title)
+          
+        })
+        }else{
           this.props.toggleIsBusy();
-          props.onAcceptPaymentClick(false);
-          let title = 'Package Purchased Successfully';
-          if(packageType != 'EP')
-          this.updateStatus(1, props)
-          else
-          this.successPopUp(popUp,'prototype',title)
-        
+          this.purchaseEnrollmentFirst(popUp);
+        }
       })
+      
   
   
   }
@@ -472,7 +533,6 @@ handleDialogBoxState = (dialogState,currentProps)  => {
     }
   })
 
-  console.count("​MembersListContainer 3")
     return (
       <Fragment>
           {buyPackagesBoxState && (
@@ -552,6 +612,7 @@ handleDialogBoxState = (dialogState,currentProps)  => {
           onAcceptPaymentClick = { this.handleDialogBoxState}
           buyPackagesBoxState ={buyPackagesBoxState}
           currentProps = {currentProps}
+          updateStatus = {this.updateStatus}
        />
       </Fragment>
     );

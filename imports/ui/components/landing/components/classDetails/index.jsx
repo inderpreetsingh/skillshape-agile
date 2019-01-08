@@ -85,7 +85,6 @@ const ClassDetails = props => {
   
   const currentView =
   location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
-  console.count("​ClassDetails 2")
 
   return (
     <Wrapper>
