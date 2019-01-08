@@ -2,15 +2,18 @@ import React, { Fragment } from "react";
 import { isEmpty, get } from "lodash";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString } from "/imports/util";
+import { dateFriendly, capitalizeString,packageCoverProvider } from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { filterForTransaction } from './filterCode';
 import { withStyles } from "material-ui/styles";
 import Paper from 'material-ui/Paper'
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
+import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
-const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Stripe', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'Credit card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
+const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Stripe', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Credit Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
@@ -58,7 +61,7 @@ class MyTransaction extends React.Component {
     Meteor.call('purchases.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
       let state = {};
       if (res) {
-        state = { pageCount: Math.ceil(res.count / 3), purchaseData: res.records }
+        state = { pageCount: Math.ceil(res.count / 3), purchaseData: packageCoverProvider(res.records,true) }
         state.isLoading = false;
         this.setState(state);
       }
@@ -103,6 +106,15 @@ class MyTransaction extends React.Component {
       };
     }, () => { this.getPurchaseData(); });
   };
+  amountGenerator = (purchase)=>{
+    let currency = get(purchase,'currency','$');
+    let amount = get(purchase,'amount',0);
+    config.currency.map((obj)=>{
+      if(obj.label == currency)
+      currency= obj.value;
+    })
+    return `${currency+amount}`;
+  }
   render() {
     const { tableHeaderColumns } = getTableProps();
     const { purchaseData, isLoading } = this.state;
@@ -121,38 +133,45 @@ class MyTransaction extends React.Component {
           {isEmpty(purchaseData)
             ? "No payout found"
             : purchaseData.reverse().map((purchase, index) => {
+              let covers = get(purchase,'covers',[]);
+              covers = covers.join(', ');
+              console.log("​render -> covers", covers)
               return (
                 <Fragment>
                   <FncTableRow key={index} selectable={false}>
                     <FncTableCell data-th={tableHeaderColumns[0].columnName}>
-                      {index + 1}
-                    </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[1].columnName}>
                       {this.getColumnValue(purchase, 'userName')}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[2].columnName}>
-                      {this.getColumnValue(purchase, 'packageName')}
-                    </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[3].columnName}>
-                      {this.packageType(purchase)}
-                    </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[4].columnName}>
-                      {this.getColumnValue(purchase, 'amount')}
-                    </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[5].columnName}>
+                    <FncTableCell data-th={tableHeaderColumns[1].columnName}>
                       {dateFriendly(this.getColumnValue(purchase, 'startDate'), "MMMM Do YYYY, h:mm:ss a")}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[6].columnName}>
+                    <FncTableCell data-th={tableHeaderColumns[2].columnName}>
+                      {this.packageType(purchase)}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[3].columnName}>
                       {this.getColumnValue(purchase, 'paymentMethod')}
                     </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[4].columnName}>
+                      {this.amountGenerator(purchase)}
+                    </FncTableCell>
+                    <FncTableCell data-th={tableHeaderColumns[5].columnName}>
+                    {this.getColumnValue(purchase,'schoolName.name')}
+                    </FncTableCell>
+                    <Tooltip 
+                    animation="zoom" 
+                    placement="top" 
+                    trigger={['click','focus','hover']} 
+                    overlay={
+                    <span>{covers}</span>
+                    } 
+                    overlayStyle={{zIndex:9999}}>
+                    
+                    <FncTableCell data-th={tableHeaderColumns[6].columnName}>
+                    Hover Me
+                    </FncTableCell>
+                    </Tooltip>
                     <FncTableCell data-th={tableHeaderColumns[7].columnName}>
-                      {dateFriendly(this.getColumnValue(purchase, 'endDate'), "MMMM Do YYYY, h:mm:ss a")}
-                    </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[8].columnName}>
-                      {this.getColumnValue(purchase, 'noClasses') == null ? 'Unlimited' : this.getColumnValue(purchase, 'noClasses')}
-                    </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[9].columnName}>
-                      {this.getColumnValue(purchase, 'packageStatus')}
+                      {this.getColumnValue(purchase, 'packageName')}
                     </FncTableCell>
                   </FncTableRow>
                 </Fragment>

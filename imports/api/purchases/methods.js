@@ -148,6 +148,11 @@ Meteor.methods({
   "purchases.getFilteredPurchases":function (filter,limitAndSkip){
     let count = Purchases.find(filter,limitAndSkip).count();
     let records = Purchases.find(filter,limitAndSkip).fetch();
+    if(!isEmpty(records)){
+      records.map((obj)=>{
+          obj.schoolName = School.findOne({_id:obj.schoolId},{fields:{'name':1}});
+      })
+    }
     return {count,records}
   }
 });

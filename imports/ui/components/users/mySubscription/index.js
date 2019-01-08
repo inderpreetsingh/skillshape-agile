@@ -16,7 +16,6 @@ import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { packageCoverProvider, withPopUp,confirmationDialog,formatDate } from '/imports/util';
 import ClassInterest from '/imports/api/classInterest/fields.js';
 
-
 const Wrapper = styled.div`background: white;`;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
