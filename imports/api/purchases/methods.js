@@ -1,9 +1,9 @@
 import Purchases from "./fields";
 import School from "../school/fields";
+import Classes from "/imports/api/classes/fields.js"
 import isEmpty from "lodash/isEmpty";
 import { check } from 'meteor/check';
-import moment from "moment";
-import {get,compact,uniq} from 'lodash';
+import {get,compact,uniq,concat,flatten} from 'lodash';
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
   "purchases.addPurchase": function (payload) {
@@ -149,7 +149,26 @@ Meteor.methods({
     try{
       let count = Purchases.find(filter,limitAndSkip).count();
       let purchaseData = Purchases.find(filter,limitAndSkip).fetch();
-      let packageType,packageId,covers=[],methodName;
+      let packageType,packageId,covers=[],methodName,newPurchaseData=[];
+      
+      //Get Attendance Data too
+      let attendanceData = Meteor.call('attendance.findById',{userId:filter.userId}) 
+      if(!isEmpty(attendanceData)){
+      attendanceData.map((obj,index)=>{
+        let {students} =  Classes.findOne({_id:obj.classId}) || {};
+        if(!isEmpty(students)){
+          students.map((student)=>{
+            if(student.userId == filter.userId){
+              if(student.purchaseId){
+                newPurchaseData.push({...obj,...Purchases.findOne({_id:student.purchaseId})})
+              }
+            }
+          })
+        }
+      })
+      
+      purchaseData = flatten(concat(purchaseData,newPurchaseData));
+      }
       if(!isEmpty(purchaseData)){
         purchaseData = compact(purchaseData);
           purchaseData.map((obj,index)=>{

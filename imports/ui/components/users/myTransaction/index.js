@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { isEmpty, get } from "lodash";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString } from "/imports/util";
+import { dateFriendly, capitalizeString ,cutString} from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { filterForTransaction } from './filterCode';
@@ -72,8 +72,8 @@ class MyTransaction extends React.Component {
   changePageClick = (skip) => {
     this.setState({ skip: skip.skip, isLoading: true }, () => { this.getPurchaseData(); });
   }
-  getColumnValue = (data, fieldName) => {
-    let result = get(data, fieldName, 'Missing');
+  getColumnValue = (data, fieldName,secondFieldName=null) => {
+    let result = get(data, fieldName, get(data,secondFieldName,null));
     if (typeof result == "string") {
       return capitalizeString(result)
     }
@@ -143,39 +143,39 @@ class MyTransaction extends React.Component {
           {isEmpty(purchaseData)
             ? "No payout found"
             :  purchaseData.reverse().map((purchase, index) => {
-              let transactionType = get(purchase, 'packageStatus', '') == 'expired' ? 'Expiration' : 'Purchase';
+              let transactionType = get(purchase, 'packageStatus', '') == 'expired' ? 'Expiration' : get(purchase,'classTypeName','')  ? 'Attendance' : 'Purchase';
               return (
                 <Fragment>
                   <FncTableRow key={index} selectable={false}>
                     <FncTableCell data-th={columnValues[0].columnName}>
-                      {this.getColumnValue(purchase, 'userName')}
+                      {this.getColumnValue(purchase, 'userName') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[1].columnName}>
-                      {dateFriendly(this.getColumnValue(purchase, 'startDate'), "MMMM Do YYYY, h:mm:ss a")}
+                      {dateFriendly(this.getColumnValue(purchase, 'startDate','attendedTime'), "MMMM Do YYYY, h:mm:ss a")}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[2].columnName}>
                       {transactionType}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[3].columnName}>
-                      {this.getColumnValue(purchase, 'paymentMethod')}
+                      {this.getColumnValue(purchase, 'paymentMethod') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[4].columnName}>
                       {this.amountGenerator(purchase)}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[5].columnName}>
-                      {this.getColumnValue(purchase, 'schoolName.name')}
+                      {this.getColumnValue(purchase, 'schoolName.name') || "..."}
                     </FncTableCell>
                     <Tooltip
                       animation="zoom"
                       placement="top"
-                      trigger={['hover']}
+                      trigger={['click']}
                       overlay={
                         <span>{this.classesCovered(purchase)}</span>
                       }
                       overlayStyle={{ zIndex: 9999 }}>
 
                       <FncTableCell data-th={columnValues[6].columnName}>
-                        Click Me
+                        {this.getColumnValue(purchase,'classTypeName') || cutString(this.classesCovered(purchase),10)}
                     </FncTableCell>
                     </Tooltip>
                     <Tooltip
@@ -193,7 +193,7 @@ class MyTransaction extends React.Component {
                       }
                       overlayStyle={{ zIndex: -9999 }}>
                       <FncTableCell data-th={columnValues[7].columnName}>
-                        {this.getColumnValue(purchase, 'packageName')}
+                        {this.getColumnValue(purchase, 'packageName') || "..."}
                       </FncTableCell>
                     </Tooltip>
                     <FncTableCell data-th={columnValues[8].columnName}>

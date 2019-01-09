@@ -135,7 +135,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
         else if (props.payAsYouGo) {
             return (<HighlightedBg>
                 <Text>
-                    <b>Payment</b> of {formatMoney(fee, currency)} <b>is due on</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}
+                    <b>Payment</b> of {formatMoney(fee, currency)} <b>is due on</b> {calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData && props.combinedData.length - 1)}
                 </Text>
                 {getContractEnds()}
             </HighlightedBg>
@@ -151,7 +151,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
             )
         } else if (props.payUpFront) {
             let contractLength = get(props, 'contractLength', 0);
-            contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
+            contractLength = props.combinedData && props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
             return (
                 <HighlightedBg>
                     <Text>
