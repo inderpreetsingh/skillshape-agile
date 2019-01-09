@@ -14,6 +14,7 @@ export const getTableProps = () => {
   const tableRowProps = {
     className: "table-header"
   };
+
   const tableHeaderColumns = [
     {
       columnName: "User Name",
@@ -21,7 +22,7 @@ export const getTableProps = () => {
       // className: "wd-150"
     },
     {
-      columnName: "Starts On",
+      columnName: "Date",
       tooltip: "",
       // className: "wd-211"
     },
@@ -52,6 +53,11 @@ export const getTableProps = () => {
     },
     {
       columnName: "Package Name (Click For Details)",
+      tooltip: "",
+      // className: "wd-150"
+    },
+    {
+      columnName: "Package Type",
       tooltip: "",
       // className: "wd-150"
     },

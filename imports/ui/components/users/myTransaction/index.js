@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { isEmpty, get } from "lodash";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString} from "/imports/util";
+import { dateFriendly, capitalizeString } from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { filterForTransaction } from './filterCode';
@@ -24,7 +24,7 @@ const styles = theme => ({
     borderRadius: "10px"
   },
   rootGrid: {
-    padding:'6px'
+    padding: '6px'
   }
 })
 class MyTransaction extends React.Component {
@@ -38,11 +38,11 @@ class MyTransaction extends React.Component {
       selectedPackageType: null,
       selectedPackageStatus: null,
       selectedPaymentMethod: null,
-      paymentMethodsOptions: paymentMethods,  
+      paymentMethodsOptions: paymentMethods,
       packageStatusOptions: packageStatus,
       packageTypeOptions: packageTypes,
       filter: {
-        userId: get(this.props.params,'id',Meteor.userId())
+        userId: get(this.props.params, 'id', Meteor.userId())
       },
       limit: 3,
       skip: 0,
@@ -55,7 +55,7 @@ class MyTransaction extends React.Component {
   }
   // get purchase data from db on page load and page number click.
   getPurchaseData = () => {
-    this.setState({ isLoading: true },()=>{
+    this.setState({ isLoading: true }, () => {
       let { filter } = this.state;
       let { limit, skip } = this.state;
       let limitAndSkip = { limit, skip };
@@ -91,13 +91,13 @@ class MyTransaction extends React.Component {
   }
   handleFilter = (value, filterName, stateName) => {
     let stringValue = get(value.target, "value", null)
-    if(filterName=='packageName'){
-     value =  stringValue ?  stringValue :  "";
+    if (filterName == 'packageName') {
+      value = stringValue ? stringValue : "";
     }
     this.setState(state => {
       let { filter } = state;
       if (value.value && filterName || typeof value == 'string' && value)
-        filter[filterName] = value.value ? value.value : new RegExp(`^${value}`,'i');
+        filter[filterName] = value.value ? value.value : new RegExp(`^${value}`, 'i');
       else
         delete filter[filterName];
       return {
@@ -108,97 +108,103 @@ class MyTransaction extends React.Component {
       };
     }, () => { this.getPurchaseData(); });
   };
-  amountGenerator = (purchase)=>{
-    let currency = get(purchase,'currency','$');
-    let amount = get(purchase,'amount',0);
-    config.currency.map((obj)=>{
-      if(obj.label == currency)
-      currency= obj.value;
+  amountGenerator = (purchase) => {
+    let currency = get(purchase, 'currency', '$');
+    let amount = get(purchase, 'amount', 0);
+    config.currency.map((obj) => {
+      if (obj.label == currency)
+        currency = obj.value;
     })
-    return `${currency+amount}`;
+    return `${currency + amount}`;
   }
-  classesCovered = (purchase) =>{
-		console.log("​classesCovered -> purchase", purchase)
-    let covers = get(purchase,'covers',[]);
+  classesCovered = (purchase) => {
+    let covers = get(purchase, 'covers', []);
     covers = covers.join(', ');
     return covers;
   }
   render() {
-    const { tableHeaderColumns } = getTableProps();
-    const { purchaseData, isLoading } = this.state;
+    const { purchaseData, isLoading ,selectedFilter} = this.state;
+    let columnData = getTableProps() 
+    const { tableHeaderColumns } = columnData;
     const { classes } = this.props;
+    let columnValues = tableHeaderColumns;
+    let TableName = TransactionDetailsTable 
     return (
       <div>
         {isLoading && <ContainerLoader />}
         <center>
           {" "}
-          <h1>My Transactions </h1>
+          <h1>My Transactions</h1>
         </center>
         <Paper className={classes.root}>
           {filterForTransaction.call(this)}
         </Paper>
-        <TransactionDetailsTable>
+        <TableName>
           {isEmpty(purchaseData)
             ? "No payout found"
-            : purchaseData.reverse().map((purchase, index) => {
+            :  purchaseData.reverse().map((purchase, index) => {
+              let transactionType = get(purchase, 'packageStatus', '') == 'expired' ? 'Expiration' : 'Purchase';
               return (
                 <Fragment>
-                    <FncTableRow key={index} selectable={false}>
-                    <FncTableCell data-th={tableHeaderColumns[0].columnName}>
+                  <FncTableRow key={index} selectable={false}>
+                    <FncTableCell data-th={columnValues[0].columnName}>
                       {this.getColumnValue(purchase, 'userName')}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[1].columnName}>
+                    <FncTableCell data-th={columnValues[1].columnName}>
                       {dateFriendly(this.getColumnValue(purchase, 'startDate'), "MMMM Do YYYY, h:mm:ss a")}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[2].columnName}>
-                      {this.packageType(purchase)}
+                    <FncTableCell data-th={columnValues[2].columnName}>
+                      {transactionType}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[3].columnName}>
+                    <FncTableCell data-th={columnValues[3].columnName}>
                       {this.getColumnValue(purchase, 'paymentMethod')}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[4].columnName}>
+                    <FncTableCell data-th={columnValues[4].columnName}>
                       {this.amountGenerator(purchase)}
                     </FncTableCell>
-                    <FncTableCell data-th={tableHeaderColumns[5].columnName}>
-                    {this.getColumnValue(purchase,'schoolName.name')}
+                    <FncTableCell data-th={columnValues[5].columnName}>
+                      {this.getColumnValue(purchase, 'schoolName.name')}
                     </FncTableCell>
-                    <Tooltip 
-                    animation="zoom" 
-                    placement="top" 
-                    trigger={['click']} 
-                    overlay={
-                    <span>{this.classesCovered(purchase)}</span>
-                    } 
-                    overlayStyle={{zIndex:9999}}>
-                    
-                    <FncTableCell data-th={tableHeaderColumns[6].columnName}>
-                    Click Me
-                    </FncTableCell>
-                    </Tooltip>
-                    <Tooltip 
-                    animation="zoom" 
-                    placement="top" 
-                    trigger={['click']} 
-                    destroyTooltipOnHide
-                    overlay={
-                      <SubscriptionsDetailsDialogBox
-                      {...purchase}
-                      open={true}
-                      onModalClose={() =>{} }
-                    
-                    />
-                    } 
-                    overlayStyle={{zIndex:-9999}}>
-                    <FncTableCell data-th={tableHeaderColumns[7].columnName}>
-                      {this.getColumnValue(purchase, 'packageName')}
+                    <Tooltip
+                      animation="zoom"
+                      placement="top"
+                      trigger={['hover']}
+                      overlay={
+                        <span>{this.classesCovered(purchase)}</span>
+                      }
+                      overlayStyle={{ zIndex: 9999 }}>
+
+                      <FncTableCell data-th={columnValues[6].columnName}>
+                        Click Me
                     </FncTableCell>
                     </Tooltip>
+                    <Tooltip
+                      animation="zoom"
+                      placement="top"
+                      trigger={['click']}
+                      destroyTooltipOnHide
+                      overlay={
+                        <SubscriptionsDetailsDialogBox
+                          {...purchase}
+                          open={true}
+                          onModalClose={() => { }}
+
+                        />
+                      }
+                      overlayStyle={{ zIndex: -9999 }}>
+                      <FncTableCell data-th={columnValues[7].columnName}>
+                        {this.getColumnValue(purchase, 'packageName')}
+                      </FncTableCell>
+                    </Tooltip>
+                    <FncTableCell data-th={columnValues[8].columnName}>
+                      {this.packageType(purchase)}
+                    </FncTableCell>
                   </FncTableRow>
-                  
+
                 </Fragment>
               );
             })}
-        </TransactionDetailsTable>
+        </TableName>
         <Pagination
           {...this.state}
           onChange={this.changePageClick}
