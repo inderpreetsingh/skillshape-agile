@@ -154,11 +154,11 @@ const LoginUserSideNav = props => {
   ];
   if (Meteor.settings.public.paymentEnabled) {
     childData.push({
-      name: "My Subscription",
+      name: "My Subscriptions",
       link: `/mySubscription/${Meteor.userId()}`,
       iconName: "collections"
     },{
-      name: "My Transaction",
+      name: "My Transactions",
       link: `/myTransaction/${Meteor.userId()}`,
       iconName: "collections"
     });
