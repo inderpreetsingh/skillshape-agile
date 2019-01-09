@@ -1,7 +1,10 @@
 import React from "react";
+import styled from 'styled-components';
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 import Button from "material-ui/Button";
+
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const styles = theme => {
   // console.log("theme", theme);
@@ -15,7 +18,7 @@ const styles = theme => {
       background: "#c0c1c0"
     },
     btnActive: {
-      margin: 5,
+      marginRight: helpers.rhythmDiv,
       width: 165,
       color: "#fff"
     },
@@ -26,6 +29,15 @@ const styles = theme => {
     }
   };
 };
+
+const InnerWrapper = styled.div`
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  ${props => props.variant === 'distributed' && 'justify-content: space-between;'}
+  width: 100%;
+  margin-bottom: ${helpers.rhythmDiv * 3}px;
+`;
 
 class ResponsiveTabs extends React.Component {
   constructor(props) {
@@ -49,19 +61,12 @@ class ResponsiveTabs extends React.Component {
       this.props.onTabChange(this.props.tabValue);
     }
   }
+
   render() {
-    const { classes, defaultValue } = this.props;
+    const { classes, defaultValue, variant } = this.props;
     return (
       <div className="responsive-tab">
-        <div
-          style={{
-            display: "inline-flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            width: "100%",
-            marginBottom: 25
-          }}
-        >
+        <InnerWrapper variant={variant}>
           {this.props.tabs.map((tab, index) => {
             return (
               <Button
@@ -80,14 +85,19 @@ class ResponsiveTabs extends React.Component {
               </Button>
             );
           })}
-        </div>
+        </InnerWrapper>
       </div>
     );
   }
 }
 
 ResponsiveTabs.propTypes = {
+  variant: PropTypes.string,
   classes: PropTypes.object.isRequired
 };
+
+ResponsiveTabs.defaultProps = {
+
+}
 
 export default withStyles(styles)(ResponsiveTabs);

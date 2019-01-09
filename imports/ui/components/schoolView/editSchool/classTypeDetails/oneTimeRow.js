@@ -45,9 +45,9 @@ export class OneTimeRow extends React.Component {
     }
     return state;
   };
- 
+
   addNewRow = () => {
-    const {locationData,data,roomData} = this.props;
+    const { locationData, data, roomData } = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
       startDate: new Date(),
@@ -79,8 +79,8 @@ export class OneTimeRow extends React.Component {
     this.setState({ row: oldRow });
   };
   //Set default location id if nothing selected 
-  setDefaultLocation=(defaultLocId)=>{
-    this.setState({locationId:defaultLocId})
+  setDefaultLocation = (defaultLocId) => {
+    this.setState({ locationId: defaultLocId })
     return defaultLocId;
   }
   handleSelectInputChange = (index, fieldName, event) => {
@@ -101,8 +101,8 @@ export class OneTimeRow extends React.Component {
     console.log("this.state.row ", this.state.row);
     return this.state.row;
   };
-  handleRoomData = (locationId,roomId,index)=> {
-  this.setState({row:oldRow});
+  handleRoomData = (locationId, roomId, index) => {
+    this.setState({ row: oldRow });
   }
   render() {
     const { row } = this.state;
@@ -111,12 +111,6 @@ export class OneTimeRow extends React.Component {
         {row.map((data, index) => {
           return (
             <Grid
-              style={{
-                border: "1px solid black",
-                marginBottom: 15,
-                padding: 5,
-                backgroundColor: "antiquewhite"
-              }}
               key={index}
               container
             >
@@ -170,7 +164,7 @@ export class OneTimeRow extends React.Component {
                         "duration"
                       )}
                       fullWidth
-                      inputProps={{ min: "0"}}
+                      inputProps={{ min: "0" }}
                     />
                   </Grid>
                   <Grid sm={6}>
@@ -207,38 +201,38 @@ export class OneTimeRow extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              
+
               <Grid item xs={12} sm={4}>
-                
-                 <ButtonWrapper>
-            <FormGhostButton
-              alertColor
-              onClick={this.removeRow.bind(this, index)}
-              label="Delete"
-            />
-          </ButtonWrapper>
+
+                <ButtonWrapper>
+                  <FormGhostButton
+                    alertColor
+                    onClick={this.removeRow.bind(this, index)}
+                    label="Delete"
+                  />
+                </ButtonWrapper>
               </Grid>
             </Grid>
           );
         })}
         <div>
           <div>
-            
+
             <div
               style={{
                 display: "flex",
                 justifyContent: "center"
               }}
             >
-              
+
               <ButtonWrapper>
-                  <FormGhostButton
-                    darkGreyColor
-                    onClick={this.addNewRow}
-                    label="Add Linked Class Time"
-                  />
-                </ButtonWrapper>
-            
+                <FormGhostButton
+                  darkGreyColor
+                  onClick={this.addNewRow}
+                  label="Add Linked Class Time"
+                />
+              </ButtonWrapper>
+
             </div>
           </div>
         </div>

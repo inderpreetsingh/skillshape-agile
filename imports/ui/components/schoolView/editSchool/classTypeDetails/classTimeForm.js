@@ -6,10 +6,13 @@
 5. Related changes in the class time popup in the calendar.
 */
 import React, { Fragment } from "react";
-import { ContainerLoader } from "/imports/ui/loading/container";
+import { get, isEmpty, remove, flatten, includes } from 'lodash';
+import { createContainer } from 'meteor/react-meteor-data';
+import styled from "styled-components";
 import { withStyles } from "material-ui/styles";
+import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 import Button from "material-ui/Button";
-import config from "/imports/config";
+
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import Select from "material-ui/Select";
@@ -23,35 +26,42 @@ import Dialog, {
   DialogActions,
   withMobileDialog
 } from "material-ui/Dialog";
+
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import ResponsiveTabs from "/imports/util/responsiveTabs";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import config from "/imports/config";
 // import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import { WeekDaysRow } from "./weekDaysRow";
 import { MenuItem } from "material-ui/Menu";
 import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
+
 import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
-import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
 import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import InstructorList from '/imports/ui/components/landing/components/classDetails/membersList/presentational/MembersList.jsx';
-import { withPopUp } from '/imports/util';
-import { get, isEmpty, remove, flatten, includes } from 'lodash';
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
-import { createContainer } from 'meteor/react-meteor-data';
+
+import { withPopUp } from '/imports/util';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 const Instructors = styled.div`
     margin-top: 16px;
     font-size: 17px;
-    padding: 10px;
+    padding: ${helpers.rhythmDiv}px;
     background-color: aliceblue;
 `;
+
+const ClassTimeDataWrapper = styled.div`
+  background-color: ${helpers.panelColor};
+`;
+
 const styles = theme => {
   return {
     delete: {
@@ -85,7 +95,6 @@ const styles = theme => {
 5.Retrieving the default value.(Done)
 6.Join class button will be set to closed class if class started.
 7.Popup with some text.
-
 */
 const formId = "classTimeForm";
 class ClassTimeForm extends React.Component {
@@ -350,7 +359,8 @@ class ClassTimeForm extends React.Component {
     const { fullScreen, data, classes, schoolId, parentKey, parentData, locationData, popUp, instructorsData } = this.props;
     const { roomId, locationId, roomData, addInstructorDialogBoxState } = this.state;
 
-    let styleForBox = this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2 ? { border: '2px solid', padding: '7px', marginBottom: "2px", backgroundColor: "lightgray" } : {};
+    // let styleForBox = this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2 ? { border: '2px solid', padding: '7px', marginBottom: "2px", backgroundColor: "lightgray" } : {};
+    let styleForBox = {};
     return (
       <div>
         <Dialog
@@ -480,75 +490,79 @@ class ClassTimeForm extends React.Component {
                     </Select>
                   </FormControl>
 
-                  <ResponsiveTabs
-                    defaultValue={1}
-                    tabValue={this.state.tabValue}
-                    tabs={["Single/Set", "Series", "Ongoing"]}
-                    color="primary"
-                    onTabChange={this.onTabChange}
-                  />
 
-                  <div style={styleForBox}>
-                    {this.closedCheckbox()}
-                    {this.state.tabValue == 1 && (
-                      <Grid container>
-                        <Grid item sm={6} xs={12}>
-                          <MaterialDatePicker
-                            required={true}
-                            label={"Start Date"}
-                            floatingLabelText={"Start Date *"}
-                            value={this.state.startDate}
-                            onChange={this.handleChangeDate.bind(
-                              this,
-                              "startDate"
-                            )}
-                            fullWidth={true}
-                          />
+                  <ClassTimeDataWrapper>
+                    <ResponsiveTabs
+                      variant="distributed"
+                      defaultValue={1}
+                      tabValue={this.state.tabValue}
+                      tabs={["Single/Set", "Series", "Ongoing"]}
+                      color="primary"
+                      onTabChange={this.onTabChange}
+                    />
+
+                    <div style={styleForBox}>
+                      {this.closedCheckbox()}
+                      {this.state.tabValue == 1 && (
+                        <Grid container>
+                          <Grid item sm={6} xs={12}>
+                            <MaterialDatePicker
+                              required={true}
+                              label={"Start Date"}
+                              floatingLabelText={"Start Date *"}
+                              value={this.state.startDate}
+                              onChange={this.handleChangeDate.bind(
+                                this,
+                                "startDate"
+                              )}
+                              fullWidth={true}
+                            />
+                          </Grid>
+                          <Grid item sm={6} xs={12}>
+                            <MaterialDatePicker
+                              required={true}
+                              label={"End Date"}
+                              floatingLabelText={"End Date *"}
+                              value={this.state.endDate}
+                              onChange={this.handleChangeDate.bind(
+                                this,
+                                "endDate"
+                              )}
+                              fullWidth={true}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item sm={6} xs={12}>
-                          <MaterialDatePicker
-                            required={true}
-                            label={"End Date"}
-                            floatingLabelText={"End Date *"}
-                            value={this.state.endDate}
-                            onChange={this.handleChangeDate.bind(
-                              this,
-                              "endDate"
-                            )}
-                            fullWidth={true}
-                          />
-                        </Grid>
-                      </Grid>
+                      )}
+                    </div>
+
+                    {this.state.tabValue === 0 && (
+                      <div>
+                        <OneTimeRow
+                          ref="oneTimeRow"
+                          data={
+                            data &&
+                            data.scheduleDetails &&
+                            data.scheduleDetails.oneTime
+                          }
+                          roomData={this.state.roomData}
+                          saveClassTimes={this.saveClassTimes}
+                          handleNoOfRow={this.handleNoOfRow}
+                          locationData={locationData}
+                        />
+                      </div>
                     )}
-                  </div>
-
-                  {this.state.tabValue === 0 && (
-                    <div style={{ border: "3px solid blue", padding: 10 }}>
-                      <OneTimeRow
-                        ref="oneTimeRow"
-                        data={
-                          data &&
-                          data.scheduleDetails &&
-                          data.scheduleDetails.oneTime
-                        }
-                        roomData={this.state.roomData}
-                        saveClassTimes={this.saveClassTimes}
-                        handleNoOfRow={this.handleNoOfRow}
-                        locationData={locationData}
-                      />
-                    </div>
-                  )}
-                  {(this.state.tabValue === 1 || this.state.tabValue === 2) && (
-                    <div style={{ border: "3px solid blue", padding: 10 }}>
-                      <WeekDaysRow
-                        ref="weekDaysRow"
-                        data={data && data.scheduleDetails}
-                        roomData={this.state.roomData}
-                        saveClassTimes={this.saveClassTimes}
-                        locationData={locationData}
-                      />
-                    </div>
-                  )}
+                    {(this.state.tabValue === 1 || this.state.tabValue === 2) && (
+                      <div>
+                        <WeekDaysRow
+                          ref="weekDaysRow"
+                          data={data && data.scheduleDetails}
+                          roomData={this.state.roomData}
+                          saveClassTimes={this.saveClassTimes}
+                          locationData={locationData}
+                        />
+                      </div>
+                    )}
+                  </ClassTimeDataWrapper>
 
                   <InstructorList
                     viewType={"instructorsView"}
@@ -624,7 +638,7 @@ class ClassTimeForm extends React.Component {
         </Dialog>
         {this.state.PackageAttachment && <PackageAttachment
           open={this.state.PackageOpen}
-          popUp = {this.props.popUp}
+          popUp={this.props.popUp}
           onClose={() => { this.setState({ PackageOpen: false }) }}
           schoolId={schoolId}
           classTypeId={parentKey}
