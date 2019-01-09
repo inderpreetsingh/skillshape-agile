@@ -51,7 +51,7 @@ export const getTableProps = () => {
       // className: "wd-100"
     },
     {
-      columnName: "Package Name",
+      columnName: "Package Name (Click For Details)",
       tooltip: "",
       // className: "wd-150"
     },

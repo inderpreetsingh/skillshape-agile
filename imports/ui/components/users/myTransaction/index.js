@@ -2,13 +2,14 @@ import React, { Fragment } from "react";
 import { isEmpty, get } from "lodash";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString,packageCoverProvider } from "/imports/util";
+import { dateFriendly, capitalizeString} from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { filterForTransaction } from './filterCode';
 import { withStyles } from "material-ui/styles";
 import Paper from 'material-ui/Paper'
 import Tooltip from 'rc-tooltip';
+import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
@@ -54,18 +55,19 @@ class MyTransaction extends React.Component {
   }
   // get purchase data from db on page load and page number click.
   getPurchaseData = () => {
-    this.setState({ isLoading: true });
-    let { filter } = this.state;
-    let { limit, skip } = this.state;
-    let limitAndSkip = { limit, skip };
-    Meteor.call('purchases.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
-      let state = {};
-      if (res) {
-        state = { pageCount: Math.ceil(res.count / 3), purchaseData: packageCoverProvider(res.records,true) }
-        state.isLoading = false;
-        this.setState(state);
-      }
-    })
+    this.setState({ isLoading: true },()=>{
+      let { filter } = this.state;
+      let { limit, skip } = this.state;
+      let limitAndSkip = { limit, skip };
+      Meteor.call('purchases.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
+        let state = {};
+        if (res) {
+          state = { pageCount: Math.ceil(res.count / 3), purchaseData: res.records }
+          state.isLoading = false;
+          this.setState(state);
+        }
+      })
+    });
   }
   changePageClick = (skip) => {
     this.setState({ skip: skip.skip, isLoading: true }, () => { this.getPurchaseData(); });
@@ -115,6 +117,12 @@ class MyTransaction extends React.Component {
     })
     return `${currency+amount}`;
   }
+  classesCovered = (purchase) =>{
+		console.log("​classesCovered -> purchase", purchase)
+    let covers = get(purchase,'covers',[]);
+    covers = covers.join(', ');
+    return covers;
+  }
   render() {
     const { tableHeaderColumns } = getTableProps();
     const { purchaseData, isLoading } = this.state;
@@ -133,12 +141,9 @@ class MyTransaction extends React.Component {
           {isEmpty(purchaseData)
             ? "No payout found"
             : purchaseData.reverse().map((purchase, index) => {
-              let covers = get(purchase,'covers',[]);
-              covers = covers.join(', ');
-              console.log("​render -> covers", covers)
               return (
                 <Fragment>
-                  <FncTableRow key={index} selectable={false}>
+                    <FncTableRow key={index} selectable={false}>
                     <FncTableCell data-th={tableHeaderColumns[0].columnName}>
                       {this.getColumnValue(purchase, 'userName')}
                     </FncTableCell>
@@ -160,20 +165,36 @@ class MyTransaction extends React.Component {
                     <Tooltip 
                     animation="zoom" 
                     placement="top" 
-                    trigger={['click','focus','hover']} 
+                    trigger={['click']} 
                     overlay={
-                    <span>{covers}</span>
+                    <span>{this.classesCovered(purchase)}</span>
                     } 
                     overlayStyle={{zIndex:9999}}>
                     
                     <FncTableCell data-th={tableHeaderColumns[6].columnName}>
-                    Hover Me
+                    Click Me
                     </FncTableCell>
                     </Tooltip>
+                    <Tooltip 
+                    animation="zoom" 
+                    placement="top" 
+                    trigger={['click']} 
+                    destroyTooltipOnHide
+                    overlay={
+                      <SubscriptionsDetailsDialogBox
+                      {...purchase}
+                      open={true}
+                      onModalClose={() =>{} }
+                    
+                    />
+                    } 
+                    overlayStyle={{zIndex:-9999}}>
                     <FncTableCell data-th={tableHeaderColumns[7].columnName}>
                       {this.getColumnValue(purchase, 'packageName')}
                     </FncTableCell>
+                    </Tooltip>
                   </FncTableRow>
+                  
                 </Fragment>
               );
             })}

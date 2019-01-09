@@ -3,7 +3,7 @@ import School from "../school/fields";
 import isEmpty from "lodash/isEmpty";
 import { check } from 'meteor/check';
 import moment from "moment";
-import get from 'lodash/get';
+import {get,compact,uniq} from 'lodash';
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
   "purchases.addPurchase": function (payload) {
@@ -146,14 +146,39 @@ Meteor.methods({
     return Purchases.find({ packageId: { $in: packageIds }, packageStatus: 'active', userId }).fetch();
   },
   "purchases.getFilteredPurchases":function (filter,limitAndSkip){
-    let count = Purchases.find(filter,limitAndSkip).count();
-    let records = Purchases.find(filter,limitAndSkip).fetch();
-    if(!isEmpty(records)){
-      records.map((obj)=>{
-          obj.schoolName = School.findOne({_id:obj.schoolId},{fields:{'name':1}});
-      })
+    try{
+      let count = Purchases.find(filter,limitAndSkip).count();
+      let purchaseData = Purchases.find(filter,limitAndSkip).fetch();
+      let packageType,packageId,covers=[],methodName;
+      if(!isEmpty(purchaseData)){
+        purchaseData = compact(purchaseData);
+          purchaseData.map((obj,index)=>{
+              packageType = get(obj,'packageType','MP');
+              packageId = get(obj,'packageId','');
+              if(packageType == "MP"){
+                  methodName = 'monthlyPricing.getCover';
+                        }
+              else if(packageType == "CP"){
+                  methodName = 'classPricing.getCover';
+              }else{
+                  methodName = "enrollmentFee.getCover";
+              }
+            obj.schoolName = School.findOne({_id:obj.schoolId},{fields:{'name':1}});
+            res =  Meteor.call(methodName,packageId)
+                  if(res){
+                      res.map((obj1,index1)=>{
+                          covers.push(obj1.name);
+                      })
+                      obj.covers = uniq(covers);
+                  }
+          })
+      }
+      return {count,records:purchaseData}
+    }catch(error){
+			console.log("​ error in purchases.getFilteredPurchases", error)
+      
     }
-    return {count,records}
+   
   }
 });
 /* 

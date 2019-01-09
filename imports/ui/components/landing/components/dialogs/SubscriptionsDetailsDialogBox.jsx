@@ -98,9 +98,14 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
     const getRemainingClasses = (props) => {
         let stringToPrint = '';
-        props.combinedData.map((obj, index) => {
-            stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(obj.endDate)} <br/>`;
-        })
+            if(props.combinedData){
+                props.combinedData.map((obj, index) => {
+                   stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(obj.endDate)} <br/>`;
+               }) 
+            }
+            else{
+                stringToPrint += ` ${props.noClasses} ${props.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(props.endDate)} <br/>`;
+            }
         return stringToPrint;
     }
 
