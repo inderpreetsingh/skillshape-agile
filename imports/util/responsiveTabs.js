@@ -10,14 +10,16 @@ const styles = theme => {
   // console.log("theme", theme);
   return {
     btn: {
-      margin: 5,
-      width: 165,
+      marginRight: helpers.rhythmDiv,
+      marginBottom: helpers.rhythmDiv,
+      width: helpers.baseFontSize * 9,
       display: "inline-block",
       borderRadius: "4px",
       position: "relative",
       background: "#c0c1c0"
     },
     btnActive: {
+      marginBottom: helpers.rhythmDiv,
       marginRight: helpers.rhythmDiv,
       width: 165,
       color: "#fff"
@@ -30,13 +32,18 @@ const styles = theme => {
   };
 };
 
+// Currently the distributed works well for 3 items only.
+
 const InnerWrapper = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   justify-content: center;
-  ${props => props.variant === 'distributed' && 'justify-content: space-between;'}
   width: 100%;
-  margin-bottom: ${helpers.rhythmDiv * 3}px;
+  margin: ${helpers.rhythmDiv}px 0; 
+  ${props => props.variant === 'distributed' && 'justify-content: space-between;'}
+  @media screen and (max-width: ${helpers.mobile + 100}px) {
+    ${props => props.variant === 'distributed' && 'justify-content: flex-start;'}
+  } 
 `;
 
 class ResponsiveTabs extends React.Component {

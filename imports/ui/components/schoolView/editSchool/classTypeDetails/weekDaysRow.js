@@ -23,19 +23,27 @@ const Wrapper = styled.div`
 
 const FormWrapper = styled.div`
   background: white;
-  max-width: 50%;
+  max-width: calc(50% - ${helpers.rhythmDiv}px);
   width: 100%;
-  margin-right: 8px;
+  margin-right: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
+
+  :nth-child(2n) {
+    margin-right: 0;
+  }
 `;
 
 const AddLinkedTime = styled.div`
   ${helpers.flexCenter}  
-  max-width: 50%;
+  max-width: calc(50% - ${helpers.rhythmDiv * 2}px);
   flex-grow: 1;
-  align-self:
+  align-self: stretch;
   width: 100%;
   border: 1px dotted #333;
+
+  :last-child {
+    margin-right: 0;
+  }
 `;
 
 export class WeekDaysRow extends React.Component {

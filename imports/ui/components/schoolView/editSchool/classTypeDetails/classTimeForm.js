@@ -59,6 +59,7 @@ const Instructors = styled.div`
 `;
 
 const ClassTimeDataWrapper = styled.div`
+  padding: ${helpers.rhythmDiv * 2}px;
   background-color: ${helpers.panelColor};
 `;
 
@@ -78,6 +79,12 @@ const styles = theme => {
       backgroundColor: 'green',
       color: "black",
       fontWeight: 600
+    },
+    textField: {
+      marginBottom: helpers.rhythmDiv
+    },
+    formControl: {
+      marginBottom: helpers.rhythmDiv
     },
     dialogActionsRoot: {
       [`@media screen and (max-width: ${mobile}px)`]: {
@@ -422,7 +429,7 @@ class ClassTimeForm extends React.Component {
                   This name helps differentiate different class times in the same
                   class type. Good examples include "Wednesday Night Swim" or
                   "Weekend Open Training."
-              </DialogContentText>
+                </DialogContentText>
                 <form id={formId}>
                   <TextField
                     required={true}
@@ -432,6 +439,7 @@ class ClassTimeForm extends React.Component {
                     label="Class Time Name"
                     type="text"
                     fullWidth
+                    className={classes.textField}
                   />
                   <TextField
                     defaultValue={data && data.desc}
@@ -441,9 +449,10 @@ class ClassTimeForm extends React.Component {
                     type="text"
                     fullWidth
                     multiline
+                    className={classes.textField}
                     inputProps={{ maxLength: 200 }}
                   />
-                  <FormControl fullWidth margin="dense">
+                  <FormControl className={classes.formControl} fullWidth margin="dense">
                     <InputLabel htmlFor="location">Location</InputLabel>
                     <Select
                       required={true}
@@ -467,7 +476,7 @@ class ClassTimeForm extends React.Component {
                     </Select>
                   </FormControl>
 
-                  <FormControl fullWidth margin="dense">
+                  <FormControl className={classes.formControl} fullWidth margin="dense">
                     <InputLabel htmlFor="roomId">Room</InputLabel>
                     <Select
                       input={<Input id="roomId" />}
