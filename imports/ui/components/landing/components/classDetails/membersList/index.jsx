@@ -177,7 +177,7 @@ cancelSignIn = ()=>(
           title:'Confirmation',
           type:'inform',
           content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
-          buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[0],popUp)}}]
+          buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Check-In',onClick:()=>{this.updateClass(filter,status,purchased[0],popUp)}}]
         }
         confirmationDialog(data);
         return;
@@ -189,7 +189,7 @@ cancelSignIn = ()=>(
           title:'Confirmation',
           type:'inform',
           content:<div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
-          buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[pos],popUp)}}]
+          buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Check-In',onClick:()=>{this.updateClass(filter,status,purchased[pos],popUp)}}]
         }
         confirmationDialog(data);
         return;
