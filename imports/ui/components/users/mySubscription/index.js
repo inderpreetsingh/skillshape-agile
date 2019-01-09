@@ -6,7 +6,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import styled from 'styled-components';
-import MySubscriptionRender from './MySubscriptionRender.jsx';
+const MySubscriptionRender = React.lazy(()=>import('./MySubscriptionRender.jsx'));
 import ClassSubscription from '/imports/api/classSubscription/fields';
 import Purchases from '/imports/api/purchases/fields';
 import School from '/imports/api/school/fields';
@@ -14,8 +14,7 @@ import { FormGhostButton } from '/imports/ui/components/landing/components/butto
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { packageCoverProvider, withPopUp,confirmationDialog,formatDate } from '/imports/util';
-
-
+import ClassInterest from '/imports/api/classInterest/fields.js';
 
 const Wrapper = styled.div`background: white;`;
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
@@ -184,7 +183,7 @@ class MySubscription extends React.Component {
 			data,
 			(error, res) => {
 				if (res) {
-					this.setState({ isBusy: false });
+					this.setState({ isBusy: false,manageMemberShipDialog:false });
 					const { popUp } = this.props;
 					popUp.appear(
 						'success',
@@ -276,6 +275,7 @@ class MySubscription extends React.Component {
 		}
 
 		return (
+			<React.Suspense fallback={<ContainerLoader/>}>
 			<Wrapper>
 				{/*<SchoolBox schoolData={schoolData} purchaseData={purchaseData} />*/}
 				<MySubscriptionRender
@@ -303,6 +303,7 @@ class MySubscription extends React.Component {
 					removeFromCalendar={this.removeFromCalendar}
 				/>
 			</Wrapper>
+			</React.Suspense>
 		);
 	}
 }
@@ -318,19 +319,27 @@ export default createContainer((props) => {
 		schoolSubscription,
 		packagesDataSubscription,
 		classSubscription,
+		classInterestSubscription,
 		purchaseSubscription,
 		adminsDataSubscriptions,
-		classSubscriptionData;
-	userId = get(currentUser, '_id', null);
+		classSubscriptionData,
+		classInterestData;
+	userId = get(props.params,'id',get(currentUser, '_id', null));
 	filter = { userId };
 	purchaseSubscription = Meteor.subscribe('purchases.getPurchasesListByMemberId', filter);
 	classSubscription = Meteor.subscribe('classSubscription.findDataById', filter);
-
-	if (purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
+	classInterestSubscription = Meteor.subscribe("classInterest.getClassInterest");
+	if (classInterestSubscription && classInterestSubscription.ready() && purchaseSubscription && purchaseSubscription.ready() && classSubscription && classSubscription.ready()) {
 		purchaseData = Purchases.find().fetch();
 		classSubscriptionData = ClassSubscription.find().fetch();
 		// console.log(purchaseData, classSubscription, ' in purchase subscription');
-
+		classInterestData = ClassInterest.find().fetch();
+		console.log("​classInterestData", classInterestData)
+		if(!isEmpty(classInterestData)){
+			classInterestData.map((obj)=>{
+				schoolIds.push(obj.schoolId);
+			})
+		}
 		if (!isEmpty(purchaseData)) {
 			purchaseData.map((current) => {
 				schoolIds.push(current.schoolId);

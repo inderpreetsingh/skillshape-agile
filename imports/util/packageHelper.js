@@ -25,7 +25,7 @@ perClassPackageMaker = purchaseData =>{
     })
     return filter(purchaseData,(o)=>{ return get(o,'packageStatus','inActive')=='active'});
 }
-export const  packageCoverProvider = purchaseData => {
+export const  packageCoverProvider = (purchaseData,from) => {
 	purchaseData = compact(purchaseData);
     let packageType,packageId,covers=[],methodName;
     if(!isEmpty(purchaseData)){
@@ -50,5 +50,5 @@ export const  packageCoverProvider = purchaseData => {
             })
         })
     }
-    return perClassPackageMaker(purchaseData);
+    return from?purchaseData:perClassPackageMaker(purchaseData);
   };

@@ -29,7 +29,8 @@ class ClassDetailsContainer extends Component {
     this.setState({isBusy:!this.state.isBusy});
   }
   render() {
-    const { currentUser, isUserSubsReady, classData, instructorsData, popUp, instructorsIds } = this.props;
+    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds } = this.props;
+    console.count('ClassDetailsContainer 1');
     return (
       <ClassDetails
         topSearchBarProps={{
@@ -46,7 +47,7 @@ class ClassDetailsContainer extends Component {
           classModulesData: classModulesData
         }}
         classTimeInformationProps={{ ...classTimeData }}
-        classData={classData}
+        classData={classDetails}
         instructorsData={instructorsData}
         popUp={popUp}
         instructorsIds={instructorsIds}
@@ -60,7 +61,7 @@ class ClassDetailsContainer extends Component {
 export default createContainer((props) => {
   const { state } = props.location.state;
   const dataProps = props.location.state.props;
-  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classData, instructorsIds,
+  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classDetails, instructorsIds,
     instructorsData = [], userSubscription, classTimeSubscription, ClassTimeData;
   schoolId = state.school._id;
   classTimeId = state.eventData.classTimeId;
@@ -68,8 +69,8 @@ export default createContainer((props) => {
   filter = { _id: state.classDetails._id };
   classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
   if (classesSubscription && classesSubscription.ready()) {
-    classData = Classes.find().fetch();
-    instructorsIds = get(classData[0], 'instructors', []);
+   classDetails = Classes.find().fetch();
+    instructorsIds = get(classDetails[0], 'instructors', []);
     if (isEmpty(instructorsIds)) {
       classTimeSubscription = Meteor.subscribe('classTimes.getclassTimes', { schoolId, classTypeId });
       if (classTimeSubscription && classTimeSubscription.ready()) {
@@ -101,10 +102,10 @@ export default createContainer((props) => {
 
   }
   return {
-    classData,
+    classDetails,
     instructorsData,
     instructorsIds,
-
+    ...props
   };
 }, withPopUp(ClassDetailsContainer));
 

@@ -157,6 +157,10 @@ const LoginUserSideNav = props => {
       name: "My Subscription",
       link: `/mySubscription/${Meteor.userId()}`,
       iconName: "collections"
+    },{
+      name: "My Transaction",
+      link: `/myTransaction/${Meteor.userId()}`,
+      iconName: "collections"
     });
   }
   return (

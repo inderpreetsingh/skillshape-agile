@@ -315,6 +315,7 @@ class ThinkingAboutAttending extends React.Component {
                   else {
                     handleCheckBoxes(checkBoxes);
                   }
+                  onModalClose()
                 }}
                 label={"Join but Purchase Later"}
               />

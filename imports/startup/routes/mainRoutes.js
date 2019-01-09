@@ -28,6 +28,8 @@ import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar";
 import MyMedia from "/imports/ui/components/users/myMedia";
 import MyProfile from "/imports/ui/components/users/myProfile";
 import MySubscription from "/imports/ui/components/users/mySubscription";
+import MyTransaction from "/imports/ui/components/users/myTransaction";
+import MyAttendance from '/imports/ui/components/users/myAttedance';
 import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
 import PurchasePackage from '/imports/ui/components/purchasePackage';
 import SkillShapeButtonsCollection from '/imports/ui/components/landing/SkillShapeButtonsCollection';
@@ -108,6 +110,16 @@ export default (Routes = componentLoader(props => (
           name="MySubscription"
           component={MySubscription}
         />
+         <Route
+          path="/myTransaction/:id"
+          name="MyTransaction"
+          component={MyTransaction}
+        /><Route
+          path="/myAttendance/:id"
+          name="MyAttendance"
+          component={MyAttendance}
+        />
+        
         <Route
           path="/schoolAdmin/:schoolId/edit"
           name="SchoolAdmin-Edit"

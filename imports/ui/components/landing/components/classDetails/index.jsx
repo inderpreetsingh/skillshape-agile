@@ -82,12 +82,17 @@ const ClassDetails = props => {
   const { state } = props.location.state;
   const dataProps = props.location.state.props;
   const { school } = state;
-
+  
   const currentView =
-    location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
+  location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
 
   return (
     <Wrapper>
+      {window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'auto'
+      })}
       <PageContent>
         <TopSearchBar {...props.topSearchBarProps} />
         {isBusy && <ContainerLoader />}

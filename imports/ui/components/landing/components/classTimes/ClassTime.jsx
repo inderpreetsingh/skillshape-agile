@@ -502,7 +502,8 @@ class ClassTime extends Component {
 
   handleNotification = CheckBoxes => {
     this.setState({ isLoading: true });
-    const { schoolId, classTypeId, classTypeName,schoolName } = this.props;
+    const { schoolId, classTypeId, classTypeName,schoolName='' } = this.props;
+		console.log("​getScheduleTypeFormatted -> schoolName", schoolName)
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     if(!isEmpty(currentUser)){
@@ -526,7 +527,7 @@ class ClassTime extends Component {
               content: `Hi ${userName}, You are now ${
                 CheckBoxes[1] ? "subscribed" : "unsubscribed"
               } to  notification related to the
-            location and time updates for ${schoolName} ${classTypeName.name}.
+            location and time updates for ${schoolName && schoolName} ${classTypeName.name}.
              You can change this in the My Subscriptions area.
             `
             });

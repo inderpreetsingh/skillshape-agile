@@ -84,20 +84,26 @@ export default class MyCalender extends React.Component {
     })
   }
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
-    this.setState({ classDetailModal: false });
+    let newState = {classDetailModal: false,status:'Sign In'}
     const { routeName, classTimesData, classTypeData, schoolData } = this.props
     const originalEvent  = get(jsEvent,"originalEvent",'');
-    this.setState({status:'Sign In'})
     classTimesData && classTimesData.map((obj)=>{
       if(obj._id==eventData.classTimeId){
-        this.setState({classTimes:obj})
+        newState.classTimes = obj;
       }
     })
     classTypeData && classTypeData.map((obj) => {
       if (obj._id == eventData.classTypeId) {
-        this.setState({ classType: obj })
+        newState.classType = obj;
       }
     })
+    this.setState(state=>{
+      return {
+        ...state,
+        ...newState
+      }
+    })
+    this.setDate()
     const {schoolId,classTypeId,classTimeId,start} = eventData;
     let filter = {schoolId,classTypeId,classTimeId,scheduled_date:new Date(start)};
     this.getStudentStatus(filter);
@@ -172,29 +178,30 @@ export default class MyCalender extends React.Component {
       let purchased = get(res,'purchased',[]);
       let epStatus = get(res,"epStatus",false);
       let pos = -1;
+      if(status=='signOut'){
+        let {classDetails:{students}}=this.state,purchaseId,purchaseData;
+        if(!isEmpty(students) ){
+          students.map((obj)=>{
+            if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+              purchaseId = obj.purchaseId;
+            }
+          })
+          purchased.map((obj)=>{
+            if(obj._id==purchaseId){
+              purchaseData = obj;
+            }
+          })
+          this.updateClass(filter,status,purchaseData,popUp);
+        }
+        return;
+      }
        if(epStatus && !isEmpty(purchased)){
         purchased.map((obj,index)=>{
           if(obj.noClasses == null && obj.packageType == 'MP'){
               pos = index;
           }
         })
-         if(status=='signOut'){
-          let {classDetails:{students}}=this.state,purchaseId,purchaseData;
-          if(!isEmpty(students) && !isEmpty(purchased)){
-            students.map((obj)=>{
-              if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
-                purchaseId = obj.purchaseId;
-              }
-            })
-            purchased.map((obj)=>{
-              if(obj._id==purchaseId){
-                purchaseData = obj;
-              }
-            })
-            this.updateClass(filter,status,purchaseData,popUp);
-          }
-          return;
-        }
+        
         if(purchased.length==1){
           let data = {};
           data = {
@@ -481,6 +488,7 @@ export default class MyCalender extends React.Component {
       classTypeId = get(filter,'classTypeId',null);
     }
     let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
+    console.count('My Calendar')
     return (
       <div>
         <FullCalendarContainer

@@ -18,7 +18,7 @@ Meteor.methods({
       return;
     }
     doc.createdAt = new Date();
-    if (this.userId && this.userId == doc.userId) {
+    if (this.userId && this.userId == doc.userId || from == 'signHandler') {
       return ClassInterest.insert(doc, () => {
         let currentUserRec = Meteor.users.findOne(this.userId);
         let classTypeData = ClassType.findOne(doc.classTypeId);

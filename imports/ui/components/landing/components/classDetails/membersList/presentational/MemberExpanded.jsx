@@ -11,7 +11,6 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { get, isEmpty } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
-import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/dialogs/";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
@@ -218,174 +217,6 @@ PaymentAndStatus = (props) => {
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
-acceptPayment = (packageData,props,paymentMethod) => {
-    props.toggleIsBusy();
-    let userId,packageId,packageType,schoolId,data,noClasses,packageName,planId=null;
-    let {popUp} = props;
-    userId = props._id;
-    packageId = get(packageData,'_id',null);
-    packageType = get(packageData,'packageType',null);
-    schoolId = props.schoolId;
-    noClasses = get(packageData,'noClasses',0);
-    packageName = get(packageData,'name',get(packageData,'packageName','packageName'));
-    if(packageType=='MP' && !isEmpty(packageData.pymtDetails)){
-      planId = get(packageData.pymtDetails[0],'planId',null);
-    }
-    data = {userId,packageId,schoolId,packageType,paymentMethod,noClasses,packageName,planId};
-    Meteor.call('stripe.handleOtherPaymentMethods',data,(err,res)=>{
-      
-        props.toggleIsBusy();
-        let title = 'Package Purchased Successfully';
-        if(packageType != 'EP')
-        this.updateStatus(1, props)
-        else
-        this.successPopUp(popUp,'prototype',title)
-      
-    })
-
-
-}
-sendLinkConfirmation = (props,packageId=null,packageType=null)=>{
-  let {popUp} = props;
-  popUp.appear("inform", {
-    title: "Confirmation",
-    content: "Do you really want to send a package link to this student.",
-    onAffirmationButtonClick: () => {this.sendLink(props,packageId=null,packageType=null)},
-   defaultButtons: true,    
-}, true)
-}
-acceptPaymentConfirmation = (packageData,props,paymentMethod) =>{
-  let {popUp} = props;
-  popUp.appear("inform", {
-    title: "Confirmation",
-    content: "Do you really want to confirm the payment.",
-    onAffirmationButtonClick: () => {this.acceptPayment(packageData,props,paymentMethod)},
-   defaultButtons: true,    
-}, true)
-}
-sendLink = (props,packageId=null,packageType=null) =>{
-   try{
-    let userId,classesId,valid,data={},schoolName,className,schoolId;
-    let {popUp} = props;
-    props.toggleIsBusy();
-    userId = props._id;
-    classesId = props.classData[0]._id;
-    valid = true;
-    userName = get(props.profile,"firstName",get(props.profile,"name",get(props.profile,"lastName","Old Data")));
-    userEmail =get(props.emails[0],'address',null);
-    schoolName = props.schoolName;
-    className = props.classTypeName;
-    schoolId = props.schoolId;
-    data ={ userId, packageId,classesId,valid,userEmail,userName,schoolName,className,schoolId,packageType }
-    Meteor.call("packageRequest.addRecord",data,(err,res)=>{
-      props.toggleIsBusy();
-        if(res && res.status){
-         this.successPopUp(popUp,userName)
-        }
-        else if(res && !res.status){
-          data.link = `${Meteor.absoluteUrl()+'purchasePackage/'+res.record._id}`;
-          this.confirmationPopUp(popUp,data);
-        }
-    })
-  }catch(error){
-		console.log("​sendLink error", error)
-  }
-   
-    }
-successPopUp = (popUp,userName,title)=>{
-    popUp.appear(
-      'success',
-      {
-        title: 'Success',
-        content: title ? title :`Email with purchase link send to ${userName} successfully.`,
-        RenderActions: (
-          <ButtonWrapper>
-          <FormGhostButton
-            label={'Ok'}
-            applyClose
-          />
-        </ButtonWrapper>
-        )
-      },
-      true
-    );
-  }
-confirmationPopUp = (popUp,data)=>{
-  popUp.appear(
-    'inform',
-    {
-      title: 'Confirmation',
-      content: `An email is already sent to ${data.userName}.Do you want to send the email again.`,
-      RenderActions: (
-        <ButtonWrapper>
-          <FormGhostButton
-            label={'Cancel'}
-            applyClose
-          />
-          <FormGhostButton
-            label={'Yes'}
-            onClick={()=>{this.sendEmailAgain(data);
-              this.successPopUp(popUp,data.userName);
-            }}
-            applyClose
-          />
-        </ButtonWrapper>
-      )
-    },
-    true
-  );
-}
-sendEmailAgain = (data)=>{
-  Meteor.call("packageRequest.sendPurchaseRequest",data);
-}
-updateStatus = (n, props) => {
-  let { status, popUp ,purchaseId} = props;
-  let inc=0,packageType;
-  if(!purchaseId){
-    props.onAddIconClick(null,props._id,'checkIn');
-    return;
-  }
-  if (n == 1) {
-    if (status == 'signIn') {
-      inc = -1;
-      status = 'checkIn';
-    }
-    else if (status == 'checkIn'){
-      inc = 1;
-      status = 'signIn';
-    } 
-  }
-  else {
-    if (status == 'signIn' || status == 'checkIn'){
-      inc = 1;
-      status = 'signOut';
-    } 
-  }
-  let filter = props.classData[0];
-  filter.userId = props._id;
-  props.classData[0].students.map((obj)=>{
-    if(obj.userId==props._id){
-      purchaseId = obj.purchaseId;
-      packageType = obj.packageType;
-    }
-  })
-  Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
-  Meteor.call("classes.updateClassData", filter, status, (err, res) => {
-    if (res) {
-      popUp.appear("success", {
-        title: `Successfully`,
-        content: `${status} Performed Successfully.`,
-        RenderActions: (<ButtonWrapper>
-          <FormGhostButton
-            label={'Ok'}
-            onClick={() => { }}
-            applyClose
-          />
-        </ButtonWrapper>)
-      }, true);
-    }
-  })
-}
 
 const StatusOptions = props => (
   <StatusDetails>
@@ -394,7 +225,7 @@ const StatusOptions = props => (
         noMarginBottom
         fullWidth
         label={props.status == 'signIn' ? "Check in" : "Check out"}
-        onClick={() => { this.updateStatus(1, props) }}
+        onClick={() => { props.updateStatus(1, props) }}
       />
     </StatusButton>
     <StatusButton>
@@ -403,7 +234,7 @@ const StatusOptions = props => (
         caution
         fullWidth
         label={"Sign Out"}
-        onClick={() => { this.updateStatus(2, props) }}
+        onClick={() => { props.updateStatus(2, props) }}
       />
     </StatusButton>
   </StatusDetails>
@@ -417,17 +248,8 @@ const MemberExpanded = props => {
   let classTypeId = get(props.classData[0],'classTypeId',null);
   let buyPackagesBoxState = props.buyPackagesBoxState;
   return (
-    <Wrapper>
-      {buyPackagesBoxState && (
-          <BuyPackagesDialogBox
-            classTypeId = {classTypeId}
-            open={buyPackagesBoxState}
-            onModalClose={()=>{props.onAcceptPaymentClick(false)}}
-            onSendLinkClick = {this.sendLinkConfirmation}
-            currentProps = {props.currentProps}
-            acceptPayment = {this.acceptPaymentConfirmation}
-          />
-        )}
+    <Wrapper key = {name}>
+    
       <InnerWrapper>
         <MemberDetails>
           <MemberDetailsInner>

@@ -59,7 +59,7 @@ const Title = SlantedHeading.extend`
 
 const MembersList = props => {
     const expanded =
-        props.viewType === "instructorsView" && props.entityType === "students";
+    props.viewType === "instructorsView" && props.entityType === "students";
     const type = props.entityType === 'students' ? 'student' : 'instructor';
     let studentsView = props.viewType === "studentsView" && props.entityType === "students";
     let joinClass = studentsView;
@@ -119,6 +119,7 @@ const MembersList = props => {
                                     onAcceptPaymentClick={props.onAcceptPaymentClick}
                                     buyPackagesBoxState ={props.buyPackagesBoxState}
                                     currentProps = {props.currentProps}
+                                    updateStatus = {props.updateStatus}
                                 />
                             ) : (
                                     <Member
