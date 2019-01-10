@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styled from "styled-components";
 import Member from "./Member.jsx";
 import MemberExpanded from "./MemberExpanded.jsx";
@@ -6,11 +6,6 @@ import SearchList from "./SearchList.jsx";
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Capitalize, SlantedHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { get, isEmpty } from 'lodash';
-
-const Wrapper = styled.div`
-  padding: 0 ${rhythmDiv * 2}px;
-  margin-bottom: ${rhythmDiv * 7}px;
-`;
 
 const ListHeadWrapper = styled.div`
   display: flex;
@@ -59,29 +54,30 @@ const Title = SlantedHeading.extend`
 
 const MembersList = props => {
     const expanded =
-    props.viewType === "instructorsView" && props.entityType === "students";
+        props.viewType === "instructorsView" && props.entityType === "students";
     const type = props.entityType === 'students' ? 'student' : 'instructor';
     let studentsView = props.viewType === "studentsView" && props.entityType === "students";
     let joinClass = studentsView;
-    !isEmpty(props.data) && studentsView && props.data.map((obj)=>{
-        if(obj._id == Meteor.userId()){
+    !isEmpty(props.data) && studentsView && props.data.map((obj) => {
+        if (obj._id == Meteor.userId()) {
             joinClass = false;
         }
     })
     return (
-        <Wrapper>
-                {/* <SearchList
+        <Fragment
+        >
+            {/* <SearchList
           onChange={props.onSearchChange}
           searchedValue={props.searchedValue}
         /> */}
-             {props.viewType === "instructorsView" || !isEmpty(props.data) || props.entityType === 'students' ? ( <ListHeadWrapper>
+            {props.viewType === "instructorsView" || !isEmpty(props.data) || props.entityType === 'students' ? (<ListHeadWrapper>
                 <Title>
-                  <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
+                    <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
                 </Title>
-            </ListHeadWrapper>) : ''} 
-           
+            </ListHeadWrapper>) : ''}
+
             <MembersGrid expanded={expanded}>
-            {joinClass &&   <MemberWrapper >
+                {joinClass && <MemberWrapper >
                     <Member
                         addMember={true}
                         onAddIconClick={props.onJoinClassClick}
@@ -114,12 +110,12 @@ const MembersList = props => {
                                     schoolName={props.schoolName}
                                     classTypeName={props.classTypeName}
                                     toggleIsBusy={props.toggleIsBusy}
-                                    schoolId = {props.schoolId}
+                                    schoolId={props.schoolId}
                                     onAddIconClick={props.onJoinClassClick}
                                     onAcceptPaymentClick={props.onAcceptPaymentClick}
-                                    buyPackagesBoxState ={props.buyPackagesBoxState}
-                                    currentProps = {props.currentProps}
-                                    updateStatus = {props.updateStatus}
+                                    buyPackagesBoxState={props.buyPackagesBoxState}
+                                    currentProps={props.currentProps}
+                                    updateStatus={props.updateStatus}
                                 />
                             ) : (
                                     <Member
@@ -138,7 +134,7 @@ const MembersList = props => {
                                 )}
                         </MemberWrapper>
                     ))}
-                    {props.viewType != "studentsView" &&   <MemberWrapper expanded={expanded}>
+                {props.viewType != "studentsView" && <MemberWrapper expanded={expanded}>
                     <Member
                         addMember={props.addInstructor || props.addStudent}
                         onAddIconClick={props.onAddIconClick}
@@ -152,10 +148,10 @@ const MembersList = props => {
 
                     />
                 </MemberWrapper>}
-              
-              
+
+
             </MembersGrid>
-        </Wrapper>
+        </Fragment>
     );
 };
 

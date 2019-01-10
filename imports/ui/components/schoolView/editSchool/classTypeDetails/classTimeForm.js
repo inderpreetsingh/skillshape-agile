@@ -22,7 +22,6 @@ import Grid from "material-ui/Grid";
 import Dialog, {
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   withMobileDialog
 } from "material-ui/Dialog";
@@ -51,15 +50,32 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
+
+const ListWrapper = styled.div`
+  padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+`;
+
+let FormWrapper, DialogContentText, FormInputsWrapper;
+FormWrapper = DialogContentText = FormInputsWrapper = styled.div`
+  padding: 0 ${helpers.rhythmDiv * 3}px;
+`;
+
+DialogContentText = DialogContentText.extend`
+  font-size: ${helpers.baseFontSize}px;
+  font-family: ${helpers.specialFont};
+`;
+
 const Instructors = styled.div`
-    margin-top: 16px;
-    font-size: 17px;
-    padding: ${helpers.rhythmDiv}px;
-    background-color: aliceblue;
+  font-size: 17px;
+  padding: ${helpers.rhythmDiv}px;
+  background-color: aliceblue;
 `;
 
 const ClassTimeDataWrapper = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
+  margin-top: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
   background-color: ${helpers.panelColor};
 `;
 
@@ -85,6 +101,10 @@ const styles = theme => {
     },
     formControl: {
       marginBottom: helpers.rhythmDiv
+    },
+    dialogContent: {
+      padding: 0,
+      paddingBottom: helpers.rhythmDiv * 3
     },
     dialogActionsRoot: {
       [`@media screen and (max-width: ${mobile}px)`]: {
@@ -424,82 +444,85 @@ class ClassTimeForm extends React.Component {
           {this.state.error ? (
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
-              <DialogContent>
+              <DialogContent className={classes.dialogContent}>
                 <DialogContentText>
                   This name helps differentiate different class times in the same
                   class type. Good examples include "Wednesday Night Swim" or
                   "Weekend Open Training."
                 </DialogContentText>
-                <form id={formId}>
-                  <TextField
-                    required={true}
-                    defaultValue={data && data.name}
-                    margin="dense"
-                    inputRef={ref => (this.classTimeName = ref)}
-                    label="Class Time Name"
-                    type="text"
-                    fullWidth
-                    className={classes.textField}
-                  />
-                  <TextField
-                    defaultValue={data && data.desc}
-                    margin="dense"
-                    inputRef={ref => (this.desc = ref)}
-                    label="Brief Description (200 Characters)"
-                    type="text"
-                    fullWidth
-                    multiline
-                    className={classes.textField}
-                    inputProps={{ maxLength: 200 }}
-                  />
-                  <FormControl className={classes.formControl} fullWidth margin="dense">
-                    <InputLabel htmlFor="location">Location</InputLabel>
-                    <Select
-                      required={true}
-                      input={<Input id="location" />}
-                      value={locationId}
-                      onChange={this.handleLocAndRoom.bind(this, 'locationId')}
-                      fullWidth
-                    >
-                      {isEmpty(locationData) && (
-                        <MenuItem value="" disabled>
-                          No location added in Locations.
-                          </MenuItem>
-                      )}
-                      {locationData.map((data, index) => {
-                        return (
-                          <MenuItem key={index} value={data._id}>{`${
-                            data.address
-                            }, ${data.city}, ${data.country}`}</MenuItem>
-                        );
-                      })}
-                    </Select>
-                  </FormControl>
 
-                  <FormControl className={classes.formControl} fullWidth margin="dense">
-                    <InputLabel htmlFor="roomId">Room</InputLabel>
-                    <Select
-                      input={<Input id="roomId" />}
-                      value={roomId}
-                      onChange={this.handleLocAndRoom.bind(this, 'roomId')}
+
+                <form id={formId}>
+                  <FormInputsWrapper>
+                    <TextField
+                      required={true}
+                      defaultValue={data && data.name}
+                      margin="dense"
+                      inputRef={ref => (this.classTimeName = ref)}
+                      label="Class Time Name"
+                      type="text"
                       fullWidth
-                    >
-                      {_.isEmpty(roomData) && (
-                        <MenuItem value="" disabled>
-                          No location added in Locations.
-                      </MenuItem>
-                      )}
-                      {roomData &&
-                        roomData.map((data, index) => {
+                      className={classes.textField}
+                    />
+                    <TextField
+                      defaultValue={data && data.desc}
+                      margin="dense"
+                      inputRef={ref => (this.desc = ref)}
+                      label="Brief Description (200 Characters)"
+                      type="text"
+                      fullWidth
+                      multiline
+                      className={classes.textField}
+                      inputProps={{ maxLength: 200 }}
+                    />
+                    <FormControl className={classes.formControl} fullWidth margin="dense">
+                      <InputLabel htmlFor="location">Location</InputLabel>
+                      <Select
+                        required={true}
+                        input={<Input id="location" />}
+                        value={locationId}
+                        onChange={this.handleLocAndRoom.bind(this, 'locationId')}
+                        fullWidth
+                      >
+                        {isEmpty(locationData) && (
+                          <MenuItem value="" disabled>
+                            No location added in Locations.
+                          </MenuItem>
+                        )}
+                        {locationData.map((data, index) => {
                           return (
-                            <MenuItem key={index} value={data.id}>
-                              {data.name}
-                            </MenuItem>
+                            <MenuItem key={index} value={data._id}>{`${
+                              data.address
+                              }, ${data.city}, ${data.country}`}</MenuItem>
                           );
                         })}
-                    </Select>
-                  </FormControl>
+                      </Select>
+                    </FormControl>
 
+                    <FormControl className={classes.formControl} fullWidth margin="dense">
+                      <InputLabel htmlFor="roomId">Room</InputLabel>
+                      <Select
+                        input={<Input id="roomId" />}
+                        value={roomId}
+                        onChange={this.handleLocAndRoom.bind(this, 'roomId')}
+                        fullWidth
+                      >
+                        {_.isEmpty(roomData) && (
+                          <MenuItem value="" disabled>
+                            No location added in Locations.
+                      </MenuItem>
+                        )}
+                        {roomData &&
+                          roomData.map((data, index) => {
+                            return (
+                              <MenuItem key={index} value={data.id}>
+                                {data.name}
+                              </MenuItem>
+                            );
+                          })}
+                      </Select>
+                    </FormControl>
+                  </FormInputsWrapper>
 
                   <ClassTimeDataWrapper>
                     <ResponsiveTabs
@@ -574,23 +597,27 @@ class ClassTimeForm extends React.Component {
                     )}
                   </ClassTimeDataWrapper>
 
-                  <InstructorList
-                    viewType={"instructorsView"}
-                    searchedValue={this.state.teachersFilterWith}
-                    onSearchChange={this.handleSearchChange("teachersFilterWith")}
-                    data={instructorsData}
-                    entityType={"teachers"}
-                    searchedValue={this.state.teachersFilterWith}
-                    onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
-                    popUp={popUp}
-                    classTimeForm
-                    instructorsIdsSetter={this.instructorsIdsSetter}
-                    addInstructor
-                    text={'Instructor'}
-                  />
+                  <ListWrapper>
+                    <InstructorList
+                      marginBottom={helpers.rhythmDiv * 2}
+                      viewType={"instructorsView"}
+                      searchedValue={this.state.teachersFilterWith}
+                      onSearchChange={this.handleSearchChange("teachersFilterWith")}
+                      data={instructorsData}
+                      entityType={"teachers"}
+                      searchedValue={this.state.teachersFilterWith}
+                      onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
+                      popUp={popUp}
+                      classTimeForm
+                      instructorsIdsSetter={this.instructorsIdsSetter}
+                      addInstructor
+                      text={'Instructor'}
+                    />
+                  </ListWrapper>
+
                   <Instructors>
                     Instructors changes will show here after saving this class time.
-                </Instructors>
+                  </Instructors>
                 </form>
               </DialogContent>
             )}

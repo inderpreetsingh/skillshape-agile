@@ -19,9 +19,9 @@ const styles = theme => {
       background: "#c0c1c0"
     },
     btnActive: {
+      width: helpers.baseFontSize * 9,
       marginBottom: helpers.rhythmDiv,
       marginRight: helpers.rhythmDiv,
-      width: 165,
       color: "#fff"
     },
     muiLabel: {

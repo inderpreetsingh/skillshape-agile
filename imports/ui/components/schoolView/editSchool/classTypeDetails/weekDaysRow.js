@@ -12,38 +12,18 @@ import config from "/imports/config";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-const ButtonWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
+import { AddLinkedTime, AddCTFormWrapper, } from './sharedStyledComponents';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
   flex-wrap: wrap;
-`;
 
-const FormWrapper = styled.div`
-  background: white;
-  max-width: calc(50% - ${helpers.rhythmDiv}px);
-  width: 100%;
-  margin-right: ${helpers.rhythmDiv * 2}px;
-  padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
-
-  :nth-child(2n) {
-    margin-right: 0;
+  @media screen and (max-width: ${helpers.mobile}px) {
+      flex-direction: column;
   }
 `;
-
-const AddLinkedTime = styled.div`
-  ${helpers.flexCenter}  
-  max-width: calc(50% - ${helpers.rhythmDiv * 2}px);
-  flex-grow: 1;
-  align-self: stretch;
-  width: 100%;
-  border: 1px dotted #333;
-
-  :last-child {
-    margin-right: 0;
-  }
+const ButtonWrapper = styled.div`
+  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 export class WeekDaysRow extends React.Component {
@@ -162,7 +142,7 @@ export class WeekDaysRow extends React.Component {
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<FormWrapper>
+          return (<AddCTFormWrapper>
 
             {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
             <FormControl fullWidth margin="dense">
@@ -256,8 +236,6 @@ export class WeekDaysRow extends React.Component {
               </Select>
             </FormControl>
 
-
-
             <ButtonWrapper>
               <FormGhostButton
                 alertColor
@@ -265,7 +243,7 @@ export class WeekDaysRow extends React.Component {
                 label="Delete"
               />
             </ButtonWrapper>
-          </FormWrapper>
+          </AddCTFormWrapper>
           );
         })}
 
