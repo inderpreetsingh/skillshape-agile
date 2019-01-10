@@ -14,7 +14,7 @@ import { DialogActions } from "material-ui/Dialog";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { AddLinkedTime, AddCTFormWrapper, } from './sharedStyledComponents';
+import { LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
 
 
 const Wrapper = styled.div`
@@ -27,6 +27,7 @@ flex-wrap: wrap;
 `;
 
 const ButtonWrapper = styled.div`
+  ${helpers.flexCenter}
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 export class OneTimeRow extends React.Component {
@@ -121,97 +122,112 @@ export class OneTimeRow extends React.Component {
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<AddCTFormWrapper>
-            <MaterialDatePicker
-              required={true}
-              hintText={"Date"}
-              floatingLabelText={"Date *"}
-              value={data ? data.startDate : ""}
-              onChange={this.handleChangeDate.bind(
-                this,
-                index,
-                "startDate"
-              )}
-              fullWidth={true}
-            />
-            <MaterialTimePicker
-              required={true}
-              value={data ? data.startTime : ""}
-              floatingLabelText={"Start Time *"}
-              hintText={"Start Time"}
-              onChange={this.handleChangeDate.bind(
-                this,
-                index,
-                "startTime"
-              )}
-              fullWidth={true}
-            />
+          return (<CTFormWrapper>
+            <CTFormRow>
+              <CTFormControlHW>
+                <MaterialDatePicker
+                  required={true}
+                  hintText={"Date"}
+                  floatingLabelText={"Date *"}
+                  value={data ? data.startDate : ""}
+                  onChange={this.handleChangeDate.bind(
+                    this,
+                    index,
+                    "startDate"
+                  )}
+                  fullWidth={true}
+                />
+              </CTFormControlHW>
+              <CTFormControlHW>
+                <MaterialTimePicker
+                  required={true}
+                  value={data ? data.startTime : ""}
+                  floatingLabelText={"Start Time *"}
+                  hintText={"Start Time"}
+                  onChange={this.handleChangeDate.bind(
+                    this,
+                    index,
+                    "startTime"
+                  )}
+                  fullWidth={true}
+                />
+              </CTFormControlHW>
+            </CTFormRow>
 
-            <TextField
-              required={true}
-              defaultValue={data && data.duration != "" ? data.duration : 60}
-              margin="dense"
-              label="Duration"
-              type="number"
-              onChange={this.handleSelectInputChange.bind(
-                this,
-                index,
-                "duration"
-              )}
-              fullWidth
-              inputProps={{ min: "0" }}
-            />
-            <FormControl
-              fullWidth
-              margin="dense"
-              style={{ padding: "4px" }}
-            >
-              <InputLabel htmlFor="weekDay" shrink={true}>
-                Units
+            <CTFormRow>
+              <CTFormControlHW>
+                <TextField
+                  required={true}
+                  defaultValue={data && data.duration != "" ? data.duration : 60}
+                  margin="dense"
+                  label="Duration"
+                  type="number"
+                  onChange={this.handleSelectInputChange.bind(
+                    this,
+                    index,
+                    "duration"
+                  )}
+                  fullWidth
+                  inputProps={{ min: "0" }}
+                />
+              </CTFormControlHW>
+
+              <CTFormControlHW>
+                <FormControl
+                  fullWidth
+                  margin="dense"
+                  style={{ padding: "4px" }}
+                >
+                  <InputLabel htmlFor="weekDay" shrink={true}>
+                    Units
                       </InputLabel>
-              <Select
-                input={<Input id="duration" />}
-                value={(data && data.timeUnits) || "Minutes"}
-                onChange={this.handleSelectInputChange.bind(
-                  this,
-                  index,
-                  "timeUnits"
-                )}
-                fullWidth
-              >
-                {config.duration.map((data, index) => {
-                  return (
-                    <MenuItem
-                      key={`${index}-${data.value}`}
-                      value={data.value}
-                    >
-                      {data.label}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                  <Select
+                    input={<Input id="duration" />}
+                    value={(data && data.timeUnits) || "Minutes"}
+                    onChange={this.handleSelectInputChange.bind(
+                      this,
+                      index,
+                      "timeUnits"
+                    )}
+                    fullWidth
+                  >
+                    {config.duration.map((data, index) => {
+                      return (
+                        <MenuItem
+                          key={`${index}-${data.value}`}
+                          value={data.value}
+                        >
+                          {data.label}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </CTFormControlHW>
+            </CTFormRow>
 
             <ButtonWrapper>
               <FormGhostButton
+                icon
+                iconName="delete"
                 alertColor
                 onClick={this.removeRow.bind(this, index)}
                 label="Delete"
               />
             </ButtonWrapper>
-          </AddCTFormWrapper>
+          </CTFormWrapper>
 
           );
         })}
 
-        <AddLinkedTime>
+        <LinkedTime>
           <FormGhostButton
             darkGreyColor
             onClick={this.addNewRow}
             label="Add Linked Class Time"
           />
 
-        </AddLinkedTime>
+        </LinkedTime>
 
       </Wrapper>
     );

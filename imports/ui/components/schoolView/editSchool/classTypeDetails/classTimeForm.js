@@ -31,7 +31,7 @@ import ResponsiveTabs from "/imports/util/responsiveTabs";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import config from "/imports/config";
 // import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
-import { WeekDaysRow } from "./weekDaysRow";
+import WeekDaysRow from "./weekDaysRow";
 import { MenuItem } from "material-ui/Menu";
 import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";

@@ -1,32 +1,67 @@
 import React from "react";
+import styled from "styled-components";
+import { withStyles } from 'material-ui/styles';
 import Grid from "material-ui/Grid";
-import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import Select from "material-ui/Select";
 import MultiSelect from "react-select";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
+import IconButton from "material-ui/IconButton";
+import Icon from "material-ui/Icon";
 import Typography from "material-ui/Typography";
+
+
 import config from "/imports/config";
-import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { AddLinkedTime, AddCTFormWrapper, } from './sharedStyledComponents';
+import { LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
-  flex-wrap: wrap;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-      flex-direction: column;
-  }
+  flex-direction: column;
 `;
-const ButtonWrapper = styled.div`
+
+const IconButtonWrapper = styled.div`
+  position: absolute;
+  top: 4px;
+  right: 4px;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-export class WeekDaysRow extends React.Component {
+const OnGoingCTFormWrapper = CTFormWrapper.extend`
+  padding: ${helpers.rhythmDiv * 2}px;
+  padding-right: ${helpers.rhythmDiv * 4}px;
+  max-width: 100%;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  margin-right: 0;
+`;
+
+const OnGoingLinkedTime = LinkedTime.extend`
+  max-width: 100%;
+  height: 100px;
+`;
+
+const styles = {
+  textField: {
+    marginRight: helpers.rhythmDiv,
+  },
+  iconButton: {
+    background: "white",
+    fontSize: helpers.baseFontSize,
+    height: 'auto',
+    width: 'auto',
+    borderRadius: '50%',
+  },
+  icon: {
+    color: helpers.alertColor
+  }
+}
+
+
+class WeekDaysRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeFields();
@@ -138,17 +173,17 @@ export class WeekDaysRow extends React.Component {
     this.setState({ row: oldRow });
   }
   render() {
+    const { classes } = this.props;
     const { row, Weekdays } = this.state;
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<AddCTFormWrapper>
-
+          return (<OnGoingCTFormWrapper>
             {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
-            <FormControl fullWidth margin="dense">
+            <FormControl fullWidth className={classes.textField}>
               <InputLabel htmlFor="weekDay" shrink={true}>
                 WeekDay
-                  </InputLabel>
+              </InputLabel>
 
               {/* <Select
                     input={<Input id="weekDay" />}
@@ -179,83 +214,95 @@ export class WeekDaysRow extends React.Component {
               />
             </FormControl>
 
-            <MaterialTimePicker
-              required={true}
-              value={data && data.startTime}
-              floatingLabelText={"Start Time *"}
-              hintText={"Start Time"}
-              onChange={this.handleChangeDate.bind(
-                this,
-                index,
-                "startTime"
-              )}
-              fullWidth={true}
-            />
+            <CTFormRow>
+              <CTFormControlHW>
+                <MaterialTimePicker
+                  required={true}
+                  value={data && data.startTime}
+                  floatingLabelText={"Start Time *"}
+                  hintText={"Start Time"}
+                  className={classes.textField}
+                  onChange={this.handleChangeDate.bind(
+                    this,
+                    index,
+                    "startTime"
+                  )}
+                  fullWidth={true}
+                />
+              </CTFormControlHW>
 
-            <TextField
-              defaultValue={data && data.duration || 60}
-              margin="dense"
-              onChange={this.handleSelectInputChange.bind(
-                this,
-                index,
-                "duration"
-              )}
-              label="Duration"
-              type="number"
-              fullWidth
-              required={
-                data && data.key && data.key != '' ? true : false
-              } /*Made it mandatory if week day selected*/
-              inputProps={{ min: "0" }}
-            />
+              <CTFormControlHW>
+                <TextField
+                  className={classes.textField}
+                  defaultValue={data && data.duration || 60}
+                  onChange={this.handleSelectInputChange.bind(
+                    this,
+                    index,
+                    "duration"
+                  )}
+                  label="Duration"
+                  type="number"
+                  fullWidth
+                  required={
+                    data && data.key && data.key != '' ? true : false
+                  } /*Made it mandatory if week day selected*/
+                  inputProps={{ min: "0" }}
+                />
 
-            <FormControl fullWidth margin="dense">
-              <InputLabel htmlFor="weekDay" shrink={true}>
-                Units
-                      </InputLabel>
-              <Select
-                input={<Input id="duration" />}
-                value={(data && data.timeUnits) || "Minutes"}
-                onChange={this.handleSelectInputChange.bind(
-                  this,
-                  index,
-                  "timeUnits"
-                )}
-                fullWidth
-              >
-                {config.duration.map((data, index) => {
-                  return (
-                    <MenuItem
-                      key={`${index}-${data.value}`}
-                      value={data.value}
-                    >
-                      {data.label}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="weekDay" shrink={true}>
+                    Units
+                  </InputLabel>
+                  <Select
+                    input={<Input id="duration" />}
+                    value={(data && data.timeUnits) || "Minutes"}
+                    onChange={this.handleSelectInputChange.bind(
+                      this,
+                      index,
+                      "timeUnits"
+                    )}
+                    fullWidth
+                  >
+                    {config.duration.map((data, index) => {
+                      return (
+                        <MenuItem
+                          key={`${index} -${data.value} `}
+                          value={data.value}
+                        >
+                          {data.label}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
 
-            <ButtonWrapper>
-              <FormGhostButton
-                alertColor
+              </CTFormControlHW>
+            </CTFormRow>
+
+            <IconButtonWrapper>
+              <IconButton
+                className={classes.iconButton}
                 onClick={this.removeRow.bind(this, index)}
-                label="Delete"
-              />
-            </ButtonWrapper>
-          </AddCTFormWrapper>
+              >
+                <Icon className={classes.icon}>delete</Icon>
+              </IconButton>
+            </IconButtonWrapper>
+
+          </OnGoingCTFormWrapper>
           );
         })}
 
-        <AddLinkedTime>
+        <OnGoingLinkedTime>
           <FormGhostButton
             darkGreyColor
             onClick={this.addNewRow}
             label="Add Linked Class Time"
           />
 
-        </AddLinkedTime>
+        </OnGoingLinkedTime>
       </Wrapper>
     );
   }
 }
+
+export default withStyles(styles)(WeekDaysRow);
