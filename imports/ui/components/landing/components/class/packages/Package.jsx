@@ -1,34 +1,21 @@
-import React, { Fragment } from 'react';
-import styled from 'styled-components';
-import ReactHtmlParser from 'react-html-parser';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
-
-import {
-	EditButton,
-	SecondaryButton,
-	FormGhostButton
-} from '/imports/ui/components/landing/components/buttons/';
-
-import {
-	formatMoney,
-	maximumClasses,
-	capitalizeString,
-	calcRenewalDate,
-	calcContractEnd,
-	formatDate
-} from '/imports/util';
-
+import React, { Fragment } from 'react';
+import ReactHtmlParser from 'react-html-parser';
+import styled from 'styled-components';
+import { EditButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
+import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import Cart from '/imports/ui/components/landing/components/icons/Cart.jsx';
-import {
-	SubscriptionsDetailsDialogBox
-} from '/imports/ui/components/landing/components/dialogs/';
-
-import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
-
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
+import { calcRenewalDate, capitalizeString, formatDate, formatMoney, maximumClasses } from '/imports/util';
+
+
+
+
+
 
 const ADMIN_SUBSCRIPTIONS = 'adminSubscriptions';
 const MY_SUBSCRIPTIONS = 'mySubscriptions';

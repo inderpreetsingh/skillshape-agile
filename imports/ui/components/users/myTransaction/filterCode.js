@@ -11,7 +11,10 @@ const customStyle = {
     marginBottom: '10px',
 }
 export const filterForTransaction = function () {
-    const { selectedPackageType, packageTypeOptions, selectedPackageStatus, packageStatusOptions,packageName ,selectedPaymentMethod,paymentMethodsOptions} = this.state;
+    const { selectedPackageType, packageTypeOptions,
+         selectedPackageStatus, packageStatusOptions,
+         packageName ,selectedPaymentMethod,
+         paymentMethodsOptions} = this.state;
     const {classes} = this.props;
     return (
         <Wrapper>
