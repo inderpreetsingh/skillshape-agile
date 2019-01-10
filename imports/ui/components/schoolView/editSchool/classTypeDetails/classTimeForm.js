@@ -19,6 +19,7 @@ import Select from "material-ui/Select";
 import Checkbox from "material-ui/Checkbox";
 import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
+import { MenuItem } from "material-ui/Menu";
 import Dialog, {
   DialogTitle,
   DialogContent,
@@ -32,8 +33,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import config from "/imports/config";
 // import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
 import WeekDaysRow from "./weekDaysRow";
-import { MenuItem } from "material-ui/Menu";
-import { OneTimeRow } from "./oneTimeRow";
+import OneTimeRow from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
 
 import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
@@ -223,6 +223,12 @@ class ClassTimeForm extends React.Component {
   };
 
   handleLocAndRoom = (key, event) => {
+
+    if (event.target.value === 'add_new_location') {
+      this.handleAddNewLocation();
+      return;
+    }
+
     if (key == 'roomId') {
       this.setState({ roomId: event.target.value });
     } else {
@@ -323,6 +329,10 @@ class ClassTimeForm extends React.Component {
       });
     }
   };
+
+  handleAddNewLocation = () => {
+    this.setState({ showLocationForm: true })
+  }
 
   onSubmit = ({ methodName, doc, doc_id, value }) => {
 
@@ -484,11 +494,11 @@ class ClassTimeForm extends React.Component {
                         onChange={this.handleLocAndRoom.bind(this, 'locationId')}
                         fullWidth
                       >
-                        {isEmpty(locationData) && (
+                        {/*isEmpty(locationData) && (
                           <MenuItem value="" disabled>
                             No location added in Locations.
                           </MenuItem>
-                        )}
+                        )*/}
                         {locationData.map((data, index) => {
                           return (
                             <MenuItem key={index} value={data._id}>{`${
@@ -496,6 +506,9 @@ class ClassTimeForm extends React.Component {
                               }, ${data.city}, ${data.country}`}</MenuItem>
                           );
                         })}
+                        <MenuItem key={'add_location'} value={"add_new_location"}>
+                          + Add New Location
+                        </MenuItem>
                       </Select>
                     </FormControl>
 
@@ -641,13 +654,13 @@ class ClassTimeForm extends React.Component {
                 className={classes.cancel}
               />
             </ButtonWrapper>
-            <ButtonWrapper>
+            {/*<ButtonWrapper>
               <FormGhostButton
                 onClick={() => { this.setState({ showLocationForm: true }) }}
                 label="Add New Location"
                 className={classes.cancel}
               />
-            </ButtonWrapper>
+            </ButtonWrapper>*/}
             <ButtonWrapper>
               <FormGhostButton
                 type="submit"

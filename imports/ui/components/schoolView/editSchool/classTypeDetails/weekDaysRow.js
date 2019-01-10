@@ -45,8 +45,14 @@ const OnGoingLinkedTime = LinkedTime.extend`
 `;
 
 const styles = {
-  textField: {
+  formField: {
     marginRight: helpers.rhythmDiv,
+  },
+  formFieldSmReset: {
+    marginRight: helpers.rhythmDiv,
+    [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+      marginRight: 0
+    }
   },
   iconButton: {
     background: "white",
@@ -180,7 +186,7 @@ class WeekDaysRow extends React.Component {
         {row.map((data, index) => {
           return (<OnGoingCTFormWrapper>
             {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
-            <FormControl fullWidth className={classes.textField}>
+            <FormControl fullWidth className={classes.formFieldSmReset}>
               <InputLabel htmlFor="weekDay" shrink={true}>
                 WeekDay
               </InputLabel>
@@ -221,7 +227,7 @@ class WeekDaysRow extends React.Component {
                   value={data && data.startTime}
                   floatingLabelText={"Start Time *"}
                   hintText={"Start Time"}
-                  className={classes.textField}
+                  className={classes.formFieldSmReset}
                   onChange={this.handleChangeDate.bind(
                     this,
                     index,
@@ -233,7 +239,7 @@ class WeekDaysRow extends React.Component {
 
               <CTFormControlHW>
                 <TextField
-                  className={classes.textField}
+                  className={classes.formField}
                   defaultValue={data && data.duration || 60}
                   onChange={this.handleSelectInputChange.bind(
                     this,

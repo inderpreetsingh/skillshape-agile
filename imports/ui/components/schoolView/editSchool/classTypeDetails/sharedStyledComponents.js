@@ -14,6 +14,10 @@ export const CTFormControlHW = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   max-width: calc(50% - ${helpers.rhythmDiv}px);
   width: 100%;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: 100%;
+  }
 `;
 
 

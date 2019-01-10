@@ -1,7 +1,8 @@
 import React from "react";
+import styled from "styled-components";
+import { withStyles } from 'material-ui/styles';
+
 import Grid from "material-ui/Grid";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
-import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import Select from "material-ui/Select";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
@@ -9,28 +10,68 @@ import Button from "material-ui/Button";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
-import config from "/imports/config";
 import { DialogActions } from "material-ui/Dialog";
-import styled from "styled-components";
+
+import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
+import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import config from "/imports/config";
 import { LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
 
 
 const Wrapper = styled.div`
-${helpers.flexCenter}
-flex-wrap: wrap;
+  ${helpers.flexCenter}
+  flex-wrap: wrap;
 
-@media screen and (max-width: ${helpers.mobile}px) {
-  flex-direction: column;
-}
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
+`;
+
+const SSFormRow = CTFormRow.extend`
+  @media screen and (max-width: ${helpers.mobie}px) {
+    flex-direction: column;
+  }
+`;
+
+const SSFormControlHW = CTFormControlHW.extend`
+  margin-right: ${helpers.rhythmDiv}px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-right: 0;
+  }
+`;
+
+const TimePickerWrapper = SSFormControlHW.extend`
+  margin-top: 4px;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-top: 0;
+  }
 `;
 
 const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
-  margin-bottom: ${helpers.rhythmDiv}px;
+  margin: ${helpers.rhythmDiv}px 0;
 `;
-export class OneTimeRow extends React.Component {
+
+const styles = {
+  textField: {
+    marginRight: helpers.rhythmDiv
+  },
+  pickerFiledNoMrg: {
+    margin: 0,
+    marginBottom: helpers.rhythmDiv,
+  },
+  pickerField: {
+    margin: 0,
+    marginBottom: helpers.rhythmDiv,
+    marginRight: helpers.rhythmDiv
+  }
+}
+
+class OneTimeRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeFields();
@@ -119,13 +160,15 @@ export class OneTimeRow extends React.Component {
   }
   render() {
     const { row } = this.state;
+    const { classes } = this.props;
     return (
       <Wrapper>
         {row.map((data, index) => {
           return (<CTFormWrapper>
-            <CTFormRow>
-              <CTFormControlHW>
+            <SSFormRow>
+              <SSFormControlHW>
                 <MaterialDatePicker
+                  className={classes.pickerField}
                   required={true}
                   hintText={"Date"}
                   floatingLabelText={"Date *"}
@@ -137,9 +180,11 @@ export class OneTimeRow extends React.Component {
                   )}
                   fullWidth={true}
                 />
-              </CTFormControlHW>
-              <CTFormControlHW>
+              </SSFormControlHW>
+
+              <TimePickerWrapper>
                 <MaterialTimePicker
+                  className={classes.pickerFiledNoMrg}
                   required={true}
                   value={data ? data.startTime : ""}
                   floatingLabelText={"Start Time *"}
@@ -151,15 +196,14 @@ export class OneTimeRow extends React.Component {
                   )}
                   fullWidth={true}
                 />
-              </CTFormControlHW>
-            </CTFormRow>
+              </TimePickerWrapper>
+            </SSFormRow>
 
-            <CTFormRow>
-              <CTFormControlHW>
+            <SSFormRow>
+              <SSFormControlHW>
                 <TextField
                   required={true}
                   defaultValue={data && data.duration != "" ? data.duration : 60}
-                  margin="dense"
                   label="Duration"
                   type="number"
                   onChange={this.handleSelectInputChange.bind(
@@ -170,17 +214,16 @@ export class OneTimeRow extends React.Component {
                   fullWidth
                   inputProps={{ min: "0" }}
                 />
-              </CTFormControlHW>
+              </SSFormControlHW>
 
-              <CTFormControlHW>
+              <SSFormControlHW>
                 <FormControl
                   fullWidth
-                  margin="dense"
-                  style={{ padding: "4px" }}
+
                 >
                   <InputLabel htmlFor="weekDay" shrink={true}>
                     Units
-                      </InputLabel>
+                  </InputLabel>
                   <Select
                     input={<Input id="duration" />}
                     value={(data && data.timeUnits) || "Minutes"}
@@ -203,8 +246,8 @@ export class OneTimeRow extends React.Component {
                     })}
                   </Select>
                 </FormControl>
-              </CTFormControlHW>
-            </CTFormRow>
+              </SSFormControlHW>
+            </SSFormRow>
 
             <ButtonWrapper>
               <FormGhostButton
@@ -216,7 +259,6 @@ export class OneTimeRow extends React.Component {
               />
             </ButtonWrapper>
           </CTFormWrapper>
-
           );
         })}
 
@@ -226,10 +268,11 @@ export class OneTimeRow extends React.Component {
             onClick={this.addNewRow}
             label="Add Linked Class Time"
           />
-
         </LinkedTime>
 
       </Wrapper>
     );
   }
 }
+
+export default withStyles(styles)(OneTimeRow);
