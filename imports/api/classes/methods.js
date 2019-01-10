@@ -55,10 +55,11 @@ Meteor.methods({
             filter = {};
             let obj = {userId:filter.userId ? filter.userId :this.userId,status,purchaseId,packageType};
             if(status=='checkIn' || status=='checkOut'){
-                Meteor.call("attendance.updateData",filter,(err,res)=>{
-
-                })
+               let methodName = status == 'checkIn' ? "attendance.updateData" : 'attendance.removeData';
+                Meteor.call(methodName,filter);
+                status  = status == 'checkOut' ? 'signIn' : status;
             }
+         
             // Add or remove record in the add to calendar collection.
             let addToCalendarCondition = "classTimeId" in  filter && 'classTypeId' in filter && 'schoolId' in filter;
             if(addToCalendarCondition && status == 'signIn' || status == "signOut"){

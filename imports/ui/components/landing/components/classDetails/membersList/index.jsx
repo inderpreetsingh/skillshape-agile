@@ -325,6 +325,20 @@ studentsListMaker = (studentsData,classData,purchaseData) =>{
 })
 return studentsData;
 }
+getStatusInfo = status => {
+  if (status == 'signIn') {
+    return 'Signed In';
+  } else if (status == 'signOut') {
+    return 'Singed Out';
+  }
+  else if (status == 'checkIn') {
+    return 'Checked In';
+  }
+  else if (status == 'checkout'){
+    return 'Checked Out';
+  }
+};
+
 updateStatus = (n, props) => {
 	let { status, popUp ,purchaseId} = props;
   let inc=0,packageType;
@@ -336,7 +350,7 @@ updateStatus = (n, props) => {
     }
     else if (status == 'checkIn'){
       inc = 1;
-      status = 'signIn';
+      status = 'checkOut';
     } 
   }
   else {
@@ -357,12 +371,13 @@ updateStatus = (n, props) => {
       packageType = obj.packageType;
     }
   })
-  Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
   Meteor.call("classes.updateClassData", filter, status, (err, res) => {
     if (res) {
+      Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
+      this.setState({})
       popUp.appear("success", {
         title: `Successfully`,
-        content: `${status} Performed Successfully.`,
+        content: `${this.getStatusInfo(status)} Performed Successfully.`,
         RenderActions: (<ButtonWrapper>
           <FormGhostButton
             label={'Ok'}
