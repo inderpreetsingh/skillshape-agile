@@ -116,6 +116,7 @@ const ClassDetails = props => {
               schoolId={school._id}
               popUp={props.popUp}
               params={{ slug: school.slug }}
+              classData={classData && classData[0]}
             />
           </ClassTimeWrapper>
           {/* <TimeLine {...dataProps.eventData} /> */}

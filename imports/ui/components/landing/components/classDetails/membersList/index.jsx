@@ -340,7 +340,8 @@ getStatusInfo = status => {
 };
 
 updateStatus = (n, props) => {
-	let { status, popUp ,purchaseId} = props;
+  let { status, popUp ,purchaseId,classData} = props;
+  let {scheduled_date} = classData && classData[0] || {};
   let inc=0,packageType;
  
   if (n == 1) {
@@ -358,6 +359,18 @@ updateStatus = (n, props) => {
       inc = 1;
       status = 'signOut';
     } 
+  }
+  if(status == 'checkIn' && scheduled_date >= new Date()){
+    let data = {};
+        data = {
+          popUp,
+          title:'Oops',
+          type:'alert',
+          content:<div>You can't control future classes.</div>,
+          buttons:[{label:'Ok',onClick:()=>{},greyColor:true}]
+        }
+        confirmationDialog(data);
+        return;
   }
   if(!purchaseId){
     this.handleSignIn(null,props._id,status);
