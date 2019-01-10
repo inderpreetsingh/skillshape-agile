@@ -334,7 +334,7 @@ getStatusInfo = status => {
   else if (status == 'checkIn') {
     return 'Checked In';
   }
-  else if (status == 'checkout'){
+  else if (status == 'checkOut'){
     return 'Checked Out';
   }
 };

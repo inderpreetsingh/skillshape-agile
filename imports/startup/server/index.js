@@ -34,7 +34,7 @@ import '/imports/api/urlToBase64/methods';
 import '/imports/api/classSubscription/methods';
 import "/imports/api/classes/methods";
 import "/imports/api/attendance/methods";
-
+import '/imports/api/transactions/methods.js';
 // All publication imported over here
 import '/imports/api/packages/server/publication';
 import "/imports/api/modules/server/publication";
