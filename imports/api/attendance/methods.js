@@ -16,5 +16,9 @@ Meteor.methods({
             obj.classTypeName = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1}}).name;
         })
         return attendanceData;
+    },
+    'attendance.removeData':function(filter){
+        let {_id:classId,userId} = filter;
+        Attendance.remove({userId,classId});
     }
 })

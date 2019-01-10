@@ -202,8 +202,9 @@ class ClassTimeInformation extends Component {
       schoolName,
       schoolCoverSrc,
       title, desc, locationData, eventStartTime,
-      website, start, schoolId, classType, params
+      website, start, schoolId, classType, params, classData
     } = this.props;
+    const {scheduled_date} = classData || {}
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
       return `${get(locationData, 'city', '')}, ${get(locationData, 'state', '')}, ${get(locationData, 'country', '')}, ${get(locationData, 'zip', '')}`
@@ -246,7 +247,7 @@ class ClassTimeInformation extends Component {
           website={website}
           time={this.getTime()}
           timePeriod={this.getTimePeriod()}
-          startDate={start}
+          startDate={scheduled_date}
           address={locationName()}
           locationData={{ lat: get(locationData, 'loc[1]', ''), lng: get(locationData, "loc[0]", '') }}
         />

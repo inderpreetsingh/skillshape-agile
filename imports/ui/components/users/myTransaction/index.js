@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { isEmpty, get } from "lodash";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString ,cutString} from "/imports/util";
+import { dateFriendly, capitalizeString, cutString } from "/imports/util";
 import { FncTableCell, FncTableRow } from './styles';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { filterForTransaction } from './filterCode';
@@ -15,6 +15,7 @@ import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Stripe', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Credit Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
+const transactionType  = [{label:'Transaction Type All',value: 0},{label:'Purchase',value:'purchase'},{label:'Attendance',value:'attendance'}]
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
@@ -31,16 +32,18 @@ class MyTransaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      purchaseData: [],
+      transactionData: [],
       perPage: 3,
       pageCount: 1,
       packageName: '',
       selectedPackageType: null,
       selectedPackageStatus: null,
       selectedPaymentMethod: null,
+      selectedTransactionType: null,
       paymentMethodsOptions: paymentMethods,
       packageStatusOptions: packageStatus,
       packageTypeOptions: packageTypes,
+      transactionTypeOptions: transactionType,
       filter: {
         userId: get(this.props.params, 'id', Meteor.userId())
       },
@@ -53,16 +56,16 @@ class MyTransaction extends React.Component {
   componentWillMount() {
     this.getPurchaseData();
   }
-  // get purchase data from db on page load and page number click.
+  // get transaction data from db on page load and page number click.
   getPurchaseData = () => {
     this.setState({ isLoading: true }, () => {
       let { filter } = this.state;
       let { limit, skip } = this.state;
       let limitAndSkip = { limit, skip };
-      Meteor.call('purchases.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
+      Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
         let state = {};
         if (res) {
-          state = { pageCount: Math.ceil(res.count / 3), purchaseData: res.records }
+          state = { pageCount: Math.ceil(res.count / 3), transactionData: res.records }
           state.isLoading = false;
           this.setState(state);
         }
@@ -72,15 +75,15 @@ class MyTransaction extends React.Component {
   changePageClick = (skip) => {
     this.setState({ skip: skip.skip, isLoading: true }, () => { this.getPurchaseData(); });
   }
-  getColumnValue = (data, fieldName,secondFieldName=null) => {
-    let result = get(data, fieldName, get(data,secondFieldName,null));
+  getColumnValue = (data, fieldName, secondFieldName = null) => {
+    let result = get(data, fieldName, get(data, secondFieldName, null));
     if (typeof result == "string") {
       return capitalizeString(result)
     }
     return result;
   }
-  packageType = (purchase) => {
-    let pt = get(purchase, 'packageType', 'Unavailable');
+  packageType = (transaction) => {
+    let pt = get(transaction, 'packageType', 'Unavailable');
     pt == 'MP' ? pt = 'Monthly Package' : pt == 'CP' ? pt = 'Per Class' : pt == 'EP' ? pt = 'Enrollment Package' : pt = 'Unavailable';
     return capitalizeString(pt);
   }
@@ -108,27 +111,27 @@ class MyTransaction extends React.Component {
       };
     }, () => { this.getPurchaseData(); });
   };
-  amountGenerator = (purchase) => {
-    let currency = get(purchase, 'currency', '$');
-    let amount = get(purchase, 'amount', 0);
+  amountGenerator = (transaction) => {
+    let currency = get(transaction, 'currency', '$');
+    let amount = get(transaction, 'amount', 0);
     config.currency.map((obj) => {
       if (obj.label == currency)
         currency = obj.value;
     })
     return `${currency + amount}`;
   }
-  classesCovered = (purchase) => {
-    let covers = get(purchase, 'covers', []);
+  classesCovered = (transaction) => {
+    let covers = get(transaction, 'covers', []);
     covers = covers.join(', ');
     return covers;
   }
   render() {
-    const { purchaseData, isLoading ,selectedFilter} = this.state;
-    let columnData = getTableProps() 
+    const { transactionData, isLoading, selectedFilter } = this.state;
+    let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
     const { classes } = this.props;
     let columnValues = tableHeaderColumns;
-    let TableName = TransactionDetailsTable 
+    let TableName = TransactionDetailsTable
     return (
       <div>
         {isLoading && <ContainerLoader />}
@@ -140,44 +143,34 @@ class MyTransaction extends React.Component {
           {filterForTransaction.call(this)}
         </Paper>
         <TableName>
-          {isEmpty(purchaseData)
+          {isEmpty(transactionData)
             ? "No payout found"
-            :  purchaseData.reverse().map((purchase, index) => {
-              let transactionType = get(purchase, 'packageStatus', '') == 'expired' ? 'Expiration' : get(purchase,'classTypeName','')  ? 'Attendance' : 'Purchase';
+            : transactionData.reverse().map((transaction, index) => {
+              let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
               return (
                 <Fragment>
                   <FncTableRow key={index} selectable={false}>
                     <FncTableCell data-th={columnValues[0].columnName}>
-                      {this.getColumnValue(purchase, 'userName') || "..."}
+                      {this.getColumnValue(transaction, 'userName') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[1].columnName}>
-                      {dateFriendly(this.getColumnValue(purchase, 'startDate','attendedTime'), "MMMM Do YYYY, h:mm:ss a")}
+                      {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm:ss a")}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[2].columnName}>
-                      {transactionType}
+                      {this.getColumnValue(transaction, 'transactionType')}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[3].columnName}>
-                      {this.getColumnValue(purchase, 'paymentMethod') || "..."}
+                      {this.getColumnValue(transaction, 'paymentMethod') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[4].columnName}>
-                      {this.amountGenerator(purchase)}
+                      {this.amountGenerator(transaction)}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[5].columnName}>
-                      {this.getColumnValue(purchase, 'schoolName.name') || "..."}
+                      {this.getColumnValue(transaction, 'schoolName') || "..."}
                     </FncTableCell>
-                    <Tooltip
-                      animation="zoom"
-                      placement="top"
-                      trigger={['click']}
-                      overlay={
-                        <span>{this.classesCovered(purchase)}</span>
-                      }
-                      overlayStyle={{ zIndex: 9999 }}>
-
-                      <FncTableCell data-th={columnValues[6].columnName}>
-                        {this.getColumnValue(purchase,'classTypeName') || cutString(this.classesCovered(purchase),10)}
+                    <FncTableCell data-th={columnValues[6].columnName}>
+                      {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
-                    </Tooltip>
                     <Tooltip
                       animation="zoom"
                       placement="top"
@@ -185,7 +178,7 @@ class MyTransaction extends React.Component {
                       destroyTooltipOnHide
                       overlay={
                         <SubscriptionsDetailsDialogBox
-                          {...purchase}
+                          {...transaction}
                           open={true}
                           onModalClose={() => { }}
 
@@ -193,11 +186,11 @@ class MyTransaction extends React.Component {
                       }
                       overlayStyle={{ zIndex: -9999 }}>
                       <FncTableCell data-th={columnValues[7].columnName}>
-                        {this.getColumnValue(purchase, 'packageName') || "..."}
+                        {this.getColumnValue(transaction, 'packageName') || "..."}
                       </FncTableCell>
                     </Tooltip>
                     <FncTableCell data-th={columnValues[8].columnName}>
-                      {this.packageType(purchase)}
+                      {this.packageType(transaction)}
                     </FncTableCell>
                   </FncTableRow>
 

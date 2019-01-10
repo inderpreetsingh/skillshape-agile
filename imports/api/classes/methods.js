@@ -1,6 +1,7 @@
 import Classes from './fields';
 import {get,isEmpty,uniq,includes,flatten} from 'lodash';
-
+import School from "../school/fields";
+import ClassType from "/imports/api/classType/fields.js"
 Meteor.methods({
     "classes.handleInstructors":function(payLoad){
         if(payLoad && payLoad.students && !isEmpty(payLoad.students)){
@@ -49,16 +50,41 @@ Meteor.methods({
         try{
             if(from == 'purchasePackage'){
              filter.students = get(Classes.findOne({_id:filter._id}),"students",[]);
-
             }
             if(filter == null)
             filter = {};
             let obj = {userId:filter.userId ? filter.userId :this.userId,status,purchaseId,packageType};
             if(status=='checkIn' || status=='checkOut'){
-                Meteor.call("attendance.updateData",filter,(err,res)=>{
-
+               let methodName = status == 'checkIn' ? "attendance.updateData" : 'attendance.removeData';
+               // Entry in the transaction page.
+               const {userId,schoolId,classId,classTypeId} = filter;
+               !purchaseId && filter.students.map((obj)=>{
+                   if(obj.userId == filter.userId)
+                   purchaseId = obj.purchaseId;
                 })
+                if(purchaseId){
+                   let data = {userId,schoolId,classId,purchaseId};
+                   let profile = Meteor.users.findOne({_id:userId},{fields:{'profile':1}}).profile;
+                   data.userName = get(profile,'name',get(profile,'firstName',get(profile,'lastName','Old Data'))); 
+                   let purchaseData = Meteor.call('purchases.getPackagesFromPurchaseIds',[purchaseId]);
+                   let {packageType,packageName,amount,currency,packageStatus,paymentMethod} = purchaseData[0] || {};
+                   data.packageType = packageType;
+                   data.packageStatus = packageStatus;
+                   data.packageType = packageType;
+                   data.amount = amount;
+                   data.currency = currency;
+                   data.packageName = packageName;
+                   data.paymentMethod = paymentMethod;
+                   data.schoolName = School.findOne({_id:schoolId},{fields:{'name':1}}).name;
+                   data.transactionType = 'attendance';
+                   data.transactionDate = new Date();
+                   data.classTypeName = ClassType.findOne({_id:classTypeId},{fields:{"name":1}}).name;
+                   data.action = 'add';
+                   Meteor.call("transactions.handleEntry",data);
+               }
+                status  = status == 'checkOut' ? 'signIn' : status;
             }
+         
             // Add or remove record in the add to calendar collection.
             let addToCalendarCondition = "classTimeId" in  filter && 'classTypeId' in filter && 'schoolId' in filter;
             if(addToCalendarCondition && status == 'signIn' || status == "signOut"){

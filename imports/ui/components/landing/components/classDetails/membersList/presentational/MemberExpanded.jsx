@@ -186,8 +186,8 @@ const getStatusInfo = status => {
   else if (status == 'checkIn') {
     return 'Checked In';
   }
-  else {
-    return 'Checked Out';
+  else if (status == 'checkout'){
+    return 'Check In';
   }
 };
 

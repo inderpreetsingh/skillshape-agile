@@ -14,7 +14,7 @@ export const filterForTransaction = function () {
     const { selectedPackageType, packageTypeOptions,
          selectedPackageStatus, packageStatusOptions,
          packageName ,selectedPaymentMethod,
-         paymentMethodsOptions} = this.state;
+         paymentMethodsOptions,selectedTransactionType,transactionTypeOptions} = this.state;
     const {classes} = this.props;
     return (
         <Wrapper>
@@ -30,6 +30,18 @@ export const filterForTransaction = function () {
                     onChange={(e)=>{this.handleFilter(e, 'packageName', 'packageName')}}
                   />
                   </Grid>
+                  <Grid item xs={6} sm={3}>
+                        <ReactSelect
+                            name="filters"
+                            style={customStyle}
+                            placeholder={<b>Transaction Type</b>}
+                            value={selectedTransactionType}
+                            options={transactionTypeOptions}
+                            onChange={(data) => { this.handleFilter(data, 'transactionType', 'selectedTransactionType') }}
+                            closeMenuOnSelect={false}
+                            clearable={false}
+                        />
+                    </Grid>
                     <Grid item xs={6} sm={3}>
                         <ReactSelect
                             name="filters"

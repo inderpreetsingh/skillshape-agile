@@ -7,8 +7,22 @@ import {get,compact,uniq,concat,flatten} from 'lodash';
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({
   "purchases.addPurchase": function (payload) {
-    check(payload, Object);
-    return Purchases.insert(payload);
+    try{
+      check(payload, Object);
+      let data = {...payload};
+      payload.action = 'add';
+      payload.transactionDate = new Date();
+      payload.schoolName = School.findOne({_id:payload.schoolId},{fields:{'name':1}}).name;
+      payload.transactionType = 'purchase';
+      let purchaseId = Purchases.insert(data);
+      payload.purchaseId = purchaseId;
+      Meteor.call('transactions.handleEntry',payload);
+      return purchaseId;
+    }catch(error){
+			console.log("​purchases.addPurchase error", error)
+      
+    }
+   
   },
   "purchases.getAllPurchaseData": function (slug, filters) {
     check(slug, String);
