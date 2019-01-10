@@ -62,7 +62,7 @@ export default (props) => {
             <Header {...headerProps} onCreateNewSchoolClick={onCreateNewSchoolClick} />
             <BodyWrapper>
                 <SchoolsList schools={bodyProps.schools} />
-                <AddSchool><MyLink onClick={onCreateNewSchoolClick}>click here</MyLink> to add a new school.</AddSchool>
+                {/*<AddSchool><MyLink onClick={onCreateNewSchoolClick}>click here</MyLink> to add a new school.</AddSchool>*/}
             </BodyWrapper>
             <Footer />
         </DashBoardContent>
