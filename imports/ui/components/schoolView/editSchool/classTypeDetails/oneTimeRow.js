@@ -1,23 +1,50 @@
 import React from "react";
+import styled from "styled-components";
+import { withStyles } from 'material-ui/styles';
+
 import Grid from "material-ui/Grid";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
-import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import Select from "material-ui/Select";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
+import IconButton from "material-ui/IconButton";
+import Icon from "material-ui/Icon";
+
 import Button from "material-ui/Button";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
-import config from "/imports/config";
 import { DialogActions } from "material-ui/Dialog";
-import styled from "styled-components";
+
+import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
+import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-const ButtonWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
+import config from "/imports/config";
+import { styles, LinkedTime, CTIconButtonWrapper, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+
+
+const Wrapper = styled.div`
+  ${helpers.flexCenter}
+  flex-wrap: wrap;
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    flex-direction: column;
+  }
 `;
-export class OneTimeRow extends React.Component {
+
+const SSFormTimePickerControl = CTFormControlHW.extend`
+  margin-top: 4px;
+  
+  @media screen and (max-width: ${helpers.mobile}px) {
+    margin-top: 0;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  margin-left: ${helpers.rhythmDiv}px;
+`;
+
+class OneTimeRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeFields();
@@ -45,9 +72,9 @@ export class OneTimeRow extends React.Component {
     }
     return state;
   };
- 
+
   addNewRow = () => {
-    const {locationData,data,roomData} = this.props;
+    const { locationData, data, roomData } = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
       startDate: new Date(),
@@ -79,8 +106,8 @@ export class OneTimeRow extends React.Component {
     this.setState({ row: oldRow });
   };
   //Set default location id if nothing selected 
-  setDefaultLocation=(defaultLocId)=>{
-    this.setState({locationId:defaultLocId})
+  setDefaultLocation = (defaultLocId) => {
+    this.setState({ locationId: defaultLocId })
     return defaultLocId;
   }
   handleSelectInputChange = (index, fieldName, event) => {
@@ -101,41 +128,38 @@ export class OneTimeRow extends React.Component {
     console.log("this.state.row ", this.state.row);
     return this.state.row;
   };
-  handleRoomData = (locationId,roomId,index)=> {
-  this.setState({row:oldRow});
+  handleRoomData = (locationId, roomId, index) => {
+    this.setState({ row: oldRow });
   }
   render() {
     const { row } = this.state;
+    const { classes } = this.props;
     return (
-      <div>
+      <Wrapper>
         {row.map((data, index) => {
-          return (
-            <Grid
-              style={{
-                border: "1px solid black",
-                marginBottom: 15,
-                padding: 5,
-                backgroundColor: "antiquewhite"
-              }}
-              key={index}
-              container
+          return (<CTFormWrapper>
+            <CTFormRow
+              marginBottom={helpers.rhythmDiv * 2}
             >
-              <Grid item sm={6} xs={12}>
-                <MaterialDatePicker
-                  required={true}
-                  hintText={"Date"}
-                  floatingLabelText={"Date *"}
-                  value={data ? data.startDate : ""}
-                  onChange={this.handleChangeDate.bind(
-                    this,
-                    index,
-                    "startDate"
-                  )}
-                  fullWidth={true}
-                />
-              </Grid>
-              <Grid item sm={6} xs={12}>
+              <MaterialDatePicker
+                className={classes.pickerField}
+                required={true}
+                hintText={"Date"}
+                floatingLabelText={"Date *"}
+                value={data ? data.startDate : ""}
+                onChange={this.handleChangeDate.bind(
+                  this,
+                  index,
+                  "startDate"
+                )}
+                fullWidth={true}
+              />
+            </CTFormRow>
+
+            <CTFormRow>
+              <SSFormTimePickerControl>
                 <MaterialTimePicker
+                  className={classes.pickerField}
                   required={true}
                   value={data ? data.startTime : ""}
                   floatingLabelText={"Start Time *"}
@@ -147,102 +171,89 @@ export class OneTimeRow extends React.Component {
                   )}
                   fullWidth={true}
                 />
-              </Grid>
-              <Grid item sm={6} xs={12}>
-                <Grid
-                  container
-                  style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    padding: "3px"
-                  }}
+              </SSFormTimePickerControl>
+
+              <CTFormControlHW>
+                <TextField
+                  className={classes.formField}
+                  required={true}
+                  defaultValue={data && data.duration != "" ? data.duration : 60}
+                  label="Duration"
+                  type="number"
+                  onChange={this.handleSelectInputChange.bind(
+                    this,
+                    index,
+                    "duration"
+                  )}
+                  fullWidth
+                  inputProps={{ min: "0" }}
+                />
+
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="weekDay" shrink={true}>
+                    Units
+                  </InputLabel>
+                  <Select
+                    input={<Input id="duration" />}
+                    value={(data && data.timeUnits) || "Minutes"}
+                    onChange={this.handleSelectInputChange.bind(
+                      this,
+                      index,
+                      "timeUnits"
+                    )}
+                    fullWidth
+                  >
+                    {config.duration.map((data, index) => {
+                      return (
+                        <MenuItem
+                          key={`${index}-${data.value}`}
+                          value={data.value}
+                        >
+                          {data.label}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </CTFormControlHW>
+
+              <CTIconButtonWrapper>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={this.removeRow.bind(this, index)}
                 >
-                  <Grid sm={6}>
-                    <TextField
-                      required={true}
-                      defaultValue={data && data.duration != "" ? data.duration : 60}
-                      margin="dense"
-                      label="Duration"
-                      type="number"
-                      onChange={this.handleSelectInputChange.bind(
-                        this,
-                        index,
-                        "duration"
-                      )}
-                      fullWidth
-                      inputProps={{ min: "0"}}
-                    />
-                  </Grid>
-                  <Grid sm={6}>
-                    <FormControl
-                      fullWidth
-                      margin="dense"
-                      style={{ padding: "4px" }}
-                    >
-                      <InputLabel htmlFor="weekDay" shrink={true}>
-                        Units
-                      </InputLabel>
-                      <Select
-                        input={<Input id="duration" />}
-                        value={(data && data.timeUnits) || "Minutes"}
-                        onChange={this.handleSelectInputChange.bind(
-                          this,
-                          index,
-                          "timeUnits"
-                        )}
-                        fullWidth
-                      >
-                        {config.duration.map((data, index) => {
-                          return (
-                            <MenuItem
-                              key={`${index}-${data.value}`}
-                              value={data.value}
-                            >
-                              {data.label}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </Grid>
-              
-              <Grid item xs={12} sm={4}>
-                
-                 <ButtonWrapper>
-            <FormGhostButton
-              alertColor
-              onClick={this.removeRow.bind(this, index)}
-              label="Delete"
-            />
-          </ButtonWrapper>
-              </Grid>
-            </Grid>
+                  <Icon className={classes.icon}>delete_outline</Icon>
+                </IconButton>
+              </CTIconButtonWrapper>
+            </CTFormRow>
+
+            {/*<ButtonWrapper>
+              <FormGhostButton
+                icon
+                iconName="delete"
+                alertColor
+                onClick={this.removeRow.bind(this, index)}
+                label="Delete"
+              />
+            </ButtonWrapper>*/}
+          </CTFormWrapper>
           );
         })}
-        <div>
-          <div>
-            
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center"
-              }}
-            >
-              
-              <ButtonWrapper>
-                  <FormGhostButton
-                    darkGreyColor
-                    onClick={this.addNewRow}
-                    label="Add Linked Class Time"
-                  />
-                </ButtonWrapper>
-            
-            </div>
-          </div>
-        </div>
-      </div>
+
+        <LinkedTime>
+          <ButtonWrapper>
+            <FormGhostButton
+              darkGreyColor
+              onClick={this.addNewRow}
+              label="Add Linked Class Time"
+            />
+
+          </ButtonWrapper>
+        </LinkedTime>
+
+      </Wrapper>
     );
   }
 }
+
+export default withStyles(styles)(OneTimeRow);
