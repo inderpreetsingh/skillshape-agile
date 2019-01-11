@@ -33,7 +33,7 @@ class MyTransaction extends React.Component {
     super(props);
     this.state = {
       transactionData: [],
-      perPage: 3,
+      perPage: 10,
       pageCount: 1,
       packageName: '',
       selectedPackageType: null,
@@ -47,7 +47,7 @@ class MyTransaction extends React.Component {
       filter: {
         userId: get(this.props.params, 'id', Meteor.userId())
       },
-      limit: 3,
+      limit: 10,
       skip: 0,
       isLoading: false
     };
@@ -65,7 +65,7 @@ class MyTransaction extends React.Component {
       Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
         let state = {};
         if (res) {
-          state = { pageCount: Math.ceil(res.count / 3), transactionData: res.records }
+          state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records }
           state.isLoading = false;
           this.setState(state);
         }
@@ -131,7 +131,13 @@ class MyTransaction extends React.Component {
     const { tableHeaderColumns } = columnData;
     const { classes } = this.props;
     let columnValues = tableHeaderColumns;
-    let TableName = TransactionDetailsTable
+    let TableName = TransactionDetailsTable;
+    if(!Meteor.userId()){
+      return 'Please Login First.'
+    }
+    else if(get(this.props.params, 'id',null) !=  Meteor.userId()){
+      return 'Unable to Access Other User Account';
+    }
     return (
       <div>
         {isLoading && <ContainerLoader />}
