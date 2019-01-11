@@ -217,7 +217,7 @@ const ClassTypeCardDescription = (props) => {
 														addDelimiter(cardRevealInfo.name),
 														cardRevealInfo._id
 													)}
-												label="Class Details"
+												label="View Class"
 											/>
 										</ButtonWrapper>
 

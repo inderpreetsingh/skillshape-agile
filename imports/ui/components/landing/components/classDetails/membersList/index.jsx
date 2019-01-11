@@ -186,7 +186,7 @@ class MembersListContainer extends Component {
             title: 'Confirmation',
             type: 'inform',
             content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
-            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Sign In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp) } }]
+            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp) } }]
           }
           confirmationDialog(data);
           return;
@@ -198,7 +198,7 @@ class MembersListContainer extends Component {
             title: 'Confirmation',
             type: 'inform',
             content: <div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
-            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Sign In', onClick: () => { this.updateClass(filter, status, purchased[pos], popUp) } }]
+            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[pos], popUp) } }]
           }
           confirmationDialog(data);
           return;
@@ -614,49 +614,43 @@ class MembersListContainer extends Component {
           fromSignFunctionality
           closeClassTypePackages={this.closeClassTypePackages}
         />}
+        <MembersList
+          viewType={currentView}
+          onSearchChange={this.handleSearchChange("teachersFilterWith")}
+          data={instructorsData}
+          entityType={"teachers"}
+          searchedValue={this.state.teachersFilterWith}
+          onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
+          classData={classData}
+          popUp={popUp}
+          instructorsIds={instructorsIds}
+          addInstructor
 
-        <ListWrapper>
-          <MembersList
-            viewType={currentView}
-            onSearchChange={this.handleSearchChange("teachersFilterWith")}
-            data={instructorsData}
-            entityType={"teachers"}
-            searchedValue={this.state.teachersFilterWith}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            addInstructor
-
-          />
-        </ListWrapper>
-        <ListWrapper>
-          <MembersList
-            viewType={currentView}
-            searchedValue={this.state.studentsFilterWith}
-            onSearchChange={this.handleSearchChange("studentsFilterWith")}
-            data={this.studentsListMaker(studentsData, classData, purchaseData)}
-            entityType={"students"}
-            searchedValue={this.state.studentsFilterWith}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
-            addStudent
-            onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
-            params={params}
-            onJoinClassClick={this.handleSignIn}
-            schoolName={schoolName}
-            classTypeName={classTypeName}
-            toggleIsBusy={toggleIsBusy}
-            schoolId={schoolId}
-            onAcceptPaymentClick={this.handleDialogBoxState}
-            buyPackagesBoxState={buyPackagesBoxState}
-            currentProps={currentProps}
-            updateStatus={this.updateStatus}
-          />
-        </ListWrapper>
-
+        />
+        <MembersList
+          viewType={currentView}
+          searchedValue={this.state.studentsFilterWith}
+          onSearchChange={this.handleSearchChange("studentsFilterWith")}
+          data={this.studentsListMaker(studentsData, classData, purchaseData)}
+          entityType={"students"}
+          searchedValue={this.state.studentsFilterWith}
+          classData={classData}
+          popUp={popUp}
+          instructorsIds={instructorsIds}
+          onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
+          addStudent
+          onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
+          params={params}
+          onJoinClassClick={this.handleSignIn}
+          schoolName={schoolName}
+          classTypeName={classTypeName}
+          toggleIsBusy={toggleIsBusy}
+          schoolId={schoolId}
+          onAcceptPaymentClick={this.handleDialogBoxState}
+          buyPackagesBoxState={buyPackagesBoxState}
+          currentProps={currentProps}
+          updateStatus={this.updateStatus}
+        />
       </Fragment>
     );
   }
