@@ -78,8 +78,11 @@ class MembersListContainer extends Component {
     } else if (packageType == 'MP') {
       condition = get(monthlyAttendance, 'noClasses', 0);
     }
+    if (status == 'checkIn') {
+      inc = -1;
+    }
     /*  */
-
+    console.log("in updateClass")
     Meteor.call('purchase.manageAttendance', _id, packageType, inc, (err, res) => {
       if (condition <= 0) {
         condition = res;
@@ -312,6 +315,7 @@ class MembersListContainer extends Component {
       this.setState({ purchaseData: res });
     });
   }
+
   studentsListMaker = (studentsData, classData, purchaseData) => {
     let studentStatus = classData && classData[0] ? classData[0].students : [];
     studentsData && studentsData.map((obj, index) => {
@@ -332,18 +336,33 @@ class MembersListContainer extends Component {
     })
     return studentsData;
   }
-  updateStatus = (n, props) => {
-    let { status, popUp, purchaseId } = props;
-    let inc = 0, packageType;
+  getStatusInfo = status => {
+    if (status == 'signIn') {
+      return 'Signed In';
+    } else if (status == 'signOut') {
+      return 'Singed Out';
+    }
+    else if (status == 'checkIn') {
+      return 'Checked In';
+    }
+    else if (status == 'checkOut') {
+      return 'Checked Out';
+    }
+  };
 
+  updateStatus = (n, props) => {
+    let { status, popUp, purchaseId, classData } = props;
+    let { scheduled_date } = classData && classData[0] || {};
+    let inc = 0, packageType;
+    console.log('in Update Status', n, status)
     if (n == 1) {
-      if (status == 'signIn') {
+      if (status == 'signIn' || status == 'checkOut') {
         inc = -1;
         status = 'checkIn';
       }
       else if (status == 'checkIn') {
         inc = 1;
-        status = 'signIn';
+        status = 'checkOut';
       }
     }
     else {
@@ -351,6 +370,18 @@ class MembersListContainer extends Component {
         inc = 1;
         status = 'signOut';
       }
+    }
+    if (status == 'checkIn' && scheduled_date >= new Date()) {
+      let data = {};
+      data = {
+        popUp,
+        title: 'Oops',
+        type: 'alert',
+        content: <div>You can't control future classes.</div>,
+        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+      }
+      confirmationDialog(data);
+      return;
     }
     if (!purchaseId) {
       this.handleSignIn(null, props._id, status);
@@ -364,12 +395,13 @@ class MembersListContainer extends Component {
         packageType = obj.packageType;
       }
     })
-    Meteor.call('purchase.manageAttendance', purchaseId, packageType, inc);
-    Meteor.call("classes.updateClassData", filter, status, (err, res) => {
+    Meteor.call("classes.updateClassData", filter, status, purchaseId, packageType, (err, res) => {
       if (res) {
+        Meteor.call('purchase.manageAttendance', purchaseId, packageType, inc);
+        this.setState({})
         popUp.appear("success", {
           title: `Successfully`,
-          content: `${status} Performed Successfully.`,
+          content: `${this.getStatusInfo(status)} Performed Successfully.`,
           RenderActions: (<ButtonWrapper>
             <FormGhostButton
               label={'Ok'}
@@ -522,9 +554,6 @@ class MembersListContainer extends Component {
         this.purchaseEnrollmentFirst(popUp);
       }
     })
-
-
-
   }
   render() {
     const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy } = this.props;

@@ -186,7 +186,7 @@ const getStatusInfo = status => {
   else if (status == 'checkIn') {
     return 'Checked In';
   }
-  else if (status == 'checkout'){
+  else if (status == 'checkOut'){
     return 'Check In';
   }
 };
@@ -217,14 +217,21 @@ PaymentAndStatus = (props) => {
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
-
+reverseStatus = (status) => {
+  if(status == 'signIn' || status == 'checkOut'){
+    return 'Check In';
+  }
+  else{
+    return 'Check Out';
+  }
+}
 const StatusOptions = props => (
   <StatusDetails>
     <StatusButton>
       <PrimaryButton
         noMarginBottom
         fullWidth
-        label={props.status == 'signIn' ? "Check in" : "Check out"}
+        label={reverseStatus(props.status)}
         onClick={() => { props.updateStatus(1, props) }}
       />
     </StatusButton>

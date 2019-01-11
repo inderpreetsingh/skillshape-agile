@@ -14,8 +14,8 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
-const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Stripe', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Credit Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
-const transactionType  = [{label:'Transaction Type All',value: 0},{label:'Purchase',value:'purchase'},{label:'Attendance',value:'attendance'}]
+const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
+const transactionType  = [{label:'Transaction Type All',value: 0},{label:'Purchase',value:'purchase'},{label:'Attendance',value:'attendance'},{label:'Expired',value:'expired'}]
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
@@ -154,7 +154,7 @@ class MyTransaction extends React.Component {
                       {this.getColumnValue(transaction, 'userName') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[1].columnName}>
-                      {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm:ss a")}
+                      {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm a")}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[2].columnName}>
                       {this.getColumnValue(transaction, 'transactionType')}
@@ -171,7 +171,7 @@ class MyTransaction extends React.Component {
                     <FncTableCell data-th={columnValues[6].columnName}>
                       {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
-                    <Tooltip
+                    {/* <Tooltip
                       animation="zoom"
                       placement="top"
                       trigger={['click']}
@@ -184,11 +184,11 @@ class MyTransaction extends React.Component {
 
                         />
                       }
-                      overlayStyle={{ zIndex: -9999 }}>
+                      overlayStyle={{ zIndex: -9999 }}> */}
                       <FncTableCell data-th={columnValues[7].columnName}>
                         {this.getColumnValue(transaction, 'packageName') || "..."}
                       </FncTableCell>
-                    </Tooltip>
+                    {/* </Tooltip> */}
                     <FncTableCell data-th={columnValues[8].columnName}>
                       {this.packageType(transaction)}
                     </FncTableCell>

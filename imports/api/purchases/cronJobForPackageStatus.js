@@ -56,6 +56,9 @@ SyncedCron.add({
           { _id: { $in: packageIds } },
           { $set: { packageStatus: "expired" } }
         );
+        packageIds.map((_id)=>{
+          Meteor.call("purchases.addTransactionEntry",_id,'expired');
+        })
       }
       //make expired subscription in classSubscription collection
       // if the end date in past and cancel the subscription from stripe
