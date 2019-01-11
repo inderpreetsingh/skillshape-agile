@@ -45,6 +45,7 @@ const styles = theme => {
         },
         dialogActionsRoot: {
             padding: `0 ${helpers.rhythmDiv}px`,
+            paddingLeft: helpers.rhythmDiv * 2,
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
@@ -185,10 +186,10 @@ const ButtonWrapper = styled.div`
 `;
 
 const ClassNameWrapper = styled.div`
-@media screen and(max - width: ${ helpers.mobile}px) {
-    display: flex;
-    flex-direction: column;
-}
+    @media screen and (max-width: ${ helpers.mobile}px) {
+        display: flex;
+        flex-direction: column;
+    }
 `;
 
 // Class data buttons
@@ -196,7 +197,9 @@ const CDButtonsWrapper = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding-left: ${helpers.rhythmDiv}px;
+    @media screen and (max-width: ${helpers.mobile}px) {
+        padding-left: ${helpers.rhythmDiv}px;
+    }
 `;
 
 const labelMaker = (notification) => {
@@ -285,7 +288,7 @@ const ManageMemberShipDialogBox = props => {
                     <ProfileImage
                         src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
                     <DialogTitleWrapper>
-                        <SchoolName>{capitalizeString(get(selectedSchoolData,'name','schoolName'))}</SchoolName>
+                        <SchoolName>{capitalizeString(get(selectedSchoolData, 'name', 'schoolName'))}</SchoolName>
                         <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>
                     </DialogTitleWrapper>
                     <IconButton
@@ -329,7 +332,7 @@ const ManageMemberShipDialogBox = props => {
                                                     notification={get(classData.notification, 'notification', false)}
                                                     onLeaveClassButtonClick={(e) => {
                                                         e.stopPropagation();
-                                                        removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'),classData._id)
+                                                        removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'), classData._id)
                                                     }}
                                                     onNotificationsButtonClick={(e) => {
                                                         e.stopPropagation();
@@ -348,7 +351,7 @@ const ManageMemberShipDialogBox = props => {
                                             notification={get(classData.notification, 'notification', false)}
                                             onLeaveClassButtonClick={(e) => {
                                                 e.stopPropagation();
-                                                removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'),classData._id)
+                                                removeAll(get(classData, 'classTimes', []), get(classData, 'name', 'Test Class Type'), classData._id)
                                             }}
                                             onNotificationsButtonClick={(e) => {
                                                 e.stopPropagation();
@@ -386,7 +389,6 @@ const ManageMemberShipDialogBox = props => {
                 <DialogActions
                     classes={{
                         root: classes.dialogActionsRoot,
-                        action: classes.dialogAction
                     }}>
                     {(!isEmpty(subscriptionsData)) && (<ButtonWrapper>
                         <FormGhostButton alertColor label="Leave school" onClick={leaveSchool} />

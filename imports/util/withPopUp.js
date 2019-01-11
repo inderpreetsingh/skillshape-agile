@@ -27,14 +27,18 @@ export function withPopUp(WrappedComponent) {
       }
     }
 
-    handleClose = () => {
+    handleModalClose = () => {
       this.setState({ open: false });
+      const { applyClose, dialogBoxProps: { onPopUpClose } } = this.state;
 
-      if (this.props.onPopUpClose && this.state.applyClose)
-        this.props.onPopUpClose();
+      if (onPopUpClose && applyClose) {
+        onPopUpClose();
+      }
     };
 
-
+    handleClose = () => {
+      this.setState({ open: false });
+    }
 
     close = () => {
       const initialState = this._initializeState();
@@ -78,7 +82,6 @@ export function withPopUp(WrappedComponent) {
       }
       if (this.state.dialogBoxProps.onAffirmationButtonClick) {
         this.state.dialogBoxProps.onAffirmationButtonClick();
-
       }
     };
 
@@ -91,7 +94,7 @@ export function withPopUp(WrappedComponent) {
               open={open}
               type={type}
               {...dialogBoxProps}
-              onModalClose={this.handleClose}
+              onModalClose={this.handleModalClose}
               onCloseButtonClick={this.handleClose}
               onAffirmationButtonClick={this.handleAffirmationButtonClick}
             />
