@@ -17,7 +17,9 @@ import config from "/imports/config";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+
+import { multiSelectInputStyles, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -209,15 +211,17 @@ class WeekDaysRow extends React.Component {
                       );
                     })}
                   </Select> */}
-              <MultiSelect
-                name="filters"
-                placeholder="Weekdays"
-                value={data.key || [{ label: 'Sunday', value: 6 }]}
-                options={Weekdays}
-                onChange={(e) => { this.handleWeekDay(e, index) }}
-                multi
-                style={{ backgroundColor: 'antiquewhite' }}
-              />
+              <div className="ss-multi-select">
+                <MultiSelect
+                  name="filters"
+                  placeholder="Weekdays"
+                  value={data.key || [{ label: 'Sunday', value: 6 }]}
+                  options={Weekdays}
+                  onChange={(e) => { this.handleWeekDay(e, index) }}
+                  multi
+                  styles={multiSelectInputStyles}
+                />
+              </div>
             </FormControl>
 
             <CTFormRow>

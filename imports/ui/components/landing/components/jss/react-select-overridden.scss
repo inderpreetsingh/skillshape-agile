@@ -1,5 +1,42 @@
+$br-color: map-get($colors, 'input-default');
+$br-color-hover: map-get($colors, 'input-hover');
+$pr-color: map-get($colors, 'primary');
+
 .Select {
     &-input > input {
         font-size: map-get($sizes, "base-font-size") * 1px;
+    }
+}
+
+.Select.is-focused:not(.is-open) > .Select-control {
+    border-color: $br-color;
+    box-shadow: none;
+}
+
+.ss-multi-select {
+    .is-open {
+        .Select {
+            &-control {
+                border-bottom: 2px solid $pr-color;    
+                &:hover {
+                    border-bottom: 2px solid $pr-color;
+                }
+            }
+        }
+    }
+    .Select{
+        &-control {
+            border-radius: 0;
+            border: none;
+            border-bottom: 1px solid $br-color;
+            
+            &:hover {
+                border-bottom: 2px solid $br-color-hover;
+            }
+        }
+
+        &-value {
+            background-color: map-get($colors, 'secondary')
+        }
     }
 }

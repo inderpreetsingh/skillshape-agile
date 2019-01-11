@@ -2,8 +2,34 @@ import React from 'react';
 import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+
+export const multiSelectInputStyles = {
+  container: styles => {
+    debugger;
+    return {
+      ...styles,
+      background: 'white',
+      borderRadius: 0,
+      borderBottom: `1px solid #333`,
+    }
+  },
+  control: styles => ({
+    ...styles,
+    width: 200,
+    background: 'white',
+    borderRadius: 0,
+    borderBottom: `1px solid #333`,
+  }),
+  input: styles => ({
+    ...styles,
+    width: 200,
+    background: 'violet'
+  })
+}
+
 export const CTFormRow = styled.div`
-  ${helpers.flexCenter}
+  ${helpers.flexHorizontalSpaceBetween}
+  margin-bottom: ${helpers.rhythmDiv}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
     flex-direction: column;
