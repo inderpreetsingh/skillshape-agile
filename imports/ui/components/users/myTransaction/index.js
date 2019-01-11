@@ -177,7 +177,7 @@ class MyTransaction extends React.Component {
                     <FncTableCell data-th={columnValues[6].columnName}>
                       {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
-                    {/* <Tooltip
+                    <Tooltip
                       animation="zoom"
                       placement="top"
                       trigger={['click']}
@@ -190,11 +190,11 @@ class MyTransaction extends React.Component {
 
                         />
                       }
-                      overlayStyle={{ zIndex: -9999 }}> */}
+                      overlayStyle={{ zIndex: -9999 }}>
                       <FncTableCell data-th={columnValues[7].columnName}>
                         {this.getColumnValue(transaction, 'packageName') || "..."}
                       </FncTableCell>
-                    {/* </Tooltip> */}
+                    </Tooltip>
                     <FncTableCell data-th={columnValues[8].columnName}>
                       {this.packageType(transaction)}
                     </FncTableCell>
