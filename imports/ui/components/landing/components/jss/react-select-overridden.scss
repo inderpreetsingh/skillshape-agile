@@ -8,11 +8,6 @@ $pr-color: map-get($colors, 'primary');
     }
 }
 
-.Select.is-focused:not(.is-open) > .Select-control {
-    border-color: $br-color;
-    box-shadow: none;
-}
-
 .ss-multi-select {
     .is-open {
         .Select {
@@ -34,9 +29,12 @@ $pr-color: map-get($colors, 'primary');
                 border-bottom: 2px solid $br-color-hover;
             }
         }
-
         &-value {
             background-color: map-get($colors, 'secondary')
         }
+    }
+    .Select.is-focused:not(.is-open) > .Select-control {
+        border-color: $br-color;
+        box-shadow: none;
     }
 }
