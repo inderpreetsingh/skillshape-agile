@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import ClassDetails from "/imports/ui/components/landing/components/classDetails/index.jsx";
+import React, { Component ,lazy, Suspense,} from "react";
 import { get, isEmpty, includes, remove } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
-
+const   ClassDetails  = lazy(()=>import("/imports/ui/components/landing/components/classDetails/index.jsx"))
+import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import { classModulesData, classTimeData } from "/imports/ui/components/landing/constants/classDetails/";
 import { withPopUp } from '/imports/util';
 import Classes from "/imports/api/classes/fields";
@@ -32,6 +32,7 @@ class ClassDetailsContainer extends Component {
     const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds } = this.props;
     console.count('ClassDetailsContainer 1');
     return (
+      <Suspense fallback={<Preloader />}>
       <ClassDetails
         topSearchBarProps={{
           currentUser,
@@ -54,6 +55,7 @@ class ClassDetailsContainer extends Component {
         toggleIsBusy={this.toggleIsBusy}
         isBusy={this.state.isBusy}
       />
+      </Suspense>
     );
   }
 }

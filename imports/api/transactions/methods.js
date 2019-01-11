@@ -1,7 +1,7 @@
 import Transactions from './fields';
 import {get,isEmpty,uniq,includes,flatten,compact} from 'lodash';
 import { check } from 'meteor/check';
-
+import Purchases from '/imports/api/purchases/fields.js';
 Meteor.methods({
     'transactions.handleEntry':function(data){
         check(data,Object);
@@ -16,12 +16,13 @@ Meteor.methods({
         try{
           let count = Transactions.find(filter,limitAndSkip).count();
           let transactionData = Transactions.find(filter,limitAndSkip).fetch();
-          let packageType,packageId,covers=[],methodName,newPurchaseData=[];
+          let packageType,covers=[],methodName,newPurchaseData=[],data,finalData=[];
           if(!isEmpty(transactionData)){
             transactionData = compact(transactionData);
               transactionData.map((obj,index)=>{
+                  let wholePurchaseData = Purchases.findOne({_id:obj.purchaseId});
+                  let {packageId} = wholePurchaseData;
                   packageType = get(obj,'packageType','MP');
-                  packageId = get(obj,'packageId','');
                   if(packageType == "MP"){
                       methodName = 'monthlyPricing.getCover';
                             }
@@ -37,9 +38,11 @@ Meteor.methods({
                           })
                           obj.covers = uniq(covers);
                       }
+                data = {...obj,...wholePurchaseData};
+                finalData.push(data);
               })
           }
-          return {count,records:transactionData}
+          return {count,records:finalData}
         }catch(error){
                 console.log("​ error in transactions.getFilteredPurchases", error)
           
