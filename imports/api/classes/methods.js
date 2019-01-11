@@ -55,7 +55,6 @@ Meteor.methods({
             filter = {};
             let obj = {userId:filter.userId ? filter.userId :this.userId,status,purchaseId,packageType};
             if(status=='checkIn' || status=='checkOut'){
-               let methodName = status == 'checkIn' ? "attendance.updateData" : 'attendance.removeData';
                // Entry in the transaction page.
                const {userId,schoolId,classId,classTypeId} = filter;
                !purchaseId && filter.students.map((obj)=>{
@@ -66,21 +65,16 @@ Meteor.methods({
                    let data = {userId,schoolId,classId,purchaseId};
                    let profile = Meteor.users.findOne({_id:userId},{fields:{'profile':1}}).profile;
                    data.userName = get(profile,'name',get(profile,'firstName',get(profile,'lastName','Old Data'))); 
-                   let purchaseData = Meteor.call('purchases.getPackagesFromPurchaseIds',[purchaseId]);
-                   let {packageType,packageName,amount,currency,packageStatus,paymentMethod} = purchaseData[0] || {};
-                   data.packageType = packageType;
-                   data.packageStatus = packageStatus;
-                   data.packageType = packageType;
-                   data.amount = amount;
-                   data.currency = currency;
-                   data.packageName = packageName;
-                   data.paymentMethod = paymentMethod;
+                   let purchaseData = Meteor.call('purchases.getDataForTransactionEntry',purchaseId);
+                   delete purchaseData._id;
                    data.schoolName = School.findOne({_id:schoolId},{fields:{'name':1}}).name;
                    data.transactionType = 'attendance';
                    data.transactionDate = new Date();
+                   data.purchaseId = purchaseId;
                    data.classTypeName = ClassType.findOne({_id:classTypeId},{fields:{"name":1}}).name;
                    data.action = 'add';
-                   Meteor.call("transactions.handleEntry",data);
+                   let payLoad = {...data,...purchaseData}
+                   Meteor.call("transactions.handleEntry",payLoad);
                }
                 status  = status == 'checkOut' ? 'signIn' : status;
             }
@@ -106,21 +100,15 @@ Meteor.methods({
                     userId = filter.userId ? filter.userId : Meteor.userId();
                     filter.students.map((obj,i)=>{
                         if(obj.userId == userId){
-                            if(status!='signOut'){
-                                obj.status = status;
-                                purchaseId ? obj.purchaseId = purchaseId : '';
-                            }else if(status == 'signOut'){
                                 index = i;
-                            }
-                            found = true;
                         }
                       })
-                      if(!found)
-                     filter.students.push(obj);
-                     filter.students = uniq(filter.students);
                       if (index > -1) {
                         filter.students.splice(index, 1);
                       }
+                      if(status != 'signOut')
+                     filter.students.push(obj);
+                     filter.students = uniq(filter.students);
                     return Classes.update({_id:filter._id},{$set:filter});
                 }
                 else{

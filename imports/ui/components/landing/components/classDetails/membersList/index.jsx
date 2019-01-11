@@ -72,8 +72,11 @@ class MembersListContainer extends Component {
     }else if(packageType == 'MP'){
       condition = get(monthlyAttendance,'noClasses',0);
     }
+    if(status == 'checkIn'){
+      inc = -1;
+    }
     /*  */
-    
+    console.log("in updateClass")
     Meteor.call('purchase.manageAttendance',_id,packageType,inc,(err,res)=>{
       if(condition <= 0 ){
         condition = res;
@@ -343,9 +346,9 @@ updateStatus = (n, props) => {
   let { status, popUp ,purchaseId,classData} = props;
   let {scheduled_date} = classData && classData[0] || {};
   let inc=0,packageType;
- 
+  console.log('in Update Status',n,status)
   if (n == 1) {
-    if (status == 'signIn') {
+    if (status == 'signIn' || status == 'checkOut') {
       inc = -1;
       status = 'checkIn';
     }
@@ -384,7 +387,7 @@ updateStatus = (n, props) => {
       packageType = obj.packageType;
     }
   })
-  Meteor.call("classes.updateClassData", filter, status, (err, res) => {
+  Meteor.call("classes.updateClassData", filter, status,purchaseId,packageType, (err, res) => {
     if (res) {
       Meteor.call('purchase.manageAttendance',purchaseId,packageType,inc);
       this.setState({})

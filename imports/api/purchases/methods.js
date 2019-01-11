@@ -10,13 +10,8 @@ Meteor.methods({
     try{
       check(payload, Object);
       let data = {...payload};
-      payload.action = 'add';
-      payload.transactionDate = new Date();
-      payload.schoolName = School.findOne({_id:payload.schoolId},{fields:{'name':1}}).name;
-      payload.transactionType = 'purchase';
       let purchaseId = Purchases.insert(data);
-      payload.purchaseId = purchaseId;
-      Meteor.call('transactions.handleEntry',payload);
+      Meteor.call('purchases.addTransactionEntry',purchaseId,'purchase')
       return purchaseId;
     }catch(error){
 			console.log("​purchases.addPurchase error", error)
@@ -46,6 +41,7 @@ Meteor.methods({
   "purchases.updatePurchases": function ({ payload, recordId }) {
     check(recordId, String);
     check(payload, Object);
+
     Purchases.update(
       { _id: recordId },
       {
@@ -115,6 +111,7 @@ Meteor.methods({
             return record.noClasses;
           }else{
             Purchases.update({_id},{$set:{packageStatus:'expired'}});
+            Meteor.call("purchases.addTransactionEntry",_id,'expired');
             record = Purchases.findOne({packageId,userId,packageStatus:'inActive'});
             if(record){
                let days = (record.startDate-record.endDate)/(1000 * 60 * 60 * 24);
@@ -212,6 +209,21 @@ Meteor.methods({
       
     }
    
+  },
+  "purchases.getDataForTransactionEntry":function(_id){
+    let record = Purchases.findOne({_id});
+    return {packageType,packageName,amount,currency,packageStatus,paymentMethod} = record;
+  },
+  "purchases.addTransactionEntry":function(_id,transactionType){
+    let data = Purchases.findOne({_id});   
+    let payload = {...data};
+    payload.action = 'add';
+    payload.transactionDate = new Date();
+    payload.schoolName = School.findOne({_id:payload.schoolId},{fields:{'name':1}}).name;
+    payload.transactionType = transactionType;
+    payload.purchaseId = _id;
+    delete payload._id;
+    Meteor.call('transactions.handleEntry',payload);
   }
 });
 /* 
