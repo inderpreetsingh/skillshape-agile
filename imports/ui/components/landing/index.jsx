@@ -1,35 +1,27 @@
-import React, { Component, Fragment } from "react";
-import DocumentTitle from "react-document-title";
-import { debounce, isEmpty, get } from "lodash";
-import styled from "styled-components";
-import { Element, scroller } from "react-scroll";
-import Sticky from "react-stickynode";
+import { debounce, isEmpty } from "lodash";
+import React, { Component, lazy, Suspense,Fragment } from "react";
+const DocumentTitle = lazy(() => import("react-document-title"));
 import { browserHistory, withRouter } from "react-router";
-
-import ip from "ip";
-import Button from "material-ui/Button";
-
-import Cover from "./components/Cover.jsx";
-import BrandBar from "./components/BrandBar.jsx";
-import SearchArea from "./components/SearchArea.jsx";
-import CardsList from "./components/cards/CardsList.jsx";
-import ClassMap from "./components/map/ClassMap.jsx";
-import FilterPanel from "./components/FilterPanel.jsx";
-import ClassTypeList from "./components/classType/classTypeList.jsx";
-import SwitchIconButton from "./components/buttons/SwitchIconButton.jsx";
-import FloatingChangeViewButton from "./components/buttons/FloatingChangeViewButton.jsx";
-import Footer from "./components/footer/index.jsx";
-import NoResults from "./components/NoResults.jsx";
-import PrimaryButton from "./components/buttons/PrimaryButton.jsx";
-import FormGhostButton from "./components/buttons/FormGhostButton.jsx";
-import ContactUsFloatingButton from "./components/buttons/ContactUsFloatingButton.jsx";
-import FiltersDialogBox from "./components/dialogs/FiltersDialogBox.jsx";
-import * as helpers from "./components/jss/helpers.js";
-import { cardsData, cardsData1 } from "./constants/cardsData.js";
-import config from "/imports/config";
-import Events from "/imports/util/events";
-import { withPopUp, } from "/imports/util";
+import { Element, scroller } from "react-scroll";
+const  Sticky = lazy(() => import("react-stickynode"));
+const  BrandBar = lazy(() => import("./components/BrandBar.jsx"));
+const  FloatingChangeViewButton = lazy(() => import("./components/buttons/FloatingChangeViewButton.jsx"));
+const  FormGhostButton = lazy(() => import("./components/buttons/FormGhostButton.jsx"));
+const  ClassTypeList = lazy(() => import("./components/classType/classTypeList.jsx"));
+const  Cover = lazy(() => import("./components/Cover.jsx"));
+const   FiltersDialogBox  = lazy(() => import("./components/dialogs/FiltersDialogBox.jsx"));
+const    FilterPanel = lazy(() => import("./components/FilterPanel.jsx"));
+const   Footer  = lazy(() => import("./components/footer/index.jsx"));
+const   SearchArea  = lazy(() => import("./components/SearchArea.jsx"));
+const    config = lazy(() => import("/imports/config"));
+const     Events  = lazy(() => import("/imports/util/events"));
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
+import * as helpers from "./components/jss/helpers.js";
+import { withPopUp } from "/imports/util";
+import styled from "styled-components";
+
+
+
 
 const MainContentWrapper = styled.div`
   display: flex;
@@ -985,9 +977,10 @@ class Landing extends Component {
     }
 
     return (
-      <DocumentTitle title={this.props.route.name}>
+      <Fragment>
+      <Suspense fallback={<Preloader />}>
+          <DocumentTitle title={this.props.route.name}>
         <div>
-          {/*this._redirectBasedOnVisitorType()*/}
           {this.state.filterPanelDialogBox && (
             <FiltersDialogBox
               open={this.state.filterPanelDialogBox}
@@ -1019,7 +1012,6 @@ class Landing extends Component {
               }}
             />
           )}
-
           {/* Cover */}
           <CoverWrapper>
             <Cover
@@ -1103,44 +1095,7 @@ class Landing extends Component {
               />
             </ClassTypeOuterWrapper>
           </Element>
-
-          {/*
-                <Element name="content-container" className="element">
-                  <MainContentWrapper>
-                    {this.state.mapView ?
-                      (
-                        <Fragment>
-                          <MapOuterContainer>
-                            <Sticky top={0}>
-                              <MapContainer>
-                                <ClassMap isMarkerShown />
-                              </MapContainer>
-                            </Sticky>
-                          </MapOuterContainer>
-                         <WithMapCardsContainer>
-                            <div>
-                              <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                              <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
-                            </div>
-                            <FooterOuterWrapper>
-                              <FooterWrapper>
-                                <Footer mapView={this.state.mapView}/>
-                              </FooterWrapper>
-                            </FooterOuterWrapper>
-                         </WithMapCardsContainer>
-                       </Fragment>
-                     ) :
-                   (<CardsContainer>
-
-                      <CardsList mapView={this.state.mapView} title={'Yoga in Delhi'} name={'yoga-in-delhi'} cardsData={this.state.cardsDataList[0]} />
-                      <CardsList mapView={this.state.mapView} title={'Painting in Paris'} name={'painting-in-paris'} cardsData={this.state.cardsDataList[1]} />
-                   </CardsContainer>)}
-                 </MainContentWrapper>
-               </Element>
-               */}
-
           {!this.state.mapView && <Footer mapView={this.state.mapView} />}
-
           {this.state.mapView && (
             <FloatingMapButtonWrapper>
               <FloatingChangeViewButton
@@ -1150,6 +1105,8 @@ class Landing extends Component {
           )}
         </div>
       </DocumentTitle>
+      </Suspense>
+         </Fragment>
     );
   }
 }

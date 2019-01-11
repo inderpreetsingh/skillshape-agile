@@ -1,14 +1,11 @@
-import React from "react";
+import { get, isEmpty } from "lodash";
 import { Meteor } from "meteor/meteor";
-import { isEmpty, get } from "lodash";
 import { createContainer } from "meteor/react-meteor-data";
-import { Route, Redirect } from "react-router-dom";
-import { browserHistory } from "react-router";
+import React from "react";
 import ContactUsFloatingButton from "/imports/ui/components/landing/components/buttons/ContactUsFloatingButton.jsx";
 import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
-import { toastrModal, withPopUp } from "/imports/util";
-import config from "/imports/config";
+import { withPopUp } from "/imports/util";
 
 class MainLayout extends React.Component {
   constructor(props) {
