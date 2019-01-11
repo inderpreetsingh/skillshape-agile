@@ -6,6 +6,9 @@ import Grid from "material-ui/Grid";
 import Select from "material-ui/Select";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
+import IconButton from "material-ui/IconButton";
+import Icon from "material-ui/Icon";
+
 import Button from "material-ui/Button";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
@@ -17,7 +20,7 @@ import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-pic
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import config from "/imports/config";
-import { LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+import { styles, LinkedTime, CTIconButtonWrapper, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
 
 
 const Wrapper = styled.div`
@@ -29,47 +32,17 @@ const Wrapper = styled.div`
   }
 `;
 
-const SSFormRow = CTFormRow.extend`
-  @media screen and (max-width: ${helpers.mobie}px) {
-    flex-direction: column;
-  }
-`;
-
-const SSFormControlHW = CTFormControlHW.extend`
-  margin-right: ${helpers.rhythmDiv}px;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    margin-right: 0;
-  }
-`;
-
-const TimePickerWrapper = SSFormControlHW.extend`
+const SSFormTimePickerControl = CTFormControlHW.extend`
   margin-top: 4px;
-
+  
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-top: 0;
   }
 `;
 
 const ButtonWrapper = styled.div`
-  ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv}px 0;
+  margin-left: ${helpers.rhythmDiv}px;
 `;
-
-const styles = {
-  textField: {
-    marginRight: helpers.rhythmDiv
-  },
-  pickerFiledNoMrg: {
-    margin: 0,
-    marginBottom: helpers.rhythmDiv,
-  },
-  pickerField: {
-    margin: 0,
-    marginBottom: helpers.rhythmDiv,
-    marginRight: helpers.rhythmDiv
-  }
-}
 
 class OneTimeRow extends React.Component {
   constructor(props) {
@@ -165,26 +138,28 @@ class OneTimeRow extends React.Component {
       <Wrapper>
         {row.map((data, index) => {
           return (<CTFormWrapper>
-            <SSFormRow>
-              <SSFormControlHW>
-                <MaterialDatePicker
-                  className={classes.pickerField}
-                  required={true}
-                  hintText={"Date"}
-                  floatingLabelText={"Date *"}
-                  value={data ? data.startDate : ""}
-                  onChange={this.handleChangeDate.bind(
-                    this,
-                    index,
-                    "startDate"
-                  )}
-                  fullWidth={true}
-                />
-              </SSFormControlHW>
+            <CTFormRow
+              marginBottom={helpers.rhythmDiv * 2}
+            >
+              <MaterialDatePicker
+                className={classes.pickerField}
+                required={true}
+                hintText={"Date"}
+                floatingLabelText={"Date *"}
+                value={data ? data.startDate : ""}
+                onChange={this.handleChangeDate.bind(
+                  this,
+                  index,
+                  "startDate"
+                )}
+                fullWidth={true}
+              />
+            </CTFormRow>
 
-              <TimePickerWrapper>
+            <CTFormRow>
+              <SSFormTimePickerControl>
                 <MaterialTimePicker
-                  className={classes.pickerFiledNoMrg}
+                  className={classes.pickerField}
                   required={true}
                   value={data ? data.startTime : ""}
                   floatingLabelText={"Start Time *"}
@@ -196,12 +171,11 @@ class OneTimeRow extends React.Component {
                   )}
                   fullWidth={true}
                 />
-              </TimePickerWrapper>
-            </SSFormRow>
+              </SSFormTimePickerControl>
 
-            <SSFormRow>
-              <SSFormControlHW>
+              <CTFormControlHW>
                 <TextField
+                  className={classes.formField}
                   required={true}
                   defaultValue={data && data.duration != "" ? data.duration : 60}
                   label="Duration"
@@ -214,13 +188,8 @@ class OneTimeRow extends React.Component {
                   fullWidth
                   inputProps={{ min: "0" }}
                 />
-              </SSFormControlHW>
 
-              <SSFormControlHW>
-                <FormControl
-                  fullWidth
-
-                >
+                <FormControl fullWidth>
                   <InputLabel htmlFor="weekDay" shrink={true}>
                     Units
                   </InputLabel>
@@ -246,10 +215,19 @@ class OneTimeRow extends React.Component {
                     })}
                   </Select>
                 </FormControl>
-              </SSFormControlHW>
-            </SSFormRow>
+              </CTFormControlHW>
 
-            <ButtonWrapper>
+              <CTIconButtonWrapper>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={this.removeRow.bind(this, index)}
+                >
+                  <Icon className={classes.icon}>delete_outline</Icon>
+                </IconButton>
+              </CTIconButtonWrapper>
+            </CTFormRow>
+
+            {/*<ButtonWrapper>
               <FormGhostButton
                 icon
                 iconName="delete"
@@ -257,17 +235,20 @@ class OneTimeRow extends React.Component {
                 onClick={this.removeRow.bind(this, index)}
                 label="Delete"
               />
-            </ButtonWrapper>
+            </ButtonWrapper>*/}
           </CTFormWrapper>
           );
         })}
 
         <LinkedTime>
-          <FormGhostButton
-            darkGreyColor
-            onClick={this.addNewRow}
-            label="Add Linked Class Time"
-          />
+          <ButtonWrapper>
+            <FormGhostButton
+              darkGreyColor
+              onClick={this.addNewRow}
+              label="Add Linked Class Time"
+            />
+
+          </ButtonWrapper>
         </LinkedTime>
 
       </Wrapper>

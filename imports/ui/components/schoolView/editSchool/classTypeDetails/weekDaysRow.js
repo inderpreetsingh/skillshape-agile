@@ -17,7 +17,9 @@ import config from "/imports/config";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+
+import { styles, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW, CTIconButtonWrapper } from './sharedStyledComponents';
+
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -26,45 +28,14 @@ const Wrapper = styled.div`
 
 const IconButtonWrapper = styled.div`
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: ${helpers.rhythmDiv}px;
+  right: ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const OnGoingCTFormWrapper = CTFormWrapper.extend`
-  padding: ${helpers.rhythmDiv * 2}px;
-  padding-right: ${helpers.rhythmDiv * 4}px;
-  max-width: 100%;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  margin-right: 0;
+const ButtonWrapper = styled.div`
+  margin-left: ${helpers.rhythmDiv}px;
 `;
-
-const OnGoingLinkedTime = LinkedTime.extend`
-  max-width: 100%;
-  height: 100px;
-`;
-
-const styles = {
-  formField: {
-    marginRight: helpers.rhythmDiv,
-  },
-  formFieldSmReset: {
-    marginRight: helpers.rhythmDiv,
-    [`@media screen and (max-width: ${helpers.mobile}px)`]: {
-      marginRight: 0
-    }
-  },
-  iconButton: {
-    background: "white",
-    fontSize: helpers.baseFontSize,
-    height: 'auto',
-    width: 'auto',
-    borderRadius: '50%',
-  },
-  icon: {
-    color: helpers.alertColor
-  }
-}
 
 
 class WeekDaysRow extends React.Component {
@@ -184,14 +155,16 @@ class WeekDaysRow extends React.Component {
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<OnGoingCTFormWrapper>
+          return (<CTFormWrapper>
             {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
-            <FormControl fullWidth className={classes.formFieldSmReset}>
-              <InputLabel htmlFor="weekDay" shrink={true}>
-                WeekDay
+            <CTFormRow
+              marginBottom={helpers.rhythmDiv * 2}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="weekDay" shrink={true}>
+                  WeekDay
               </InputLabel>
 
-              {/* <Select
+                {/* <Select
                     input={<Input id="weekDay" />}
                     value={data && data.key != '' ? data.key : scheduleDetails[0]}
                     onChange={this.handleSelectInputChange.bind(
@@ -209,16 +182,18 @@ class WeekDaysRow extends React.Component {
                       );
                     })}
                   </Select> */}
-              <MultiSelect
-                name="filters"
-                placeholder="Weekdays"
-                value={data.key || [{ label: 'Sunday', value: 6 }]}
-                options={Weekdays}
-                onChange={(e) => { this.handleWeekDay(e, index) }}
-                multi
-                style={{ backgroundColor: 'antiquewhite' }}
-              />
-            </FormControl>
+                <div className="ss-multi-select">
+                  <MultiSelect
+                    name="filters"
+                    placeholder="Weekdays"
+                    value={data.key || [{ label: 'Sunday', value: 6 }]}
+                    options={Weekdays}
+                    onChange={(e) => { this.handleWeekDay(e, index) }}
+                    multi
+                  />
+                </div>
+              </FormControl>
+            </CTFormRow>
 
             <CTFormRow>
               <CTFormControlHW>
@@ -285,27 +260,28 @@ class WeekDaysRow extends React.Component {
               </CTFormControlHW>
             </CTFormRow>
 
-            <IconButtonWrapper>
+            <CTIconButtonWrapper>
               <IconButton
                 className={classes.iconButton}
                 onClick={this.removeRow.bind(this, index)}
               >
-                <Icon className={classes.icon}>delete</Icon>
+                <Icon className={classes.icon}>delete_outline</Icon>
               </IconButton>
-            </IconButtonWrapper>
+            </CTIconButtonWrapper>
 
-          </OnGoingCTFormWrapper>
+          </CTFormWrapper>
           );
         })}
 
-        <OnGoingLinkedTime>
-          <FormGhostButton
-            darkGreyColor
-            onClick={this.addNewRow}
-            label="Add Linked Class Time"
-          />
-
-        </OnGoingLinkedTime>
+        <LinkedTime>
+          <ButtonWrapper>
+            <FormGhostButton
+              darkGreyColor
+              onClick={this.addNewRow}
+              label="Add Linked Class Time"
+            />
+          </ButtonWrapper>
+        </LinkedTime>
       </Wrapper>
     );
   }

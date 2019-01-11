@@ -315,6 +315,7 @@ class MembersListContainer extends Component {
       this.setState({ purchaseData: res });
     });
   }
+
   studentsListMaker = (studentsData, classData, purchaseData) => {
     let studentStatus = classData && classData[0] ? classData[0].students : [];
     studentsData && studentsData.map((obj, index) => {
@@ -553,9 +554,6 @@ class MembersListContainer extends Component {
         this.purchaseEnrollmentFirst(popUp);
       }
     })
-
-
-
   }
   render() {
     const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy } = this.props;
