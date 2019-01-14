@@ -82,10 +82,10 @@ class ClassTimesBoxes extends Component {
         {withSlider &&
           !editMode && (
             <SliderWrapper>
-              <ClassTimesSlider
+              {/* <ClassTimesSlider
                 data={modifiedClassTimesData}
                 componentProps={{ classInterestData: classInterestData }}
-              />
+              /> */}
             </SliderWrapper>
           )}
         <BarWrapper show={withSlider}>
