@@ -6,11 +6,11 @@ import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
 import EmailSignature from "./signature.js";
 import { getUserFullName } from "/imports/util/getUserData";
-let platform=Meteor.settings.platform;
-export const sendNewSchoolSuggestionEmail = function({ newSuggestionLink }) {
+let platform = Meteor.settings.platform;
+export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
-  if(platform == 'local'){
-    to='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
   else {
     to = config.skillshapeAdminEmail;
@@ -26,7 +26,7 @@ export const sendNewSchoolSuggestionEmail = function({ newSuggestionLink }) {
 //1.Button on which admin click.
 //2.It will redirect to the school edit page.
 //3.Need to open the package modal
-export const sendPackagePurchaseEmail = function({
+export const sendPackagePurchaseEmail = function ({
   to,
   buyer,
   packageName,
@@ -34,8 +34,8 @@ export const sendPackagePurchaseEmail = function({
   schoolId
 }) {
   let To;
-  if(platform == 'local'){
-    To='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    To = 'ramesh.bansal@daffodilsw.com';
   }
   else {
     To = config.skillshapeAdminEmail;
@@ -46,8 +46,8 @@ export const sendPackagePurchaseEmail = function({
     subject: "Package Purchase Request Recieved",
     html: `Dear ${schoolAdminName},<br/><b>${buyer}</b> has expressed interest in <b>${packageName}</b> class package.
             <a href=${Meteor.absoluteUrl(
-              `SchoolAdmin/${schoolId}/edit`
-            )}>Click here</a> to go to School page.
+        `SchoolAdmin/${schoolId}/edit`
+      )}>Click here</a> to go to School page.
             <br/><br/>
             <br/><br/>
             ${EmailSignature}`
@@ -55,7 +55,7 @@ export const sendPackagePurchaseEmail = function({
 };
 
 // Send Email to school admin when user wants to join a class.
-export const sendJoinClassEmail = function({
+export const sendJoinClassEmail = function ({
   currentUserName,
   schoolAdminName,
   classTypeName,
@@ -64,8 +64,8 @@ export const sendJoinClassEmail = function({
   memberLink
 }) {
   let to;
-  if(platform == 'local'){
-    to='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
   else {
     to = config.skillshapeAdminEmail;
@@ -78,15 +78,15 @@ export const sendJoinClassEmail = function({
       html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
                 <br/>You can visit the following link OR links to know more about this request:
                 ${
-                  classLink
-                    ? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Class</a><br/>`
-                    : ""
-                }
+        classLink
+          ? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Class</a><br/>`
+          : ""
+        }
                 ${
-                  memberLink
-                    ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Member</a><br/>`
-                    : ""
-                }
+        memberLink
+          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Member</a><br/>`
+          : ""
+        }
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
@@ -95,7 +95,7 @@ export const sendJoinClassEmail = function({
 };
 
 // Send Email to school admin when user claim for a school.
-export const sendClaimASchoolEmail = function(
+export const sendClaimASchoolEmail = function (
   claimSchoolData,
   ROOT_URL,
   manageBySelfUrl,
@@ -110,15 +110,15 @@ export const sendClaimASchoolEmail = function(
       To = config.skillshapeAdminEmail;
     }
     let to;
-  if(platform == 'local'){
-    to='ramesh.bansal@daffodilsw.com';
-  }
-  else if(platform == 'dev'){
-    to = config.skillshapeAdminEmail;
-  }
-  else{
-    to=To ? To : config.skillshapeAdminEmail
-  }
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else if (platform == 'dev') {
+      to = config.skillshapeAdminEmail;
+    }
+    else {
+      to = To ? To : config.skillshapeAdminEmail
+    }
     Email.send({
       to: to, // Replace value of `to` with Admin email if Admin exists.
       from: config.fromEmailForJoiningClass,
@@ -126,20 +126,20 @@ export const sendClaimASchoolEmail = function(
       html: `
                     Hi${schoolOwnerName || ""},<br/>
                    <b>${
-                     claimSchoolData.userName
-                   }</b> has requested permission to manage <b>${
-                    school && school.name
-      }</b>. You are listed as the admin. <br/>Do you approve this?<br/><br/>
+        claimSchoolData.userName
+        }</b> has requested permission to manage <b>${
+        school && school.name
+        }</b>. You are listed as the admin. <br/>Do you approve this?<br/><br/>
                    <div>
                        <a href=${
-                         modifyUsersRoles.keepMeSuperAdmin
-                       } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>
+        modifyUsersRoles.keepMeSuperAdmin
+        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>
                        <a href=${
-                         modifyUsersRoles.makeRequesterSuperAdmin
-                       } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them SuperAdministrator and keep me as an Administrator.</a><br/>
+        modifyUsersRoles.makeRequesterSuperAdmin
+        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them SuperAdministrator and keep me as an Administrator.</a><br/>
                        <a href=${
-                         modifyUsersRoles.removeMeAsAdmin
-                       } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them SuperAdministrator and remove me as Administrator.</a><br/>
+        modifyUsersRoles.removeMeAsAdmin
+        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them SuperAdministrator and remove me as Administrator.</a><br/>
                        <a href=${manageBySelfUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">No, deny their request.</a><br/>
                        <a href=${ROOT_URL}&approve=true style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">I have no idea what this is about.</a><br/>
                    </div>
@@ -150,24 +150,24 @@ export const sendClaimASchoolEmail = function(
   }
 };
 // Send Confirmation email to Member who do claim request for school.
-export const sendConfirmationEmail = function(userRec, school) {
+export const sendConfirmationEmail = function (userRec, school) {
   if (Meteor.isServer) {
     let to;
-  if(platform == 'local'){
-    to='ramesh.bansal@daffodilsw.com';
-  }
-  else {
-    to = config.skillshapeAdminEmail;
-  }
- 
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else {
+      to = config.skillshapeAdminEmail;
+    }
+
     Email.send({
       to: to, // Replace value of `to` with Admin email if Admin exists.
       from: config.fromEmailForJoiningClass,
       subject: "Confirmation regarding your school claim request received",
       html: `Hi ${(userRec && userRec.profile.firstName) || ""},<br/>
                 We have sent your request to the email on file for ${
-                  school.name
-                }. We will resolve this as soon as possible.
+        school.name
+        }. We will resolve this as soon as possible.
                 <br/><br/>
                 <br/><br/>
                 ${EmailSignature}`
@@ -205,7 +205,7 @@ export const sendConfirmationEmail = function(userRec, school) {
 //     }
 // };
 
-export const sendClassTimesRequest = function({
+export const sendClassTimesRequest = function ({
   currentUserData,
   schoolOwnerData,
   superAdminData,
@@ -227,17 +227,17 @@ export const sendClassTimesRequest = function({
     (emailObj.subject = "School Admin not found"),
       (emailObj.text = `Hi SuperAdmin, \nCorresponding to this school ${
         schoolData.name
-      } there is no admin assign yet \n\nThanks, \n\n${EmailSignature}`);
+        } there is no admin assign yet \n\nThanks, \n\n${EmailSignature}`);
   }
   if (Meteor.isServer) {
     let to;
-  if(platform == 'local'){
-    to='ramesh.bansal@daffodilsw.com';
-  }
-  else {
-    to = config.skillshapeAdminEmail;
-  }
-  
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else {
+      to = config.skillshapeAdminEmail;
+    }
+
     Email.send({
       to: to, //emailObj.to
       from: "Notices@SkillShape.com",
@@ -248,7 +248,7 @@ export const sendClassTimesRequest = function({
   }
 };
 
-export const sendEmailToStudentForClassTypeUpdation = function(
+export const sendEmailToStudentForClassTypeUpdation = function (
   userData,
   schoolData,
   classTypeName,
@@ -256,13 +256,13 @@ export const sendEmailToStudentForClassTypeUpdation = function(
 ) {
   if (Meteor.isServer) {
     let to;
-    if(platform == 'local'){
-      to='ramesh.bansal@daffodilsw.com';
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
     }
     else {
       to = config.skillshapeAdminEmail;
     }
-   
+
     const userName = getUserFullName(userData);
     Email.send({
       to: to, //userData.emails[0].address
@@ -270,15 +270,15 @@ export const sendEmailToStudentForClassTypeUpdation = function(
       subject: subject,
       html: `${userName}, <br/>${
         schoolData.name
-      } has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
-        `schools/${schoolData.slug}`
-      )} to view their new information and join the class! <br/><br/>Thanks, <br/><br/>${EmailSignature}`
+        } has updated their listing for ${classTypeName}. Please go to <br/> ${Meteor.absoluteUrl(
+          `schools/${schoolData.slug}`
+        )} to view their new information and join the class! <br/><br/>Thanks, <br/><br/>${EmailSignature}`
     });
   }
 };
 
 // This function is used to send user registration email and email verification link together.
-export const userRegistrationAndVerifyEmail = function(
+export const userRegistrationAndVerifyEmail = function (
   user,
   verificationToken,
   passwd,
@@ -342,7 +342,7 @@ export const userRegistrationAndVerifyEmail = function(
 //     }
 // };
 
-export const sendEmailForSubscription = function({
+export const sendEmailForSubscription = function ({
   toEmail,
   fromEmail,
   subject,
@@ -373,11 +373,11 @@ export const sendEmailForSubscription = function({
   }
 };
 
-export const sendEmailToStudentForPriceInfoUpdate = function(
+export const sendEmailToStudentForPriceInfoUpdate = function (
   userData,
   schoolData
 ) {
-  
+
   if (Meteor.isServer) {
     const userName = getUserFullName(userData);
     Email.send({
@@ -386,15 +386,15 @@ export const sendEmailToStudentForPriceInfoUpdate = function(
       subject: "School has updated pricing info",
       html: `Hi ${userName}, \n${
         schoolData.name
-      } has updated their prices. Please go to \n ${Meteor.absoluteUrl(
-        `SchoolAdmin/${schoolData._id}/edit`
-      )} to view their new information! \n\nThanks, \n\n${EmailSignature}`
+        } has updated their prices. Please go to \n ${Meteor.absoluteUrl(
+          `SchoolAdmin/${schoolData._id}/edit`
+        )} to view their new information! \n\nThanks, \n\n${EmailSignature}`
     });
   }
 };
 // Click <b>${newlyCreatedUser ? "Claim your account" : "To accept the invitation"}</b> to accept the invitation :<br/>
 
-export const sendEmailToStudentForClaimAsMember = function(
+export const sendEmailToStudentForClaimAsMember = function (
   currentUserData,
   schoolData,
   user,
@@ -418,29 +418,29 @@ export const sendEmailToStudentForClaimAsMember = function(
             <br/>
             <div>
               <center><a href=${ROOT_URL} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">
-                ${newlyCreatedUser ? "Click here to claim and accept the invitation" : "Click here to join "+ schoolData.name}
+                ${newlyCreatedUser ? "Click here to claim and accept the invitation" : "Click here to join " + schoolData.name}
               </a></center>
               <br/>
                ${ rejectionUrl
-                   ? `<center> 
+          ? `<center> 
                         <a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">
                           If this is a mistake, click here to reject the invitation
                         </a>
                       </center><br/>`
-                   : ""
-               }
+          : ""
+        }
             </div>
             ${ passwd
-                ? `Your temporary password is  : ${passwd} You will be asked to make your own when you click the link above.`
-                : ""
-            }
+          ? `Your temporary password is  : ${passwd} You will be asked to make your own when you click the link above.`
+          : ""
+        }
              \n\nThanks, \n\n${EmailSignature}`
     });
   }
 };
 
 // NOTE: This email is used to send request received in case of class type location, times, and then pricing.
-export const sendRequestReceivedEmail = function({
+export const sendRequestReceivedEmail = function ({
   toEmail,
   fromEmail,
   schoolPageLink,
@@ -459,7 +459,7 @@ export const sendRequestReceivedEmail = function({
       subject: `${requestFor} request received`,
       html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ""}
             saw your listing on SkillShape.com ${classTypeName &&
-              `for ${classTypeName} `}
+        `for ${classTypeName} `}
             at <br />${schoolPageLink} <br /> and would you like to update your ${requestFor} <br />${updateLink}
             <br />
             <br />
@@ -471,7 +471,7 @@ export const sendRequestReceivedEmail = function({
   }
 };
 
-export const sendClassTypeLocationRequestEmail = function({
+export const sendClassTypeLocationRequestEmail = function ({
   toEmail,
   fromEmail,
   updatePriceLink,
@@ -490,7 +490,7 @@ export const sendClassTypeLocationRequestEmail = function({
   }
 };
 
-export const sendEmailToSchool = function(
+export const sendEmailToSchool = function (
   message,
   studentName,
   contactName,
@@ -500,26 +500,26 @@ export const sendEmailToSchool = function(
   yourName
 ) {
   let to;
-  if(platform == 'local'){
-    to ='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
-  else if(platform == 'dev'){
+  else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
   }
-  else{
+  else {
     to = schoolData.email;
   }
   if (Meteor.isServer) {
     Email.send({
-      to:  to, // Needs to replace this with requester's Email.
+      to: to, // Needs to replace this with requester's Email.
       from: "Notices@SkillShape.com",
       subject: subject,
       html: `Hi, ${contactName}<br/>
                    ${yourEmail ? `User Email: ${yourEmail}<br/>` : ""}
                    ${yourName ? `User Name:${yourName}<br/>` : ""}
                    ${studentName} saw your listing on SkillShape.com ${Meteor.absoluteUrl(
-        `schools/${schoolData.slug}`
-      )} and has the following message for you:
+          `schools/${schoolData.slug}`
+        )} and has the following message for you:
                    <br/> ${message} <br/>Thanks, <br/>${EmailSignature}`
     });
   }
@@ -527,13 +527,13 @@ export const sendEmailToSchool = function(
 //Send email to student when their package is expired
 export const sendPackageExpiredEmail = (To, userName, packageName) => {
   let to;
-  if(platform == 'local'){
-    to ='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
-  else if(platform == 'dev'){
+  else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
   }
-  else{
+  else {
     to = To;
   }
   Email.send({
@@ -548,13 +548,13 @@ export const sendPackageExpiredEmail = (To, userName, packageName) => {
 //Send email to school when their student package is expired.
 export const sendPackageExpiredEmailToSchool = (schoolName, schoolEmail, userName, userEmail, packageName) => {
   let to;
-  if(platform == 'local'){
-    to ='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
-  else if(platform == 'dev'){
+  else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
   }
-  else{
+  else {
     to = schoolEmail;
   }
   Email.send({
@@ -567,15 +567,15 @@ export const sendPackageExpiredEmailToSchool = (schoolName, schoolEmail, userNam
   });
 };
 // send email notification to school when student successfully purchased a package.
-export const sendPackagePurchasedEmailToStudent = ( userName, userEmail, packageName) => {
+export const sendPackagePurchasedEmailToStudent = (userName, userEmail, packageName) => {
   let to;
-  if(platform == 'local'){
-    to ='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
-  else if(platform == 'dev'){
+  else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
   }
-  else{
+  else {
     to = userEmail;
   }
   Email.send({
@@ -592,13 +592,13 @@ export const sendPackagePurchasedEmailToStudent = ( userName, userEmail, package
 // send email notification to student when student successfully purchased a package.
 export const sendPackagePurchasedEmailToSchool = (schoolName, schoolEmail, userName, userEmail, packageName) => {
   let to;
-  if(platform == 'local'){
-    to ='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
-  else if(platform == 'dev'){
+  else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
   }
-  else{
+  else {
     to = schoolEmail;
   }
   Email.send({
@@ -610,7 +610,7 @@ export const sendPackagePurchasedEmailToSchool = (schoolName, schoolEmail, userN
              Thank you for using skillshape.com <br/>${EmailSignature}`
   });
 };
-export const sendSkillShapeJoinInvitation = (to,userName,schoolName,password)=>{
+export const sendSkillShapeJoinInvitation = (to, userName, schoolName, password) => {
   Email.send({
     to: to, // Needs to replace this with requester's Email.
     from: "Notices@SkillShape.com",
@@ -622,10 +622,10 @@ export const sendSkillShapeJoinInvitation = (to,userName,schoolName,password)=>{
     `
   })
 }
-export const adminInvitation = (to,userName,schoolName,action,adminName)=>{
+export const adminInvitation = (to, userName, schoolName, action, adminName) => {
   let content;
-  if(action=='add'){
-    content=`Hi ${userName}<br/>
+  if (action == 'add') {
+    content = `Hi ${userName}<br/>
     ${adminName} from ${schoolName} added you as an admin to their school on skillShape.<br/>
      This will allow you to manage classes, members, and much more. To log in, click the button below.<br/>
      <a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Skillshape</a>        
@@ -634,8 +634,8 @@ export const adminInvitation = (to,userName,schoolName,action,adminName)=>{
      The SkillShape Team<br/>
     `;
   }
-  else{
-    content=`Hi ${userName}
+  else {
+    content = `Hi ${userName}
     You have been removed as an admin from ${schoolName} on skillShape. If you believe this is a mistake,<br/>
      contact the administrator of the school.<br/>
      <a href=${Meteor.absoluteUrl()} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Skillshape</a>        
@@ -647,19 +647,19 @@ export const adminInvitation = (to,userName,schoolName,action,adminName)=>{
   Email.send({
     to: to, // Needs to replace this with requester's Email.
     from: "Notices@SkillShape.com",
-    subject: `SkillShape Admin ${action =='add'? "Invitation" : "Removal"}`,
+    subject: `SkillShape Admin ${action == 'add' ? "Invitation" : "Removal"}`,
     html: content
   })
 }
-export const sendEmailToRequester = (userEmail,userName,schoolName)=>{
+export const sendEmailToRequester = (userEmail, userName, schoolName) => {
   let to;
-  if(platform == 'local'){
-    to ='ramesh.bansal@daffodilsw.com';
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
   }
-  else if(platform == 'dev'){
+  else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
   }
-  else{
+  else {
     to = userEmail;
   }
   Email.send({
@@ -676,7 +676,7 @@ export const sendEmailToRequester = (userEmail,userName,schoolName)=>{
     `
   })
 }
-export const sendPackageLink = function({
+export const sendPackageLink = function ({
   userEmail,
   userName,
   link,
@@ -685,13 +685,13 @@ export const sendPackageLink = function({
 }) {
   if (Meteor.isServer) {
     let to;
-    if(platform == 'local'){
-      to ='ramesh.bansal@daffodilsw.com';
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
     }
-    else if(platform == 'dev'){
+    else if (platform == 'dev') {
       to = config.skillshapeAdminEmail;
     }
-    else{
+    else {
       to = userEmail;
     }
     Email.send({
@@ -708,12 +708,12 @@ export const sendPackageLink = function({
     });
   }
 };
-export const errorBoundaryEmail = function({
+export const errorBoundaryEmail = function ({
   error,
   errorInfo
 }) {
-  let emails = ['ramesh.bansal@daffodilsw.com','singhs.ishwer@gmail.com'];
-  emails.map((to)=>{
+  let emails = ['ramesh.bansal@daffodilsw.com', 'singhs.ishwer@gmail.com'];
+  emails.map((to) => {
     Email.send({
       to: to, //emailObj.to
       from: "Notices@SkillShape.com",
@@ -734,4 +734,4 @@ export const errorBoundaryEmail = function({
       `
     });
   })
-  }
+}

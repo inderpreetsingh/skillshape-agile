@@ -1,17 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { withStyles } from 'material-ui/styles';
+import IconButton from "material-ui/IconButton";
+import Icon from "material-ui/Icon";
+
+
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-export const styles = {
-  formField: {
-    marginRight: helpers.rhythmDiv,
-  },
-  formFieldSmReset: {
-    marginRight: helpers.rhythmDiv,
-    [`@media screen and (max-width: ${helpers.mobile}px)`]: {
-      marginRight: 0
-    }
-  },
+const styles = {
   iconButton: {
     background: "white",
     fontSize: helpers.baseFontSize,
@@ -27,6 +23,19 @@ export const styles = {
   }
 }
 
+export const DeleteClassTime = withStyles(styles)(props => {
+  return (
+    <CTIconButtonWrapper>
+      <IconButton
+        className={props.classes.iconButton}
+        onClick={props.removeRow}
+      >
+        <Icon className={props.classes.icon}>delete_outline</Icon>
+      </IconButton>
+    </CTIconButtonWrapper>
+  )
+});
+
 
 export const CTIconButtonWrapper = styled.div`
   position: absolute;
@@ -34,7 +43,6 @@ export const CTIconButtonWrapper = styled.div`
   right: ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
-
 
 export const CTFormRow = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -49,10 +57,14 @@ export const CTFormControlHW = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   max-width: calc(50% - ${helpers.rhythmDiv}px);
   width: 100%;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  margin-right: ${props => props.marginRight}px;
+  margin-bottom: ${props => props.marginBottom || helpers.rhythmDiv * 2}px;
+  ${props => props.noMarginBottom && 'margin-bottom: 0'};
 
   @media screen and (max-width: ${helpers.mobile}px) {
     max-width: 100%;
+    margin-right: 0;
+    ${props => props.marginRightSm && `margin-right: ${props.marginRight}px;`}
   }
 `;
 
@@ -82,3 +94,4 @@ export const LinkedTime = styled.div`
   border: 1px dotted #333;
   height: 120px;
 `;
+

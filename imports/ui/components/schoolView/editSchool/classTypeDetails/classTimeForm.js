@@ -32,8 +32,8 @@ import ResponsiveTabs from "/imports/util/responsiveTabs";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import config from "/imports/config";
 // import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
-import WeekDaysRow from "./weekDaysRow";
-import OneTimeRow from "./oneTimeRow";
+import { WeekDaysRow } from "./weekDaysRow";
+import { OneTimeRow } from "./oneTimeRow";
 import "/imports/api/sLocation/methods";
 
 import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
@@ -272,7 +272,8 @@ class ClassTimeForm extends React.Component {
     event.preventDefault();
     const { schoolId, data, parentKey, parentData, popUp } = this.props;
     const { tabValue, locationId } = this.state;
-
+    console.log(this, "this...");
+    debugger;
     const payload = {
       schoolId: schoolId,
       classTypeId: parentKey,
@@ -455,12 +456,6 @@ class ClassTimeForm extends React.Component {
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
               <DialogContent className={classes.dialogContent}>
-                <DialogContentText>
-                  This name helps differentiate different class times in the same
-                  class type. Good examples include "Wednesday Night Swim" or
-                  "Weekend Open Training."
-                </DialogContentText>
-
 
                 <form id={formId}>
                   <FormInputsWrapper>
@@ -474,6 +469,13 @@ class ClassTimeForm extends React.Component {
                       fullWidth
                       className={classes.textField}
                     />
+
+                    <DialogContentText>
+                      This name helps differentiate different class times in the same
+                      class type. Good examples include "Wednesday Night Swim" or
+                      "Weekend Open Training."
+                    </DialogContentText>
+
                     <TextField
                       defaultValue={data && data.desc}
                       margin="dense"

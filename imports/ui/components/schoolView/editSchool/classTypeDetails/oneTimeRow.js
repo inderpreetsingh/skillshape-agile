@@ -6,8 +6,6 @@ import Grid from "material-ui/Grid";
 import Select from "material-ui/Select";
 import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
-import IconButton from "material-ui/IconButton";
-import Icon from "material-ui/Icon";
 
 import Button from "material-ui/Button";
 import { FormControl } from "material-ui/Form";
@@ -20,7 +18,7 @@ import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-pic
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import config from "/imports/config";
-import { styles, LinkedTime, CTIconButtonWrapper, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+import { styles, DeleteClassTime, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
 
 
 const Wrapper = styled.div`
@@ -33,7 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const SSFormTimePickerControl = CTFormControlHW.extend`
-  margin-top: 4px;
+  margin-top: 0px;
   
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-top: 0;
@@ -44,7 +42,7 @@ const ButtonWrapper = styled.div`
   margin-left: ${helpers.rhythmDiv}px;
 `;
 
-class OneTimeRow extends React.Component {
+export class OneTimeRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeFields();
@@ -142,7 +140,6 @@ class OneTimeRow extends React.Component {
               marginBottom={helpers.rhythmDiv * 2}
             >
               <MaterialDatePicker
-                className={classes.pickerField}
                 required={true}
                 hintText={"Date"}
                 floatingLabelText={"Date *"}
@@ -157,9 +154,8 @@ class OneTimeRow extends React.Component {
             </CTFormRow>
 
             <CTFormRow>
-              <SSFormTimePickerControl>
+              <SSFormTimePickerControl marginRight={helpers.rhythmDiv * 2}>
                 <MaterialTimePicker
-                  className={classes.pickerField}
                   required={true}
                   value={data ? data.startTime : ""}
                   floatingLabelText={"Start Time *"}
@@ -174,20 +170,21 @@ class OneTimeRow extends React.Component {
               </SSFormTimePickerControl>
 
               <CTFormControlHW>
-                <TextField
-                  className={classes.formField}
-                  required={true}
-                  defaultValue={data && data.duration != "" ? data.duration : 60}
-                  label="Duration"
-                  type="number"
-                  onChange={this.handleSelectInputChange.bind(
-                    this,
-                    index,
-                    "duration"
-                  )}
-                  fullWidth
-                  inputProps={{ min: "0" }}
-                />
+                <CTFormControlHW noMarginBottom marginRightSm marginRight={helpers.rhythmDiv}>
+                  <TextField
+                    required={true}
+                    defaultValue={data && data.duration != "" ? data.duration : 60}
+                    label="Duration"
+                    type="number"
+                    onChange={this.handleSelectInputChange.bind(
+                      this,
+                      index,
+                      "duration"
+                    )}
+                    fullWidth
+                    inputProps={{ min: "0" }}
+                  />
+                </CTFormControlHW>
 
                 <FormControl fullWidth>
                   <InputLabel htmlFor="weekDay" shrink={true}>
@@ -216,15 +213,6 @@ class OneTimeRow extends React.Component {
                   </Select>
                 </FormControl>
               </CTFormControlHW>
-
-              <CTIconButtonWrapper>
-                <IconButton
-                  className={classes.iconButton}
-                  onClick={this.removeRow.bind(this, index)}
-                >
-                  <Icon className={classes.icon}>delete_outline</Icon>
-                </IconButton>
-              </CTIconButtonWrapper>
             </CTFormRow>
 
             {/*<ButtonWrapper>
@@ -236,6 +224,11 @@ class OneTimeRow extends React.Component {
                 label="Delete"
               />
             </ButtonWrapper>*/}
+
+            <DeleteClassTime
+              classes={this.props.classes}
+              removeRow={this.removeRow.bind(this, index)}
+            />
           </CTFormWrapper>
           );
         })}
@@ -256,4 +249,3 @@ class OneTimeRow extends React.Component {
   }
 }
 
-export default withStyles(styles)(OneTimeRow);
