@@ -8,8 +8,6 @@ import TextField from "material-ui/TextField";
 import Input, { InputLabel } from "material-ui/Input";
 import { FormControl } from "material-ui/Form";
 import { MenuItem } from "material-ui/Menu";
-import IconButton from "material-ui/IconButton";
-import Icon from "material-ui/Icon";
 import Typography from "material-ui/Typography";
 
 
@@ -18,8 +16,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
-import { styles, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW, CTIconButtonWrapper } from './sharedStyledComponents';
-
+import { DeleteClassTime, styles, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -38,7 +35,7 @@ const ButtonWrapper = styled.div`
 `;
 
 
-class WeekDaysRow extends React.Component {
+export class WeekDaysRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeFields();
@@ -162,7 +159,7 @@ class WeekDaysRow extends React.Component {
               <FormControl fullWidth>
                 <InputLabel htmlFor="weekDay" shrink={true}>
                   WeekDay
-              </InputLabel>
+                </InputLabel>
 
                 {/* <Select
                     input={<Input id="weekDay" />}
@@ -196,13 +193,13 @@ class WeekDaysRow extends React.Component {
             </CTFormRow>
 
             <CTFormRow>
-              <CTFormControlHW>
+              <CTFormControlHW marginRight={helpers.rhythmDiv}>
                 <MaterialTimePicker
                   required={true}
                   value={data && data.startTime}
                   floatingLabelText={"Start Time *"}
                   hintText={"Start Time"}
-                  className={classes.formFieldSmReset}
+                  // className={classes.formFieldSmReset}
                   onChange={this.handleChangeDate.bind(
                     this,
                     index,
@@ -213,22 +210,24 @@ class WeekDaysRow extends React.Component {
               </CTFormControlHW>
 
               <CTFormControlHW>
-                <TextField
-                  className={classes.formField}
-                  defaultValue={data && data.duration || 60}
-                  onChange={this.handleSelectInputChange.bind(
-                    this,
-                    index,
-                    "duration"
-                  )}
-                  label="Duration"
-                  type="number"
-                  fullWidth
-                  required={
-                    data && data.key && data.key != '' ? true : false
-                  } /*Made it mandatory if week day selected*/
-                  inputProps={{ min: "0" }}
-                />
+                <CTFormControlHW marginRight={helpers.rhythmDiv} marginRightSm noMarginBottom>
+                  <TextField
+                    // className={classes.formField}
+                    defaultValue={data && data.duration || 60}
+                    onChange={this.handleSelectInputChange.bind(
+                      this,
+                      index,
+                      "duration"
+                    )}
+                    label="Duration"
+                    type="number"
+                    fullWidth
+                    required={
+                      data && data.key && data.key != '' ? true : false
+                    } /*Made it mandatory if week day selected*/
+                    inputProps={{ min: "0" }}
+                  />
+                </CTFormControlHW>
 
                 <FormControl fullWidth>
                   <InputLabel htmlFor="weekDay" shrink={true}>
@@ -260,19 +259,13 @@ class WeekDaysRow extends React.Component {
               </CTFormControlHW>
             </CTFormRow>
 
-            <CTIconButtonWrapper>
-              <IconButton
-                className={classes.iconButton}
-                onClick={this.removeRow.bind(this, index)}
-              >
-                <Icon className={classes.icon}>delete_outline</Icon>
-              </IconButton>
-            </CTIconButtonWrapper>
-
+            <DeleteClassTime
+              classes={this.props.classes}
+              removeRow={this.removeRow.bind(this, index)}
+            />
           </CTFormWrapper>
-          );
+          )
         })}
-
         <LinkedTime>
           <ButtonWrapper>
             <FormGhostButton
@@ -283,8 +276,6 @@ class WeekDaysRow extends React.Component {
           </ButtonWrapper>
         </LinkedTime>
       </Wrapper>
-    );
+    )
   }
 }
-
-export default withStyles(styles)(WeekDaysRow);
