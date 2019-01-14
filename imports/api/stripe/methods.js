@@ -454,7 +454,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         })
         payAsYouGo = get(MonthlyData,'pymtType.payAsYouGo',false);
         payUpFront = get(MonthlyData,'pymtType.payUpFront',false);
-        autoWithdraw = get(MonthlyData,'pymtType.autoWithdraw',false);
+        autoWithdraw = get(MonthlyData,'pymtType.autoWithDraw',false);
         expPeriod = 'Months';
       }
        //Get currency name and correct amount using multipleFactor from config

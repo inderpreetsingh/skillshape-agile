@@ -275,7 +275,7 @@ class Package extends React.Component {
 
 	getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
-		let fee = get(props, 'fee', 0).toFixed(2);
+		let fee = get(props, 'amount', 0).toFixed(2);
 		let currency = get(props, 'currency', '$')
 		if (get(props, 'payUpFront', false)) {
 			stringToPrint += `<b>Paid until:</b> `;
@@ -286,8 +286,7 @@ class Package extends React.Component {
 		if (get(props, 'payAsYouGo', false)) {
 			return `Payment of ${formatMoney(fee, currency)} is due on ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}`
 		}
-		if (get(props, 'autoWithdraw', false)) {
-
+		if (get(props, 'autoWithdraw', false) || get(props,'packageType',null) == 'MP') {
 			return stringToPrint += `<b>Automatic Payment</b> of ${formatMoney(fee, currency)} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
 		}
 		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
