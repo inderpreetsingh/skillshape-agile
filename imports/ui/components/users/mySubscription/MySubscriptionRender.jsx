@@ -51,6 +51,11 @@ const styles = {
     }
 };
 
+const SchoolName = SubHeading.extend`
+    max-width: 160px;
+    width: 100%;
+`;
+
 const Wrapper = styled.div`
 	max-width: 800px;
 	margin: 0 auto;
@@ -282,7 +287,7 @@ const MySubscriptionRender = (props) => {
                                                 />
                                             </ProfileImage>
                                         </Profile>
-                                        <SubHeading> {school.name} </SubHeading>
+                                        <SchoolName> {school.name} </SchoolName>
                                     </SchoolProfile>
 
                                     <ActionButtons
