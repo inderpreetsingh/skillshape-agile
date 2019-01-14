@@ -219,7 +219,9 @@ Meteor.methods({
     let payload = {...data};
     payload.action = 'add';
     payload.transactionDate = new Date();
-    payload.schoolName = School.findOne({_id:payload.schoolId},{fields:{'name':1}}).name;
+    let schoolData = School.findOne({_id:payload.schoolId},{fields:{'name':1,'slug':1}});
+    payload.schoolName = schoolData.name;
+    payload.schoolSlug = schoolData.slug;
     payload.transactionType = transactionType;
     payload.purchaseId = _id;
     delete payload._id;

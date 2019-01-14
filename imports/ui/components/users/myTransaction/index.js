@@ -9,7 +9,7 @@ import { filterForTransaction } from './filterCode';
 import { withStyles } from "material-ui/styles";
 import Paper from 'material-ui/Paper'
 import Tooltip from 'rc-tooltip';
-import { goToClassTypePage } from '/imports/util';
+import { goToClassTypePage,goToSchoolPage } from '/imports/util';
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import config from "../../../../config";
@@ -163,7 +163,7 @@ class MyTransaction extends React.Component {
             ? "No payout found"
             : transactionData.map((transaction, index) => {
               let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
-              let { classTypeName, classTypeId } = transaction || {};
+              let { classTypeName, classTypeId,schoolSlug,schoolId } = transaction || {};
               let classTypePageCondition = classTypeName && classTypeId;
               return (
                 <Fragment>
@@ -183,7 +183,7 @@ class MyTransaction extends React.Component {
                     <FncTableCell data-th={columnValues[4].columnName}>
                       {this.amountGenerator(transaction)}
                     </FncTableCell>
-                    <FncTableCell data-th={columnValues[5].columnName}>
+                    <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { goToSchoolPage(schoolId, schoolSlug)}}>
                       {this.getColumnValue(transaction, 'schoolName') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) }}>
