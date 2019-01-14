@@ -57,11 +57,12 @@ const ListWrapper = styled.div`
 `;
 
 let FormWrapper, DialogContentText, FormInputsWrapper;
-FormWrapper = DialogContentText = FormInputsWrapper = styled.div`
+FormWrapper = FormInputsWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
 
-DialogContentText = DialogContentText.extend`
+const DialogContentText = styled.div`
+  padding: 0;
   font-size: ${helpers.baseFontSize}px;
   font-family: ${helpers.specialFont};
 `;
