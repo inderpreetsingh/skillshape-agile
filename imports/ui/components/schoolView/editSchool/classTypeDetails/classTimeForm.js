@@ -45,6 +45,7 @@ import InstructorList from '/imports/ui/components/landing/components/classDetai
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 
 import { withPopUp } from '/imports/util';
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const ButtonWrapper = styled.div`
@@ -61,10 +62,15 @@ FormWrapper = FormInputsWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
 
-const DialogContentText = styled.div`
+const DialogContentText = Text.extend`
   padding: 0;
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
+  font-family: ${helpers.commonFont};
+  color: ${helpers.secondaryTextColor};
+`;
+
+const CheckBoxText = Text.extend`
+  font-family: ${helpers.commonFont};
+  color: ${helpers.secondaryTextColor};
 `;
 
 const Instructors = styled.div`
@@ -99,6 +105,16 @@ const styles = theme => {
     },
     textField: {
       marginBottom: helpers.rhythmDiv
+    },
+    formLabel: {
+      color: helpers.black,
+    },
+    formControlLabel: {
+      fontSize: helpers.baseFontSize
+    },
+    checkBoxRoot: {
+      marginLeft: 0,
+      height: helpers.rhythmDiv * 3,
     },
     formControl: {
       marginBottom: helpers.rhythmDiv
@@ -273,8 +289,8 @@ class ClassTimeForm extends React.Component {
     event.preventDefault();
     const { schoolId, data, parentKey, parentData, popUp } = this.props;
     const { tabValue, locationId } = this.state;
-    console.log(this, "this...");
-    debugger;
+    // console.log(this, "this...");
+    // debugger;
     const payload = {
       schoolId: schoolId,
       classTypeId: parentKey,
@@ -364,21 +380,34 @@ class ClassTimeForm extends React.Component {
   };
   //onsubmit1 for the handling again opening new classtime form
   closedCheckbox = () => {
+    const { classes } = this.props;
     return <Fragment>
-      {(this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2) && <FormControl fullWidth margin="dense">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={this.state.closed}
-              onChange={() => {
-                this.setState({ closed: !this.state.closed })
+      {(this.state.tabValue == 1 || this.state.tabValue == 0) &&
+        <Fragment>
+          <FormControl fullWidth margin="dense">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.closed}
+                  onChange={() => {
+                    this.setState({ closed: !this.state.closed })
+                  }}
+                  value="closed"
+                  classes={{
+                    root: classes.checkBoxRoot,
+                  }}
+                />
+              }
+              classes={{
+                label: classes.formControlLabel
               }}
-              value="closed"
+              label="Make it closed series/set ?"
             />
-          }
-          label="Do you want to make this a Closed Series / Set? This will close registration once the first class has started and students who join will be enrolled in the entire series."
-        />
-      </FormControl>}
+          </FormControl>
+          <CheckBoxText>
+            This will close registration once the first class has started and students who join will be enrolled in the entire series.
+          </CheckBoxText>
+        </Fragment>}
     </Fragment>
   }
   instructorsIdsSetter = (instructorId, action) => {

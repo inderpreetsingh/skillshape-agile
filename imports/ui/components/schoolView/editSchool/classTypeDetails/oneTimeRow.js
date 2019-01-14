@@ -123,7 +123,7 @@ export class OneTimeRow extends React.Component {
     }
   };
   getRowData = () => {
-    console.log("this.state.row ", this.state.row);
+    //console.log("this.state.row ", this.state.row);
     return this.state.row;
   };
   handleRoomData = (locationId, roomId, index) => {
@@ -170,7 +170,10 @@ export class OneTimeRow extends React.Component {
               </SSFormTimePickerControl>
 
               <CTFormControlHW>
-                <CTFormControlHW noMarginBottom marginRightSm marginRight={helpers.rhythmDiv}>
+                <CTFormControlHW
+                  noMarginBottom
+                  marginRightSm
+                  marginRight={helpers.rhythmDiv}>
                   <TextField
                     required={true}
                     defaultValue={data && data.duration != "" ? data.duration : 60}
