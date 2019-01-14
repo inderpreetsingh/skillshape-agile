@@ -62,7 +62,7 @@ Meteor.methods({
                    purchaseId = obj.purchaseId;
                 })
                 if(purchaseId){
-                   let data = {userId,schoolId,classId,purchaseId};
+                   let data = {userId,schoolId,classId,purchaseId,classTypeId};
                    let profile = Meteor.users.findOne({_id:userId},{fields:{'profile':1}}).profile;
                    data.userName = get(profile,'name',get(profile,'firstName',get(profile,'lastName','Old Data'))); 
                    let purchaseData = Meteor.call('purchases.getDataForTransactionEntry',purchaseId);

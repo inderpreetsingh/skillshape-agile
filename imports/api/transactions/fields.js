@@ -10,6 +10,10 @@ Transactions.attachSchema(new SimpleSchema({
         type: String,
         optional: true
     },
+    classTypeId: {
+        type: String,
+        optional: true
+    },
     transactionDate: {
         type: Date,
         optional: true

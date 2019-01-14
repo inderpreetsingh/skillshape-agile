@@ -9,6 +9,7 @@ import { filterForTransaction } from './filterCode';
 import { withStyles } from "material-ui/styles";
 import Paper from 'material-ui/Paper'
 import Tooltip from 'rc-tooltip';
+import { goToClassTypePage } from '/imports/util';
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import config from "../../../../config";
@@ -153,6 +154,8 @@ class MyTransaction extends React.Component {
             ? "No payout found"
             : transactionData.reverse().map((transaction, index) => {
               let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
+              let {classTypeName,classTypeId} = transaction || {};
+              let classTypePageCondition  = classTypeName && classTypeId;
               return (
                 <Fragment>
                   <FncTableRow key={index} selectable={false}>
@@ -174,9 +177,11 @@ class MyTransaction extends React.Component {
                     <FncTableCell data-th={columnValues[5].columnName}>
                       {this.getColumnValue(transaction, 'schoolName') || "..."}
                     </FncTableCell>
+                    <div onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName,classTypeId) }}>
                     <FncTableCell data-th={columnValues[6].columnName}>
                       {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
+                   </div>
                     <Tooltip
                       animation="zoom"
                       placement="top"
