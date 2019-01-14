@@ -71,6 +71,7 @@ const DialogContentText = Text.extend`
 const CheckBoxText = Text.extend`
   font-family: ${helpers.commonFont};
   color: ${helpers.secondaryTextColor};
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const Instructors = styled.div`
@@ -384,7 +385,7 @@ class ClassTimeForm extends React.Component {
     return <Fragment>
       {(this.state.tabValue == 1 || this.state.tabValue == 0) &&
         <Fragment>
-          <FormControl fullWidth margin="dense">
+          <FormControl fullWidth>
             <FormControlLabel
               control={
                 <Checkbox
