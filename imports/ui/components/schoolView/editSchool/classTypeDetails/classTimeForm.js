@@ -56,7 +56,7 @@ const ListWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-let FormWrapper, DialogContentText, FormInputsWrapper;
+let FormWrapper, FormInputsWrapper;
 FormWrapper = FormInputsWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
