@@ -16,7 +16,7 @@ import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
-const transactionType  = [{label:'Transaction Type All',value: 0},{label:'Purchase',value:'purchase'},{label:'Attendance',value:'attendance'},{label:'Expired',value:'expired'}]
+const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }]
 const styles = theme => ({
   root: {
     paddingTop: theme.spacing.unit * 2,
@@ -37,6 +37,7 @@ class MyTransaction extends React.Component {
       perPage: 10,
       pageCount: 1,
       packageName: '',
+      sddb: false,
       selectedPackageType: null,
       selectedPackageStatus: null,
       selectedPaymentMethod: null,
@@ -127,19 +128,19 @@ class MyTransaction extends React.Component {
     return covers;
   }
   render() {
-    const { transactionData, isLoading, selectedFilter } = this.state;
+    const { transactionData, isLoading, selectedFilter, sddb, index } = this.state;
     let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
     const { classes } = this.props;
     let columnValues = tableHeaderColumns;
     let TableName = TransactionDetailsTable;
-    if(!Meteor.userId()){
+    if (!Meteor.userId()) {
       return 'Please Login First.'
     }
-    else if(get(this.props.params, 'id',null) !=  Meteor.userId()){
+    else if (get(this.props.params, 'id', null) != Meteor.userId()) {
       return 'Unable to Access Other User Account';
     }
-    const color = {color:'green',cursor: "pointer"};
+    const color = { color: 'green', cursor: "pointer" };
     return (
       <div>
         {isLoading && <ContainerLoader />}
@@ -150,13 +151,20 @@ class MyTransaction extends React.Component {
         <Paper className={classes.root}>
           {filterForTransaction.call(this)}
         </Paper>
+        {sddb &&
+          <SubscriptionsDetailsDialogBox
+            {...transactionData[index]}
+            open={sddb}
+            onModalClose={() => { this.setState({ sddb: false }) }}
+          />
+        }
         <TableName>
           {isEmpty(transactionData)
             ? "No payout found"
-            : transactionData.reverse().map((transaction, index) => {
+            : transactionData.map((transaction, index) => {
               let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
-              let {classTypeName,classTypeId} = transaction || {};
-              let classTypePageCondition  = classTypeName && classTypeId;
+              let { classTypeName, classTypeId } = transaction || {};
+              let classTypePageCondition = classTypeName && classTypeId;
               return (
                 <Fragment>
                   <FncTableRow key={index} selectable={false}>
@@ -178,29 +186,12 @@ class MyTransaction extends React.Component {
                     <FncTableCell data-th={columnValues[5].columnName}>
                       {this.getColumnValue(transaction, 'schoolName') || "..."}
                     </FncTableCell>
-                    <div onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName,classTypeId) }}>
-                    <FncTableCell data-th={columnValues[6].columnName} style={color}>
+                    <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) }}>
                       {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
-                   </div>
-                    <Tooltip
-                      animation="zoom"
-                      placement="top"
-                      trigger={['click']}
-                      destroyTooltipOnHide
-                      overlay={
-                        <SubscriptionsDetailsDialogBox
-                          {...transaction}
-                          open={true}
-                          onModalClose={() => { }}
-
-                        />
-                      }
-                      overlayStyle={{ zIndex: -9999 }}>
-                      <FncTableCell data-th={columnValues[7].columnName} style={color}>
-                        {this.getColumnValue(transaction, 'packageName') || "..."}
-                      </FncTableCell>
-                    </Tooltip>
+                    <FncTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
+                      {this.getColumnValue(transaction, 'packageName') || "..."}
+                    </FncTableCell>
                     <FncTableCell data-th={columnValues[8].columnName}>
                       {this.packageType(transaction)}
                     </FncTableCell>
