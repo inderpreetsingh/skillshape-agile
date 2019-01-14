@@ -17,8 +17,7 @@ import config from '/imports/config';
 import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 import NotFound from '/imports/ui/components/landing/components/helpers/NotFound.jsx';
 import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
-
-
+import { ContainerLoader } from "/imports/ui/loading/container";
 const Wrapper = styled.div`
 	width: 100%;
 
@@ -34,6 +33,9 @@ class ClassTypeView extends Component {
 	render() {
 		// console.log("ClassTypeView .props-->>",this.props)
 		const emptyClassTypeData = isEmpty(this.props.classTypeData);
+		if(this.props.isLoading){
+			return  <ContainerLoader />
+		}
 		return (
 			<Wrapper isEmpty={emptyClassTypeData} className="classtype-page">
 				{/*<DocumentTitle title={get(this.props,"params.classTypeName","untitled")}> */}

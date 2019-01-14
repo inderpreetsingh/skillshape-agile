@@ -139,6 +139,7 @@ class MyTransaction extends React.Component {
     else if(get(this.props.params, 'id',null) !=  Meteor.userId()){
       return 'Unable to Access Other User Account';
     }
+    const color = {color:'green',cursor: "pointer"};
     return (
       <div>
         {isLoading && <ContainerLoader />}
@@ -178,7 +179,7 @@ class MyTransaction extends React.Component {
                       {this.getColumnValue(transaction, 'schoolName') || "..."}
                     </FncTableCell>
                     <div onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName,classTypeId) }}>
-                    <FncTableCell data-th={columnValues[6].columnName}>
+                    <FncTableCell data-th={columnValues[6].columnName} style={color}>
                       {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
                    </div>
@@ -196,7 +197,7 @@ class MyTransaction extends React.Component {
                         />
                       }
                       overlayStyle={{ zIndex: -9999 }}>
-                      <FncTableCell data-th={columnValues[7].columnName}>
+                      <FncTableCell data-th={columnValues[7].columnName} style={color}>
                         {this.getColumnValue(transaction, 'packageName') || "..."}
                       </FncTableCell>
                     </Tooltip>

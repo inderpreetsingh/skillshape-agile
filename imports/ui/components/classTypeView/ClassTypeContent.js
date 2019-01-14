@@ -541,6 +541,7 @@ class ClassTypeContent extends Component {
               }}
               classTypeIds={this.state.selectedClassTypeIds}
               epData = {this.state.epData}
+              currentPackageData = {this.state.currentPackageData}
             />
           }
         {this.state.emailUsDialog && (
