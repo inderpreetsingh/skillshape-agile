@@ -383,7 +383,7 @@ class ClassTimeForm extends React.Component {
   closedCheckbox = () => {
     const { classes } = this.props;
     return <Fragment>
-      {(this.state.tabValue == 1 || this.state.tabValue == 0) &&
+      {(this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2) &&
         <Fragment>
           <FormControl fullWidth>
             <FormControlLabel
