@@ -3,6 +3,7 @@ import { TableCell, TableRow } from "material-ui/Table";
 
 import {
     rhythmDiv,
+    specialFont,
     mobile,
     baseFontSize,
     darkBgColor
@@ -22,6 +23,7 @@ export const FncTableCell = styled(TableCell)`
   overflow-wrap: break-word;
   word-wrap: break-word;
   padding: ${rhythmDiv * 2}px;
+  font-family: ${specialFont};
 
   @media screen and (max-width: ${mobile}px) {
     display: block;

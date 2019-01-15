@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import styled from 'styled-components';
 import { isEmpty, get } from "lodash";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
@@ -9,26 +10,52 @@ import { filterForTransaction } from './filterCode';
 import { withStyles } from "material-ui/styles";
 import Paper from 'material-ui/Paper'
 import Tooltip from 'rc-tooltip';
-import { goToClassTypePage,goToSchoolPage } from '/imports/util';
+import { goToClassTypePage, goToSchoolPage } from '/imports/util';
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import 'rc-tooltip/assets/bootstrap_white.css';
+import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
 const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }]
+
+const TableWrapper = styled.div`
+  padding: ${rhythmDiv * 2}px;
+  padding-top: ${rhythmDiv * 4}px;
+  background: ${panelColor};
+`;
+
+const PageHeading = Heading.extend`
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: ${rhythmDiv * 6}px;
+`;
+
+const Wrapper = styled.div`
+  background: white;
+`;
+
+const PaginationWrapper = styled.div`
+  background: ${panelColor};
+`;
+
 const styles = theme => ({
   root: {
-    maxWidth: '90%',
+    maxWidth: `calc(90% - ${rhythmDiv * 4}px)`,
     margin: `0 auto`,
     boxShadow: 'none',
     background: 'transparent',
+    marginBottom: rhythmDiv * 2,
   },
   rootGrid: {
     padding: '6px'
   }
 })
+
+
 class MyTransaction extends React.Component {
   constructor(props) {
     super(props);
@@ -142,12 +169,9 @@ class MyTransaction extends React.Component {
     }
     const color = { color: 'green', cursor: "pointer" };
     return (
-      <div>
+      <Wrapper>
         {isLoading && <ContainerLoader />}
-        <center>
-          {" "}
-          <h1>My Transactions</h1>
-        </center>
+        <PageHeading>My Transactions</PageHeading>
         <Paper className={classes.root}>
           {filterForTransaction.call(this)}
         </Paper>
@@ -158,54 +182,61 @@ class MyTransaction extends React.Component {
             onModalClose={() => { this.setState({ sddb: false }) }}
           />
         }
-        <TableName>
-          {isEmpty(transactionData)
-            ? "No payout found"
-            : transactionData.map((transaction, index) => {
-              let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
-              let { classTypeName, classTypeId,schoolSlug,schoolId } = transaction || {};
-              let classTypePageCondition = classTypeName && classTypeId;
-              return (
-                <Fragment>
-                  <FncTableRow key={index} selectable={false}>
-                    <FncTableCell data-th={columnValues[0].columnName}>
-                      {this.getColumnValue(transaction, 'userName') || "..."}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[1].columnName}>
-                      {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm a")}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[2].columnName}>
-                      {this.getColumnValue(transaction, 'transactionType')}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[3].columnName}>
-                      {this.getColumnValue(transaction, 'paymentMethod') || "..."}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[4].columnName}>
-                      {this.amountGenerator(transaction)}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { goToSchoolPage(schoolId, schoolSlug)}}>
-                      {this.getColumnValue(transaction, 'schoolName') || "..."}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) }}>
-                      {this.getColumnValue(transaction, 'classTypeName') || "..."}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
-                      {this.getColumnValue(transaction, 'packageName') || "..."}
-                    </FncTableCell>
-                    <FncTableCell data-th={columnValues[8].columnName}>
-                      {this.packageType(transaction)}
-                    </FncTableCell>
-                  </FncTableRow>
+        <TableWrapper>
+          <TableName>
+            {isEmpty(transactionData)
+              ? "No payout found"
+              : transactionData.map((transaction, index) => {
+                let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
+                let { classTypeName, classTypeId, schoolSlug, schoolId } = transaction || {};
+                let classTypePageCondition = classTypeName && classTypeId;
+                return (
+                  <Fragment>
+                    <FncTableRow key={index} selectable={false}>
+                      <FncTableCell data-th={columnValues[0].columnName}>
+                        {this.getColumnValue(transaction, 'userName') || "..."}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[1].columnName}>
+                        {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm a")}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[2].columnName}>
+                        {this.getColumnValue(transaction, 'transactionType')}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[3].columnName}>
+                        {this.getColumnValue(transaction, 'paymentMethod') || "..."}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[4].columnName}>
+                        {this.amountGenerator(transaction)}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { goToSchoolPage(schoolId, schoolSlug) }}>
+                        {this.getColumnValue(transaction, 'schoolName') || "..."}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) }}>
+                        {this.getColumnValue(transaction, 'classTypeName') || "..."}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
+                        {this.getColumnValue(transaction, 'packageName') || "..."}
+                      </FncTableCell>
+                      <FncTableCell data-th={columnValues[8].columnName}>
+                        {this.packageType(transaction)}
+                      </FncTableCell>
+                    </FncTableRow>
 
-                </Fragment>
-              );
-            })}
-        </TableName>
-        <Pagination
-          {...this.state}
-          onChange={this.changePageClick}
-        />
-      </div>
+                  </Fragment>
+                );
+              })}
+          </TableName>
+        </TableWrapper>
+        <PaginationWrapper>
+          <Pagination
+            style={{
+              marginBottom: 0
+            }}
+            {...this.state}
+            onChange={this.changePageClick}
+          />
+        </PaginationWrapper>
+      </Wrapper>
     );
   }
 }
