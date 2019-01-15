@@ -194,11 +194,12 @@ const getStatusInfo = status => {
 PaymentAndStatus = (props) => {
   let {alreadyPurchasedData:{epStatus,purchased,purchasedEP}} = props;
   if (props.purchaseData) {
-    res = props.purchaseData;
+    let {endDate,packageType,noClasses} = props.purchaseData;
+    let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses >1 ? 'Classes' : 'Class'} Remaining`
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
-        <PaymentExpires>Payment Expires on</PaymentExpires>
-        <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
+        <PaymentExpires>{text}</PaymentExpires>
+        <ExpiryDate>{formatDate(endDate)}</ExpiryDate>
       </PaymentDetails>
       <StatusOptions {...props} />
     </PaymentAndStatusDetails>

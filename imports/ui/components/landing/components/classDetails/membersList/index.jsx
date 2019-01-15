@@ -596,7 +596,7 @@ class MembersListContainer extends Component {
         {notification &&
           currentView === "studentsView" && (
             <Notification
-              notificationContent="You do not have any packages that will cover this class."
+              notificationContent="You have not Connected any package to this class. If you don't have any package please purchase one first."
               bgColor={danger}
               buttonLabel="Purchase Classes"
               onButtonClick={() => { this.setState({ classTypePackages: true }) }}
