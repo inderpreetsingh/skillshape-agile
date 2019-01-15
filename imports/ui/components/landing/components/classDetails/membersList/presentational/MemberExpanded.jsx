@@ -192,6 +192,7 @@ const getStatusInfo = status => {
 };
 
 PaymentAndStatus = (props) => {
+  let {alreadyPurchasedData:{epStatus,purchased,purchasedEP}} = props;
   if (props.purchaseData) {
     res = props.purchaseData;
     return (<PaymentAndStatusDetails>
@@ -203,9 +204,17 @@ PaymentAndStatus = (props) => {
     </PaymentAndStatusDetails>
     )
   }
+  if(epStatus && !isEmpty(purchased)){
+    return (<PaymentAndStatusDetails>
+      <PaymentDetails>
+      </PaymentDetails>
+      <StatusOptions {...props} />
+    </PaymentAndStatusDetails>
+    )
+  }
   return (<PaymentAndStatusDetails>
     <PaymentDetails>
-      <Text color={helpers.alertColor}>No Purchased</Text>
+      <Text color={helpers.alertColor}>No Package</Text>
       <SkillShapeButton
         noMarginBottom
         danger

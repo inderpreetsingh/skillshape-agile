@@ -42,13 +42,14 @@ class MembersListContainer extends Component {
     let studentsIds = [];
     let purchaseIds = [];
     const { classData } = props;
+    let {classTypeId} = classData[0] || {};
     if (classData) {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
       })
       if (!isEmpty(studentsIds)) {
-        Meteor.call('user.getUsersFromIds', studentsIds, (err, res) => {
+        Meteor.call('user.getUsersFromIds', studentsIds,classTypeId, (err, res) => {
           if (res) {
             this.setState({ studentsData: res });
           }
@@ -66,7 +67,6 @@ class MembersListContainer extends Component {
     return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
   }
   componentWillReceiveProps(nextProps, prevProps) {
-    console.count('mlCcwrp')
 
     this.studentsData(nextProps);
   }
@@ -82,7 +82,6 @@ class MembersListContainer extends Component {
       inc = -1;
     }
     /*  */
-    console.log("in updateClass")
     Meteor.call('purchase.manageAttendance', _id, packageType, inc, (err, res) => {
       if (condition <= 0) {
         condition = res;
@@ -305,9 +304,6 @@ class MembersListContainer extends Component {
       if (typeof entityType == "string") return member.type == entityType;
       else return entityType.indexOf(member.type) !== -1;
     });
-    // console.group("entities");
-    // console.info(entities);
-    // console.groupEnd();
     return entities;
   };
   getPurchaseData = _id => {
@@ -354,7 +350,6 @@ class MembersListContainer extends Component {
     let { status, popUp, purchaseId, classData } = props;
     let { scheduled_date } = classData && classData[0] || {};
     let inc = 0, packageType;
-    console.log('in Update Status', n, status)
     if (n == 1) {
       if (status == 'signIn' || status == 'checkOut') {
         inc = -1;
