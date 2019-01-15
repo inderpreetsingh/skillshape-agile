@@ -9,7 +9,7 @@ import { getTableProps, TransactionDetailsTable } from "./transactionDetailsTabl
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import { ContainerLoader } from "/imports/ui/loading/container";
-import { capitalizeString, dateFriendly, goToClassTypePage, goToSchoolPage } from "/imports/util";
+import { capitalizeString, dateFriendly, goToClassTypePage, goToSchoolPage, withPopUp, confirmationDialog } from "/imports/util";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
@@ -128,7 +128,7 @@ class MyTransaction extends React.Component {
     const { transactionData, isLoading, selectedFilter, sddb, index } = this.state;
     let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
-    const { classes } = this.props;
+    const { classes, popUp } = this.props;
     let columnValues = tableHeaderColumns;
     let TableName = TransactionDetailsTable;
     if (!Meteor.userId()) {
@@ -138,6 +138,8 @@ class MyTransaction extends React.Component {
       return 'Unable to Access Other User Account';
     }
     const color = { color: 'green', cursor: "pointer" };
+
+
     return (
       <div>
         {isLoading && <ContainerLoader />}
@@ -159,9 +161,23 @@ class MyTransaction extends React.Component {
           {isEmpty(transactionData)
             ? "No payout found"
             : transactionData.map((transaction, index) => {
-              let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
-              let { classTypeName, classTypeId,schoolSlug,schoolId } = transaction || {};
+              let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
               let classTypePageCondition = classTypeName && classTypeId;
+              let dataForClassType = {}, dataForSchool = {};
+              dataForClassType = {
+                popUp,
+                title: 'Confirmation',
+                type: 'inform',
+                content: <div>{classTypePageCondition ? `You will be redirected to ${classTypeName} page.` : 'Please Create New Data to use this functionality.'}</div>,
+                buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) } }]
+              };
+              dataForSchool = {
+                popUp,
+                title: 'Confirmation',
+                type: 'inform',
+                content: <div>You will be redirected to {schoolName} page.</div>,
+                buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { goToSchoolPage(schoolId, schoolSlug) } }]
+              }
               return (
                 <Fragment>
                   <FncTableRow key={index} selectable={false}>
@@ -180,10 +196,10 @@ class MyTransaction extends React.Component {
                     <FncTableCell data-th={columnValues[4].columnName}>
                       {this.amountGenerator(transaction)}
                     </FncTableCell>
-                    <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { goToSchoolPage(schoolId, schoolSlug)}}>
+                    <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
                       {this.getColumnValue(transaction, 'schoolName') || "..."}
                     </FncTableCell>
-                    <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) }}>
+                    <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
                       {this.getColumnValue(transaction, 'classTypeName') || "..."}
                     </FncTableCell>
                     <FncTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
@@ -206,4 +222,4 @@ class MyTransaction extends React.Component {
     );
   }
 }
-export default withStyles(styles)(MyTransaction);
+export default withStyles(styles)(withPopUp(MyTransaction));

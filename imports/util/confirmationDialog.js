@@ -5,7 +5,6 @@ import React from "react";
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 export function confirmationDialog(data) {
-   console.log("​confirmationDialog -> data", data)
    const {title,content,buttons,type,popUp} = data;
    popUp.appear(type, {
     title,
