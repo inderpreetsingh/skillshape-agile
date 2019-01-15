@@ -676,7 +676,36 @@ class ClassTypeContent extends Component {
               </ClassTimesWrapper>
             </ClassTimesInnerWrapper>
           </MainInnerFixedContainer>
-
+          <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
+            <SchoolDetails
+              website={schoolData.website}
+              address={schoolData.address}
+              images={
+                !isEmpty(mediaData) &&
+                mediaData.map(media => ({
+                  original: media.sourcePath,
+                  thumbnail: media.sourcePath,
+                  media: media
+                }))
+              }
+              schoolName={schoolData && schoolData.name}
+              notes={schoolData.studentNotesHtml}
+              description={schoolData.aboutHtml}
+            />
+            {/*<CalendarWrapper>
+                      <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
+                  </CalendarWrapper>*/}
+            {
+              /*<MyCalender {...this.props}/>*/
+             
+            }
+          </MainInnerFixedContainer>
+          <CalendarWrapper>
+                <ManageMyCalendar
+                  classCalendar={true}
+                  {...this.props}
+                />
+              </CalendarWrapper>
           <Element name="price-section">
             <PackagesWrapper
               marginBottom={
@@ -718,35 +747,7 @@ class ClassTypeContent extends Component {
             </PackagesWrapper>
           </Element>
 
-          <MainInnerFixedContainer fixedWidth="1100" marginBottom="64">
-            <SchoolDetails
-              website={schoolData.website}
-              address={schoolData.address}
-              images={
-                !isEmpty(mediaData) &&
-                mediaData.map(media => ({
-                  original: media.sourcePath,
-                  thumbnail: media.sourcePath,
-                  media: media
-                }))
-              }
-              schoolName={schoolData && schoolData.name}
-              notes={schoolData.studentNotesHtml}
-              description={schoolData.aboutHtml}
-            />
-            {/*<CalendarWrapper>
-                      <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
-                  </CalendarWrapper>*/}
-            {
-              /*<MyCalender {...this.props}/>*/
-              <CalendarWrapper>
-                <ManageMyCalendar
-                  classCalendar={true}
-                  {...this.props}
-                />
-              </CalendarWrapper>
-            }
-          </MainInnerFixedContainer>
+          
         </Main>
       </div>
     );
