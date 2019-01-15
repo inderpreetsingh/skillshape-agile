@@ -12,6 +12,7 @@ import Tooltip from 'rc-tooltip';
 import { goToClassTypePage } from '/imports/util';
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import 'rc-tooltip/assets/bootstrap_white.css';
+
 import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
@@ -19,11 +20,10 @@ const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Ski
 const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }]
 const styles = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    backgroundColor: "#4caf50",
-    margin: "10px",
-    borderRadius: "10px"
+    maxWidth: '90%',
+    margin: `0 auto`,
+    boxShadow: 'none',
+    background: 'transparent',
   },
   rootGrid: {
     padding: '6px'
