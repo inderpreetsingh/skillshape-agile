@@ -70,7 +70,7 @@ class MembersListContainer extends Component {
 
     this.studentsData(nextProps);
   }
-  updateClass = (filter, status, purchaseData, popUp) => {
+  updateClass = (filter, status, purchaseData, popUp,packageConnected) => {
     let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};
     let condition = 0, inc = 0;
     if (packageType == 'CP') {
@@ -92,13 +92,13 @@ class MembersListContainer extends Component {
           if (res) {
             this.setState({ status: 'Sign In', isLoading: false });
             popUp.appear("success", {
-              title: `Sign in successfully`,
-              content: `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
+              title: packageConnected ? 'Package Connected Successfully.':`Sign in successfully`,
+              content: packageConnected ?'This Package is connected to this class successfully.' :`You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
               RenderActions: (<ButtonWrapper>
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                   !packageConnected && this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
                   }}
                   applyClose
                 />
@@ -145,7 +145,7 @@ class MembersListContainer extends Component {
       applyClose
     />
   )
-  handleClassUpdate = (filter, status, popUp) => {
+  handleClassUpdate = (filter, status, popUp,packageConnected) => {
     Meteor.call('classPricing.signInHandler', filter, (err, res) => {
       let purchased = get(res, 'purchased', []);
       let epStatus = get(res, "epStatus", false);
@@ -185,7 +185,7 @@ class MembersListContainer extends Component {
             title: 'Confirmation',
             type: 'inform',
             content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
-            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp) } }]
+            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp,packageConnected) } }]
           }
           confirmationDialog(data);
           return;
@@ -197,7 +197,7 @@ class MembersListContainer extends Component {
             title: 'Confirmation',
             type: 'inform',
             content: <div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
-            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[pos], popUp) } }]
+            buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[pos], popUp,packageConnected) } }]
           }
           confirmationDialog(data);
           return;
@@ -211,7 +211,7 @@ class MembersListContainer extends Component {
               {purchased.map((obj) =>
                 <FormGhostButton
                   label={capitalizeString(`Sign in with ${obj.packageName}`)}
-                  onClick={() => { this.updateClass(filter, status, obj, popUp) }}
+                  onClick={() => { this.updateClass(filter, status, obj, popUp,packageConnected) }}
                   applyClose
                 />
               )}
@@ -267,14 +267,14 @@ class MembersListContainer extends Component {
       }
     })
   }
-  handleSignIn = (e, userId, status = 'signIn') => {
+  handleSignIn = (e, userId, status = 'signIn',packageConnected=false) => {
     e && e.preventDefault();
     const { popUp, classData } = this.props;
     let classDetails = classData[0];
     if (userId) {
       classDetails.userId = userId;
     }
-    this.handleClassUpdate(classDetails, status, popUp)
+    this.handleClassUpdate(classDetails, status, popUp,packageConnected)
   }
   handleAddInstructorDialogBoxState = (dialogBoxState, text) => () => {
     this.setState(state => {
@@ -349,7 +349,7 @@ class MembersListContainer extends Component {
   updateStatus = (n, props) => {
     let { status, popUp, purchaseId, classData } = props;
     let { scheduled_date } = classData && classData[0] || {};
-    let inc = 0, packageType;
+    let inc = 0, packageType,packageConnected = false;
     if (n == 1) {
       if (status == 'signIn' || status == 'checkOut') {
         inc = -1;
@@ -359,6 +359,11 @@ class MembersListContainer extends Component {
         inc = 1;
         status = 'checkOut';
       }
+    }
+    else if(n == 2){
+      inc = 0;
+      status = 'signIn';
+      packageConnected = true;
     }
     else {
       if (status == 'signIn' || status == 'checkIn') {
@@ -379,7 +384,7 @@ class MembersListContainer extends Component {
       return;
     }
     if (!purchaseId) {
-      this.handleSignIn(null, props._id, status);
+      this.handleSignIn(null, props._id, status,packageConnected);
       return;
     }
     let filter = props.classData[0];

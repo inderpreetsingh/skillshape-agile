@@ -207,6 +207,13 @@ PaymentAndStatus = (props) => {
   if(epStatus && !isEmpty(purchased)){
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
+      <SkillShapeButton
+        noMarginBottom
+        danger
+        fullWidth
+        label="Choose Packages"
+        onClick={()=>{props.updateStatus(2, props)}}
+      />
       </PaymentDetails>
       <StatusOptions {...props} />
     </PaymentAndStatusDetails>
