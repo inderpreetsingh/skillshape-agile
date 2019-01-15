@@ -42,7 +42,7 @@ class MembersListContainer extends Component {
     let studentsIds = [];
     let purchaseIds = [];
     const { classData } = props;
-    let {classTypeId} = classData[0] || {};
+    let {classTypeId} = classData && classData[0] || {};
     if (classData) {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
