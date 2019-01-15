@@ -1,18 +1,15 @@
-import React, { Fragment } from "react";
-import { isEmpty, get } from "lodash";
-import Pagination from "/imports/ui/componentHelpers/pagination";
-import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString, cutString } from "/imports/util";
-import { FncTableCell, FncTableRow } from './styles';
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { filterForTransaction } from './filterCode';
+import { get, isEmpty } from "lodash";
+import Paper from 'material-ui/Paper';
 import { withStyles } from "material-ui/styles";
-import Paper from 'material-ui/Paper'
-import Tooltip from 'rc-tooltip';
-import { goToClassTypePage,goToSchoolPage } from '/imports/util';
-import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
-import 'rc-tooltip/assets/bootstrap_white.css';
+import React, { Fragment } from "react";
 import config from "../../../../config";
+import { filterForTransaction } from './filterCode';
+import { FncTableCell, FncTableRow } from './styles';
+import { getTableProps, TransactionDetailsTable } from "./transactionDetailsTable";
+import Pagination from "/imports/ui/componentHelpers/pagination";
+import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import { ContainerLoader } from "/imports/ui/loading/container";
+import { capitalizeString, dateFriendly, goToClassTypePage, goToSchoolPage } from "/imports/util";
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
