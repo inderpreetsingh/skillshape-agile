@@ -122,7 +122,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
     const getDatesBasedOnSubscriptions = (props) => {
         let stringToPrint = '';
-        let fee = get(props, 'fee', 0).toFixed(2);
+        let fee = get(props, 'amount', 0).toFixed(2);
         let currency = get(props, 'currency', '$');
 
         if (props.packageType == 'EP') {
@@ -140,16 +140,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                 {getContractEnds()}
             </HighlightedBg>
             )
-        } else if (props.autoWithdraw) {
-            return (
-                <HighlightedBg>
-                    <Text>
-                        <b>Automatic Payment</b> of {formatMoney(fee, currency)} will process {calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}
-                    </Text>
-                    {getContractEnds()}
-                </HighlightedBg>
-            )
-        } else if (props.payUpFront) {
+        }else if (props.payUpFront) {
             let contractLength = get(props, 'contractLength', 0);
             contractLength = props.combinedData && props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
             return (
@@ -160,7 +151,16 @@ const SubscriptionsDetailsDialogBox = (props) => {
                     {getContractEnds()}
                 </HighlightedBg>
             )
-        }
+        } else  {
+            return (
+                <HighlightedBg>
+                    <Text>
+                        <b>Automatic Payment</b> of {formatMoney(fee, currency)} will process {calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}
+                    </Text>
+                    {getContractEnds()}
+                </HighlightedBg>
+            )
+        } 
     }
 
     const {

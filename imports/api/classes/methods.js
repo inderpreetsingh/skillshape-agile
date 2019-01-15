@@ -67,7 +67,10 @@ Meteor.methods({
                    data.userName = get(profile,'name',get(profile,'firstName',get(profile,'lastName','Old Data'))); 
                    let purchaseData = Meteor.call('purchases.getDataForTransactionEntry',purchaseId);
                    delete purchaseData._id;
-                   data.schoolName = School.findOne({_id:schoolId},{fields:{'name':1}}).name;
+
+                   let schoolData = School.findOne({_id:schoolId},{fields:{'name':1,'slug':1}});
+                   data.schoolName = schoolData.name;
+                   data.schoolSlug = schoolData.slug;
                    data.transactionType = 'attendance';
                    data.transactionDate = new Date();
                    data.purchaseId = purchaseId;

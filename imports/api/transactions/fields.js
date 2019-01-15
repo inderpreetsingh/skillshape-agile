@@ -66,6 +66,10 @@ Transactions.attachSchema(new SimpleSchema({
     schoolName: {
         type: String,
         optional: true
+    },
+    schoolSlug: {
+        type: String,
+        optional: true
     }
 
 
