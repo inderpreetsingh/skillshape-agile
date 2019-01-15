@@ -16,11 +16,10 @@ const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'Ski
 const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }]
 const styles = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    backgroundColor: "#4caf50",
-    margin: "10px",
-    borderRadius: "10px"
+    maxWidth: '90%',
+    margin: `0 auto`,
+    boxShadow: 'none',
+    background: 'transparent',
   },
   rootGrid: {
     padding: '6px'
