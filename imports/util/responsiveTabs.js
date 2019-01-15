@@ -40,10 +40,11 @@ const InnerWrapper = styled.div`
   justify-content: center;
   width: 100%;
   margin: ${helpers.rhythmDiv}px 0; 
-  ${props => props.variant === 'distributed' && 'justify-content: space-between;'}
-  @media screen and (max-width: ${helpers.mobile + 100}px) {
-    ${props => props.variant === 'distributed' && 'justify-content: flex-start;'}
-  } 
+  ${props => props.variant === 'distributed' && 'justify-content: space-between; flex-wrap: nowrap;'}
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    ${props => props.variant === 'distributed' && 'flex-direction: column; align-items: center;'}
+  }
 `;
 
 class ResponsiveTabs extends React.Component {
