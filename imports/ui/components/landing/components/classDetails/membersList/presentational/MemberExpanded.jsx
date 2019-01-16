@@ -258,7 +258,7 @@ const StatusOptions = props => (
         caution
         fullWidth
         label={"Sign Out"}
-        onClick={() => { props.updateStatus(2, props) }}
+        onClick={() => { props.updateStatus(3, props) }}
       />
     </StatusButton>
   </StatusDetails>

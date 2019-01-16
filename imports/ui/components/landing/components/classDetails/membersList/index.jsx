@@ -35,13 +35,13 @@ class MembersListContainer extends Component {
   }
 
   componentWillMount() {
-    this.studentsData(this.props);
+    this.studentsData();
   }
 
-  studentsData = (props) => {
+  studentsData = () => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData } = props;
+    const { classData } = this.props;
     let {classTypeId} = classData && classData[0] || {};
     if (classData) {
       get(classData[0], 'students', []).map((obj, index) => {
@@ -55,6 +55,9 @@ class MembersListContainer extends Component {
           }
         })
       }
+      else{
+        this.setState({ studentsData: [] });
+      }
       if (!isEmpty(purchaseIds)) {
         Meteor.call("purchases.getPackagesFromPurchaseIds", purchaseIds, (err, res) => {
           if (res)
@@ -64,11 +67,10 @@ class MembersListContainer extends Component {
     }
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
+    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state) ;
   }
   componentWillReceiveProps(nextProps, prevProps) {
-
-    this.studentsData(nextProps);
+    this.studentsData();
   }
   updateClass = (filter, status, purchaseData, popUp,packageConnected) => {
     let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};

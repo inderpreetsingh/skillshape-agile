@@ -30,7 +30,6 @@ class ClassDetailsContainer extends Component {
   }
   render() {
     const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds } = this.props;
-    console.count('ClassDetailsContainer 1');
     return (
       <Suspense fallback={<Preloader />}>
       <ClassDetails
