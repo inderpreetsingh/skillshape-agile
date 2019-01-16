@@ -18,8 +18,7 @@ import {
   dateFriendly,
   goToClassTypePage,
   goToSchoolPage,
-  withPopUp,
-  confirmationDialog
+  withPopUp, confirmationDialog
 } from "/imports/util";
 
 import config from "../../../../config";
@@ -196,9 +195,23 @@ class MyTransaction extends React.Component {
             {isEmpty(transactionData)
               ? "No payout found"
               : transactionData.map((transaction, index) => {
-                let transactionType = get(transaction, 'packageStatus', '') == 'expired' ? 'Expiration' : get(transaction, 'classTypeName', '') ? 'Attendance' : 'Purchase';
-                let { classTypeName, classTypeId, schoolSlug, schoolId } = transaction || {};
+                let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
                 let classTypePageCondition = classTypeName && classTypeId;
+                let dataForClassType = {}, dataForSchool = {};
+                dataForClassType = {
+                  popUp,
+                  title: 'Confirmation',
+                  type: 'inform',
+                  content: <div>{classTypePageCondition ? `You will be redirected to ${classTypeName} page.` : 'Please Create New Data to use this functionality.'}</div>,
+                  buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) } }]
+                };
+                dataForSchool = {
+                  popUp,
+                  title: 'Confirmation',
+                  type: 'inform',
+                  content: <div>You will be redirected to {schoolName} page.</div>,
+                  buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { goToSchoolPage(schoolId, schoolSlug) } }]
+                }
                 return (
                   <Fragment>
                     <FncTableRow key={index} selectable={false}>
@@ -217,10 +230,10 @@ class MyTransaction extends React.Component {
                       <FncTableCell data-th={columnValues[4].columnName}>
                         {this.amountGenerator(transaction)}
                       </FncTableCell>
-                      <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { goToSchoolPage(schoolId, schoolSlug) }}>
+                      <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
                         {this.getColumnValue(transaction, 'schoolName') || "..."}
                       </FncTableCell>
-                      <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) }}>
+                      <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
                         {this.getColumnValue(transaction, 'classTypeName') || "..."}
                       </FncTableCell>
                       <FncTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
@@ -230,7 +243,6 @@ class MyTransaction extends React.Component {
                         {this.packageType(transaction)}
                       </FncTableCell>
                     </FncTableRow>
-
                   </Fragment>
                 );
               })}
