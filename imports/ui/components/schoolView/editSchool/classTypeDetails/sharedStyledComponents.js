@@ -23,6 +23,13 @@ const styles = {
   }
 }
 
+export const CTIconButtonWrapper = styled.div`
+  position: absolute;
+  top: ${helpers.rhythmDiv}px;
+  right: ${helpers.rhythmDiv}px;
+  margin-bottom: ${helpers.rhythmDiv}px;
+`;
+
 export const DeleteClassTime = withStyles(styles)(props => {
   return (
     <CTIconButtonWrapper>
@@ -36,45 +43,11 @@ export const DeleteClassTime = withStyles(styles)(props => {
   )
 });
 
-
-export const CTIconButtonWrapper = styled.div`
-  position: absolute;
-  top: ${helpers.rhythmDiv}px;
-  right: ${helpers.rhythmDiv}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
-
-export const CTFormRow = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
-  ${props => props.marginBottom && `margin-bottom: ${props.marginBottom}px;`}
-  
-  @media screen and (max-width: ${helpers.mobile}px) {
-    flex-direction: column;
-  }
-`;
-
-export const CTFormControlHW = styled.div`
-  ${helpers.flexHorizontalSpaceBetween}
-  max-width: calc(50% - ${helpers.rhythmDiv}px);
-  width: 100%;
-  margin-right: ${props => props.marginRight}px;
-  margin-bottom: ${props => props.marginBottom || helpers.rhythmDiv * 2}px;
-  ${props => props.noMarginBottom && 'margin-bottom: 0'};
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    max-width: 100%;
-    margin-right: 0;
-    ${props => props.marginRightSm && `margin-right: ${props.marginRight}px;`}
-  }
-`;
-
-
 export const CTFormWrapper = styled.div`
   background: white;
   width: 100%;
-  padding: ${helpers.rhythmDiv * 2}px;
-  padding-right: ${helpers.rhythmDiv * 5}px;
   position: relative;
+  padding: ${helpers.rhythmDiv * 2}px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   border-radius: 3px;
   
@@ -84,6 +57,33 @@ export const CTFormWrapper = styled.div`
     margin-bottom: ${helpers.rhythmDiv * 2}px;
   }
 `;
+
+export const CTFormRow = styled.div`
+${helpers.flexHorizontalSpaceBetween}
+${props => props.marginBottom && `margin-bottom: ${props.marginBottom}px;`}
+${props => props.justifyContent && `justify-content: ${props.justifyContent};`}
+
+@media screen and (max-width: ${helpers.mobile}px) {
+  flex-direction: column;
+}
+`;
+
+export const CTFormControlHW = styled.div`
+${helpers.flexHorizontalSpaceBetween}
+  max-width: calc(50% - ${helpers.rhythmDiv}px);
+  width: 100%;
+  margin-right: ${props => props.marginRight}px;
+  margin-bottom: ${props => props.marginBottom || helpers.rhythmDiv * 2}px;
+  ${props => props.noMarginBottom && 'margin-bottom: 0'};
+  
+  @media screen and (max-width: ${helpers.mobile}px) {
+    max-width: 100%;
+    margin-right: 0;
+    ${props => props.marginRightSm && `margin-right: ${props.marginRight}px;`}
+  }
+`;
+
+
 
 export const LinkedTime = styled.div`
   ${helpers.flexCenter}  

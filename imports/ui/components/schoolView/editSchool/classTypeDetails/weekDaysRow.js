@@ -259,10 +259,24 @@ export class WeekDaysRow extends React.Component {
               </CTFormControlHW>
             </CTFormRow>
 
-            <DeleteClassTime
+            {/*< DeleteClassTime
               classes={this.props.classes}
-              removeRow={this.removeRow.bind(this, index)}
-            />
+            removeRow={this.removeRow.bind(this, index)}
+            />*/}
+
+            <CTFormRow
+              justifyContent="center"
+            >
+              <ButtonWrapper>
+                <FormGhostButton
+                  icon
+                  iconName="delete"
+                  alertColor
+                  onClick={this.removeRow.bind(this, index)}
+                  label="Delete"
+                />
+              </ButtonWrapper>
+            </CTFormRow>
           </CTFormWrapper>
           )
         })}
