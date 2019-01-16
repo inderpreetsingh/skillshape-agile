@@ -93,7 +93,6 @@ li {
   border-collapse: collapse;
   border-spacing: 0px;
   table-layout: fixed;
-  font-family: "circular", sans-serif !important;
   width: 90% !important;
   margin: auto;
 }
@@ -101,8 +100,9 @@ li {
 .table-header th {
   color: rgba(0, 0, 0, 0.87) !important;
   height: 48px;
+  font-family: Zilla Slab , serif;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
   background-color: #fff;
 }
 

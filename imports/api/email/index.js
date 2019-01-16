@@ -710,7 +710,8 @@ export const sendPackageLink = function ({
 };
 export const errorBoundaryEmail = function ({
   error,
-  errorInfo
+  errorInfo,
+  url
 }) {
   let emails = ['ramesh.bansal@daffodilsw.com', 'singhs.ishwer@gmail.com'];
   emails.map((to) => {
@@ -720,7 +721,7 @@ export const errorBoundaryEmail = function ({
       subject: "Error handling",
       html: `<div>
       <center>
-        <h2>Oops Something Went Wrong.</h2>
+        <h2>Oops Something Went Wrong at ${url} </h2>
         <details style={{ whiteSpace: 'pre-wrap' }}>
         <h3>	${error} at ${platform}
           <br />
