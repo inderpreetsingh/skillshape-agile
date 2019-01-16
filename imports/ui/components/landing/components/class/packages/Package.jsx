@@ -280,11 +280,11 @@ class Package extends React.Component {
 		if (get(props, 'payUpFront', false)) {
 			stringToPrint += `<b>Paid until:</b> `;
 			let contractLength = get(props, 'contractLength', 0);
-			contractLength = props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
+			contractLength = props.combinedData && props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : contractLength;
 			return stringToPrint += calcRenewalDate(props.endDate, props.packageType === 'MP', contractLength);
 		}
 		if (get(props, 'payAsYouGo', false)) {
-			return `Payment of ${formatMoney(fee, currency)} is due on ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData.length - 1)}`
+			return `Payment of ${formatMoney(fee, currency)} is due on ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData ? props.combinedData.length - 1 : 0)}`
 		}
 		if (get(props, 'autoWithdraw', false) || get(props,'packageType',null) == 'MP') {
 			return stringToPrint += `<b>Automatic Payment</b> of ${formatMoney(fee, currency)} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
@@ -298,8 +298,8 @@ class Package extends React.Component {
 				// props.combinedData.map((obj,index)=>{
 				// 	stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
 				// })
-				let noClasses = 0;
-				props.combinedData.map((obj, index) => {
+				let noClasses = get(props,'noClasses',0);
+				props.combinedData && props.combinedData.map((obj, index) => {
 					noClasses += get(obj, "noClasses", 0);
 				})
 				return stringToPrint += `${noClasses} ${noClasses <= 1 ? 'Class' : 'Classes'} Remaining`;
