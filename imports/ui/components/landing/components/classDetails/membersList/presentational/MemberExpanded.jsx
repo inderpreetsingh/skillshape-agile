@@ -192,12 +192,29 @@ const getStatusInfo = status => {
 };
 
 PaymentAndStatus = (props) => {
+  let {alreadyPurchasedData:{epStatus,purchased,purchasedEP}} = props;
   if (props.purchaseData) {
-    res = props.purchaseData;
+    let {endDate,packageType,noClasses} = props.purchaseData;
+    let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses >1 ? 'Classes' : 'Class'} Remaining`
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
-        <PaymentExpires>Payment Expires on</PaymentExpires>
-        <ExpiryDate>{formatDate(res.endDate)}</ExpiryDate>
+        <PaymentExpires>{text}</PaymentExpires>
+        <ExpiryDate>{formatDate(endDate)}</ExpiryDate>
+      </PaymentDetails>
+      <StatusOptions {...props} />
+    </PaymentAndStatusDetails>
+    )
+  }
+  if(epStatus && !isEmpty(purchased)){
+    return (<PaymentAndStatusDetails>
+      <PaymentDetails>
+      <SkillShapeButton
+        noMarginBottom
+        danger
+        fullWidth
+        label="Choose Packages"
+        onClick={()=>{props.updateStatus(2, props)}}
+      />
       </PaymentDetails>
       <StatusOptions {...props} />
     </PaymentAndStatusDetails>
@@ -205,7 +222,7 @@ PaymentAndStatus = (props) => {
   }
   return (<PaymentAndStatusDetails>
     <PaymentDetails>
-      <Text color={helpers.alertColor}>No Purchased</Text>
+      <Text color={helpers.alertColor}>No Package</Text>
       <SkillShapeButton
         noMarginBottom
         danger

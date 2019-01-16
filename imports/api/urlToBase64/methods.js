@@ -12,7 +12,7 @@ Meteor.methods({
         }
       
     },
-    'urlToBase64.errorBoundary':({error,errorInfo})=>{
-        errorBoundaryEmail({error,errorInfo});
+    'urlToBase64.errorBoundary':({error,errorInfo,url})=>{
+        errorBoundaryEmail({error,errorInfo,url});
     }
 })

@@ -488,7 +488,6 @@ export default class MyCalender extends React.Component {
       classTypeId = get(filter,'classTypeId',null);
     }
     let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
-    console.count('My Calendar')
     return (
       <div>
         <FullCalendarContainer

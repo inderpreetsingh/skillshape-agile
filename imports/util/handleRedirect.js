@@ -1,18 +1,20 @@
-import School from "/imports/api/school/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
-import { browserHistory } from 'react-router';
 import { isEmpty } from 'lodash';
+import { browserHistory } from 'react-router';
+import ClassInterest from "/imports/api/classInterest/fields";
 
 export function goToSchoolPage(schoolId,slug) {
-	console.log("​goToSchoolPage -> schoolId,slug", schoolId,slug)
   if(slug){
     browserHistory.push(`/schools/${slug}`)
   }
   else if(schoolId) {
-    const schoolData = School.findOne({_id: schoolId});
-    if(schoolData && schoolData.slug) {
-      browserHistory.push(`/schools/${schoolData.slug}`)
-    }
+  Meteor.call("school.findSuperAdmin",null,schoolId,(err,res)=>{
+      if(res){
+        const schoolData = res;
+        if(schoolData && schoolData.slug) {
+          browserHistory.push(`/schools/${schoolData.slug}`)
+        }
+      }
+    })
   }
 }
 

@@ -1,22 +1,29 @@
 import React, { Fragment } from "react";
 import styled from 'styled-components';
-import { isEmpty, get } from "lodash";
-import Pagination from "/imports/ui/componentHelpers/pagination";
-import { TransactionDetailsTable, getTableProps } from "./transactionDetailsTable";
-import { dateFriendly, capitalizeString, cutString } from "/imports/util";
-import { FncTableCell, FncTableRow } from './styles';
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { filterForTransaction } from './filterCode';
-import { withStyles } from "material-ui/styles";
-import Paper from 'material-ui/Paper'
+import { get, isEmpty } from "lodash";
 import Tooltip from 'rc-tooltip';
-import { goToClassTypePage, goToSchoolPage } from '/imports/util';
-import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
-import 'rc-tooltip/assets/bootstrap_white.css';
+import Paper from 'material-ui/Paper';
+import { withStyles } from "material-ui/styles";
 import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
+import { filterForTransaction } from './filterCode';
+import { FncTableCell, FncTableRow } from './styles';
+import { getTableProps, TransactionDetailsTable } from "./transactionDetailsTable";
+import Pagination from "/imports/ui/componentHelpers/pagination";
+import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import { ContainerLoader } from "/imports/ui/loading/container";
+import {
+  capitalizeString,
+  dateFriendly,
+  goToClassTypePage,
+  goToSchoolPage,
+  withPopUp,
+  confirmationDialog
+} from "/imports/util";
+
 import config from "../../../../config";
+import 'rc-tooltip/assets/bootstrap_white.css';
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
@@ -158,7 +165,7 @@ class MyTransaction extends React.Component {
     const { transactionData, isLoading, selectedFilter, sddb, index } = this.state;
     let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
-    const { classes } = this.props;
+    const { classes, popUp } = this.props;
     let columnValues = tableHeaderColumns;
     let TableName = TransactionDetailsTable;
     if (!Meteor.userId()) {
@@ -168,6 +175,8 @@ class MyTransaction extends React.Component {
       return 'Unable to Access Other User Account';
     }
     const color = { color: 'green', cursor: "pointer" };
+
+
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
@@ -240,4 +249,4 @@ class MyTransaction extends React.Component {
     );
   }
 }
-export default withStyles(styles)(MyTransaction);
+export default withStyles(styles)(withPopUp(MyTransaction));
