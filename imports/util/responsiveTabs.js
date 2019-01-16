@@ -6,23 +6,40 @@ import Button from "material-ui/Button";
 
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
+const DISTRIBUTED = 'distributed';
+
+const btnStyles = {
+  marginRight: helpers.rhythmDiv,
+  marginBottom: helpers.rhythmDiv,
+  width: helpers.baseFontSize * 9,
+  display: "inline-block",
+  borderRadius: "4px",
+  position: "relative",
+}
+
 const styles = theme => {
   // console.log("theme", theme);
   return {
     btn: {
-      marginRight: helpers.rhythmDiv,
-      marginBottom: helpers.rhythmDiv,
-      width: helpers.baseFontSize * 9,
-      display: "inline-block",
-      borderRadius: "4px",
-      position: "relative",
+      ...btnStyles,
       background: "#c0c1c0"
     },
     btnActive: {
-      width: helpers.baseFontSize * 9,
-      marginBottom: helpers.rhythmDiv,
-      marginRight: helpers.rhythmDiv,
-      color: "#fff"
+      ...btnStyles,
+
+    },
+    btnDistributed: {
+      ...btnStyles,
+      background: "#c0c1c0",
+      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+        width: '100%'
+      }
+    },
+    btnActiveDistributed: {
+      ...btnStyles,
+      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+        width: '100%'
+      }
     },
     muiLabel: {
       color: "#fff",
@@ -40,10 +57,10 @@ const InnerWrapper = styled.div`
   justify-content: center;
   width: 100%;
   margin: ${helpers.rhythmDiv}px 0; 
-  ${props => props.variant === 'distributed' && 'justify-content: space-between; flex-wrap: nowrap;'}
+  ${props => props.variant === DISTRIBUTED && 'justify-content: space-between; flex-wrap: nowrap;'}
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    ${props => props.variant === 'distributed' && 'flex-direction: column; align-items: center;'}
+    ${props => props.variant === DISTRIBUTED && 'flex-direction: column; align-items: center;'}
   }
 `;
 
@@ -72,6 +89,8 @@ class ResponsiveTabs extends React.Component {
 
   render() {
     const { classes, defaultValue, variant } = this.props;
+    const btn = variant === DISTRIBUTED ? classes.btnDistributed : classes.btn;
+    const btnActive = variant === DISTRIBUTED ? classes.btnActiveDistributed : classes.btnActive;
     return (
       <div className="responsive-tab">
         <InnerWrapper variant={variant}>
@@ -80,7 +99,7 @@ class ResponsiveTabs extends React.Component {
               <Button
                 classes={{ label: classes.muiLabel }}
                 className={
-                  index == this.state.tabValue ? classes.btnActive : classes.btn
+                  index == this.state.tabValue ? btnActive : btn
                 }
                 raised
                 color={index == this.state.tabValue && this.props.color}
