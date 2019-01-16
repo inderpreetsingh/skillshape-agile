@@ -18,50 +18,6 @@ import { Heading, SubHeading, ToggleVisibility } from '/imports/ui/components/la
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-const styles = {
-    profileIconButton: {
-        background: 'white',
-        width: 24,
-        height: 24,
-        fontSize: helpers.baseFontSize,
-    },
-    expansionPanelRoot: {
-        border: 'none'
-    },
-    expansionPanelRootExpanded: {
-        border: `1px solid black`
-    },
-    expansionPanelDetails: {
-        padding: 0,
-        marginTop: helpers.rhythmDiv
-    },
-    expansionPanelSummary: {
-        margin: 0,
-        padding: helpers.rhythmDiv
-    },
-    expansionPanelSummaryContent: {
-        margin: 0,
-        justifyContent: 'space-between',
-        [`@media screen and (max-width: ${helpers.mobile}px)`]: {
-            flexDirection: 'column',
-            "& > :last-child": {
-                paddingRight: 0
-            }
-        }
-    }
-};
-
-const SchoolName = SubHeading.extend`
-    max-width: 160px;
-    width: 100%;
-`;
-
-const Wrapper = styled.div`
-	max-width: 800px;
-	margin: 0 auto;
-	margin-bottom: ${helpers.rhythmDiv * 4}px;
-`;
-
 stopNotification = (payload) => {
     this.setState({ isBusy: true });
     let data = {};
@@ -90,19 +46,90 @@ stopNotification = (payload) => {
 }
 
 
+
+const styles = {
+    profileIconButton: {
+        background: 'white',
+        width: 24,
+        height: 24,
+        fontSize: helpers.baseFontSize,
+    },
+    expansionPanelRoot: {
+        border: 'none'
+    },
+    expansionPanelRootExpanded: {
+        border: `1px solid black`
+    },
+    expansionPanelDetails: {
+        padding: 0,
+        marginTop: helpers.rhythmDiv
+    },
+    expansionPanelSummary: {
+        margin: 0,
+        padding: helpers.rhythmDiv
+    },
+    expansionPanelSummaryContent: {
+        margin: 0,
+        justifyContent: 'space-between',
+        [`@media screen and (max-width: ${helpers.mobile + 50}px)`]: {
+            flexDirection: 'column',
+            "& > :last-child": {
+                paddingRight: 0
+            }
+        }
+    }
+};
+
+const SchoolName = SubHeading.extend`
+    width: 160px;
+`;
+
+const Wrapper = styled.div`
+	max-width: 800px;
+	margin: 0 auto;
+	margin-bottom: ${helpers.rhythmDiv * 4}px;
+`;
+
 const ActionButtonsWrapper = styled.div`
 	${helpers.flexCenter} left: ${helpers.rhythmDiv * 2}px;
 	bottom: ${helpers.rhythmDiv * 2}px;
 	padding: ${helpers.rhythmDiv}px;
 	right: auto;
 	margin-left: ${helpers.rhythmDiv}px;
-	flex-wrap: wrap;
+	// flex-wrap: wrap;
+
+    @media screen and (max-width: ${helpers.tablet - 100}px) {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    @media screen and (max-width: ${helpers.mobile + 50}px) {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: ${helpers.mobile - 100}px) {
+        flex-direction: column;
+    }
 `;
 
 const ActionButton = styled.div`
-	margin-right: ${helpers.rhythmDiv}px;
+    display: flex;
+    margin-right: ${helpers.rhythmDiv}px;
 	margin-bottom: ${helpers.rhythmDiv}px;
-`;
+
+    @media screen and (max-width: ${helpers.tablet - 100}px) {
+        width: 100%;
+    }
+
+    @media screen and (max-width: ${helpers.mobile + 50}px) {
+        width: auto;
+    }
+    
+    @media screen and (max-width: ${helpers.mobile - 100}px) {
+        width: 100%;
+    }
+ `;
 
 const Subscriptions = styled.div`
 	display: flex;
@@ -130,7 +157,7 @@ const SchoolProfile = styled.div`
 	/* prettier-ignore */
     ${helpers.flexCenter}
     
-    @media screen and (max-width: ${helpers.mobile}px) {
+    @media screen and (max-width: ${helpers.mobile + 50}px) {
         justify-content: flex-start;
         padding-left: ${helpers.rhythmDiv}px;
     }
@@ -149,10 +176,10 @@ const ProfileIcons = styled.div`
 const ActionButtons = (props) => (
     <ActionButtonsWrapper>
         <ActionButton onClick={props.onEditMemberShip}>
-            <FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" />
+            <FormGhostButton fullWidth icon iconName="remove_from_queue" label="Edit Membership" />
         </ActionButton>
         <ActionButton onClick={props.onSchoolVisit(props.schoolSlug)}>
-            <FormGhostButton icon iconName="school" label="Visit School" />
+            <FormGhostButton fullWidth icon iconName="school" label="Visit School" />
         </ActionButton>
         {/*
         {props.phone && props.phone.length && <ActionButton onClick={props.onCall(props.phone)}>
