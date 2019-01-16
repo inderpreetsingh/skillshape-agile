@@ -84,7 +84,7 @@ class MyTransaction extends React.Component {
       },
       limit: 10,
       skip: 0,
-      isLoading: false
+      isLoading: true
     };
   }
 
@@ -93,7 +93,6 @@ class MyTransaction extends React.Component {
   }
   // get transaction data from db on page load and page number click.
   getPurchaseData = () => {
-    this.setState({ isLoading: true }, () => {
       let { filter } = this.state;
       let { limit, skip } = this.state;
       let limitAndSkip = { limit, skip };
@@ -101,11 +100,10 @@ class MyTransaction extends React.Component {
         let state = {};
         if (res) {
           state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records }
-          state.isLoading = false;
-          this.setState(state);
         }
+        state.isLoading = false;
+        this.setState(state);
       })
-    });
   }
   changePageClick = (skip) => {
     this.setState({ skip: skip.skip, isLoading: true }, () => { this.getPurchaseData(); });
