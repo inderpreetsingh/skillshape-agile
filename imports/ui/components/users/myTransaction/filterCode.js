@@ -2,27 +2,38 @@ import styled from "styled-components";
 import React, { Fragment } from "react";
 import ReactSelect from "react-select";
 import Grid from "material-ui/Grid";
+import { withStyles } from 'material-ui/styles';
 import TextField from "material-ui/TextField";
 
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { rhythmDiv, commonFont } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv, commonFont, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const Wrapper = styled.div`
-    margin-bottom: ${rhythmDiv}px;
+    margin-bottom: ${rhythmDiv * 4}px;
 `;
 
 const ControlsRow = styled.div`
     display: flex;
     align-items: flex-end;
-    margin-bottom: ${rhythmDiv}px;
+    margin-bottom: ${rhythmDiv * 2}px;
+
+    @media screen and (max-width: ${mobile}px) {
+        flex-direction: column;
+    }
 `;
 
 const Control = styled.div`
     display: flex;
     flex-direction: column;
-    max-width: 300px;
+    max-width: ${props => props.maxWidth || 300}px;
     width: 100%;
     margin-right: ${rhythmDiv * 2}px;
+
+    @media screen and (max-width: ${mobile}px) {
+        max-width: 100%;
+        margin-bottom: ${rhythmDiv}px;
+        margin-right: 0;
+    }
 `;
 
 const ControlLabel = Text.extend`
@@ -33,6 +44,43 @@ const customStyle = {
     marginTop: rhythmDiv,
     marginBottom: rhythmDiv,
 }
+
+const textFieldStyles = {
+    root: {
+        height: 36,
+    },
+    textFieldInput: {
+        transform: `translateY(-6px)`,
+    },
+    cssLabel: {
+        transform: `translate(0, 12px)`,
+    },
+    cssFocused: {
+        transform: `translate(0, -12.5px)`,
+        transform: `scale(0.75)`
+    }
+}
+
+const StyledTextField = withStyles(textFieldStyles)(props => (
+    <TextField
+        {...props}
+        classes={{
+            root: props.classes.root
+        }}
+        InputLabelProps={{
+            classes: {
+                root: props.classes.cssLabel,
+                shrink: props.classes.cssFocused,
+            },
+        }}
+        InputProps={{
+            classes: {
+                input: props.classes.textFieldInput
+            },
+        }}
+    />
+))
+
 export const filterForTransaction = function () {
     const { selectedPackageType, packageTypeOptions,
         selectedPackageStatus, packageStatusOptions,
@@ -70,9 +118,9 @@ export const filterForTransaction = function () {
             </ControlsRow>
 
             <ControlLabel>Filter By Package: </ControlLabel>
-            <ControlsRow>
-                <Control>
-                    <TextField
+            <ControlsRow >
+                <Control maxWidth={250}>
+                    <StyledTextField
                         defaultValue={''}
                         value={packageName}
                         label="Package Name"
@@ -81,7 +129,7 @@ export const filterForTransaction = function () {
                     />
                 </Control>
 
-                <Control>
+                <Control maxWidth={250}>
                     <ReactSelect
                         name="filters"
                         placeholder={<b>Package Type</b>}
@@ -93,7 +141,7 @@ export const filterForTransaction = function () {
                     />
                 </Control>
 
-                <Control>
+                <Control maxWidth={250}>
                     <ReactSelect
                         name="filters"
                         placeholder={<b>Package Status</b>}

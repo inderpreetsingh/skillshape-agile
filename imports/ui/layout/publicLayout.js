@@ -10,7 +10,6 @@ import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar
 import { withStyles } from "/imports/util";
 
 
-
 const styles = theme => ({
   wrapper: {
     minHeight: "100vh",
@@ -19,6 +18,7 @@ const styles = theme => ({
     overflow: "hidden"
   },
   content: {
+    height: '100%',
     backgroundColor: theme.palette.background.default
     // paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
   }
@@ -79,7 +79,7 @@ class PublicLayout extends React.Component {
                 { showSetPasswordDialogBox: false, isBusy: false },
                 () => {
                   if (currentUser) {
-                    browserHistory.push(`/profile/${get(currentUser,'_id',null)}`);
+                    browserHistory.push(`/profile/${get(currentUser, '_id', null)}`);
                   }
                 }
               );

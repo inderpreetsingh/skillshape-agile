@@ -11,6 +11,7 @@ import "./pagination.css";
  * @extends React.Component
  */
 export default class Pagination extends React.Component {
+
   constructor(props) {
     super(props);
   }
@@ -32,10 +33,11 @@ export default class Pagination extends React.Component {
 
   render() {
     // console.log("Pagination props -->>",this.props)
+    // const { paginationProps } = this.props;
     return (
       <div
-        className="pagination-container"
-        style={{ ...this.props.style, marginBottom: "39px" }}
+        className={"pagination-container"}
+        style={{ marginBottom: "39px", ...this.props.style }}
       >
         <ReactPaginate
           containerClassName={"pagination"}
