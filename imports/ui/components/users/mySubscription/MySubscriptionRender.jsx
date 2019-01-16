@@ -62,7 +62,9 @@ const styles = {
     },
     expansionPanelDetails: {
         padding: 0,
-        marginTop: helpers.rhythmDiv
+        marginTop: helpers.rhythmDiv,
+        height: 200,
+        overflowY: 'auto'
     },
     expansionPanelSummary: {
         margin: 0,
@@ -82,6 +84,10 @@ const styles = {
 
 const SchoolName = SubHeading.extend`
     width: 160px;
+
+    @media screen and (max-width: ${helpers.mobile + 50}px) {
+        width: auto;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -337,7 +343,6 @@ const MySubscriptionRender = (props) => {
                                                     bgColor: 'white',
                                                     opacity: 1
                                                 }}
-                                                maxListHeight={300}
                                                 subsType="mySubscriptions"
                                                 subsData={activeSubsData}
                                                 title={
