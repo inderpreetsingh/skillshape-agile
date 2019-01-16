@@ -1,5 +1,6 @@
 "use strict";
 import React from "react";
+import { tablet } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { createTable } from "/imports/util";
 
 export const getTableProps = () => {
@@ -9,7 +10,8 @@ export const getTableProps = () => {
   const tableHeaderProps = {
     adjustForCheckbox: false,
     displaySelectAll: false,
-    responsive: true
+    responsive: true,
+    listLayoutDisplay: tablet,
   };
   const tableRowProps = {
     className: "table-header"

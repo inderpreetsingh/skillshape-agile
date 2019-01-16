@@ -63,7 +63,7 @@ const styles = {
     expansionPanelDetails: {
         padding: 0,
         marginTop: helpers.rhythmDiv,
-        height: 200,
+        maxHeight: 200,
         overflowY: 'auto'
     },
     expansionPanelSummary: {
