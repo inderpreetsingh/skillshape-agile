@@ -28,6 +28,7 @@ import React, { Fragment } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
+import { packageCoverProvider} from '/imports/util';
 import SchoolMemberInfo from "../schoolMemberInfo";
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
@@ -514,7 +515,7 @@ class DashBoardView extends React.Component {
     superAdmin = superAdminId == _id ? true : false;
     pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePic;
     // memberInfo = this.state.memberInfo
-    let subscriptionList = get(purchaseByUserId, _id, []);
+    let subscriptionList = packageCoverProvider(get(purchaseByUserId, _id, []));
     this.handleDrawerToggle();
     this.setState({
       memberInfo: {

@@ -626,7 +626,7 @@ class SchoolMemberInfo extends Component {
 					</Grid>
 				)}
 				{!isEmpty(subscriptionList) &&
-					view === 'admin' &&
+					(view === 'admin' || userId == Meteor.userId()) &&
 					Meteor.settings.public.paymentEnabled &&
 					(
 						<SubscriptionsList

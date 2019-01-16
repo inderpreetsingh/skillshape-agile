@@ -334,7 +334,6 @@ export default createContainer((props) => {
 		classSubscriptionData = ClassSubscription.find().fetch();
 		// console.log(purchaseData, classSubscription, ' in purchase subscription');
 		classInterestData = ClassInterest.find().fetch();
-		console.log("​classInterestData", classInterestData)
 		if(!isEmpty(classInterestData)){
 			classInterestData.map((obj)=>{
 				schoolIds.push(obj.schoolId);
