@@ -5,12 +5,13 @@ import {
     rhythmDiv,
     specialFont,
     mobile,
+    tablet,
     baseFontSize,
     darkBgColor
 } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 export const FncTableRow = styled(TableRow)`
-   @media screen and (max-width: ${mobile}px) {
+   @media screen and (max-width: ${tablet}px) {
     border-bottom: 1px solid ${darkBgColor}; 
 
     :first-of-type {
@@ -25,7 +26,7 @@ export const FncTableCell = styled(TableCell)`
   padding: ${rhythmDiv * 2}px;
   font-family: ${specialFont};
 
-  @media screen and (max-width: ${mobile}px) {
+  @media screen and (max-width: ${tablet}px) {
     display: block;
     border: none;
 

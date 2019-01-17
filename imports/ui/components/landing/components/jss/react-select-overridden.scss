@@ -8,7 +8,7 @@ $pr-color: map-get($colors, 'primary');
     }
 }
 
-.ss-multi-select {
+.ss-multi-select, .ss-select {
     .is-open {
         .Select {
             &-control {
@@ -36,5 +36,19 @@ $pr-color: map-get($colors, 'primary');
     .Select.is-focused:not(.is-open) > .Select-control {
         border-color: $br-color;
         box-shadow: none;
+    }
+}
+
+.ss-select {
+    .Select {
+        &-placeholder {
+            padding-left: 0;
+            color: map-get($colors, 'my-black');
+            font-size: map-get($sizes, 'base-font-size') * 1px;
+            & > b {
+                font-weight: 400;
+                color: map-get($colors, 'input-default');
+            }
+        }
     }
 }

@@ -50,10 +50,10 @@ const textFieldStyles = {
         height: 36,
     },
     textFieldInput: {
-        transform: `translateY(-6px)`,
+        transform: `translateY(-8px)`,
     },
     cssLabel: {
-        transform: `translate(0, 12px)`,
+        transform: `translate(0, 8px)`,
     },
     cssFocused: {
         transform: `translate(0, -12.5px)`,
@@ -90,7 +90,7 @@ export const filterForTransaction = function () {
     return (
         <Wrapper>
             <ControlsRow>
-                <Control>
+                <Control className="ss-multi-select ss-select">
                     <ControlLabel>Transaction Type: </ControlLabel>
                     <ReactSelect
                         name="filters"
@@ -103,7 +103,7 @@ export const filterForTransaction = function () {
                     />
                 </Control>
 
-                <Control>
+                <Control className="ss-multi-select ss-select">
                     <ControlLabel>Payment Method: </ControlLabel>
                     <ReactSelect
                         name="filters"
@@ -129,19 +129,21 @@ export const filterForTransaction = function () {
                     />
                 </Control>
 
-                <Control maxWidth={250}>
+                <Control className="ss-multi-select ss-select" maxWidth={250}>
                     <ReactSelect
                         name="filters"
                         placeholder={<b>Package Type</b>}
                         value={selectedPackageType}
                         options={packageTypeOptions}
-                        onChange={(data) => { this.handleFilter(data, 'packageType', 'selectedPackageType') }}
+                        onChange={(data) => {
+                            this.handleFilter(data, 'packageType', 'selectedPackageType')
+                        }}
                         closeMenuOnSelect={false}
                         clearable={false}
                     />
                 </Control>
 
-                <Control maxWidth={250}>
+                <Control className="ss-multi-select ss-select" maxWidth={250}>
                     <ReactSelect
                         name="filters"
                         placeholder={<b>Package Status</b>}
