@@ -11,8 +11,7 @@ import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
 import { calcRenewalDate, capitalizeString, formatDate, formatMoney } from '/imports/util';
-
-
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 const styles = theme => {
     return {
         dialogTitleRoot: {
@@ -234,7 +233,15 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         root: classes.dialogActionsRoot,
                         action: classes.dialogAction
                     }}>
-
+                   {
+                       props.packageType == 'MP' && !props.payUpFront && (
+                        <FormGhostButton
+                        alertColor
+                        label={'Cancel Contract'}
+                        onClick= {()=>{}}
+                        />
+                       )
+                   } 
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>
