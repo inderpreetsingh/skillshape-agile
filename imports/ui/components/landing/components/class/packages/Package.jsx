@@ -226,7 +226,8 @@ class Package extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			subscriptionsDetailsDialog: false
+			subscriptionsDetailsDialog: false,
+			contractDialog:false
 		}
 	}
 
@@ -348,7 +349,7 @@ class Package extends React.Component {
 			roundness,
 			usedFor
 		} = this.props;
-		const { subscriptionsDetailsDialog } = this.state;
+		const { subscriptionsDetailsDialog,contractDialog } = this.state;
 		const ourPackageStatus = props.packageStatus || props.status;
 
 		if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
@@ -358,6 +359,8 @@ class Package extends React.Component {
 					<SubscriptionsDetailsDialogBox
 						{...props}
 						open={subscriptionsDetailsDialog}
+						contractDialog = {contractDialog}
+						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
 						onModalClose={() => this.handleModelState('subscriptionsDetailsDialog', false)}
 					/>}
 				<OuterWrapper

@@ -26,7 +26,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
-const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }]
+const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }, { label: 'Contract Cancelled', value: 'contractCancelled' }]
 
 const TableWrapper = styled.div`
   padding: ${rhythmDiv * 2}px;
@@ -71,6 +71,7 @@ class MyTransaction extends React.Component {
       pageCount: 1,
       packageName: '',
       sddb: false,
+      contractDialog:false,
       selectedPackageType: null,
       selectedPackageStatus: null,
       selectedPaymentMethod: null,
@@ -159,7 +160,7 @@ class MyTransaction extends React.Component {
     return covers;
   }
   render() {
-    const { transactionData, isLoading, selectedFilter, sddb, index } = this.state;
+    const { transactionData, isLoading, selectedFilter, sddb, index,contractDialog } = this.state;
     let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
     const { classes, popUp } = this.props;
@@ -185,6 +186,8 @@ class MyTransaction extends React.Component {
           <SubscriptionsDetailsDialogBox
             {...transactionData[index]}
             open={sddb}
+            contractDialog = {contractDialog}
+						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
             onModalClose={() => { this.setState({ sddb: false }) }}
           />
         }
