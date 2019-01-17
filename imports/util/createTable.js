@@ -13,7 +13,7 @@ import Table, {
 } from 'material-ui/Table';
 
 const MyTableHead = styled(TableHead)`
-  @media screen and (max-width: ${mobile}px) {
+  @media screen and (max-width: ${props => props.listLayoutDisplay || mobile}px) {
     ${props => props.responsive && 'display: none'}
   }
 `;
