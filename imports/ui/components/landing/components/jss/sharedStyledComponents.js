@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { TableCell, TableRow } from "material-ui/Table";
 import { getContainerMaxWidth } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -95,3 +96,46 @@ export const GridItem = styled.div`
 		max-width: ${(props) => (props.inPopUp ? '100%' : props.cardWidth + props.spacing + 'px')};
 	}
 `;
+
+// Flex Table Components
+export const SSTableRow = styled(TableRow)`
+   @media screen and (max-width: ${props => props.listViewBreakPnt || helpers.tablet}px) {
+    border-bottom: 1px solid ${helpers.darkBgColor}; 
+
+    :first-of-type {
+        border-top: 1px solid ${helpers.darkBgColor};   
+    }
+   }   
+`;
+
+export const SSTableCell = styled(TableCell)`
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  padding: ${helpers.rhythmDiv * 2}px;
+  font-family: ${helpers.specialFont};
+
+  @media screen and (max-width: ${props => props.listViewBreakPnt || helpers.tablet}px) {
+    display: block;
+    border: none;
+
+    ::before {
+      content: attr(data-th) ": ";
+      font-weight: 600;
+      font-size: inherit;
+      margin-right: ${helpers.rhythmDiv}px;
+      display: inline-block;  
+    }
+  }
+`;
+
+export const length = {
+	w211: {
+		width: 211
+	},
+	w100: {
+		width: 100
+	},
+	w150: {
+		width: 150
+	}
+};

@@ -5,13 +5,14 @@ import { createTable } from "/imports/util";
 
 export const getTableProps = () => {
   const tableProps = {
-    className: "table-view"
+    //className: "table-view"
+    horizontalBar: true
   };
   const tableHeaderProps = {
     adjustForCheckbox: false,
     displaySelectAll: false,
     responsive: true,
-    listLayoutDisplay: tablet,
+    listViewBreakPnt: tablet,
   };
   const tableRowProps = {
     className: "table-header"

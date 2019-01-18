@@ -8,10 +8,10 @@ import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 import { filterForTransaction } from './filterCode';
-import { FncTableCell, FncTableRow } from './styles';
 import { getTableProps, TransactionDetailsTable } from "./transactionDetailsTable";
 import Pagination from "/imports/ui/componentHelpers/pagination";
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import { SSTableCell, SSTableRow } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import {
   capitalizeString,
@@ -28,10 +28,16 @@ const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Acti
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
 const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }, { label: 'Contract Cancelled', value: 'contractCancelled' }]
 
-const TableWrapper = styled.div`
+const ContentWrapper = styled.div`
   padding: ${rhythmDiv * 2}px;
   padding-top: ${rhythmDiv * 4}px;
   background: ${panelColor};
+`;
+
+const TableWrapper = styled.div`
+  max-width: 90%;
+  margin: 0 auto;
+  overflow: auto;
 `;
 
 const PageHeading = Heading.extend`
@@ -71,7 +77,7 @@ class MyTransaction extends React.Component {
       pageCount: 1,
       packageName: '',
       sddb: false,
-      contractDialog:false,
+      contractDialog: false,
       selectedPackageType: null,
       selectedPackageStatus: null,
       selectedPaymentMethod: null,
@@ -94,17 +100,17 @@ class MyTransaction extends React.Component {
   }
   // get transaction data from db on page load and page number click.
   getPurchaseData = () => {
-      let { filter } = this.state;
-      let { limit, skip } = this.state;
-      let limitAndSkip = { limit, skip };
-      Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
-        let state = {};
-        if (res) {
-          state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records }
-        }
-        state.isLoading = false;
-        this.setState(state);
-      })
+    let { filter } = this.state;
+    let { limit, skip } = this.state;
+    let limitAndSkip = { limit, skip };
+    Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
+      let state = {};
+      if (res) {
+        state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records }
+      }
+      state.isLoading = false;
+      this.setState(state);
+    })
   }
   changePageClick = (skip) => {
     this.setState({ skip: skip.skip, isLoading: true }, () => { this.getPurchaseData(); });
@@ -160,7 +166,7 @@ class MyTransaction extends React.Component {
     return covers;
   }
   render() {
-    const { transactionData, isLoading, selectedFilter, sddb, index,contractDialog } = this.state;
+    const { transactionData, isLoading, selectedFilter, sddb, index, contractDialog } = this.state;
     let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
     const { classes, popUp } = this.props;
@@ -186,13 +192,14 @@ class MyTransaction extends React.Component {
           <SubscriptionsDetailsDialogBox
             {...transactionData[index]}
             open={sddb}
-            contractDialog = {contractDialog}
-						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
+            contractDialog={contractDialog}
+            toggleContractDialog={() => { this.setState({ contractDialog: !this.state.contractDialog }) }}
             onModalClose={() => { this.setState({ sddb: false }) }}
           />
         }
-        <TableWrapper>
-          <TableName>
+        <ContentWrapper>
+          <TableWrapper>
+            <TableName>
             {isEmpty(transactionData)
               ? "No payout found"
               : transactionData.map((transaction, index) => {
@@ -215,35 +222,35 @@ class MyTransaction extends React.Component {
                 }
                 return (
                   <Fragment>
-                    <FncTableRow key={index} selectable={false}>
-                      <FncTableCell data-th={columnValues[0].columnName}>
+                    <SSTableRow key={index} selectable={false}>
+                      <SSTableCell data-th={columnValues[0].columnName}>
                         {this.getColumnValue(transaction, 'userName') || "..."}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[1].columnName}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[1].columnName}>
                         {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm a")}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[2].columnName}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[2].columnName}>
                         {this.getColumnValue(transaction, 'transactionType')}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[3].columnName}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[3].columnName}>
                         {this.getColumnValue(transaction, 'paymentMethod') || "..."}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[4].columnName}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[4].columnName}>
                         {this.amountGenerator(transaction)}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
                         {this.getColumnValue(transaction, 'schoolName') || "..."}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
                         {this.getColumnValue(transaction, 'classTypeName') || "..."}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
                         {this.getColumnValue(transaction, 'packageName') || "..."}
-                      </FncTableCell>
-                      <FncTableCell data-th={columnValues[8].columnName}>
+                      </SSTableCell>
+                      <SSTableCell data-th={columnValues[8].columnName}>
                         {this.packageType(transaction)}
-                      </FncTableCell>
-                    </FncTableRow>
+                      </SSTableCell>
+                    </SSTableRow>
                   </Fragment>
                 );
               })}
@@ -258,6 +265,7 @@ class MyTransaction extends React.Component {
             onChange={this.changePageClick}
           />
         </PaginationWrapper>
+        </ContentWrapper>
       </Wrapper>
     );
   }
