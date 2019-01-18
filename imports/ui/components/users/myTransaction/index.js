@@ -174,7 +174,6 @@ class MyTransaction extends React.Component {
     }
     const color = { color: 'green', cursor: "pointer" };
 
-
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
@@ -188,7 +187,7 @@ class MyTransaction extends React.Component {
             open={sddb}
             contractDialog = {contractDialog}
 						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
-            onModalClose={() => { this.setState({ sddb: false }) }}
+            onModalClose={() => { this.setState({ sddb: false ,contractDialog:false}) }}
           />
         }
         <TableWrapper>
