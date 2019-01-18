@@ -136,6 +136,10 @@ const LogOutUserSideNav = props => (
 
 const LoginUserSideNav = props => {
   const currentUser = Meteor.user();
+  const isSchool = currentUser
+    && currentUser.profile
+    && currentUser.profile.userType === "School";
+
   let childData = [
     {
       name: "My Profile",
@@ -165,7 +169,6 @@ const LoginUserSideNav = props => {
       });
   }
 
-  const isSchool = currentUser.profile.userType === "School";
 
   return (
     <Fragment>

@@ -368,7 +368,8 @@ const ManageMemberShipDialogBox = props => {
                                                 <Text fontSize="18">{get(classTimeData, "name", 'Class Time Name')}</Text>
                                                 <ActionButtons>
                                                     <ButtonWrapper>
-                                                        <SecondaryButton
+                                                        <FormGhostButton
+                                                            darkGreyColor
                                                             label="Remove from calendar"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
