@@ -333,11 +333,11 @@ class Package extends React.Component {
 		this.setState(state => {
 			return {
 				...state,
-				[modelName]: modelState
+				[modelName]: modelState,
+				contractDialog:false
 			}
 		})
 	}
-
 	render() {
 		const props = this.props;
 		const { bgColor,

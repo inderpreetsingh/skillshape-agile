@@ -541,8 +541,8 @@ export const sendPackageExpiredEmail = (To, userName, packageName) => {
     from: "Notices@SkillShape.com",
     subject: "Skillshape Package Expired",
     html: `Hi  ${userName}<br/>
-             your ${packageName} is expired today.To continue our services you have to buy a new package.<br/>
-             Thanks<br/>${EmailSignature}`
+             Your ${packageName} is expired today. To continue, you will have to purchase a new package.<br/>
+             Thanks,<br/>${EmailSignature}`
   });
 };
 //Send email to school when their student package is expired.
@@ -562,7 +562,7 @@ export const sendPackageExpiredEmailToSchool = (schoolName, schoolEmail, userNam
     from: "Notices@SkillShape.com",
     subject: "Student Package Expired",
     html: `Hi  ${schoolName}<br/>
-             your student name ${userName} and email Id ${userEmail} 's package name ${packageName} is expired today.
+             Your student name ${userName} and email Id ${userEmail} 's package name ${packageName} is expired today.
              Thanks<br/>${EmailSignature}`
   });
 };
@@ -758,7 +758,7 @@ export const sendContractCancelledEmail = function ({
       from: "Notices@SkillShape.com",
       subject: "Contract Cancel Request",
       html: `Hi ${schoolName}<br/>
-              ${userName} have requested to cancel his contract of package ${packageName}.Please Click Here to take the action.<br/>
+              ${userName} have requested to cancel his contract of package ${packageName}.Please <a href=${Meteor.absoluteUrl()}>Click Here</a> to take the action.<br/>
               Thanks.<br/>
               ${schoolName} at SkillShape.<br/>
               ${EmailSignature}

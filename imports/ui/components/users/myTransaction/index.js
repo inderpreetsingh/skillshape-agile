@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import styled from 'styled-components';
 import { get, isEmpty } from "lodash";
-import Tooltip from 'rc-tooltip';
 import Paper from 'material-ui/Paper';
 import { withStyles } from "material-ui/styles";
 import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -22,7 +21,6 @@ import {
 } from "/imports/util";
 
 import config from "../../../../config";
-import 'rc-tooltip/assets/bootstrap_white.css';
 const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
 const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
 const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
@@ -117,6 +115,9 @@ class MyTransaction extends React.Component {
   }
   getColumnValue = (data, fieldName, secondFieldName = null) => {
     let result = get(data, fieldName, get(data, secondFieldName, null));
+    if(result == 'contractCancelled'){
+      return 'Contract Cancelled';
+    }
     if (typeof result == "string") {
       return capitalizeString(result)
     }
@@ -180,7 +181,6 @@ class MyTransaction extends React.Component {
     }
     const color = { color: 'green', cursor: "pointer" };
 
-
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
@@ -192,9 +192,9 @@ class MyTransaction extends React.Component {
           <SubscriptionsDetailsDialogBox
             {...transactionData[index]}
             open={sddb}
-            contractDialog={contractDialog}
-            toggleContractDialog={() => { this.setState({ contractDialog: !this.state.contractDialog }) }}
-            onModalClose={() => { this.setState({ sddb: false }) }}
+            contractDialog = {contractDialog}
+						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
+            onModalClose={() => { this.setState({ sddb: false ,contractDialog:false}) }}
           />
         }
         <ContentWrapper>

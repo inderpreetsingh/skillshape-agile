@@ -10,9 +10,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import { withPopUp ,confirmationDialog} from '/imports/util';
-
-
-
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 const StudentNotesContent = styled.textarea`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
@@ -114,7 +112,7 @@ class ContractDialog extends Component {
             content: 'Your request is received.',
             buttons: [{ label: 'Ok', onClick: () => {this.props.onModalClose() }}]
           }
-          confirmationDialog(data);
+          this.setState({isLoading:false},confirmationDialog(data));
       }
     })
   }
@@ -122,14 +120,14 @@ class ContractDialog extends Component {
     Meteor.call("Contracts.handleRecords",doc,(err,res)=>{
       if(!isEmpty(res)){
         let data = {};
-          data = {
-            popUp,
-            title: 'Success',
-            type: 'inform',
-            content: 'Your already have sent a request.',
-            buttons: [{ label: 'Ok', onClick: () => { this.props.onModalClose()}}]
-          }
-          confirmationDialog(data);
+        data = {
+          popUp,
+          title: 'Success',
+          type: 'inform',
+          content: 'Your already have sent a request.',
+          buttons: [{ label: 'Ok', onClick: () => { this.props.onModalClose()}}]
+        }
+        this.setState({isLoading:false}, confirmationDialog(data))
       }
       else{
         doc.action = 'add';
@@ -147,7 +145,7 @@ class ContractDialog extends Component {
   }
   onSubmit = (e) => {
     e.preventDefault();
-    const { _id: purchaseId, userName, schoolId, popUp, packageName,userId } = this.props;
+    const { _id: purchaseId, userName, schoolId, popUp, packageName,userId,payAsYouGo,autoWithdraw} = this.props;
     const {reason} = this.state;
     if(reason.length < 10){
       let data = {};
@@ -161,14 +159,16 @@ class ContractDialog extends Component {
       confirmationDialog(data);
       return ;
     }
-    let doc = { purchaseId, userName, schoolId, packageName, action: 'find',userId ,reason,status:'pending'};
-    this.checkIsRequestExist(doc,popUp);
+    let doc = { purchaseId, userName, schoolId, packageName, action: 'find',userId ,reason,status:'pending',payAsYouGo,autoWithdraw};
+    this.setState({isLoading:true},this.checkIsRequestExist(doc,popUp));
+    
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return false ;
+    return nextState.isLoading != this.state.isLoading;
   }
   render() {
     const { props } = this;
+    const {isLoading} = this.state;
     return (
       <Dialog
         open={props.open}
@@ -176,7 +176,7 @@ class ContractDialog extends Component {
         onRequestClose={props.onModalClose}
         aria-labelledby={`Cancel Contract`}
         classes={{ paper: props.classes.dialogRoot }}
-      >
+      >{ isLoading && <ContainerLoader/>}
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
