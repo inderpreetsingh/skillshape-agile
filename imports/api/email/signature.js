@@ -11,7 +11,7 @@ export default EmailSignature = `<div>
                             <td>
                                 <div style="font-size:1.2em;color:#000001;">The SkillShape Team</div>
                                 <div style="line-height:0.3em;">&nbsp;</div>
-                                <div style="color:#000001;"><span style="font-weight: 700;"></span> <span>SkllShape</span> <span></span></div>
+                                <div style="color:#000001;"><span style="font-weight: 700;"></span> <span>SkillShape</span> <span></span></div>
                                 <div style="line-height:0.3em;">&nbsp;</div>
                                 <div><span style="color:#348cc0;">site:&nbsp;</span><span><a href="http://SkillShape.com" style="color:#000001;" target="_blank">SkillShape.com</a></span></div>
                                 <div><span style="color:#348cc0;">email:&nbsp;</span><span><a href="mailto:Hello@SkillShape.com" target="_blank" style="color: #000001;">Hello@SkillShape.com</a></span></div>
