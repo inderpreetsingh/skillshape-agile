@@ -526,6 +526,7 @@ export default class MyCalender extends React.Component {
                     handleSignIn = {this.handleSignIn}
                     fromSignFunctionality
                     closeClassTypePackages = {this.closeClassTypePackages}
+                    schoolData = {schoolData}
                     />}
         {isOpen && (
           <SkillshapePopover

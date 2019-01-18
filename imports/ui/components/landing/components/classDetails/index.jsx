@@ -131,6 +131,7 @@ const ClassDetails = props => {
             instructorsIds={instructorsIds}
             params={dataProps.params}
             toggleIsBusy={toggleIsBusy}
+            schoolData={school}
           />
         </InnerWrapper>
       </PageContent>

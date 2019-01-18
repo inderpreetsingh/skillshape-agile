@@ -560,7 +560,7 @@ class MembersListContainer extends Component {
     })
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy } = this.props;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy,schoolData } = this.props;
     const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -617,6 +617,7 @@ class MembersListContainer extends Component {
           handleSignIn={this.handleSignIn}
           fromSignFunctionality
           closeClassTypePackages={this.closeClassTypePackages}
+          schoolData = {schoolData}
         />}
         <ListWrapper>
           <MembersList

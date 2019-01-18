@@ -299,7 +299,7 @@ class Package extends React.Component {
 				// props.combinedData.map((obj,index)=>{
 				// 	stringToPrint += ` ${obj.noClasses} Classes : ${formatDate(obj.endDate)} <br/>`;
 				// })
-				let noClasses = get(props,'noClasses',0);
+				let noClasses = 0;
 				props.combinedData && props.combinedData.map((obj, index) => {
 					noClasses += get(obj, "noClasses", 0);
 				})

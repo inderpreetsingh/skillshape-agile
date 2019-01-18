@@ -286,7 +286,7 @@ class MySubscription extends React.Component {
 					currentUser={currentUser}
 					selectedSchool={selectedSchool}
 					schoolData={schoolData}
-					purchaseData={purchaseData}
+					purchaseData={packageCoverProvider(purchaseData)}
 					callUsDialog={callUsDialog}
 					emailUsDialog={emailUsDialog}
 					manageMemberShipDialog={manageMemberShipDialog}
@@ -376,9 +376,7 @@ export default createContainer((props) => {
 	}
 
 	purchaseData = concat(purchaseData, classSubscriptionData);
-	purchaseData = packageCoverProvider(purchaseData);
-
-	return {
+		return {
 		currentUser,
 		isLoading,
 		schoolData,

@@ -150,7 +150,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                     {getContractEnds()}
                 </HighlightedBg>
             )
-        } else  {
+        } else if(props.packageType == 'MP') {
             return (
                 <HighlightedBg>
                     <Text>
