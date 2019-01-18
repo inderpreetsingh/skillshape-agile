@@ -135,6 +135,11 @@ const LogOutUserSideNav = props => (
 );
 
 const LoginUserSideNav = props => {
+  const currentUser = Meteor.user();
+  const isSchool = currentUser
+    && currentUser.profile
+    && currentUser.profile.userType === "School";
+
   let childData = [
     {
       name: "My Profile",
@@ -157,12 +162,14 @@ const LoginUserSideNav = props => {
       name: "My Subscriptions",
       link: `/mySubscription/${Meteor.userId()}`,
       iconName: "collections"
-    },{
-      name: "My Transactions",
-      link: `/myTransaction/${Meteor.userId()}`,
-      iconName: "collections"
-    });
+    }, {
+        name: "My Transactions",
+        link: `/myTransaction/${Meteor.userId()}`,
+        iconName: "collections"
+      });
   }
+
+
   return (
     <Fragment>
       <NestedNavItems
@@ -173,6 +180,16 @@ const LoginUserSideNav = props => {
         childData={childData}
         onClick={props.childItemOnClick}
       />
+      {isSchool &&
+        <SideNavItem
+          button
+          menuListItemText={props.classes.menuListItemText}
+          name="My Dashboard"
+          iconName="dashboard"
+          onClick={() => props.childItemOnClick("/dashboard")}
+        />
+      }
+
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}

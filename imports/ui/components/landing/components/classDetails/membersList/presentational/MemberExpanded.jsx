@@ -14,7 +14,8 @@ import { browserHistory, Link } from "react-router";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
-    color: "white"
+    color: "white",
+    paddingLeft: rhythmDiv
   }
 };
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
@@ -151,6 +152,12 @@ const StatusButton = styled.div`
   }
 `;
 
+const Name = Text.extend`
+  font-size: 18px;
+  color: white;
+  word-break: break-word;  
+`;
+
 const PaymentExpires = Text.extend`
   font-weight: 300;
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -186,16 +193,16 @@ const getStatusInfo = status => {
   else if (status == 'checkIn') {
     return 'Checked In';
   }
-  else if (status == 'checkOut'){
+  else if (status == 'checkOut') {
     return 'Check In';
   }
 };
 
 PaymentAndStatus = (props) => {
-  let {alreadyPurchasedData:{epStatus,purchased,purchasedEP}} = props;
+  let { alreadyPurchasedData: { epStatus, purchased, purchasedEP } } = props;
   if (props.purchaseData) {
-    let {endDate,packageType,noClasses} = props.purchaseData;
-    let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses >1 ? 'Classes' : 'Class'} Remaining`
+    let { endDate, packageType, noClasses } = props.purchaseData;
+    let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses > 1 ? 'Classes' : 'Class'} Remaining`
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
         <PaymentExpires>{text}</PaymentExpires>
@@ -205,16 +212,16 @@ PaymentAndStatus = (props) => {
     </PaymentAndStatusDetails>
     )
   }
-  if(epStatus && !isEmpty(purchased)){
+  if (epStatus && !isEmpty(purchased)) {
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
-      <SkillShapeButton
-        noMarginBottom
-        danger
-        fullWidth
-        label="Choose Packages"
-        onClick={()=>{props.updateStatus(2, props)}}
-      />
+        <SkillShapeButton
+          noMarginBottom
+          danger
+          fullWidth
+          label="Choose Packages"
+          onClick={() => { props.updateStatus(2, props) }}
+        />
       </PaymentDetails>
       <StatusOptions {...props} />
     </PaymentAndStatusDetails>
@@ -228,17 +235,17 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={()=>{props.onAcceptPaymentClick(true,props)}}
+        onClick={() => { props.onAcceptPaymentClick(true, props) }}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
   </PaymentAndStatusDetails>)
 }
 reverseStatus = (status) => {
-  if(status == 'signIn' || status == 'checkOut'){
+  if (status == 'signIn' || status == 'checkOut') {
     return 'Check In';
   }
-  else{
+  else {
     return 'Check Out';
   }
 }
@@ -269,19 +276,17 @@ const MemberExpanded = props => {
   const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
   const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
   const slug = get(props, "params.slug", null);
-  let classTypeId = get(props.classData[0],'classTypeId',null);
+  let classTypeId = get(props.classData[0], 'classTypeId', null);
   let buyPackagesBoxState = props.buyPackagesBoxState;
   return (
-    <Wrapper key = {name}>
-    
+    <Wrapper key={name}>
+
       <InnerWrapper>
         <MemberDetails>
           <MemberDetailsInner>
             <MemberPic url={profileSrc} />
             <MemberStatus>
-              <Text color="white" fontSize="18">
-                {name}
-              </Text>
+              <Name>{name}</Name>
               <Text color={getStatusColor(props.status)}>
                 {getStatusInfo(props.status)}
               </Text>
