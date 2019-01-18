@@ -736,3 +736,34 @@ export const errorBoundaryEmail = function ({
     });
   })
 }
+export const sendContractCancelledEmail = function ({
+  userName,
+  packageName,
+  to,
+  schoolName
+}) {
+  if (Meteor.isServer) {
+    let to;
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else if (platform == 'dev') {
+      to = config.skillshapeAdminEmail;
+    }
+    else {
+      to = to;
+    }
+    Email.send({
+      to: to, //emailObj.to
+      from: "Notices@SkillShape.com",
+      subject: "Contract Cancel Request",
+      html: `Hi ${schoolName}<br/>
+              ${userName} have requested to cancel his contract of package ${packageName}.Please Click Here to take the action.<br/>
+              Thanks.<br/>
+              ${schoolName} at SkillShape.<br/>
+              ${EmailSignature}
+
+      `
+    });
+  }
+};

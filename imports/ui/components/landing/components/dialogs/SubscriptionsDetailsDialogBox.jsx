@@ -7,12 +7,12 @@ import ReactHtmlParser from 'react-html-parser';
 import styled from "styled-components";
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
+import ContractDialog from './ContractDialog';
 import { DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
 import { calcRenewalDate, capitalizeString, formatDate, formatMoney } from '/imports/util';
-
-
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 const styles = theme => {
     return {
         dialogTitleRoot: {
@@ -95,7 +95,6 @@ const ClassListItem = Text.withComponent('li').extend`
 
 
 const SubscriptionsDetailsDialogBox = (props) => {
-
     const getRemainingClasses = (props) => {
         let stringToPrint = '';
             if(props.combinedData){
@@ -169,6 +168,8 @@ const SubscriptionsDetailsDialogBox = (props) => {
         fullScreen,
         onModalClose,
         subscriptionsData,
+        contractDialog,
+        toggleContractDialog
     } = props;
 
     const ourPackageStatus = props.packageStatus || props.status;
@@ -195,7 +196,13 @@ const SubscriptionsDetailsDialogBox = (props) => {
                     />
 
                 </DialogTitle>
-
+                {contractDialog &&
+                <ContractDialog
+                open= {contractDialog}
+                onModalClose = {()=>{toggleContractDialog()}}
+                {...props}
+                />}
+                
                 <DialogContent classes={{ root: classes.dialogContent }}>
                     <ContentWrapper>
                         <StatusWrapper>
@@ -234,7 +241,15 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         root: classes.dialogActionsRoot,
                         action: classes.dialogAction
                     }}>
-
+                   {
+                      props.packageStatus !='expired' && props.packageType == 'MP' && !props.payUpFront && (
+                        <FormGhostButton
+                        alertColor
+                        label={'Cancel Contract'}
+                        onClick= {()=>{toggleContractDialog()}}
+                        />
+                       )
+                   } 
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>
