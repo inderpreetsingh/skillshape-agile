@@ -35,8 +35,6 @@ const styles = theme => {
         dialogContent: {
             padding: `0 ${helpers.rhythmDiv * 3}px`,
             paddingBottom: helpers.rhythmDiv,
-            flexShrink: 0,
-
         },
         dialogPaper: {
             maxWidth: 600,
@@ -96,6 +94,7 @@ const WrapperContact = styled.li`
 
 const DialogTitleContainer = styled.div`
   display: flex;
+  flex-shrink: 0;
   padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
 `;
 

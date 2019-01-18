@@ -13,7 +13,7 @@ import Table, {
 } from 'material-ui/Table';
 
 const MyTableHead = styled(TableHead)`
-  @media screen and (max-width: ${props => props.listLayoutDisplay || mobile}px) {
+  @media screen and (max-width: ${props => props.listViewBreakPnt || mobile}px) {
     ${props => props.responsive && 'display: none'}
   }
 `;
@@ -34,7 +34,7 @@ export const createTable = ({
   <Table
     {...tableProps}
     {...props}
-    bodyStyle={{ overflow: 'visible' }}
+    bodyStyle={{ overflow: tableProps.horizontalBar ? 'none' : 'visible' }}
   >
     <MyTableHead {...tableHeaderProps}>
       <TableRow {...tableRowProps}>
