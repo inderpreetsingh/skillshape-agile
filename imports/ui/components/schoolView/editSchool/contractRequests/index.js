@@ -7,20 +7,25 @@ import { withPopUp, confirmationDialog } from "/imports/util";
 import { createContainer } from 'meteor/react-meteor-data';
 import { fill, isEmpty, get } from "lodash";
 import Contracts from '/imports/api/contracts/fields.js';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 const Wrapper = styled.div`
   background: white;
 `;
 const Request = styled.div`
-margin: 5px 0px 5px 0px;
+margin: 5px 0px 20px 0px;
 width: auto;
 border: #4caf50 1px solid;
-border-radius: 8px;
-padding: 9px;
+border-radius: 45px;
+padding: 13px;
 font-family: sans-serif;
 text-transform: capitalize;
+box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
 `;
 const Div = styled.div`
-  width: fit-content;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: space-evenly;
 `;
 const styles = theme => ({
     root: {
@@ -88,11 +93,21 @@ class ContractRequests extends React.Component {
                     <Div>
                         {!isEmpty(contractsData) ? contractsData.map((obj) => {
                             return <Request>
-                                {obj.packageName}
-                                <button onClick={()=>{this.confirmation(obj,'allowed')}}>Dummy</button>
+                                <b>User Name:</b> {obj.userName || 'Missing'}<br/>
+                                <b>Package Name:</b>  {obj.packageName} <br/>
+                                <b>Reason:</b> {obj.reason} <br/>
+                                <FormGhostButton
+                                    label={"Deny"}                            
+                                    onClick={()=>{this.confirmation(obj,'denied')}}
+                                    alertColor
+                                ></FormGhostButton>
+                                <FormGhostButton
+                                    label={"Allow"}                            
+                                    onClick={()=>{this.confirmation(obj,'allowed')}}
+                                ></FormGhostButton>
                             </Request>;
                         }) : <Request>
-                                No Data
+                                No Request Found
         </Request>}
                     </Div>
                 </center>

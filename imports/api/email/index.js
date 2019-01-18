@@ -758,7 +758,7 @@ export const sendContractCancelledEmail = function ({
       from: "Notices@SkillShape.com",
       subject: "Contract Cancel Request",
       html: `Hi ${schoolName}<br/>
-              ${userName} have requested to cancel his contract of package ${packageName}.Please Click Here to take the action.<br/>
+              ${userName} have requested to cancel his contract of package ${packageName}.Please <a href=${Meteor.absoluteUrl()}>Click Here</a> to take the action.<br/>
               Thanks.<br/>
               ${schoolName} at SkillShape.<br/>
               ${EmailSignature}
