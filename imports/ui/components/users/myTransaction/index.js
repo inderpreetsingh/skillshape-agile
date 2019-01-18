@@ -109,6 +109,9 @@ class MyTransaction extends React.Component {
   }
   getColumnValue = (data, fieldName, secondFieldName = null) => {
     let result = get(data, fieldName, get(data, secondFieldName, null));
+    if(result == 'contractCancelled'){
+      return 'Contract Cancelled';
+    }
     if (typeof result == "string") {
       return capitalizeString(result)
     }
