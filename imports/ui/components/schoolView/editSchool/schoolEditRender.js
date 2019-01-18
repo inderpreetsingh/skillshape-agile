@@ -8,6 +8,7 @@ import EmbedCodes from "./embedCodes";
 import LocationDetails from "./locationDetails";
 import MediaDetails from "./mediaDetails";
 import PriceDetails from "./priceDetails";
+import ContractRequests from './contractRequests';
 // import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 //tab details import over here
 import SchoolDetails from "./schoolDetails";
@@ -60,7 +61,8 @@ export default function (props) {
                 "Students",
                 "Admins",
                 "Financial",
-                "View School"
+                "View School",
+                "Requests"
               ]}
               color="primary"
               onTabChange={this.onTabChange}
@@ -164,6 +166,11 @@ export default function (props) {
                {
                 this.state.tabValue === 9 &&(
                   browserHistory.push(`/schools/${slug}`)
+                )
+              }
+               {
+                this.state.tabValue === 10 &&(
+                  <ContractRequests/>
                 )
               }
             </div>
