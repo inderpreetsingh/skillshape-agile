@@ -117,6 +117,11 @@ export const PurchasesSchema = new SimpleSchema({
   paymentMethod:{
     type: String,
     optional: true
+  },
+  subscriptionCancelResponse:{
+    type:Object,
+    optional:true,
+    blackbox: true
   }
 });
 

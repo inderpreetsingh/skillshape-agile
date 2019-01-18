@@ -350,6 +350,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){
          fee = parseInt(String(current.cost).split(".").join(""));
+         amount = current.cost;
          currency = current.currency;
          contractLength = current.month
         }
@@ -368,7 +369,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         fee,
         currency,
         contractLength,
-        monthlyAttendance
+        monthlyAttendance,
+        amount
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);

@@ -145,7 +145,7 @@ class ContractDialog extends Component {
   }
   onSubmit = (e) => {
     e.preventDefault();
-    const { _id: purchaseId, userName, schoolId, popUp, packageName,userId } = this.props;
+    const { _id: purchaseId, userName, schoolId, popUp, packageName,userId,payAsYouGo,autoWithdraw} = this.props;
     const {reason} = this.state;
     if(reason.length < 10){
       let data = {};
@@ -159,7 +159,7 @@ class ContractDialog extends Component {
       confirmationDialog(data);
       return ;
     }
-    let doc = { purchaseId, userName, schoolId, packageName, action: 'find',userId ,reason,status:'pending'};
+    let doc = { purchaseId, userName, schoolId, packageName, action: 'find',userId ,reason,status:'pending',payAsYouGo,autoWithdraw};
     this.setState({isLoading:true},this.checkIsRequestExist(doc,popUp));
     
   }

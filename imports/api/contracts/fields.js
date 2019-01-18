@@ -33,6 +33,14 @@ Contracts.attachSchema(new SimpleSchema({
     status:{
         type: String,
         optional: true
+    },
+    payAsYouGo: {
+      type: Boolean,
+      optional: true
+    },
+    autoWithdraw: {
+      type: Boolean,
+      optional: true
     }
 
 }));

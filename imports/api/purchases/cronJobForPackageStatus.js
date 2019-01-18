@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import ClassSubscription from '/imports/api/classSubscription/fields';
 import School from '/imports/api/school/fields';
 import { sendPackageExpiredEmail ,sendPackageExpiredEmailToSchool} from "/imports/api/email";
-var stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
+let stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 SyncedCron.add({
   name: "cron Job For Package Status",
   schedule: function (parser) {

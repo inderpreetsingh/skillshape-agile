@@ -79,6 +79,10 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type:Object,
     optional:true,
     blackbox: true
+  },
+  amount:{
+    type: String,
+    optional: true
   }
 });
 

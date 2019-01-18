@@ -170,7 +170,10 @@ export default function (props) {
               }
                {
                 this.state.tabValue === 10 &&(
-                  <ContractRequests/>
+                  <ContractRequests
+                  schoolData= {schoolData}
+                  currentUser = {currentUser}
+                  />
                 )
               }
             </div>
