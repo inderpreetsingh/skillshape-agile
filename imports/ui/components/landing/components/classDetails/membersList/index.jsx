@@ -20,7 +20,7 @@ const Div = styled.div`
 
 const ListWrapper = styled.div`  
   padding: 0 ${ rhythmDiv * 2} px;
-  margin - bottom: ${ props => props.marginBottom || rhythmDiv * 7} px;
+  margin-bottom: ${ props => props.marginBottom || rhythmDiv * 7}px;
 `;
 
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
@@ -42,20 +42,20 @@ class MembersListContainer extends Component {
     let studentsIds = [];
     let purchaseIds = [];
     const { classData } = this.props;
-    let {classTypeId} = classData && classData[0] || {};
+    let { classTypeId } = classData && classData[0] || {};
     if (classData) {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
       })
       if (!isEmpty(studentsIds)) {
-        Meteor.call('user.getUsersFromIds', studentsIds,classTypeId, (err, res) => {
+        Meteor.call('user.getUsersFromIds', studentsIds, classTypeId, (err, res) => {
           if (res) {
             this.setState({ studentsData: res });
           }
         })
       }
-      else{
+      else {
         this.setState({ studentsData: [] });
       }
       if (!isEmpty(purchaseIds)) {
@@ -67,12 +67,12 @@ class MembersListContainer extends Component {
     }
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state) ;
+    return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
   }
   componentWillReceiveProps(nextProps, prevProps) {
     this.studentsData();
   }
-  updateClass = (filter, status, purchaseData, popUp,packageConnected) => {
+  updateClass = (filter, status, purchaseData, popUp, packageConnected) => {
     let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};
     let condition = 0, inc = 0;
     if (packageType == 'CP') {
@@ -94,13 +94,13 @@ class MembersListContainer extends Component {
           if (res) {
             this.setState({ status: 'Sign In', isLoading: false });
             popUp.appear("success", {
-              title: packageConnected ? 'Package Connected Successfully.':`Sign in successfully`,
-              content: packageConnected ?'This Package is connected to this class successfully.' :`You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
+              title: packageConnected ? 'Package Connected Successfully.' : `Sign in successfully`,
+              content: packageConnected ? 'This Package is connected to this class successfully.' : `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
               RenderActions: (<ButtonWrapper>
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                   !packageConnected && this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                    !packageConnected && this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
                   }}
                   applyClose
                 />
@@ -147,7 +147,7 @@ class MembersListContainer extends Component {
       applyClose
     />
   )
-  handleClassUpdate = (filter, status, popUp,packageConnected) => {
+  handleClassUpdate = (filter, status, popUp, packageConnected) => {
     Meteor.call('classPricing.signInHandler', filter, (err, res) => {
       let purchased = get(res, 'purchased', []);
       let epStatus = get(res, "epStatus", false);
@@ -190,7 +190,7 @@ class MembersListContainer extends Component {
           //   buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp,packageConnected) } }]
           // }
           // confirmationDialog(data);
-          this.updateClass(filter, status, purchased[0], popUp,packageConnected)
+          this.updateClass(filter, status, purchased[0], popUp, packageConnected)
           return;
         }
         if (pos != -1) {
@@ -203,7 +203,7 @@ class MembersListContainer extends Component {
           //   buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => {  } }]
           // }
           // confirmationDialog(data);
-          this.updateClass(filter, status, purchased[pos], popUp,packageConnected)
+          this.updateClass(filter, status, purchased[pos], popUp, packageConnected)
           return;
         }
 
@@ -215,7 +215,7 @@ class MembersListContainer extends Component {
               {purchased.map((obj) =>
                 <FormGhostButton
                   label={capitalizeString(`Sign in with ${obj.packageName}`)}
-                  onClick={() => { this.updateClass(filter, status, obj, popUp,packageConnected) }}
+                  onClick={() => { this.updateClass(filter, status, obj, popUp, packageConnected) }}
                   applyClose
                 />
               )}
@@ -271,14 +271,14 @@ class MembersListContainer extends Component {
       }
     })
   }
-  handleSignIn = (e, userId, status = 'signIn',packageConnected=false) => {
+  handleSignIn = (e, userId, status = 'signIn', packageConnected = false) => {
     e && e.preventDefault();
     const { popUp, classData } = this.props;
     let classDetails = classData[0];
     if (userId) {
       classDetails.userId = userId;
     }
-    this.handleClassUpdate(classDetails, status, popUp,packageConnected)
+    this.handleClassUpdate(classDetails, status, popUp, packageConnected)
   }
   handleAddInstructorDialogBoxState = (dialogBoxState, text) => () => {
     this.setState(state => {
@@ -353,7 +353,7 @@ class MembersListContainer extends Component {
   updateStatus = (n, props) => {
     let { status, popUp, purchaseId, classData } = props;
     let { scheduled_date } = classData && classData[0] || {};
-    let inc = 0, packageType,packageConnected = false;
+    let inc = 0, packageType, packageConnected = false;
     if (n == 1) {
       if (status == 'signIn' || status == 'checkOut') {
         inc = -1;
@@ -364,7 +364,7 @@ class MembersListContainer extends Component {
         status = 'checkOut';
       }
     }
-    else if(n == 2){
+    else if (n == 2) {
       inc = 0;
       status = 'signIn';
       packageConnected = true;
@@ -388,7 +388,7 @@ class MembersListContainer extends Component {
       return;
     }
     if (!purchaseId) {
-      this.handleSignIn(null, props._id, status,packageConnected);
+      this.handleSignIn(null, props._id, status, packageConnected);
       return;
     }
     let filter = props.classData[0];
@@ -618,43 +618,47 @@ class MembersListContainer extends Component {
           fromSignFunctionality
           closeClassTypePackages={this.closeClassTypePackages}
         />}
-        <MembersList
-          viewType={currentView}
-          onSearchChange={this.handleSearchChange("teachersFilterWith")}
-          data={instructorsData}
-          entityType={"teachers"}
-          searchedValue={this.state.teachersFilterWith}
-          onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
-          classData={classData}
-          popUp={popUp}
-          instructorsIds={instructorsIds}
-          addInstructor
+        <ListWrapper>
+          <MembersList
+            viewType={currentView}
+            onSearchChange={this.handleSearchChange("teachersFilterWith")}
+            data={instructorsData}
+            entityType={"teachers"}
+            searchedValue={this.state.teachersFilterWith}
+            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
+            classData={classData}
+            popUp={popUp}
+            instructorsIds={instructorsIds}
+            addInstructor
+          />
+        </ListWrapper>
 
-        />
-        <MembersList
-          viewType={currentView}
-          searchedValue={this.state.studentsFilterWith}
-          onSearchChange={this.handleSearchChange("studentsFilterWith")}
-          data={this.studentsListMaker(studentsData, classData, purchaseData)}
-          entityType={"students"}
-          searchedValue={this.state.studentsFilterWith}
-          classData={classData}
-          popUp={popUp}
-          instructorsIds={instructorsIds}
-          onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
-          addStudent
-          onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
-          params={params}
-          onJoinClassClick={this.handleSignIn}
-          schoolName={schoolName}
-          classTypeName={classTypeName}
-          toggleIsBusy={toggleIsBusy}
-          schoolId={schoolId}
-          onAcceptPaymentClick={this.handleDialogBoxState}
-          buyPackagesBoxState={buyPackagesBoxState}
-          currentProps={currentProps}
-          updateStatus={this.updateStatus}
-        />
+        <ListWrapper>
+          <MembersList
+            viewType={currentView}
+            searchedValue={this.state.studentsFilterWith}
+            onSearchChange={this.handleSearchChange("studentsFilterWith")}
+            data={this.studentsListMaker(studentsData, classData, purchaseData)}
+            entityType={"students"}
+            searchedValue={this.state.studentsFilterWith}
+            classData={classData}
+            popUp={popUp}
+            instructorsIds={instructorsIds}
+            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
+            addStudent
+            onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
+            params={params}
+            onJoinClassClick={this.handleSignIn}
+            schoolName={schoolName}
+            classTypeName={classTypeName}
+            toggleIsBusy={toggleIsBusy}
+            schoolId={schoolId}
+            onAcceptPaymentClick={this.handleDialogBoxState}
+            buyPackagesBoxState={buyPackagesBoxState}
+            currentProps={currentProps}
+            updateStatus={this.updateStatus}
+          />
+        </ListWrapper>
       </Fragment>
     );
   }

@@ -40,10 +40,10 @@ const Content = styled.p`
 `;
 
 const ButtonsWrapper = styled.div`
-	${(props) => (props.rightAlign ? 'justify-content: flex-end' : '')};
-  flex-wrap: wrap;
-  /* prettier-ignore */
+	width: 100%;
 	${helpers.flexCenter}
+	flex-wrap: wrap;
+	${(props) => (props.rightAlign && 'justify-content: flex-end')};
 `;
 
 const ButtonWrapper = styled.div`
@@ -224,13 +224,6 @@ class SkillShapeDialogBox extends Component {
 		} = this.props;
 		return (
 			<ButtonsWrapper rightAlign>
-				{(type === 'warning' || defaultButtons) && (
-					<ButtonWrapper>
-						<Button onClick={onCloseButtonClick || onModalClose} className={this._getCancelButtonClasses()}>
-							{this._getCancelButtonText()}
-						</Button>
-					</ButtonWrapper>
-				)}
 				<ButtonWrapper>
 					<Button
 						onClick={onAffirmationButtonClick || onModalClose}
@@ -245,6 +238,13 @@ class SkillShapeDialogBox extends Component {
 						{this._getAffirmateButtonText()}
 					</Button>
 				</ButtonWrapper>
+				{(type === 'warning' || defaultButtons) && (
+					<ButtonWrapper>
+						<Button onClick={onCloseButtonClick || onModalClose} className={this._getCancelButtonClasses()}>
+							{this._getCancelButtonText()}
+						</Button>
+					</ButtonWrapper>
+				)}
 			</ButtonsWrapper>
 		);
 	};
@@ -316,7 +316,7 @@ class SkillShapeDialogBox extends Component {
 					onRequestClose={onModalClose}
 					aria-labelledby="skillshape-popup"
 					classes={{ paper: classes.dialogRoot }}
-					disableBackdropClick = {true}
+					disableBackdropClick={true}
 				>
 					<DialogTitleWrapper color={popUpBasicConfig[type].color}>
 						<Title color={popUpBasicConfig[type].color}>{title || popUpBasicConfig[type].title}</Title>
