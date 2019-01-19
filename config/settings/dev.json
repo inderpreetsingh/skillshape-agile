@@ -2,6 +2,7 @@
   "Comment":
     "Some secrets are of production so need to replace production secrets with development secrets ",
   "public": {
+    "googleAppId":"696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com",
     "stripe": {
       "PUBLIC_KEY": "pk_test_keeDSx92i51AJKtdBuzx5H0y"
     },
