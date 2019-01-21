@@ -97,14 +97,14 @@ li {
   margin: auto;
 }
 
-.table-header th {
+/* .table-header th {
   color: rgba(0, 0, 0, 0.87) !important;
   height: 48px;
   font-family: Zilla Slab , serif;
   font-weight: 500;
   font-size: 18px;
   background-color: #fff;
-}
+} */
 
 thead {
   border-bottom: 2px solid rgb(224, 224, 224);

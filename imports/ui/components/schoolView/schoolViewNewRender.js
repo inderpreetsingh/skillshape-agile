@@ -130,8 +130,8 @@ const PackagesWrapper = GenericWrapper.extend`
 `;
 
 const MyCalendarWrapper = GenericFixedWidthWrapper.extend`
-  margin-bottom: ${helpers.rhythmDiv * 8}px;
   padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
 `;
 
 const PricingSection = styled.div`
@@ -274,8 +274,8 @@ export default function () {
                 })
               }}
               classTypeIds={this.state.selectedClassTypeIds}
-              epData = {this.state.epData}
-              currentPackageData = {this.state.currentPackageData}
+              epData={this.state.epData}
+              currentPackageData={this.state.currentPackageData}
             />
           }
           {

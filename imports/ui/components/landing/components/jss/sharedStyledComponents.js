@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { TableCell, TableRow } from "material-ui/Table";
+import { withStyles } from 'material-ui/styles';
+import Table, { TableCell, TableRow } from "material-ui/Table";
 import { getContainerMaxWidth } from '/imports/util';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -108,10 +109,13 @@ export const SSTableRow = styled(TableRow)`
    }   
 `;
 
-export const SSTableCell = styled(TableCell)`
-  overflow-wrap: break-word;
+
+console.log(MyTableCell, TableCell, "///");
+
+const MyTableCell = styled(TableCell)`
+	overflow-wrap: break-word;
+	padding: ${helpers.rhythmDiv * 2}px;
   word-wrap: break-word;
-  padding: ${helpers.rhythmDiv * 2}px;
   font-family: ${helpers.specialFont};
 
   @media screen and (max-width: ${props => props.listViewBreakPnt || helpers.tablet}px) {
@@ -128,14 +132,8 @@ export const SSTableCell = styled(TableCell)`
   }
 `;
 
-export const length = {
-	w211: {
-		width: 211
+export const SSTableCell = withStyles(theme => ({
+	paddingDefault: {
+		padding: helpers.rhythmDiv * 2
 	},
-	w100: {
-		width: 100
-	},
-	w150: {
-		width: 150
-	}
-};
+}))(MyTableCell);

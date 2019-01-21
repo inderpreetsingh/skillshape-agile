@@ -1,6 +1,7 @@
 import { get } from "lodash";
 import { MuiThemeProvider } from "material-ui/styles";
 import React from "react";
+import styled from 'styled-components';
 import { browserHistory } from "react-router";
 import SetPasswordDialogBox from "/imports/ui/components/landing/components/dialogs/SetPasswordDialogBox";
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
@@ -8,7 +9,12 @@ import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
 import { withStyles } from "/imports/util";
+import { panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
 
+const MainPanel = styled.div`
+  position: relative;
+  flex: 1 1 0;
+`;
 
 const styles = theme => ({
   wrapper: {
@@ -19,7 +25,7 @@ const styles = theme => ({
   },
   content: {
     height: '100%',
-    backgroundColor: theme.palette.background.default
+    backgroundColor: panelColor
     // paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
   }
 });
@@ -136,8 +142,7 @@ class PublicLayout extends React.Component {
             errorText={this.state.errorMessage}
             isLoading={this.state.isBusy}
           />
-          <div
-            style={{ flex: 1 }}
+          <MainPanel
             ref={ref => {
               this.mainPanelRef = ref;
             }}
@@ -150,7 +155,7 @@ class PublicLayout extends React.Component {
                 currentLocationPathName
               })}
             </main>
-          </div>
+          </MainPanel>
           <Footer />
         </div>
       </MuiThemeProvider>

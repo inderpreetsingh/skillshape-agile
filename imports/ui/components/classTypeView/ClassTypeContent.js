@@ -154,6 +154,7 @@ const PackagesTitle = styled.h2`
 
 const CalendarWrapper = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
+  margin-bottom: ${helpers.rhythmDiv * 8}px;
 `;
 
 const ClassContainer = styled.div`
@@ -513,7 +514,7 @@ class ClassTypeContent extends Component {
       requestFor = manageRequestTitle != "Pricing" ? "class times" : requestFor;
     }
     purchasedSuccessfully = () => {
-      this.setState({enrollmentPackagesDialog:false});
+      this.setState({ enrollmentPackagesDialog: false });
     }
     return (
       <div>
@@ -524,26 +525,26 @@ class ClassTypeContent extends Component {
             onModalClose={() => this.handleDialogState("callUsDialog", false)}
           />
         )}
-              {
-            this.state.enrollmentPackagesDialog &&
-            <EnrollmentPackagesDialogBox
-              open={this.state.enrollmentPackagesDialog}
-              schoolId={classTypeData.schoolId}
-              onAddToCartIconButtonClick={this.handlePurchasePackage}
-              onModalClose={() => {
-                this.setState(state => {
-                  return {
-                    ...state,
-                    enrollmentPackagesDialog: false,
-                    selectedClassTypeIds: null
-                  }
-                })
-              }}
-              classTypeIds={this.state.selectedClassTypeIds}
-              epData = {this.state.epData}
-              currentPackageData = {this.state.currentPackageData}
-            />
-          }
+        {
+          this.state.enrollmentPackagesDialog &&
+          <EnrollmentPackagesDialogBox
+            open={this.state.enrollmentPackagesDialog}
+            schoolId={classTypeData.schoolId}
+            onAddToCartIconButtonClick={this.handlePurchasePackage}
+            onModalClose={() => {
+              this.setState(state => {
+                return {
+                  ...state,
+                  enrollmentPackagesDialog: false,
+                  selectedClassTypeIds: null
+                }
+              })
+            }}
+            classTypeIds={this.state.selectedClassTypeIds}
+            epData={this.state.epData}
+            currentPackageData={this.state.currentPackageData}
+          />
+        }
         {this.state.emailUsDialog && (
           <EmailUsDialogBox
             schoolData={schoolData}
@@ -697,15 +698,15 @@ class ClassTypeContent extends Component {
                   </CalendarWrapper>*/}
             {
               /*<MyCalender {...this.props}/>*/
-             
+
             }
           </MainInnerFixedContainer>
           <CalendarWrapper>
-                <ManageMyCalendar
-                  classCalendar={true}
-                  {...this.props}
-                />
-              </CalendarWrapper>
+            <ManageMyCalendar
+              classCalendar={true}
+              {...this.props}
+            />
+          </CalendarWrapper>
           <Element name="price-section">
             <PackagesWrapper
               marginBottom={
@@ -747,7 +748,7 @@ class ClassTypeContent extends Component {
             </PackagesWrapper>
           </Element>
 
-          
+
         </Main>
       </div>
     );
