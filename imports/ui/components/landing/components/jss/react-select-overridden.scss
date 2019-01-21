@@ -50,5 +50,13 @@ $pr-color: map-get($colors, 'primary');
                 color: map-get($colors, 'input-default');
             }
         }
+        &-control, &-value {
+            background-color: transparent
+        }
+    }
+    .Select.is-pseudo-focused , 
+    .Select.is-open > .Select-control ,
+    .Select.is-focused:not(.is-open) > .Select-control {
+        background: transparent;
     }
 }

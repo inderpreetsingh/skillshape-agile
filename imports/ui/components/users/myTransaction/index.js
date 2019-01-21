@@ -45,7 +45,7 @@ const PageHeading = Heading.extend`
 `;
 
 const Wrapper = styled.div`
-  background: white;
+  background: ${panelColor};
 `;
 
 const PaginationWrapper = styled.div`
@@ -115,7 +115,7 @@ class MyTransaction extends React.Component {
   }
   getColumnValue = (data, fieldName, secondFieldName = null) => {
     let result = get(data, fieldName, get(data, secondFieldName, null));
-    if(result == 'contractCancelled'){
+    if (result == 'contractCancelled') {
       return 'Contract Cancelled';
     }
     if (typeof result == "string") {
@@ -192,79 +192,79 @@ class MyTransaction extends React.Component {
           <SubscriptionsDetailsDialogBox
             {...transactionData[index]}
             open={sddb}
-            contractDialog = {contractDialog}
-						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
-            onModalClose={() => { this.setState({ sddb: false ,contractDialog:false}) }}
+            contractDialog={contractDialog}
+            toggleContractDialog={() => { this.setState({ contractDialog: !this.state.contractDialog }) }}
+            onModalClose={() => { this.setState({ sddb: false, contractDialog: false }) }}
           />
         }
         <ContentWrapper>
           <TableWrapper>
             <TableName>
-            {isEmpty(transactionData)
-              ? "No payout found"
-              : transactionData.map((transaction, index) => {
-                let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
-                let classTypePageCondition = classTypeName && classTypeId;
-                let dataForClassType = {}, dataForSchool = {};
-                dataForClassType = {
-                  popUp,
-                  title: 'Confirmation',
-                  type: 'inform',
-                  content: <div>{classTypePageCondition ? `You will be redirected to ${classTypeName} page.` : 'Please Create New Data to use this functionality.'}</div>,
-                  buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) } }]
-                };
-                dataForSchool = {
-                  popUp,
-                  title: 'Confirmation',
-                  type: 'inform',
-                  content: <div>You will be redirected to {schoolName} page.</div>,
-                  buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { goToSchoolPage(schoolId, schoolSlug) } }]
-                }
-                return (
-                  <Fragment>
-                    <SSTableRow key={index} selectable={false}>
-                      <SSTableCell data-th={columnValues[0].columnName}>
-                        {this.getColumnValue(transaction, 'userName') || "..."}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[1].columnName}>
-                        {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm a")}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[2].columnName}>
-                        {this.getColumnValue(transaction, 'transactionType')}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[3].columnName}>
-                        {this.getColumnValue(transaction, 'paymentMethod') || "..."}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[4].columnName}>
-                        {this.amountGenerator(transaction)}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
-                        {this.getColumnValue(transaction, 'schoolName') || "..."}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
-                        {this.getColumnValue(transaction, 'classTypeName') || "..."}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
-                        {this.getColumnValue(transaction, 'packageName') || "..."}
-                      </SSTableCell>
-                      <SSTableCell data-th={columnValues[8].columnName}>
-                        {this.packageType(transaction)}
-                      </SSTableCell>
-                    </SSTableRow>
-                  </Fragment>
-                );
-              })}
-          </TableName>
-        </TableWrapper>
-        <PaginationWrapper>
-          <Pagination
-            style={{
-              marginBottom: 0
-            }}
-            {...this.state}
-            onChange={this.changePageClick}
-          />
-        </PaginationWrapper>
+              {isEmpty(transactionData)
+                ? "No payout found"
+                : transactionData.map((transaction, index) => {
+                  let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
+                  let classTypePageCondition = classTypeName && classTypeId;
+                  let dataForClassType = {}, dataForSchool = {};
+                  dataForClassType = {
+                    popUp,
+                    title: 'Confirmation',
+                    type: 'inform',
+                    content: <div>{classTypePageCondition ? `You will be redirected to ${classTypeName} page.` : 'Please Create New Data to use this functionality.'}</div>,
+                    buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { classTypePageCondition && goToClassTypePage(classTypeName, classTypeId) } }]
+                  };
+                  dataForSchool = {
+                    popUp,
+                    title: 'Confirmation',
+                    type: 'inform',
+                    content: <div>You will be redirected to {schoolName} page.</div>,
+                    buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { goToSchoolPage(schoolId, schoolSlug) } }]
+                  }
+                  return (
+                    <Fragment>
+                      <SSTableRow key={index} selectable={false}>
+                        <SSTableCell className="pd-normal" data-th={columnValues[0].columnName}>
+                          {this.getColumnValue(transaction, 'userName') || "..."}
+                        </SSTableCell>
+                        <SSTableCell className="pd-normal" data-th={columnValues[1].columnName}>
+                          {dateFriendly(this.getColumnValue(transaction, 'transactionDate'), "MMMM Do YYYY, h:mm a")}
+                        </SSTableCell>
+                        <SSTableCell className="pd-normal" data-th={columnValues[2].columnName}>
+                          {this.getColumnValue(transaction, 'transactionType')}
+                        </SSTableCell>
+                        <SSTableCell data-th={columnValues[3].columnName}>
+                          {this.getColumnValue(transaction, 'paymentMethod') || "..."}
+                        </SSTableCell>
+                        <SSTableCell data-th={columnValues[4].columnName}>
+                          {this.amountGenerator(transaction)}
+                        </SSTableCell>
+                        <SSTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
+                          {this.getColumnValue(transaction, 'schoolName') || "..."}
+                        </SSTableCell>
+                        <SSTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
+                          {this.getColumnValue(transaction, 'classTypeName') || "..."}
+                        </SSTableCell>
+                        <SSTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
+                          {this.getColumnValue(transaction, 'packageName') || "..."}
+                        </SSTableCell>
+                        <SSTableCell data-th={columnValues[8].columnName}>
+                          {this.packageType(transaction)}
+                        </SSTableCell>
+                      </SSTableRow>
+                    </Fragment>
+                  );
+                })}
+            </TableName>
+          </TableWrapper>
+          <PaginationWrapper>
+            <Pagination
+              style={{
+                marginBottom: 0
+              }}
+              {...this.state}
+              onChange={this.changePageClick}
+            />
+          </PaginationWrapper>
         </ContentWrapper>
       </Wrapper>
     );

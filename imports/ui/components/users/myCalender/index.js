@@ -14,7 +14,7 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
-import { capitalizeString,confirmationDialog } from '/imports/util';
+import { capitalizeString, confirmationDialog } from '/imports/util';
 
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
@@ -22,6 +22,7 @@ const Div = styled.div`
     width: 100%;
     justify-content: center;
 `;
+
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 const SCHOOL_VIEW = 'SchoolView';
@@ -68,23 +69,23 @@ export default class MyCalender extends React.Component {
   }
 
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
-  getStudentStatus = (filter) =>{
+  getStudentStatus = (filter) => {
     //classes.getClassData
     //classPricing.signInHandler
-    Meteor.call("classes.getClassData",filter,(err,res)=>{
-      if(res){
-        res.students && res.students.map((obj,index)=>{
-          if(obj.userId == Meteor.userId()){
-            if(obj.status=='signIn' || obj.status=='checkIn')
-            this.setState({status:'Sign Out'});
+    Meteor.call("classes.getClassData", filter, (err, res) => {
+      if (res) {
+        res.students && res.students.map((obj, index) => {
+          if (obj.userId == Meteor.userId()) {
+            if (obj.status == 'signIn' || obj.status == 'checkIn')
+              this.setState({ status: 'Sign Out' });
           }
         })
       }
-      this.setState({classDetails:res,filter:filter});
+      this.setState({ classDetails: res, filter: filter });
     })
   }
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
-    let newState = {classDetailModal: false,status:'Sign In'}
+    let newState = { classDetailModal: false, status: 'Sign In' }
     const { routeName, classTimesData, classTypeData, schoolData } = this.props
     const originalEvent  = get(jsEvent,"originalEvent",'');
     classTimesData && classTimesData.map((obj)=>{
@@ -97,15 +98,15 @@ export default class MyCalender extends React.Component {
         newState.classType = obj;
       }
     })
-    this.setState(state=>{
+    this.setState(state => {
       return {
         ...state,
         ...newState
       }
     })
     this.setDate()
-    const {schoolId,classTypeId,classTimeId,start} = eventData;
-    let filter = {schoolId,classTypeId,classTimeId,scheduled_date:new Date(start)};
+    const { schoolId, classTypeId, classTimeId, start } = eventData;
+    let filter = { schoolId, classTypeId, classTimeId, scheduled_date: new Date(start) };
     this.getStudentStatus(filter);
    
     if(isEmpty(schoolData)){
@@ -173,36 +174,46 @@ export default class MyCalender extends React.Component {
       }
     })
   }
-  handleClassUpdate = (filter,status,popUp)=>{
-    Meteor.call('classPricing.signInHandler',filter,(err,res)=>{
-      let purchased = get(res,'purchased',[]);
-      let epStatus = get(res,"epStatus",false);
+
+  handleModelState = (modelName, modelState) => () => {
+    this.setState(state => {
+      return {
+        ...state,
+        [modelName]: modelState
+      }
+    })
+  }
+
+  handleClassUpdate = (filter, status, popUp) => {
+    Meteor.call('classPricing.signInHandler', filter, (err, res) => {
+      let purchased = get(res, 'purchased', []);
+      let epStatus = get(res, "epStatus", false);
       let pos = -1;
-      if(status=='signOut'){
-        let {classDetails:{students}}=this.state,purchaseId,purchaseData;
-        if(!isEmpty(students) ){
-          students.map((obj)=>{
-            if(obj.userId == filter.userId ? filter.userId : Meteor.userId()){
+      if (status == 'signOut') {
+        let { classDetails: { students } } = this.state, purchaseId, purchaseData;
+        if (!isEmpty(students)) {
+          students.map((obj) => {
+            if (obj.userId == filter.userId ? filter.userId : Meteor.userId()) {
               purchaseId = obj.purchaseId;
             }
           })
-          purchased.map((obj)=>{
-            if(obj._id==purchaseId){
+          purchased.map((obj) => {
+            if (obj._id == purchaseId) {
               purchaseData = obj;
             }
           })
-          this.updateClass(filter,status,purchaseData,popUp);
+          this.updateClass(filter, status, purchaseData, popUp);
         }
         return;
       }
-       if(epStatus && !isEmpty(purchased)){
-        purchased.map((obj,index)=>{
-          if(obj.noClasses == null && obj.packageType == 'MP'){
-              pos = index;
+      if (epStatus && !isEmpty(purchased)) {
+        purchased.map((obj, index) => {
+          if (obj.noClasses == null && obj.packageType == 'MP') {
+            pos = index;
           }
         })
-        
-        if(purchased.length==1){
+
+        if (purchased.length == 1) {
           // let data = {};
           // data = {
           //   popUp,
@@ -212,10 +223,10 @@ export default class MyCalender extends React.Component {
           //   buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[0],popUp)}}]
           // }
           // confirmationDialog(data);
-          this.updateClass(filter,status,purchased[0],popUp)
+          this.updateClass(filter, status, purchased[0], popUp)
           return;
         }
-        if(pos != -1){
+        if (pos != -1) {
           // let data = {};
           // data = {
           //   popUp,
@@ -225,173 +236,173 @@ export default class MyCalender extends React.Component {
           //   buttons:[{label:'Cancel',onClick:()=>{},greyColor:true},{label:'Confirm Sign In',onClick:()=>{this.updateClass(filter,status,purchased[pos],popUp)}}]
           // }
           // confirmationDialog(data);
-          this.updateClass(filter,status,purchased[pos],popUp)
+          this.updateClass(filter, status, purchased[pos], popUp)
           return;
         }
-       
-        else{
+
+        else {
           popUp.appear("inform", {
             title: `Confirmation`,
             content: `You have the followings packages. Please select one from which you are going to use.`,
             RenderActions: (<ButtonWrapper>
-              {purchased.map((obj)=>
-               <FormGhostButton
-               label={capitalizeString(`Sign in with ${obj.packageName}`)}
-               onClick={() => {this.updateClass(filter,status,obj,popUp)}}
-               applyClose
-             />
-                )}
+              {purchased.map((obj) =>
+                <FormGhostButton
+                  label={capitalizeString(`Sign in with ${obj.packageName}`)}
+                  onClick={() => { this.updateClass(filter, status, obj, popUp) }}
+                  applyClose
+                />
+              )}
             </ButtonWrapper>)
           }, true);
         }
-       }
-       else{
-        let packageType,packagesRequired,content,title ;
-       if( !epStatus ){
-        packageType = ' Enrollment package ';
-        packagesRequired = 'enrollment';
-        title = 'Enrollment Fee Required';
-        content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
-       }else{
-        packageType = ' Class Fees Due ';
-        packagesRequired ='perClassAndMonthly';
-        title =  `No ${packageType} Purchased Yet.`
-        content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
-       }
+      }
+      else {
+        let packageType, packagesRequired, content, title;
+        if (!epStatus) {
+          packageType = ' Enrollment package ';
+          packagesRequired = 'enrollment';
+          title = 'Enrollment Fee Required';
+          content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
+        } else {
+          packageType = ' Class Fees Due ';
+          packagesRequired = 'perClassAndMonthly';
+          title = `No ${packageType} Purchased Yet.`
+          content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
+        }
         popUp.appear("inform", {
           title,
           content,
           RenderActions: (<ButtonWrapper>
-             {this.cancelSignIn()}
-           {this.signInAndPurchaseLater(filter,status,popUp)}
-           {this.purchaseNowButton(packagesRequired)}
+            {this.cancelSignIn()}
+            {this.signInAndPurchaseLater(filter, status, popUp)}
+            {this.purchaseNowButton(packagesRequired)}
           </ButtonWrapper>)
         }, true);
-       }
-     })
-   }
-
-  updateClass = (filter,status,purchaseData,popUp)=>{
-    let {packageType,noClasses,_id,packageName,monthlyAttendance} = purchaseData || {};
-    let condition=0,inc=0;
-    if(packageType == 'CP'){
-      condition = noClasses;
-    }else if(packageType == 'MP'){
-      condition = get(monthlyAttendance,'noClasses',0);
       }
-    
-        Meteor.call('purchase.manageAttendance',_id,packageType,inc,(err,res)=>{
-            if(condition <= 0 ){
-              condition = res;
-            }
-            if(condition>0 || res == undefined && !condition < 0 || !purchaseData){
-              this.setState({isLoading:true});
-              Meteor.call("classes.updateClassData",filter,status,_id,packageType,(err,res)=>{
-                if(res){
-                  this.setState({status:'Sign In',isLoading:false});
-                  popUp.appear("success", {
-                    title: `${this.state.status} successfully`,
-                    content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
-                    RenderActions: (<ButtonWrapper>
-                      <FormGhostButton
-                          label={'Ok'}
-                          onClick={() => {
-                            this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
-                          }}
-                          applyClose
-                      />
-                  </ButtonWrapper>)
-                  }, true);
-                }
-              })
-            }
-            else{
-              popUp.appear("alert", {
-                title: `Caution`,
-                content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
-                RenderActions: (<ButtonWrapper>
-                    {this.cancelSignIn()}
-                    {this.signInAndPurchaseLater(filter,status,popUp)}
-                   {this.purchaseNowButton()}
-              </ButtonWrapper>)
-              }, true);
-            }
-          
-        });
-    
-   
-  
+    })
   }
-  purchaseNowButton = (packagesRequired)=>(
+
+  updateClass = (filter, status, purchaseData, popUp) => {
+    let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};
+    let condition = 0, inc = 0;
+    if (packageType == 'CP') {
+      condition = noClasses;
+    } else if (packageType == 'MP') {
+      condition = get(monthlyAttendance, 'noClasses', 0);
+    }
+
+    Meteor.call('purchase.manageAttendance', _id, packageType, inc, (err, res) => {
+      if (condition <= 0) {
+        condition = res;
+      }
+      if (condition > 0 || res == undefined && !condition < 0 || !purchaseData) {
+        this.setState({ isLoading: true });
+        Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
+          if (res) {
+            this.setState({ status: 'Sign In', isLoading: false });
+            popUp.appear("success", {
+              title: `${this.state.status} successfully`,
+              content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
+              RenderActions: (<ButtonWrapper>
+                <FormGhostButton
+                  label={'Ok'}
+                  onClick={() => {
+                    this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                  }}
+                  applyClose
+                />
+              </ButtonWrapper>)
+            }, true);
+          }
+        })
+      }
+      else {
+        popUp.appear("alert", {
+          title: `Caution`,
+          content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
+          RenderActions: (<ButtonWrapper>
+            {this.cancelSignIn()}
+            {this.signInAndPurchaseLater(filter, status, popUp)}
+            {this.purchaseNowButton()}
+          </ButtonWrapper>)
+        }, true);
+      }
+
+    });
+
+
+
+  }
+  purchaseNowButton = (packagesRequired) => (
     <FormGhostButton
-    label={'Purchase Now'}
-    onClick={() => {this.setState({classTypePackages:true,packagesRequired})}}
-    applyClose
-  />
+      label={'Purchase Now'}
+      onClick={() => { this.setState({ classTypePackages: true, packagesRequired }) }}
+      applyClose
+    />
   )
-  cancelSignIn = ()=>(
+  cancelSignIn = () => (
     <FormGhostButton
-             label={'Cancel Sign In'}
-             onClick={() => {}}
-             applyClose
-           />
+      label={'Cancel Sign In'}
+      onClick={() => { }}
+      applyClose
+    />
   )
-  signInAndPurchaseLater = (filter,status,popUp)=>(
+  signInAndPurchaseLater = (filter, status, popUp) => (
     <FormGhostButton
-             label={'Sign In And Purchase Later'}
-             onClick={() => {this.handleSIgnInAndPurchaseLater(filter,status,popUp)}}
-             applyClose
-           />
+      label={'Sign In And Purchase Later'}
+      onClick={() => { this.handleSIgnInAndPurchaseLater(filter, status, popUp) }}
+      applyClose
+    />
   )
-  handleSIgnInAndPurchaseLater = (filter,status,popUp) => {
-    Meteor.call("classes.updateClassData",filter,status,null,null,(err,res)=>{
-      if(res){
-        this.setState({status:'Sign In',isLoading:false});
+  handleSIgnInAndPurchaseLater = (filter, status, popUp) => {
+    Meteor.call("classes.updateClassData", filter, status, null, null, (err, res) => {
+      if (res) {
+        this.setState({ status: 'Sign In', isLoading: false });
         popUp.appear("success", {
           title: `${this.state.status} successfully`,
           content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
           RenderActions: (<ButtonWrapper>
             <FormGhostButton
-                label={'Ok'}
-                onClick={() => {
-                  this.setState({status: status == 'signIn' ? 'Sign Out' : 'Sign In'})
-                }}
-                applyClose
+              label={'Ok'}
+              onClick={() => {
+                this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+              }}
+              applyClose
             />
-        </ButtonWrapper>)
+          </ButtonWrapper>)
         }, true);
       }
     })
   }
   handleSignIn = () => {
-    const {popUp} = this.props;
-    const {classDetails,filter,status} = this.state;
-   
-    if(status == "Sign In"){
-          this.handleClassUpdate(classDetails ?classDetails : filter,'signIn',popUp)
+    const { popUp } = this.props;
+    const { classDetails, filter, status } = this.state;
+
+    if (status == "Sign In") {
+      this.handleClassUpdate(classDetails ? classDetails : filter, 'signIn', popUp)
     }
     else {
       popUp.appear("inform", {
         title: "Confirmation",
         content: `You are currently signed in. Do you want to sign out?`,
-        RenderActions: ( <Div > 
+        RenderActions: (<Div >
           <ButtonWrapper>
             <FormGhostButton
-                label={'No'}
-                onClick={() => {
-                }}
-                applyClose
+              label={'No'}
+              onClick={() => {
+              }}
+              applyClose
             />
-        </ButtonWrapper>
-        <ButtonWrapper>
+          </ButtonWrapper>
+          <ButtonWrapper>
             <FormGhostButton
-                label={'Yes'}
-                onClick={() => {
-                  this.handleClassUpdate(classDetails ?classDetails : filter,'signOut',popUp)
-                }}
-                applyClose
+              label={'Yes'}
+              onClick={() => {
+                this.handleClassUpdate(classDetails ? classDetails : filter, 'signOut', popUp)
+              }}
+              applyClose
             />
-        </ButtonWrapper>
+          </ButtonWrapper>
         </Div>)
       }, true);
     }
@@ -445,7 +456,7 @@ export default class MyCalender extends React.Component {
       </Link>
       <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
-        <Assignment_turned_in />
+          <Assignment_turned_in />
         </PopoverListItemIcon>
         <ListItemText primary={status} />
       </ListItem>
@@ -457,8 +468,8 @@ export default class MyCalender extends React.Component {
       </ListItem>
     </List>
   )
-  closeClassTypePackages = () =>{
-    this.setState({classTypePackages:false});
+  closeClassTypePackages = () => {
+    this.setState({ classTypePackages: false });
   }
   render() {
     const { isOpen,
@@ -476,18 +487,18 @@ export default class MyCalender extends React.Component {
       classDetails,
       packagesRequired
     } = this.state;
-    const { routeName,schoolData } = this.props;
-    let name,_id;
-    if( !isEmpty(schoolData)){
-      name = get (schoolData,'name','School Name');
-      _id = get(schoolData,'_id',null);
+    const { routeName, schoolData } = this.props;
+    let name, _id;
+    if (!isEmpty(schoolData)) {
+      name = get(schoolData, 'name', 'School Name');
+      _id = get(schoolData, '_id', null);
     }
     let classTypeId;
-    if(!isEmpty(classDetails)){
-      classTypeId = get(classDetails,'classTypeId',null);
+    if (!isEmpty(classDetails)) {
+      classTypeId = get(classDetails, 'classTypeId', null);
     }
-    else{
-      classTypeId = get(filter,'classTypeId',null);
+    else {
+      classTypeId = get(filter, 'classTypeId', null);
     }
     let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
     return (
@@ -501,33 +512,33 @@ export default class MyCalender extends React.Component {
           manageMyCalendar={true}
         />
         {isLoading && <ContainerLoader />}
-        {classDetailModal  && (
+        {classDetailModal && (
           <ClassDetailModal
             eventData={eventData}
             showModal={classDetailModal}
-            closeEventModal={this.handleEventModal}
+            closeEventModal={this.handleModelState('classDetailModal', false)}
             classInterestData={this.props.classInterestData}
             onJoinClassButtonClick={this.props.onJoinClassButtonClick}
             clickedDate={clickedDate}
             routeName={this.props.route && this.props.route.name}
             type={this.props.type}
             params={this.props.params}
-            schoolName = {name}
+            schoolName={name}
           />
         )}
-        {classTypePackages && <ClassTypePackages 
-                    schoolId = {_id}
-                    open={classTypePackages}
-                    onClose={()=>{this.setState({classTypePackages:false})}}
-                    params= {this.props.params}
-                    classTypeId = {classTypeId}
-                    userId={Meteor.userId()}
-                    packagesRequired = {packagesRequired}
-                    handleSignIn = {this.handleSignIn}
-                    fromSignFunctionality
-                    closeClassTypePackages = {this.closeClassTypePackages}
-                    schoolData = {schoolData}
-                    />}
+        {classTypePackages && <ClassTypePackages
+          schoolId={_id}
+          open={classTypePackages}
+          onClose={() => { this.setState({ classTypePackages: false }) }}
+          params={this.props.params}
+          classTypeId={classTypeId}
+          userId={Meteor.userId()}
+          packagesRequired={packagesRequired}
+          handleSignIn={this.handleSignIn}
+          fromSignFunctionality
+          closeClassTypePackages={this.closeClassTypePackages}
+          schoolData={schoolData}
+        />}
         {isOpen && (
           <SkillshapePopover
             anchorEl={anchorEl}

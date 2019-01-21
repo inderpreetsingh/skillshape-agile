@@ -1,0 +1,11 @@
+.pd-light {
+    padding: map-get($sizes , 'rhythm-div') * 1px;
+}
+
+.pd-normal {
+    padding: map-get($sizes, 'rhythm-div') * 2px;
+}
+
+.pd-dense {
+    padding: map-get($sizes, 'rhythm-div') * 4px;
+}

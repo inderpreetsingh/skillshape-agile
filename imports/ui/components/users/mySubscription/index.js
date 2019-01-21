@@ -6,17 +6,31 @@ import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import styled from 'styled-components';
-const MySubscriptionRender = React.lazy(()=>import('./MySubscriptionRender.jsx'));
+const MySubscriptionRender = React.lazy(() => import('./MySubscriptionRender.jsx'));
 import ClassSubscription from '/imports/api/classSubscription/fields';
 import Purchases from '/imports/api/purchases/fields';
 import School from '/imports/api/school/fields';
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { packageCoverProvider, withPopUp,confirmationDialog,formatDate } from '/imports/util';
+import { packageCoverProvider, withPopUp, confirmationDialog, formatDate } from '/imports/util';
 import ClassInterest from '/imports/api/classInterest/fields.js';
 
-const Wrapper = styled.div`background: white;`;
+const Wrapper = styled.div`
+	padding-top: ${rhythmDiv * 2}px;
+	
+	::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		background: ${panelColor};
+		z-index: -1;
+	}
+`;
+
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 class MySubscription extends React.Component {
@@ -34,7 +48,7 @@ class MySubscription extends React.Component {
 
 
 	classDataFinder = (schoolData) => {
-		let {  currentUser } = this.props;
+		let { currentUser } = this.props;
 		let schoolId = get(schoolData, '_id', null);
 		let userId = get(currentUser, '_id', null);
 		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
@@ -96,32 +110,32 @@ class MySubscription extends React.Component {
 			}
 		});
 	}
-	purchasePackageDataChecker = (classTimes, classTypeName,_id,schoolId) => {
-		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId',{classTypeId:_id,schoolId},(err,res)=>{
-			const {popUp} = this.props;
-			if(!isEmpty(res)){
-				let data = {},latestExpirationDate = get(res[0],'endDate',new Date());
+	purchasePackageDataChecker = (classTimes, classTypeName, _id, schoolId) => {
+		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId', { classTypeId: _id, schoolId }, (err, res) => {
+			const { popUp } = this.props;
+			if (!isEmpty(res)) {
+				let data = {}, latestExpirationDate = get(res[0], 'endDate', new Date());
 				data = {
 					popUp,
 					title: 'Confirmation',
 					type: 'inform',
 				}
-				if(_id){
-				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove this class from your calendar? If you join again before the expiration, your Packages will still be active.`
-				data.buttons = [{label:'Leave Class',onClick:()=>{this.removeAll(classTimes, classTypeName,_id)},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				if (_id) {
+					data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove this class from your calendar? If you join again before the expiration, your Packages will still be active.`
+					data.buttons = [{ label: 'Leave Class', onClick: () => { this.removeAll(classTimes, classTypeName, _id) }, alert: true }, { label: 'Cancel', onClick: () => { }, greyColor: true }];
 				}
-				else{
-				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove the school and all classes from your calendar? If you join again before the expiration, your Packages will still be active.`
-				data.buttons = [{label:'Leave School',onClick:()=>{this.leaveSchoolHandler()},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				else {
+					data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove the school and all classes from your calendar? If you join again before the expiration, your Packages will still be active.`
+					data.buttons = [{ label: 'Leave School', onClick: () => { this.leaveSchoolHandler() }, alert: true }, { label: 'Cancel', onClick: () => { }, greyColor: true }];
 				}
 				confirmationDialog(data);
 			}
-			else{
-				_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
+			else {
+				_id ? this.removeAll(classTimes, classTypeName, _id) : this.leaveSchoolHandler();
 			}
 		})
 	}
-	removeAll = (classTimes, classTypeName,_id) => {
+	removeAll = (classTimes, classTypeName, _id) => {
 		const { currentUser } = this.props;
 		let userId = get(currentUser, '_id', null), data = {};
 		this.setState({ all: true });
@@ -135,8 +149,8 @@ class MySubscription extends React.Component {
 		})
 	}
 	leaveSchool = () => {
-		let { popUp, currentUser,schoolData } = this.props;
-		let {_id:schoolId} = schoolData[0];
+		let { popUp, currentUser, schoolData } = this.props;
+		let { _id: schoolId } = schoolData[0];
 		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
 		popUp.appear(
 			'inform',
@@ -151,7 +165,7 @@ class MySubscription extends React.Component {
 						/>
 						<FormGhostButton
 							label={'Yes'}
-							onClick={()=>{this.purchasePackageDataChecker(null,null,null,schoolId)}}
+							onClick={() => { this.purchasePackageDataChecker(null, null, null, schoolId) }}
 							applyClose
 						/>
 					</ButtonWrapper>
@@ -165,7 +179,7 @@ class MySubscription extends React.Component {
 		this.setState({ all: true });
 		if (!isEmpty(subscriptionsData)) {
 			subscriptionsData.map((obj, index) => {
-				this.removeAll(obj.classTimes, obj.name,obj._id);
+				this.removeAll(obj.classTimes, obj.name, obj._id);
 			})
 		}
 	}
@@ -183,7 +197,7 @@ class MySubscription extends React.Component {
 			data,
 			(error, res) => {
 				if (res) {
-					this.setState({ isBusy: false,manageMemberShipDialog:false });
+					this.setState({ isBusy: false, manageMemberShipDialog: false });
 					const { popUp } = this.props;
 					popUp.appear(
 						'success',
@@ -275,34 +289,34 @@ class MySubscription extends React.Component {
 		}
 
 		return (
-			<React.Suspense fallback={<ContainerLoader/>}>
-			<Wrapper>
-				{/*<SchoolBox schoolData={schoolData} purchaseData={purchaseData} />*/}
-				<MySubscriptionRender
-					getContactNumbers={this.getContactNumbers}
-					getOurEmail={this.getOurEmail}
-					email={email}
-					phone={phone}
-					currentUser={currentUser}
-					selectedSchool={selectedSchool}
-					schoolData={schoolData}
-					purchaseData={packageCoverProvider(purchaseData)}
-					callUsDialog={callUsDialog}
-					emailUsDialog={emailUsDialog}
-					manageMemberShipDialog={manageMemberShipDialog}
-					handleManageMemberShipDialogBox={this.handleManageMemberShipDialogBox}
-					handleModelState={this.handleModelState}
-					handleEmail={this.handleEmail}
-					handleCall={this.handleCall}
-					isBusy={isBusy}
-					subscriptionsData={subscriptionsData}
-					handleSchoolVisit={this.handleSchoolVisit}
-					removeAll={this.purchasePackageDataChecker}
-					stopNotification={this.stopNotification}
-					leaveSchool={this.leaveSchool}
-					removeFromCalendar={this.removeFromCalendar}
-				/>
-			</Wrapper>
+			<React.Suspense fallback={<ContainerLoader />}>
+				<Wrapper>
+					{/*<SchoolBox schoolData={schoolData} purchaseData={purchaseData} />*/}
+					<MySubscriptionRender
+						getContactNumbers={this.getContactNumbers}
+						getOurEmail={this.getOurEmail}
+						email={email}
+						phone={phone}
+						currentUser={currentUser}
+						selectedSchool={selectedSchool}
+						schoolData={schoolData}
+						purchaseData={packageCoverProvider(purchaseData)}
+						callUsDialog={callUsDialog}
+						emailUsDialog={emailUsDialog}
+						manageMemberShipDialog={manageMemberShipDialog}
+						handleManageMemberShipDialogBox={this.handleManageMemberShipDialogBox}
+						handleModelState={this.handleModelState}
+						handleEmail={this.handleEmail}
+						handleCall={this.handleCall}
+						isBusy={isBusy}
+						subscriptionsData={subscriptionsData}
+						handleSchoolVisit={this.handleSchoolVisit}
+						removeAll={this.purchasePackageDataChecker}
+						stopNotification={this.stopNotification}
+						leaveSchool={this.leaveSchool}
+						removeFromCalendar={this.removeFromCalendar}
+					/>
+				</Wrapper>
 			</React.Suspense>
 		);
 	}
@@ -324,7 +338,7 @@ export default createContainer((props) => {
 		adminsDataSubscriptions,
 		classSubscriptionData,
 		classInterestData;
-	userId = get(props.params,'id',get(currentUser, '_id', null));
+	userId = get(props.params, 'id', get(currentUser, '_id', null));
 	filter = { userId };
 	purchaseSubscription = Meteor.subscribe('purchases.getPurchasesListByMemberId', filter);
 	classSubscription = Meteor.subscribe('classSubscription.findDataById', filter);
@@ -334,8 +348,8 @@ export default createContainer((props) => {
 		classSubscriptionData = ClassSubscription.find().fetch();
 		// console.log(purchaseData, classSubscription, ' in purchase subscription');
 		classInterestData = ClassInterest.find().fetch();
-		if(!isEmpty(classInterestData)){
-			classInterestData.map((obj)=>{
+		if (!isEmpty(classInterestData)) {
+			classInterestData.map((obj) => {
 				schoolIds.push(obj.schoolId);
 			})
 		}
@@ -376,7 +390,7 @@ export default createContainer((props) => {
 	}
 
 	purchaseData = concat(purchaseData, classSubscriptionData);
-		return {
+	return {
 		currentUser,
 		isLoading,
 		schoolData,

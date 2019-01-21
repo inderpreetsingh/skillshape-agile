@@ -112,6 +112,7 @@ const ActionButtonsWrapper = styled.div`
     @media screen and (max-width: ${helpers.mobile + 50}px) {
         flex-direction: row;
         flex-wrap: wrap;
+        justify-content: center;
     }
 
     @media screen and (max-width: ${helpers.mobile - 100}px) {
