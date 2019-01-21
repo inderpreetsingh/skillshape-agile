@@ -62,10 +62,10 @@ Meteor.methods({
       classInterestData.map((classInterest)=>{
         let event = {};
         let {classTimeId,classTypeId,_id:id} = classInterest;
-        //event.id = id;
+        event.id = id;
         let classTimeData = ClassTimes.findOne({_id:classTimeId});
         let classTypeData = ClassTypes.findOne({_id:classTypeId});
-        let {locationId,name:classTimeName,desc:classTimeDesc,scheduleType,scheduleDetails} = classTimeData;
+        let {locationId,name:classTimeName,desc:classTimeDesc,scheduleType,scheduleDetails,endDate} = classTimeData;
         let locationData = SLocation.findOne({_id:locationId});
         if(locationData){
           let {address,city,state,country} = locationData;
@@ -76,11 +76,11 @@ Meteor.methods({
         let summary = `${classTypeName}: ${classTimeName}`;
         event.summary = summary;
         event.description = classTimeDesc || classTypeDesc || 'No Description';
-        if(scheduleType == 'oneTime'){
+        if(scheduleType != 'OnGoing'){
           scheduleDetails.map((obj)=>{
             let {startDate,duration,timeUnits} = obj;
             let date1 = moment(startDate).format();
-            let date2 = moment(startDate).format();
+            let date2 = moment(scheduleType == 'oneTime' ? startDate : endDate).format();
             if(duration && timeUnits){
               if(timeUnits == 'Minutes'){
                 date2 = moment(date2).add(duration,'m');
