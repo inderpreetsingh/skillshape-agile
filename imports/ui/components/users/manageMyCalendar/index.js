@@ -17,7 +17,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassType from "/imports/api/classType/fields";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import MyCalender from "/imports/ui/components/users/myCalender";
-import { cutString, formStyles } from "/imports/util";
+import { cutString, formStyles,withPopUp,confirmationDialog } from "/imports/util";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import {get} from "lodash";
 import { ContainerLoader } from "/imports/ui/loading/container";
@@ -28,7 +28,10 @@ const inputStyle = {
   minWidth: 150,
   display: "flex"
 };
-
+const Div = styled.div`
+float: right;
+margin: 13px;
+`;
 const expansionPanelStyle = {
   display: "flex",
   flexDirection: "column"
@@ -515,13 +518,46 @@ class ManageMyCalendar extends React.Component {
        }, (authResult)=>{
         const {access_token} = authResult;
         const {_id:userId} = this.props.currentUser;
-        Meteor.call("calendar.handleGoogleCalendar",access_token,userId,(err,res)=>{
-					console.log("​ManageMyCalendar -> handleCalendarSync -> err,res", err,res)
+        if(access_token){
+          Meteor.call("calendar.handleGoogleCalendar",access_token,userId,(err,res)=>{
+            this.setState({isLoading:false});
+            const {popUp} = this.props;
+            const data = {
+              popUp,
+              title: 'Success',
+              type: 'success',
+              content: 'Your skillshape calendar sync with google calendar Successfully.',
+              buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+            };
+            confirmationDialog(data);
+          })
+        }
+        else{
           this.setState({isLoading:false});
-        })
+            const {popUp} = this.props;
+            const data = {
+              popUp,
+              title: 'Error',
+              type: 'alert',
+              content: 'Oops Something Went Wrong!',
+              buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+            };
+            confirmationDialog(data);
+        }
        });
 
     })
+  }
+  calendarConformation = () => {
+    const {popUp} = this.props;
+    const data = {
+      popUp,
+      title: 'Confirmation',
+      type: 'inform',
+      content: 'Do you really want to sync your skillshape calendar with the google calendar.',
+      buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Yes', onClick: () => {this.handleCalendarSync() } }]
+    };
+    confirmationDialog(data);
   }
   render() {
     // const { schoolClassTimes } = this.props;
@@ -542,12 +578,13 @@ class ManageMyCalendar extends React.Component {
     return (
       <DocumentTitle title={this.props.route && this.props.route.name}>
         <div>
+        <Div>
           {get(this.props, 'route.name', null) == "MyCalendar" &&
             <FormGhostButton
               label={"Sync Calendar"}
-              onClick={this.handleCalendarSync}
+              onClick={this.calendarConformation}
               applyClose
-            />}
+            />}</Div>
           {isLoading && <ContainerLoader />}
           {/*<Card style={{padding: 10, margin: 15}}> */}
           <Card style={{ padding: 8 }}>
@@ -562,7 +599,7 @@ class ManageMyCalendar extends React.Component {
                   display: "inline",
                   flexWrap: "wrap"
                 }}
-                onChange={this.handleClassOnChange}
+                onChange={this.calendarConformation}
                 defaultSelected="Select any one"
               >
                 {classTypeData &&
@@ -1036,4 +1073,4 @@ export default createContainer(props => {
     managedClassTypeData,
     classTypeForInterests
   };
-}, withStyles(newStyles)(ManageMyCalendar));
+}, withStyles(newStyles)(withPopUp(ManageMyCalendar)));

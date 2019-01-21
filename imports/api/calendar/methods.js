@@ -57,12 +57,12 @@ Meteor.methods({
   },
   "calendar.generateEvents":function(userId){
     let events = [];
-    let classInterestData = ClassInterest.find({userId}).fetch();
+    let classInterestData = ClassInterest.find({userId},{limit:2}).fetch();
     if(!isEmpty(classInterestData)){
       classInterestData.map((classInterest)=>{
         let event = {};
         let {classTimeId,classTypeId,_id:id} = classInterest;
-        event.id = id;
+        //event.id = id;
         let classTimeData = ClassTimes.findOne({_id:classTimeId});
         let classTypeData = ClassTypes.findOne({_id:classTypeId});
         let {locationId,name:classTimeName,desc:classTimeDesc,scheduleType,scheduleDetails,endDate} = classTimeData;
@@ -76,11 +76,10 @@ Meteor.methods({
         let summary = `${classTypeName}: ${classTimeName}`;
         event.summary = summary;
         event.description = classTimeDesc || classTypeDesc || 'No Description';
-        if(scheduleType != 'OnGoing'){
           scheduleDetails.map((obj)=>{
-            let {startDate,duration,timeUnits} = obj;
+            let {startDate,duration,timeUnits,key} = obj;
             let date1 = moment(startDate).format();
-            let date2 = moment(scheduleType == 'oneTime' ? startDate : endDate).format();
+            let date2 = moment(scheduleType == 'recurring' ? endDate : startDate).format();
             if(duration && timeUnits){
               if(timeUnits == 'Minutes'){
                 date2 = moment(date2).add(duration,'m');
@@ -89,16 +88,43 @@ Meteor.methods({
               }
             }
             event.start = {dateTime:date1,timeZone:'Asia/Kolkata'};
-            event.end = {dateTime:date2,timeZone:'Asia/Kolkata'}
+            event.end = {dateTime:date2,timeZone:'Asia/Kolkata'};
+            if(scheduleType != 'oneTime'){
+            event.recurrence = ['RRULE:FREQ=DAILY;'];
+            if(key){
+              let byDay = generatorByDay(key);
+              event.recurrence = [`RRULE:FREQ=DAILY;BYDAY=${byDay}`];
+            }
+            }
             events.push(event);
           })
-        }
-
       })
     }
     return events;
   }
 });
+
+generatorByDay = (key) =>{
+let str = [];
+  key.map((day)=>{
+    if(day.value == 0){
+      str.push('SU');
+    }else if (day.value == 1){
+      str.push('MO');
+    }else if (day.value == 2){
+      str.push('TU');
+    }else if (day.value == 3){
+      str.push('WE');
+    }else if (day.value == 4){
+      str.push('TH');
+    }else if (day.value == 5){
+      str.push('FI');
+    }else if (day.value == 6){
+      str.push('SA');
+    }
+  })
+  return str.join(",");
+}
 /* 
       clientId = '696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com',
      scopes = 'https://www.googleapis.com/auth/calendar',
