@@ -1,8 +1,13 @@
 
 import { check } from 'meteor/check';
+import ClassInterest from "/imports/api/classInterest/fields.js";
+import ClassTimes from "/imports/api/classTimes/fields.js";
+import ClassTypes from "/imports/api/classType/fields.js";
+import SLocation from "/imports/api/sLocation/fields.js";
+import {get,isEmpty} from 'lodash';
+import moment from 'moment';
 import axios from 'axios';
 const event = {
-  id:'aaaaaaaaaaaaaaaaaaaaaaa',
   summary: 'Testing',
   location: '800 Howard St., San Francisco, CA 94103',
   description: 'A chance to hear more about Google"s developer products.',
@@ -30,19 +35,68 @@ const event = {
   },
 };
 Meteor.methods({
-  "calendar.handleGoogleCalendar":async function (){
+  "calendar.handleGoogleCalendar": async function (access_token,userId){
     try{
-      let response = await  axios({
-          method: 'post',
-          url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
-          headers: { 'Content-Type': 'application/json', authorization: 'Bearer ya29.GluWBpbX3cSWEMid13mDosTbMvjBWAYzojaQJSvLKqVKwlwgi1OZfBUGyFAESuAfpAMe-JfNhYv9nnhWQ70vWy5cBtGymGTzLyYw0t-u5C3u5RvWc0CVO--Ows5m' },
-          data: event,
-          timeout: 20000,
+      let eventsList = Meteor.call('calendar.generateEvents',userId);
+      if(!isEmpty(eventsList)){
+        eventsList.map(async (e)=>{
+          let response = await  axios({
+            method: 'post',
+            url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
+            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+            data: e,
+            timeout: 20000,
+          })
         })
-        console.log("response",response);
+      }
+      return true;
     }catch(error){
       console.log("Error in the calendar.handleGoogleCalendar",error);
+      throw new Meteor.Error(error);
     }
+  },
+  "calendar.generateEvents":function(userId){
+    let events = [];
+    let classInterestData = ClassInterest.find({userId}).fetch();
+    if(!isEmpty(classInterestData)){
+      classInterestData.map((classInterest)=>{
+        let event = {};
+        let {classTimeId,classTypeId,_id:id} = classInterest;
+        //event.id = id;
+        let classTimeData = ClassTimes.findOne({_id:classTimeId});
+        let classTypeData = ClassTypes.findOne({_id:classTypeId});
+        let {locationId,name:classTimeName,desc:classTimeDesc,scheduleType,scheduleDetails} = classTimeData;
+        let locationData = SLocation.findOne({_id:locationId});
+        if(locationData){
+          let {address,city,state,country} = locationData;
+          let location = `${address}, ${city}, ${state}, ${country}`;
+          event.location = location;
+        }
+        let {name:classTypeName,desc:classTypeDesc} = classTypeData;
+        let summary = `${classTypeName}: ${classTimeName}`;
+        event.summary = summary;
+        event.description = classTimeDesc || classTypeDesc || 'No Description';
+        if(scheduleType == 'oneTime'){
+          scheduleDetails.map((obj)=>{
+            let {startDate,duration,timeUnits} = obj;
+            let date1 = moment(startDate).format();
+            let date2 = moment(startDate).format();
+            if(duration && timeUnits){
+              if(timeUnits == 'Minutes'){
+                date2 = moment(date2).add(duration,'m');
+              }else{
+                date2 = moment(date2).add(duration,'h');
+              }
+            }
+            event.start = {dateTime:date1,timeZone:'Asia/Kolkata'};
+            event.end = {dateTime:date2,timeZone:'Asia/Kolkata'}
+            events.push(event);
+          })
+        }
+
+      })
+    }
+    return events;
   }
 });
 /* 
@@ -103,4 +157,21 @@ request.execute(function(event) {
   console.log(event)
 });
       });
+*/
+
+
+/*  --------FLow For Calendar Sync 
+1. User Click on the sync button.
+2. Open the Google Login PopUp.
+3. Get the access token.
+3.1 Show Loading on the client side.
+4. Call the method with access token and the userId.
+5. Get all the calendar events from the interest collection with userId.
+6. Get all the class times ids.
+7. Get all the class times data from collection.
+8. Generate events based on the class time type.
+9. Map on the events and start calling the api with axios.
+10. After Map show success popUp.
+
+
 */

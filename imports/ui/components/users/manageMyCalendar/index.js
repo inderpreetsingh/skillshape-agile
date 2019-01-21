@@ -19,6 +19,8 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import MyCalender from "/imports/ui/components/users/myCalender";
 import { cutString, formStyles } from "/imports/util";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import {get} from "lodash";
+import { ContainerLoader } from "/imports/ui/loading/container";
 
 const styles = formStyles();
 
@@ -503,18 +505,23 @@ class ManageMyCalendar extends React.Component {
     return value[0] + ": " + Time;
   };
   handleCalendarSync = () =>{
-    clientId = Meteor.settings.public.googleAppId,
-    scopes = 'https://www.googleapis.com/auth/calendar',
-    calendarId = 'Your google calendar id',
-    eventsList = [];
-    gapi.auth.authorize(
-     {
-        'client_id': clientId,
-        'scope': scopes,
-        
-     }, (authResult)=>{
-       console.log("authResult", authResult)
-     });
+    this.setState({isLoading:true},()=>{
+     const  clientId = Meteor.settings.public.googleAppId;
+     const  scopes = 'https://www.googleapis.com/auth/calendar';
+      gapi.auth.authorize(
+       {
+          'client_id': clientId,
+          'scope': scopes,
+       }, (authResult)=>{
+        const {access_token} = authResult;
+        const {_id:userId} = this.props.currentUser;
+        Meteor.call("calendar.handleGoogleCalendar",access_token,userId,(err,res)=>{
+					console.log("​ManageMyCalendar -> handleCalendarSync -> err,res", err,res)
+          this.setState({isLoading:false});
+        })
+       });
+
+    })
   }
   render() {
     // const { schoolClassTimes } = this.props;
@@ -529,16 +536,19 @@ class ManageMyCalendar extends React.Component {
       classTypeData,
       managedClassTypes,
       schoolClassTypes,
-      classTypeForInterests
+      classTypeForInterests,
+      isLoading
     } = this.state;
     return (
       <DocumentTitle title={this.props.route && this.props.route.name}>
         <div>
-        <FormGhostButton
-               label={"Sync Calendar"}
-               onClick={this.handleCalendarSync}
-               applyClose
-             />
+          {get(this.props, 'route.name', null) == "MyCalendar" &&
+            <FormGhostButton
+              label={"Sync Calendar"}
+              onClick={this.handleCalendarSync}
+              applyClose
+            />}
+          {isLoading && <ContainerLoader />}
           {/*<Card style={{padding: 10, margin: 15}}> */}
           <Card style={{ padding: 8 }}>
             <FormControl component="fieldset" required>
