@@ -1,8 +1,9 @@
 "use strict"
 import React from "react";
+import { withStyles } from 'material-ui/styles';
 import styled from 'styled-components';
 
-import { mobile, specialFont } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { mobile, specialFont, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import './tableCss';
 
 import Table, {
@@ -18,10 +19,18 @@ const MyTableHead = styled(TableHead)`
   }
 `;
 
-const MyTableCell = styled(TableCell)`
-  font-family: ${specialFont}
-`;
-
+const MyTableCell = withStyles(theme => ({
+  head: {
+    padding: rhythmDiv * 2,
+    fontFamily: specialFont,
+    fontSize: 18,
+    fontWeight: 500,
+    background: 'white'
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
 export const createTable = ({
   tableProps,
@@ -39,7 +48,9 @@ export const createTable = ({
     <MyTableHead {...tableHeaderProps}>
       <TableRow {...tableRowProps}>
         {
-          tableHeaderColumns && Array.isArray(tableHeaderColumns) && tableHeaderColumns.map(({ tooltip, columnName, className }, id) => (
+          tableHeaderColumns &&
+          Array.isArray(tableHeaderColumns) &&
+          tableHeaderColumns.map(({ tooltip, columnName, className }, id) => (
             <MyTableCell key={id} className={className} tooltip={tooltip} {...tableHeaderColumnProps}>{columnName}</MyTableCell>
           ))
         }

@@ -22,7 +22,7 @@ class FullCalendar extends React.Component {
       views: {
         week: {
           type: "basic",
-          duration: { weeks: 2 }
+          duration: { weeks: 3 }
         }
       },
       //theme:false,
