@@ -40,13 +40,21 @@ Meteor.methods({
       let eventsList = Meteor.call('calendar.generateEvents',userId);
       if(!isEmpty(eventsList)){
         eventsList.map(async (e)=>{
-          let response = await  axios({
-            method: 'post',
-            url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
-            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
-            data: e,
-            timeout: 20000,
-          })
+          console.log('​e', e)
+          try{
+            let response = await  axios({
+              method: 'post',
+              url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
+              headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+              data: e,
+              timeout: 20000,
+            })
+            // console.log('​response', response)
+            console.log('Event Added')
+          }catch(error){
+					console.log('​Error in map of the calendar.handleGoogleCalendar')
+					 //console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
+          }
         })
       }
       return true;
@@ -77,9 +85,10 @@ Meteor.methods({
         event.summary = summary;
         event.description = classTimeDesc || classTypeDesc || 'No Description';
           scheduleDetails.map((obj)=>{
-            let {startDate,duration,timeUnits,key} = obj;
-            let date1 = moment(startDate).format();
-            let date2 = moment(scheduleType == 'recurring' ? endDate : startDate).format();
+            let {startTime,duration,timeUnits,key} = obj;
+            let date1 = moment(startTime);
+            let date2 = moment(startTime);
+            
             if(duration && timeUnits){
               if(timeUnits == 'Minutes'){
                 date2 = moment(date2).add(duration,'m');
@@ -87,14 +96,23 @@ Meteor.methods({
                 date2 = moment(date2).add(duration,'h');
               }
             }
+            let COUNT = moment(endDate).diff(date1,'days')+2;
+            date2 = moment(date2).format();
+            date1 = moment(date1).format();
             event.start = {dateTime:date1,timeZone:'Asia/Kolkata'};
             event.end = {dateTime:date2,timeZone:'Asia/Kolkata'};
             if(scheduleType != 'oneTime'){
-            event.recurrence = ['RRULE:FREQ=DAILY;'];
+            let str = 'RRULE:FREQ=WEEKLY;';
             if(key){
               let byDay = generatorByDay(key);
-              event.recurrence = [`RRULE:FREQ=DAILY;BYDAY=${byDay}`];
+              if(byDay){
+                str+=`BYDAY=${byDay};`;
+              }
             }
+            if(scheduleType == 'recurring'){
+              str+=`COUNT=${COUNT};`;
+            }
+            event.recurrence = [str];
             }
             events.push(event);
           })
@@ -118,7 +136,7 @@ let str = [];
     }else if (day.value == 4){
       str.push('TH');
     }else if (day.value == 5){
-      str.push('FI');
+      str.push('FR');
     }else if (day.value == 6){
       str.push('SA');
     }

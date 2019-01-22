@@ -110,7 +110,7 @@ class FullCalendar extends React.Component {
     if (value == 6) {
       return 0;
     } else {
-      return value + 1;
+      return value ;
     }
   };
 
@@ -305,7 +305,7 @@ class FullCalendar extends React.Component {
               obj.key.forEach(dateObj => {
                 const scheduleDetailsObject = {
                   ...obj,
-                  day: this._getNormalizedDayValue(dateObj.value),
+                  day: dateObj.value,
                   title: classTime.classTypeName.name + ": " + classTime.name
                 };
                 const newCalendarEvent = this._createSEventForSeriesClasses(

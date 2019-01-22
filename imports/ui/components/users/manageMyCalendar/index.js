@@ -578,13 +578,13 @@ class ManageMyCalendar extends React.Component {
     return (
       <DocumentTitle title={this.props.route && this.props.route.name}>
         <div>
-        {/* <Div>
+        <Div>
           {get(this.props, 'route.name', null) == "MyCalendar" &&
             <FormGhostButton
               label={"Sync Calendar"}
               onClick={this.calendarConformation}
               applyClose
-            />}</Div> */}
+            />}</Div>
           {isLoading && <ContainerLoader />}
           {/*<Card style={{padding: 10, margin: 15}}> */}
           <Card style={{ padding: 8 }}>
