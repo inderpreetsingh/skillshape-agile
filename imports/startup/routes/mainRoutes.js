@@ -1,12 +1,11 @@
 import React from "react";
 import { browserHistory, IndexRoute, Route, Router } from "react-router";
-
 import StripeConnectModal from "./../../ui/modal/stripeConnectModal";
 import ResetPassword from "/imports/ui/components/account/resetPassword";
 import VerifyEmail from "/imports/ui/components/account/verifyEmail";
 import ClaimSchool from "/imports/ui/components/claimSchool";
 import ClassTypeView from "/imports/ui/components/classTypeView";
-import Financials from "/imports/ui/components/financials";
+import DashBoard from '/imports/ui/components/dashboard';
 import ClassDetails from "/imports/ui/components/landing/ClassDetails.jsx";
 import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
@@ -14,12 +13,13 @@ import NoResults from "/imports/ui/components/landing/components/NoResults";
 import SchoolSuggestionsView from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
 import Landing from "/imports/ui/components/landing/index.jsx";
 import School from "/imports/ui/components/landing/School.jsx";
+import SkillShapeButtonsCollection from '/imports/ui/components/landing/SkillShapeButtonsCollection';
+import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
 import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
 import ManageUsers from "/imports/ui/components/manage-users";
 import Optimization from '/imports/ui/components/optimization';
+import PurchasePackage from '/imports/ui/components/purchasePackage';
 import SchoolMemberView from "/imports/ui/components/schoolMembers";
-import DashBoard from '/imports/ui/components/dashboard';
-
 // import MyCalender from '/imports/ui/components/users/myCalender';
 import SchoolUpload from "/imports/ui/components/schoolUpload";
 import SchoolView from "/imports/ui/components/schoolView";
@@ -29,23 +29,21 @@ import MyMedia from "/imports/ui/components/users/myMedia";
 import MyProfile from "/imports/ui/components/users/myProfile";
 import MySubscription from "/imports/ui/components/users/mySubscription";
 import MyTransaction from "/imports/ui/components/users/myTransaction";
-import MyAttendance from '/imports/ui/components/users/myAttedance';
-import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
-import PurchasePackage from '/imports/ui/components/purchasePackage';
-import SkillShapeButtonsCollection from '/imports/ui/components/landing/SkillShapeButtonsCollection';
-
 //layout
 import AdminLayout from "/imports/ui/layout/adminLayout";
 import EmbedLayout from "/imports/ui/layout/embedLayout";
 import MainLayout from "/imports/ui/layout/mainLayout";
 import PublicLayout from "/imports/ui/layout/publicLayout";
-
 //pages
 import AboutUs from "/imports/ui/pages/aboutUs";
 import ContactUs from "/imports/ui/pages/contactUs";
 import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import { componentLoader } from "/imports/util";
+
+
+
+
 
 
 export default (Routes = componentLoader(props => (
@@ -114,10 +112,6 @@ export default (Routes = componentLoader(props => (
           path="/myTransaction/:id"
           name="MyTransaction"
           component={MyTransaction}
-        /><Route
-          path="/myAttendance/:id"
-          name="MyAttendance"
-          component={MyAttendance}
         />
         
         <Route

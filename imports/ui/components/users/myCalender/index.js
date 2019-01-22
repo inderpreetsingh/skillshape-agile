@@ -87,14 +87,14 @@ export default class MyCalender extends React.Component {
   handleEventModal = (isOpen, eventData, clickedDate, jsEvent) => {
     let newState = { classDetailModal: false, status: 'Sign In' }
     const { routeName, classTimesData, classTypeData, schoolData } = this.props
-    const originalEvent = get(jsEvent, "originalEvent", '');
-    classTimesData && classTimesData.map((obj) => {
-      if (obj._id == eventData.classTimeId) {
+    const originalEvent  = get(jsEvent,"originalEvent",'');
+    classTimesData && classTimesData.map((obj)=>{
+      if(obj._id== eventData && eventData.classTimeId){
         newState.classTimes = obj;
       }
     })
     classTypeData && classTypeData.map((obj) => {
-      if (obj._id == eventData.classTypeId) {
+      if (obj._id == eventData && eventData.classTypeId) {
         newState.classType = obj;
       }
     })
@@ -108,9 +108,9 @@ export default class MyCalender extends React.Component {
     const { schoolId, classTypeId, classTimeId, start } = eventData;
     let filter = { schoolId, classTypeId, classTimeId, scheduled_date: new Date(start) };
     this.getStudentStatus(filter);
-
-    if (isEmpty(schoolData)) {
-      let schoolId = this.state.classTimes.schoolId;
+   
+    if(isEmpty(schoolData)){
+      let schoolId = get(this.state,"classTimes.schoolId",null);
       Meteor.call("school.getMySchool", schoolId, (err, res) => {
         if (res) {
           let admins = get(res, 'admins', []);
