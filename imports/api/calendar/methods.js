@@ -52,8 +52,8 @@ Meteor.methods({
             // console.log('​response', response)
             console.log('Event Added')
           }catch(error){
+            //  console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
 					console.log('​Error in map of the calendar.handleGoogleCalendar')
-					 //console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
           }
         })
       }
@@ -70,7 +70,7 @@ Meteor.methods({
       classInterestData.map((classInterest)=>{
         let event = {};
         let {classTimeId,classTypeId,_id:id} = classInterest;
-        //event.id = id;
+        event.id = id.toLowerCase().replace(/[ywxz]/g, '');
         let classTimeData = ClassTimes.findOne({_id:classTimeId});
         let classTypeData = ClassTypes.findOne({_id:classTypeId});
         let {locationId,name:classTimeName,desc:classTimeDesc,scheduleType,scheduleDetails,endDate} = classTimeData;
