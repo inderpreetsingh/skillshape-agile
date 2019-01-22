@@ -22,8 +22,16 @@ const MY_SUBSCRIPTIONS = 'mySubscriptions';
 
 // NOTE: Added small styles for appearance=small
 const packageStyles = {
+	normal: {
+		opacity: 1,
+	},
 	light: {
+		opacity: 0.1,
 		bgColor: helpers.panelColor,
+	},
+	lightEnhanced: {
+		opacity: 0.5,
+		bgColor: helpers.panelColor
 	}
 }
 
@@ -45,10 +53,10 @@ const outerWrapperSmallStyles = `
 `
 
 const OuterWrapper = styled.div`
-	${(props) => (props.variant ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
+	width: 100%;
+	${props => (props.variant && `box-shadow: ${helpers.inputBoxShadow}`)};
 	padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
 	padding-right: ${helpers.rhythmDiv * 2}px;
-	width: 100%;
 	border-radius: ${helpers.rhythmDiv * 6}px;
 	color: ${helpers.textColor};
 	z-index: 1;
@@ -63,11 +71,11 @@ const OuterWrapper = styled.div`
 		bottom: 0;
 		left: 0;
 		background-color: ${(props) => (props.bgColor || 'white')};
-		opacity: ${(props) => (props.variant === 'light' ? 0.1 : 1)};
 		border-radius: ${props => props.roundness || helpers.rhythmDiv * 6}px;
 		/* overriding the opacity for the subscription, variant*/
-		${props => props.variant && props.variant !== 'normal' && `background-color: ${packageStyles[props.variant].bgColor}`}
-		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1}`}; 
+		${props => props.variant && props.variant !== 'normal' && `background-color: ${packageStyles[props.variant].bgColor};`};
+		opacity: ${(props) => packageStyles[props.variant].opacity};
+		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1};`}; 
 		${props => props.packageSelected && `opacity: 0.1; background-color: ${helpers.primaryColor};`}	
 	}
 
@@ -227,7 +235,7 @@ class Package extends React.Component {
 		super(props);
 		this.state = {
 			subscriptionsDetailsDialog: false,
-			contractDialog:false
+			contractDialog: false
 		}
 	}
 
@@ -287,7 +295,7 @@ class Package extends React.Component {
 		if (get(props, 'payAsYouGo', false)) {
 			return `Payment of ${formatMoney(fee, currency)} is due on ${calcRenewalDate(props.endDate, props.packageType === 'MP', props.combinedData ? props.combinedData.length - 1 : 0)}`
 		}
-		if (get(props, 'autoWithdraw', false) || get(props,'packageType',null) == 'MP') {
+		if (get(props, 'autoWithdraw', false) || get(props, 'packageType', null) == 'MP') {
 			return stringToPrint += `<b>Automatic Payment</b> of ${formatMoney(fee, currency)} will process ${calcRenewalDate(props.endDate, props.packageType === 'MP', 0)}.`
 		}
 		if (props.subsType === ADMIN_SUBSCRIPTIONS) {
@@ -334,7 +342,7 @@ class Package extends React.Component {
 			return {
 				...state,
 				[modelName]: modelState,
-				contractDialog:false
+				contractDialog: false
 			}
 		})
 	}
@@ -349,7 +357,7 @@ class Package extends React.Component {
 			roundness,
 			usedFor
 		} = this.props;
-		const { subscriptionsDetailsDialog,contractDialog } = this.state;
+		const { subscriptionsDetailsDialog, contractDialog } = this.state;
 		const ourPackageStatus = props.packageStatus || props.status;
 
 		if (props.subsType === ADMIN_SUBSCRIPTIONS || props.subsType === MY_SUBSCRIPTIONS) {
@@ -359,8 +367,8 @@ class Package extends React.Component {
 					<SubscriptionsDetailsDialogBox
 						{...props}
 						open={subscriptionsDetailsDialog}
-						contractDialog = {contractDialog}
-						toggleContractDialog = {()=>{this.setState({contractDialog:!this.state.contractDialog})}}
+						contractDialog={contractDialog}
+						toggleContractDialog={() => { this.setState({ contractDialog: !this.state.contractDialog }) }}
 						onModalClose={() => this.handleModelState('subscriptionsDetailsDialog', false)}
 					/>}
 				<OuterWrapper
