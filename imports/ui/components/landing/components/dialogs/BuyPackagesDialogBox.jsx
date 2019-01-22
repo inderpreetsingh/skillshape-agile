@@ -1,12 +1,13 @@
+import React, { Component, Fragment } from "react";
+import { Link } from 'react-router';
+import { createContainer } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 import { isEmpty, isEqual } from "lodash";
 import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
 import { FormControl, FormControlLabel } from "material-ui/Form";
 import Radio, { RadioGroup } from "material-ui/Radio";
 import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import { createContainer } from "meteor/react-meteor-data";
-import PropTypes from "prop-types";
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
 import { ActionButtons, DialogBoxTitleBar } from './sharedDialogBoxComponents';
 import { dialogStyles } from './sharedDialogBoxStyles';
 import ClassPricing from "/imports/api/classPricing/fields";
@@ -17,13 +18,15 @@ import FormGhostButton from '/imports/ui/components/landing/components/buttons/F
 import Package from '/imports/ui/components/landing/components/class/packages/Package.jsx';
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
+
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import { normalizeMonthlyPricingData, withPopUp } from "/imports/util";
 
 const PackagesListWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
 const PackageWrapper = styled.div`
@@ -32,6 +35,7 @@ const PackageWrapper = styled.div`
         margin-bottom: 0;
     }
 `;
+
 const Title = styled.h2`
 	font-family: ${helpers.specialFont};
 	font-weight: 300;
@@ -40,10 +44,11 @@ const Title = styled.h2`
 	line-height: 1;
 	font-size: ${helpers.baseFontSize * 1.5}px;
 	margin: 0;
-	margin-bottom: ${helpers.rhythmDiv * 4}px;
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
 	color: ${helpers.textColor};
 	width: 100%;
 `;
+
 const ActionButton = styled.div`
     display: flex;
     width: calc(50% - ${helpers.rhythmDiv}px);
@@ -58,37 +63,53 @@ const ActionButton = styled.div`
 `;
 
 const NotesContent = styled.textarea`
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-style: italic;
-  width: 100%;
-  height: 100px;
-  border-radius: 5px;
+    font-family: ${helpers.specialFont};
+    font-size: ${helpers.baseFontSize}px;
+    font-style: italic;
+    width: 100%;
+    height: 100px;
+    border-radius: 5px;
+    margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
-const BoxForExternalPayment = styled.div`
-    border: 2px #4caf50 solid;
-    margin-top: 8px;
-    border-radius: 13px;
-`;
+
 const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     max-height: 300px;
 `;
-const TitleForPayment = styled.div`
-text-align: center;
-font-size: initial;
-font-weight: 400;
-border-radius: 13px;
-background-color: aliceblue;`;
+
+const TitleForPayment = Text.extend`
+    text-align: center;
+    font-weight: 400;
+    font-size: 18px;
+`;
 
 const ButtonWrapper = styled.div`
-text-align: center;
-margin: 3px;
+    text-align: center;
+    margin: 3px;
 `;
+
+const MyLink = styled(Link)`
+    font-family: ${helpers.specialFont};
+    font-size: ${helpers.baseFontSize}px;
+    color: ${helpers.primaryColor};
+`;
+
+const PastSubscriptions = Text.extend`
+    font-family: ${helpers.specialFont};
+    font-style: italic;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+`; 
+
 const styles = theme => {
     return {
         ...dialogStyles,
+        dialogTitleRoot: {
+            ...dialogStyles.dialogTitleRoot,
+            marginBottom: 0
+        },
         dialogActions: {
             width: '100%'
         },
@@ -158,9 +179,9 @@ class BuyPackagesDialogBox extends Component {
         }
 
     }
-    shouldComponentUpdate(nextProps,nextState){
-        return !isEqual(nextProps,this.props) || !isEqual(nextState,this.state);
-      }
+    shouldComponentUpdate(nextProps, nextState) {
+        return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
+    }
     handleRadioButtonChange = event => {
         this.setState({ radioButtonGroupValue: event.target.value });
     };
@@ -236,9 +257,10 @@ class BuyPackagesDialogBox extends Component {
             radioButtonGroupValue,
             selectedPackageType
         } = this.state;
-        let {_id:userId} = currentProps;
 
-        
+        let { _id: userId } = currentProps;
+
+
         return (<Dialog
             open={open}
             onClose={onModalClose}
@@ -254,20 +276,24 @@ class BuyPackagesDialogBox extends Component {
                         onModalClose={onModalClose}
                     />
                 </DialogTitle>
+                <PastSubscriptions>
+                    <MyLink target={"_blank"} to={`${Meteor.absoluteUrl()}mySubscription/${userId}`}>Click here </MyLink> 
+                    to view past subscriptions.</PastSubscriptions>
                 {isLoading ?
                     <ContainerLoader />
                     :
                     <DialogContent classes={{ root: classes.dialogContent }}>
-                            <ButtonWrapper>
-                        <FormGhostButton
-                            label={'Student Past Purchases'}
-                            onClick={() => {
-                                const url = `${Meteor.absoluteUrl()}mySubscription/${userId}`;
-                                window.open(url, '_blank');
-                            }}
-                            blueColor
-                            applyClose
-                        />
+                        <ButtonWrapper>
+                            
+                            {/*<FormGhostButton
+                                label={'Student Past Purchases'}
+                                onClick={() => {
+                                    const url = `${Meteor.absoluteUrl()}mySubscription/${userId}`;
+                                    window.open(url, '_blank');
+                                }}
+                                blueColor
+                                applyClose
+                            />*/}
                         </ButtonWrapper>
                         {!isEmpty(packageList) && packageList.map((obj) => {
                             return (
@@ -281,109 +307,108 @@ class BuyPackagesDialogBox extends Component {
                                                 packageSelected={i === selectedPackageIndex && obj.title == selectedPackageType}
                                                 onPackageClick={this.handlePackageClick(i, obj.title)}
                                                 usedFor="buyPackagesDialogBox"
-                                                variant={'light'}
+                                                variant={'lightEnhanced'}
                                                 schoolId={schoolId}
                                                 currency={currency}
                                             />
                                         </PackageWrapper>
                                     ))}
-                                </PackagesListWrapper>
-
-                            )
-
+                                </PackagesListWrapper>)
                         })}
 
-                       
-                            <Fragment>
-                                <NotesContent
-                                    placeholder="Notes..."
-                                />
-                                <BoxForExternalPayment>
-                              <TitleForPayment>  Accept External Payment </TitleForPayment>
-                                <FormControl
-                                    component="fieldset"
-                                    className={classes.radioGroupWrapper}>
-                                    <RadioGroup
-                                        aria-label="payment-options"
-                                        name="payment-options"
-                                        className={classes.radioGroup}
-                                        value={this.state.radioButtonGroupValue}
-                                        onChange={this.handleRadioButtonChange}
-                                    >
-                                        <FormControlLabel
+                        <Fragment>
+                            <NotesContent placeholder="Notes..." />
+                            <TitleForPayment> Accept External Payment </TitleForPayment>
+                            <FormControl
+                                component="fieldset"
+                                className={classes.radioGroupWrapper}>
+                                <RadioGroup
+                                    aria-label="payment-options"
+                                    name="payment-options"
+                                    className={classes.radioGroup}
+                                    value={this.state.radioButtonGroupValue}
+                                    onChange={this.handleRadioButtonChange}
+                                >
+                                    <FormControlLabel
+                                        classes={{
+                                            root: classes.radioLabelRoot,
+                                            label: classes.radioLabel,
+                                        }}
+                                        value="cash" control={<Radio
                                             classes={{
-                                                root: classes.radioLabelRoot,
-                                                label: classes.radioLabel,
+                                                root: classes.radioButtonRoot
                                             }}
-                                            value="cash" control={<Radio
-                                                classes={{
-                                                    root: classes.radioButtonRoot
-                                                }}
-                                            />} label="Cash" />
+                                        />} label="Cash" />
 
-                                        <FormControlLabel
+                                    <FormControlLabel
+                                        classes={{
+                                            root: classes.radioLabelRoot,
+                                            label: classes.radioLabel
+                                        }}
+
+                                        value="check"
+
+                                        control={<Radio
                                             classes={{
-                                                root: classes.radioLabelRoot,
-                                                label: classes.radioLabel
+                                                root: classes.radioButtonRoot
                                             }}
-                                            value="check" control={<Radio
-                                                classes={{
-                                                    root: classes.radioButtonRoot
-                                                }}
-                                            />} label="Check" />
-                                        <FormControlLabel
+                                        />}
+
+                                        label="Check" />
+                                    <FormControlLabel
+                                        classes={{
+                                            root: classes.radioLabelRoot,
+                                            label: classes.radioLabel
+                                        }}
+                                        value="creditCard" control={<Radio
                                             classes={{
-                                                root: classes.radioLabelRoot,
-                                                label: classes.radioLabel
+                                                root: classes.radioButtonRoot
                                             }}
-                                            value="creditCard" control={<Radio
-                                                classes={{
-                                                    root: classes.radioButtonRoot
-                                                }}
-                                            />} label="Credit Card" />
-                                        <FormControlLabel
+                                        />} label="Credit Card" />
+                                    <FormControlLabel
+                                        classes={{
+                                            root: classes.radioLabelRoot,
+                                            label: classes.radioLabel
+                                        }}
+                                        value="bankTransfer"
+                                        control={<Radio
                                             classes={{
-                                                root: classes.radioLabelRoot,
-                                                label: classes.radioLabel
+                                                root: classes.radioButtonRoot
                                             }}
-                                            value="bankTransfer" control={<Radio
-                                                classes={{
-                                                    root: classes.radioButtonRoot
-                                                }}
-                                            />} label="Bank Transfer" />
-                                        <FormControlLabel
+                                        />} label="Bank Transfer" />
+                                    <FormControlLabel
+                                        classes={{
+                                            root: classes.radioLabelRoot,
+                                            label: classes.radioLabel
+                                        }}
+                                        value="other" control={<Radio
                                             classes={{
-                                                root: classes.radioLabelRoot,
-                                                label: classes.radioLabel
+                                                root: classes.radioButtonRoot
                                             }}
-                                            value="other" control={<Radio
-                                                classes={{
-                                                    root: classes.radioButtonRoot
-                                                }}
-                                            />} label="Others" />
-                                    </RadioGroup>
-                                </FormControl>
-                                </BoxForExternalPayment>
-                            </Fragment>
+                                        />} label="Others" />
+                                </RadioGroup>
+                            </FormControl>
+                        </Fragment>
                     </DialogContent>}
 
-                <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
+                <DialogActions
+                    classes={{
+                        root: classes.dialogActionsRoot,
+                        action: classes.dialogActions
+                    }} >
                     <ActionButtons>
-                <ActionButton
-                        >
+                        <ActionButton>
                             <PrimaryButton
                                 fullWidth
                                 label={'Accept External Payment'}
                                 onClick={this.acceptPayment} />
                         </ActionButton>
-                        <ActionButton
-                        >
+                        <ActionButton>
                             <PrimaryButton
                                 fullWidth
                                 label={'Send Link'}
                                 onClick={this.handleSendLink} />
                         </ActionButton>
-                  
                     </ActionButtons>
                 </DialogActions>
             </MuiThemeProvider>

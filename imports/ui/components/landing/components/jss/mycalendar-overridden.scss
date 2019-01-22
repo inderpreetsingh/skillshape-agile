@@ -2,10 +2,12 @@
   Override the styles
 */
 
-$calendar-button-active-color: #BBB8B9;
+$calendar-btn-active-color: map-get($colors , 'primary');
+$calendar-btn-default-color: #BBB8B9;
 
 .fc .fc-toolbar button {
   text-transform: capitalize;
+  background: $calendar-btn-default-color;
   font-family: map-get($fonts,'special');
   height: map-get($sizes,'rhythm-div') * 4px;
 }
@@ -56,7 +58,7 @@ $calendar-button-active-color: #BBB8B9;
 .fc button:hover .fc-next-button
 {
   background-color: white;
-  color: map-get($colors,'primary');
+  color: $calendar-btn-default-color;
 }
 
 .fc .fc-left  button .fc-icon {
@@ -83,8 +85,8 @@ $calendar-button-active-color: #BBB8B9;
 
 .fc .fc-toolbar .fc-state-active {
   cursor: pointer;
-  background-color: $calendar-button-active-color; /* Otherwise the color of bg green appears */
-  border-color: $calendar-button-active-color;
+  background-color: $calendar-btn-active-color; /* Otherwise the color of bg green appears */
+  border-color: $calendar-btn-active-color;
 }
 
 .fc .fc-toolbar button:active,
@@ -94,7 +96,7 @@ $calendar-button-active-color: #BBB8B9;
 .fc .fc-toolbar button.btn-primary:focus,
 .fc .fc-toolbar button.btn-primary:hover {
   box-shadow: none;
-  background-color: darken(map-get($colors,'primary'),5%);
+  background-color: darken($calendar-btn-active-color,5%);
 }
 
 .fc .fc-toolbar button[disabled] {
@@ -106,12 +108,12 @@ $calendar-button-active-color: #BBB8B9;
 .fc .fc-toolbar button.fc-state-active:focus,
 .fc .fc-toolbar button.fc-state-active:hover
 {
-  background-color: $calendar-button-active-color;
-  border-color: $calendar-button-active-color;
+  background-color: $calendar-btn-active-color;
+  border-color: $calendar-btn-active-color;
 }
 
 .fc .fc-toolbar button.fc-state-active:hover, .fc .fc-toolbar button[disabled]:focus, .fc .fc-toolbar button[disabled]:hover {
-  background-color: lighten($calendar-button-active-color,10%);
+  background-color: lighten($calendar-btn-active-color,10%);
 }
 
 .fc .fc-left .fc-button-group button,
@@ -119,7 +121,7 @@ $calendar-button-active-color: #BBB8B9;
 .fc .fc-left .fc-button-group button:active:hover,
  {
   background-color: white;
-  color: map-get($colors,'primary');
+  color: $calendar-btn-default-color;
 }
 
 .fc-body thead {

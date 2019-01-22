@@ -30,6 +30,7 @@ export const /*******FONTS*********/
   primaryColor = colors.green[500],
   shadowColor = colors.grey[600],
   panelColor = colors.grey[100],
+  darkPanelColor = colors.grey[200],
   darkBgColor = colors.grey[800],
   inputErrorColor = "#ff1744",
   caution = "#E9B942",
