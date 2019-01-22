@@ -599,7 +599,7 @@ class ManageMyCalendar extends React.Component {
                   display: "inline",
                   flexWrap: "wrap"
                 }}
-                onChange={this.calendarConformation}
+                onChange={this.handleClassOnChange}
                 defaultSelected="Select any one"
               >
                 {classTypeData &&
