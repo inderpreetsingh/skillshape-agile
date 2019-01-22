@@ -134,6 +134,11 @@ $calendar-btn-default-color: #BBB8B9;
   line-height: 1.2;
 }
 
+.fc-basic-view .fc-body .fc-row {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
 
 @media screen and (max-width: 500px) {
   .fc-left .fc-button-group {
