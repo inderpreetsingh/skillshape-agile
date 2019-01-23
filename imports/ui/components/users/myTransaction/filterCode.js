@@ -92,8 +92,8 @@ export const filterForTransaction = function () {
         <Wrapper>
             <ControlsRow>
                 <Control className="ss-multi-select ss-select">
-                    <ControlLabel>Transaction Type: </ControlLabel>
-                    {/*<ReactSelect
+                    {/*<ControlLabel>Transaction Type: </ControlLabel>
+                    <ReactSelect
                         name="filters"
                         placeholder={<b>Transaction Type</b>}
                         value={selectedTransactionType}

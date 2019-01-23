@@ -53,9 +53,9 @@ const styles = {
         fontSize: helpers.baseFontSize,
     },
     expansionIcon: {
-        color: 'yellow',
-        [`@media screen and max-width: ${helpers.mobile}px`]: {
-            top: '40%'
+        [`@media screen and (max-width: ${helpers.mobile + 50}px)`]: {
+            position: 'relative',
+            top: -1 * helpers.rhythmDiv
         }
     },
     expansionPanelRoot: {
@@ -306,12 +306,9 @@ const MySubscriptionRender = (props) => {
                                         root: classes.expansionPanelSummary,
                                         content: classes.expansionPanelSummaryContent
                                     }}
-                                    IconButtonProps={{
-                                        classes: {
-                                            root: classes.expansionIcon
-                                        }
-                                    }}
-                                    expandIcon={<ExpandMoreIcon />}
+                                    expandIcon={
+                                        <ExpandMoreIcon className={classes.expansionIcon} />
+                                    }
                                 >
                                     <SchoolProfile>
                                         <Profile>
