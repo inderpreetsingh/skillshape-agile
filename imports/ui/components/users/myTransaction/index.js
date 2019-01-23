@@ -168,7 +168,7 @@ class MyTransaction extends React.Component {
       filterValue = filterValueOriginal = filterValue ? filterValue : '';
     }
 
-    debugger;
+    // debugger;
     this.setState(state => {
       const { filter } = state;
       if (filterValue && typeof filterValue === 'number') filterValue = 0;

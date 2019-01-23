@@ -93,7 +93,7 @@ export const filterForTransaction = function () {
             <ControlsRow>
                 <Control className="ss-multi-select ss-select">
                     <ControlLabel>Transaction Type: </ControlLabel>
-                    <ReactSelect
+                    {/*<ReactSelect
                         name="filters"
                         placeholder={<b>Transaction Type</b>}
                         value={selectedTransactionType}
@@ -101,7 +101,7 @@ export const filterForTransaction = function () {
                         onChange={(data) => { this.handleFilter(data, 'transactionType', 'selectedTransactionType') }}
                         closeMenuOnSelect={false}
                         clearable={false}
-                    />
+                    /> */}
 
                     <IconSelect
                         labelText='Transaction Type'
@@ -116,8 +116,6 @@ export const filterForTransaction = function () {
                             this.handleFilter(data, 'transactionType', 'selectedTransactionType')
                         }}
                     />
-
-
                 </Control>
 
                 <Control className="ss-multi-select ss-select">
