@@ -116,35 +116,35 @@ export default (schoolPageCards = {
 				content:
 					'SkillShape’s Calendar Frame, Pricing Frame, and Media Frames bring our thoughtfully crafted student interfaces to your website.'
 			},
-			{
-				solutionContent: '/images/school/solution-gifs/filter-content.png',
-				bgImage: '/images/school/solution-box1/feature4bg.svg',
-				title: 'SkillBoard platform Option',
-				tagline: 'Pay monthly fee for limited access to trial classes',
-				content:
-					'By joining SkillBoard you will see steady flow of students paying you for long term enrollments.'
-			}
+			// {
+			// 	solutionContent: '/images/school/solution-gifs/filter-content.png',
+			// 	bgImage: '/images/school/solution-box1/feature4bg.svg',
+			// 	title: 'SkillBoard platform Option',
+			// 	tagline: 'Pay monthly fee for limited access to trial classes',
+			// 	content:
+			// 		'By joining SkillBoard you will see steady flow of students paying you for long term enrollments.'
+			// }
 		]
 	},
 	solutionBox2: {
 		cardBgColor: '#F9EEE6',
 		cardsData: [
-			{
-				solutionContent: '/images/school/solution-gifs/filter-content.png',
-				bgImage: '/images/school/solution-box2/sc2feature1.svg',
-				title: 'Class group chat',
-				tagline: 'Increases the potential for camaraderie and fellowship',
-				content:
-					'SkillShape offers a Class Chat. Students can chat with each other to plan outings after class or organize transportation or any special events.'
-			},
-			{
-				solutionContent: '/images/school/solution-gifs/filter-content.png',
-				bgImage: '/images/school/solution-box2/sc2feature2.svg',
-				title: 'Training materials',
-				tagline: 'List the skills and techniques you will cover',
-				content:
-					'Students get access to training materials. You can list all of the skills and techniques you cover, provide text and/or media overviews.'
-			},
+			// {
+			// 	solutionContent: '/images/school/solution-gifs/filter-content.png',
+			// 	bgImage: '/images/school/solution-box2/sc2feature1.svg',
+			// 	title: 'Class group chat',
+			// 	tagline: 'Increases the potential for camaraderie and fellowship',
+			// 	content:
+			// 		'SkillShape offers a Class Chat. Students can chat with each other to plan outings after class or organize transportation or any special events.'
+			// },
+			// {
+			// 	solutionContent: '/images/school/solution-gifs/filter-content.png',
+			// 	bgImage: '/images/school/solution-box2/sc2feature2.svg',
+			// 	title: 'Training materials',
+			// 	tagline: 'List the skills and techniques you will cover',
+			// 	content:
+			// 		'Students get access to training materials. You can list all of the skills and techniques you cover, provide text and/or media overviews.'
+			// },
 			{
 				solutionContent: '/images/school/solution-gifs/track-students.png',
 				bgImage: '/images/school/solution-box2/sc2feature3.svg',
@@ -152,14 +152,14 @@ export default (schoolPageCards = {
 				tagline: 'Inform when a student drops off attendance',
 				content: 'SkillShape can keep track of attendance inform you when a student drops off attendance. '
 			},
-			{
-				solutionContent: '/images/school/solution-gifs/class-progressive-system.png',
-				bgImage: '/images/school/solution-box2/sc2feature4.svg',
-				title: 'Class Progression System',
-				tagline: "Track student's exposure when they attend classes",
-				content:
-					'With this system easily plan classes based on the skills or techniques you will cover, and track each student’s exposure when they attend classes.'
-			}
+			// {
+			// 	solutionContent: '/images/school/solution-gifs/class-progressive-system.png',
+			// 	bgImage: '/images/school/solution-box2/sc2feature4.svg',
+			// 	title: 'Class Progression System',
+			// 	tagline: "Track student's exposure when they attend classes",
+			// 	content:
+			// 		'With this system easily plan classes based on the skills or techniques you will cover, and track each student’s exposure when they attend classes.'
+			// }
 		]
 	},
 	solutionBox3: {
@@ -189,14 +189,14 @@ export default (schoolPageCards = {
 				content:
 					'Students can enroll, and purchase monthly or per class packages. They can set up automatic withdrawal using credit cards or bank transfer for lower fees.'
 			},
-			{
-				solutionContent: '/images/school/solution-gifs/rent-your-room.png',
-				bgImage: '/images/school/solution-box3/sc3feature4.svg',
-				title: 'Rent your room',
-				tagline: 'Let other schools operate within your facility',
-				content:
-					'If you rent out rooms in your school, you can easily delegate a room, allowing other schools to operate seamlessly within your facility.'
-			}
+			// {
+			// 	solutionContent: '/images/school/solution-gifs/rent-your-room.png',
+			// 	bgImage: '/images/school/solution-box3/sc3feature4.svg',
+			// 	title: 'Rent your room',
+			// 	tagline: 'Let other schools operate within your facility',
+			// 	content:
+			// 		'If you rent out rooms in your school, you can easily delegate a room, allowing other schools to operate seamlessly within your facility.'
+			// }
 		]
 	}
 });

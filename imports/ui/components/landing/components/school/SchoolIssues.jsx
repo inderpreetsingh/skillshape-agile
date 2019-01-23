@@ -29,8 +29,8 @@ const Wrapper = styled.div`
   height: 100vh;
   min-height: 600px;
   position: relative;
-  background-color: ${(props) => props.bgColor};
-  background-image: url('${(props) => props.bgImage}');
+  background-color: ${props => props.bgColor};
+  background-image: url('${props => props.bgImage}');
   background-position: bottom left;
   background-repeat: repeat no-repeat;
   padding-top: 116px; // 100px is the height of problem cards + 16px marginbottom

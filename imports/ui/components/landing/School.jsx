@@ -8,9 +8,9 @@ import SchoolHeader from "./components/school/SchoolHeader.jsx";
 import SchoolIssues from "./components/school/SchoolIssues.jsx";
 import SchoolPricing from "./components/school/SchoolPricing.jsx";
 
-import schoolIssuesData from "./constants/schoolIssues.js";
-import schoolPageCards from "./constants/schoolPageCards.js";
-import schoolPagePricingCards from "./constants/schoolPagePriceCards.js";
+import schoolIssuesData from "./constants/skillshape-for-school/schoolIssues.js";
+import schoolPageCards from "./constants/skillshape-for-school/schoolPageCards.js";
+import schoolPagePricingCards from "./constants/skillshape-for-school/schoolPagePriceCards.js";
 
 import * as helpers from "./components/jss/helpers.js";
 
@@ -36,12 +36,11 @@ const School = props => (
 
     <SchoolIssues issues={schoolIssuesData} cardsData={schoolPageCards} />
 
-    
-
+    {/*<SchoolPricing cardsData={schoolPagePricingCards} />*/}
     <Footer />
   </Wrapper>
 );
 
-// <SchoolPricing cardsData={schoolPagePricingCards} />
+
 
 export default School;
