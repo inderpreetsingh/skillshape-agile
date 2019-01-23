@@ -161,6 +161,35 @@ Meteor.methods({
     }
     return events;
   },
+  "calendar.getRefreshToken":async function(code){
+    try{
+      let client_id = Meteor.settings.google.auth.appId;
+      let client_secret = Meteor.settings.google.auth.secret;
+      let data = {
+        code,                                                                                             // 99
+        client_id ,                                                                                   // 100
+        client_secret,                                                               // 101
+        redirect_uri: Meteor.absoluteUrl().slice(0, -1),                                                           // 102
+        grant_type: 'authorization_code',
+        timeout: 20000,}
+        
+     let response = await  axios({
+          method: 'post',
+          url: 'https://accounts.google.com/o/oauth2/token',
+          headers: { 'Content-Type': 'application/json' },
+          data
+        })
+      let {refresh_token} = response.data;
+      if(refresh_token){
+        Meteor.users.update({_id:this.userId},{$set:{refresh_token}});
+        return true;
+      }
+      return false;
+    }catch(error){
+		console.log('​}catch -> error', error.response)
+      throw new Meteor.Error(error);
+    }
+  }
 });
 
 generatorByDay = (key) =>{

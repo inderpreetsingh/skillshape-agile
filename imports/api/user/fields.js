@@ -209,6 +209,10 @@ Schema.User = new SimpleSchema({
   "stripeCusIds.$":{
     type: String,
     optional: true
+  },
+  refresh_token:{
+    type:String,
+    optional:true
   }
 });
 
