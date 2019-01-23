@@ -257,12 +257,13 @@ const SkillShapeSchool = (props) => {
 								Managing their own times, students, and financials within their own school, within your facility.
 							</li>
 							<br></br>
-							<h2 style={{font: '"Open Sans", sans-serif', textAlign:'center'}}>So sign up for a SkillShape School Account and see what everyone is talking about!</h2>
+							
+							<h2 style={{font: '"Open Sans", sans-serif', textAlign:'center'}}>So sign up for a SkillShape School Account and see what everyone is talking about!</h2> 
 						</ul>
 						</div>
 			</MainContentWrapper>
 			<MainContentWrapper>
-				<Grid container style={{margin: 'auto',maxWidth: '1000px'}}>
+				<Grid container style={{margin: 'auto', display:'none', maxWidth: '1000px'}}>
 					<Grid item md={4} sm={4} xs={12} className={props.classes.styleGrid}>
 						<div style={{textAlign:'center'}}>
 							<img style={{verticalAlign:'bottom',left:'auto',right:'auto'}} role="presentation" src="/images/pricing-full.png"/>

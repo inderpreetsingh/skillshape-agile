@@ -36,10 +36,12 @@ const School = props => (
 
     <SchoolIssues issues={schoolIssuesData} cardsData={schoolPageCards} />
 
-    <SchoolPricing cardsData={schoolPagePricingCards} />
+    
 
     <Footer />
   </Wrapper>
 );
+
+// <SchoolPricing cardsData={schoolPagePricingCards} />
 
 export default School;

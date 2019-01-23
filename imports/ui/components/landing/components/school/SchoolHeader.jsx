@@ -91,6 +91,9 @@ const HeaderOverlay = styled.div`
 
 const HeaderContent = styled.div`
 	width: 500px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 	min-height: 500px;
 	padding: ${helpers.rhythmDiv * 2}px;
 `;
@@ -203,9 +206,9 @@ class SchoolHeader extends Component {
 				<Wrapper bgSrc={props.schoolHeaderImgSrc}>
 					<HeaderContentWrapper>
 						<HeaderContent>
-							<VideoPlayerWrapper>
+							{/*<VideoPlayerWrapper>
 								<VideoPlayer onFullScreenChange={this.handleFullScreenModeChange} />
-							</VideoPlayerWrapper>
+							</VideoPlayerWrapper>*/}
 							<Title>{props.title}</Title>
 							<Content>{props.content}</Content>
 							<FieldsWrapper>
@@ -227,7 +230,7 @@ class SchoolHeader extends Component {
 								/>
 								<ButtonWrapper>
 									<PrimaryButton
-										label="Sign Up"
+										label="Join for free"
 										increaseHeight
 										noMarginBottom
 										onClick={this.handleSignUpButtonClick}
@@ -235,7 +238,7 @@ class SchoolHeader extends Component {
 								</ButtonWrapper>
 								<ButtonSmallWrapper>
 									<PrimaryButton
-										label="Sign Up"
+										label="Join for free"
 										increaseHeight
 										noMarginBottom
 										boxShadow
