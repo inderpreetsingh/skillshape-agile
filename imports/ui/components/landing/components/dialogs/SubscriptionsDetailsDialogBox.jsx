@@ -20,7 +20,7 @@ const styles = theme => {
             padding: `0 ${helpers.rhythmDiv * 3}px`
         },
         dialogContent: {
-            paddingBottom: helpers.rhythmDiv,
+            paddingBottom: 0,
         },
         dialogPaper: {
             maxWidth: 600,
@@ -97,14 +97,14 @@ const ClassListItem = Text.withComponent('li').extend`
 const SubscriptionsDetailsDialogBox = (props) => {
     const getRemainingClasses = (props) => {
         let stringToPrint = '';
-            if(props.combinedData){
-                props.combinedData.map((obj, index) => {
-                   stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(obj.endDate)} <br/>`;
-               }) 
-            }
-            else{
-                stringToPrint += ` ${props.noClasses} ${props.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(props.endDate)} <br/>`;
-            }
+        if (props.combinedData) {
+            props.combinedData.map((obj, index) => {
+                stringToPrint += ` ${obj.noClasses} ${obj.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(obj.endDate)} <br/>`;
+            })
+        }
+        else {
+            stringToPrint += ` ${props.noClasses} ${props.noClasses <= 1 ? 'Class' : 'Classes'} expires on ${formatDate(props.endDate)} <br/>`;
+        }
         return stringToPrint;
     }
 
@@ -139,7 +139,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                 {getContractEnds()}
             </HighlightedBg>
             )
-        }else if (props.payUpFront) {
+        } else if (props.payUpFront) {
             let contractLength = get(props, 'contractLength', 0);
             contractLength = props.combinedData && props.combinedData.length > 1 ? contractLength * props.combinedData.length - 1 : 0
             return (
@@ -150,7 +150,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                     {getContractEnds()}
                 </HighlightedBg>
             )
-        } else if(props.packageType == 'MP') {
+        } else if (props.packageType == 'MP') {
             return (
                 <HighlightedBg>
                     <Text>
@@ -159,7 +159,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                     {getContractEnds()}
                 </HighlightedBg>
             )
-        } 
+        }
     }
 
     const {
@@ -197,12 +197,12 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
                 </DialogTitle>
                 {contractDialog &&
-                <ContractDialog
-                open= {contractDialog}
-                onModalClose = {()=>{toggleContractDialog()}}
-                {...props}
-                />}
-                
+                    <ContractDialog
+                        open={contractDialog}
+                        onModalClose={() => { toggleContractDialog() }}
+                        {...props}
+                    />}
+
                 <DialogContent classes={{ root: classes.dialogContent }}>
                     <ContentWrapper>
                         <StatusWrapper>
@@ -241,15 +241,15 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         root: classes.dialogActionsRoot,
                         action: classes.dialogAction
                     }}>
-                   {
-                      props.packageStatus !='expired' && props.packageType == 'MP' && !props.payUpFront && (
-                        <FormGhostButton
-                        alertColor
-                        label={'Cancel Contract'}
-                        onClick= {()=>{toggleContractDialog()}}
-                        />
-                       )
-                   } 
+                    {
+                        props.packageStatus != 'expired' && props.packageType == 'MP' && !props.payUpFront && (
+                            <FormGhostButton
+                                alertColor
+                                label={'Cancel Contract'}
+                                onClick={() => { toggleContractDialog() }}
+                            />
+                        )
+                    }
                 </DialogActions>
             </MuiThemeProvider>
         </Dialog>

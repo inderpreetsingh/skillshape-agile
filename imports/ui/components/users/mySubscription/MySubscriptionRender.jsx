@@ -45,14 +45,18 @@ stopNotification = (payload) => {
     });
 }
 
-
-
 const styles = {
-    profileIconButton: {
+    contactIconButton: {
         background: 'white',
         width: 24,
         height: 24,
         fontSize: helpers.baseFontSize,
+    },
+    expansionIcon: {
+        [`@media screen and (max-width: ${helpers.mobile + 50}px)`]: {
+            position: 'relative',
+            top: -1 * helpers.rhythmDiv
+        }
     },
     expansionPanelRoot: {
         border: 'none'
@@ -172,7 +176,7 @@ const SchoolProfile = styled.div`
 
 const Profile = styled.div``;
 
-const ProfileIcons = styled.div`
+const ContactIcons = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -201,14 +205,14 @@ const ActionButtons = (props) => (
 );
 
 const ContactSchool = (props) => (
-    <ProfileIcons>
-        {props.phone && props.phone.length && <IconButton classes={{ root: props.classes.profileIconButton }}>
+    <ContactIcons>
+        {props.phone && props.phone.length && <IconButton classes={{ root: props.classes.contactIconButton }}>
             <Call onClick={props.onCallClick(props.phone)} />
         </IconButton>}
-        {props.email && <IconButton classes={{ root: props.classes.profileIconButton }}>
+        {props.email && <IconButton classes={{ root: props.classes.contactIconButton }}>
             <Email onClick={props.onEmailClick(props.email, props.data)} />
         </IconButton>}
-    </ProfileIcons>
+    </ContactIcons>
 );
 
 const MySubscriptionRender = (props) => {
@@ -302,7 +306,9 @@ const MySubscriptionRender = (props) => {
                                         root: classes.expansionPanelSummary,
                                         content: classes.expansionPanelSummaryContent
                                     }}
-                                    expandIcon={<ExpandMoreIcon />}
+                                    expandIcon={
+                                        <ExpandMoreIcon className={classes.expansionIcon} />
+                                    }
                                 >
                                     <SchoolProfile>
                                         <Profile>
