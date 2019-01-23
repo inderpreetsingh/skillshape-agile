@@ -54,7 +54,7 @@ const outerWrapperSmallStyles = `
 
 const OuterWrapper = styled.div`
 	width: 100%;
-	${props => (props.variant && `box-shadow: ${helpers.inputBoxShadow}`)};
+	${props => props.variant !== 'normal' && `box-shadow: ${helpers.inputBoxShadow}`};
 	padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
 	padding-right: ${helpers.rhythmDiv * 2}px;
 	border-radius: ${helpers.rhythmDiv * 6}px;
@@ -70,12 +70,12 @@ const OuterWrapper = styled.div`
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background-color: ${(props) => (props.bgColor || 'white')};
+		background-color: ${props => props.bgColor || 'white'};
 		border-radius: ${props => props.roundness || helpers.rhythmDiv * 6}px;
 		/* overriding the opacity for the subscription, variant*/
-		${props => props.variant && props.variant !== 'normal' && `background-color: ${packageStyles[props.variant].bgColor};`};
-		opacity: ${(props) => packageStyles[props.variant].opacity};
-		${(props) => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1};`}; 
+		${props => props.variant !== 'normal' && `background-color: ${packageStyles[props.variant].bgColor};`};
+		${props => `opacity : ${packageStyles[props.variant].opacity}`};
+		${props => props.usedFor === 'subscriptions' && `opacity: ${props.opacity || 1};`}; 
 		${props => props.packageSelected && `opacity: 0.1; background-color: ${helpers.primaryColor};`}	
 	}
 
@@ -563,6 +563,7 @@ Package.propTypes = {
 };
 
 Package.defaultProps = {
+	variant: 'normal',
 	appearance: 'normal',
 	packageSelected: false,
 	packagePerClass: false,

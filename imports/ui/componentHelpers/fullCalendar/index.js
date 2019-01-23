@@ -183,7 +183,7 @@ class FullCalendar extends React.Component {
     // Class Time Ids managed by current user
     let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
-    // merging deletedEvents data from classInterestData to classTimesData for disabling events
+    // merging deletedEvents data from classInterestData to classTimesData for disabling  
     classInterestData.map(current1 => {
       classTimesData.map(current2 => {
         if (current1.classTimeId == current2._id) {

@@ -25,7 +25,8 @@ const MyTableCell = withStyles(theme => ({
     fontFamily: specialFont,
     fontSize: 18,
     fontWeight: 500,
-    background: 'white'
+    background: 'white',
+    textAlign: 'center'
   },
   body: {
     fontSize: 14,

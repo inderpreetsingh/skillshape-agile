@@ -5,6 +5,7 @@ import Grid from "material-ui/Grid";
 import { withStyles } from 'material-ui/styles';
 import TextField from "material-ui/TextField";
 
+import { IconSelect } from '/imports/ui/components/landing/components/form/';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { rhythmDiv, commonFont, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
 
@@ -101,10 +102,40 @@ export const filterForTransaction = function () {
                         closeMenuOnSelect={false}
                         clearable={false}
                     />
+
+                    <IconSelect
+                        labelText='Transaction Type'
+                        value={selectedTransactionType}
+                        options={transactionTypeOptions}
+                        inputProps={{
+                            name: 'transactionType',
+                            id: 'transactionType'
+                        }}
+                        onChange={(data) => {
+                            //console.log(data, ".....")
+                            this.handleFilter(data, 'transactionType', 'selectedTransactionType')
+                        }}
+                    />
+
+
                 </Control>
 
                 <Control className="ss-multi-select ss-select">
-                    <ControlLabel>Payment Method: </ControlLabel>
+                    <IconSelect
+                        labelText='Payment Method'
+                        value={selectedPaymentMethod}
+                        options={paymentMethodsOptions}
+                        inputProps={{
+                            name: 'paymentMethod',
+                            id: 'paymentMethod'
+                        }}
+                        onChange={(data) => {
+                            //console.log(data, ".....")
+                            this.handleFilter(data, 'paymentMethod', 'selectedPaymentMethod')
+                        }}
+                    />
+
+                    {/*<ControlLabel>Payment Method: </ControlLabel>
                     <ReactSelect
                         name="filters"
                         placeholder={<b>Payment Method</b>}
@@ -113,7 +144,7 @@ export const filterForTransaction = function () {
                         onChange={(data) => { this.handleFilter(data, 'paymentMethod', 'selectedPaymentMethod') }}
                         closeMenuOnSelect={false}
                         clearable={false}
-                    />
+                    />*/}
                 </Control>
             </ControlsRow>
 
@@ -130,7 +161,7 @@ export const filterForTransaction = function () {
                 </Control>
 
                 <Control className="ss-multi-select ss-select" maxWidth={250}>
-                    <ReactSelect
+                    {/*<ReactSelect
                         name="filters"
                         placeholder={<b>Package Type</b>}
                         value={selectedPackageType}
@@ -140,11 +171,25 @@ export const filterForTransaction = function () {
                         }}
                         closeMenuOnSelect={false}
                         clearable={false}
+                    />*/}
+
+                    <IconSelect
+                        labelText='Package Type'
+                        value={selectedPackageType}
+                        options={packageTypeOptions}
+                        inputProps={{
+                            name: 'packageType',
+                            id: 'packageType'
+                        }}
+                        onChange={(data) => {
+                            //console.log(data, ".....")
+                            this.handleFilter(data, 'packageType', 'selectedPackageType')
+                        }}
                     />
                 </Control>
 
                 <Control className="ss-multi-select ss-select" maxWidth={250}>
-                    <ReactSelect
+                    {/*<ReactSelect
                         name="filters"
                         placeholder={<b>Package Status</b>}
                         value={selectedPackageStatus}
@@ -152,6 +197,20 @@ export const filterForTransaction = function () {
                         onChange={(data) => { this.handleFilter(data, 'packageStatus', 'selectedPackageStatus') }}
                         closeMenuOnSelect={false}
                         clearable={false}
+                    />*/}
+
+                    <IconSelect
+                        labelText='Package Status'
+                        value={selectedPackageStatus}
+                        options={packageStatusOptions}
+                        inputProps={{
+                            name: 'packageStatus',
+                            id: 'packageStatus'
+                        }}
+                        onChange={(data) => {
+                            //console.log(data, ".....")
+                            this.handleFilter(data, 'packageStatus', 'selectedPackageStatus')
+                        }}
                     />
                 </Control>
             </ControlsRow>

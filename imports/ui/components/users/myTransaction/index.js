@@ -21,10 +21,17 @@ import {
 } from "/imports/util";
 
 import config from "../../../../config";
-const packageTypes = [{ label: 'Package Type All', value: 0 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
-const packageStatus = [{ label: 'Package Status All', value: 0 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
-const paymentMethods = [{ label: 'Payment Method All', value: 0 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
-const transactionType = [{ label: 'Transaction Type All', value: 0 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }, { label: 'Contract Cancelled', value: 'contractCancelled' }]
+const packageTypes = [{ label: 'Package Type All', value: 1 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
+const packageStatus = [{ label: 'Package Status All', value: 1 }, { label: 'Active', value: 'active' }, { label: 'Expired', value: 'expired' }, { label: 'In Active', value: 'inActive' }];
+const paymentMethods = [{ label: 'Payment Method All', value: 1 }, { label: 'SkillShape', value: 'stripe' }, { label: 'Cash', value: 'cash' }, { label: 'Check', value: 'check' }, { label: 'External Card', value: 'creditCard' }, { label: 'Bank Transfer', value: 'bankTransfer' }, { label: 'Others', value: 'other' }];
+const transactionType = [{ label: 'Transaction Type All', value: 1 }, { label: 'Purchase', value: 'purchase' }, { label: 'Attendance', value: 'attendance' }, { label: 'Expired', value: 'expired' }, { label: 'Contract Cancelled', value: 'contractCancelled' }]
+
+const maxFilterValues = {
+  packageType: 'Package Type All',
+  packageStatus: 'Package Status All',
+  paymentMethod: 'Payment Method All',
+  transactionType: 'Transaction Type All'
+}
 
 const ContentWrapper = styled.div`
   padding: ${rhythmDiv * 2}px;
@@ -46,6 +53,7 @@ const PageHeading = Heading.extend`
 
 const Wrapper = styled.div`
   background: ${panelColor};
+  padding-top: ${rhythmDiv * 2}px;
 `;
 
 const PaginationWrapper = styled.div`
@@ -101,6 +109,7 @@ class MyTransaction extends React.Component {
     let { filter } = this.state;
     let { limit, skip } = this.state;
     let limitAndSkip = { limit, skip };
+
     Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
       let state = {};
       if (res) {
@@ -133,25 +142,52 @@ class MyTransaction extends React.Component {
       textFieldValue: e.target.value
     });
   }
-  handleFilter = (value, filterName, stateName) => {
-    let stringValue = get(value.target, "value", null)
+  // handleFilter = (value, filterName, stateName) => {
+  //   let stringValue = get(value.target, "value", null)
+  //   if (filterName == 'packageName') {
+  //     value = stringValue ? stringValue : "";
+  //   }
+  //   this.setState(state => {
+  //     let { filter } = state;
+  //     if (value.value && filterName || typeof value == 'string' && value)
+  //       filter[filterName] = value.value ? value.value : new RegExp(`^${value}`, 'i');
+  //     else
+  //       delete filter[filterName];
+  //     return {
+  //       [stateName]: value,
+  //       filter,
+  //       isLoading: true,
+  //       skip: 0,
+  //     };
+  //   }, () => { this.getPurchaseData(); });
+  // };
+
+  handleFilter = (event, filterName, stateName) => {
+    let filterValue = filterValueOriginal = get(event.target, 'value', null);
     if (filterName == 'packageName') {
-      value = stringValue ? stringValue : "";
+      filterValue = filterValueOriginal = filterValue ? filterValue : '';
     }
+
+    debugger;
     this.setState(state => {
-      let { filter } = state;
-      if (value.value && filterName || typeof value == 'string' && value)
-        filter[filterName] = value.value ? value.value : new RegExp(`^${value}`, 'i');
-      else
+      const { filter } = state;
+      if (filterValue && typeof filterValue === 'number') filterValue = 0;
+      if (filterValue && filterName || typeof filterValue == 'string') {
+        filter[filterName] = filterValue ? filterValue : new RegExp(`^${filterValue}`, 'i');;
+      } else {
         delete filter[filterName];
+      }
+
       return {
-        [stateName]: value,
+        [stateName]: filterValueOriginal,
         filter,
         isLoading: true,
-        skip: 0,
-      };
-    }, () => { this.getPurchaseData(); });
-  };
+        skip: 0
+      }
+    }, () => {
+      this.getPurchaseData();
+    });
+  }
   amountGenerator = (transaction) => {
     let currency = get(transaction, 'currency', '$');
     let amount = get(transaction, 'amount', 0);

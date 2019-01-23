@@ -45,14 +45,18 @@ stopNotification = (payload) => {
     });
 }
 
-
-
 const styles = {
-    profileIconButton: {
+    contactIconButton: {
         background: 'white',
         width: 24,
         height: 24,
         fontSize: helpers.baseFontSize,
+    },
+    expansionIcon: {
+        color: 'yellow',
+        [`@media screen and max-width: ${helpers.mobile}px`]: {
+            top: '40%'
+        }
     },
     expansionPanelRoot: {
         border: 'none'
@@ -172,7 +176,7 @@ const SchoolProfile = styled.div`
 
 const Profile = styled.div``;
 
-const ProfileIcons = styled.div`
+const ContactIcons = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -201,14 +205,14 @@ const ActionButtons = (props) => (
 );
 
 const ContactSchool = (props) => (
-    <ProfileIcons>
-        {props.phone && props.phone.length && <IconButton classes={{ root: props.classes.profileIconButton }}>
+    <ContactIcons>
+        {props.phone && props.phone.length && <IconButton classes={{ root: props.classes.contactIconButton }}>
             <Call onClick={props.onCallClick(props.phone)} />
         </IconButton>}
-        {props.email && <IconButton classes={{ root: props.classes.profileIconButton }}>
+        {props.email && <IconButton classes={{ root: props.classes.contactIconButton }}>
             <Email onClick={props.onEmailClick(props.email, props.data)} />
         </IconButton>}
-    </ProfileIcons>
+    </ContactIcons>
 );
 
 const MySubscriptionRender = (props) => {
@@ -301,6 +305,11 @@ const MySubscriptionRender = (props) => {
                                     classes={{
                                         root: classes.expansionPanelSummary,
                                         content: classes.expansionPanelSummaryContent
+                                    }}
+                                    IconButtonProps={{
+                                        classes: {
+                                            root: classes.expansionIcon
+                                        }
                                     }}
                                     expandIcon={<ExpandMoreIcon />}
                                 >
