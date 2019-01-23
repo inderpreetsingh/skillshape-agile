@@ -36,32 +36,73 @@ const event = {
 };
 Meteor.methods({
   "calendar.handleGoogleCalendar": async function (access_token,userId){
+ 
     try{
-      let eventsList = Meteor.call('calendar.generateEvents',userId);
-      if(!isEmpty(eventsList)){
-        eventsList.map(async (e)=>{
-          console.log('​e', e)
-          try{
-            let response = await  axios({
-              method: 'post',
-              url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
-              headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
-              data: e,
-              timeout: 20000,
-            })
-            // console.log('​response', response)
-            console.log('Event Added')
-          }catch(error){
-            //  console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
-					console.log('​Error in map of the calendar.handleGoogleCalendar')
-          }
+      let clientId1 = "696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com";
+      let data = {
+        code: access_token,                                                                                             // 99
+        client_id: clientId1,                                                                                   // 100
+        client_secret: "yspUqSye1D0y0IHaDYIl1G4q",                                                               // 101
+        redirect_uri: "http://localhost:3000",                                                           // 102
+        grant_type: 'authorization_code',
+        timeout: 20000,}
+        
+        let response = await  axios({
+          method: 'post',
+          url: 'https://accounts.google.com/o/oauth2/token',
+          headers: { 'Content-Type': 'application/json' },
+          data
         })
+      console.log('​response', response)
+      let {refresh_token} = response.data;
+      data = {
+        client_id: clientId1, 
+        client_secret: "yspUqSye1D0y0IHaDYIl1G4q",
+        refresh_token,
+        grant_type:'refresh_token',
       }
-      return true;
+      console.log('​data', data)
+      let response1 = await  axios({
+        method: 'post',
+        url: 'https://accounts.google.com/o/oauth2/token',
+        headers: { 'Content-Type': 'application/json' },
+        data
+      })
+        console.log('​response', response1)
     }catch(error){
-      console.log("Error in the calendar.handleGoogleCalendar",error);
-      throw new Meteor.Error(error);
+			console.log('​}catch -> error', error.response)
+      
     }
+   
+
+
+
+    // try{
+    //   let eventsList = Meteor.call('calendar.generateEvents',userId);
+    //   if(!isEmpty(eventsList)){
+    //     eventsList.map(async (e)=>{
+    //       console.log('​e', e)
+    //       try{
+    //         let response = await  axios({
+    //           method: 'post',
+    //           url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
+    //           headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+    //           data: e,
+    //           timeout: 20000,
+    //         })
+    //         // console.log('​response', response)
+    //         console.log('Event Added')
+    //       }catch(error){
+    //         //  console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
+		// 			console.log('​Error in map of the calendar.handleGoogleCalendar')
+    //       }
+    //     })
+    //   }
+    //   return true;
+    // }catch(error){
+    //   console.log("Error in the calendar.handleGoogleCalendar",error);
+    //   throw new Meteor.Error(error);
+    // }
   },
   "calendar.generateEvents":function(userId){
     let events = [];
@@ -119,7 +160,7 @@ Meteor.methods({
       })
     }
     return events;
-  }
+  },
 });
 
 generatorByDay = (key) =>{
@@ -216,6 +257,41 @@ request.execute(function(event) {
 8. Generate events based on the class time type.
 9. Map on the events and start calling the api with axios.
 10. After Map show success popUp.
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+Code for getting calendar id of the user
+clientId = '696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com',
+scopes = 'https://www.googleapis.com/auth/calendar',
+gapi.auth.authorize(
+      {
+         'client_id': clientId,
+         'scope': scopes,
+         
+      }, (authResult)=>{
+			  console.log("authResult", authResult)
+		 gapi.client.load('calendar', 'v3', function() {
+              var request = gapi.client.calendar.calendarList.list({});
+              request.execute(function(resp) {
+                 console.log('resp',resp)
+              });
+          });
+
+})
 
 
 */
