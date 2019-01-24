@@ -44,7 +44,8 @@ const BoxInnerWrapper = styled.div`
   @media screen and (max-width: ${helpers.tablet + 50}px) {
     //flex-direction: column-reverse;
     // padding: 0 ${helpers.rhythmDiv * 2}px;
-    padding: 0;
+	padding: 0;
+	justify-content: flex-end;
   }
 `;
 
@@ -53,19 +54,15 @@ const BoxInnerWrapper = styled.div`
 // 	min-width: 0;
 // `;
 
-const SchoolSolutionCards = styled.div`
-
-`;
-
 const SolutionCards = styled.div`
-	max-width: ${SOLUTION_BOX_WIDTH + 100}px;
+	//max-width: ${SOLUTION_BOX_WIDTH + 100}px;
 	height: ${CARD_HEIGHT + 20}px;
-	display: flex;
-	justify-content: center;
-	flex-grow: 1;
-	width: 100%;
-	padding: 0 ${helpers.rhythmDiv * 2}px;
-	margin-top: ${helpers.rhythmDiv * 2}px;
+	// display: flex;
+	// justify-content: center;
+	// flex-grow: 1;
+	// width: 100%;
+	// padding: 0 ${helpers.rhythmDiv * 2}px;
+	// margin-top: ${helpers.rhythmDiv * 2}px;
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		max-width: 500px;
@@ -81,7 +78,7 @@ const SolutionCards = styled.div`
 `;
 
 const Solutions = styled.div`
-	max-width: ${SOLUTION_BOX_WIDTH}px;
+	max-width: 800px;
 	height: ${CARD_HEIGHT}px;
 	width: 100%;
 	display: flex;
@@ -238,7 +235,7 @@ class SolutionBox extends Component {
 								))}
 						</SolutionCards>
 
-						<Solutions totalCards={props.cardsData.length}>
+						{/*<Solutions totalCards={props.cardsData.length}>
 							{props.cardsData &&
 								props.cardsData.map((card, i) => {
 									const isCurrentSolutionSelected = this.state.currentSolution === i;
@@ -257,7 +254,7 @@ class SolutionBox extends Component {
 										</CSSTransition>
 									);
 								})}
-						</Solutions>
+							</Solutions> */}
 					</BoxInnerWrapper>
 				</ToggleVisibilityTablet>
 			</BoxWrapper>
