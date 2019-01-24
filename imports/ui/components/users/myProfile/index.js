@@ -95,7 +95,21 @@ class MyProfile extends React.Component {
   handleTextChange = (fieldName, event) => {
     this.setState({ [fieldName]: event.target.value });
   };
-
+  removeGoogleSync = () =>{
+    let docId = get(this.props.currentUser,'_id',Meteor.userId());
+    let doc = {refresh_token:null};
+    Meteor.call("user.editUser",{ doc, docId },(err,res)=>{
+      const {popUp} = this.props;
+      const data = {
+        popUp,
+        title: 'Success',
+        type: 'success',
+        content: 'Your Google Calendar disconnected with SkillShape Successfully.',
+        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+      };
+      confirmationDialog(data);
+    })
+  }
   handleDobChange = date => {
     this.setState({ dob: date })
   }
@@ -135,6 +149,7 @@ class MyProfile extends React.Component {
         "profile.currency": this.state.currency,
         "profile.about": this.state.about,
         "profile.coords": this.state.loc,
+        refresh_token:this.state.refresh_token
       };
       const { file } = this.state;
       try {

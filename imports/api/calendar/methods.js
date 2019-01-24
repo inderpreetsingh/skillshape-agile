@@ -9,11 +9,10 @@ import moment from 'moment';
 import axios from 'axios';
 
 Meteor.methods({
-  "calendar.handleGoogleCalendar": async function (userId) {
+  "calendar.handleGoogleCalendar": async function (userId,action,_id) {
     try {
       let { refresh_token } = Meteor.users.findOne({ _id: userId });
       if (refresh_token) {
-        let eventsList = Meteor.call('calendar.generateEvents', userId);
         let client_id = Meteor.settings.google.auth.appId;
         let client_secret = Meteor.settings.google.auth.secret;
         let data = {
@@ -29,36 +28,59 @@ Meteor.methods({
           data
         })
         let { access_token } = response.data;
-        eventsList.map(async (e) => {
-          try {
+        if(action=='insert'){
+          let eventsList = Meteor.call('calendar.generateEvents', userId);
+          eventsList.map(async (e) => {
+            try {
+              let response = await axios({
+                method: 'post',
+                url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+                data: e,
+                timeout: 20000,
+              })
+              //console.log('​response', response)
+              let {id:eventId} = response.data;
+              let {_id} = e;
+              if(eventId){
+                ClassInterest.update({_id},{$set:{eventId}});
+              }
+               console.log('Event Added')
+            } catch (error) {
+              //console.log('​Error in map of the calendar.handleGoogleCalendar', error)
+              console.log('​Error in map of the calendar.handleGoogleCalendar')
+            }
+          })
+        }
+        else if(action=='delete'){
+          let {eventId} = ClassInterest.findOne({_id});
+          if(eventId){
             let response = await axios({
-              method: 'post',
-              url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
+              method: 'delete',
+              url: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
               headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
-              data: e,
               timeout: 20000,
             })
-             //console.log('​response', response)
-            console.log('Event Added')
-          } catch (error) {
-           // console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
-            console.log('​Error in map of the calendar.handleGoogleCalendar')
+            console.log('Event Deleted');
           }
-        })
+        }
       }
     } catch (error) {
-      console.log('​}catch -> error', error.response)
+      console.log('Error in calendar.handleGoogleCalendar', error.response)
       throw new Meteor.Error(error);
+    }
+    finally{
+      return true
     }
   },
   "calendar.generateEvents": function (userId) {
     let events = [];
-    let classInterestData = ClassInterest.find({ userId }, { limit: 2 }).fetch();
+    let classInterestData = ClassInterest.find({ userId,eventId:{$exists:false} }).fetch();
     if (!isEmpty(classInterestData)) {
       classInterestData.map((classInterest) => {
         let event = {};
         let { classTimeId, classTypeId, _id: id } = classInterest;
-        event.id = id.toLowerCase().replace(/[ywxz]/g, '')+'0';
+        event._id = id;
         let classTimeData = ClassTimes.findOne({ _id: classTimeId });
         let classTypeData = ClassTypes.findOne({ _id: classTypeId });
         let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;
@@ -129,7 +151,10 @@ Meteor.methods({
       })
       let { refresh_token } = response.data;
       if (refresh_token) {
-        Meteor.users.update({ _id: this.userId }, { $set: { refresh_token } });
+        let docId = this.userId;
+        let doc = {refresh_token};
+        Meteor.call("user.editUser",{ doc, docId })
+        Meteor.call("calendar.handleGoogleCalendar",this.userId,'insert');
         return true;
       }
       return false;

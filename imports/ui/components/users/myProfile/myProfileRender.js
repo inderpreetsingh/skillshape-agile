@@ -270,9 +270,9 @@ export default function () {
                           label={`Sync Google`}
                           onClick={this.calendarConformation}
                         />
-                          : <SecondaryButton
-                            disabled
-                            label={`Sync Google`}
+                          : <PrimaryButton
+                            label={`Cancel Sync Google`}
+                            onClick={this.removeGoogleSync} 
                           />}
                         <SaveBtnWrapper>
                           {/* <Button type="submit" color="accent" raised dense>
