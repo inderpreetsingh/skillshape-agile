@@ -4,7 +4,7 @@ import { browserHistory } from "react-router";
 import moment from "moment";
 import { createContainer } from "meteor/react-meteor-data";
 import MyProfileRender from "./myProfileRender";
-import { withStyles, imageRegex, emailRegex, toastrModal, compressImage } from "/imports/util";
+import { withStyles, confirmationDialog, emailRegex, withPopUp, compressImage } from "/imports/util";
 import { resolve } from "url";
 
 const style = theme => {
@@ -71,7 +71,8 @@ class MyProfile extends React.Component {
         phone: currentUser.profile.phone || "",
         address: currentUser.profile.address || "",
         currency: currentUser.profile.currency || "",
-        about: currentUser.profile.about || ""
+        about: currentUser.profile.about || "",
+        refresh_token: get(currentUser,'refresh_token',null)
       });
     }
   };
@@ -133,7 +134,7 @@ class MyProfile extends React.Component {
         "profile.address": this.state.address,
         "profile.currency": this.state.currency,
         "profile.about": this.state.about,
-        "profile.coords": this.state.loc
+        "profile.coords": this.state.loc,
       };
       const { file } = this.state;
       try {
@@ -219,7 +220,7 @@ class MyProfile extends React.Component {
   };
 
   editUserCall = userData => {
-    const { currentUser, toastr } = this.props;
+    const { currentUser, popUp } = this.props;
     Meteor.call(
       "user.editUser",
       { doc: userData, docId: currentUser._id },
@@ -227,10 +228,24 @@ class MyProfile extends React.Component {
         let state = { isBusy: false };
         if (error) {
           state.errorText = error.reason || error.message;
-          toastr.error(state.errorText, "Error");
+          const data = {
+            popUp,
+            title: 'Error',
+            type: 'alert',
+            content: state.errorText,
+            buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+          };
+          confirmationDialog(data);
         }
         if (result) {
-          toastr.success("You have successfully edited your profile!", "Success");
+          const data = {
+            popUp,
+            title: 'Success',
+            type: 'success',
+            content: "You have successfully edited your profile!",
+            buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+          };
+          confirmationDialog(data);
         }
         this.setState(state);
       }
@@ -238,36 +253,122 @@ class MyProfile extends React.Component {
   };
 
   changePassword = () => {
+    const { popUp } = this.props;
     let currentPassword = this.refs.currentPassword.value;
     let newPassword = this.refs.newPassword.value;
     let confirmPassword = this.refs.confirmPassword.value;
     if (!currentPassword || !newPassword || !confirmPassword) {
-      toastr.error("All fields are mandatory", "Error");
+      const data = {
+        popUp,
+        title: 'Error',
+        type: 'error',
+        content: "All fields are mandatory",
+        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+      };
+      confirmationDialog(data);
       return;
     }
 
     if (newPassword && confirmPassword && newPassword != confirmPassword) {
-      toastr.error("Password Not Match", "Error");
+      const data = {
+        popUp,
+        title: 'Error',
+        type: 'error',
+        content: "Password Not Match",
+        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+      };
+      confirmationDialog(data);
       return;
     }
 
     if (newPassword && confirmPassword && currentPassword) {
       Accounts.changePassword(currentPassword, newPassword, (err, result) => {
         if (err) {
-          toastr.error("We are sorry but something went wrong.");
+          const data = {
+            popUp,
+            title: 'Error',
+            type: 'error',
+            content: "We are sorry but something went wrong.",
+            buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+          };
+          confirmationDialog(data);
         } else {
           this.refs.currentPassword.value = null;
           this.refs.newPassword.value = null;
           this.refs.confirmPassword.value = null;
-          toastr.success("Your password has been changed.", "Success");
+          const data = {
+            popUp,
+            title: 'Success',
+            type: 'success',
+            content: "Your password has been changed.",
+            buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+          };
+          confirmationDialog(data);
         }
       });
     }
   };
-
+  handleCalendarSync = () => {
+    let self = this;
+    this.setState({ isBusy: true }, () => {
+      const clientId = Meteor.settings.public.googleAppId;
+      gapi.load('auth2', function () {
+        auth2 = gapi.auth2.init({
+          client_id: clientId,
+        });
+        auth2.grantOfflineAccess().then((res) => {
+          if (res.code) {
+            Meteor.call('calendar.getRefreshToken', res.code, (err, res) => {
+              self.setState({ isBusy: false });
+              const { popUp } = self.props;
+              if(res){
+                const data = {
+                  popUp,
+                  title: 'Success',
+                  type: 'success',
+                  content: 'Your Google Calendar connected with SkillShape Successfully.',
+                  buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+                };
+                confirmationDialog(data);
+              }
+              else{
+                this.somethingWentWrong();
+              }
+            })
+          }
+          else {
+            this.somethingWentWrong();
+          }
+        });
+      });
+    })
+  }
+  somethingWentWrong = () => {
+    this.setState({ isBusy: false });
+    const { popUp } = this.props;
+    const data = {
+      popUp,
+      title: 'Error',
+      type: 'alert',
+      content: 'Oops Something Went Wrong!',
+      buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+    };
+    confirmationDialog(data);
+  }
+  calendarConformation = () => {
+    const { popUp } = this.props;
+    const data = {
+      popUp,
+      title: 'Confirmation',
+      type: 'inform',
+      content: 'Please Connect your Google Account to sync SkillShape Calendar with your Google Calendar.',
+      buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Yes', onClick: () => { this.handleCalendarSync() } }]
+    };
+    confirmationDialog(data);
+  }
   render() {
     return MyProfileRender.call(this, this.props, this.state);
   }
 }
 
-export default withStyles(style)(toastrModal(MyProfile));
+export default withStyles(style)(withPopUp(MyProfile));
