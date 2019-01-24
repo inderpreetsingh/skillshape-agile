@@ -12,7 +12,7 @@ import ContactUsDialogBox from '/imports/ui/components/landing/components/dialog
 
 import IssueSolutionSlider from './IssueSolutionSlider.jsx';
 import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { SOLUTION_BOX_WIDTH , CARD_HEIGHT} from './constants.js';
+import { SOLUTION_BOX_WIDTH, CARD_HEIGHT } from './constants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const BoxWrapper = styled.div`
@@ -194,6 +194,7 @@ class SolutionBox extends Component {
 
 	render() {
 		const { props } = this;
+		console.log(props, 'SOLUTION BOX');
 		return (
 			<BoxWrapper firstBox={props.firstBox}>
 				{this.state.contactDialog && (
@@ -207,11 +208,14 @@ class SolutionBox extends Component {
 					<ProblemTitle>{props.title}</ProblemTitle>
 				</Problem>
 
-				<ToggleVisibilityTablet show>		
-					<BoxInnerWrapper>	
-						<IssueSolutionSlider 
-							padding={`${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px`}
-							data={props.cardsData} />
+				<ToggleVisibilityTablet show>
+					<BoxInnerWrapper>
+						<IssueSolutionSlider
+							cardBgColor={props.cardBgColor}
+							changeSolution={this.handleSolutionChange}
+							currentSolution={this.state.currentSolution}
+							data={props.cardsData}
+						/>
 					</BoxInnerWrapper>
 				</ToggleVisibilityTablet>
 
@@ -226,7 +230,6 @@ class SolutionBox extends Component {
 											key={i}
 											{...card}
 											active={i === this.state.currentSolution}
-											noMarginBotton={i === 2 || i === 3}
 											onCardClick={() => this.handleSolutionChange(i)}
 											cardBgColor={props.cardBgColor}
 										/>
