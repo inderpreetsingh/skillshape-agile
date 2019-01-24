@@ -19,9 +19,7 @@ const Wrapper = styled.div`
 const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    
-    `;
+    align-items: center;`;
 
 const GfxWrapper = styled.div`
     position: relative;

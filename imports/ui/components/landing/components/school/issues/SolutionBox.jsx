@@ -69,13 +69,14 @@ const SolutionCards = styled.div`
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		max-width: 500px;
-		height: 800px;
+		height: ${props => props.totalCards > 1 ? '600px' : '400px'};
+		height: fit-content;
 		flex-direction: column;
 		justify-content: flex-start;
 	}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
-		min-height: 800px;
+		height: ${props => props.totalCards > 1 ? '700px' : '400px'};
 	}
 `;
 
@@ -222,7 +223,7 @@ class SolutionBox extends Component {
 				{/* Will be for the tablet/mobile*/}
 				<ToggleVisibilityTablet>
 					<BoxInnerWrapper>
-						<SolutionCards>
+						<SolutionCards totalCards={props.cardsData.length}>
 							{props.cardsData &&
 								props.cardsData.map((card, i) => (
 									<CardWrapper>
@@ -237,7 +238,7 @@ class SolutionBox extends Component {
 								))}
 						</SolutionCards>
 
-						<Solutions>
+						<Solutions totalCards={props.cardsData.length}>
 							{props.cardsData &&
 								props.cardsData.map((card, i) => {
 									const isCurrentSolutionSelected = this.state.currentSolution === i;

@@ -14,7 +14,7 @@ const config = {
 const Wrapper = styled.div`
   position: relative;
   display: flex;
-  width: 100vw;
+  max-width: 100vw;
   overflow: hidden;
 `;
 
@@ -49,9 +49,14 @@ const Arrow = styled.button`
   padding: 0 ${helpers.rhythmDiv}px;
   top: 50%;
   transform: translateY(-50%);
+  outline: none;
 
   &:hover {
     color: ${helpers.primaryColor};
+  }
+
+  &:focus {
+    outline: none;
   }
 
   &:before {
@@ -61,16 +66,31 @@ const Arrow = styled.button`
 `;
 
 const SliderLeftArrow = Arrow.extend`
-  left: ${helpers.rhythmDiv * 3}px;
-  @media screen and (max-width: ${helpers.tablet + 120}px) {
-    left: 0;
+  left: 10%;
+  @media screen and (max-width: 1200px) {
+    left: 5%;
+  }
+  @media screen and (max-width: 1000px) {
+    left: ${helpers.rhythmDiv * 3}px;
+  }
+  @media screen and (max-width: 900px) {
+    left: 0px;
   }
 `;
 
 const SliderRightArrow = Arrow.extend`
-  right: ${helpers.rhythmDiv * 3}px;
-  @media screen and (max-width: ${helpers.tablet + 120}px) {
-    right: 0;
+  right: 10%;
+
+  @media screen and (max-width: 1200px) {
+    right: 5%;
+  }
+
+  @media screen and (max-width: 1000px) {
+    right: ${helpers.rhythmDiv * 3}px;
+  }
+  
+  @media screen and (max-width: 900px) {
+    right: 0px;
   }
 `;
 
@@ -106,14 +126,14 @@ class IssueSolutionSlider extends React.Component {
     const { data, cardBgColor } = this.props;
     console.log(selectedIndex, 'SOLUTION SLIDER');
     return (<Wrapper>
-      <SliderLeftArrow onClick={this.handleMoveLeft}> {"<"} </SliderLeftArrow>
+      {totalElements > 0 && <SliderLeftArrow onClick={this.handleMoveLeft}> {"<"} </SliderLeftArrow>}
       <Container totalElements={totalElements} selectedIndex={selectedIndex}>
         {data.map((cardData, i) => (
           <IssueSolutionWrapper key={i}>
             <IssueSolution cardBgColor={cardBgColor} {...cardData} />
           </IssueSolutionWrapper>))}
       </Container>
-      <SliderRightArrow onClick={this.handleMoveRight}> {">"} </SliderRightArrow>
+      {totalElements > 0 && <SliderRightArrow onClick={this.handleMoveRight}> {">"} </SliderRightArrow>}
     </Wrapper>
     )
   }
