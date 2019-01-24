@@ -212,7 +212,7 @@ class IssueFormatSelectors extends Component {
 					</IssuesFixed>
 				</Sticky>
 
-				<IssuesNumberBar
+				{/*<IssuesNumberBar
 					displayIssueNumbers={this.state.displayIssueNumbers}
 					hideIssues={this.state.hideIssues}
 				>
@@ -225,7 +225,7 @@ class IssueFormatSelectors extends Component {
 								onClick={() => this.handleCardClick(i)}
 							/>
 						))}
-				</IssuesNumberBar>
+						</IssuesNumberBar> */}
 			</Wrapper>
 		);
 	}

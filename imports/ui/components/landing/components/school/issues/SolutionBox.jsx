@@ -69,14 +69,14 @@ const SolutionCards = styled.div`
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		max-width: 500px;
-		height: ${props => props.totalCards > 1 ? '600px' : '400px'};
+		height: ${props => props.totalCards > 1 ? '600px' : '500px'};
 		height: fit-content;
 		flex-direction: column;
 		justify-content: flex-start;
 	}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
-		height: ${props => props.totalCards > 1 ? '700px' : '400px'};
+		height: ${props => props.totalCards > 1 ? '700px' : '500px'};
 	}
 `;
 

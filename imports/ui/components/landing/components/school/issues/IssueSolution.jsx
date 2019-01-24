@@ -24,7 +24,7 @@ const ContentWrapper = styled.div`
 const GfxWrapper = styled.div`
     position: relative;
     width: 100%;
-    max-width: ${SOLUTION_BOX_WIDTH}px;
+    max-width: ${SOLUTION_BOX_WIDTH}%;
 `;
 
 const Content = styled.div`
@@ -34,7 +34,7 @@ const Content = styled.div`
     background-color: ${props => props.cardBgColor};
     background-position: 50% 50%;
     background-repeat: repeat;
-    max-width: ${SOLUTION_BOX_WIDTH}px;
+    max-width: ${SOLUTION_BOX_WIDTH}%;
     width: 100%;
     display: flex;
     align-items: center;
