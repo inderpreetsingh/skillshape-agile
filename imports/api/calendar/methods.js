@@ -75,7 +75,7 @@ Meteor.methods({
   },
   "calendar.generateEvents": function (userId) {
     let events = [];
-    let classInterestData = ClassInterest.find({ userId }, { limit: 2 }).fetch();
+    let classInterestData = ClassInterest.find({ userId,eventId:{$exists:false} }).fetch();
     if (!isEmpty(classInterestData)) {
       classInterestData.map((classInterest) => {
         let event = {};
