@@ -21,7 +21,7 @@ Meteor.methods({
     doc.createdAt = new Date();
     if (this.userId && this.userId == doc.userId || from == 'signHandler') {
       return ClassInterest.insert(doc, () => {
-        Meteor.call("calendar.handleGoogleCalendar",this.userId);
+        Meteor.call("calendar.handleGoogleCalendar",this.userId,'insert');
         let currentUserRec = Meteor.users.findOne(this.userId);
         let classTypeData = ClassType.findOne(doc.classTypeId);
         let classTimes = ClassTimes.findOne(doc.classTimeId);
@@ -74,8 +74,11 @@ Meteor.methods({
     if (this.userId) {
       if(doc.from == 'signHandler'){
         let {schoolId,classTimeId,classTypeId,userId} = doc;
+        let {_id} = ClassInterest.findOne({schoolId,classTimeId,classTypeId,userId});
+        Meteor.call("calendar.handleGoogleCalendar",userId,'delete',_id);
         return ClassInterest.remove({schoolId,classTimeId,classTypeId,userId});
       }
+      Meteor.call("calendar.handleGoogleCalendar",userId,'delete',doc._id);
       return ClassInterest.remove({ _id: doc._id, userId: this.userId });
     } else {
       throw new Meteor.Error("Permission denied!!");
