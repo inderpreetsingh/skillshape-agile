@@ -154,6 +154,7 @@ Meteor.methods({
         let docId = this.userId;
         let doc = {refresh_token};
         Meteor.call("user.editUser",{ doc, docId })
+        Meteor.call("calendar.handleGoogleCalendar",this.userId,'insert');
         return true;
       }
       return false;
