@@ -28,7 +28,8 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
 import IconInput from "/imports/ui/components/landing/components/form/IconInput";
-
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import ReactPhoneInput from 'react-phone-input-2';
 const SaveBtnWrapper = styled.div`
   margin: 10px;
@@ -50,7 +51,8 @@ export default function () {
     phone,
     address,
     email,
-    about
+    about,
+    refresh_token
   } = this.state;
   let userType = Meteor.user();
   if (!isUserSubsReady) return <Loading />;
@@ -264,7 +266,14 @@ export default function () {
                           value={about}
                           onChange={this.handleTextChange.bind(this, "about")}
                         />
-
+                        {!refresh_token ? <PrimaryButton
+                          label={`Sync Google`}
+                          onClick={this.calendarConformation}
+                        />
+                          : <SecondaryButton
+                            disabled
+                            label={`Sync Google`}
+                          />}
                         <SaveBtnWrapper>
                           {/* <Button type="submit" color="accent" raised dense>
                             Save
