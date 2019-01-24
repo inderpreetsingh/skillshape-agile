@@ -49,7 +49,15 @@ export const ToggleVisibility = styled.div`
   display: ${props => props.show ? 'flex' : 'none'};
 
   @media screen and (max-width: ${helpers.mobile}px) {
-	display: ${props => props.show ? 'none' : 'flex'};
+		display: ${props => props.show ? 'none' : 'flex'};
+  }
+`;
+
+export const ToggleVisibilityTablet = styled.div`
+	display: ${props => props.show ? 'flex' : 'none'};
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+		display: ${props => props.show ? 'none' : 'flex'};
   }
 `;
 

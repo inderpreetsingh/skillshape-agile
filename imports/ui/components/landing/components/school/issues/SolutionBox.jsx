@@ -7,13 +7,13 @@ import Events from '/imports/util/events';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import SchoolSolutionCard from '/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx';
-import SchoolSolutionSlider from '/imports/ui/components/landing/components/school/issues/SchoolCardsSlider.jsx';
 import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
-const SOLUTION_BOX_WIDTH = 800;
-const CARD_HEIGHT = 200;
+import IssueSolutionSlider from './IssueSolutionSlider.jsx';
+import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { SOLUTION_BOX_WIDTH , CARD_HEIGHT} from './constants.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const BoxWrapper = styled.div`
 	${helpers.flexCenter} flex-direction: column;
@@ -53,6 +53,10 @@ const BoxInnerWrapper = styled.div`
 // 	min-width: 0;
 // `;
 
+const SchoolSolutionCards = styled.div`
+
+`;
+
 const SolutionCards = styled.div`
 	max-width: ${SOLUTION_BOX_WIDTH + 100}px;
 	height: ${CARD_HEIGHT + 20}px;
@@ -60,7 +64,6 @@ const SolutionCards = styled.div`
 	justify-content: center;
 	flex-grow: 1;
 	width: 100%;
-	// height: 380px; // computed based on the cards and it's content.
 	padding: 0 ${helpers.rhythmDiv * 2}px;
 	margin-top: ${helpers.rhythmDiv * 2}px;
 
@@ -87,9 +90,6 @@ const Solutions = styled.div`
 	margin: 0;
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
-		// max-width: 500px;
-		// justify-content: flex-start;
-		// margin-bottom: ${helpers.rhythmDiv * 2}px;
 		display: none;
 	}
 `;
@@ -104,11 +104,7 @@ const CardWrapper = styled.div`
 	}
 `;
 
-const SolutionContent = styled.img`	
-  //background-image: url('${props => props.solutionContent}');
-  //background-size: contain;
-  //background-repeat: no-repeat;	
-  //object-fit: contain;
+const SolutionGfx = styled.img`	
   height: 100%;
   border-radius: 10px;
   background-position: 50% 50%; 
@@ -209,47 +205,57 @@ class SolutionBox extends Component {
 				<Problem>
 					{/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
 					<ProblemTitle>{props.title}</ProblemTitle>
-
 				</Problem>
 
-				<BoxInnerWrapper>
-					<SolutionCards>
-						{props.cardsData &&
-							props.cardsData.map((card, i) => (
-								<CardWrapper>
-									<SchoolSolutionCard
-										key={i}
-										{...card}
-										active={i === this.state.currentSolution}
-										noMarginBotton={i === 2 || i === 3}
-										onCardClick={() => this.handleSolutionChange(i)}
-										cardBgColor={props.cardBgColor}
-									/>
-								</CardWrapper>
-							))}
-					</SolutionCards>
+				<ToggleVisibilityTablet show>		
+					<BoxInnerWrapper>	
+						<IssueSolutionSlider 
+							padding={`${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px`}
+							data={props.cardsData} />
+					</BoxInnerWrapper>
+				</ToggleVisibilityTablet>
 
-					<Solutions>
-						{props.cardsData &&
-							props.cardsData.map((card, i) => {
-								const isCurrentSolutionSelected = this.state.currentSolution === i;
-								return (
-									<CSSTransition
-										in={isCurrentSolutionSelected}
-										timeout={{
-											enter: 600,
-											exit: 400
-										}}
-										classNames="fade"
-										unmountOnExit
-									>
-										<SolutionContent
-											key={i} src={card.solutionContent} />
-									</CSSTransition>
-								);
-							})}
-					</Solutions>
-				</BoxInnerWrapper>
+				{/* Will be for the tablet/mobile*/}
+				<ToggleVisibilityTablet>
+					<BoxInnerWrapper>
+						<SolutionCards>
+							{props.cardsData &&
+								props.cardsData.map((card, i) => (
+									<CardWrapper>
+										<SchoolSolutionCard
+											key={i}
+											{...card}
+											active={i === this.state.currentSolution}
+											noMarginBotton={i === 2 || i === 3}
+											onCardClick={() => this.handleSolutionChange(i)}
+											cardBgColor={props.cardBgColor}
+										/>
+									</CardWrapper>
+								))}
+						</SolutionCards>
+
+						<Solutions>
+							{props.cardsData &&
+								props.cardsData.map((card, i) => {
+									const isCurrentSolutionSelected = this.state.currentSolution === i;
+									return (
+										<CSSTransition
+											in={isCurrentSolutionSelected}
+											timeout={{
+												enter: 600,
+												exit: 400
+											}}
+											classNames="fade"
+											unmountOnExit
+										>
+											<SolutionGfx
+												key={i} src={card.solutionContent} />
+										</CSSTransition>
+									);
+								})}
+						</Solutions>
+					</BoxInnerWrapper>
+				</ToggleVisibilityTablet>
 			</BoxWrapper>
 		);
 	}
