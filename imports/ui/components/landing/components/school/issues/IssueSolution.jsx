@@ -34,7 +34,6 @@ const Content = styled.div`
     background-color: ${props => props.cardBgColor};
     background-position: 50% 50%;
     background-repeat: repeat;
-    max-width: ${SOLUTION_BOX_WIDTH}%;
     width: 100%;
     display: flex;
     align-items: center;
