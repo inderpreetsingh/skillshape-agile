@@ -9,7 +9,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 Meteor.methods({
-  "calendar.handleGoogleCalendar": async function (userId,action,eventId) {
+  "calendar.handleGoogleCalendar": async function (userId,action,_id) {
     try {
       let { refresh_token } = Meteor.users.findOne({ _id: userId });
       if (refresh_token) {
@@ -39,23 +39,30 @@ Meteor.methods({
                 data: e,
                 timeout: 20000,
               })
-              //  console.log('​response', response)
+              //console.log('​response', response)
+              let {id:eventId} = response.data;
+              let {_id} = e;
+              if(eventId){
+                ClassInterest.update({_id},{$set:{eventId}});
+              }
                console.log('Event Added')
             } catch (error) {
-             // console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
+              //console.log('​Error in map of the calendar.handleGoogleCalendar', error)
               console.log('​Error in map of the calendar.handleGoogleCalendar')
             }
           })
         }
         else if(action=='delete'){
-          eventId = eventId.toLowerCase().replace(/[ywxz]/g, '')+'4';
-          let response = await axios({
-            method: 'delete',
-            url: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
-            timeout: 20000,
-          })
-          console.log('Event Deleted');
+          let {eventId} = ClassInterest.findOne({_id});
+          if(eventId){
+            let response = await axios({
+              method: 'delete',
+              url: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+              headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+              timeout: 20000,
+            })
+            console.log('Event Deleted');
+          }
         }
       }
     } catch (error) {
@@ -73,7 +80,7 @@ Meteor.methods({
       classInterestData.map((classInterest) => {
         let event = {};
         let { classTimeId, classTypeId, _id: id } = classInterest;
-        event.id = id.toLowerCase().replace(/[ywxz]/g, '')+'4';
+        event._id = id;
         let classTimeData = ClassTimes.findOne({ _id: classTimeId });
         let classTypeData = ClassTypes.findOne({ _id: classTypeId });
         let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;

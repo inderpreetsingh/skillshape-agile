@@ -31,6 +31,11 @@ ClassInterest.attachSchema(
     "deletedEvents.$": {
       type: String,
       blackbox: true
+    },
+    eventId:{
+      type: String,
+      blackbox: true,
+      optional:true
     }
   })
 );
