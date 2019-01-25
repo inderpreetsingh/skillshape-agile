@@ -29,14 +29,6 @@ class ClassTimeInformation extends Component {
     const { classType } = this.props;
     return get(classType, 'name', '');
   }
-  getTime = () => {
-    const { classTimeData } = this.props;
-    return get(classTimeData, 'time', '');
-  }
-  getTimePeriod = () => {
-    const { classTimeData } = this.props;
-    return get(classTimeData, 'timePeriod', '');
-  }
 
   handleJoinNowButtonClick = () => {
     // No package type purchased ---> packages list dialogBox should appear
@@ -207,7 +199,7 @@ class ClassTimeInformation extends Component {
     const {scheduled_date} = classData || {}
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
-      return `${get(locationData, 'city', '')}, ${get(locationData, 'state', '')}, ${get(locationData, 'country', '')}, ${get(locationData, 'zip', '')}`
+      return `${get(locationData,'address','')}, ${get(locationData, 'city', '')}, ${get(locationData, 'state', '')}, ${get(locationData, 'country', '')}, ${get(locationData, 'zip', '')}`
     }
 
     return (
@@ -238,15 +230,14 @@ class ClassTimeInformation extends Component {
           />)}
 
         <NameBar
-          title={this.getTitle()}
+          title={title}
           schoolName={schoolName}
           onJoinClassButtonClick={() => { this.setState({ thinkingAboutAttending: true }) }}
         />
         <Description description={desc} />
         <LocationDetails
           website={website}
-          time={this.getTime()}
-          timePeriod={this.getTimePeriod()}
+          time={eventStartTime}
           startDate={scheduled_date}
           address={locationName()}
           locationData={{ lat: get(locationData, 'loc[1]', ''), lng: get(locationData, "loc[0]", '') }}

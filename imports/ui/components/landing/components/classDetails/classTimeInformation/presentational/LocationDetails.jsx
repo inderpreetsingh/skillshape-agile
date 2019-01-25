@@ -117,7 +117,7 @@ const LocationDetails = props => {
           </MyDate>
           <Time>
             <Icon classes={{ root: icon }}>timer</Icon>
-            {time} {timePeriod}
+            {time}
           </Time>
           <Address>
             <Icon classes={{ root: icon }}>my_location</Icon>
