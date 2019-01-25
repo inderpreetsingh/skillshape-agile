@@ -98,7 +98,7 @@ class MyProfile extends React.Component {
   clearAllEvents = () => {
     this.setState({isBusy:true},()=>{
       let docId = get(this.props.currentUser,'_id',Meteor.userId());
-      let doc = {refresh_token:null};
+      let doc = {refresh_token:null,googleCalendarId:null};
       Meteor.call("calendar.clearAllEvents",{ doc, docId },(err,res)=>{
         if(err){
           this.somethingWentWrong();
@@ -130,7 +130,7 @@ class MyProfile extends React.Component {
   }
   removeGoogleSync = () =>{
     let docId = get(this.props.currentUser,'_id',Meteor.userId());
-    let doc = {refresh_token:null};
+    let doc = {refresh_token:null,googleCalendarId:null};
     this.setState({isBusy:true},()=>{
       Meteor.call("user.editUser",{ doc, docId },(err,res)=>{
         this.setState({isBusy:false});

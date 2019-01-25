@@ -126,7 +126,7 @@ Schema.UserProfile = new SimpleSchema({
     type: Boolean,
     optional: true,
     defaultValue: false
-  }
+  },
 });
 
 Schema.User = new SimpleSchema({
@@ -211,6 +211,10 @@ Schema.User = new SimpleSchema({
     optional: true
   },
   refresh_token:{
+    type:String,
+    optional:true
+  },
+  googleCalendarId:{
     type:String,
     optional:true
   }

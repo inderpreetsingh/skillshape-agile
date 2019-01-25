@@ -9,10 +9,10 @@ import moment from 'moment';
 import axios from 'axios';
 
 Meteor.methods({
-  "calendar.handleGoogleCalendar": async function (userId,action,ids) {
+  "calendar.handleGoogleCalendar": async function (userId, action, ids) {
     try {
-      let { refresh_token } = Meteor.users.findOne({ _id: userId });
-      if (refresh_token) {
+      let { refresh_token, googleCalendarId: calendarId } = Meteor.users.findOne({ _id: userId });
+      if (refresh_token && calendarId) {
         let client_id = Meteor.settings.google.auth.appId;
         let client_secret = Meteor.settings.google.auth.secret;
         let data = {
@@ -28,46 +28,47 @@ Meteor.methods({
           data
         })
         let { access_token } = response.data;
-        if(action=='insert'){
+
+        if (action == 'insert') {
           let eventsList = Meteor.call('calendar.generateEvents', userId);
           eventsList.map(async (e) => {
             try {
               let response = await axios({
                 method: 'post',
-                url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json',
+                url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?alt=json`,
                 headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
                 data: e,
                 timeout: 20000,
               })
-              let {id:eventId} = response.data;
-              let {_id} = e;
-              if(eventId){
-                ClassInterest.update({_id},{$set:{eventId}});
+              let { id: eventId } = response.data;
+              let { _id } = e;
+              if (eventId) {
+                ClassInterest.update({ _id }, { $set: { eventId } });
               }
-               console.log('Event Added')
+              console.log('Event Added')
             } catch (error) {
               console.log('​Error in map of the calendar.handleGoogleCalendar')
             }
           })
         }
-        else if(action=='delete'  && !isEmpty(ids)){
-          let classInterestData = ClassInterest.find({_id:{$in:ids}}).fetch();
-          classInterestData.map(async(obj)=>{
-          let {eventId} = obj;
-          if(eventId){
-            let response = await axios({
-              method: 'delete',
-              url: `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-              headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
-              timeout: 20000,
-            })
-            console.log('Event Deleted');
-          }
+        else if (action == 'delete' && !isEmpty(ids)) {
+          let classInterestData = ClassInterest.find({ _id: { $in: ids } }).fetch();
+          classInterestData.map(async (obj) => {
+            let { eventId } = obj;
+            if (eventId) {
+              let response = await axios({
+                method: 'delete',
+                url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`,
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+                timeout: 20000,
+              })
+              console.log('Event Deleted');
+            }
           })
         }
       }
     } catch (error) {
-      console.log('Error in calendar.handleGoogleCalendar', error,error.response)
+      console.log('Error in calendar.handleGoogleCalendar', error, error.response)
       throw new Meteor.Error(error);
     }
   },
@@ -140,7 +141,7 @@ Meteor.methods({
         grant_type: 'authorization_code',
         timeout: 20000,
       }
-
+      //get refresh token
       let response = await axios({
         method: 'post',
         url: 'https://accounts.google.com/o/oauth2/token',
@@ -148,11 +149,34 @@ Meteor.methods({
         data
       })
       let { refresh_token } = response.data;
+      //generate access token
+      let dataForAccessToken = {
+        client_id,
+        client_secret,
+        refresh_token,
+        grant_type: 'refresh_token',
+      }
+      let accessTokenResponse = await axios({
+        method: 'post',
+        url: 'https://accounts.google.com/o/oauth2/token',
+        headers: { 'Content-Type': 'application/json' },
+        data: dataForAccessToken
+      })
+      let { access_token } = accessTokenResponse.data;
+      //create new google calendar
+      let calendarResponse = await axios({
+        method: 'post',
+        url: 'https://www.googleapis.com/calendar/v3/calendars',
+        headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+        data: { summary: 'SkillShape' },
+        timeout: 20000,
+      })
+      let { id: googleCalendarId } = calendarResponse.data;
       if (refresh_token) {
         let docId = this.userId;
-        let doc = {refresh_token};
-        Meteor.call("user.editUser",{ doc, docId })
-        Meteor.call("calendar.handleGoogleCalendar",this.userId,'insert');
+        let doc = { refresh_token, googleCalendarId };
+        Meteor.call("user.editUser", { doc, docId })
+        Meteor.call("calendar.handleGoogleCalendar", this.userId, 'insert');
         return true;
       }
       return false;
@@ -161,15 +185,50 @@ Meteor.methods({
       throw new Meteor.Error(error);
     }
   },
-  "calendar.clearAllEvents":function({ doc, docId }){
-    try{
-      let classInterestData = ClassInterest.find({userId:this.userId,}).fetch();
-      let ids = classInterestData.map((obj)=>obj._id);
-      Meteor.call("calendar.handleGoogleCalendar",this.userId,'delete',ids,);
-      Meteor.call("user.editUser",{ doc, docId });
+  "calendar.clearAllEvents": function ({ doc, docId }) {
+    try {
+      let classInterestData = ClassInterest.find({ userId: this.userId, }).fetch();
+      let ids = classInterestData.map((obj) => obj._id);
+      Meteor.call("calendar.handleGoogleCalendar", this.userId, 'delete', ids);
+      Meteor.call("calendar.removeGoogleCalendar");
+      Meteor.call("user.editUser", { doc, docId });
       return true;
-    }catch(error){
-			console.log('​error in calendar.clearAllEvents', error);
+    } catch (error) {
+      console.log('​error in calendar.clearAllEvents', error);
+    }
+  },
+  "calendar.removeGoogleCalendar": async function () {
+    try {
+      let { refresh_token, googleCalendarId: calendarId } = Meteor.users.findOne({ _id: this.userId });
+      if (refresh_token && calendarId) {
+        let client_id = Meteor.settings.google.auth.appId;
+        let client_secret = Meteor.settings.google.auth.secret;
+        //generate access token
+        let dataForAccessToken = {
+          client_id,
+          client_secret,
+          refresh_token,
+          grant_type: 'refresh_token',
+        }
+        let accessTokenResponse = await axios({
+          method: 'post',
+          url: 'https://accounts.google.com/o/oauth2/token',
+          headers: { 'Content-Type': 'application/json' },
+          data: dataForAccessToken
+        })
+        let { access_token } = accessTokenResponse.data;
+        //delete google calendar
+        let calendarDeleteResponse = await axios({
+          method: 'delete',
+          url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}`,
+          headers: { 'Content-Type': 'application/json', authorization: `Bearer ${access_token}` },
+          timeout: 20000,
+        })
+        console.log('calendar deleted');
+      }
+    } catch (error) {
+      console.log('​error in calendar.removeGoogleCalendar', error)
+
     }
   }
 });
