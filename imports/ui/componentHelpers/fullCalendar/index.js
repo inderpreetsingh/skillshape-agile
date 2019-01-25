@@ -127,7 +127,7 @@ class FullCalendar extends React.Component {
     temp.end = moment(new Date(scheduleDetailsObj.startTime))
       .add(scheduleDetailsObj.duration, "minutes")
       .format("hh:mm");
-    temp.eventStartTime = moment(scheduleDetailsObj.startTime).format("hh:mm");
+    temp.eventStartTime = moment(scheduleDetailsObj.startTime).format("hh:mm A");
     temp.eventEndTime = moment(new Date(scheduleDetailsObj.startTime))
       .add(
         scheduleDetailsObj.duration,
@@ -235,7 +235,7 @@ class FullCalendar extends React.Component {
           scheduleData.map((obj, index) => {
             sevent.start = obj.startDate;
             sevent.roomId = obj.roomId;
-            sevent.eventStartTime = moment(obj.startTime).format("hh:mm");
+            sevent.eventStartTime = moment(obj.startTime).format("hh:mm A");
             sevent.eventEndTime = moment(new Date(obj.startTime))
               .add(
                 obj.duration,
@@ -411,9 +411,8 @@ const renderEventBox = event => {
             <div>
               <strong class="primary label hour fc-event ${event.className &&
     event
-      .className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${moment(
-        event.start
-      ).format("hh:mm a")} </strong>
+      .className[0]}" style="box-shadow: none;display:  block;border-radius:  5px 5px 0 0;color: #fff;text-align: left;padding: 5px;"> ${
+        event.eventStartTime} </strong>
             </div>
             <div class="padded" style="
               padding: 5px;
