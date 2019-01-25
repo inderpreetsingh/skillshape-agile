@@ -55,7 +55,7 @@ const Content = styled.p`
   }
 `;
 
-const IssueCard = (props) => (
+const IssueBarCard = (props) => (
   <Wrapper onClick={props.onClick} active={props.active} bgImage={props.cardBgImage}>
     <Content active={props.active}>
       {props.title}
@@ -63,9 +63,9 @@ const IssueCard = (props) => (
   </Wrapper>
 );
 
-IssueCard.propTypes = {
+IssueBarCard.propTypes = {
   content: PropTypes.string,
   onClick: PropTypes.func
 }
 
-export default IssueCard;
+export default IssueBarCard;

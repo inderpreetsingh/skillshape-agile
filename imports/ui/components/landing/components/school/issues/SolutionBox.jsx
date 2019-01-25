@@ -7,9 +7,12 @@ import Events from '/imports/util/events';
 
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 import SchoolSolutionCard from '/imports/ui/components/landing/components/cards/SchoolSolutionCard.jsx';
-import SchoolSolutionSlider from '/imports/ui/components/landing/components/school/issues/SchoolCardsSlider.jsx';
 import ContactUsDialogBox from '/imports/ui/components/landing/components/dialogs/ContactUsDialogBox.jsx';
 
+
+import IssueSolutionSlider from './IssueSolutionSlider.jsx';
+import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { SOLUTION_BOX_WIDTH, CARD_HEIGHT } from './constants.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const BoxWrapper = styled.div`
@@ -35,68 +38,73 @@ const BoxWrapper = styled.div`
 const BoxInnerWrapper = styled.div`
   ${helpers.flexCenter}
   padding: ${helpers.rhythmDiv * 2}px;
-  justify-content: space-around;
+  flex-direction: column-reverse;
   width: 100%;
 
   @media screen and (max-width: ${helpers.tablet + 50}px) {
-    flex-direction: column-reverse;
+    //flex-direction: column-reverse;
     // padding: 0 ${helpers.rhythmDiv * 2}px;
-    padding: 0;
+	padding: 0;
+	justify-content: flex-end;
   }
 `;
 
-const SolutionListInner = styled.div`
-	${helpers.flexCenter} flex-direction: column;
-	min-width: 0;
-	justify-content: flex-start;
-`;
+// const SolutionListInner = styled.div`
+// 	${helpers.flexCenter}
+// 	min-width: 0;
+// `;
 
-const SolutionList = styled.div`
-	max-width: 450px;
-	width: 100%;
-	height: 380px; // computed based on the cards and it's content.
-	min-width: 0;
-	display: flex;
-	flex-grow: 1;
-	padding: 0 ${helpers.rhythmDiv * 2}px;
-	margin-top: ${helpers.rhythmDiv * 2}px;
+const SolutionCards = styled.div`
+	//max-width: ${SOLUTION_BOX_WIDTH + 100}px;
+	height: ${CARD_HEIGHT + 20}px;
+	// display: flex;
+	// justify-content: center;
+	// flex-grow: 1;
+	// width: 100%;
+	// padding: 0 ${helpers.rhythmDiv * 2}px;
+	// margin-top: ${helpers.rhythmDiv * 2}px;
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		max-width: 500px;
-		height: calc(400px + 360px);
+		height: ${props => props.totalCards > 1 ? '600px' : '500px'};
+		height: fit-content;
+		flex-direction: column;
+		justify-content: flex-start;
 	}
 
 	@media screen and (max-width: ${helpers.mobile}px) {
-		min-height: 800px;
+		height: ${props => props.totalCards > 1 ? '700px' : '500px'};
 	}
 `;
 
-const SolutionContentWrapper = styled.div`
+const Solutions = styled.div`
+	max-width: 800px;
+	height: ${CARD_HEIGHT}px;
+	width: 100%;
 	display: flex;
-	flex-direction: column;
+	justify-content: center;
 	padding: 0 ${helpers.rhythmDiv * 2}px;
 	position: relative;
-	max-width: 400px;
-	width: 100%;
-	height: 200px;
 	margin: 0;
-	position: relative;
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
-		// max-width: 500px;
-		// justify-content: flex-start;
-		// margin-bottom: ${helpers.rhythmDiv * 2}px;
 		display: none;
 	}
 `;
 
-const SolutionContent = styled.img`	
-  //background-image: url('${(props) => props.solutionContent}');
-  //background-size: contain;
-  //background-repeat: no-repeat;	
+const CardWrapper = styled.div`
+	max-width: 300px;
+	max-height: fit-content;
+
+	@media screen and (max-width: ${helpers.tablet + 50}px) {
+		max-width: 500px;
+		max-height: none;
+	}
+`;
+
+const SolutionGfx = styled.img`	
   height: 100%;
   border-radius: 10px;
-  //object-fit: contain;
   background-position: 50% 50%; 
   box-shadow: ${helpers.buttonBoxShadow}; 	
 `;
@@ -106,7 +114,7 @@ const Problem = styled.div`
 	justify-content: center;
 	width: 100%;
 	margin: ${helpers.rhythmDiv * 4}px 0;
-	margin-bottom: 0;
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
 
 	@media screen and (max-width: ${helpers.tablet + 50}px) {
 		margin: ${helpers.rhythmDiv * 4}px 0;
@@ -184,6 +192,7 @@ class SolutionBox extends Component {
 
 	render() {
 		const { props } = this;
+		console.log(props, 'SOLUTION BOX');
 		return (
 			<BoxWrapper firstBox={props.firstBox}>
 				{this.state.contactDialog && (
@@ -195,46 +204,59 @@ class SolutionBox extends Component {
 				<Problem>
 					{/*<ProblemNumber>Problem #{props.solutionIndex}</ProblemNumber> */}
 					<ProblemTitle>{props.title}</ProblemTitle>
-
 				</Problem>
 
-				<BoxInnerWrapper>
-					<SolutionList>
-						<SolutionListInner>
+				<ToggleVisibilityTablet show>
+					<BoxInnerWrapper>
+						<IssueSolutionSlider
+							cardBgColor={props.cardBgColor}
+							changeSolution={this.handleSolutionChange}
+							currentSolution={this.state.currentSolution}
+							data={props.cardsData}
+						/>
+					</BoxInnerWrapper>
+				</ToggleVisibilityTablet>
+
+				{/* Will be for the tablet/mobile*/}
+				<ToggleVisibilityTablet>
+					<BoxInnerWrapper>
+						<SolutionCards totalCards={props.cardsData.length}>
 							{props.cardsData &&
 								props.cardsData.map((card, i) => (
-									<SchoolSolutionCard
-										key={i}
-										{...card}
-										active={i === this.state.currentSolution}
-										noMarginBotton={i === 2 || i === 3}
-										onCardClick={() => this.handleSolutionChange(i)}
-										cardBgColor={props.cardBgColor}
-									/>
+									<CardWrapper>
+										<SchoolSolutionCard
+											key={i}
+											{...card}
+											active={i === this.state.currentSolution}
+											onCardClick={() => this.handleSolutionChange(i)}
+											cardBgColor={props.cardBgColor}
+										/>
+									</CardWrapper>
 								))}
-						</SolutionListInner>
-					</SolutionList>
+						</SolutionCards>
 
-					<SolutionContentWrapper>
-						{props.cardsData &&
-							props.cardsData.map((card, i) => {
-								const isCurrentSolutionSelected = this.state.currentSolution === i;
-								return (
-									<CSSTransition
-										in={isCurrentSolutionSelected}
-										timeout={{
-											enter: 600,
-											exit: 400
-										}}
-										classNames="fade"
-										unmountOnExit
-									>
-										<SolutionContent key={i} src={card.solutionContent} />
-									</CSSTransition>
-								);
-							})}
-					</SolutionContentWrapper>
-				</BoxInnerWrapper>
+						{/*<Solutions totalCards={props.cardsData.length}>
+							{props.cardsData &&
+								props.cardsData.map((card, i) => {
+									const isCurrentSolutionSelected = this.state.currentSolution === i;
+									return (
+										<CSSTransition
+											in={isCurrentSolutionSelected}
+											timeout={{
+												enter: 600,
+												exit: 400
+											}}
+											classNames="fade"
+											unmountOnExit
+										>
+											<SolutionGfx
+												key={i} src={card.solutionContent} />
+										</CSSTransition>
+									);
+								})}
+							</Solutions> */}
+					</BoxInnerWrapper>
+				</ToggleVisibilityTablet>
 			</BoxWrapper>
 		);
 	}
