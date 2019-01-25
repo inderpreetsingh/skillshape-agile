@@ -1,6 +1,6 @@
 import get from "lodash/get";
 import React from "react";
-//import MyProfileRender from "./myProfileRender";
+import MyProfileRender from "./myProfileRender";
 import { compressImage, confirmationDialog, withPopUp, withStyles } from "/imports/util";
 
 const style = theme => {
@@ -415,7 +415,7 @@ class MyProfile extends React.Component {
     confirmationDialog(data);
   }
   render() {
-    return <div></div>
+    return MyProfileRender.call(this, this.props, this.state);
   }
 }
 
