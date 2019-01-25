@@ -30,7 +30,9 @@ class MembersListContainer extends Component {
     this.state = {
       teachersFilterWith: "",
       studentsFilterWith: "",
-      addInstructorDialogBoxState: false
+      addInstructorDialogBoxState: false,
+      notification:true,
+      packagesRequired:'enrollment'
     };
   }
 
@@ -43,6 +45,21 @@ class MembersListContainer extends Component {
     let purchaseIds = [];
     const { classData } = this.props;
     let { classTypeId } = classData && classData[0] || {};
+    let filter = {classTypeId,userId:Meteor.userId()};
+    Meteor.call("classPricing.signInHandler",filter,(err,res)=>{
+      if(!isEmpty(res)){
+        let {epStatus,purchased} = res;
+        if(epStatus && !isEmpty(purchased)){
+          this.setState({notification:false});
+        }
+        else if(!epStatus){
+          this.setState({packagesRequired:'enrollment'})
+        }
+        else{
+          this.setState({packagesRequired:'perClassAndMonthly'})
+        }
+      }
+    })
     if (classData) {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
@@ -561,19 +578,16 @@ class MembersListContainer extends Component {
   }
   render() {
     const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy,schoolData } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps } = this.state;
+    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
-    let notification = true, classTypeId;
+    let classTypeId;
     !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
       classTypeId = get(classData[0], "classTypeId", null);
-      if (obj.userId == Meteor.userId()) {
-        notification = !obj.purchaseId ? true : false;
-      }
     })
-
+  
     return (
       <Fragment>
         {buyPackagesBoxState && (
@@ -600,9 +614,9 @@ class MembersListContainer extends Component {
         {notification &&
           currentView === "studentsView" && (
             <Notification
-              notificationContent="You have not Connected any package to this class. If you don't have any package please purchase one first."
+              notificationContent={`You need to purchase ${packagesRequired == 'enrollment'? "enrollment " :'monthly/per class '}package first.`}
               bgColor={danger}
-              buttonLabel="Purchase Classes"
+              buttonLabel="Purchase Package"
               onButtonClick={() => { this.setState({ classTypePackages: true }) }}
             />
           )}
