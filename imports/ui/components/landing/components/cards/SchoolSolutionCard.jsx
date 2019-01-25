@@ -61,7 +61,7 @@ const SolutionContent = styled.div`
 		transition: 0.2s height linear, 0.1s opacity linear;
 		opacity: ${(props) => (props.showContent ? 1 : 0)};
 		height: ${(props) => (props.showContent ? 300 : 0)}px;
-		background-image: url('${(props) => props.solutionContent}');
+		background-image: url('${props => props.solutionContent}');
 		background-position: 50% 50%;
 		background-size: cover;
 		margin-bottom: ${helpers.rhythmDiv}px;

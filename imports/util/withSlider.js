@@ -25,7 +25,7 @@ const Arrow = styled.button`
   font-size: ${helpers.rhythmDiv * 6}px;
   font-family: ${helpers.specialFont};
   font-weight: 300;
-  z-index: 1;
+  z-index: 100000;
   width: auto;
   height: auto;
   color: ${helpers.primaryColor};

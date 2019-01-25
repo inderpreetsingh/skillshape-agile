@@ -26,8 +26,8 @@ const IconSelect = (props) => (
         value={props.value || ''}
         onChange={props.onChange}
         input={<Input
-          name={props.inputProps.name}
-          id={props.inputId}
+          name={props.inputId || props.inputProps.name}
+          id={props.inputId || props.inputProps.id}
           endAdornment={
             <InputAdornment position="end">
               <Icon color="disabled">{props.iconName}</Icon>
@@ -53,6 +53,13 @@ IconSelect.propTypes = {
   onChange: PropTypes.func,
   inputId: PropTypes.string,
   children: PropTypes.element,
+}
+
+IconSelect.defaultProps = {
+  inputProps: {
+    name: 'input-select',
+    id: ''
+  }
 }
 
 export default withStyles(styles)(IconSelect);

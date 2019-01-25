@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Sticky from 'react-stickynode';
 
 import * as helpers from '../../jss/helpers.js';
-import IssueCard from './IssueCard.jsx';
+import IssueBarCard from './IssueBarCard.jsx';
 import IssueNumber from './IssueNumber.jsx';
 
 const Wrapper = styled.div`
@@ -37,9 +37,9 @@ const IssuesTitle = styled.h2`
 	}
 `;
 
-const IssuesWrapper = styled.div`${helpers.flexCenter} width: 100%;`;
+const IssuesBar = styled.div`${helpers.flexCenter} width: 100%;`;
 
-const IssuesNumberWrapper = styled.div`
+const IssuesNumberBar = styled.div`
 	display: none;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
@@ -198,21 +198,21 @@ class IssueFormatSelectors extends Component {
 			<Wrapper>
 				<Sticky className="issue-cards" onStateChange={this.handleStickyStateChange}>
 					<IssuesFixed sticky={this.state.sticky} hideIssues={this.state.hideIssues}>
-						<IssuesWrapper>
+						<IssuesBar>
 							{this.props.issues &&
 								this.props.issues.map((issue, i) => (
-									<IssueCard
+									<IssueBarCard
 										key={i}
 										active={this.state.activeIssue === i}
 										onClick={() => this.handleCardClick(i)}
 										{...issue}
 									/>
 								))}
-						</IssuesWrapper>
+						</IssuesBar>
 					</IssuesFixed>
 				</Sticky>
 
-				<IssuesNumberWrapper
+				{/*<IssuesNumberBar
 					displayIssueNumbers={this.state.displayIssueNumbers}
 					hideIssues={this.state.hideIssues}
 				>
@@ -225,7 +225,7 @@ class IssueFormatSelectors extends Component {
 								onClick={() => this.handleCardClick(i)}
 							/>
 						))}
-				</IssuesNumberWrapper>
+						</IssuesNumberBar> */}
 			</Wrapper>
 		);
 	}
