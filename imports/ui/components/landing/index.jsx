@@ -292,7 +292,6 @@ class Landing extends Component {
     // console.group("REDIRECT INDEX PAGE");
     console.info(currentUser, localStorage.getItem("visitorRedirected"));
     // console.groupEnd();
-    debugger;
     if (!visitorRedirected && previousLocationPathName === "/") {
       if (
         isUserSubsReady &&

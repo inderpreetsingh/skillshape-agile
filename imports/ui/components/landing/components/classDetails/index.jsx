@@ -77,7 +77,8 @@ const ClassDetails = props => {
     instructorsIds,
     bgImg,
     toggleIsBusy,
-    isBusy
+    isBusy,
+    currentClassTypeData
   } = props;
   const { state } = props.location.state || {};
   const dataProps = props.location.state.props;
@@ -100,8 +101,8 @@ const ClassDetails = props => {
             <ClassTimeCover
               bgImg={bgImg}
               logoImg={headerProps.logoImg}
-              classTypeName={get(state.classType, 'name', null)}
-              classTypeId={get(state.classType, '_id', null)}
+              classTypeName={get(currentClassTypeData, 'name', null)}
+              classTypeId={get(currentClassTypeData, '_id', null)}
               slug={get(school, 'slug', '')}
             />
 
@@ -111,7 +112,7 @@ const ClassDetails = props => {
               schoolCoverSrc={bgImg}
               locationData={state.location}
               website={school.website}
-              classType={state.classType}
+              classType={currentClassTypeData}
               schoolId={school._id}
               popUp={props.popUp}
               params={{ slug: school.slug }}
@@ -122,7 +123,7 @@ const ClassDetails = props => {
           <MembersList
             schoolId={school._id}
             schoolName={school.name}
-            classTypeName={get(state.classType, 'name', null)}
+            classTypeName={get(currentClassTypeData, 'name', null)}
             currentView={currentView}
             classData={classData}
             instructorsData={instructorsData}

@@ -7,7 +7,7 @@ import { classModulesData, classTimeData } from "/imports/ui/components/landing/
 import { withPopUp } from '/imports/util';
 import Classes from "/imports/api/classes/fields";
 import ClassTime from '/imports/api/classTimes/fields.js';
-
+import ClassType from '/imports/api/classType/fields';
 import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 
 class ClassDetailsContainer extends Component {
@@ -29,10 +29,11 @@ class ClassDetailsContainer extends Component {
     this.setState({isBusy:!this.state.isBusy});
   }
   render() {
-    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds } = this.props;
+    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds ,currentClassTypeData} = this.props;
     return (
       <Suspense fallback={<Preloader />}>
       <ClassDetails
+      currentClassTypeData = {currentClassTypeData}
         topSearchBarProps={{
           currentUser,
           isUserSubsReady
@@ -69,6 +70,11 @@ export default createContainer((props) => {
   classTypeId = state.eventData.classTypeId;
   filter = { _id: state.classDetails._id };
   classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
+  let classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeId});
+  let currentClassTypeData = {};
+  if(classTypeSub && classTypeSub.ready()){
+    currentClassTypeData = ClassType.findOne({});
+  }
   if (classesSubscription && classesSubscription.ready()) {
    classDetails = Classes.find().fetch();
     instructorsIds = get(classDetails[0], 'instructors', []);
@@ -106,6 +112,7 @@ export default createContainer((props) => {
     classDetails,
     instructorsData,
     instructorsIds,
+    currentClassTypeData,
     ...props
   };
 }, withPopUp(ClassDetailsContainer));
