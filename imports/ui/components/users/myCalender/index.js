@@ -108,9 +108,6 @@ export default class MyCalender extends React.Component {
     const { schoolId, classTypeId, classTimeId, start } = eventData;
     let filter = { schoolId, classTypeId, classTimeId, scheduled_date: new Date(start) };
     this.getStudentStatus(filter);
-   
-    if(isEmpty(schoolData)){
-      let schoolId = get(this.state,"classTimes.schoolId",null);
       Meteor.call("school.getMySchool", schoolId, (err, res) => {
         if (res) {
           let admins = get(res, 'admins', []);
@@ -121,7 +118,7 @@ export default class MyCalender extends React.Component {
           }
         }
       })
-    }
+   
     Meteor.call("location.getLocsFromIds", [eventData.locationId], (err, res) => {
       if (res) {
         this.setState({ location: res[0] })
