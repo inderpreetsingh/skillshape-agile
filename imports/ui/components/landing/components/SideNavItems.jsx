@@ -47,7 +47,7 @@ const IconWrapper = styled.div`
 
 const DrawerHeader = props => (
   <div className={props.drawerHeader}>
-    <IconButton onClick={props.handleDrawer}>close</IconButton>
+    <IconButton className="ss-icon-button" onClick={props.handleDrawer}>close</IconButton>
     {props.currentUser && <SecondaryButton icon iconName="exit_to_app" label="Logout" onClick={logoutUser} />}
   </div>
 );

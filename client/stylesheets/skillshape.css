@@ -64,6 +64,10 @@ body {
   text-align: center;
 }
 
+.ss-icon-button {
+  font-family: Material Icons;
+}
+
 /*Used for remove "Powered by google" on location input drop-down */
 .pac-container:after {
   background-image: none !important;
