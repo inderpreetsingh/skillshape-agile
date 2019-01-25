@@ -26,7 +26,7 @@ const styles = theme => {
     },
     btnActive: {
       ...btnStyles,
-
+      background: helpers.primaryColor
     },
     btnDistributed: {
       ...btnStyles,
