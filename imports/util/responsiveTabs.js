@@ -15,6 +15,7 @@ const btnStyles = {
   display: "inline-block",
   borderRadius: "4px",
   position: "relative",
+  background: "#c0c1c0"
 }
 
 const styles = theme => {
@@ -22,7 +23,6 @@ const styles = theme => {
   return {
     btn: {
       ...btnStyles,
-      background: "#c0c1c0"
     },
     btnActive: {
       ...btnStyles,
@@ -30,13 +30,13 @@ const styles = theme => {
     },
     btnDistributed: {
       ...btnStyles,
-      background: "#c0c1c0",
       [`@media screen and (max-width: ${helpers.mobile}px)`]: {
         width: '100%'
       }
     },
     btnActiveDistributed: {
       ...btnStyles,
+      background: helpers.primaryColor,
       [`@media screen and (max-width: ${helpers.mobile}px)`]: {
         width: '100%'
       }
