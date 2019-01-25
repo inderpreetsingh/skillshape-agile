@@ -39,7 +39,7 @@ Meteor.methods({
                 data: e,
                 timeout: 20000,
               })
-              //console.log('​response', response)
+              console.log('​response', response)
               let {id:eventId} = response.data;
               let {_id} = e;
               if(eventId){
@@ -47,7 +47,7 @@ Meteor.methods({
               }
                console.log('Event Added')
             } catch (error) {
-              //console.log('​Error in map of the calendar.handleGoogleCalendar', error)
+              console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
               console.log('​Error in map of the calendar.handleGoogleCalendar')
             }
           })
@@ -66,12 +66,10 @@ Meteor.methods({
         }
       }
     } catch (error) {
-      console.log('Error in calendar.handleGoogleCalendar', error.response)
+      console.log('Error in calendar.handleGoogleCalendar', error,error.response)
       throw new Meteor.Error(error);
     }
-    finally{
-      return true
-    }
+    
   },
   "calendar.generateEvents": function (userId) {
     let events = [];

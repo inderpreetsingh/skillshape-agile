@@ -330,6 +330,7 @@ class MyProfile extends React.Component {
       gapi.load('auth2', function () {
         auth2 = gapi.auth2.init({
           client_id: clientId,
+          scope:'https://www.googleapis.com/auth/calendar'
         });
         auth2.grantOfflineAccess().then((res) => {
           if (res.code) {
