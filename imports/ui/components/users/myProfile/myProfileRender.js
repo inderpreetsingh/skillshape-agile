@@ -1,36 +1,26 @@
-import React from "react";
-import DocumentTitle from "react-document-title";
-import get from "lodash/get";
-import styled from "styled-components";
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "material-ui/Card";
-import ExpandMoreIcon from "material-ui-icons/ExpandMore";
-import IconButton from "material-ui/IconButton";
 import classnames from "classnames";
+import ExpandMoreIcon from "material-ui-icons/ExpandMore";
+import Card, { CardContent, CardHeader } from "material-ui/Card";
+import { FormControl } from "material-ui/Form";
 import Grid from "material-ui/Grid";
-import Typography from "material-ui/Typography";
+import IconButton from "material-ui/IconButton";
 import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
 import Collapse from "material-ui/transitions/Collapse";
-import { FormControl } from "material-ui/Form";
-import { MenuItem } from "material-ui/Menu";
-import Button from "material-ui/Button";
-import Edit from "material-ui-icons/Edit";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
-import { validateImage } from "/imports/util";
-import { Loading } from "/imports/ui/loading";
-import config from "/imports/config";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
-import IconInput from "/imports/ui/components/landing/components/form/IconInput";
-import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import Typography from "material-ui/Typography";
+import React from "react";
+import DocumentTitle from "react-document-title";
 import ReactPhoneInput from 'react-phone-input-2';
+import styled from "styled-components";
+import config from "/imports/config";
+import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
+import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import IconInput from "/imports/ui/components/landing/components/form/IconInput";
+import { Loading } from "/imports/ui/loading";
+import { ContainerLoader } from "/imports/ui/loading/container";
 const SaveBtnWrapper = styled.div`
   margin: 10px;
   float: right;

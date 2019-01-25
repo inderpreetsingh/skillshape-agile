@@ -1,11 +1,7 @@
-import React from "react";
 import get from "lodash/get";
-import { browserHistory } from "react-router";
-import moment from "moment";
-import { createContainer } from "meteor/react-meteor-data";
-import MyProfileRender from "./myProfileRender";
-import { withStyles, confirmationDialog, emailRegex, withPopUp, compressImage } from "/imports/util";
-import { resolve } from "url";
+import React from "react";
+//import MyProfileRender from "./myProfileRender";
+import { compressImage, confirmationDialog, withPopUp, withStyles } from "/imports/util";
 
 const style = theme => {
   return {
@@ -419,7 +415,7 @@ class MyProfile extends React.Component {
     confirmationDialog(data);
   }
   render() {
-    return MyProfileRender.call(this, this.props, this.state);
+    return <div></div>
   }
 }
 
