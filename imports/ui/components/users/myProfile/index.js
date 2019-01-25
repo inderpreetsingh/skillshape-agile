@@ -95,19 +95,55 @@ class MyProfile extends React.Component {
   handleTextChange = (fieldName, event) => {
     this.setState({ [fieldName]: event.target.value });
   };
+  clearAllEvents = () => {
+    this.setState({isBusy:true},()=>{
+      let docId = get(this.props.currentUser,'_id',Meteor.userId());
+      let doc = {refresh_token:null};
+      Meteor.call("calendar.clearAllEvents",{ doc, docId },(err,res)=>{
+        if(err){
+          this.somethingWentWrong();
+        }else{
+          this.setState({isBusy:false});
+          const {popUp} = this.props;
+          const data = {
+            popUp,
+            title: 'Success',
+            type: 'success',
+            content: 'Your SkillShape events in Google Calendar will be clear shortly.',
+            buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+          };
+          confirmationDialog(data);
+        }
+      })
+    })
+  }
+  confirmationRemoveGoogleSync = () =>{
+    const {popUp} = this.props;
+    const data = {
+      popUp,
+      title: 'Confirmation',
+      type: 'inform',
+      content: 'You can Disconnect Google Sync as well as Disconnect Google Sync  and clear previous SkillShape events from google calendar.',
+      buttons: [{ label: 'No, Thanks!', onClick: () => { }, greyColor: true },{label: 'Disconnect Google ', onClick: () => {this.removeGoogleSync()}},{ label: 'Disconnect & Clear Events', onClick: () => { this.clearAllEvents()} }]
+    };
+    confirmationDialog(data);
+  }
   removeGoogleSync = () =>{
     let docId = get(this.props.currentUser,'_id',Meteor.userId());
     let doc = {refresh_token:null};
-    Meteor.call("user.editUser",{ doc, docId },(err,res)=>{
-      const {popUp} = this.props;
-      const data = {
-        popUp,
-        title: 'Success',
-        type: 'success',
-        content: 'Your Google Calendar disconnected with SkillShape Successfully.',
-        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
-      };
-      confirmationDialog(data);
+    this.setState({isBusy:true},()=>{
+      Meteor.call("user.editUser",{ doc, docId },(err,res)=>{
+        this.setState({isBusy:false});
+        const {popUp} = this.props;
+        const data = {
+          popUp,
+          title: 'Success',
+          type: 'success',
+          content: 'Your Google Calendar disconnected with SkillShape Successfully.',
+          buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+        };
+        confirmationDialog(data);
+      })
     })
   }
   handleDobChange = date => {
@@ -342,7 +378,7 @@ class MyProfile extends React.Component {
                   popUp,
                   title: 'Success',
                   type: 'success',
-                  content: 'Your Google Calendar connected with SkillShape Successfully.',
+                  content: 'Your Google Calendar connected with SkillShape Successfully. All SkillShape events will be sync shortly.',
                   buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
                 };
                 confirmationDialog(data);

@@ -272,7 +272,7 @@ export default function () {
                         />
                           : <PrimaryButton
                             label={`Cancel Sync Google`}
-                            onClick={this.removeGoogleSync} 
+                            onClick={this.confirmationRemoveGoogleSync} 
                           />}
                         <SaveBtnWrapper>
                           {/* <Button type="submit" color="accent" raised dense>

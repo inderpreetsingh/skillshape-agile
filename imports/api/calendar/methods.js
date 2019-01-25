@@ -9,7 +9,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 Meteor.methods({
-  "calendar.handleGoogleCalendar": async function (userId,action,_id) {
+  "calendar.handleGoogleCalendar": async function (userId,action,ids) {
     try {
       let { refresh_token } = Meteor.users.findOne({ _id: userId });
       if (refresh_token) {
@@ -39,7 +39,6 @@ Meteor.methods({
                 data: e,
                 timeout: 20000,
               })
-              console.log('​response', response)
               let {id:eventId} = response.data;
               let {_id} = e;
               if(eventId){
@@ -47,13 +46,14 @@ Meteor.methods({
               }
                console.log('Event Added')
             } catch (error) {
-              console.log('​Error in map of the calendar.handleGoogleCalendar', error.response)
               console.log('​Error in map of the calendar.handleGoogleCalendar')
             }
           })
         }
-        else if(action=='delete'){
-          let {eventId} = ClassInterest.findOne({_id});
+        else if(action=='delete'  && !isEmpty(ids)){
+          let classInterestData = ClassInterest.find({_id:{$in:ids}}).fetch();
+          classInterestData.map(async(obj)=>{
+          let {eventId} = obj;
           if(eventId){
             let response = await axios({
               method: 'delete',
@@ -63,17 +63,17 @@ Meteor.methods({
             })
             console.log('Event Deleted');
           }
+          })
         }
       }
     } catch (error) {
       console.log('Error in calendar.handleGoogleCalendar', error,error.response)
       throw new Meteor.Error(error);
     }
-    
   },
   "calendar.generateEvents": function (userId) {
     let events = [];
-    let classInterestData = ClassInterest.find({ userId,eventId:{$exists:false} }).fetch();
+    let classInterestData = ClassInterest.find({ userId, }).fetch();
     if (!isEmpty(classInterestData)) {
       classInterestData.map((classInterest) => {
         let event = {};
@@ -159,6 +159,17 @@ Meteor.methods({
     } catch (error) {
       console.log('​}catch -> error', error.response)
       throw new Meteor.Error(error);
+    }
+  },
+  "calendar.clearAllEvents":function({ doc, docId }){
+    try{
+      let classInterestData = ClassInterest.find({userId:this.userId,}).fetch();
+      let ids = classInterestData.map((obj)=>obj._id);
+      Meteor.call("calendar.handleGoogleCalendar",this.userId,'delete',ids,);
+      Meteor.call("user.editUser",{ doc, docId });
+      return true;
+    }catch(error){
+			console.log('​error in calendar.clearAllEvents', error);
     }
   }
 });
