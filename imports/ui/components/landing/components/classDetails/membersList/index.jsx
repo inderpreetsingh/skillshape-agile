@@ -398,7 +398,7 @@ class MembersListContainer extends Component {
         popUp,
         title: 'Oops',
         type: 'alert',
-        content: <div>You can't control future classes.</div>,
+        content: <div>You can't control future classes. Instructor not allowed to auto check in students for future classes.</div>,
         buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
       }
       confirmationDialog(data);
@@ -565,7 +565,7 @@ class MembersListContainer extends Component {
           props.onAcceptPaymentClick(false);
           let title = 'Package Purchased Successfully';
           if (packageType != 'EP')
-            this.updateStatus(1, props)
+            this.updateStatus(2, props)
           else
             this.successPopUp(popUp, 'prototype', title)
 

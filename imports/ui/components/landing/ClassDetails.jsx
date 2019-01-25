@@ -69,11 +69,13 @@ export default createContainer((props) => {
   classTimeId = state.eventData.classTimeId;
   classTypeId = state.eventData.classTypeId;
   filter = { _id: state.classDetails._id };
-  classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
-  let classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeId});
   let currentClassTypeData = {};
-  if(classTypeSub && classTypeSub.ready()){
-    currentClassTypeData = ClassType.findOne({});
+  classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
+  if(classTypeId){
+    let classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeIds:[classTypeId]});
+    if(classTypeSub && classTypeSub.ready()){
+      currentClassTypeData = ClassType.findOne({});
+    }
   }
   if (classesSubscription && classesSubscription.ready()) {
    classDetails = Classes.find().fetch();

@@ -428,7 +428,7 @@ BuyPackagesDialogBox.defaultProps = {
 }
 
 export default withStyles(styles)(createContainer(props => {
-    const { classTypeId } = props;
+    const { classTypeId ,currentProps:{alreadyPurchasedData:{epStatus,purchased}}} = props;
     //TODO: Need to filter out packages which are already purchased..
     //let purchasesData = 
     let monthlyPricingSubscription;
@@ -437,19 +437,26 @@ export default withStyles(styles)(createContainer(props => {
     let isLoading = true;
     let currency = config.defaultCurrency;
     //console.log(classData,props,'classTYpeid')
-    if (classTypeId) {
+    if(epStatus && isEmpty(purchased) && classTypeId){
         monthlyPricingSubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricingWithClassId', { classTypeId: [classTypeId] });
         classPricingSubscription = Meteor.subscribe('classPricing.getClassPricingWithClassId', { classTypeId });
+        const sub1Ready = monthlyPricingSubscription && monthlyPricingSubscription.ready();
+        const sub2Ready = classPricingSubscription && classPricingSubscription.ready();
+        if (sub1Ready && sub2Ready ) {
+            isLoading = false;
+        }
+    }
+    else if(!epStatus){
         enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypeEnrollMentFree', { classTypeId })
+        const sub3Ready = enrollmentSubscription && enrollmentSubscription.ready();
+        if (sub3Ready) {
+            isLoading = false;
+        }
     }
+   
+    
 
-    const sub1Ready = monthlyPricingSubscription && monthlyPricingSubscription.ready();
-    const sub2Ready = classPricingSubscription && classPricingSubscription.ready();
-    const sub3Ready = enrollmentSubscription && enrollmentSubscription.ready();
     // console.info(sub1Ready, sub2Ready, sub3Ready, ">>>>>>>>>>>>>");
-    if (sub1Ready && sub2Ready && sub3Ready) {
-        isLoading = false;
-    }
 
     let classPricingData = ClassPricing.find().fetch();
     let CP = classPricingData.map((obj) => {
