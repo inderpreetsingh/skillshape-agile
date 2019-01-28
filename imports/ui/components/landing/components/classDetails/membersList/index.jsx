@@ -168,12 +168,13 @@ class MembersListContainer extends Component {
   )
   handleClassUpdate = (filter, status, popUp, packageConnected) => {
     Meteor.call('classPricing.signInHandler', filter, (err, res) => {
+			console.log('​MembersListContainer -> handleClassUpdate -> res', res)
       let purchased = get(res, 'purchased', []);
       let epStatus = get(res, "epStatus", false);
       let pos = -1;
       if (status == 'signOut') {
-        let { students } = filter, purchaseId, purchaseData;
-        if (!isEmpty(students) && !isEmpty(purchased)) {
+        let { students } = filter, purchaseId, purchaseData = {};
+        if (!isEmpty(students) ) {
           students.map((obj) => {
             if (obj.userId == filter.userId ? filter.userId : Meteor.userId()) {
               purchaseId = obj.purchaseId;
@@ -395,10 +396,13 @@ class MembersListContainer extends Component {
     }
     else {
       if (status == 'signIn' || status == 'checkIn') {
-        inc = 1;
+        if(status == 'checkIn'){
+          inc = 1;
+        }
         status = 'signOut';
       }
     }
+    console.log(inc,status,n)
     if (status == 'checkIn' && moment(scheduled_date).format('DD-MM-YYYY') > moment().format('DD-MM-YYYY')) {
       let data = {};
       data = {
@@ -411,6 +415,7 @@ class MembersListContainer extends Component {
       confirmationDialog(data);
       return;
     }
+    console.log('​MembersListContainer -> updateStatus -> purchaseId', purchaseId)
     if (!purchaseId) {
       this.handleSignIn(null, props._id, status, packageConnected);
       return;
@@ -578,7 +583,6 @@ class MembersListContainer extends Component {
             this.updateStatus(2, props)
           else
             this.successPopUp(popUp, 'prototype', title)
-
         })
       } else {
         this.props.toggleIsBusy();
