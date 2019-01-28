@@ -172,7 +172,7 @@ class MyTransaction extends React.Component {
       const { filter } = state;
       if (filterValue && typeof filterValue === 'number') filterValue = 0;
       if (filterValue && filterName || typeof filterValue == 'string') {
-        filter[filterName] = !reg ? filterValue : new RegExp(`^${filterValue}`, 'i');;
+        filter[filterName] = !reg ? filterValue : new RegExp(`.*${filterValue}.*`, 'i');;
       } else {
         delete filter[filterName];
       }
