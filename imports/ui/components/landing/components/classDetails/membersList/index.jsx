@@ -90,6 +90,7 @@ class MembersListContainer extends Component {
   componentWillReceiveProps(nextProps, prevProps) {
     this.studentsData();
   }
+  
   updateClass = (filter, status, purchaseData, popUp, packageConnected) => {
     let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};
     let condition = 0, inc = 0;
@@ -452,6 +453,9 @@ class MembersListContainer extends Component {
   closeClassTypePackages = () => {
     this.setState({ classTypePackages: false });
   }
+  setPackagesRequired = () => {
+    this.setState({packagesRequired:'perClassAndMonthly'});
+  }
   sendLinkConfirmation = (props, packageId = null, packageType = null) => {
     let { popUp } = props;
     popUp.appear("inform", {
@@ -638,6 +642,7 @@ class MembersListContainer extends Component {
           fromSignFunctionality
           closeClassTypePackages={this.closeClassTypePackages}
           schoolData = {schoolData}
+          setPackagesRequired = {this.setPackagesRequired}
         />}
         <ListWrapper>
           <MembersList
