@@ -3,7 +3,6 @@ import { Meteor } from "meteor/meteor";
 import { createContainer } from "meteor/react-meteor-data";
 import React from "react";
 import ContactUsFloatingButton from "/imports/ui/components/landing/components/buttons/ContactUsFloatingButton.jsx";
-import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import { withPopUp } from "/imports/util";
 
@@ -64,11 +63,6 @@ class MainLayout extends React.Component {
     }
   }
 
-  isEmbedLink = () => {
-    const { location } = this.props;
-    console.info(location, "...........");
-    return location.pathname.indexOf("embed") !== -1;
-  };
 
   acceptMemberInvitation = invitationObj => {
     const { popUp } = this.props;
@@ -138,17 +132,10 @@ class MainLayout extends React.Component {
   showTermsOfServiceDialogBox = () => {};
 
   render() {
-    const visitorTypeValue = localStorage.getItem("visitorType");
 
     const { currentUser, isUserSubsReady, classes } = this.props;
     return (
       <div>
-        {isUserSubsReady &&
-          !visitorTypeValue &&
-          !this.isEmbedLink() &&
-          !currentUser && (
-            <FirstTimeVisitDialogBox isUserSubsReady={isUserSubsReady} />
-          )}
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
           previousLocationPathName: this.state.previousLocationPathName,

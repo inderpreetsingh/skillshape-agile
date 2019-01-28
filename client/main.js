@@ -38,12 +38,21 @@ class App extends Component {
     localStorage.setItem("mySchoolSlug", null);
     localStorage.setItem("multipleSchools", true);
   };
-
+  isEmbedLink = () => {
+    const { location } = this.props;
+    return location.pathname.indexOf("embed") !== -1;
+  };
   render() {
+    const visitorTypeValue = localStorage.getItem("visitorType");
+    const { currentUser} = this.props;
     return (
       <MuiThemeProvider theme={muiTheme}>
         <div>
         <ErrorBoundary>
+        { !visitorTypeValue &&
+          !currentUser && (
+            <FirstTimeVisitDialogBox isUserSubsReady={true} />
+          )}
           <Routes />
 				</ErrorBoundary>
         </div>
