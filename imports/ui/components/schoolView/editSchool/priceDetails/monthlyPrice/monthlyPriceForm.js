@@ -332,7 +332,7 @@ class MonthlyPriceForm extends React.Component {
                     padding: 10,
                     backgroundColor: "dimgrey"
                   }}
-                >}
+                >
                   {this.state.tabValue === 0 && (
                     <Grid container>
                       <Grid item xs={12} sm={6}>
