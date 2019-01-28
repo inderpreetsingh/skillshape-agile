@@ -164,16 +164,15 @@ class MyTransaction extends React.Component {
 
   handleFilter = (event, filterName, stateName) => {
     let filterValue = filterValueOriginal = get(event.target, 'value', null);
+    let reg = false;
     if (filterName == 'packageName') {
-      filterValue = filterValueOriginal = filterValue ? filterValue : '';
+      reg = true;
     }
-
-    // debugger;
     this.setState(state => {
       const { filter } = state;
       if (filterValue && typeof filterValue === 'number') filterValue = 0;
       if (filterValue && filterName || typeof filterValue == 'string') {
-        filter[filterName] = filterValue ? filterValue : new RegExp(`^${filterValue}`, 'i');;
+        filter[filterName] = !reg ? filterValue : new RegExp(`^${filterValue}`, 'i');;
       } else {
         delete filter[filterName];
       }
