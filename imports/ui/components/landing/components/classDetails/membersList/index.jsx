@@ -12,6 +12,7 @@ import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/
 import { danger } from "/imports/ui/components/landing/components/jss/helpers.js";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { capitalizeString, confirmationDialog } from '/imports/util';
+import moment from 'moment';
 const Div = styled.div`
     display: flex;
     width: 100%;
@@ -397,7 +398,7 @@ class MembersListContainer extends Component {
         status = 'signOut';
       }
     }
-    if (status == 'checkIn' && scheduled_date >= new Date()) {
+    if (status == 'checkIn' && moment(scheduled_date).format('DD-MM-YYYY') > moment().format('DD-MM-YYYY')) {
       let data = {};
       data = {
         popUp,
