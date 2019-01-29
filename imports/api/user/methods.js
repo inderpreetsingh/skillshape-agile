@@ -186,12 +186,18 @@ Meteor.methods({
         }
         return Meteor.users.find({ _id: { $in: userIds }} , { fields: { "emails": 1 } }).fetch();
     },
-    'user.getUsersFromIds':function(ids,classTypeId){
+    'user.getUsersFromIds':function(ids,classTypeId,schoolId = null){
         let usersData = Meteor.users.find({_id:{$in:ids}}).fetch();
         usersData.map((obj,index)=>{
             let {_id:userId} = obj;
             let filter = {userId,classTypeId}
             obj.alreadyPurchasedData = Meteor.call('classPricing.signInHandler', filter);
+            if(schoolId){
+            let result = Meteor.call("schoolMemberDetails.getNotes",{activeUserId:userId,schoolId});  
+            let {notes,smdId} = result;
+            obj.notes = notes;
+            obj.smdId = smdId;
+        }
         })
         return usersData
        }

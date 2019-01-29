@@ -197,7 +197,9 @@ const getStatusInfo = status => {
     return 'Check In';
   }
 };
-
+handleNoteChange = (doc_id,notes) =>{
+  Meteor.call("schoolMemberDetails.editSchoolMemberDetails",{doc_id,doc:{adminNotes:notes}});
+}
 PaymentAndStatus = (props) => {
   let { alreadyPurchasedData: { epStatus, purchased, purchasedEP } } = props;
   let packageRequired = 'enrollment';
@@ -309,7 +311,7 @@ const MemberExpanded = props => {
         </ShowOnSmallScreen>
 
         <StudentNotes>
-          <StudentNotesContent>{props.studentNotes}</StudentNotesContent>
+          <StudentNotesContent onChange={(e)=>{handleNoteChange(props.smdId,e.target.value)}}>{props.notes}</StudentNotesContent>
         </StudentNotes>
       </InnerWrapper>
 

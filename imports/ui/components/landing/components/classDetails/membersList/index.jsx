@@ -45,7 +45,7 @@ class MembersListContainer extends Component {
   studentsData = () => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData } = this.props;
+    const { classData,schoolId } = this.props;
     let { classTypeId } = classData && classData[0] || {};
     let filter = {classTypeId,userId:Meteor.userId()};
     Meteor.call("classPricing.signInHandler",filter,(err,res)=>{
@@ -68,7 +68,7 @@ class MembersListContainer extends Component {
         purchaseIds.push(obj.purchaseId);
       })
       if (!isEmpty(studentsIds)) {
-        Meteor.call('user.getUsersFromIds', studentsIds, classTypeId, (err, res) => {
+        Meteor.call('user.getUsersFromIds', studentsIds, classTypeId,schoolId, (err, res) => {
           if (res) {
             this.setState({ studentsData: res });
           }

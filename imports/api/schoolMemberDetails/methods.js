@@ -167,5 +167,9 @@ Meteor.methods({
     } else {
       return SchoolMemberDetails.insert(memberData);
     }
+  },
+  "schoolMemberDetails.getNotes":function(filter){
+    let result  = SchoolMemberDetails.findOne(filter);
+     return {notes:get(result,'adminNotes',''),smdId:result._id};
   }
 });
