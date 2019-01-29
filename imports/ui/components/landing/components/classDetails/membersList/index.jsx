@@ -103,15 +103,16 @@ class MembersListContainer extends Component {
       inc = -1;
     }
     /*  */
+    this.setState({ isLoading: true });
     Meteor.call('purchase.manageAttendance', _id, packageType, inc, (err, res) => {
       if (condition <= 0) {
         condition = res;
       }
       if (condition > 0 || res == undefined) {
-        this.setState({ isLoading: true });
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
+          let state = {isLoading:false}
           if (res) {
-            this.setState({ status: 'Sign In', isLoading: false });
+            state.status = 'Sign In';
             popUp.appear("success", {
               title: packageConnected ? 'Package Connected Successfully.' : `Sign in successfully`,
               content: packageConnected ? 'This Package is connected to this class successfully.' : `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
@@ -119,7 +120,7 @@ class MembersListContainer extends Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    !packageConnected && this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' }) : this.setState({buyPackagesBoxState:false})
                   }}
                   applyClose
                 />
@@ -139,7 +140,7 @@ class MembersListContainer extends Component {
           </ButtonWrapper>)
         }, true);
       }
-
+      this.setState({...state})
     });
 
 
@@ -168,7 +169,6 @@ class MembersListContainer extends Component {
   )
   handleClassUpdate = (filter, status, popUp, packageConnected) => {
     Meteor.call('classPricing.signInHandler', filter, (err, res) => {
-			console.log('​MembersListContainer -> handleClassUpdate -> res', res)
       let purchased = get(res, 'purchased', []);
       let epStatus = get(res, "epStatus", false);
       let pos = -1;
@@ -402,7 +402,6 @@ class MembersListContainer extends Component {
         status = 'signOut';
       }
     }
-    console.log(inc,status,n)
     if (status == 'checkIn' && moment(scheduled_date).format('DD-MM-YYYY') > moment().format('DD-MM-YYYY')) {
       let data = {};
       data = {
@@ -415,7 +414,6 @@ class MembersListContainer extends Component {
       confirmationDialog(data);
       return;
     }
-    console.log('​MembersListContainer -> updateStatus -> purchaseId', purchaseId)
     if (!purchaseId) {
       this.handleSignIn(null, props._id, status, packageConnected);
       return;
@@ -446,12 +444,13 @@ class MembersListContainer extends Component {
       }
     })
   }
-  handleDialogBoxState = (dialogState, currentProps) => {
+  handleDialogBoxState = (dialogState, currentProps,packagesRequired) => {
     this.setState(state => {
       return {
         ...state,
         buyPackagesBoxState: dialogState,
-        currentProps
+        currentProps:currentProps ?currentProps : state.currentProps,
+        packagesRequired
       };
     });
   };
@@ -499,7 +498,7 @@ class MembersListContainer extends Component {
     }
 
   }
-  successPopUp = (popUp, userName, title, props) => {
+  successPopUp = (popUp, userName, title) => {
     popUp.appear(
       'success',
       {
@@ -510,7 +509,9 @@ class MembersListContainer extends Component {
             <FormGhostButton
               label={'Ok'}
               applyClose
-              onClick={() => { this.handleDialogBoxState(false) }}
+              onClick={() => { 
+                this.setPackagesRequired()
+              }}
             />
           </ButtonWrapper>
         )
@@ -551,11 +552,12 @@ class MembersListContainer extends Component {
     let { popUp } = props;
     popUp.appear("inform", {
       title: "Confirmation",
-      content: "Do you really want to confirm the payment.",
+      content: "Do you really want to confirm the payment ?",
       onAffirmationButtonClick: () => { this.acceptPayment(packageData, props, paymentMethod) },
       defaultButtons: true,
     }, true)
   }
+ 
   acceptPayment = (packageData, props, paymentMethod) => {
     this.props.toggleIsBusy();
     let userId, packageId, packageType, schoolId, data, noClasses, packageName, planId = null;
@@ -577,12 +579,11 @@ class MembersListContainer extends Component {
       if (epStatus || packageType == 'EP') {
         Meteor.call('stripe.handleOtherPaymentMethods', data, (err, res) => {
           this.props.toggleIsBusy();
-          props.onAcceptPaymentClick(false);
           let title = 'Package Purchased Successfully';
           if (packageType != 'EP')
             this.updateStatus(2, props)
           else
-            this.successPopUp(popUp, 'prototype', title)
+            this.successPopUp(popUp,null,title);
         })
       } else {
         this.props.toggleIsBusy();
@@ -612,6 +613,7 @@ class MembersListContainer extends Component {
             onSendLinkClick={this.sendLinkConfirmation}
             currentProps={currentProps}
             acceptPayment={this.acceptPaymentConfirmation}
+            packagesRequired={packagesRequired}
           />
         )}
         {addInstructorDialogBoxState && (

@@ -200,6 +200,10 @@ const getStatusInfo = status => {
 
 PaymentAndStatus = (props) => {
   let { alreadyPurchasedData: { epStatus, purchased, purchasedEP } } = props;
+  let packageRequired = 'enrollment';
+  if(epStatus && isEmpty(purchased)){
+    packageRequired = 'perClassAndMonthly';
+  }
   if (props.purchaseData) {
     let { endDate, packageType, noClasses } = props.purchaseData;
     let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses > 1 ? 'Classes' : 'Class'} Remaining`
@@ -235,7 +239,7 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={() => { props.onAcceptPaymentClick(true, props) }}
+        onClick={() => { props.onAcceptPaymentClick(true, props,packageRequired) }}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
