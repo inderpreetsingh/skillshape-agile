@@ -4,17 +4,14 @@ import styled from "styled-components";
 
 import ClearIcon from "material-ui-icons/Clear";
 import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
-import Grid from "material-ui/Grid";
 import IconButton from "material-ui/IconButton";
 import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import TextField from "material-ui/TextField";
-import Typography from "material-ui/Typography";
+
 
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
 import Select from "react-select";
 import { isEmpty, flatten, get, uniq } from "lodash";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -240,10 +237,10 @@ class AddInstructorDialogBox extends Component {
     }
     popUp.appear("inform", {
       title: "Confirmation",
-      content: `Do you really want to add  these users as an ${this.props.text}.`,
+      content: `Add these ${this.props.text} to your School?`,
       RenderActions: (
         <ActionButtons>
-          <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose />
+          <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose greyColor/>
           <FormGhostButton label={'Yes'} onClick={() => { this.props.text == "Student" ? this.handleAddStudent(popUp, payLoad) : !payLoad.classTimeForm ? this.handleClassesAndClassTime(popUp, payLoad) : this.handleInstructors(popUp, payLoad) }} applyClose />
         </ActionButtons>
       )
