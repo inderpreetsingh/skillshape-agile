@@ -201,8 +201,8 @@ class AddInstructorDialogBox extends Component {
       this.setState({ isLoading: false });
       if (res == 'added') {
         popUp.appear("success", {
-          title: "Added Successfully",
-          content: <div>Successfully added as an {this.props.text}.</div>,
+          title: `${this.props.text} Added Successfully`,
+          content: '',
           RenderActions: (<ActionButtons>
             <FormGhostButton label={'Ok'} onClick={() => { this.props.instructorsIdsSetter ? this.props.instructorsIdsSetter(payLoad.instructors, 'add') : this.props.onModalClose() }} applyClose />
           </ActionButtons>
@@ -237,7 +237,7 @@ class AddInstructorDialogBox extends Component {
     }
     popUp.appear("inform", {
       title: "Confirmation",
-      content: `Add these ${this.props.text} to your School?`,
+      content: `Add to your School?`,
       RenderActions: (
         <ActionButtons>
           <FormGhostButton label={'Cancel'} onClick={() => { }} applyClose greyColor/>

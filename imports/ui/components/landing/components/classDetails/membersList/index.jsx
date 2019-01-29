@@ -115,8 +115,8 @@ class MembersListContainer extends Component {
           if (res) {
             state.status = 'Sign In';
             popUp.appear("success", {
-              title: packageConnected ? 'Package Connected Successfully.' : `Sign in successfully`,
-              content: packageConnected ? 'This Package is connected to this class successfully.' : `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
+              title: packageConnected ? 'Package successfully purchased.' : `Sign in successfully`,
+              content: packageConnected ? 'Your student can now attend class!' : `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
               RenderActions: (<ButtonWrapper>
                 <FormGhostButton
                   label={'Ok'}
