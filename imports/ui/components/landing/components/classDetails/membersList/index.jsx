@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment,lazy,Suspense } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-import MembersList from "./presentational/MembersList.jsx";
+const MembersList = lazy(()=>import("./presentational/MembersList.jsx"));
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import { isEmpty, get, isEqual } from 'lodash';
@@ -13,6 +13,7 @@ import { danger } from "/imports/ui/components/landing/components/jss/helpers.js
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import moment from 'moment';
+import MDSpinner from "react-md-spinner";
 const Div = styled.div`
     display: flex;
     width: 100%;
@@ -651,6 +652,7 @@ class MembersListContainer extends Component {
           setPackagesRequired = {this.setPackagesRequired}
         />}
         <ListWrapper>
+        <Suspense fallback={<center><MDSpinner size={50}/></center>}>
           <MembersList
             viewType={currentView}
             onSearchChange={this.handleSearchChange("teachersFilterWith")}
@@ -663,9 +665,10 @@ class MembersListContainer extends Component {
             instructorsIds={instructorsIds}
             addInstructor
           />
+           </Suspense>
         </ListWrapper>
-
         <ListWrapper>
+    <Suspense fallback={<center><MDSpinner size={50}/></center>}>
           <MembersList
             viewType={currentView}
             searchedValue={this.state.studentsFilterWith}
@@ -690,8 +693,9 @@ class MembersListContainer extends Component {
             currentProps={currentProps}
             updateStatus={this.updateStatus}
           />
+           </Suspense>
         </ListWrapper>
-      </Fragment>
+        </Fragment>
     );
   }
 }
