@@ -294,7 +294,7 @@ class MemberExpanded extends Component {
     const slug = get(props, "params.slug", null);
     let classTypeId = get(props.classData[0], 'classTypeId', null);
     let buyPackagesBoxState = props.buyPackagesBoxState;
-    console.count('memberExpand');
+    console.count('memberExpand 160');
     return (
       <Wrapper key={name}>
         <InnerWrapper>

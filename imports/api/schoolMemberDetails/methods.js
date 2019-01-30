@@ -49,7 +49,6 @@ Meteor.methods({
   "schoolMemberDetails.editSchoolMemberDetails": function({ doc_id, doc }) {
     check(doc,Object);
     check(doc_id,String);
-
     const user = Meteor.users.findOne(this.userId);
     const memberData = SchoolMemberDetails.findOne({ _id: doc_id });
     // We are editing a school member without email here so need to check if entered email already exist OR not.

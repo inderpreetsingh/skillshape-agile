@@ -13,7 +13,6 @@ import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 
 import { withImageExists } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container";
 import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 
@@ -76,8 +75,6 @@ const ClassDetails = props => {
     popUp,
     instructorsIds,
     bgImg,
-    toggleIsBusy,
-    isBusy,
     currentClassTypeData
   } = props;
   const { state } = props.location.state || {};
@@ -95,7 +92,7 @@ const ClassDetails = props => {
       })}
       <PageContent>
         <TopSearchBar {...props.topSearchBarProps} />
-        {isBusy && <ContainerLoader />}
+        
         <InnerWrapper>
           <ClassTimeWrapper bgImg={bgImg}>
             <ClassTimeCover
@@ -130,7 +127,6 @@ const ClassDetails = props => {
             popUp={popUp}
             instructorsIds={instructorsIds}
             params={dataProps.params}
-            toggleIsBusy={toggleIsBusy}
             schoolData={school}
           />
         </InnerWrapper>

@@ -9,11 +9,12 @@ import Classes from "/imports/api/classes/fields";
 import ClassTime from '/imports/api/classTimes/fields.js';
 import ClassType from '/imports/api/classType/fields';
 import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import { ContainerLoader } from "/imports/ui/loading/container";
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
-    this.state={isBusy:false}
+    this.state={}
   }
 
   getBgImage() {
@@ -25,13 +26,17 @@ class ClassDetailsContainer extends Component {
     const { state: { school } } = this.props.location.state;
     return get(school, 'logoImg', get(school, "logoImgMedium", ""));
   }
-  toggleIsBusy = ()=>{
-    this.setState({isBusy:!this.state.isBusy});
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.isBusy != this.props.isBusy;
   }
   render() {
-    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds ,currentClassTypeData} = this.props;
+    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds ,currentClassTypeData,isBusy} = this.props;
+    // console.count('class Details Container 2')
+    if(isBusy){
+      return <ContainerLoader/>
+    }
     return (
-      <Suspense fallback={<Preloader />}>
+      <Suspense fallback={<ContainerLoader/>}>
       <ClassDetails
       currentClassTypeData = {currentClassTypeData}
         topSearchBarProps={{
@@ -52,8 +57,6 @@ class ClassDetailsContainer extends Component {
         instructorsData={instructorsData}
         popUp={popUp}
         instructorsIds={instructorsIds}
-        toggleIsBusy={this.toggleIsBusy}
-        isBusy={this.state.isBusy}
       />
       </Suspense>
     );
@@ -69,15 +72,14 @@ export default createContainer((props) => {
   classTimeId = state.eventData.classTimeId;
   classTypeId = state.eventData.classTypeId;
   filter = { _id: state.classDetails._id };
-  let currentClassTypeData = {};
+  let currentClassTypeData = {},classTypeSub;
+  let isBusy = true;
   classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
   if(classTypeId){
-    let classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeIds:[classTypeId]});
-    if(classTypeSub && classTypeSub.ready()){
-      currentClassTypeData = ClassType.findOne({});
-    }
+    classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeIds:[classTypeId]});
   }
-  if (classesSubscription && classesSubscription.ready()) {
+  if (classesSubscription && classesSubscription.ready() && classTypeSub && classTypeSub.ready()) {
+   currentClassTypeData = ClassType.findOne({});
    classDetails = Classes.find().fetch();
     instructorsIds = get(classDetails[0], 'instructors', []);
     if (isEmpty(instructorsIds)) {
@@ -87,6 +89,7 @@ export default createContainer((props) => {
         instructorsIds = get(ClassTimeData[0], 'instructors', []);
         userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
         if (userSubscription && userSubscription.ready()) {
+          isBusy = false;
           instructorsData = Meteor.users.find().fetch();
           if (!includes(instructorsIds, Meteor.userId())) {
             instructorsData = remove(instructorsData, (ele) => {
@@ -100,6 +103,7 @@ export default createContainer((props) => {
     else if (!isEmpty(instructorsIds)) {
       userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
       if (userSubscription && userSubscription.ready()) {
+        isBusy = false;
         instructorsData = Meteor.users.find().fetch();
         if (!includes(instructorsIds, Meteor.userId())) {
           instructorsData = remove(instructorsData, (ele) => {
@@ -111,6 +115,7 @@ export default createContainer((props) => {
 
   }
   return {
+    isBusy,
     classDetails,
     instructorsData,
     instructorsIds,

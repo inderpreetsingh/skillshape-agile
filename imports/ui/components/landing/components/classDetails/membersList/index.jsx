@@ -12,6 +12,7 @@ import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/
 import { danger } from "/imports/ui/components/landing/components/jss/helpers.js";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { capitalizeString, confirmationDialog } from '/imports/util';
+import { ContainerLoader } from "/imports/ui/loading/container";
 import moment from 'moment';
 const Div = styled.div`
     display: flex;
@@ -477,7 +478,7 @@ class MembersListContainer extends Component {
     try {
       let userId, classesId, valid, data = {}, schoolName, className, schoolId;
       let { popUp } = props;
-      this.props.toggleIsBusy();
+      this.toggleIsBusy();
       userId = props._id;
       classesId = props.classData[0]._id;
       valid = true;
@@ -488,7 +489,7 @@ class MembersListContainer extends Component {
       schoolId = props.schoolId;
       data = { userId, packageId, classesId, valid, userEmail, userName, schoolName, className, schoolId, packageType }
       Meteor.call("packageRequest.addRecord", data, (err, res) => {
-        this.props.toggleIsBusy();
+        this.toggleIsBusy();
         if (res && res.status) {
           this.successPopUp(popUp, userName, null, props)
         }
@@ -563,7 +564,7 @@ class MembersListContainer extends Component {
   }
  
   acceptPayment = (packageData, props, paymentMethod) => {
-    this.props.toggleIsBusy();
+    this.toggleIsBusy();
     let userId, packageId, packageType, schoolId, data, noClasses, packageName, planId = null;
     let { popUp, classData } = props;
     userId = props._id;
@@ -582,7 +583,7 @@ class MembersListContainer extends Component {
       let epStatus = get(res, "epStatus", false);
       if (epStatus || packageType == 'EP') {
         Meteor.call('stripe.handleOtherPaymentMethods', data, (err, res) => {
-          this.props.toggleIsBusy();
+          this.toggleIsBusy();
           let title = 'Package Purchased Successfully';
           if (packageType != 'EP')
             this.updateStatus(2, props)
@@ -590,15 +591,28 @@ class MembersListContainer extends Component {
             this.successPopUp(popUp,null,title);
         })
       } else {
-        this.props.toggleIsBusy();
+        this.toggleIsBusy();
         this.purchaseEnrollmentFirst(popUp);
       }
     })
   }
   handleNoteChange = (doc_id) =>{
-    this.props.toggleIsBusy();
+    this.toggleIsBusy();
+    if(!doc_id){
+      const {popUp} = this.props;
+      let data = {};
+        data = {
+          popUp,
+          title: 'Error',
+          type: 'error',
+          content: 'Old Data Please use new data.',
+          buttons: [{ label: 'Ok', onClick: () => { } }]
+        }
+        confirmationDialog(data);
+        return;
+    }
     Meteor.call("schoolMemberDetails.editSchoolMemberDetails",{doc_id,doc:{adminNotes:this.state.notes}},(err,res)=>{
-      this.props.toggleIsBusy();
+      this.toggleIsBusy();
       const {popUp} = this.props;
         let data = {};
           data = {
@@ -614,9 +628,12 @@ class MembersListContainer extends Component {
   setNotes = (notes) =>{
     this.setState({notes});
   }
+  toggleIsBusy = ()=>{
+    this.setState({isBusy:!this.state.isBusy});
+  }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy,schoolData } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification } = this.state;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName,schoolData } = this.props;
+    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification ,isBusy} = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
@@ -625,9 +642,10 @@ class MembersListContainer extends Component {
     !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
       classTypeId = get(classData[0], "classTypeId", null);
     })
-  
+    
     return (
       <Fragment>
+        {isBusy && <ContainerLoader />}
         {buyPackagesBoxState && (
           <BuyPackagesDialogBox
             classTypeId={classTypeId}
@@ -707,7 +725,7 @@ class MembersListContainer extends Component {
             onJoinClassClick={this.handleSignIn}
             schoolName={schoolName}
             classTypeName={classTypeName}
-            toggleIsBusy={toggleIsBusy}
+            toggleIsBusy={this.toggleIsBusy}
             schoolId={schoolId}
             onAcceptPaymentClick={this.handleDialogBoxState}
             buyPackagesBoxState={buyPackagesBoxState}
