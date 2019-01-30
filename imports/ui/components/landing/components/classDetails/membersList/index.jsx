@@ -1,8 +1,8 @@
-import React, { Component, Fragment,lazy,Suspense } from "react";
+import React, { Component, Fragment, lazy, Suspense } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-const MembersList = lazy(()=>import("./presentational/MembersList.jsx"));
+const MembersList = lazy(() => import("./presentational/MembersList.jsx"));
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import { isEmpty, get, isEqual } from 'lodash';
@@ -21,7 +21,7 @@ const Div = styled.div`
 `;
 
 const ListWrapper = styled.div`  
-  padding: 0 ${ rhythmDiv * 2} px;
+  padding: 0 ${rhythmDiv * 2}px;
   margin-bottom: ${ props => props.marginBottom || rhythmDiv * 7}px;
 `;
 
@@ -33,8 +33,8 @@ class MembersListContainer extends Component {
       teachersFilterWith: "",
       studentsFilterWith: "",
       addInstructorDialogBoxState: false,
-      notification:true,
-      packagesRequired:'enrollment'
+      notification: true,
+      packagesRequired: 'enrollment'
     };
   }
 
@@ -45,20 +45,20 @@ class MembersListContainer extends Component {
   studentsData = () => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData,schoolId } = this.props;
+    const { classData, schoolId } = this.props;
     let { classTypeId } = classData && classData[0] || {};
-    let filter = {classTypeId,userId:Meteor.userId()};
-    Meteor.call("classPricing.signInHandler",filter,(err,res)=>{
-      if(!isEmpty(res)){
-        let {epStatus,purchased} = res;
-        if(epStatus && !isEmpty(purchased)){
-          this.setState({notification:false});
+    let filter = { classTypeId, userId: Meteor.userId() };
+    Meteor.call("classPricing.signInHandler", filter, (err, res) => {
+      if (!isEmpty(res)) {
+        let { epStatus, purchased } = res;
+        if (epStatus && !isEmpty(purchased)) {
+          this.setState({ notification: false });
         }
-        else if(!epStatus){
-          this.setState({packagesRequired:'enrollment'})
+        else if (!epStatus) {
+          this.setState({ packagesRequired: 'enrollment' })
         }
-        else{
-          this.setState({packagesRequired:'perClassAndMonthly'})
+        else {
+          this.setState({ packagesRequired: 'perClassAndMonthly' })
         }
       }
     })
@@ -68,7 +68,7 @@ class MembersListContainer extends Component {
         purchaseIds.push(obj.purchaseId);
       })
       if (!isEmpty(studentsIds)) {
-        Meteor.call('user.getUsersFromIds', studentsIds, classTypeId,schoolId, (err, res) => {
+        Meteor.call('user.getUsersFromIds', studentsIds, classTypeId, schoolId, (err, res) => {
           if (res) {
             this.setState({ studentsData: res });
           }
@@ -91,7 +91,7 @@ class MembersListContainer extends Component {
   componentWillReceiveProps(nextProps, prevProps) {
     this.studentsData();
   }
-  
+
   updateClass = (filter, status, purchaseData, popUp, packageConnected) => {
     let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};
     let condition = 0, inc = 0;
@@ -111,7 +111,7 @@ class MembersListContainer extends Component {
       }
       if (condition > 0 || res == undefined) {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
-          let state = {isLoading:false}
+          let state = { isLoading: false }
           if (res) {
             state.status = 'Sign In';
             popUp.appear("success", {
@@ -121,7 +121,7 @@ class MembersListContainer extends Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' }) : this.setState({buyPackagesBoxState:false})
+                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' }) : this.setState({ buyPackagesBoxState: false })
                   }}
                   applyClose
                 />
@@ -141,7 +141,7 @@ class MembersListContainer extends Component {
           </ButtonWrapper>)
         }, true);
       }
-      this.setState({...state})
+      this.setState({ ...state })
     });
 
 
@@ -175,7 +175,7 @@ class MembersListContainer extends Component {
       let pos = -1;
       if (status == 'signOut') {
         let { students } = filter, purchaseId, purchaseData = {};
-        if (!isEmpty(students) ) {
+        if (!isEmpty(students)) {
           students.map((obj) => {
             if (obj.userId == filter.userId ? filter.userId : Meteor.userId()) {
               purchaseId = obj.purchaseId;
@@ -248,7 +248,7 @@ class MembersListContainer extends Component {
         popUp.appear("alert", { title: "Alert", content: "Oops user don't have any package. Please use Accept payment button to accept payment and send link or else ask user to purchase one itself." });
         return;
       }
-      else if (status == 'signIn'){
+      else if (status == 'signIn') {
         this.updateClass(filter, status, {}, popUp);
         return;
       }
@@ -397,7 +397,7 @@ class MembersListContainer extends Component {
     }
     else {
       if (status == 'signIn' || status == 'checkIn') {
-        if(status == 'checkIn'){
+        if (status == 'checkIn') {
           inc = 1;
         }
         status = 'signOut';
@@ -445,12 +445,12 @@ class MembersListContainer extends Component {
       }
     })
   }
-  handleDialogBoxState = (dialogState, currentProps,packagesRequired) => {
+  handleDialogBoxState = (dialogState, currentProps, packagesRequired) => {
     this.setState(state => {
       return {
         ...state,
         buyPackagesBoxState: dialogState,
-        currentProps:currentProps ?currentProps : state.currentProps,
+        currentProps: currentProps ? currentProps : state.currentProps,
         packagesRequired
       };
     });
@@ -459,7 +459,7 @@ class MembersListContainer extends Component {
     this.setState({ classTypePackages: false });
   }
   setPackagesRequired = () => {
-    this.setState({packagesRequired:'perClassAndMonthly'});
+    this.setState({ packagesRequired: 'perClassAndMonthly' });
   }
   sendLinkConfirmation = (props, packageId = null, packageType = null) => {
     let { popUp } = props;
@@ -510,7 +510,7 @@ class MembersListContainer extends Component {
             <FormGhostButton
               label={'Ok'}
               applyClose
-              onClick={() => { 
+              onClick={() => {
                 this.setPackagesRequired()
               }}
             />
@@ -558,7 +558,7 @@ class MembersListContainer extends Component {
       defaultButtons: true,
     }, true)
   }
- 
+
   acceptPayment = (packageData, props, paymentMethod) => {
     this.props.toggleIsBusy();
     let userId, packageId, packageType, schoolId, data, noClasses, packageName, planId = null;
@@ -584,7 +584,7 @@ class MembersListContainer extends Component {
           if (packageType != 'EP')
             this.updateStatus(2, props)
           else
-            this.successPopUp(popUp,null,title);
+            this.successPopUp(popUp, null, title);
         })
       } else {
         this.props.toggleIsBusy();
@@ -593,8 +593,8 @@ class MembersListContainer extends Component {
     })
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy,schoolData } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification } = this.state;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy, schoolData } = this.props;
+    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
@@ -603,7 +603,7 @@ class MembersListContainer extends Component {
     !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
       classTypeId = get(classData[0], "classTypeId", null);
     })
-  
+
     return (
       <Fragment>
         {buyPackagesBoxState && (
@@ -631,7 +631,7 @@ class MembersListContainer extends Component {
         {notification &&
           currentView === "studentsView" && (
             <Notification
-              notificationContent={`You need to purchase ${packagesRequired == 'enrollment'? "enrollment " :'monthly/per class '}package first.`}
+              notificationContent={`You need to purchase ${packagesRequired == 'enrollment' ? "enrollment " : 'monthly/per class '}package first.`}
               bgColor={danger}
               buttonLabel="Purchase Package"
               onButtonClick={() => { this.setState({ classTypePackages: true }) }}
@@ -648,54 +648,54 @@ class MembersListContainer extends Component {
           handleSignIn={this.handleSignIn}
           fromSignFunctionality
           closeClassTypePackages={this.closeClassTypePackages}
-          schoolData = {schoolData}
-          setPackagesRequired = {this.setPackagesRequired}
+          schoolData={schoolData}
+          setPackagesRequired={this.setPackagesRequired}
         />}
         <ListWrapper>
-        <Suspense fallback={<center><MDSpinner size={50}/></center>}>
-          <MembersList
-            viewType={currentView}
-            onSearchChange={this.handleSearchChange("teachersFilterWith")}
-            data={instructorsData}
-            entityType={"teachers"}
-            searchedValue={this.state.teachersFilterWith}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            addInstructor
-          />
-           </Suspense>
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <MembersList
+              viewType={currentView}
+              onSearchChange={this.handleSearchChange("teachersFilterWith")}
+              data={instructorsData}
+              entityType={"teachers"}
+              searchedValue={this.state.teachersFilterWith}
+              onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
+              classData={classData}
+              popUp={popUp}
+              instructorsIds={instructorsIds}
+              addInstructor
+            />
+          </Suspense>
         </ListWrapper>
         <ListWrapper>
-    <Suspense fallback={<center><MDSpinner size={50}/></center>}>
-          <MembersList
-            viewType={currentView}
-            searchedValue={this.state.studentsFilterWith}
-            onSearchChange={this.handleSearchChange("studentsFilterWith")}
-            data={this.studentsListMaker(studentsData, classData, purchaseData)}
-            entityType={"students"}
-            searchedValue={this.state.studentsFilterWith}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
-            addStudent
-            onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
-            params={params}
-            onJoinClassClick={this.handleSignIn}
-            schoolName={schoolName}
-            classTypeName={classTypeName}
-            toggleIsBusy={toggleIsBusy}
-            schoolId={schoolId}
-            onAcceptPaymentClick={this.handleDialogBoxState}
-            buyPackagesBoxState={buyPackagesBoxState}
-            currentProps={currentProps}
-            updateStatus={this.updateStatus}
-          />
-           </Suspense>
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <MembersList
+              viewType={currentView}
+              searchedValue={this.state.studentsFilterWith}
+              onSearchChange={this.handleSearchChange("studentsFilterWith")}
+              data={this.studentsListMaker(studentsData, classData, purchaseData)}
+              entityType={"students"}
+              searchedValue={this.state.studentsFilterWith}
+              classData={classData}
+              popUp={popUp}
+              instructorsIds={instructorsIds}
+              onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
+              addStudent
+              onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
+              params={params}
+              onJoinClassClick={this.handleSignIn}
+              schoolName={schoolName}
+              classTypeName={classTypeName}
+              toggleIsBusy={toggleIsBusy}
+              schoolId={schoolId}
+              onAcceptPaymentClick={this.handleDialogBoxState}
+              buyPackagesBoxState={buyPackagesBoxState}
+              currentProps={currentProps}
+              updateStatus={this.updateStatus}
+            />
+          </Suspense>
         </ListWrapper>
-        </Fragment>
+      </Fragment>
     );
   }
 }
