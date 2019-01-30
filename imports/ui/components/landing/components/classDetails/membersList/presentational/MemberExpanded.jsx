@@ -197,13 +197,13 @@ const getStatusInfo = status => {
     return 'Check In';
   }
 };
-handleNoteChange = (doc_id,notes) =>{
-  Meteor.call("schoolMemberDetails.editSchoolMemberDetails",{doc_id,doc:{adminNotes:notes}});
+handleNoteChange = (doc_id, notes) => {
+  Meteor.call("schoolMemberDetails.editSchoolMemberDetails", { doc_id, doc: { adminNotes: notes } });
 }
 PaymentAndStatus = (props) => {
   let { alreadyPurchasedData: { epStatus, purchased, purchasedEP } } = props;
   let packageRequired = 'enrollment';
-  if(epStatus && isEmpty(purchased)){
+  if (epStatus && isEmpty(purchased)) {
     packageRequired = 'perClassAndMonthly';
   }
   if (props.purchaseData) {
@@ -241,7 +241,7 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={() => { props.onAcceptPaymentClick(true, props,packageRequired) }}
+        onClick={() => { props.onAcceptPaymentClick(true, props, packageRequired) }}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
@@ -281,9 +281,12 @@ const MemberExpanded = props => {
   const profile = props.profile;
   const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
   const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
-  const slug = get(props, "params.slug", null);
+  const slug = get(props, "schoolName", null);
   let classTypeId = get(props.classData[0], 'classTypeId', null);
   let buyPackagesBoxState = props.buyPackagesBoxState;
+  console.group('MEMBER EXPANDED')
+  console.info(props, "PROPS");
+  console.groupEnd();
   return (
     <Wrapper key={name}>
 
@@ -311,7 +314,7 @@ const MemberExpanded = props => {
         </ShowOnSmallScreen>
 
         <StudentNotes>
-          <StudentNotesContent onChange={(e)=>{handleNoteChange(props.smdId,e.target.value)}}>{props.notes}</StudentNotesContent>
+          <StudentNotesContent onChange={(e) => { handleNoteChange(props.smdId, e.target.value) }}>{props.notes}</StudentNotesContent>
         </StudentNotes>
       </InnerWrapper>
 
