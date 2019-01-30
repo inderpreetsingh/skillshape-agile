@@ -186,8 +186,10 @@ Meteor.methods({
         }
         return Meteor.users.find({ _id: { $in: userIds }} , { fields: { "emails": 1 } }).fetch();
     },
-    'user.getUsersFromIds':function(ids,classTypeId,schoolId = null){
+    'user.getUsersFromIds':function(data){
+        let {studentsIds:ids, classTypeId,schoolId,classData,purchaseIds} = data;
         let usersData = Meteor.users.find({_id:{$in:ids}}).fetch();
+        let purchaseData =  Meteor.call("purchases.getPackagesFromPurchaseIds",purchaseIds);
         !isEmpty(usersData) && usersData.map((obj,index)=>{
             let {_id:userId} = obj;
             let filter = {userId,classTypeId}
@@ -199,6 +201,27 @@ Meteor.methods({
             obj.smdId = smdId;
         }
         })
-        return usersData
+        let studentsData = studentsListMaker(usersData,classData,purchaseData)
+        return studentsData
        }
 });
+studentsListMaker = (studentsData, classData, purchaseData) => {
+    let studentStatus = classData && classData[0] ? classData[0].students : [];
+    studentsData && studentsData.map((obj, index) => {
+      studentStatus.map((obj1, index2) => {
+        if (obj1.userId == obj._id) {
+          {
+            obj.status = get(obj1, "status", null);
+            obj.purchaseId = get(obj1, "purchaseId", null);
+          }
+          !isEmpty(purchaseData) && purchaseData.map((purchaseRec) => {
+            if (purchaseRec._id == obj1.purchaseId) {
+              obj.purchaseData = purchaseRec;
+            }
+          })
+
+        }
+      })
+    })
+    return studentsData;
+  }

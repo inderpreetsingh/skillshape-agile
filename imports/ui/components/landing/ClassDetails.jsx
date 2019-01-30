@@ -1,5 +1,5 @@
 import React, { Component ,lazy, Suspense,} from "react";
-import { get, isEmpty, includes, remove } from 'lodash';
+import { get, isEmpty, includes, remove,isEqual } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 const   ClassDetails  = lazy(()=>import("/imports/ui/components/landing/components/classDetails/index.jsx"))
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
@@ -26,11 +26,8 @@ class ClassDetailsContainer extends Component {
     const { state: { school } } = this.props.location.state;
     return get(school, 'logoImg', get(school, "logoImgMedium", ""));
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.isBusy != this.props.isBusy;
-  }
   render() {
-    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds ,currentClassTypeData,isBusy} = this.props;
+    const { currentUser, isUserSubsReady, classData, instructorsData, popUp, instructorsIds ,currentClassTypeData,isBusy} = this.props;
     // console.count('class Details Container 2')
     if(isBusy){
       return <ContainerLoader/>
@@ -53,7 +50,7 @@ class ClassDetailsContainer extends Component {
           classModulesData: classModulesData
         }}
         classTimeInformationProps={{ ...classTimeData }}
-        classData={classDetails}
+        classData={classData}
         instructorsData={instructorsData}
         popUp={popUp}
         instructorsIds={instructorsIds}
@@ -66,7 +63,7 @@ class ClassDetailsContainer extends Component {
 export default createContainer((props) => {
   const { state } = props.location.state;
   const dataProps = props.location.state.props;
-  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classDetails, instructorsIds,
+  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classData, instructorsIds,
     instructorsData = [], userSubscription, classTimeSubscription, ClassTimeData;
   schoolId = state.school._id;
   classTimeId = state.eventData.classTimeId;
@@ -80,8 +77,8 @@ export default createContainer((props) => {
   }
   if (classesSubscription && classesSubscription.ready() && classTypeSub && classTypeSub.ready()) {
    currentClassTypeData = ClassType.findOne({});
-   classDetails = Classes.find().fetch();
-    instructorsIds = get(classDetails[0], 'instructors', []);
+   classData = Classes.find().fetch();
+    instructorsIds = get(classData[0], 'instructors', []);
     if (isEmpty(instructorsIds)) {
       classTimeSubscription = Meteor.subscribe('classTimes.getclassTimes', { schoolId, classTypeId });
       if (classTimeSubscription && classTimeSubscription.ready()) {
@@ -116,7 +113,7 @@ export default createContainer((props) => {
   }
   return {
     isBusy,
-    classDetails,
+    classData,
     instructorsData,
     instructorsIds,
     currentClassTypeData,

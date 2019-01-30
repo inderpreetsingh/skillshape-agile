@@ -68,7 +68,8 @@ class MembersListContainer extends Component {
         purchaseIds.push(obj.purchaseId);
       })
       if (!isEmpty(studentsIds)) {
-        Meteor.call('user.getUsersFromIds', studentsIds, classTypeId,schoolId, (err, res) => {
+        let data = {studentsIds, classTypeId,schoolId,classData,purchaseIds};
+        Meteor.call('user.getUsersFromIds',data , (err, res) => {
           if (res) {
             this.setState({ studentsData: res });
           }
@@ -76,12 +77,6 @@ class MembersListContainer extends Component {
       }
       else {
         this.setState({ studentsData: [] });
-      }
-      if (!isEmpty(purchaseIds)) {
-        Meteor.call("purchases.getPackagesFromPurchaseIds", purchaseIds, (err, res) => {
-          if (res)
-            this.setState({ purchaseData: res });
-        });
       }
     }
   }
@@ -346,26 +341,7 @@ class MembersListContainer extends Component {
     });
   }
 
-  studentsListMaker = (studentsData, classData, purchaseData) => {
-    let studentStatus = classData && classData[0] ? classData[0].students : [];
-    studentsData && studentsData.map((obj, index) => {
-      studentStatus.map((obj1, index2) => {
-        if (obj1.userId == obj._id) {
-          {
-            obj.status = get(obj1, "status", null);
-            obj.purchaseId = get(obj1, "purchaseId", null);
-          }
-          !isEmpty(purchaseData) && purchaseData.map((purchaseRec) => {
-            if (purchaseRec._id == obj1.purchaseId) {
-              obj.purchaseData = purchaseRec;
-            }
-          })
-
-        }
-      })
-    })
-    return studentsData;
-  }
+  
   getStatusInfo = status => {
     if (status == 'signIn') {
       return 'Signed In';
@@ -712,7 +688,7 @@ class MembersListContainer extends Component {
             viewType={currentView}
             searchedValue={this.state.studentsFilterWith}
             onSearchChange={this.handleSearchChange("studentsFilterWith")}
-            data={this.studentsListMaker(studentsData, classData, purchaseData)}
+            data={studentsData}
             entityType={"students"}
             searchedValue={this.state.studentsFilterWith}
             classData={classData}
