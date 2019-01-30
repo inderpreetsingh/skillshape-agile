@@ -1,8 +1,8 @@
-import React, { Component, Fragment,lazy,Suspense } from "react";
+import React, { Component, Fragment,} from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-const MembersList = lazy(()=>import("./presentational/MembersList.jsx"));
+import MembersList from "./presentational/MembersList.jsx";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import { isEmpty, get, isEqual } from 'lodash';
@@ -13,7 +13,6 @@ import { danger } from "/imports/ui/components/landing/components/jss/helpers.js
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import moment from 'moment';
-import MDSpinner from "react-md-spinner";
 const Div = styled.div`
     display: flex;
     width: 100%;
@@ -86,6 +85,9 @@ class MembersListContainer extends Component {
     }
   }
   shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.notes && nextState.notes != this.state.notes){
+      return false
+    }
     return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
   }
   componentWillReceiveProps(nextProps, prevProps) {
@@ -109,9 +111,9 @@ class MembersListContainer extends Component {
       if (condition <= 0) {
         condition = res;
       }
+      let state = {isLoading:false}
       if (condition > 0 || res == undefined) {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
-          let state = {isLoading:false}
           if (res) {
             state.status = 'Sign In';
             popUp.appear("success", {
@@ -128,9 +130,11 @@ class MembersListContainer extends Component {
               </ButtonWrapper>)
             }, true);
           }
+          this.setState({...state})
         })
       }
       else {
+        this.setState({...state})
         popUp.appear("alert", {
           title: `Caution`,
           content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
@@ -141,7 +145,6 @@ class MembersListContainer extends Component {
           </ButtonWrapper>)
         }, true);
       }
-      this.setState({...state})
     });
 
 
@@ -592,6 +595,25 @@ class MembersListContainer extends Component {
       }
     })
   }
+  handleNoteChange = (doc_id) =>{
+    this.props.toggleIsBusy();
+    Meteor.call("schoolMemberDetails.editSchoolMemberDetails",{doc_id,doc:{adminNotes:this.state.notes}},(err,res)=>{
+      this.props.toggleIsBusy();
+      const {popUp} = this.props;
+        let data = {};
+          data = {
+            popUp,
+            title: 'Success',
+            type: 'success',
+            content: 'Note saved successfully',
+            buttons: [{ label: 'Ok', onClick: () => { } }]
+          }
+          confirmationDialog(data);
+    });
+  }
+  setNotes = (notes) =>{
+    this.setState({notes});
+  }
   render() {
     const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy,schoolData } = this.props;
     const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification } = this.state;
@@ -652,7 +674,7 @@ class MembersListContainer extends Component {
           setPackagesRequired = {this.setPackagesRequired}
         />}
         <ListWrapper>
-        <Suspense fallback={<center><MDSpinner size={50}/></center>}>
+
           <MembersList
             viewType={currentView}
             onSearchChange={this.handleSearchChange("teachersFilterWith")}
@@ -665,10 +687,9 @@ class MembersListContainer extends Component {
             instructorsIds={instructorsIds}
             addInstructor
           />
-           </Suspense>
         </ListWrapper>
         <ListWrapper>
-    <Suspense fallback={<center><MDSpinner size={50}/></center>}>
+
           <MembersList
             viewType={currentView}
             searchedValue={this.state.studentsFilterWith}
@@ -692,9 +713,11 @@ class MembersListContainer extends Component {
             buyPackagesBoxState={buyPackagesBoxState}
             currentProps={currentProps}
             updateStatus={this.updateStatus}
+            handleNoteChange = {this.handleNoteChange}
+            setNotes= {this.setNotes}
           />
-           </Suspense>
         </ListWrapper>
+         
         </Fragment>
     );
   }
