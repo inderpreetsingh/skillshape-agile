@@ -1,11 +1,11 @@
 import { createContainer } from "meteor/react-meteor-data";
 import React from "react";
+import { isEmpty } from 'lodash';
 import ClassType from "/imports/api/classType/fields";
 import School from "/imports/api/school/fields";
 import config from "/imports/config.js";
 import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
-
-
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 class SchoolClassTypeView extends React.Component {
   constructor(props) {
@@ -60,22 +60,26 @@ class SchoolClassTypeView extends React.Component {
   };
 
   render() {
-    const { schoolId } = this.props;
+    const { schoolId, classTimesData } = this.props;
     return (
       <div className="wrapper">
-        <ClassTypeList
-          containerPaddingTop="0px"
-          locationName={null}
-          mapView={false}
-          filters={{ schoolId: schoolId, limit: this.state.seeMoreCount }}
-          splitByCategory={false}
-          classTypeBySchool="classTypeBySchool"
-          handleSeeMore={this.handleSeeMore}
-          schoolView={true}
-          hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
-          classTimesData={this.props.classTimesData}
-          params = {this.props.params}
-        />
+        {!isEmpty(classTimesData) ?
+          <ClassTypeList
+            containerPaddingTop="0px"
+            locationName={null}
+            mapView={false}
+            filters={{ schoolId: schoolId, limit: this.state.seeMoreCount }}
+            splitByCategory={false}
+            classTypeBySchool="classTypeBySchool"
+            handleSeeMore={this.handleSeeMore}
+            schoolView={true}
+            hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
+            classTimesData={classTimesData}
+            params={this.props.params}
+          />
+          :
+          <Text align="center">This school don't have any class yet.</Text>
+        }
       </div>
     );
   }
