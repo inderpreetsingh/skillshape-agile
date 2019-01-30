@@ -1,7 +1,7 @@
 import React, { Component, Fragment,} from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv ,panelColor} from '/imports/ui/components/landing/components/jss/helpers.js';
 import MembersList from "./presentational/MembersList.jsx";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
@@ -13,6 +13,7 @@ import { danger } from "/imports/ui/components/landing/components/jss/helpers.js
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import { ContainerLoader } from "/imports/ui/loading/container";
+import Pagination from "/imports/ui/componentHelpers/pagination";
 import moment from 'moment';
 const Div = styled.div`
     display: flex;
@@ -24,7 +25,9 @@ const ListWrapper = styled.div`
   padding: 0 ${ rhythmDiv * 2} px;
   margin-bottom: ${ props => props.marginBottom || rhythmDiv * 7}px;
 `;
-
+const PaginationWrapper = styled.div`
+  background: ${panelColor};
+`
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 class MembersListContainer extends Component {
   constructor(props) {
@@ -34,7 +37,11 @@ class MembersListContainer extends Component {
       studentsFilterWith: "",
       addInstructorDialogBoxState: false,
       notification:true,
-      packagesRequired:'enrollment'
+      packagesRequired:'enrollment',
+      limit:40,
+      skip:0,
+      pageCount:0,
+      perPage:40
     };
   }
 
@@ -66,19 +73,25 @@ class MembersListContainer extends Component {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
+        this.setState({pageCount:Math.ceil(studentsIds.length / 5)})
       })
       if (!isEmpty(studentsIds)) {
-        let data = {studentsIds, classTypeId,schoolId,classData,purchaseIds};
+        let {limit,skip} = this.state;
+        let limitAndSkip = {limit,skip}
+        let data = {studentsIds, classTypeId,schoolId,classData,purchaseIds,limitAndSkip};
         Meteor.call('user.getUsersFromIds',data , (err, res) => {
           if (res) {
-            this.setState({ studentsData: res });
+            this.setState({ studentsData: res , isBusy: false});
           }
         })
       }
       else {
-        this.setState({ studentsData: [] });
+        this.setState({ studentsData: [], isBusy: false });
       }
     }
+  }
+  changePageClick = (skip) => {
+    this.setState({ skip: skip.skip, isBusy: true }, () => { this.studentsData(); });
   }
   shouldComponentUpdate(nextProps, nextState) {
     if(this.state.notes && nextState.notes != this.state.notes){
@@ -102,12 +115,12 @@ class MembersListContainer extends Component {
       inc = -1;
     }
     /*  */
-    this.setState({ isLoading: true });
+    this.setState({ isBusy: true });
     Meteor.call('purchase.manageAttendance', _id, packageType, inc, (err, res) => {
       if (condition <= 0) {
         condition = res;
       }
-      let state = {isLoading:false}
+      let state = {isBusy:false}
       if (condition > 0 || res == undefined) {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
           if (res) {
@@ -279,7 +292,7 @@ class MembersListContainer extends Component {
   handleSIgnInAndPurchaseLater = (filter, status, popUp) => {
     Meteor.call("classes.updateClassData", filter, status, null, null, (err, res) => {
       if (res) {
-        this.setState({ status: 'Sign In', isLoading: false });
+        this.setState({ status: 'Sign In', isBusy: false });
         popUp.appear("success", {
           title: `${this.state.status} successfully`,
           content: `You have been successfully ${status == 'signIn' ? 'Sign In' : 'Sign Out'}.`,
@@ -711,7 +724,15 @@ class MembersListContainer extends Component {
             setNotes= {this.setNotes}
           />
         </ListWrapper>
-         
+        <PaginationWrapper>
+            <Pagination
+              style={{
+                marginBottom: 0
+              }}
+              {...this.state}
+              onChange={this.changePageClick}
+            />
+          </PaginationWrapper>
         </Fragment>
     );
   }
