@@ -73,7 +73,7 @@ class MembersListContainer extends Component {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
-        this.setState({pageCount:Math.ceil(studentsIds.length / 5)})
+        this.setState({pageCount:Math.ceil(studentsIds.length / this.state.limit)})
       })
       if (!isEmpty(studentsIds)) {
         let {limit,skip} = this.state;

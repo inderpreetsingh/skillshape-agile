@@ -188,7 +188,6 @@ Meteor.methods({
     },
     'user.getUsersFromIds':function(data){
         let {studentsIds:ids, classTypeId,schoolId,classData,purchaseIds,limitAndSkip} = data;
-		console.log('TCL: limitAndSkip', limitAndSkip)
         let usersData = Meteor.users.find({_id:{$in:ids}},limitAndSkip).fetch();
         let purchaseData =  Meteor.call("purchases.getPackagesFromPurchaseIds",purchaseIds);
         !isEmpty(usersData) && usersData.map((obj,index)=>{
