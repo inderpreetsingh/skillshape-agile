@@ -525,15 +525,15 @@ class Package extends React.Component {
 												props._id,
 												props.schoolId,
 												props.packageName || props.name,
-												props.cost ? props.cost : props.pymtDetails[0].cost,
+												props.cost ? props.cost : props.uiPayment[0].cost,
 												props.pymtDetails,
 												props.expDuration,
 												props.expPeriod || props.duPeriod,
 												props.noClasses,
-												props.pymtDetails && props.pymtDetails[0].planId,
+												props.pymtDetails && props.uiPayment[0].planId,
 												props.currency
 													? props.currency
-													: props.pymtDetails ? props.pymtDetails[0].currency : props.schoolCurrency,
+													: props.pymtDetails ? props.uiPayment[0].currency : props.schoolCurrency,
 												props.pymtType
 											);
 										}}
