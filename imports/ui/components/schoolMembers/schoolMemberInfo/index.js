@@ -470,7 +470,7 @@ class SchoolMemberInfo extends Component {
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'Old Data'))
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
-		let userName = get(memberInfo,'name',get(memberInfo,'firstName',get(memberInfo,'lastName','Old Data')));
+		let userName = get(memberInfo,'name',get(memberInfo,'firstName',get(memberInfo,'lastName',get(memberInfo,'email',"Old Data"))));
 		return (
 			<Grid container>
 				{showConfirmation && (
