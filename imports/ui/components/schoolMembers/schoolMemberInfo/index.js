@@ -65,7 +65,6 @@ const UserProfile = styled.div`
 	display: flex;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
-		flex-wrap: wrap;
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: ${helpers.rhythmDiv * 2}px;
@@ -73,6 +72,10 @@ const UserProfile = styled.div`
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		margin-bottom: 0;
+	}
+
+	@media screen and (max-width: ${helpers.mobile - 50}px) {
+		flex-direction: column;
 	}
 `;
 
@@ -90,7 +93,11 @@ const UIPanelElem = styled.div`
 
 const AvatarContainer = UIPanelElem.extend`
 	text-align: center;
-
+	
+	@media screen and (max-width: ${helpers.tablet}px) {
+		margin-right: ${helpers.rhythmDiv}px;
+	}
+	
 	@media screen and (max-width: ${helpers.mobile - 50}px) {
 		width: 100%;
 	}
