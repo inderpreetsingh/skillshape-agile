@@ -16,17 +16,18 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import { verifyImageURL, withPopUp,confirmationDialog } from '/imports/util';
+import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
-
+const AVATAR_SIZE = 165;
 
 const styles = (theme) => ({
 	avatarCss: {
 		minWidth: '100%',
-		height: '163px',
+		height: '160px',
 		backgroundSize: 'cover',
 		backgroundPosition: 'top center',
-		borderRadius: '27px'
+		borderRadius: '24px'
 	},
 	btnBackGround: {
 		background: `${helpers.action}`
@@ -34,42 +35,110 @@ const styles = (theme) => ({
 	avatarContainer: {
 		width: 100,
 		textAlign: 'center'
+	},
+	adminNotesInput: {
+		background: '#fff',
+		borderRadius: 5,
+		border: `1px solid ${helpers.darkBgColor}`
 	}
 });
 
-const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
-
-const ActionButtonsWrapper = styled.div`
-	left: ${helpers.rhythmDiv * 2}px;
-	bottom: ${helpers.rhythmDiv * 2}px;
-	right: auto;
-	padding: 5px;
-	${helpers.flexCenter} @media screen and (max-width: ${helpers.tablet + 100}px) {
-		justify-content: flex-start;
-		align-items: flex-start;
-		bottom: 0;
-	}
+const UserInfoPanel = styled.div`
+	display: flex;
+	margin: 0 auto ${helpers.rhythmDiv * 2}px auto;
+	padding: ${helpers.rhythmDiv * 2}px;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
-		position: initial;
-		align-items: center;
-		flex-direction: row;
-		flex-wrap: wrap;
+		margin-bottom: 0;
+		max-width: 500px;
+		width: 100%;
+		flex-direction: column;
+		padding: 0;
 	}
+	
+	@media screen and (max-width: ${helpers.mobile + 50}px) {
+		padding: 0 ${helpers.rhythmDiv * 4}px;
+	}
+`;
+
+const UserProfile = styled.div`
+	display: flex;
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+	}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-bottom: 0;
+	}
+`;
+
+const UIPanelElem = styled.div`
+	margin-right: ${helpers.rhythmDiv * 4}px;
+	
+	@media screen and (max-width: ${helpers.tablet}px) {
+		margin-right: 0;
+	}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+	}
+`;
+
+const AvatarContainer = UIPanelElem.extend`
+	text-align: center;
+
+	@media screen and (max-width: ${helpers.mobile - 50}px) {
+		width: 100%;
+	}
+`;
+
+const MemberDetails = UIPanelElem.extend`
+	display: flex;
+	flex-direction: column;
+`;
+
+const AdminNotes = UIPanelElem.extend`
+	margin-right: 0;
+	display: flex;
+	flex-direction: column;
+`;
+
+const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
+
+const ActionButtonsBar = styled.div`
+	${helpers.flexCenter}
+	flex-wrap: wrap;
+	margin: 0 auto;
+	width: 100%;
+	
+	@media screen and (max-width: ${helpers.tablet}px) {
+		max-width: 500px;
+	}
+
+	@media screen and (max-width: ${helpers.mobile + 50}px) {
+		padding: 0 ${helpers.rhythmDiv * 4}px;
+	}
+`;
+
+const ActionButtonsWrapper = styled.div` 
+	display: flex;
+	flex-wrap: wrap;
 `;
 
 const ActionButton = styled.div`
 	margin-right: ${helpers.rhythmDiv}px;
-
-	@media screen and (max-width: ${helpers.tablet + 100}px) {
+	margin-bottom: ${helpers.rhythmDiv}px;
+	
+	:last-of-type {
 		margin-right: 0;
-		margin-bottom: ${helpers.rhythmDiv * 2}px;
-	}
-
-	@media screen and (max-width: ${helpers.tablet}px) {
-		margin-right: ${helpers.rhythmDiv}px;
+		margin-bottom: 0;
 	}
 `;
+
 const ProfilePic = styled.div`
 	transition: background-image 1s linear !important;
 	background-size: cover;
@@ -77,31 +146,44 @@ const ProfilePic = styled.div`
 	background-repeat: no-repeat;
 	background-image: url(${(props) => props.img});
 	height: 150px;
+	width: ${AVATAR_SIZE}px;
 	border-radius: 15px;
-	width: 165px;
 	border: 2px solid black;
 	border-radius: 15px;
+
+	@media screen and (max-width: ${helpers.mobile - 50}px) {
+		width: 100%;
+	}
 `;
 const UploadDiv = styled.div`
-	background: #448aff;
+	// background: #448aff;
+	
 	/* display: block; */
 	/* overflow: hidden; */
-	position: relative;
 	/* bottom: 21px; */
-	margin: 4px auto 0 auto;
 	/* overflow: hidden; */
-	width: 137px;
 	/* background-image: url((unknown)); */
 	/* background-size: cover; */
 	/* background-position: center; */
 	/* height: 250px; */
 	/* width: 250px; */
+	background: ${helpers.primaryColor};
+	position: relative;
+	margin: ${helpers.rhythmDiv}px auto 0 auto;
+	width: ${AVATAR_SIZE}px;
 	border: 1px solid #bbb;
-	/* width: 122px; */
-	/* height: 100pc; */
 	color: #fff;
 	font-family: inherit;
 	font-weight: 400;
+	height: ${helpers.rhythmDiv * 4}px;
+	border-radius: 5px;
+	font-family: ${helpers.specialFont};
+	${helpers.flexCenter}
+
+	@media screen and (max-width: ${helpers.mobile - 50}px) {
+		width: 100%;
+	}
+
 `;
 
 const ActionButtons = (props) => (
@@ -173,28 +255,28 @@ class SchoolMemberInfo extends Component {
 		this.classDataFinder();
 		return state;
 	};
-	purchasePackageDataChecker = (classTimes, classTypeName,_id,schoolId) => {
-		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId',{classTypeId:_id,schoolId},(err,res)=>{
-			const {popUp} = this.props;
-			if(!isEmpty(res)){
-				let data = {},latestExpirationDate = get(res[0],'endDate',new Date());
+	purchasePackageDataChecker = (classTimes, classTypeName, _id, schoolId) => {
+		Meteor.call('enrollment.checkPackagesFromClassTypeAndSchoolId', { classTypeId: _id, schoolId }, (err, res) => {
+			const { popUp } = this.props;
+			if (!isEmpty(res)) {
+				let data = {}, latestExpirationDate = get(res[0], 'endDate', new Date());
 				data = {
 					popUp,
 					title: 'Confirmation',
 					type: 'inform',
 				}
-				if(_id){
-				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove this class from your calendar? If you join again before the expiration, your Packages will still be active.`
-				data.buttons = [{label:'Leave Class',onClick:()=>{this.removeAll(classTimes, classTypeName,_id)},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				if (_id) {
+					data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove this class from your calendar? If you join again before the expiration, your Packages will still be active.`
+					data.buttons = [{ label: 'Leave Class', onClick: () => { this.removeAll(classTimes, classTypeName, _id) }, alert: true }, { label: 'Cancel', onClick: () => { }, greyColor: true }];
 				}
-				else{
-				data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove the school and all classes from your calendar? If you join again before the expiration, your Packages will still be active.`
-				data.buttons = [{label:'Leave School',onClick:()=>{this.leaveSchoolHandler()},alert:true},{label:'Cancel' , onClick:()=>{},greyColor:true}];
+				else {
+					data.content = `You have one or more active subscriptions until ${formatDate(latestExpirationDate)}. Do you want to remove the school and all classes from your calendar? If you join again before the expiration, your Packages will still be active.`
+					data.buttons = [{ label: 'Leave School', onClick: () => { this.leaveSchoolHandler() }, alert: true }, { label: 'Cancel', onClick: () => { }, greyColor: true }];
 				}
 				confirmationDialog(data);
 			}
-			else{
-				_id ? this.removeAll(classTimes, classTypeName,_id) : this.leaveSchoolHandler();
+			else {
+				_id ? this.removeAll(classTimes, classTypeName, _id) : this.leaveSchoolHandler();
 			}
 		})
 	}
@@ -337,12 +419,12 @@ class SchoolMemberInfo extends Component {
 								content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
 								RenderActions: (
 									<ButtonWrapper>
-									<FormGhostButton
-										label={'Ok'}
-										onClick={this.okClick}
-										applyClose
-									/>
-								</ButtonWrapper>
+										<FormGhostButton
+											label={'Ok'}
+											onClick={this.okClick}
+											applyClose
+										/>
+									</ButtonWrapper>
 								)
 							},
 							true
@@ -359,12 +441,12 @@ class SchoolMemberInfo extends Component {
 						content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`,
 						RenderActions: (
 							<ButtonWrapper>
-							<FormGhostButton
-								label={'Ok'}
-								onClick={this.okClick}
-								applyClose
-							/>
-						</ButtonWrapper>
+								<FormGhostButton
+									label={'Ok'}
+									onClick={this.okClick}
+									applyClose
+								/>
+							</ButtonWrapper>
 						)
 					},
 					true
@@ -375,7 +457,7 @@ class SchoolMemberInfo extends Component {
 	leaveSchool = () => {
 		let { popUp, memberInfo } = this.props;
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
-		let schoolId = get(memberInfo,'schoolId',null);
+		let schoolId = get(memberInfo, 'schoolId', null);
 		popUp.appear(
 			'inform',
 			{
@@ -389,7 +471,7 @@ class SchoolMemberInfo extends Component {
 						/>
 						<FormGhostButton
 							label={'Yes'}
-							onClick={()=>{this.purchasePackageDataChecker(null,null,null,schoolId)}}
+							onClick={() => { this.purchasePackageDataChecker(null, null, null, schoolId) }}
 							applyClose
 						/>
 					</ButtonWrapper>
@@ -407,7 +489,7 @@ class SchoolMemberInfo extends Component {
 			})
 		}
 	}
-	okClick = ()=>{
+	okClick = () => {
 		this.classDataFinder();
 	}
 	removeFromCalendar = (data) => {
@@ -429,12 +511,12 @@ class SchoolMemberInfo extends Component {
 							content: `${data.all ? `Successfully removed all classes from ${schoolName}.` : `Successfully removed from ${classTypeName} : ${classTimeName}.`}.`,
 							RenderActions: (
 								<ButtonWrapper>
-								<FormGhostButton
-									label={'Ok'}
-									onClick={this.okClick}
-									applyClose
-								/>
-							</ButtonWrapper>
+									<FormGhostButton
+										label={'Ok'}
+										onClick={this.okClick}
+										applyClose
+									/>
+								</ButtonWrapper>
 							)
 						},
 						true
@@ -470,7 +552,7 @@ class SchoolMemberInfo extends Component {
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'Old Data'))
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
-		let userName = get(memberInfo,'name',get(memberInfo,'firstName',get(memberInfo,'lastName','Old Data')));
+		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', 'Old Data')));
 		return (
 			<Grid container>
 				{showConfirmation && (
@@ -523,24 +605,16 @@ class SchoolMemberInfo extends Component {
 						schoolId={this.props.memberInfo && this.props.memberInfo.schoolId}
 					/>
 				)}
-				<Grid container className="userInfoPanel" style={{ borderTop: 'solid 3px #ddd', display: 'flex' }}>
-					<Grid
-						item
-						sm={8}
-						xs={12}
-						md={8}
-						style={{
-							display: 'flex',
-							justifyContent: 'space-evenly',
-							padding: '24px'
-						}}
-					>
-						<Grid className={classes.avatarContainer} item sm={4} xs={4} md={4} key={memberInfo._id}>
-							<ProgressiveImage src={bgImg} placeholder={config.blurImage}>
+				<UserInfoPanel className="userInfoPanel" >
+					<UserProfile>
+						<AvatarContainer key={memberInfo._id}>
+							<ProgressiveImage
+								src={bgImg}
+								placeholder={config.blurImage}>
 								{(src) => <ProfilePic img={src} />}
 							</ProgressiveImage>
 
-							{view === 'admin' ? (
+							{view === 'admin' && (
 								<UploadDiv
 									onClick={() =>
 										this.setState({
@@ -551,11 +625,9 @@ class SchoolMemberInfo extends Component {
 								>
 									Upload Image <FileUpload />
 								</UploadDiv>
-							) : (
-									''
-								)}
-						</Grid>
-						{
+							)}
+
+
 							<UploadAvatar
 								showUploadAvatarModal={showUploadAvatarModal}
 								onClose={() => {
@@ -567,61 +639,53 @@ class SchoolMemberInfo extends Component {
 								onEdit={this.onEditAvatar}
 								memberInfo={memberInfo}
 							/>
-						}
+						</AvatarContainer>
 
-						<Grid item sm={4} xs={4} md={4}>
-							<Typography>{userName}</Typography>
-								<React.Fragment>
-									<Typography>{memberInfo.phone}</Typography>
-									<Typography>{memberInfo.email}</Typography>
-								</React.Fragment>
-							{userId === Meteor.userId() && (<ActionButtonsWrapper>
-								<ActionButton onClick={() => { }}>
-									<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
-								</ActionButton>
-							</ActionButtonsWrapper>) }
-							{adminView && (<ActionButtonsWrapper>
-							<ActionButton onClick={() => { }}>
-									<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
-								</ActionButton>
-							</ActionButtonsWrapper>)}
-							
-							
-						</Grid>
-					</Grid>
-					{notClassmatePage && (<Grid item sm={3} xs={12} md={3} style={{ padding: '28px' }}>
-						<div className="notes">Admin Notes</div>
+						<MemberDetails>
+							<Text>{userName}</Text>
+							<React.Fragment>
+								{memberInfo.phone && <Text>{memberInfo.phone}</Text>}
+								{memberInfo.email && <Text>{memberInfo.email}</Text>}
+							</React.Fragment>
+							{(userId === Meteor.userId() || adminView) &&
+								<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
+							}
+							{/* &&
+								<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
+							*/}
+						</MemberDetails>
+					</UserProfile>
+
+					{notClassmatePage && <AdminNotes>
+						<Text>Admin Notes</Text>
 						<Input
 							onBlur={this.saveMyNotesInMembers}
 							value={this.state.notes}
 							onChange={(e) => this.setState({ notes: e.target.value })}
-							style={{ border: '1px solid', backgroundColor: '#fff' }}
+							className={classes.adminNotesInput}
 							multiline
 							rows={4}
 							fullWidth
 						/>
-					</Grid>)}
-
-				</Grid>
+					</AdminNotes>}
+				</UserInfoPanel>
 				{view === 'admin' && (
-					<Grid container style={{ backgroundColor: 'darkgray', marginTop: '22px' }}>
-						<Grid item>
-							<ActionButtons
-								memberInfo={this.props.memberInfo}
-								handleCall={this.handleCall}
-								handleEmail={this.handleEmail}
-								onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
-								openEditMemberModal={(event) => {
-									this.setState({ openEditMemberModal: true });
-								}}
-								adminView={adminView}
-								removeButtonClick={() => {
-									this.setState({ showConfirmation: true });
-								}}
-								superAdmin={superAdmin}
-							/>
-						</Grid>
-					</Grid>
+					<ActionButtonsBar>
+						<ActionButtons
+							memberInfo={this.props.memberInfo}
+							handleCall={this.handleCall}
+							handleEmail={this.handleEmail}
+							onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
+							openEditMemberModal={(event) => {
+								this.setState({ openEditMemberModal: true });
+							}}
+							adminView={adminView}
+							removeButtonClick={() => {
+								this.setState({ showConfirmation: true });
+							}}
+							superAdmin={superAdmin}
+						/>
+					</ActionButtonsBar>
 				)}
 				{!isEmpty(subscriptionList) &&
 					(view === 'admin' || userId == Meteor.userId()) &&
