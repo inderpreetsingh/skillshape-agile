@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 import { withStyles } from "material-ui/styles";
 
@@ -197,10 +197,13 @@ const getStatusInfo = status => {
     return 'Check In';
   }
 };
+handleNoteChange = (doc_id, notes) => {
+  Meteor.call("schoolMemberDetails.editSchoolMemberDetails", { doc_id, doc: { adminNotes: notes } });
+}
 PaymentAndStatus = (props) => {
   let { alreadyPurchasedData: { epStatus, purchased, purchasedEP } } = props;
   let packageRequired = 'enrollment';
-  if(epStatus && isEmpty(purchased)){
+  if (epStatus && isEmpty(purchased)) {
     packageRequired = 'perClassAndMonthly';
   }
   if (props.purchaseData) {
@@ -238,7 +241,7 @@ PaymentAndStatus = (props) => {
         danger
         fullWidth
         label="Accept Payment"
-        onClick={() => { props.onAcceptPaymentClick(true, props,packageRequired) }}
+        onClick={() => { props.onAcceptPaymentClick(true, props, packageRequired) }}
       />
     </PaymentDetails>
     <StatusOptions {...props} />
@@ -254,13 +257,13 @@ reverseStatus = (status) => {
 }
 const StatusOptions = props => (
   <StatusDetails>
-     <StatusButton>
+    <StatusButton>
       <SkillShapeButton
         noMarginBottom
         fullWidth
         information
         label={"Save Notes"}
-        onClick={() => { props.handleNoteChange(props.smdId)}}
+        onClick={() => { props.handleNoteChange(props.smdId) }}
       />
     </StatusButton>
     <StatusButton>
@@ -282,16 +285,18 @@ const StatusOptions = props => (
     </StatusButton>
   </StatusDetails>
 );
+
 class MemberExpanded extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(nextProps, this.props);
   }
-  render (){
-    const {props} = this;
+  render() {
+    const { props } = this;
     const profile = props.profile;
     const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
     const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
-    const slug = get(props, "params.slug", null);
+    const slug = get(props, "schoolName", null);
+
     let classTypeId = get(props.classData[0], 'classTypeId', null);
     let buyPackagesBoxState = props.buyPackagesBoxState;
     console.count('memberExpand 160');
@@ -308,23 +313,23 @@ class MemberExpanded extends Component {
                 </Text>
               </MemberStatus>
             </MemberDetailsInner>
-  
+
             <DropDownMenu
               onMenuItemClick={(value) => { onMenuItemClick(value, slug) }}
               menuButtonClass={props.classes.iconButton}
               menuOptions={menuOptions}
             />
           </MemberDetails>
-  
+
           <ShowOnSmallScreen>
             <PaymentAndStatus {...props} />
           </ShowOnSmallScreen>
-  
+
           <StudentNotes>
-            <StudentNotesContent onChange={(e)=>{props.setNotes(e.target.value)}}>{props.notes}</StudentNotesContent>
+            <StudentNotesContent onChange={(e) => { props.setNotes(e.target.value) }}>{props.notes}</StudentNotesContent>
           </StudentNotes>
         </InnerWrapper>
-  
+
         <HideOnSmall>
           <PaymentAndStatus {...props} />
         </HideOnSmall>

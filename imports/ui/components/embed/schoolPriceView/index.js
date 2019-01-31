@@ -1,6 +1,6 @@
 import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
 import { isEmpty, get } from "lodash";
+import { createContainer } from "meteor/react-meteor-data";
 import config from "/imports/config";
 import School from "/imports/api/school/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
@@ -17,6 +17,7 @@ import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/S
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 class SchoolPriceView extends React.Component {
   constructor(props) {
@@ -127,7 +128,7 @@ class SchoolPriceView extends React.Component {
   };
 
   purchasedSuccessfully = () => {
-    this.setState({enrollmentPackagesDialog:false});
+    this.setState({ enrollmentPackagesDialog: false });
   }
   handleInputChange = (inputName, event) => {
     if (inputName === "email") {
@@ -365,26 +366,26 @@ class SchoolPriceView extends React.Component {
             }
           />
         )}
-          {
-            this.state.enrollmentPackagesDialog &&
-            <EnrollmentPackagesDialogBox
-              open={this.state.enrollmentPackagesDialog}
-              schoolId={schoolId}
-              onAddToCartIconButtonClick={this.handlePurchasePackage}
-              onModalClose={() => {
-                this.setState(state => {
-                  return {
-                    ...state,
-                    enrollmentPackagesDialog: false,
-                    selectedClassTypeIds: null
-                  }
-                })
-              }}
-              classTypeIds={this.state.selectedClassTypeIds}
-              epData = {this.state.epData}
-              currentPackageData = {this.state.currentPackageData}
-            />
-          }
+        {
+          this.state.enrollmentPackagesDialog &&
+          <EnrollmentPackagesDialogBox
+            open={this.state.enrollmentPackagesDialog}
+            schoolId={schoolId}
+            onAddToCartIconButtonClick={this.handlePurchasePackage}
+            onModalClose={() => {
+              this.setState(state => {
+                return {
+                  ...state,
+                  enrollmentPackagesDialog: false,
+                  selectedClassTypeIds: null
+                }
+              })
+            }}
+            classTypeIds={this.state.selectedClassTypeIds}
+            epData={this.state.epData}
+            currentPackageData={this.state.currentPackageData}
+          />
+        }
         {this.state.signUpDialogBox && (
           <SignUpDialogBox
             open={this.state.signUpDialogBox}
@@ -421,16 +422,21 @@ class SchoolPriceView extends React.Component {
             onAgreeButtonClick={this.handleServiceAgreementSubmit}
           />
         )}
-        <PackagesList
-          schoolId={schoolId}
-          onAddToCartIconButtonClick={this.handlePurchasePackage}
-          variant="light"
-          enrollMentPackages
-          enrollMentPackagesData={enrollmentFee}
-          perClassPackagesData={classPricing}
-          monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
-          currency={currency}
-        />
+
+        {(!isEmpty(enrollmentFee) || !isEmpty(classPricing) || !isEmpty(monthlyPricing)) ?
+          <PackagesList
+            schoolId={schoolId}
+            onAddToCartIconButtonClick={this.handlePurchasePackage}
+            variant="light"
+            enrollMentPackages
+            enrollMentPackagesData={enrollmentFee}
+            perClassPackagesData={classPricing}
+            monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricing)}
+            currency={currency}
+          />
+          :
+          <Text align="center">This School haven't published any pricing information yet.</Text>
+        }
       </div>
     );
   }
