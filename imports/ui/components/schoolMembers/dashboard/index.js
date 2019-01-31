@@ -503,7 +503,7 @@ class DashBoardView extends React.Component {
       memberInfo = SchoolMemberDetails.findOne(memberId);
 			console.log("​handleMemberDetailsToRightPanel -> memberInfo", memberInfo)
       profile = memberInfo.profile.profile;
-      email = memberInfo.email;
+      email = memberInfo.profile.emails[0].address;
       _id = memberInfo.activeUserId;
     }
     else {
@@ -626,10 +626,24 @@ class DashBoardView extends React.Component {
       }
     })
   }
+  shouldComponentUpdate(nextProps,nextState){
+    return !nextProps.isLoading;
+  }
   render() {
-
-    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId } = this.props;
-    const { renderStudentModal, memberInfo, joinSkillShape, isLoading } = this.state;
+    console.count('dashboard 5')
+    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId ,isLoading} = this.props;
+    const { renderStudentModal, memberInfo, joinSkillShape } = this.state;
+    if (isLoading) {
+      return <Preloader />;
+    }
+     // Not allow accessing this URL to non admin user.
+     if (!isLoading && !schoolAdmin && slug) {
+      return (
+        <Typography type="display2" gutterBottom align="center">
+          To access this page you need to login as an admin.
+        </Typography>
+      );
+    }
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
       schoolMemberListFilters.schoolId =
@@ -643,14 +657,7 @@ class DashBoardView extends React.Component {
       filters.activeUserId = currentUser && currentUser._id;
     }
 
-    // Not allow accessing this URL to non admin user.
-    if (!schoolAdmin && slug) {
-      return (
-        <Typography type="display2" gutterBottom align="center">
-          To access this page you need to login as an admin.
-        </Typography>
-      );
-    }
+   
 
     const drawer = (
       <div>
@@ -705,9 +712,7 @@ class DashBoardView extends React.Component {
       </div>
     );
 
-    if (this.props.isLoading) {
-      return <Preloader />;
-    }
+   
 
     return (
       <Grid container className={classes.root}>
@@ -924,7 +929,6 @@ export default createContainer(props => {
     filters
   );
   if (subscription && subscription.ready()) {
-    isLoading = false;
     classTypeData = ClassType.find().fetch();
 
     if (slug) {
@@ -946,24 +950,17 @@ export default createContainer(props => {
     }
     //find all classpricing from subscription for displaying in add new member popup
     let classPricingSubscription = Meteor.subscribe("classPricing.getClassPricing", { schoolId })
-    if (classPricingSubscription.ready()) {
-      classPricing = ClassPricing.find().fetch();
-    }
-
     //find all enrollmentFee from subscription for displaying in add new member popup
     let enrollmentFeeSubscription = Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId })
-    if (enrollmentFeeSubscription.ready()) {
-      enrollmentFee = EnrollmentFees.find().fetch();
-    }
     //find all monthlyPricing from subscription for displaying in add new member popup
     let monthlySubscription = Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId })
-    if (monthlySubscription.ready()) {
+    if (classPricingSubscription.ready() && enrollmentFeeSubscription.ready() && monthlySubscription.ready()) {
+      classPricing = ClassPricing.find().fetch();
+      enrollmentFee = EnrollmentFees.find().fetch();
       monthlyPricing = MonthlyPricing.find().fetch();
+      isLoading = false;
     }
-
-
     if (!isEmpty(schoolData) && schoolData[0].admins) {
-
       adminsIds = schoolData[0].admins;
       superAdminId = schoolData[0].superAdmin || null
       adminsIds.push(superAdminId)

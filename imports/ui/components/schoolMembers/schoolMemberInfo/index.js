@@ -571,12 +571,10 @@ class SchoolMemberInfo extends Component {
 
 						<Grid item sm={4} xs={4} md={4}>
 							<Typography>{userName}</Typography>
-							{view === 'admin' && (
 								<React.Fragment>
 									<Typography>{memberInfo.phone}</Typography>
 									<Typography>{memberInfo.email}</Typography>
 								</React.Fragment>
-							)}
 							{userId === Meteor.userId() && (<ActionButtonsWrapper>
 								<ActionButton onClick={() => { }}>
 									<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
