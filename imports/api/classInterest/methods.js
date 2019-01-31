@@ -13,7 +13,6 @@ import { dataURLToBlob } from "blob-util";
 Meteor.methods({
   "classInterest.addClassInterest": function({ doc }) {
     check(doc,Object);
-
     let {schoolId,classTimeId,classTypeId,userId,from} = doc;
     if(!isEmpty(ClassInterest.findOne({schoolId,classTimeId,classTypeId,userId}))){
       return;

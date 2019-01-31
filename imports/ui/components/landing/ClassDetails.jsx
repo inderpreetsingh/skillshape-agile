@@ -1,5 +1,5 @@
 import React, { Component ,lazy, Suspense,} from "react";
-import { get, isEmpty, includes, remove } from 'lodash';
+import { get, isEmpty, includes, remove,isEqual } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 const   ClassDetails  = lazy(()=>import("/imports/ui/components/landing/components/classDetails/index.jsx"))
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
@@ -9,11 +9,12 @@ import Classes from "/imports/api/classes/fields";
 import ClassTime from '/imports/api/classTimes/fields.js';
 import ClassType from '/imports/api/classType/fields';
 import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import { ContainerLoader } from "/imports/ui/loading/container";
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
-    this.state={isBusy:false}
+    this.state={}
   }
 
   getBgImage() {
@@ -25,13 +26,14 @@ class ClassDetailsContainer extends Component {
     const { state: { school } } = this.props.location.state;
     return get(school, 'logoImg', get(school, "logoImgMedium", ""));
   }
-  toggleIsBusy = ()=>{
-    this.setState({isBusy:!this.state.isBusy});
-  }
   render() {
-    const { currentUser, isUserSubsReady, classDetails, instructorsData, popUp, instructorsIds ,currentClassTypeData} = this.props;
+    const { currentUser, isUserSubsReady, classData, instructorsData, popUp, instructorsIds ,currentClassTypeData,isBusy} = this.props;
+    // console.count('class Details Container 2')
+    if(isBusy){
+      return <ContainerLoader/>
+    }
     return (
-      <Suspense fallback={<Preloader />}>
+      <Suspense fallback={<ContainerLoader/>}>
       <ClassDetails
       currentClassTypeData = {currentClassTypeData}
         topSearchBarProps={{
@@ -48,12 +50,10 @@ class ClassDetailsContainer extends Component {
           classModulesData: classModulesData
         }}
         classTimeInformationProps={{ ...classTimeData }}
-        classData={classDetails}
+        classData={classData}
         instructorsData={instructorsData}
         popUp={popUp}
         instructorsIds={instructorsIds}
-        toggleIsBusy={this.toggleIsBusy}
-        isBusy={this.state.isBusy}
       />
       </Suspense>
     );
@@ -63,23 +63,22 @@ class ClassDetailsContainer extends Component {
 export default createContainer((props) => {
   const { state } = props.location.state;
   const dataProps = props.location.state.props;
-  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classDetails, instructorsIds,
+  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classData, instructorsIds,
     instructorsData = [], userSubscription, classTimeSubscription, ClassTimeData;
   schoolId = state.school._id;
   classTimeId = state.eventData.classTimeId;
   classTypeId = state.eventData.classTypeId;
   filter = { _id: state.classDetails._id };
-  let currentClassTypeData = {};
+  let currentClassTypeData = {},classTypeSub;
+  let isBusy = true;
   classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
   if(classTypeId){
-    let classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeIds:[classTypeId]});
-    if(classTypeSub && classTypeSub.ready()){
-      currentClassTypeData = ClassType.findOne({});
-    }
+    classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeIds:[classTypeId]});
   }
-  if (classesSubscription && classesSubscription.ready()) {
-   classDetails = Classes.find().fetch();
-    instructorsIds = get(classDetails[0], 'instructors', []);
+  if (classesSubscription && classesSubscription.ready() && classTypeSub && classTypeSub.ready()) {
+   currentClassTypeData = ClassType.findOne({});
+   classData = Classes.find().fetch();
+    instructorsIds = get(classData[0], 'instructors', []);
     if (isEmpty(instructorsIds)) {
       classTimeSubscription = Meteor.subscribe('classTimes.getclassTimes', { schoolId, classTypeId });
       if (classTimeSubscription && classTimeSubscription.ready()) {
@@ -87,6 +86,7 @@ export default createContainer((props) => {
         instructorsIds = get(ClassTimeData[0], 'instructors', []);
         userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
         if (userSubscription && userSubscription.ready()) {
+          isBusy = false;
           instructorsData = Meteor.users.find().fetch();
           if (!includes(instructorsIds, Meteor.userId())) {
             instructorsData = remove(instructorsData, (ele) => {
@@ -100,6 +100,7 @@ export default createContainer((props) => {
     else if (!isEmpty(instructorsIds)) {
       userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
       if (userSubscription && userSubscription.ready()) {
+        isBusy = false;
         instructorsData = Meteor.users.find().fetch();
         if (!includes(instructorsIds, Meteor.userId())) {
           instructorsData = remove(instructorsData, (ele) => {
@@ -111,7 +112,8 @@ export default createContainer((props) => {
 
   }
   return {
-    classDetails,
+    isBusy,
+    classData,
     instructorsData,
     instructorsIds,
     currentClassTypeData,

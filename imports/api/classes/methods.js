@@ -89,6 +89,7 @@ Meteor.methods({
                 data.userId = filter.userId ? filter.userId : this.userId;
                 data.from = 'signHandler';
                 status == 'signIn' ? methodName = 'classInterest.addClassInterest' : status == 'signOut' ? methodName = 'classInterest.removeClassInterest' : '';
+                delete data._id;
                 Meteor.call(methodName,{doc:data});
             }
             if(!filter._id){

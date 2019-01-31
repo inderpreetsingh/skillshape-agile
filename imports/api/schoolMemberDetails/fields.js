@@ -121,5 +121,6 @@ Meteor.startup(function() {
     });
   }
 });
-SchoolMemberDetails.join(Meteor.users, "activeUserId", "profile", ["profile"]);
+SchoolMemberDetails.join(Meteor.users, "activeUserId", "profile", ["profile",'emails']);
+
 export default SchoolMemberDetails;

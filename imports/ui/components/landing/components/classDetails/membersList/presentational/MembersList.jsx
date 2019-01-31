@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment,lazy,Suspense } from "react";
 import styled from "styled-components";
-import Member from "./Member.jsx";
-import MemberExpanded from "./MemberExpanded.jsx";
-import SearchList from "./SearchList.jsx";
+const Member = lazy(()=>import("./Member.jsx"));
+const MemberExpanded = lazy(()=>import("./MemberExpanded.jsx"))
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Capitalize, SlantedHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { get, isEmpty } from 'lodash';
+import MDSpinner from "react-md-spinner";
 
 const ListHeadWrapper = styled.div`
   display: flex;
@@ -75,7 +75,8 @@ const MembersList = props => {
                     <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
                 </Title>
             </ListHeadWrapper>) : ''}
-
+        <Suspense fallback={<center><MDSpinner size={50}/></center>}>
+                
             <MembersGrid expanded={expanded}>
                 {joinClass && <MemberWrapper >
                     <Member
@@ -92,8 +93,8 @@ const MembersList = props => {
                     />
                 </MemberWrapper>}
                 {!isEmpty(props.data) &&
-                    props.data.map(obj => (
-                        <MemberWrapper expanded={expanded} type={obj.type}>
+                    props.data.map((obj,index) => (
+                        <MemberWrapper expanded={expanded} type={obj.type} key={index+props.entityType}>
                             {expanded ? (
                                 <MemberExpanded
                                     viewType={props.viewType}
@@ -116,6 +117,8 @@ const MembersList = props => {
                                     buyPackagesBoxState={props.buyPackagesBoxState}
                                     currentProps={props.currentProps}
                                     updateStatus={props.updateStatus}
+                                    handleNoteChange = {props.handleNoteChange}
+                                    setNotes = {props.setNotes}
                                 />
                             ) : (
                                     <Member
@@ -151,6 +154,8 @@ const MembersList = props => {
 
 
             </MembersGrid>
+          </Suspense>
+
         </Fragment>
     );
 };

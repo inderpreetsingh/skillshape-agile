@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 import { withStyles } from "material-ui/styles";
 
@@ -8,7 +8,7 @@ import DropDownMenu from "/imports/ui/components/landing/components/form/DropDow
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { formatDate } from "/imports/util/formatSchedule";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { get, isEmpty } from 'lodash';
+import { isEmpty, get, isEqual } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -258,6 +258,15 @@ reverseStatus = (status) => {
 const StatusOptions = props => (
   <StatusDetails>
     <StatusButton>
+      <SkillShapeButton
+        noMarginBottom
+        fullWidth
+        information
+        label={"Save Notes"}
+        onClick={() => { props.handleNoteChange(props.smdId) }}
+      />
+    </StatusButton>
+    <StatusButton>
       <PrimaryButton
         noMarginBottom
         fullWidth
@@ -277,52 +286,56 @@ const StatusOptions = props => (
   </StatusDetails>
 );
 
-const MemberExpanded = props => {
-  const profile = props.profile;
-  const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
-  const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
-  const slug = get(props, "schoolName", null);
-  let classTypeId = get(props.classData[0], 'classTypeId', null);
-  let buyPackagesBoxState = props.buyPackagesBoxState;
-  console.group('MEMBER EXPANDED')
-  console.info(props, "PROPS");
-  console.groupEnd();
-  return (
-    <Wrapper key={name}>
+class MemberExpanded extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return !isEqual(nextProps, this.props);
+  }
+  render() {
+    const { props } = this;
+    const profile = props.profile;
+    const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
+    const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
+    const slug = get(props, "schoolName", null);
 
-      <InnerWrapper>
-        <MemberDetails>
-          <MemberDetailsInner>
-            <MemberPic url={profileSrc} />
-            <MemberStatus>
-              <Name>{name}</Name>
-              <Text color={getStatusColor(props.status)}>
-                {getStatusInfo(props.status)}
-              </Text>
-            </MemberStatus>
-          </MemberDetailsInner>
+    let classTypeId = get(props.classData[0], 'classTypeId', null);
+    let buyPackagesBoxState = props.buyPackagesBoxState;
+    console.count('memberExpand 160');
+    return (
+      <Wrapper key={name}>
+        <InnerWrapper>
+          <MemberDetails>
+            <MemberDetailsInner>
+              <MemberPic url={profileSrc} />
+              <MemberStatus>
+                <Name>{name}</Name>
+                <Text color={getStatusColor(props.status)}>
+                  {getStatusInfo(props.status)}
+                </Text>
+              </MemberStatus>
+            </MemberDetailsInner>
 
-          <DropDownMenu
-            onMenuItemClick={(value) => { onMenuItemClick(value, slug) }}
-            menuButtonClass={props.classes.iconButton}
-            menuOptions={menuOptions}
-          />
-        </MemberDetails>
+            <DropDownMenu
+              onMenuItemClick={(value) => { onMenuItemClick(value, slug) }}
+              menuButtonClass={props.classes.iconButton}
+              menuOptions={menuOptions}
+            />
+          </MemberDetails>
 
-        <ShowOnSmallScreen>
+          <ShowOnSmallScreen>
+            <PaymentAndStatus {...props} />
+          </ShowOnSmallScreen>
+
+          <StudentNotes>
+            <StudentNotesContent onChange={(e) => { props.setNotes(e.target.value) }}>{props.notes}</StudentNotesContent>
+          </StudentNotes>
+        </InnerWrapper>
+
+        <HideOnSmall>
           <PaymentAndStatus {...props} />
-        </ShowOnSmallScreen>
-
-        <StudentNotes>
-          <StudentNotesContent onChange={(e) => { handleNoteChange(props.smdId, e.target.value) }}>{props.notes}</StudentNotesContent>
-        </StudentNotes>
-      </InnerWrapper>
-
-      <HideOnSmall>
-        <PaymentAndStatus {...props} />
-      </HideOnSmall>
-    </Wrapper>
-  );
+        </HideOnSmall>
+      </Wrapper>
+    );
+  }
 };
 
 export default withStyles(styles)(MemberExpanded);
