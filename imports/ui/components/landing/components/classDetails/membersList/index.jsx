@@ -1,8 +1,8 @@
-import React, { Component, Fragment, lazy, Suspense } from "react";
+import React, { Component, Fragment, } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-const MembersList = lazy(() => import("./presentational/MembersList.jsx"));
+import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+import MembersList from "./presentational/MembersList.jsx";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import { isEmpty, get, isEqual } from 'lodash';
@@ -123,7 +123,6 @@ class MembersListContainer extends Component {
       let state = { isBusy: false }
       if (condition > 0 || res == undefined) {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
-          let state = { isLoading: false }
           if (res) {
             state.status = 'Sign In';
             popUp.appear("success", {
@@ -155,7 +154,6 @@ class MembersListContainer extends Component {
           </ButtonWrapper>)
         }, true);
       }
-      this.setState({ ...state })
     });
 
 
@@ -623,13 +621,8 @@ class MembersListContainer extends Component {
     this.setState({ isBusy: !this.state.isBusy });
   }
   render() {
-<<<<<<< HEAD
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, toggleIsBusy, schoolData } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification } = this.state;
-=======
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName,schoolData } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification ,isBusy} = this.state;
->>>>>>> 1a988adc6f1e6978ecbc6d94705a04048ed7522d
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData } = this.props;
+    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification, isBusy } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
@@ -638,11 +631,7 @@ class MembersListContainer extends Component {
     !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
       classTypeId = get(classData[0], "classTypeId", null);
     })
-<<<<<<< HEAD
 
-=======
-
->>>>>>> 1a988adc6f1e6978ecbc6d94705a04048ed7522d
     return (
       <Fragment>
         {isBusy && <ContainerLoader />}
@@ -692,52 +681,6 @@ class MembersListContainer extends Component {
           setPackagesRequired={this.setPackagesRequired}
         />}
         <ListWrapper>
-<<<<<<< HEAD
-        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-          <MembersList
-            viewType={currentView}
-            onSearchChange={this.handleSearchChange("teachersFilterWith")}
-            data={instructorsData}
-            entityType={"teachers"}
-            searchedValue={this.state.teachersFilterWith}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            addInstructor
-          />
-        </Suspense>
-        </ListWrapper>
-      <ListWrapper>
-        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-          <MembersList
-            viewType={currentView}
-            searchedValue={this.state.studentsFilterWith}
-            onSearchChange={this.handleSearchChange("studentsFilterWith")}
-            data={this.studentsListMaker(studentsData, classData, purchaseData)}
-            entityType={"students"}
-            searchedValue={this.state.studentsFilterWith}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
-            addStudent
-            onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
-            params={params}
-            onJoinClassClick={this.handleSignIn}
-            schoolName={schoolName}
-            classTypeName={classTypeName}
-            toggleIsBusy={toggleIsBusy}
-            schoolId={schoolId}
-            onAcceptPaymentClick={this.handleDialogBoxState}
-            buyPackagesBoxState={buyPackagesBoxState}
-            currentProps={currentProps}
-            updateStatus={this.updateStatus}
-          />
-        </Suspense>
-      </ListWrapper>
-      </Fragment >
-=======
 
           <MembersList
             viewType={currentView}
@@ -777,21 +720,20 @@ class MembersListContainer extends Component {
             buyPackagesBoxState={buyPackagesBoxState}
             currentProps={currentProps}
             updateStatus={this.updateStatus}
-            handleNoteChange = {this.handleNoteChange}
-            setNotes= {this.setNotes}
+            handleNoteChange={this.handleNoteChange}
+            setNotes={this.setNotes}
           />
         </ListWrapper>
         <PaginationWrapper>
-            <Pagination
-              style={{
-                marginBottom: 0
-              }}
-              {...this.state}
-              onChange={this.changePageClick}
-            />
-          </PaginationWrapper>
-        </Fragment>
->>>>>>> 1a988adc6f1e6978ecbc6d94705a04048ed7522d
+          <Pagination
+            style={{
+              marginBottom: 0
+            }}
+            {...this.state}
+            onChange={this.changePageClick}
+          />
+        </PaginationWrapper>
+      </Fragment>
     );
   }
 }
