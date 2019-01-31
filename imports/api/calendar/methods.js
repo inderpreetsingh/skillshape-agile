@@ -175,8 +175,9 @@ Meteor.methods({
       if (refresh_token) {
         let docId = this.userId;
         let doc = { refresh_token, googleCalendarId };
-        Meteor.call("user.editUser", { doc, docId })
-        Meteor.call("calendar.handleGoogleCalendar", this.userId, 'insert');
+        Meteor.call("user.editUser", { doc, docId },(err,res)=>{
+          Meteor.call("calendar.handleGoogleCalendar", this.userId, 'insert');
+        })
         return true;
       }
       return false;
@@ -189,9 +190,11 @@ Meteor.methods({
     try {
       let classInterestData = ClassInterest.find({ userId: this.userId, }).fetch();
       let ids = classInterestData.map((obj) => obj._id);
-      Meteor.call("calendar.handleGoogleCalendar", this.userId, 'delete', ids);
-      Meteor.call("calendar.removeGoogleCalendar");
-      Meteor.call("user.editUser", { doc, docId });
+      Meteor.call("calendar.handleGoogleCalendar", this.userId, 'delete', ids,(err,res)=>{
+        Meteor.call("calendar.removeGoogleCalendar",(err,res)=>{
+          Meteor.call("user.editUser", { doc, docId });
+        });
+      });
       return true;
     } catch (error) {
       console.log('​error in calendar.clearAllEvents', error);
