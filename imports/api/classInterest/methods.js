@@ -69,7 +69,6 @@ Meteor.methods({
     }
   },
   "classInterest.removeClassInterest": function({ doc }) {
-		console.log('TCL: classInterest.removeClassInterest',doc)
     check(doc,Object);
     if (this.userId) {
       if(doc.from == 'signHandler'){
