@@ -11,6 +11,7 @@ import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { withStyles } from "/imports/util";
+import {get,isEmpty} from 'lodash';
 const formId = "create-media";
 
 
@@ -43,9 +44,17 @@ class CreateMedia extends React.Component {
 						if (err) {
 							state.error = err.reason || err.message;
 						}
-						if (!_.isEmpty(res)) {
+						if (!isEmpty(res)) {
 							res.map((current, index) => {
-								state.schoolMembers.push({ value: current._id, label: `${current && current.firstName ? current.firstName : ""} ${current && current.lastName ? current.lastName : ""}` })
+								let {profile:{profile:{firstName,lastName,name},emails}} = current;
+								let label = '';
+								if(firstName || lastName || name){
+								 label = `${firstName ? firstName : name} ${lastName ? lastName : ''}`;
+								}
+								else if(!isEmpty(emails)){
+								 label = `${emails[0].address}`;
+								}
+								state.schoolMembers.push({ value: current._id, label})
 							})
 						}
 
