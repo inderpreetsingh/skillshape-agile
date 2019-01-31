@@ -1,7 +1,7 @@
-import React, { Component, Fragment,} from "react";
+import React, { Component, Fragment, } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { rhythmDiv ,panelColor} from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
 import MembersList from "./presentational/MembersList.jsx";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
@@ -22,7 +22,7 @@ const Div = styled.div`
 `;
 
 const ListWrapper = styled.div`  
-  padding: 0 ${ rhythmDiv * 2} px;
+  padding: 0 ${rhythmDiv * 2}px;
   margin-bottom: ${ props => props.marginBottom || rhythmDiv * 7}px;
 `;
 const PaginationWrapper = styled.div`
@@ -36,12 +36,12 @@ class MembersListContainer extends Component {
       teachersFilterWith: "",
       studentsFilterWith: "",
       addInstructorDialogBoxState: false,
-      notification:true,
-      packagesRequired:'enrollment',
-      limit:40,
-      skip:0,
-      pageCount:0,
-      perPage:40
+      notification: true,
+      packagesRequired: 'enrollment',
+      limit: 40,
+      skip: 0,
+      pageCount: 0,
+      perPage: 40
     };
   }
 
@@ -52,20 +52,20 @@ class MembersListContainer extends Component {
   studentsData = () => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData,schoolId } = this.props;
+    const { classData, schoolId } = this.props;
     let { classTypeId } = classData && classData[0] || {};
-    let filter = {classTypeId,userId:Meteor.userId()};
-    Meteor.call("classPricing.signInHandler",filter,(err,res)=>{
-      if(!isEmpty(res)){
-        let {epStatus,purchased} = res;
-        if(epStatus && !isEmpty(purchased)){
-          this.setState({notification:false});
+    let filter = { classTypeId, userId: Meteor.userId() };
+    Meteor.call("classPricing.signInHandler", filter, (err, res) => {
+      if (!isEmpty(res)) {
+        let { epStatus, purchased } = res;
+        if (epStatus && !isEmpty(purchased)) {
+          this.setState({ notification: false });
         }
-        else if(!epStatus){
-          this.setState({packagesRequired:'enrollment'})
+        else if (!epStatus) {
+          this.setState({ packagesRequired: 'enrollment' })
         }
-        else{
-          this.setState({packagesRequired:'perClassAndMonthly'})
+        else {
+          this.setState({ packagesRequired: 'perClassAndMonthly' })
         }
       }
     })
@@ -73,15 +73,15 @@ class MembersListContainer extends Component {
       get(classData[0], 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
-        this.setState({pageCount:Math.ceil(studentsIds.length / this.state.limit)})
+        this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit) })
       })
       if (!isEmpty(studentsIds)) {
-        let {limit,skip} = this.state;
-        let limitAndSkip = {limit,skip}
-        let data = {studentsIds, classTypeId,schoolId,classData,purchaseIds,limitAndSkip};
-        Meteor.call('user.getUsersFromIds',data , (err, res) => {
+        let { limit, skip } = this.state;
+        let limitAndSkip = { limit, skip }
+        let data = { studentsIds, classTypeId, schoolId, classData, purchaseIds, limitAndSkip };
+        Meteor.call('user.getUsersFromIds', data, (err, res) => {
           if (res) {
-            this.setState({ studentsData: res , isBusy: false});
+            this.setState({ studentsData: res, isBusy: false });
           }
         })
       }
@@ -94,7 +94,7 @@ class MembersListContainer extends Component {
     this.setState({ skip: skip.skip, isBusy: true }, () => { this.studentsData(); });
   }
   shouldComponentUpdate(nextProps, nextState) {
-    if(this.state.notes && nextState.notes != this.state.notes){
+    if (this.state.notes && nextState.notes != this.state.notes) {
       return false
     }
     return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
@@ -102,7 +102,7 @@ class MembersListContainer extends Component {
   componentWillReceiveProps(nextProps, prevProps) {
     this.studentsData();
   }
-  
+
   updateClass = (filter, status, purchaseData, popUp, packageConnected) => {
     let { packageType, noClasses, _id, packageName, monthlyAttendance } = purchaseData || {};
     let condition = 0, inc = 0;
@@ -120,7 +120,7 @@ class MembersListContainer extends Component {
       if (condition <= 0) {
         condition = res;
       }
-      let state = {isBusy:false}
+      let state = { isBusy: false }
       if (condition > 0 || res == undefined) {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
           if (res) {
@@ -132,18 +132,18 @@ class MembersListContainer extends Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' }) : this.setState({buyPackagesBoxState:false})
+                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' }) : this.setState({ buyPackagesBoxState: false })
                   }}
                   applyClose
                 />
               </ButtonWrapper>)
             }, true);
           }
-          this.setState({...state})
+          this.setState({ ...state })
         })
       }
       else {
-        this.setState({...state})
+        this.setState({ ...state })
         popUp.appear("alert", {
           title: `Caution`,
           content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
@@ -187,7 +187,7 @@ class MembersListContainer extends Component {
       let pos = -1;
       if (status == 'signOut') {
         let { students } = filter, purchaseId, purchaseData = {};
-        if (!isEmpty(students) ) {
+        if (!isEmpty(students)) {
           students.map((obj) => {
             if (obj.userId == filter.userId ? filter.userId : Meteor.userId()) {
               purchaseId = obj.purchaseId;
@@ -260,7 +260,7 @@ class MembersListContainer extends Component {
         popUp.appear("alert", { title: "Alert", content: "Oops user don't have any package. Please use Accept payment button to accept payment and send link or else ask user to purchase one itself." });
         return;
       }
-      else if (status == 'signIn'){
+      else if (status == 'signIn') {
         this.updateClass(filter, status, {}, popUp);
         return;
       }
@@ -354,7 +354,7 @@ class MembersListContainer extends Component {
     });
   }
 
-  
+
   getStatusInfo = status => {
     if (status == 'signIn') {
       return 'Signed In';
@@ -390,7 +390,7 @@ class MembersListContainer extends Component {
     }
     else {
       if (status == 'signIn' || status == 'checkIn') {
-        if(status == 'checkIn'){
+        if (status == 'checkIn') {
           inc = 1;
         }
         status = 'signOut';
@@ -438,12 +438,12 @@ class MembersListContainer extends Component {
       }
     })
   }
-  handleDialogBoxState = (dialogState, currentProps,packagesRequired) => {
+  handleDialogBoxState = (dialogState, currentProps, packagesRequired) => {
     this.setState(state => {
       return {
         ...state,
         buyPackagesBoxState: dialogState,
-        currentProps:currentProps ?currentProps : state.currentProps,
+        currentProps: currentProps ? currentProps : state.currentProps,
         packagesRequired
       };
     });
@@ -452,7 +452,7 @@ class MembersListContainer extends Component {
     this.setState({ classTypePackages: false });
   }
   setPackagesRequired = () => {
-    this.setState({packagesRequired:'perClassAndMonthly'});
+    this.setState({ packagesRequired: 'perClassAndMonthly' });
   }
   sendLinkConfirmation = (props, packageId = null, packageType = null) => {
     let { popUp } = props;
@@ -503,7 +503,7 @@ class MembersListContainer extends Component {
             <FormGhostButton
               label={'Ok'}
               applyClose
-              onClick={() => { 
+              onClick={() => {
                 this.setPackagesRequired()
               }}
             />
@@ -551,7 +551,7 @@ class MembersListContainer extends Component {
       defaultButtons: true,
     }, true)
   }
- 
+
   acceptPayment = (packageData, props, paymentMethod) => {
     this.toggleIsBusy();
     let userId, packageId, packageType, schoolId, data, noClasses, packageName, planId = null;
@@ -577,7 +577,7 @@ class MembersListContainer extends Component {
           if (packageType != 'EP')
             this.updateStatus(2, props)
           else
-            this.successPopUp(popUp,null,title);
+            this.successPopUp(popUp, null, title);
         })
       } else {
         this.toggleIsBusy();
@@ -585,44 +585,44 @@ class MembersListContainer extends Component {
       }
     })
   }
-  handleNoteChange = (doc_id) =>{
+  handleNoteChange = (doc_id) => {
     this.toggleIsBusy();
-    if(!doc_id){
-      const {popUp} = this.props;
+    if (!doc_id) {
+      const { popUp } = this.props;
       let data = {};
-        data = {
-          popUp,
-          title: 'Error',
-          type: 'error',
-          content: 'Old Data Please use new data.',
-          buttons: [{ label: 'Ok', onClick: () => { } }]
-        }
-        confirmationDialog(data);
-        return;
+      data = {
+        popUp,
+        title: 'Error',
+        type: 'error',
+        content: 'Old Data Please use new data.',
+        buttons: [{ label: 'Ok', onClick: () => { } }]
+      }
+      confirmationDialog(data);
+      return;
     }
-    Meteor.call("schoolMemberDetails.editSchoolMemberDetails",{doc_id,doc:{adminNotes:this.state.notes}},(err,res)=>{
+    Meteor.call("schoolMemberDetails.editSchoolMemberDetails", { doc_id, doc: { adminNotes: this.state.notes } }, (err, res) => {
       this.toggleIsBusy();
-      const {popUp} = this.props;
-        let data = {};
-          data = {
-            popUp,
-            title: 'Success',
-            type: 'success',
-            content: 'Note saved successfully',
-            buttons: [{ label: 'Ok', onClick: () => { } }]
-          }
-          confirmationDialog(data);
+      const { popUp } = this.props;
+      let data = {};
+      data = {
+        popUp,
+        title: 'Success',
+        type: 'success',
+        content: 'Note saved successfully',
+        buttons: [{ label: 'Ok', onClick: () => { } }]
+      }
+      confirmationDialog(data);
     });
   }
-  setNotes = (notes) =>{
-    this.setState({notes});
+  setNotes = (notes) => {
+    this.setState({ notes });
   }
-  toggleIsBusy = ()=>{
-    this.setState({isBusy:!this.state.isBusy});
+  toggleIsBusy = () => {
+    this.setState({ isBusy: !this.state.isBusy });
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName,schoolData } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,notification ,isBusy} = this.state;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData } = this.props;
+    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification, isBusy } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
@@ -631,7 +631,7 @@ class MembersListContainer extends Component {
     !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
       classTypeId = get(classData[0], "classTypeId", null);
     })
-    
+
     return (
       <Fragment>
         {isBusy && <ContainerLoader />}
@@ -660,7 +660,7 @@ class MembersListContainer extends Component {
         {notification &&
           currentView === "studentsView" && (
             <Notification
-              notificationContent={`You need to purchase ${packagesRequired == 'enrollment'? "enrollment " :'monthly/per class '}package first.`}
+              notificationContent={`You need to purchase ${packagesRequired == 'enrollment' ? "enrollment " : 'monthly/per class '}package first.`}
               bgColor={danger}
               buttonLabel="Purchase Package"
               onButtonClick={() => { this.setState({ classTypePackages: true }) }}
@@ -677,8 +677,8 @@ class MembersListContainer extends Component {
           handleSignIn={this.handleSignIn}
           fromSignFunctionality
           closeClassTypePackages={this.closeClassTypePackages}
-          schoolData = {schoolData}
-          setPackagesRequired = {this.setPackagesRequired}
+          schoolData={schoolData}
+          setPackagesRequired={this.setPackagesRequired}
         />}
         <ListWrapper>
 
@@ -720,20 +720,20 @@ class MembersListContainer extends Component {
             buyPackagesBoxState={buyPackagesBoxState}
             currentProps={currentProps}
             updateStatus={this.updateStatus}
-            handleNoteChange = {this.handleNoteChange}
-            setNotes= {this.setNotes}
+            handleNoteChange={this.handleNoteChange}
+            setNotes={this.setNotes}
           />
         </ListWrapper>
         <PaginationWrapper>
-            <Pagination
-              style={{
-                marginBottom: 0
-              }}
-              {...this.state}
-              onChange={this.changePageClick}
-            />
-          </PaginationWrapper>
-        </Fragment>
+          <Pagination
+            style={{
+              marginBottom: 0
+            }}
+            {...this.state}
+            onChange={this.changePageClick}
+          />
+        </PaginationWrapper>
+      </Fragment>
     );
   }
 }

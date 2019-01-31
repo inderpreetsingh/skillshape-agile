@@ -28,7 +28,7 @@ import React, { Fragment } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
-import { packageCoverProvider} from '/imports/util';
+import { packageCoverProvider } from '/imports/util';
 import SchoolMemberInfo from "../schoolMemberInfo";
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
@@ -359,7 +359,7 @@ class DashBoardView extends React.Component {
     payload.signUpType = "member-signup"
     payload.sendMeSkillShapeNotification = true;
     payload.schoolName = schoolName;
-		console.log("​adminView", adminView)
+    console.log("​adminView", adminView)
     if (!adminView) {
 
       let state = {
@@ -402,7 +402,7 @@ class DashBoardView extends React.Component {
   addNewMember = event => {
     event.preventDefault();
     const { schoolData, adminView, adminsIds } = this.props;
-		console.log("​adminView", adminView)
+    console.log("​adminView", adminView)
     // Check for existing user only if users has entered their email.
     if (!isEmpty(schoolData) && !this.state.studentWithoutEmail) {
       // Show Loading
@@ -501,7 +501,7 @@ class DashBoardView extends React.Component {
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
     if (!adminView) {
       memberInfo = SchoolMemberDetails.findOne(memberId);
-			console.log("​handleMemberDetailsToRightPanel -> memberInfo", memberInfo)
+      console.log("​handleMemberDetailsToRightPanel -> memberInfo", memberInfo)
       profile = memberInfo.profile.profile;
       email = memberInfo.profile.emails[0].address;
       _id = memberInfo.activeUserId;
@@ -626,18 +626,18 @@ class DashBoardView extends React.Component {
       }
     })
   }
-  shouldComponentUpdate(nextProps,nextState){
+  shouldComponentUpdate(nextProps, nextState) {
     return !nextProps.isLoading;
   }
   render() {
     console.count('dashboard 5')
-    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId ,isLoading} = this.props;
+    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId, isLoading } = this.props;
     const { renderStudentModal, memberInfo, joinSkillShape } = this.state;
     if (isLoading) {
       return <Preloader />;
     }
-     // Not allow accessing this URL to non admin user.
-     if (!isLoading && !schoolAdmin && slug) {
+    // Not allow accessing this URL to non admin user.
+    if (!isLoading && !schoolAdmin && slug) {
       return (
         <Typography type="display2" gutterBottom align="center">
           To access this page you need to login as an admin.
@@ -653,11 +653,19 @@ class DashBoardView extends React.Component {
     let { currentUser, isUserSubsReady } = this.props;
     let filters = { ...this.state.filters };
 
-    if (!slug) {
-      filters.activeUserId = currentUser && currentUser._id;
+    if (this.props.isLoading) {
+      return <Preloader />;
     }
+    else if (!slug) {
+      filters.activeUserId = currentUser && currentUser._id;
+    } else if (!schoolAdmin && slug) { // Not allow accessing this URL to non admin user.
 
-   
+      return (
+        <Typography type="display2" gutterBottom align="center">
+          To access this page you need to login as an admin.
+        </Typography>
+      );
+    }
 
     const drawer = (
       <div>
@@ -712,7 +720,7 @@ class DashBoardView extends React.Component {
       </div>
     );
 
-   
+
 
     return (
       <Grid container className={classes.root}>
@@ -977,6 +985,7 @@ export default createContainer(props => {
         }
       }
     }
+    isLoading = false;
   }
   return {
     ...props,

@@ -54,7 +54,6 @@ const styles = theme => {
     },
     dialogActions: {
       width: "100%",
-      paddingLeft: `${helpers.rhythmDiv * 2}px`
     },
     dialogRoot: {
       width: "100%"
@@ -95,7 +94,7 @@ const Title = styled.span`
 
 const CardsWrapper = styled.div`
   width: 100%;
-  ${helpers.flexHorizontalSpaceBetween};
+  ${helpers.flexCenter};
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     flex-direction: column;
@@ -282,14 +281,14 @@ class FirstTimeVisitDialogBox extends Component {
                 serve you in a better way.
               </Text>
             ) : (
-              <Text>
-                Just give us a moment, we are fetching some data, to make your
-                experience better :).
+                <Text>
+                  Just give us a moment, we are fetching some data, to make your
+                  experience better :).
               </Text>
-            )}
+              )}
           </DialogContent>
 
-          <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
+          <DialogActions classes={{ root: props.classes.dialogActionsRoot, action: props.classes.dialogActions }}>
             {isUserSubsReady || showLoader ? (
               <CardsWrapper>
                 <OptionCard
@@ -305,8 +304,8 @@ class FirstTimeVisitDialogBox extends Component {
                 />
               </CardsWrapper>
             ) : (
-              <Loading />
-            )}
+                <Loading />
+              )}
           </DialogActions>
         </MuiThemeProvider>
       </Dialog>
