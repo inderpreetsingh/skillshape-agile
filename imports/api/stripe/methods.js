@@ -246,13 +246,15 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     return "Successfully Disconnected";
   },
   "stripe.findAdminStripeAccount": function (superAdminId) {
-    check(superAdminId,String);
-    let result = UserStripeData.findOne({ userId: superAdminId ,stripe_user_id:{$exists:true}});
-    if (result) {
-      return true;
-    } else {
-      return false;
+    if(superAdminId){
+      let result = UserStripeData.findOne({ userId: superAdminId ,stripe_user_id:{$exists:true}});
+      if (result) {
+        return true;
+      } else {
+        return false;
+      }
     }
+    return false;
   },
   //creating plan for on monthly package creation
   "stripe.createStripePlan": async function (currencyCode, interval, amount) {
