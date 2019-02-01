@@ -25,7 +25,7 @@ class SchoolEditView extends React.Component {
      if (get(this.props.route,'name',0) == "SchoolMemberView"){
       this.setState({ tabValue: 6 });
     }
-     if (get(this.props.route,'name',0) == "Financials"){
+     if (get(this.props.route,'name',0) == "Financials" && !this.state.tabValue){
       this.setState({ tabValue: 8 });
     }
   }
@@ -33,12 +33,14 @@ class SchoolEditView extends React.Component {
     this.defaultTab(get(nextProps.route,'name',0));
   }
   defaultTab = (routeName) => {
+    if(!this.state.tabValue){
       if(routeName == "SchoolMemberView"){
         this.setState({ tabValue: 6 });
       }
       else if(routeName == "Financials") {
         this.setState({ tabValue: 8 });
       }
+    }
   }
   checkSchoolAccess = (currentUser, schoolId) => {
     if (!currentUser || !schoolId) {
