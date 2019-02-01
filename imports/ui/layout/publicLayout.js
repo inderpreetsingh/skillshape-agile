@@ -147,7 +147,7 @@ class PublicLayout extends React.Component {
               this.mainPanelRef = ref;
             }}
           >
-            <main className={classes.content}>
+            <main id="ss-main" className={classes.content}>
               {React.cloneElement(this.props.children, {
                 currentUser,
                 isUserSubsReady,

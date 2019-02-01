@@ -16,7 +16,7 @@ export default function () {
 
 	const { showCreateMediaModal, mediaFormData, filterStatus, limit, isGalleryView } = this.state;
 	const { schoolId, mediaData, classes, fullScreen, schoolView, noMediaFound } = this.props;
-	
+
 	return (
 		<div>
 			{
@@ -36,10 +36,10 @@ export default function () {
 							mediaFormData={mediaFormData}
 							filterStatus={filterStatus}
 							showLoading={this.showLoading}
-							from ='editSection'
-							
+							from='editSection'
+
 						/>
-						<Sticky activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
+						<Sticky innerZ={10} bottomBoundary="#ss-main" activeClassName={"filter-panel-sticked"} onStateChange={this.handleFixedToggle}>
 							<MediaFilter
 								stickyPosition={this.state.sticky}
 								onSearch={this.onSearch}
