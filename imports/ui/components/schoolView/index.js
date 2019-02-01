@@ -4,6 +4,7 @@ import SchoolViewBase from "./schoolViewBase";
 import SchoolViewNewRender from "./schoolViewNewRender";
 import styles from "./style";
 import { withStyles } from "/imports/util";
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 // import collection definition over here
 import ClassType from "/imports/api/classType/fields";
@@ -59,9 +60,13 @@ class SchoolView extends SchoolViewBase {
     document.title =
       this.props.schoolData && this.props.schoolData.name.toLowerCase();
   };
-
+  shouldComponentUpdate(nextProps){
+    return !nextProps.showLoading;
+  }
   render() {
-    
+    if(this.props.showLoading){
+      return <ContainerLoader />
+    }
     // if(this.props.route.name === 'SchoolViewDeveloping') {
     return SchoolViewNewRender.call(this, this.props, this.state);
     // }

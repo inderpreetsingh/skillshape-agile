@@ -22,7 +22,6 @@ import {
 
 import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 import { ContainerLoader } from '/imports/ui/loading/container';
@@ -221,7 +220,6 @@ export default function () {
   } = this.state;
 
   if (showLoading) {
-    return <PreloaderWrapper><Preloader /></PreloaderWrapper>
   }
 
   if (isEmpty(schoolData)) {
