@@ -8,7 +8,7 @@ import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "./fields";
-import { sendPackagePurchaseEmail, sendSkillShapeJoinInvitation } from "/imports/api/email";
+import { sendPackagePurchaseEmail, newSchoolJoinNotification } from "/imports/api/email";
 import ClaimSchoolRequest from "/imports/api/claimSchoolRequest/fields.js";
 import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
 import { sendClaimASchoolEmail } from "/imports/api/email";
@@ -17,7 +17,6 @@ import { sendPriceInfoRequestEmail } from "/imports/api/email";
 import { sendEmailToStudentForClaimAsMember, adminInvitation } from "/imports/api/email";
 import { getUserFullName } from "/imports/util/getUserData";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
-
 Meteor.methods({
   editSchool: function (id, data) {
     check(data, Object);
@@ -388,6 +387,9 @@ Meteor.methods({
       }
     );
     let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+    let name = getUserFullName(currentUser);
+    let userData = { name, schoolEditViewLink };
+    newSchoolJoinNotification(userData);
     return schoolEditViewLink;
   },
   "school.addNewMemberWithoutEmail": function (doc) {

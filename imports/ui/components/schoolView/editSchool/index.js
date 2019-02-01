@@ -97,7 +97,10 @@ class SchoolEditView extends React.Component {
     return !nextProps.isLoading;
   }
   render() {
-    console.count('school edit 4')
+    if(!Meteor.userId() || !checkMyAccess({ user: Meteor.user(), schoolId:this.props.schoolId }) ){
+      browserHistory.push("/")
+      return false;
+    }
     if(this.props.isLoading){
       return <ContainerLoader/>
     }
