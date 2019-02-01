@@ -5,7 +5,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { verifyImageURL } from '/imports/util';
 import ProgressiveImage from 'react-progressive-image';
-import get from 'lodash/get';
+import {get,isEmpty} from 'lodash';
 {
 	/*
 1.Set profile pic for student.
@@ -19,12 +19,12 @@ export default function(props) {
 	let membersByName;
 	if (!adminView) {
 		membersByName = _.groupBy(collectionData && collectionData, function(item) {
-			return get(item, 'profile.profile.firstName', get(item, 'profile.profile.name', '0'))[0].toUpperCase();
+			return get(item, 'profile.profile.firstName', get(item, 'profile.profile.name', get(item,'profile.emails[0].address','0')))[0].toUpperCase();
 		});
 		handleMemberDetailsToRightPanel = this.props.handleMemberDetailsToRightPanel;
 	} else {
 		membersByName = _.groupBy(collectionData && collectionData, function(item) {
-			return get(item, 'profile.firstName', get(item, 'profile.name', '0'))[0].toUpperCase();
+			return get(item, 'profile.firstName', get(item, 'profile.name', get(item,'profile.emails[0].address','0')))[0].toUpperCase();
 		});
 		handleMemberDetailsToRightPanel = props.handleMemberDetailsToRightPanel;
 	}
@@ -54,25 +54,15 @@ export default function(props) {
 											</ListItem>,
 											membersByName[key] &&
 												membersByName[key].map((data) => {
-													let profile, pic, firstName;
+													let profile, pic, firstName,emails;
 													if (!adminView) {
 														profile = data.profile.profile;
 													} else {
 														profile = data.profile;
 													}
-													pic =
-														profile && profile.low
-															? profile.low
-															: profile && profile.medium
-																? profile.medium
-																: profile && profile.pic
-																	? profile.pic
-																	: config.defaultProfilePicOptimized;
-													firstName = get(
-														profile,
-														'firstName',
-														get(profile, 'name', 'Old Data')
-													);
+													emails = get(data.profile,"emails",[]);
+													pic = profile && profile.low ? profile.low : profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePicOptimized;
+													firstName = get( profile, 'firstName', get(profile, 'name', get(emails[0],'address','Old Data')) );
 													if (get(data, '_id', null) == superAdminId) {
 														firstName = `${firstName} (SuperAdmin)`;
 													}
@@ -97,7 +87,7 @@ export default function(props) {
 																)}
 															</ProgressiveImage>
 
-															<ListItemText primary={firstName} />
+															<ListItemText primary={firstName} style ={{ textTransform:"capitalize"}}/>
 														</ListItem>
 													);
 												})

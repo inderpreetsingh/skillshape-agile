@@ -38,7 +38,7 @@ export default class AddRow extends React.Component {
 		if(key=='cost'){
 			let x = inputRestriction(event);
 			oldRow[index][key] = x;
-			this.monthlyCost.value = x;
+			event.target.value = x;
 		}
 		else{
 			oldRow[index][key] = parseInt(event.target.value);
