@@ -113,7 +113,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         destination: {
           amount: destinationAmount,
           account: stripeAccountId
-        }
+        },
+       // receipt_email: 'ramesh.bansal@daffodilsw.com'
       };
       
       startDate = new Date();
