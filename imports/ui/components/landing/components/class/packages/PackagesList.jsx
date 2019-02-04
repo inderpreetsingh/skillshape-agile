@@ -180,7 +180,7 @@ const Packages = (props) => (
 
 const PackagesListContainer = (props) => (
     <React.Fragment>
-        {console.log(".....", props.monthlyPackagesData)}
+        {/*console.log(".....", props.monthlyPackagesData)*/}
         < PackagesListWrapper
             listType={props.listType}
             variant={props.variant}
