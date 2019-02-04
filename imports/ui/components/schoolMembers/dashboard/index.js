@@ -159,9 +159,9 @@ class DashBoardView extends React.Component {
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
     so that right panel gets removed from UI*/
   componentWillReceiveProps(nextProps) {
-    if (nextProps.schoolData !== this.props.schoolData) {
-      this.setState({ memberInfo: {} });
-    }
+    // if (nextProps.schoolData !== this.props.schoolData) {
+    //   this.setState({ memberInfo: {} });
+    // }
   }
 
   handleChange = name => event => {
