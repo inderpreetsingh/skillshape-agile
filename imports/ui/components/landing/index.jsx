@@ -1,20 +1,20 @@
 import { debounce, isEmpty } from "lodash";
-import React, { Component, lazy, Suspense,Fragment } from "react";
+import React, { Component, lazy, Suspense, Fragment } from "react";
 const DocumentTitle = lazy(() => import("react-document-title"));
 import { browserHistory, withRouter } from "react-router";
 import { Element, scroller } from "react-scroll";
-const  Sticky = lazy(() => import("react-stickynode"));
-const  BrandBar = lazy(() => import("./components/BrandBar.jsx"));
-const  FloatingChangeViewButton = lazy(() => import("./components/buttons/FloatingChangeViewButton.jsx"));
-const  FormGhostButton = lazy(() => import("./components/buttons/FormGhostButton.jsx"));
-const  ClassTypeList = lazy(() => import("./components/classType/classTypeList.jsx"));
-const  Cover = lazy(() => import("./components/Cover.jsx"));
-const   FiltersDialogBox  = lazy(() => import("./components/dialogs/FiltersDialogBox.jsx"));
-const    FilterPanel = lazy(() => import("./components/FilterPanel.jsx"));
-const   Footer  = lazy(() => import("./components/footer/index.jsx"));
-const   SearchArea  = lazy(() => import("./components/SearchArea.jsx"));
-const    config = lazy(() => import("/imports/config"));
-const     Events  = lazy(() => import("/imports/util/events"));
+const Sticky = lazy(() => import("react-stickynode"));
+const BrandBar = lazy(() => import("./components/BrandBar.jsx"));
+const FloatingChangeViewButton = lazy(() => import("./components/buttons/FloatingChangeViewButton.jsx"));
+const FormGhostButton = lazy(() => import("./components/buttons/FormGhostButton.jsx"));
+const ClassTypeList = lazy(() => import("./components/classType/classTypeList.jsx"));
+const Cover = lazy(() => import("./components/Cover.jsx"));
+const FiltersDialogBox = lazy(() => import("./components/dialogs/FiltersDialogBox.jsx"));
+const FilterPanel = lazy(() => import("./components/FilterPanel.jsx"));
+const Footer = lazy(() => import("./components/footer/index.jsx"));
+const SearchArea = lazy(() => import("./components/SearchArea.jsx"));
+const config = lazy(() => import("/imports/config"));
+const Events = lazy(() => import("/imports/util/events"));
 import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "./components/jss/helpers.js";
 import { withPopUp } from "/imports/util";
@@ -283,59 +283,63 @@ class Landing extends Component {
       currentUser,
       isUserSubsReady,
       previousLocationPathName,
+      routeDetails,
       currentLocationPathName
     } = this.props;
     const visitorType = localStorage.getItem("visitorType");
     const visitorRedirected = JSON.parse(
       localStorage.getItem("visitorRedirected")
     );
-    // console.group("REDIRECT INDEX PAGE");
-    console.info(currentUser, localStorage.getItem("visitorRedirected"));
-    // console.groupEnd();
-    if (!visitorRedirected && previousLocationPathName === "/") {
-      if (
-        isUserSubsReady &&
-        currentUser &&
-        currentUser.profile.userType === "School"
-      ) {
-        // Meteor.call("school.getMySchool", (err, res) => {
-        //   if (err) {
-        //     console.warn(err);
-        //   } else {
-        //     if (res.length == 1) {
-        //       //if there is only 1 school, then visit it else
-        //       const mySchoolSlug = res[0].slug;
-        //       // browserHistory.push(`/schools/${mySchoolSlug}`);
-        //     } else {
-        //       // browserHistory.push("/skillshape-for-school");
-        //       browserHistory.push("/dashboard");
-        //     }
-        //   }
-        // });
-        localStorage.setItem("visitorRedirected", true);
-        browserHistory.push("/dashboard");
-      } else if (
-        isUserSubsReady &&
-        currentUser &&
-        currentUser.profile.userType !== "School"
-      ) {
-        localStorage.setItem("visitorRedirected", true);
-        this.handlePreloaderState(false);
-      } else if (isUserSubsReady && !currentUser) {
-        localStorage.setItem("visitorRedirected", true);
-        if (visitorType === "school") {
-          browserHistory.push("/skillshape-for-school");
-        } else {
+    console.group("REDIRECT INDEX PAGE");
+    console.log(routeDetails, previousLocationPathName, currentLocationPathName)
+    // console.info(currentUser, localStorage.getItem("visitorRedirected"));
+    console.groupEnd();
+    if (isEmpty(routeDetails.query)) {
+      if (!visitorRedirected && previousLocationPathName === "/") {
+        if (
+          isUserSubsReady &&
+          currentUser &&
+          currentUser.profile.userType === "School"
+        ) {
+          // Meteor.call("school.getMySchool", (err, res) => {
+          //   if (err) {
+          //     console.warn(err);
+          //   } else {
+          //     if (res.length == 1) {
+          //       //if there is only 1 school, then visit it else
+          //       const mySchoolSlug = res[0].slug;
+          //       // browserHistory.push(`/schools/${mySchoolSlug}`);
+          //     } else {
+          //       // browserHistory.push("/skillshape-for-school");
+          //       browserHistory.push("/dashboard");
+          //     }
+          //   }
+          // });
+          localStorage.setItem("visitorRedirected", true);
+          browserHistory.push("/dashboard");
+        } else if (
+          isUserSubsReady &&
+          currentUser &&
+          currentUser.profile.userType !== "School"
+        ) {
+          localStorage.setItem("visitorRedirected", true);
+          this.handlePreloaderState(false);
+        } else if (isUserSubsReady && !currentUser) {
+          localStorage.setItem("visitorRedirected", true);
+          if (visitorType === "school") {
+            browserHistory.push("/skillshape-for-school");
+          } else {
+            this.handlePreloaderState(false);
+          }
+        }
+      } else {
+        // Lets say we land on any link and from that we clicked on lets back to homepage
+        if (
+          (visitorRedirected && isUserSubsReady) ||
+          (isUserSubsReady && previousLocationPathName !== "/")
+        ) {
           this.handlePreloaderState(false);
         }
-      }
-    } else {
-      // Lets say we land on any link and from that we clicked on lets back to homepage
-      if (
-        (visitorRedirected && isUserSubsReady) ||
-        (isUserSubsReady && previousLocationPathName !== "/")
-      ) {
-        this.handlePreloaderState(false);
       }
     }
   };
@@ -977,135 +981,135 @@ class Landing extends Component {
 
     return (
       <Fragment>
-      <Suspense fallback={<Preloader />}>
+        <Suspense fallback={<Preloader />}>
           <DocumentTitle title={this.props.route.name}>
-        <div>
-          {this.state.filterPanelDialogBox && (
-            <FiltersDialogBox
-              open={this.state.filterPanelDialogBox}
-              onModalClose={() => this.handleFiltersDialogBoxState(false)}
-              filterPanelProps={{
-                isCardsBeingSearched: this.state.isCardsBeingSearched,
-                currentAddress: this.state.locationName,
-                removeAllFilters: this.removeAllFilters,
-                filters: this.state.filters,
-                tempFilters: this.state.tempFilters,
-                stickyPosition: this.state.sticky,
-                onLocationChange: this.onLocationChange,
-                locationName: this.state.locationName,
-                locationInputChanged: this.locationInputChanged,
-                fliterSchoolName: this.fliterSchoolName,
-                filterAge: this.filterAge,
-                filterGender: this.filterGender,
-                skillLevelFilter: this.skillLevelFilter,
-                perClassPriceFilter: this.perClassPriceFilter,
-                pricePerMonthFilter: this.pricePerMonthFilter,
-                collectSelectedSkillCategories: this
-                  .collectSelectedSkillCategories,
-                collectSelectedSkillSubject: this.collectSelectedSkillSubject,
-                handleSkillTypeSearch: this.handleSkillTypeSearch,
-                skillTypeText: this.state.filters.skillTypeText,
-                handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
-                handleFiltersDialogSaveButtonClick: this
-                  .handleFiltersDialogSaveButtonClick
-              }}
-            />
-          )}
-          {/* Cover */}
-          <CoverWrapper>
-            <Cover
-              polytheneVerticalFlow
-              itemScope
-              itemType="http://schema.org/WPHeader"
-            >
-              <BrandBar
-                positionStatic
-                currentUser={this.props.currentUser}
-                isUserSubsReady={this.props.isUserSubsReady}
-              />
-              <SearchArea
-                onLocationInputChange={this.handleLocationSearch}
-                onSkillTypeChange={this.handleSkillTypeSearch}
-                onFiltersButtonClick={() =>
-                  this.handleFiltersDialogBoxState(true)
-                }
-                handleNoOfFiltersClick={() =>
-                  this.handleFiltersDialogBoxState(true)
-                }
-                getMyCurrentLocation={this.getMyCurrentLocation}
-                onMapViewButtonClick={this.handleToggleMapView}
-                mapView={this.state.mapView}
-                locationInputChanged={this.locationInputChanged}
-                filters={this.state.filters}
-                resetLocationInput={this.resetLocationInput}
-                onLocationChange={this.onLocationChange}
-                currentFilterState={this.state.filters}
-                collectSelectedSkillCategories={
-                  this.collectSelectedSkillCategories
-                }
-                collectSelectedSkillSubject={this.collectSelectedSkillSubject}
-                onSearchIconClick={() => this.scrollTo()}
-              />
-            </Cover>
-          </CoverWrapper>
+            <div>
+              {this.state.filterPanelDialogBox && (
+                <FiltersDialogBox
+                  open={this.state.filterPanelDialogBox}
+                  onModalClose={() => this.handleFiltersDialogBoxState(false)}
+                  filterPanelProps={{
+                    isCardsBeingSearched: this.state.isCardsBeingSearched,
+                    currentAddress: this.state.locationName,
+                    removeAllFilters: this.removeAllFilters,
+                    filters: this.state.filters,
+                    tempFilters: this.state.tempFilters,
+                    stickyPosition: this.state.sticky,
+                    onLocationChange: this.onLocationChange,
+                    locationName: this.state.locationName,
+                    locationInputChanged: this.locationInputChanged,
+                    fliterSchoolName: this.fliterSchoolName,
+                    filterAge: this.filterAge,
+                    filterGender: this.filterGender,
+                    skillLevelFilter: this.skillLevelFilter,
+                    perClassPriceFilter: this.perClassPriceFilter,
+                    pricePerMonthFilter: this.pricePerMonthFilter,
+                    collectSelectedSkillCategories: this
+                      .collectSelectedSkillCategories,
+                    collectSelectedSkillSubject: this.collectSelectedSkillSubject,
+                    handleSkillTypeSearch: this.handleSkillTypeSearch,
+                    skillTypeText: this.state.filters.skillTypeText,
+                    handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
+                    handleFiltersDialogSaveButtonClick: this
+                      .handleFiltersDialogSaveButtonClick
+                  }}
+                />
+              )}
+              {/* Cover */}
+              <CoverWrapper>
+                <Cover
+                  polytheneVerticalFlow
+                  itemScope
+                  itemType="http://schema.org/WPHeader"
+                >
+                  <BrandBar
+                    positionStatic
+                    currentUser={this.props.currentUser}
+                    isUserSubsReady={this.props.isUserSubsReady}
+                  />
+                  <SearchArea
+                    onLocationInputChange={this.handleLocationSearch}
+                    onSkillTypeChange={this.handleSkillTypeSearch}
+                    onFiltersButtonClick={() =>
+                      this.handleFiltersDialogBoxState(true)
+                    }
+                    handleNoOfFiltersClick={() =>
+                      this.handleFiltersDialogBoxState(true)
+                    }
+                    getMyCurrentLocation={this.getMyCurrentLocation}
+                    onMapViewButtonClick={this.handleToggleMapView}
+                    mapView={this.state.mapView}
+                    locationInputChanged={this.locationInputChanged}
+                    filters={this.state.filters}
+                    resetLocationInput={this.resetLocationInput}
+                    onLocationChange={this.onLocationChange}
+                    currentFilterState={this.state.filters}
+                    collectSelectedSkillCategories={
+                      this.collectSelectedSkillCategories
+                    }
+                    collectSelectedSkillSubject={this.collectSelectedSkillSubject}
+                    onSearchIconClick={() => this.scrollTo()}
+                  />
+                </Cover>
+              </CoverWrapper>
 
-          {/* Filter Panel */}
-          <FilterPanelWrapper>
-            <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
-              {this.state.mapView ? (
-                this.renderFilterPanel()
-              ) : (
-                  <FilterBarDisplayWrapper sticky={this.state.sticky}>
-                    {this.renderFilterPanel()}
-                  </FilterBarDisplayWrapper>
-                )}
-            </Sticky>
-          </FilterPanelWrapper>
+              {/* Filter Panel */}
+              <FilterPanelWrapper>
+                <Sticky innerZ={10} onStateChange={this.handleStickyStateChange}>
+                  {this.state.mapView ? (
+                    this.renderFilterPanel()
+                  ) : (
+                      <FilterBarDisplayWrapper sticky={this.state.sticky}>
+                        {this.renderFilterPanel()}
+                      </FilterBarDisplayWrapper>
+                    )}
+                </Sticky>
+              </FilterPanelWrapper>
 
-          {/*Cards List */}
-          <Element
-            name="content-container"
-            className="element homepage-content"
-          >
-            {/* Applied Filters */}
-            <ClassTypeCardsPush height={this.getOuterWrapperPadding()} />
-            <ClassTypeOuterWrapper padding="0">
-              {!this.state.mapView &&
-                this.checkIfAnyFilterIsApplied() &&
-                this.showAppliedTopFilter()}
-              <ClassTypeList
-                landingPage={true}
-                handleIsCardsSearching={this.handleIsCardsSearching}
-                getMyCurrentLocation={this.getMyCurrentLocation}
-                defaultLocation={this.state.defaultLocation}
-                mapView={this.state.mapView}
-                filters={this.state.filters}
-                tempFilters={this.state.tempFilters}
-                handleSeeMore={this.handleSeeMore}
-                splitByCategory={true}
-                setSchoolIdFilter={this.setSchoolIdFilter}
-                appliedTopFilter={
-                  this.checkIfAnyFilterIsApplied() &&
-                  this.showAppliedTopFilter()
-                }
-                onSearchAgainButtonClick={this.setFilters}
-                removeAllFilters={this.removeAllFilters}
-                {...this.props}
-              />
-            </ClassTypeOuterWrapper>
-          </Element>
-          {!this.state.mapView && <Footer mapView={this.state.mapView} />}
-          {this.state.mapView && (
-            <FloatingMapButtonWrapper>
-              <FloatingChangeViewButton
-                onListButtonClick={this.handleToggleMapView}
-              />
-            </FloatingMapButtonWrapper>
-          )}
-        </div>
-      </DocumentTitle>
-      </Suspense>
-         </Fragment>
+              {/*Cards List */}
+              <Element
+                name="content-container"
+                className="element homepage-content"
+              >
+                {/* Applied Filters */}
+                <ClassTypeCardsPush height={this.getOuterWrapperPadding()} />
+                <ClassTypeOuterWrapper padding="0">
+                  {!this.state.mapView &&
+                    this.checkIfAnyFilterIsApplied() &&
+                    this.showAppliedTopFilter()}
+                  <ClassTypeList
+                    landingPage={true}
+                    handleIsCardsSearching={this.handleIsCardsSearching}
+                    getMyCurrentLocation={this.getMyCurrentLocation}
+                    defaultLocation={this.state.defaultLocation}
+                    mapView={this.state.mapView}
+                    filters={this.state.filters}
+                    tempFilters={this.state.tempFilters}
+                    handleSeeMore={this.handleSeeMore}
+                    splitByCategory={true}
+                    setSchoolIdFilter={this.setSchoolIdFilter}
+                    appliedTopFilter={
+                      this.checkIfAnyFilterIsApplied() &&
+                      this.showAppliedTopFilter()
+                    }
+                    onSearchAgainButtonClick={this.setFilters}
+                    removeAllFilters={this.removeAllFilters}
+                    {...this.props}
+                  />
+                </ClassTypeOuterWrapper>
+              </Element>
+              {!this.state.mapView && <Footer mapView={this.state.mapView} />}
+              {this.state.mapView && (
+                <FloatingMapButtonWrapper>
+                  <FloatingChangeViewButton
+                    onListButtonClick={this.handleToggleMapView}
+                  />
+                </FloatingMapButtonWrapper>
+              )}
+            </div>
+          </DocumentTitle>
+        </Suspense>
+      </Fragment>
     );
   }
 }
