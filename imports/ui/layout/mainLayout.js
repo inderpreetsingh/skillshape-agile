@@ -130,8 +130,6 @@ class MainLayout extends React.Component {
     });
   };
 
-  showTermsOfServiceDialogBox = () => {};
-
   render() {
 
     const { currentUser, isUserSubsReady, classes } = this.props;
@@ -139,6 +137,7 @@ class MainLayout extends React.Component {
       <div>
         {React.cloneElement(this.props.children, {
           currentUser: currentUser,
+          routeDetails: this.props.location,
           previousLocationPathName: this.state.previousLocationPathName,
           currentLocationPathName: this.state.currentLocationPathName,
           isUserSubsReady: isUserSubsReady

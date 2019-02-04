@@ -113,6 +113,7 @@ export const sendClaimASchoolEmail = function (
     let to;
     if (platform == 'local') {
       to = 'ramesh.bansal@daffodilsw.com';
+      //to = 'singhs.ishwer@gmail.com';
     }
     else if (platform == 'dev') {
       to = config.skillshapeAdminEmail;
@@ -156,6 +157,7 @@ export const sendConfirmationEmail = function (userRec, school) {
     let to;
     if (platform == 'local') {
       to = 'ramesh.bansal@daffodilsw.com';
+      //to = 'singhs.ishwer@gmail.com';
     }
     else {
       to = config.skillshapeAdminEmail;
@@ -772,20 +774,20 @@ export const newSchoolJoinNotification = function ({
   name,
   schoolEditViewLink,
 }) {
-    let to;
-    if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
-    }
-    else {
-      to = config.skillshapeAdminEmail;
-    }
-    Email.send({
-      to: to, //emailObj.to
-      from: "Notices@SkillShape.com",
-      subject: "New School Joined",
-      html: ` ${name ? name : ''} create a new school at ${moment().format('DD:MM:YYYY(HH:MM:A)')}.<br/>
+  let to;
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
+  }
+  else {
+    to = config.skillshapeAdminEmail;
+  }
+  Email.send({
+    to: to, //emailObj.to
+    from: "Notices@SkillShape.com",
+    subject: "New School Joined",
+    html: ` ${name ? name : ''} create a new school at ${moment().format('DD:MM:YYYY(HH:MM:A)')}.<br/>
               <a href=${schoolEditViewLink}>Click here</a> to view that school.<br/>     
               ${EmailSignature}
       `
-    });
+  });
 };
