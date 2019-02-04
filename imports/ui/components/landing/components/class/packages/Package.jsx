@@ -444,7 +444,7 @@ class Package extends React.Component {
 								<CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
 							)}
 						{usedFor !== "enrollmentPackagesDialog" && <CdText appearance={appearance}>
-							<b>Covers:</b> {this.getCovers(props.selectedClassType)}
+							<b>{props.packageType !== 'EP' ? "Covers: " : 'Required For: '}</b> {this.getCovers(props.selectedClassType)}
 						</CdText>}
 						{props.packageType == 'MP' && <CdText>{maximumClasses(props)}</CdText>}
 					</ClassDetailsSection>

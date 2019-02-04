@@ -161,13 +161,13 @@ Meteor.methods({
             return new Meteor.Error("Permission Denied!!");
         }
     },
-    "user.checkForRegisteredUser": function({ email, adminView }) {
+    "user.checkForRegisteredUser": function({ email }) {
         if (email) {
             const userData = Meteor.users.findOne({ "emails.address": email });
             if (userData) {
                 let userName = getUserFullName(userData);
                 return {
-                    userInfo: `${userName}  at ${email} already exists. Is this your ${!adminView ? "student " : " known"}?`,
+                    userInfo: `${userName}  at ${email} already exists.`,
                     userId: userData._id
                 };
             } else {

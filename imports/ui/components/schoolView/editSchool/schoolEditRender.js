@@ -136,7 +136,7 @@ export default function (props) {
                   slug = {slug}
                   currentUser = {currentUser}
                   isUserSubsReady = {isUserSubsReady}
-                  admin = {false}
+                  view = {'classmates'}
                   />
                 )
               }
@@ -146,7 +146,7 @@ export default function (props) {
                   slug = {slug}
                   currentUser = {currentUser}
                   isUserSubsReady = {isUserSubsReady}
-                  admin = {true}
+                  view = {"admin"}
                   />
                 )
               }

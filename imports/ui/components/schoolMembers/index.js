@@ -19,6 +19,7 @@ class SchoolMemberView extends Component {
     render() {
         let { currentUser, isUserSubsReady, admin } = this.props;
         let slug = get(this.props.params, 'slug', this.props.slug);
+        let view = get(this.props,'view','classmates')
         let filters = { ...this.state.filters };
 
         if (!isUserSubsReady)
@@ -43,7 +44,7 @@ class SchoolMemberView extends Component {
                         params={this.props.params}
                         location={this.props.location}
                         slug={slug}
-                        admin={admin}
+                        view = {view}
                     />
                 </Grid>
             </DocumentTitle>

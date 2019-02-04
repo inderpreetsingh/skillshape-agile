@@ -51,7 +51,7 @@ export default class SchoolMemberFilter extends Component {
     }
 
   	render() {
-    	const { stickyPosition,adminView } = this.props;
+    	const { stickyPosition,isAdmin,view } = this.props;
     	
 
   		return (
@@ -68,7 +68,7 @@ export default class SchoolMemberFilter extends Component {
 					                    onChange={this.props.handleMemberNameChange}
 					                    skillShapeInput={true}
 					                    iconName='search'
-					                    placeholder={!adminView? "Member Name":"Admin Name"}
+					                    placeholder={view == 'classmates' ? "Member Name":"Admin Name"}
 					                    value={get(this.props, "filters.memberName", "")}
 					                />
 					            </Grid>
@@ -76,7 +76,7 @@ export default class SchoolMemberFilter extends Component {
 					                <Multiselect
 					                    textField={"name"}
 					                    valueField={"_id"}
-					                    placeholder={`Search ${!adminView?"Member" :"Admin"} by Class Type`}
+					                    placeholder={`Search ${view == 'classmates'?"Member" :"Admin"} by Class Type`}
 					                    data={this.props.classTypeData}
 					                    onChange={this.props.handleClassTypeDataChange}
 					                />

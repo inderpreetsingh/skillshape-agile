@@ -225,8 +225,8 @@ const ActionButtons = (props) => (
 				iconName="edit"
 				onClick={props.onEditMemberClick} />
 		</ActionButton>
-		{props.adminView &&
-			!props.superAdmin && (
+		{props.isAdmin &&
+			!props.superAdmin && props.view == "admin" && (
 				<ActionButton>
 					<MemberActionButton
 						noMarginBottom
@@ -538,7 +538,7 @@ class SchoolMemberInfo extends Component {
 			memberInfo,
 			view,
 			classes,
-			adminView,
+			isAdmin,
 			currentUser,
 			notClassmatePage,
 			selectedSchoolData
@@ -650,13 +650,15 @@ class SchoolMemberInfo extends Component {
 
 						<MemberDetails>
 							<Text>{userName}</Text>
-							<React.Fragment>
-								{memberInfo.phone && <Text>{memberInfo.phone}</Text>}
-								{memberInfo.email && <Text>{memberInfo.email}</Text>}
-							</React.Fragment>
-							{(userId === Meteor.userId() || adminView) &&
+							{isAdmin && (
+									<React.Fragment>
+									{memberInfo.phone && <Text>{memberInfo.phone}</Text>}
+									{memberInfo.email && <Text>{memberInfo.email}</Text>}
+								</React.Fragment>
+							)}
+							{/* {(userId === Meteor.userId() || isAdmin) &&
 								<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
-							}
+							} */}
 							{/* &&
 								<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
 							*/}
@@ -676,7 +678,7 @@ class SchoolMemberInfo extends Component {
 						/>
 					</AdminNotes>}
 				</UserInfoPanel>
-				{view === 'admin' && (
+				{isAdmin && (
 					<ActionButtonsBar>
 						<ActionButtons
 							memberInfo={this.props.memberInfo}
@@ -686,11 +688,12 @@ class SchoolMemberInfo extends Component {
 							openEditMemberModal={(event) => {
 								this.setState({ openEditMemberModal: true });
 							}}
-							adminView={adminView}
+							isAdmin={isAdmin}
 							removeButtonClick={() => {
 								this.setState({ showConfirmation: true });
 							}}
 							superAdmin={superAdmin}
+							view = {view} 
 						/>
 					</ActionButtonsBar>
 				)}

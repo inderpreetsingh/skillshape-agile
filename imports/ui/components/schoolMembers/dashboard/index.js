@@ -24,12 +24,12 @@ import TextField from "material-ui/TextField";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
-import React, { Fragment } from "react";
+import React, { Fragment,lazy,Suspense } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import { packageCoverProvider } from '/imports/util';
-import SchoolMemberInfo from "../schoolMemberInfo";
+const SchoolMemberInfo = lazy(()=>import("../schoolMemberInfo"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -41,12 +41,12 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-import SchoolMemberListItems from "/imports/ui/components/schoolMembers/schoolMemberList/index.js";
-import SchoolAdminListItems from '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js';
+const SchoolMemberListItems = lazy(()=>import( "/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
+const SchoolAdminListItems = lazy(()=>import( '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import MDSpinner from "react-md-spinner";
 const drawerWidth = 400;
 const style = {
   w211: {
@@ -169,7 +169,7 @@ class DashBoardView extends React.Component {
   };
 
   renderStudentAddModal = () => {
-    const { adminView } = this.props;
+    const { isAdmin,view } = this.props;
     var currentYear = new Date().getFullYear();
     let birthYears = [];
     for (let i = 0; i < 60; i++) {
@@ -326,7 +326,7 @@ class DashBoardView extends React.Component {
           <PrimaryButton
             formId="addUser"
             type="submit"
-            label={`Add a New ${!adminView ? "Member" : 'Admin'}`} /> <PrimaryButton formId="cancelUser"
+            label={`Add a New ${view == 'classmates' ? "Member" : 'Admin'}`} /> <PrimaryButton formId="cancelUser"
               label="Cancel"
               onClick={() =>
                 this.setState({ renderStudentModal: false, error: false })
@@ -340,7 +340,7 @@ class DashBoardView extends React.Component {
   allowAddNewMemberWithThisEmail = event => {
     // event.preventDefault();
     // const { payload } = this.state;
-    const { adminView, schoolData, adminsIds } = this.props;
+    const { isAdmin, schoolData, adminsIds } = this.props;
     let schoolId = schoolData[0]._id;
     let _id = this.state.message && this.state.message.userId || null;
     let schoolName = schoolData[0].name;
@@ -359,8 +359,8 @@ class DashBoardView extends React.Component {
     payload.signUpType = "member-signup"
     payload.sendMeSkillShapeNotification = true;
     payload.schoolName = schoolName;
-    console.log("​adminView", adminView)
-    if (!adminView) {
+    console.log("​isAdmin", isAdmin)
+    if (!isAdmin) {
 
       let state = {
         isLoading: true
@@ -401,8 +401,7 @@ class DashBoardView extends React.Component {
 
   addNewMember = event => {
     event.preventDefault();
-    const { schoolData, adminView, adminsIds } = this.props;
-    console.log("​adminView", adminView)
+    const { schoolData, isAdmin, adminsIds } = this.props;
     // Check for existing user only if users has entered their email.
     if (!isEmpty(schoolData) && !this.state.studentWithoutEmail) {
       // Show Loading
@@ -412,7 +411,6 @@ class DashBoardView extends React.Component {
         "user.checkForRegisteredUser",
         {
           email: this.email.value,
-          adminView: adminView
         },
         (err, res) => {
 
@@ -423,7 +421,7 @@ class DashBoardView extends React.Component {
             // state.showConfirmationModal = fals;
             state.message = res;
             state.isLoading = false;
-            if (findIndex(adminsIds, (o) => { return o == _id }) != -1 && adminView) {
+            if (findIndex(adminsIds, (o) => { return o == _id }) != -1 && isAdmin) {
               this.setState({ error: 'This person is already an admin.', isLoading: false });
               return;
             }
@@ -495,13 +493,12 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = (memberId, superAdminId) => {
-    const { adminView, schoolData, adminsData, purchaseByUserId } = this.props;
+    const { isAdmin, schoolData, adminsData, purchaseByUserId ,view} = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
-    if (!adminView) {
+    if (view == 'classmates') {
       memberInfo = SchoolMemberDetails.findOne(memberId);
-      console.log("​handleMemberDetailsToRightPanel -> memberInfo", memberInfo)
       profile = memberInfo.profile.profile;
       email = memberInfo.profile.emails[0].address;
       _id = memberInfo.activeUserId;
@@ -524,7 +521,7 @@ class DashBoardView extends React.Component {
         name: profile.name,
         phone: profile.phone,
         email: email,
-        activeUserId: get(memberInfo, 'activeUserId', null),
+        activeUserId: get(memberInfo, 'activeUserId', _id),
         schoolId: schoolId,
         adminNotes: memberInfo.adminNotes,
         classmatesNotes: memberInfo.classmatesNotes,
@@ -630,31 +627,17 @@ class DashBoardView extends React.Component {
     return !nextProps.isLoading;
   }
   render() {
-    console.count('dashboard 5')
-    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, adminView, adminsData, superAdminId, isLoading } = this.props;
+    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, isAdmin, adminsData, superAdminId, isLoading,view } = this.props;
     const { renderStudentModal, memberInfo, joinSkillShape } = this.state;
-    if (isLoading) {
-      return <Preloader />;
-    }
-    // Not allow accessing this URL to non admin user.
-    if (!isLoading && !schoolAdmin && slug) {
-      return (
-        <Typography type="display2" gutterBottom align="center">
-          To access this page you need to login as an admin.
-        </Typography>
-      );
-    }
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
       schoolMemberListFilters.schoolId =
         !isEmpty(schoolData) && schoolData[0]._id;
     }
-
     let { currentUser, isUserSubsReady } = this.props;
     let filters = { ...this.state.filters };
-
     if (this.props.isLoading) {
-      return <Preloader />;
+      return <ContainerLoader />;
     }
     else if (!slug) {
       filters.activeUserId = currentUser && currentUser._id;
@@ -677,7 +660,8 @@ class DashBoardView extends React.Component {
             handleMemberNameChange={this.handleMemberNameChange}
             classTypeData={classTypeData}
             filters={filters}
-            adminView={adminView}
+            isAdmin={isAdmin}
+            view = {view}
           />
           {slug && (
             <Grid
@@ -697,25 +681,29 @@ class DashBoardView extends React.Component {
                 color="primary"
                 onClick={() => this.setState({ renderStudentModal: true })}
               >
-                {adminView ? "Add New Admin" : "Add New Student"}
+                {view == 'admin' ? "Add New Admin" : "Add New Student"}
               </Button>
             </Grid>
           )}
-          {adminView && !_.isEmpty(adminsData) ?
+           <Suspense fallback={<center><MDSpinner size={50}/></center>}>
+          {view == 'admin'  && !_.isEmpty(adminsData) ?
             <SchoolAdminListItems
               collectionData={adminsData}
               handleMemberDetailsToRightPanel={
                 this.handleMemberDetailsToRightPanel
               }
-              adminView={adminView}
+              isAdmin={isAdmin}
               superAdminId={superAdminId}
+              view = {view}
             /> : <SchoolMemberListItems
               filters={schoolMemberListFilters}
               handleMemberDetailsToRightPanel={
                 this.handleMemberDetailsToRightPanel
               }
-              adminView={adminView}
+              view = {view}
+              isAdmin={isAdmin}
             />}
+            </Suspense>
         </List>
       </div>
     );
@@ -770,7 +758,8 @@ class DashBoardView extends React.Component {
                   onModalClose={() =>
                     this.setState({ renderStudentModal: false, error: false })
                   }
-                  adminView={adminView}
+                  isAdmin={isAdmin}
+                  view = {view}
                 />
               )}
             </form>
@@ -810,6 +799,7 @@ class DashBoardView extends React.Component {
           className={classes.rightPanel}
           style={{ height: "100vh", overflow: "auto", overflowX: "hidden" }}
         >
+            <Suspense fallback={<center><MDSpinner size={50}/></center>}>
           {!isEmpty(memberInfo) && (
             <Fragment>
               <SchoolMemberInfo
@@ -818,101 +808,18 @@ class DashBoardView extends React.Component {
                 handleInput={this.handleInput}
                 saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                 disabled={slug ? false : true}
-                view={adminView ? "admin" : "classmates"}
+                view={view}
                 classTypeData={get(this.props, "classTypeData", [])}
                 handleMemberDetailsToRightPanel={
                   this.handleMemberDetailsToRightPanel
                 }
-                adminView={adminView}
+                isAdmin={isAdmin}
                 notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
               />
-
-              {/* <div
-                style={{
-                  height: "300px",
-                  width: "400px",
-                  border: "solid 2px",
-                  margin: "20px"
-                }}
-              >
-                <div style={{ margin: "10px" }}>Active Subscription</div>
-                {memberInfo &&
-                  memberInfo.packageDetails &&
-                  Object.values(memberInfo.packageDetails).map(value => {
-                    return (
-                      <center>
-                        <div
-                          style={{
-                            border: "solid 2px",
-                            backgroundColor: "green",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            width: "368px",
-                            height: "50px",
-                            borderRadius: "16px",
-                            marginBottom: "2px"
-                          }}
-                        >
-                          <div style={{ margin: "10px" }}>
-                            {value && value.createdOn
-                              ? dateFriendly(
-                                  value.createdOn,
-                                  "MMMM Do YYYY, h:mm:ss a"
-                                )
-                              : "Unavilable"}
-                          </div>
-                          {"  "}
-                          <div style={{ margin: "10px" }}>
-                            {value && value.packageName
-                              ? value.packageName
-                              : "Unavilable"}
-                          </div>
-                          <div
-                            style={{
-                              border: "solid 2px",
-                              width: "48px",
-                              height: "41px",
-                              marginTop: "3px",
-                              borderRadius: "14px"
-                            }}
-                          />
-                        </div>
-                      </center>
-                    );
-                  })} */}
-              {/* old subscription code */}
-              {/* <PackageDetailsTable>
-                  {memberInfo &&
-                    memberInfo.packageDetails &&
-                    Object.values(memberInfo.packageDetails).map(value => {
-                      return (
-                        <TableRow>
-                          <TableCell style={style.w150}>
-                            {}
-                            {value && value.createdOn
-                              ? dateFriendly(
-                                  value.createdOn,
-                                  "MMMM Do YYYY, h:mm:ss a"
-                                )
-                              : "Unavilable"}
-                          </TableCell> */}
-              {/* <TableCell style={style.w150}>
-                            {value && value.packageName
-                              ? value.packageName
-                              : "Unavilable"}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {/* 
-                        
-                      );
-                    })} */}
-              {/* </PackageDetailsTable> */}
-              {/* </div> */}
               {this.renderSchoolMedia(schoolData, memberInfo, slug)}
             </Fragment>
           )}
+          </Suspense>
         </Grid>
       </Grid>
     );
@@ -921,7 +828,6 @@ class DashBoardView extends React.Component {
 
 export default createContainer(props => {
   let slug = get(props.params, 'slug', props.slug);
-  let query = { admin: props.admin };
   let schoolData = [];
   let isLoading = true;
   let classTypeData = [];
@@ -929,7 +835,7 @@ export default createContainer(props => {
   let schoolAdmin = false;
   let adminsIds;
   let schoolId;
-  let classPricing, monthlyPricing, enrollmentFee, adminView = false, adminsData = [], classSubscription, classSubscriptionData
+  let classPricing, monthlyPricing, enrollmentFee, isAdmin = false, adminsData = [], classSubscription, classSubscriptionData
     , purchaseData = [], purchaseSubscription, filter, purchaseByUserId, superAdminId;
   ;
   let subscription = Meteor.subscribe(
@@ -966,7 +872,6 @@ export default createContainer(props => {
       classPricing = ClassPricing.find().fetch();
       enrollmentFee = EnrollmentFees.find().fetch();
       monthlyPricing = MonthlyPricing.find().fetch();
-      isLoading = false;
     }
     if (!isEmpty(schoolData) && schoolData[0].admins) {
       adminsIds = schoolData[0].admins;
@@ -975,17 +880,17 @@ export default createContainer(props => {
       if (includes(adminsIds, Meteor.userId())) {
         schoolAdmin = true;
       }
-      if (schoolAdmin && query.admin) {
+      if (schoolAdmin) {
         Meteor.subscribe("user.findAdminsDetails", adminsIds)
         adminsData = Meteor.users.find().fetch();
-        adminView = true;
+        isAdmin = true;
         let x = findIndex(adminsIds, (o) => { return o == Meteor.userId() })
         if (x == -1) {
           adminData = remove(adminsData, (o) => { return o._id == Meteor.userId() });
         }
       }
+      isLoading = false;
     }
-    isLoading = false;
   }
   return {
     ...props,
@@ -998,7 +903,7 @@ export default createContainer(props => {
     enrollmentFee,
     monthlyPricing,
     adminsIds,
-    adminView,
+    isAdmin,
     adminsData,
     purchaseByUserId,
     superAdminId
