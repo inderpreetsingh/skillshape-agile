@@ -85,7 +85,8 @@ Meteor.methods({
             let addToCalendarCondition = "classTimeId" in  filter && 'classTypeId' in filter && 'schoolId' in filter;
             if(addToCalendarCondition && status == 'signIn' || status == "signOut"){
                 let methodName;
-                let data = {classTypeId,classTimeId,schoolId} = filter;
+                let  {classTypeId,classTimeId,schoolId} = filter;
+                let data = {classTypeId,classTimeId,schoolId};
                 data.userId = filter.userId ? filter.userId : this.userId;
                 data.from = 'signHandler';
                 status == 'signIn' ? methodName = 'classInterest.addClassInterest' : status == 'signOut' ? methodName = 'classInterest.removeClassInterest' : '';

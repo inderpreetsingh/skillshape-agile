@@ -125,9 +125,10 @@ class MembersListContainer extends Component {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
           if (res) {
             state.status = 'Sign In';
+            let newStatus = `${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}`
             popUp.appear("success", {
-              title: packageConnected ? 'Package successfully purchased.' : `Sign in successfully`,
-              content: packageConnected ? 'Your student can now attend class!' : `You have been successfully ${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}.`,
+              title: packageConnected ? 'Package successfully purchased.' : `${newStatus} successfully`,
+              content: packageConnected ? 'Your student can now attend class!' : `You have been successfully ${newStatus}.`,
               RenderActions: (<ButtonWrapper>
                 <FormGhostButton
                   label={'Ok'}
@@ -181,6 +182,7 @@ class MembersListContainer extends Component {
     />
   )
   handleClassUpdate = (filter, status, popUp, packageConnected) => {
+		console.log('TCL: MembersListContainer -> handleClassUpdate -> filter, status, popUp, packageConnected', filter, status, popUp, packageConnected)
     Meteor.call('classPricing.signInHandler', filter, (err, res) => {
       let purchased = get(res, 'purchased', []);
       let epStatus = get(res, "epStatus", false);
@@ -370,6 +372,7 @@ class MembersListContainer extends Component {
   };
 
   updateStatus = (n, props) => {
+		console.log('TCL: MembersListContainer -> updateStatus -> n, props', n, props)
     let { status, popUp, purchaseId, classData } = props;
     let { scheduled_date } = classData && classData[0] || {};
     let inc = 0, packageType, packageConnected = false;
