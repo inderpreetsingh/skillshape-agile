@@ -20,10 +20,6 @@ import * as helpers from "./components/jss/helpers.js";
 import { withPopUp } from "/imports/util";
 import styled from "styled-components";
 
-
-
-
-
 const MainContentWrapper = styled.div`
   display: flex;
   position: relative;
