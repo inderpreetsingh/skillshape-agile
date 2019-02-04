@@ -12,11 +12,6 @@ import { Text } from '/imports/ui/components/landing/components/jss/sharedStyled
 import { packageStatus } from '/imports/ui/components/landing/constants/packages/packageStatus';
 import { calcRenewalDate, capitalizeString, formatDate, formatMoney, maximumClasses } from '/imports/util';
 
-
-
-
-
-
 const ADMIN_SUBSCRIPTIONS = 'adminSubscriptions';
 const MY_SUBSCRIPTIONS = 'mySubscriptions';
 
@@ -381,7 +376,7 @@ class Package extends React.Component {
 				>
 					<Wrapper appearance={appearance}>
 						<ClassDetailsSection appearance={appearance}>
-							<Title appearance={appearance}>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>
+							{props.packageType !== 'MP' && <Title appearance={appearance}>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>}
 							<CdText appearance={appearance}>
 								{ReactHtmlParser(this.getDateForSubscriptions(props))}
 							</CdText>
@@ -441,8 +436,8 @@ class Package extends React.Component {
 									)}
 							</CdText>
 						) : (
-								<CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
-							)}
+							props.packageType !== 'MP' && <CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
+						)}
 						{usedFor !== "enrollmentPackagesDialog" && <CdText appearance={appearance}>
 							<b>{props.packageType !== 'EP' ? "Covers: " : 'Required For: '}</b> {this.getCovers(props.selectedClassType)}
 						</CdText>}
