@@ -271,10 +271,13 @@ class Package extends React.Component {
 	getCovers = (data) => {
 		let str = ""
 		if (!isEmpty(data)) {
-			str = data.map(classType => classType.name);
+			str = data.map(classType => {
+				// console.log(classType.name.toLowerCase(), capitalizeString(classType.name.toLowerCase()))
+				return capitalizeString(classType.name.toLowerCase())
+			});
 			str = str.join(", ");
 		}
-		return str.toLowerCase();
+		return str;
 	}
 
 	getDateForSubscriptions = (props) => {
@@ -436,8 +439,8 @@ class Package extends React.Component {
 									)}
 							</CdText>
 						) : (
-							props.packageType !== 'MP' && <CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
-						)}
+								props.packageType !== 'MP' && <CdText appearance={appearance}>{this.getPaymentType(props.pymtType) || 'NA'}</CdText>
+							)}
 						{usedFor !== "enrollmentPackagesDialog" && <CdText appearance={appearance}>
 							<b>{props.packageType !== 'EP' ? "Covers: " : 'Required For: '}</b> {this.getCovers(props.selectedClassType)}
 						</CdText>}

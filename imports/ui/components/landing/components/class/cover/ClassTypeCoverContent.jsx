@@ -216,9 +216,9 @@ class ClassTypeCoverContent extends React.Component {
       // return addressArray.filter(str => str).join(", ");
       address.push(
         `${obj.address ? obj.address : "Address"}, ${
-          obj.city ? obj.city : "City"
+        obj.city ? obj.city : "City"
         }, ${obj.state ? obj.state : "State"}, ${
-          obj.country ? obj.country : "Country"
+        obj.country ? obj.country : "Country"
         }`
       );
     }
@@ -320,7 +320,7 @@ class ClassTypeCoverContent extends React.Component {
       let currentUserName = getUserFullName(Meteor.user());
       emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
         text ? text : pricing
-      }%3F %0D%0A%0D%0A Thanks`;
+        }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
       // const mailToNormalized = encodeURI(mailTo);
@@ -430,25 +430,25 @@ class ClassTypeCoverContent extends React.Component {
                     />
                   </LocationNotFound>
                 ) : (
-                  <Fragment>
-                    <div
-                      id="myMap"
-                      style={{ height: "100%", minHeight: 320 }}
-                    />
-                    <MyLocationList>
-                      {this.getAddress().map((location, index) => {
-                        return (
-                          <MyLocation>
-                            <Icon className={props.classes.myLocationIcon}>
-                              location_on
+                    <Fragment>
+                      <div
+                        id="myMap"
+                        style={{ minHeight: 320 }}
+                      />
+                      <MyLocationList>
+                        {this.getAddress().map((location, index) => {
+                          return (
+                            <MyLocation>
+                              <Icon className={props.classes.myLocationIcon}>
+                                location_on
                             </Icon>
-                            <LocationText>{location}</LocationText>
-                          </MyLocation>
-                        );
-                      })}
-                    </MyLocationList>
-                  </Fragment>
-                )}
+                              <LocationText>{location}</LocationText>
+                            </MyLocation>
+                          );
+                        })}
+                      </MyLocationList>
+                    </Fragment>
+                  )}
               </MapContainer>
             )}
 
@@ -467,18 +467,18 @@ class ClassTypeCoverContent extends React.Component {
                 </ClassTypeLogo>
               </LogoContainer>
             ) : (
-              <ClassTypeDescription
-                isEdit={props.isEdit}
-                publishStatusButton={props.publishStatusButton}
-                schoolName={props.schoolDetails.name}
-                friendlySlug={props.schoolDetails.friendlySlugs.slug.base}
-                description={description}
-                isClassTypeNameAvailable={!props.noClassTypeData}
-                classTypeName={classTypeName}
-                noOfStars={noOfRatings}
-                noOfReviews={noOfReviews}
-              />
-            )}
+                <ClassTypeDescription
+                  isEdit={props.isEdit}
+                  publishStatusButton={props.publishStatusButton}
+                  schoolName={props.schoolDetails.name}
+                  friendlySlug={props.schoolDetails.friendlySlugs.slug.base}
+                  description={description}
+                  isClassTypeNameAvailable={!props.noClassTypeData}
+                  classTypeName={classTypeName}
+                  noOfStars={noOfRatings}
+                  noOfReviews={noOfReviews}
+                />
+              )}
 
             {!props.isEdit &&
               props.noClassTypeData &&
@@ -568,11 +568,11 @@ class ClassTypeCoverContent extends React.Component {
                           />
                         </EditButtonWrapper>
                       ) : (
-                        <EditButtonWrapper>
-                          {" "}
-                          <EditButton />{" "}
-                        </EditButtonWrapper>
-                      ))}
+                          <EditButtonWrapper>
+                            {" "}
+                            <EditButton />{" "}
+                          </EditButtonWrapper>
+                        ))}
                   </Fragment>
                 </ClassTypeForegroundImage>
               )}
@@ -587,7 +587,7 @@ class ClassTypeCoverContent extends React.Component {
                     props.classTypeData.ageMin &&
                     props.classTypeData.ageMax &&
                     `${props.classTypeData.ageMin} - ${
-                      props.classTypeData.ageMax
+                    props.classTypeData.ageMax
                     }`
                   }
                   gender={props.classTypeData.gender}
