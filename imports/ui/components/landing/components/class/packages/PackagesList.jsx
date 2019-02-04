@@ -145,7 +145,7 @@ const PackageTypeTitle = SubHeading.extend`
 	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
     margin: 0 auto;
     margin-bottom: ${helpers.rhythmDiv}px;
-    text-align: ${props => props.packagesData.length === 1 ? 'center': 'left'};
+    ${props => props.packagesData.length === 1 && 'max-width: 500px'};
     
     @media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
 		max-width: ${PACKAGE_WIDTH}px;
