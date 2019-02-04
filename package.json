@@ -71,6 +71,7 @@
     "react-social-icons": "2.8.0",
     "react-stars": "2.2.5",
     "react-stickynode": "2.1.0",
+    "react-stripe-elements": "^2.0.3",
     "react-svg-inline": "2.1.0",
     "react-transition-group": "^2.2.1",
     "react-virtualized": "9.21.0",

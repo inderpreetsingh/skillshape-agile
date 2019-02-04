@@ -5,6 +5,7 @@ import React from "react";
 import ContactUsFloatingButton from "/imports/ui/components/landing/components/buttons/ContactUsFloatingButton.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import { withPopUp } from "/imports/util";
+import { browserHistory } from 'react-router';
 
 class MainLayout extends React.Component {
   constructor(props) {

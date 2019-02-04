@@ -14,10 +14,10 @@ import {get,isEmpty} from 'lodash';
 */
 }
 export default function(props) {
-	const { src, collectionData, adminView, superAdminId } = props;
+	const { src, collectionData, view ,isAdmin, superAdminId } = props;
 	let handleMemberDetailsToRightPanel;
 	let membersByName;
-	if (!adminView) {
+	if (view == 'classmates') {
 		membersByName = _.groupBy(collectionData && collectionData, function(item) {
 			return get(item, 'profile.profile.firstName', get(item, 'profile.profile.name', get(item,'profile.emails[0].address','0')))[0].toUpperCase();
 		});
@@ -34,7 +34,7 @@ export default function(props) {
 				<Grid item sm={12} xs={12} md={12}>
 					<Grid item sm={12} xs={12} md={12} style={{ padding: 8 }}>
 						<Typography>
-							{collectionData.length} {!adminView ? 'Students' : 'Admins'}
+							{collectionData.length} {view == 'classmates' ? 'Students' : 'Admins'}
 						</Typography>
 					</Grid>
 					<Grid item sm={12} xs={12} md={12}>
@@ -55,7 +55,7 @@ export default function(props) {
 											membersByName[key] &&
 												membersByName[key].map((data) => {
 													let profile, pic, firstName,emails;
-													if (!adminView) {
+													if (view == 'classmates') {
 														profile = data.profile.profile;
 													} else {
 														profile = data.profile;
