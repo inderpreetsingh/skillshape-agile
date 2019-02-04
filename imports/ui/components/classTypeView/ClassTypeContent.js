@@ -28,7 +28,7 @@ import { capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopU
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import withImageExists from "/imports/util/withImageExists.js";
-
+import {normalizeMonthlyPricingData} from "/imports/util";
 const imageExistsConfig = {
   originalImagePath: "classTypeData.classTypeImg",
   defaultImage: classTypeImgSrc
@@ -262,24 +262,7 @@ class ClassTypeContent extends Component {
     return classTypeData;
   };
 
-  normalizeMonthlyPricingData = monthlyPricingData => {
-    if (monthlyPricingData) {
-      let normalizedMonthlyPricingData = [];
-
-      for (let monthlyPricingObj of monthlyPricingData) {
-        monthlyPricingObj.pymtDetails.forEach(payment => {
-          const myMonthlyPricingObj = Object.assign({}, monthlyPricingObj);
-          myMonthlyPricingObj.pymtDetails = [];
-          myMonthlyPricingObj.pymtDetails.push(payment);
-          normalizedMonthlyPricingData.push(myMonthlyPricingObj);
-        });
-      }
-
-      return normalizedMonthlyPricingData;
-    } else {
-      return monthlyPricingData;
-    }
-  };
+ 
 
   scrollTo(name) {
     scroller.scrollTo(name || "content-container", {
@@ -739,7 +722,7 @@ class ClassTypeContent extends Component {
                     enrollMentPackages
                     enrollMentPackagesData={enrollmentFeeData}
                     perClassPackagesData={classPricingData}
-                    monthlyPackagesData={this.normalizeMonthlyPricingData(
+                    monthlyPackagesData={normalizeMonthlyPricingData(
                       monthlyPricingData
                     )}
                     currency={currency}

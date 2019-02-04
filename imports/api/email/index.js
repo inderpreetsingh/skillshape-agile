@@ -6,6 +6,7 @@ import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
 import EmailSignature from "./signature.js";
 import { getUserFullName } from "/imports/util/getUserData";
+import moment from 'moment';
 let platform = Meteor.settings.platform;
 export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
@@ -766,4 +767,25 @@ export const sendContractCancelledEmail = function ({
       `
     });
   }
+};
+export const newSchoolJoinNotification = function ({
+  name,
+  schoolEditViewLink,
+}) {
+    let to;
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else {
+      to = config.skillshapeAdminEmail;
+    }
+    Email.send({
+      to: to, //emailObj.to
+      from: "Notices@SkillShape.com",
+      subject: "New School Joined",
+      html: ` ${name ? name : ''} create a new school at ${moment().format('DD:MM:YYYY(HH:MM:A)')}.<br/>
+              <a href=${schoolEditViewLink}>Click here</a> to view that school.<br/>     
+              ${EmailSignature}
+      `
+    });
 };

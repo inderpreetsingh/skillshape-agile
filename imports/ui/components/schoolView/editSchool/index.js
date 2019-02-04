@@ -7,6 +7,8 @@ import School from "/imports/api/school/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import config from "/imports/config";
 import get from 'lodash/get';
+import { ContainerLoader } from "/imports/ui/loading/container";
+
 class SchoolEditView extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +27,7 @@ class SchoolEditView extends React.Component {
      if (get(this.props.route,'name',0) == "SchoolMemberView"){
       this.setState({ tabValue: 6 });
     }
-     if (get(this.props.route,'name',0) == "Financials"){
+     if (get(this.props.route,'name',0) == "Financials" && !this.state.tabValue){
       this.setState({ tabValue: 8 });
     }
   }
@@ -33,12 +35,14 @@ class SchoolEditView extends React.Component {
     this.defaultTab(get(nextProps.route,'name',0));
   }
   defaultTab = (routeName) => {
+    if(!this.state.tabValue){
       if(routeName == "SchoolMemberView"){
         this.setState({ tabValue: 6 });
       }
       else if(routeName == "Financials") {
         this.setState({ tabValue: 8 });
       }
+    }
   }
   checkSchoolAccess = (currentUser, schoolId) => {
     if (!currentUser || !schoolId) {
@@ -89,47 +93,50 @@ class SchoolEditView extends React.Component {
   onTabChange = tabValue => {
     this.setState({ tabValue });
   };
-
+  shouldComponentUpdate(nextProps){
+    return !nextProps.isLoading;
+  }
   render() {
+    if(!Meteor.userId() || !checkMyAccess({ user: Meteor.user(), schoolId:this.props.schoolId }) ){
+      browserHistory.push("/")
+      return false;
+    }
+    if(this.props.isLoading){
+      return <ContainerLoader/>
+    }
     return SchoolEditRender.call(this, this.props, this.state);
   }
 }
 
 export default createContainer(props => {
-  let { schoolId,slug } = props.params;
-  let subscription;
+  let { schoolId, slug } = props.params;
   let schoolData;
   let locationData;
   let moduleData;
   let isLoading = true;
   let currency;
-if(slug && !schoolId){
- subscription = Meteor.subscribe("schoolMemberDetails.getSchoolMemberWithSchool", {slug});
- if(subscription && subscription.ready()){
-   schoolId = School.find({ slug: slug }).fetch()[0]._id;
- }
-}
-  if (props.isUserSubsReady) {
-    subscription = Meteor.subscribe("UserSchool", schoolId);
-    Meteor.subscribe("location.getSchoolLocation", { schoolId });
-    Meteor.subscribe("classtype");
-    Meteor.subscribe("SkillType");
-    Meteor.subscribe("SkillClassbySchool", schoolId);
-    // Meteor.subscribe("modules.getModules", {schoolId});
-    // Meteor.subscribe("classType.getclassType", {schoolId});
+  let userSchoolSub, locationSub, classTypeSub, skillClassSchoolSub,
+    schoolMemberDetailsSub, classTypeData;
+  if (slug && !schoolId) {
+    schoolMemberDetailsSub = Meteor.subscribe("schoolMemberDetails.getSchoolMemberWithSchool", { slug });
+    if (schoolMemberDetailsSub && schoolMemberDetailsSub.ready()) {
+      schoolId = School.find({ slug: slug }).fetch()[0]._id;
+    }
   }
-  let classTypeData;
-  Meteor.subscribe("classType.getclassType", {
-    schoolId
-  });
-  if (subscription && subscription.ready()) {
-    isLoading = false;
-    schoolData = School.findOne({ _id: schoolId });
-    currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
-    locationData = SLocation.find().fetch();
-    classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
+  if (schoolId) {
+    userSchoolSub = Meteor.subscribe("UserSchool", schoolId);
+    locationSub = Meteor.subscribe("location.getSchoolLocation", { schoolId });
+    skillClassSchoolSub = Meteor.subscribe("SkillClassbySchool", schoolId);
+    classTypeSub = Meteor.subscribe("classType.getclassType", { schoolId });
+    let isAllSubsReady = userSchoolSub && userSchoolSub.ready() && locationSub && locationSub.ready() && skillClassSchoolSub && skillClassSchoolSub.ready() && classTypeSub && classTypeSub.ready();
+    if (props.isUserSubsReady && isAllSubsReady) {
+      isLoading = false;
+      schoolData = School.findOne({ _id: schoolId });
+      currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
+      locationData = SLocation.find().fetch();
+      classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
+    }
   }
-
   return {
     ...props,
     schoolId,

@@ -1,22 +1,19 @@
-import Typography from "material-ui/Typography";
-import React from "react";
-import DocumentTitle from "react-document-title";
-import { browserHistory } from "react-router";
-import ClassTypeDetails from "./classTypeDetails";
-// import Modules from './modules';
-import EmbedCodes from "./embedCodes";
-import LocationDetails from "./locationDetails";
-import MediaDetails from "./mediaDetails";
-import PriceDetails from "./priceDetails";
-import ContractRequests from './contractRequests';
-// import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-//tab details import over here
-import SchoolDetails from "./schoolDetails";
-import SchoolMemberView from "/imports/ui/components/schoolMembers";
-import { Loading } from "/imports/ui/loading";
+import React, { lazy, Suspense } from "react";
+const Typography = lazy(() => import("material-ui/Typography"));
+const DocumentTitle = lazy(() => import("react-document-title"));
+const ClassTypeDetails = lazy(() => import("./classTypeDetails"));
+const EmbedCodes = lazy(() => import("./embedCodes"));
+const LocationDetails = lazy(() => import("./locationDetails"));
+const MediaDetails = lazy(() => import("./mediaDetails"));
+const PriceDetails = lazy(() => import("./priceDetails"));
+const ContractRequests = lazy(() => import('./contractRequests'));
+const SchoolDetails = lazy(() => import("./schoolDetails"));
+const SchoolMemberView = lazy(() => import("/imports/ui/components/schoolMembers"));
+const ResponsiveTabs = lazy(() => import("/imports/util/responsiveTabs"));
+const Financial = lazy(() => import("/imports/ui/components/financials"));
+import { ContainerLoader } from "/imports/ui/loading/container";
 import { FormBuilderModal } from "/imports/ui/modal";
-import ResponsiveTabs from "/imports/util/responsiveTabs";
-import Financial from "/imports/ui/components/financials";
+import { browserHistory } from "react-router";
 export default function (props) {
   const { selecetdView, formBuilderModal } = this.state;
   
@@ -35,14 +32,11 @@ export default function (props) {
   if(schoolData){
     slug=schoolData.slug;
   }
-  if (isLoading) {
-    // return <Preloader />;
-  }
-
   if (schoolData) {
     // this.checkSchoolAccess(currentUser, schoolId)
     if (this.checkSchoolAccess(currentUser, schoolId)) {
       return (
+        <Suspense fallback={ <ContainerLoader />}>
         <DocumentTitle title={this.props.route.name}>
           <div id="editRender" style={{ overflow: "hidden" }}>
             <FormBuilderModal
@@ -69,6 +63,7 @@ export default function (props) {
               tabValue={this.state.tabValue}
               queryTabValue={this.state.queryTabValue}
             />
+        <Suspense fallback={ <ContainerLoader />}>
             <div>
               {this.state.tabValue === 0 && (
                 <SchoolDetails
@@ -177,8 +172,10 @@ export default function (props) {
                 )
               }
             </div>
+        </Suspense>
           </div>
         </DocumentTitle>
+        </Suspense>
       );
     } else {
       return (
@@ -188,6 +185,6 @@ export default function (props) {
       );
     }
   } else {
-    return <Loading />;
+    return <ContainerLoader />;
   }
 }
