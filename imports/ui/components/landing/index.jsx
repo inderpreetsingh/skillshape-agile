@@ -1,4 +1,4 @@
-import { debounce, isEmpty } from "lodash";
+import { debounce, isEmpty,get } from "lodash";
 import React, { Component, lazy, Suspense,Fragment } from "react";
 const DocumentTitle = lazy(() => import("react-document-title"));
 import { browserHistory, withRouter } from "react-router";
@@ -19,6 +19,7 @@ import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
 import * as helpers from "./components/jss/helpers.js";
 import { withPopUp } from "/imports/util";
 import styled from "styled-components";
+
 
 
 
@@ -213,7 +214,6 @@ class Landing extends Component {
     super(props);
     this.state = {
       mapView: false,
-      showPreloader: true,
       sticky: false,
       isLoading: false,
       isCardsBeingSearched: false,
@@ -267,80 +267,62 @@ class Landing extends Component {
     }
   }
 
-  handlePreloaderState = newPreloaderState => {
-    if (this.state.showPreloader !== newPreloaderState) {
-      this.setState(state => {
-        return {
-          ...state,
-          showPreloader: !state.showPreloader
-        };
-      });
-    }
-  };
 
   _redirectBasedOnVisitorType = () => {
     const {
       currentUser,
       isUserSubsReady,
       previousLocationPathName,
-      currentLocationPathName
+      currentLocationPathName,
+      location
     } = this.props;
     const visitorType = localStorage.getItem("visitorType");
     const visitorRedirected = JSON.parse(
       localStorage.getItem("visitorRedirected")
     );
-    // console.group("REDIRECT INDEX PAGE");
-    console.info(currentUser, localStorage.getItem("visitorRedirected"));
-    // console.groupEnd();
-    if (!visitorRedirected && previousLocationPathName === "/") {
-      if (
-        isUserSubsReady &&
-        currentUser &&
-        currentUser.profile.userType === "School"
-      ) {
-        // Meteor.call("school.getMySchool", (err, res) => {
-        //   if (err) {
-        //     console.warn(err);
-        //   } else {
-        //     if (res.length == 1) {
-        //       //if there is only 1 school, then visit it else
-        //       const mySchoolSlug = res[0].slug;
-        //       // browserHistory.push(`/schools/${mySchoolSlug}`);
-        //     } else {
-        //       // browserHistory.push("/skillshape-for-school");
-        //       browserHistory.push("/dashboard");
-        //     }
-        //   }
-        // });
-        localStorage.setItem("visitorRedirected", true);
-        browserHistory.push("/dashboard");
-      } else if (
-        isUserSubsReady &&
-        currentUser &&
-        currentUser.profile.userType !== "School"
-      ) {
-        localStorage.setItem("visitorRedirected", true);
-        this.handlePreloaderState(false);
-      } else if (isUserSubsReady && !currentUser) {
-        localStorage.setItem("visitorRedirected", true);
-        if (visitorType === "school") {
-          browserHistory.push("/skillshape-for-school");
-        } else {
-          this.handlePreloaderState(false);
+    let query = get(location,'query',{});
+    if(isEmpty(query)){
+      if (!visitorRedirected && previousLocationPathName === "/") {
+        if (
+          isUserSubsReady &&
+          currentUser &&
+          currentUser.profile.userType === "School"
+        ) {
+          localStorage.setItem("visitorRedirected", true);
+          browserHistory.push("/dashboard");
+        } else if (
+          isUserSubsReady &&
+          currentUser &&
+          currentUser.profile.userType !== "School"
+        ) {
+          localStorage.setItem("visitorRedirected", true);
+          
+        } else if (isUserSubsReady && !currentUser) {
+          localStorage.setItem("visitorRedirected", true);
+          if (visitorType === "school") {
+            browserHistory.push("/skillshape-for-school");
+          } else {
+            
+          }
         }
-      }
-    } else {
-      // Lets say we land on any link and from that we clicked on lets back to homepage
-      if (
-        (visitorRedirected && isUserSubsReady) ||
-        (isUserSubsReady && previousLocationPathName !== "/")
-      ) {
-        this.handlePreloaderState(false);
+      } else {
+        // Lets say we land on any link and from that we clicked on lets back to homepage
+        if (
+          (visitorRedirected && isUserSubsReady) ||
+          (isUserSubsReady && previousLocationPathName !== "/")
+        ) {
+          
+        }
       }
     }
   };
-
+  
+  componentWillMount() {
+    this._redirectBasedOnVisitorType();
+  }
+  
   componentDidMount() {
+    this._redirectBasedOnVisitorType();
     let positionCoords = this.getUsersCurrentLocation();
     positionCoords.then(function (value) {
       localStorage.setItem("myLocation", JSON.stringify(value));
@@ -438,22 +420,20 @@ class Landing extends Component {
           }
         );
       }
+      
     }
-    if (this.props.location.query && this.props.location.query.acceptInvite) {
+   else if (this.props.location.query && this.props.location.query.acceptInvite) {
       Events.trigger("acceptInvitationAsMember", {
         userData: this.props.location.query
       });
+      
     }
-
-    // When we redirect back, the componentDidUpdate needs not to be called.
-    this._redirectBasedOnVisitorType();
   }
 
   componentDidUpdate() {
     // Have to manually set it , otherwise it resets automatically in mapView.
-    document.title = "Skillshape";
-
     this._redirectBasedOnVisitorType();
+    document.title = "Skillshape";
   }
 
   // This is used to get subjects on the basis of subject category.
@@ -971,9 +951,7 @@ class Landing extends Component {
   };
 
   render() {
-    if (this.state.showPreloader) {
-      return <Preloader />;
-    }
+
 
     return (
       <Fragment>

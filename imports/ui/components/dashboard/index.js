@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component,lazy,Suspense } from 'react';
 import { browserHistory } from 'react-router';
 import { get } from 'lodash';
 
 import { withPopUp, getUserFullName } from '/imports/util';
-
-import DashBoardRender from './DashboardRender';
+import { ContainerLoader } from "/imports/ui/loading/container";
+const DashBoardRender = lazy(()=>import('./DashboardRender'));
 
 class MyDashBoard extends Component {
     constructor(props) {
@@ -92,12 +92,8 @@ class MyDashBoard extends Component {
             currentUser,
             isUserSubsReady
         } = this.props;
-
-        // console.log()
-        if (isBusy) {
-            return <ContainerLoader />
-        }
         return (
+            <Suspense fallback={<ContainerLoader/>}>
             <DashBoardRender
                 headerProps={{
                     currentUser: currentUser,
@@ -112,6 +108,7 @@ class MyDashBoard extends Component {
                 isUserSubsReady={isUserSubsReady}
                 onCreateNewSchoolClick={this.handleCreateNewSchoolClick}
             />
+            </Suspense>
         )
     }
 }
