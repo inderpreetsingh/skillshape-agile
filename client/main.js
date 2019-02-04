@@ -12,7 +12,7 @@ import { MuiThemeProvider } from "material-ui/styles";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import pickerStyles from "/imports/startup/client/material-ui-picker-styles/styles.js";
 import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
-
+import {isEmpty} from 'lodash';
 muiTheme.overrides = pickerStyles;
 
 // All the routes used in application
@@ -44,13 +44,12 @@ class App extends Component {
   };
   render() {
     const visitorTypeValue = localStorage.getItem("visitorType");
-    const { currentUser} = this.props;
     return (
       <MuiThemeProvider theme={muiTheme}>
         <div>
         <ErrorBoundary>
         { !visitorTypeValue &&
-          !currentUser && (
+          !Meteor.userId() && (
             <FirstTimeVisitDialogBox isUserSubsReady={true} />
           )}
           <Routes />
