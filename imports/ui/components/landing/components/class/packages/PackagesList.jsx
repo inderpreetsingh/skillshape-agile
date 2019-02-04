@@ -7,8 +7,15 @@ import Package from './Package';
 import PackageStructure from '../../../constants/structure/package.js';
 
 import * as helpers from '../../jss/helpers.js';
+import { SubHeading } from '../../jss/sharedStyledComponents';
 
 const PACKAGE_WIDTH = 500;
+const PACKAGE_TYPE_CATEGORIES = ['payAsYouGo', 'autoWithDraw', 'payUpFront'];
+const packageTypeCategories = {
+    'payAsYouGo': 'Pay As You Go',
+    'autoWithDraw': 'Automatic Withdrawal',
+    'payUpFront': 'Pay Up Front'
+}
 
 const PACKAGE_LIST_STYLES = {
     enrollmentPackages: {
@@ -42,8 +49,8 @@ const PackagesListWrapper = styled.section`
 	// align-items: ${(props) => (props.classPackages ? 'flex-end' : 'flex-start')};
 	align-items: center;
 	padding: ${helpers.rhythmDiv * 4}px 0;
-	${(props) => props.fullScreen && `width: 100%; align-items: center`};
-    ${(props) => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} 
+	${props => props.fullScreen && `width: 100%; align-items: center`};
+    ${props => props.onPriceEdit && 'flex-direction: row;flex-wrap: wrap;justify-content: space-around;'} 
 	
 	&:after {
 		content: "";
@@ -99,7 +106,7 @@ const PackagesWrapper = styled.div`
   }
 `;
 
-const PackagesInnerWrapper = styled.div`
+const PackagesContainer = styled.div`
 	${helpers.flexCenter}  
 	flex-wrap: wrap;
 	justify-content: ${props => props.packagesLength > 1 ? 'space-between' : 'center'}; 
@@ -131,39 +138,108 @@ const Title = styled.h2`
 	width: 100%;
 `;
 
-const PackagesListContainer = (props) => (
-    <PackagesListWrapper
-        listType={props.listType}
-        variant={props.variant}
-        fullScreen={props.fullScreen}
-        classPackages={props.classPackages}
-    >
-        <PackagesWrapper
-            classPackages={props.classPackages}
-            onPriceEdit={props.onPriceEdit}>
-            <Title>{props.packageListName}</Title>
-            <PackagesInnerWrapper packagesLength={props.packagesData.length}>
-                {props.packagesData.map((packageData) => (
-                    <PackageWrapper key={packageData._id}>
-                        <Package
-                            {...packageData}
-                            {...props.packageProps}
-                            classPackages={props.classPackages}
-                            schoolCurrency={props.schoolCurrency}
-                            onSchoolEdit={props.onSchoolEdit}
-                            onEditClick={() => {
-                                props.onEditClick();
-                            }}
-                            setFormData={() => {
-                                props.setFormData(packageData);
-                            }}
-                        />
-                    </PackageWrapper>
-                ))}
-            </PackagesInnerWrapper>
-        </PackagesWrapper>
-    </PackagesListWrapper>
+const PackageTypeTitle = SubHeading.extend`
+    font-size: 20px;
+    font-weight: 400;
+    width: 100%;
+	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
+    margin: 0 auto;
+    margin-bottom: ${helpers.rhythmDiv}px;
+    text-align: ${props => props.packagesData.length === 1 ? 'center': 'left'};
+    
+    @media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
+		max-width: ${PACKAGE_WIDTH}px;
+    }
+    
+    @media screen and (max-width: ${helpers.mobile}px) {
+        text-align: center;
+    }
+`;
+
+const Packages = (props) => (
+    <PackagesContainer packagesLength={props.packagesData.length}>
+        {props.packagesData.map((packageData) => (
+            <PackageWrapper key={packageData._id}>
+                <Package
+                    {...packageData}
+                    {...props.packageProps}
+                    classPackages={props.classPackages}
+                    schoolCurrency={props.schoolCurrency}
+                    onSchoolEdit={props.onSchoolEdit}
+                    onEditClick={() => {
+                        props.onEditClick();
+                    }}
+                    setFormData={() => {
+                        props.setFormData(packageData);
+                    }}
+                />
+            </PackageWrapper>
+        ))}
+    </PackagesContainer>
 );
+
+const PackagesListContainer = (props) => (
+    <React.Fragment>
+        {console.log(".....", props.monthlyPackagesData)}
+        < PackagesListWrapper
+            listType={props.listType}
+            variant={props.variant}
+            fullScreen={props.fullScreen}
+            classPackages={props.classPackages}
+        >
+            <PackagesWrapper
+                classPackages={props.classPackages}
+                onPriceEdit={props.onPriceEdit}>
+                <Title>{props.packageListName}</Title>
+                {props.listType === 'monthlyPackages' ?
+                    Object
+                        .keys(props.packagesData)
+                        .map(pymtType => {
+                            const packages = props.packagesData[pymtType].packages;
+                            return (<React.Fragment>
+                                {!isEmpty(packages) &&
+                                    <React.Fragment>
+                                        <PackageTypeTitle
+                                            packagesData={props.packagesData[pymtType].packages}
+                                        >{packageTypeCategories[pymtType]}</PackageTypeTitle>
+                                        <Packages
+                                            {...props}
+                                            packagesData={props.packagesData[pymtType].packages} />
+                                    </React.Fragment>}
+                            </React.Fragment>)
+                        })
+                    :
+                    <Packages {...props} />}
+            </PackagesWrapper>
+        </PackagesListWrapper >
+    </React.Fragment>
+);
+
+const categorizeMonthlyListData = (packagesData) => {
+    const categorizedData = {};
+    const categories = PACKAGE_TYPE_CATEGORIES.forEach(category => {
+        categorizedData[category] = {
+            name: category,
+            packages: []
+        };
+    });
+
+    //console.info(categorizedData, 'before adding packages');
+    packagesData.forEach(packageData => {
+        const paymentType = packageData.pymtType;
+        Object.keys(paymentType).forEach(type => {
+            const category = paymentType[type];
+            //console.log(category, type, paymentType);
+            if (category) {
+                //console.log(category, type, "....");
+                categorizedData[type].packages.push(packageData);
+            }
+        })
+    });
+
+    //console.info(categorizedData, 'after adding packages');
+    return categorizedData;
+};
 
 const PackagesList = (props) => {
     const classPackagesEmpty = isEmpty(props.perClassPackagesData);
@@ -247,9 +323,10 @@ const PackagesList = (props) => {
                             schoolId: props.schoolId,
                             usedFor: props.usedFor
                         }}
+                        monthlyPackagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
                         packageListName="Monthly Packages"
                         fullScreen={classPackagesEmpty}
-                        packagesData={props.monthlyPackagesData}
+                        packagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
                         schoolCurrency={schoolCurrency}
                         onSchoolEdit={props.onSchoolEdit}
                         onEditClick={() => {
@@ -266,7 +343,7 @@ const PackagesList = (props) => {
     );
 };
 
-//NOTE: usedFor defines in what situation we are using this package. 
+//NOTE: usedFor defines in what situation we are using this package.
 //Like using it for iframes, mysubscriptions etc.
 PackagesList.propTypes = {
     perClassPackagesData: PropTypes.arrayOf(PackageStructure),
