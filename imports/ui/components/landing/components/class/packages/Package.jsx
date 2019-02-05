@@ -379,7 +379,7 @@ class Package extends React.Component {
 				>
 					<Wrapper appearance={appearance}>
 						<ClassDetailsSection appearance={appearance}>
-							{props.packageType !== 'MP' && <Title appearance={appearance}>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>}
+							<Title appearance={appearance}>{props.packageName || props.name} {this.getPaymentTypeName(props)}</Title>
 							<CdText appearance={appearance}>
 								{ReactHtmlParser(this.getDateForSubscriptions(props))}
 							</CdText>

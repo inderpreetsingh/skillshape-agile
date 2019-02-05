@@ -115,6 +115,7 @@ export default createContainer(props => {
   let moduleData;
   let isLoading = true;
   let currency;
+  let userId = get(props,'location.query.userId',null);
   let userSchoolSub, locationSub, classTypeSub, skillClassSchoolSub,
     schoolMemberDetailsSub, classTypeData;
   if (slug && !schoolId) {
@@ -145,6 +146,7 @@ export default createContainer(props => {
     moduleData,
     isLoading,
     classTypeData,
-    currency
+    currency,
+    userId
   };
 }, SchoolEditView);

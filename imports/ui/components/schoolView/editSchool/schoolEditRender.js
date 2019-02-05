@@ -26,7 +26,8 @@ export default function (props) {
     locationData,
     moduleData,
     isLoading,
-    ...editSchoolProps
+    userId,
+    ...editSchoolProps,
   } = this.props;
   let slug;
   if(schoolData){
@@ -137,6 +138,7 @@ export default function (props) {
                   currentUser = {currentUser}
                   isUserSubsReady = {isUserSubsReady}
                   view = {'classmates'}
+                  userId = {userId}
                   />
                 )
               }
