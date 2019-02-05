@@ -169,10 +169,10 @@ const ExpiryDate = Text.extend`
   font-style: italic;
 `;
 
-const onMenuItemClick = (value, slug) => {
+const onMenuItemClick = (value, slug,userId) => {
   value = value.value;
   if (value === "view_student") {
-    browserHistory.push(`/schools/${slug}/members`);
+    browserHistory.push(`/schools/${slug}/members?userId=${userId}`);
   }
 };
 
@@ -295,8 +295,8 @@ class MemberExpanded extends Component {
     const profile = props.profile;
     const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
     const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
-    const slug = get(props, "schoolName", null);
-
+    const slug = get(props, "slug", null);
+    const {_id:userId} = props;
     let classTypeId = get(props.classData[0], 'classTypeId', null);
     let buyPackagesBoxState = props.buyPackagesBoxState;
     console.count('memberExpand 160');
@@ -315,7 +315,7 @@ class MemberExpanded extends Component {
             </MemberDetailsInner>
 
             <DropDownMenu
-              onMenuItemClick={(value) => { onMenuItemClick(value, slug) }}
+              onMenuItemClick={(value) => { onMenuItemClick(value, slug,userId) }}
               menuButtonClass={props.classes.iconButton}
               menuOptions={menuOptions}
             />

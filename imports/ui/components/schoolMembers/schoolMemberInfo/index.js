@@ -703,7 +703,7 @@ class SchoolMemberInfo extends Component {
 					</ActionButtonsBar>
 				)}
 				{!isEmpty(subscriptionList) &&
-					(view === 'admin' || userId == Meteor.userId()) &&
+					(isAdmin || userId == Meteor.userId()) &&
 					Meteor.settings.public.paymentEnabled &&
 					(
 						<SubscriptionsList

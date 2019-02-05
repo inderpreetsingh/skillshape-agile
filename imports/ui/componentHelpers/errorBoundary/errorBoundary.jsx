@@ -5,7 +5,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 
 
 const BackGround = styled.div`
-  background-image: url('/images/landing/covergb.jpg');
+  background-image: url('https://s3-us-west-1.amazonaws.com/skillshape/schools/e537fa24-3624-4cf8-9765-59e4aed9d7e0.jpg');
   height: -webkit-fill-available;
   padding: 10px;
   font-family: monospace;

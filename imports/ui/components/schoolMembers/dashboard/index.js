@@ -159,11 +159,45 @@ class DashBoardView extends React.Component {
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
     so that right panel gets removed from UI*/
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.schoolData !== this.props.schoolData) {
-    //   this.setState({ memberInfo: {} });
-    // }
+    let {userId:activeUserId,schoolData,purchaseByUserId,superAdminId,isLoading} = nextProps;
+    let {memberInfo} = this.state;
+    let schoolId = get(schoolData[0],'_id',null);
+    let schoolName =get(schoolData[0],'name','School Name')
+   if(!isLoading && schoolId && activeUserId && isEmpty(memberInfo)){
+     let data = {schoolId,activeUserId}
+    Meteor.call("schoolMemberDetails.getMemberData",data,(err,memberInfo)=>{
+      if(!isEmpty(memberInfo)){
+        let {studentWithoutEmail,classTypeIds,classmatesNotes,adminNotes,_id:memberId,profile:{profile:{name,pic,firstName,lastName,phone},emails}} = memberInfo;
+        let subscriptionList = packageCoverProvider(get(purchaseByUserId, activeUserId, []));
+        let email = get(emails[0],'address',null);
+        let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
+        let superAdmin = superAdminId == activeUserId ? true : false;
+        this.setState({
+          memberInfo: {
+            _id: activeUserId,
+            memberId: memberId,
+            name: name,
+            phone: phone,
+            email: email,
+            activeUserId: activeUserId,
+            schoolId: schoolId,
+            adminNotes: adminNotes,
+            classmatesNotes: classmatesNotes,
+            lastName: lastName,
+            classTypeIds: classTypeIds,
+            firstName: firstName,
+            pic: pic,
+            studentWithoutEmail: studentWithoutEmail,
+            schoolName: schoolName,
+            subscriptionList,
+            superAdmin,
+            schoolImg
+          }});
+      }
+    })
+   }
   }
-
+ 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
@@ -872,6 +906,7 @@ export default createContainer(props => {
       classPricing = ClassPricing.find().fetch();
       enrollmentFee = EnrollmentFees.find().fetch();
       monthlyPricing = MonthlyPricing.find().fetch();
+      isLoading = false;
     }
     if (!isEmpty(schoolData) && schoolData[0].admins) {
       adminsIds = schoolData[0].admins;
@@ -889,7 +924,7 @@ export default createContainer(props => {
           adminData = remove(adminsData, (o) => { return o._id == Meteor.userId() });
         }
       }
-      isLoading = false;
+     
     }
   }
   return {
