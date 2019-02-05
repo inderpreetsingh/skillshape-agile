@@ -84,15 +84,16 @@ export default createContainer((props) => {
       if (classTimeSubscription && classTimeSubscription.ready()) {
         ClassTimeData = ClassTime.find().fetch();
         instructorsIds = get(ClassTimeData[0], 'instructors', []);
-        userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
-        if (userSubscription && userSubscription.ready()) {
-          isBusy = false;
-          instructorsData = Meteor.users.find().fetch();
-          if (!includes(instructorsIds, Meteor.userId())) {
-            instructorsData = remove(instructorsData, (ele) => {
-              return ele._id != Meteor.userId()
-            })
+        if(!isEmpty(instructorsIds)){
+          userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
+          if (userSubscription && userSubscription.ready()) {
+            isBusy = false;
+            instructorsData = Meteor.users.find({_id:{$in:instructorsIds}}).fetch();
+           
           }
+        }
+        else{
+          isBusy = false;
         }
       }
 
@@ -101,13 +102,11 @@ export default createContainer((props) => {
       userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
       if (userSubscription && userSubscription.ready()) {
         isBusy = false;
-        instructorsData = Meteor.users.find().fetch();
-        if (!includes(instructorsIds, Meteor.userId())) {
-          instructorsData = remove(instructorsData, (ele) => {
-            return ele._id != Meteor.userId()
-          })
-        }
+        instructorsData = Meteor.users.find({_id:{$in:instructorsIds}}).fetch();
       }
+    }
+    else{
+      isBusy = false;
     }
 
   }
