@@ -315,16 +315,18 @@ class SchoolMemberInfo extends Component {
 	// Handle call button for member's view.
 	handleCall = (memberInfo) => {
 		// Detect mobile and dial number on phone else show popup that shows phone information.
-		let md = new MobileDetect(window.navigator.userAgent);
-		if (md.mobile()) {
-			let schoolPhone = 'tel:+1-303-499-7111';
-			if (schoolData.phone) {
-				schoolPhone = `tel:${schoolData.phone}`;
-				return `${schoolPhone}`;
-			}
-		} else {
-			this.handleCallButtonClick();
-		}
+		// let md = new MobileDetect(window.navigator.userAgent);
+		// debugger;
+		// console.log(md.mobile(), md.maxMobileWidth, "...........");	
+		// if (md.mobile()) {
+		// 	let schoolPhone = 'tel:+1-303-499-7111';
+		// 	if (memberInfo.phone) {
+		// 		schoolPhone = `tel:${schoolData.phone}`;
+		// 		return `${schoolPhone}`;
+		// 	}
+		// } else {
+		// }
+		this.handleCallButtonClick();
 	};
 	handleEmail = (memberInfo) => {
 		this.handleEmailButtonClick();
@@ -357,6 +359,7 @@ class SchoolMemberInfo extends Component {
 		})
 	}
 	getContactNumber = () => {
+		//console.info(this.props, "........... props, get contact number");
 		return this.props.memberInfo && this.props.memberInfo.phone;
 	};
 	componentWillMount = () => {
@@ -550,8 +553,10 @@ class SchoolMemberInfo extends Component {
 			limit,
 			bgImg,
 			showConfirmation,
+			manageMemberShipDialog,
 			subscriptionsData,
-			isBusy
+			isBusy,
+			callMemberDialog
 		} = this.state;
 		let subscriptionList = get(memberInfo, 'subscriptionList', []);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
@@ -572,7 +577,7 @@ class SchoolMemberInfo extends Component {
 						onClose={() => this.setState({ showConfirmation: false })}
 					/>
 				)}
-				{this.state.manageMemberShipDialog && (
+				{manageMemberShipDialog && (
 					<ManageMemberShipDialogBox
 						subscriptionsData={subscriptionsData || []}
 						studentName={studentName}
@@ -588,10 +593,10 @@ class SchoolMemberInfo extends Component {
 						schoolImg={schoolImg}
 					/>
 				)}
-				{this.state.callMemberDialog && (
+				{callMemberDialog && (
 					<CallMemberDialogBox
 						contactNumbers={this.getContactNumber()}
-						open={this.state.callMemberDialog}
+						open={callMemberDialog}
 						onModalClose={() => this.handleDialogState('callMemberDialog', false)}
 					/>
 				)}
@@ -651,7 +656,7 @@ class SchoolMemberInfo extends Component {
 						<MemberDetails>
 							<Text>{userName}</Text>
 							{isAdmin && (
-									<React.Fragment>
+								<React.Fragment>
 									{memberInfo.phone && <Text>{memberInfo.phone}</Text>}
 									{memberInfo.email && <Text>{memberInfo.email}</Text>}
 								</React.Fragment>
@@ -693,7 +698,7 @@ class SchoolMemberInfo extends Component {
 								this.setState({ showConfirmation: true });
 							}}
 							superAdmin={superAdmin}
-							view = {view} 
+							view={view}
 						/>
 					</ActionButtonsBar>
 				)}
