@@ -128,7 +128,7 @@ class MembersListContainer extends Component {
             let newStatus = `${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}`
             popUp.appear("success", {
               title: packageConnected ? 'Package successfully purchased.' : `${newStatus} successfully`,
-              content: packageConnected ? 'Your student can now attend class!' : `You have been successfully ${newStatus}.`,
+              content: packageConnected ? 'Your student can now attend class!' : `Student have been successfully ${newStatus}.`,
               RenderActions: (<ButtonWrapper>
                 <FormGhostButton
                   label={'Ok'}
