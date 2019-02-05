@@ -128,6 +128,7 @@ const ClassDetails = props => {
             instructorsIds={instructorsIds}
             params={dataProps.params}
             schoolData={school}
+            slug={school.slug}
           />
         </InnerWrapper>
       </PageContent>

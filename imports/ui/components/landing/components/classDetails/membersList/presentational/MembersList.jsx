@@ -119,6 +119,7 @@ const MembersList = props => {
                                     updateStatus={props.updateStatus}
                                     handleNoteChange = {props.handleNoteChange}
                                     setNotes = {props.setNotes}
+                                    slug = {props.slug}
                                 />
                             ) : (
                                     <Member

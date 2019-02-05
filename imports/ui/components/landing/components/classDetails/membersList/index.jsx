@@ -624,7 +624,7 @@ class MembersListContainer extends Component {
     this.setState({ isBusy: !this.state.isBusy });
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData } = this.props;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData,slug } = this.props;
     const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification, isBusy } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
@@ -725,6 +725,7 @@ class MembersListContainer extends Component {
             updateStatus={this.updateStatus}
             handleNoteChange={this.handleNoteChange}
             setNotes={this.setNotes}
+            slug = {slug}
           />
         </ListWrapper>
         <PaginationWrapper>

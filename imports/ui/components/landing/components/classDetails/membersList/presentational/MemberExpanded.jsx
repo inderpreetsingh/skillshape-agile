@@ -295,7 +295,7 @@ class MemberExpanded extends Component {
     const profile = props.profile;
     const profileSrc = get(profile, 'medium', get(profile, 'pic', config.defaultProfilePicOptimized))
     const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
-    const slug = get(props, "schoolName", null);
+    const slug = get(props, "slug", null);
 
     let classTypeId = get(props.classData[0], 'classTypeId', null);
     let buyPackagesBoxState = props.buyPackagesBoxState;
