@@ -264,7 +264,7 @@ const SearchInputsSection = props => (
             placeholder="Location"
             defaultValue={props.currentDefaultAddress}
             defaultBorderRadius={true}
-            searchIcon={<MyLocation style={{ color: grey[500] }} />}
+            searchIcon={<MyLocation style={{ color: grey[500] }}  />}
             onSearchIconClick={props.onSearchIconClick}
             onChange={(event) => props.locationInputChanged(event, "filters", null)}
             filters={props.filters}
@@ -409,7 +409,7 @@ class SearchArea extends Component {
   };
 
   componentDidMount() {
-    this.props.getMyCurrentLocation({noMapView: true});
+    // this.props.getMyCurrentLocation({noMapView: true});
   }
 
   componentWillReceiveProps(nextProps) {

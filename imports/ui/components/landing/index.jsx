@@ -550,8 +550,6 @@ class Landing extends Component {
 
   getMyCurrentLocation = args => {
     const { popUp } = this.props;
-    const visitorTypeValue = localStorage.getItem("visitorType");
-    if(visitorTypeValue){
       if (navigator) {
         navigator.geolocation.getCurrentPosition(
           position => {
@@ -608,7 +606,7 @@ class Landing extends Component {
           }
         );
       }
-    }
+    
   };
 
   handleSeeMore = categoyName => {
@@ -1024,7 +1022,10 @@ class Landing extends Component {
                       this.collectSelectedSkillCategories
                     }
                     collectSelectedSkillSubject={this.collectSelectedSkillSubject}
-                    onSearchIconClick={() => this.scrollTo()}
+                    onSearchIconClick={() =>{
+                      this.getMyCurrentLocation()
+                      this.scrollTo()
+                    }}
                   />
                 </Cover>
               </CoverWrapper>
