@@ -535,8 +535,8 @@ class ClassTimeForm extends React.Component {
                         {locationData.map((data, index) => {
                           return (
                             <MenuItem key={index} value={data._id}>{`${
-                              data.address
-                              }, ${data.city}, ${data.country}`}</MenuItem>
+                              data.address ? data.address + ', ': ''
+                              }${data.city ? data.city+', ' : ''} ${data.country ? data.country : ''}`}</MenuItem>
                           );
                         })}
                         <MenuItem key={'add_location'} value={"add_new_location"}>

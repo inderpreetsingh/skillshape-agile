@@ -86,7 +86,7 @@ Meteor.methods({
         let locationData = SLocation.findOne({ _id: locationId });
         if (locationData) {
           let { address, city, state, country } = locationData;
-          let location = `${address}, ${city}, ${state}, ${country}`;
+          let location = `${address ? address + ', ':''} ${city ? city+ ', ':'' } ${state ? state+ ', ':''} ${country ? country : ""}`;
           event.location = location;
         }
         let { name: classTypeName, desc: classTypeDesc } = classTypeData;
