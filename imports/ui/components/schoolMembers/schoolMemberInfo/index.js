@@ -707,7 +707,6 @@ class SchoolMemberInfo extends Component {
 					Meteor.settings.public.paymentEnabled &&
 					(
 						<SubscriptionsList
-							maxListHeight={500}
 							packageProps={{ bgColor: "white", opacity: 1 }}
 							title={"Subscriptions"}
 							subsType="adminSubscriptions"

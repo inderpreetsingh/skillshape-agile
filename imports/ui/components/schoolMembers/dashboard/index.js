@@ -24,12 +24,12 @@ import TextField from "material-ui/TextField";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
-import React, { Fragment,lazy,Suspense } from "react";
+import React, { Fragment, lazy, Suspense } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import { packageCoverProvider } from '/imports/util';
-const SchoolMemberInfo = lazy(()=>import("../schoolMemberInfo"));
+const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -42,8 +42,8 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-const SchoolMemberListItems = lazy(()=>import( "/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
-const SchoolAdminListItems = lazy(()=>import( '/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
+const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
+const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
@@ -90,7 +90,7 @@ const styles = theme => ({
       width: `${drawerWidth}px !important`
     },
     boxShadow: "none !important",
-    height: "100vh",
+    // height: "100vh",
     overflow: "auto",
     padding: "0px !important",
     paddingLeft: "16px !important",
@@ -159,51 +159,52 @@ class DashBoardView extends React.Component {
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
     so that right panel gets removed from UI*/
   componentWillReceiveProps(nextProps) {
-    let {userId:activeUserId,schoolData,purchaseByUserId,superAdminId,isLoading} = nextProps;
-    let {memberInfo} = this.state;
-    let schoolId = get(schoolData[0],'_id',null);
-    let schoolName =get(schoolData[0],'name','School Name')
-   if(!isLoading && schoolId && activeUserId && isEmpty(memberInfo)){
-     let data = {schoolId,activeUserId}
-    Meteor.call("schoolMemberDetails.getMemberData",data,(err,memberInfo)=>{
-      if(!isEmpty(memberInfo)){
-        let {studentWithoutEmail,classTypeIds,classmatesNotes,adminNotes,_id:memberId,profile:{profile:{name,pic,firstName,lastName,phone},emails}} = memberInfo;
-        let subscriptionList = packageCoverProvider(get(purchaseByUserId, activeUserId, []));
-        let email = get(emails[0],'address',null);
-        let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
-        let superAdmin = superAdminId == activeUserId ? true : false;
-        this.setState({
-          memberInfo: {
-            _id: activeUserId,
-            memberId: memberId,
-            name: name,
-            phone: phone,
-            email: email,
-            activeUserId: activeUserId,
-            schoolId: schoolId,
-            adminNotes: adminNotes,
-            classmatesNotes: classmatesNotes,
-            lastName: lastName,
-            classTypeIds: classTypeIds,
-            firstName: firstName,
-            pic: pic,
-            studentWithoutEmail: studentWithoutEmail,
-            schoolName: schoolName,
-            subscriptionList,
-            superAdmin,
-            schoolImg
-          }});
-      }
-    })
-   }
+    let { userId: activeUserId, schoolData, purchaseByUserId, superAdminId, isLoading } = nextProps;
+    let { memberInfo } = this.state;
+    let schoolId = get(schoolData[0], '_id', null);
+    let schoolName = get(schoolData[0], 'name', 'School Name')
+    if (!isLoading && schoolId && activeUserId && isEmpty(memberInfo)) {
+      let data = { schoolId, activeUserId }
+      Meteor.call("schoolMemberDetails.getMemberData", data, (err, memberInfo) => {
+        if (!isEmpty(memberInfo)) {
+          let { studentWithoutEmail, classTypeIds, classmatesNotes, adminNotes, _id: memberId, profile: { profile: { name, pic, firstName, lastName, phone }, emails } } = memberInfo;
+          let subscriptionList = packageCoverProvider(get(purchaseByUserId, activeUserId, []));
+          let email = get(emails[0], 'address', null);
+          let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
+          let superAdmin = superAdminId == activeUserId ? true : false;
+          this.setState({
+            memberInfo: {
+              _id: activeUserId,
+              memberId: memberId,
+              name: name,
+              phone: phone,
+              email: email,
+              activeUserId: activeUserId,
+              schoolId: schoolId,
+              adminNotes: adminNotes,
+              classmatesNotes: classmatesNotes,
+              lastName: lastName,
+              classTypeIds: classTypeIds,
+              firstName: firstName,
+              pic: pic,
+              studentWithoutEmail: studentWithoutEmail,
+              schoolName: schoolName,
+              subscriptionList,
+              superAdmin,
+              schoolImg
+            }
+          });
+        }
+      })
+    }
   }
- 
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
 
   renderStudentAddModal = () => {
-    const { isAdmin,view } = this.props;
+    const { isAdmin, view } = this.props;
     var currentYear = new Date().getFullYear();
     let birthYears = [];
     for (let i = 0; i < 60; i++) {
@@ -290,7 +291,7 @@ class DashBoardView extends React.Component {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
+        <Grid item xs={12} sm={6} style={{ marginTop: "24px" }}>
           <Multiselect
             textField={"name"}
             valueField={"_id"}
@@ -527,7 +528,7 @@ class DashBoardView extends React.Component {
   };
 
   handleMemberDetailsToRightPanel = (memberId, superAdminId) => {
-    const { isAdmin, schoolData, adminsData, purchaseByUserId ,view} = this.props;
+    const { isAdmin, schoolData, adminsData, purchaseByUserId, view } = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
@@ -661,7 +662,7 @@ class DashBoardView extends React.Component {
     return !nextProps.isLoading;
   }
   render() {
-    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, isAdmin, adminsData, superAdminId, isLoading,view } = this.props;
+    const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, isAdmin, adminsData, superAdminId, isLoading, view } = this.props;
     const { renderStudentModal, memberInfo, joinSkillShape } = this.state;
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
@@ -695,7 +696,7 @@ class DashBoardView extends React.Component {
             classTypeData={classTypeData}
             filters={filters}
             isAdmin={isAdmin}
-            view = {view}
+            view={view}
           />
           {slug && (
             <Grid
@@ -719,25 +720,25 @@ class DashBoardView extends React.Component {
               </Button>
             </Grid>
           )}
-           <Suspense fallback={<center><MDSpinner size={50}/></center>}>
-          {view == 'admin'  && !_.isEmpty(adminsData) ?
-            <SchoolAdminListItems
-              collectionData={adminsData}
-              handleMemberDetailsToRightPanel={
-                this.handleMemberDetailsToRightPanel
-              }
-              isAdmin={isAdmin}
-              superAdminId={superAdminId}
-              view = {view}
-            /> : <SchoolMemberListItems
-              filters={schoolMemberListFilters}
-              handleMemberDetailsToRightPanel={
-                this.handleMemberDetailsToRightPanel
-              }
-              view = {view}
-              isAdmin={isAdmin}
-            />}
-            </Suspense>
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            {view == 'admin' && !_.isEmpty(adminsData) ?
+              <SchoolAdminListItems
+                collectionData={adminsData}
+                handleMemberDetailsToRightPanel={
+                  this.handleMemberDetailsToRightPanel
+                }
+                isAdmin={isAdmin}
+                superAdminId={superAdminId}
+                view={view}
+              /> : <SchoolMemberListItems
+                filters={schoolMemberListFilters}
+                handleMemberDetailsToRightPanel={
+                  this.handleMemberDetailsToRightPanel
+                }
+                view={view}
+                isAdmin={isAdmin}
+              />}
+          </Suspense>
         </List>
       </div>
     );
@@ -793,7 +794,7 @@ class DashBoardView extends React.Component {
                     this.setState({ renderStudentModal: false, error: false })
                   }
                   isAdmin={isAdmin}
-                  view = {view}
+                  view={view}
                 />
               )}
             </form>
@@ -831,31 +832,31 @@ class DashBoardView extends React.Component {
           xs={12}
           md={8}
           className={classes.rightPanel}
-          style={{ height: "100vh", overflow: "auto", overflowX: "hidden" }}
+          style={{ overflow: "auto", overflowX: "hidden" }}
         >
-            <Suspense fallback={<center><MDSpinner size={50}/></center>}>
-          {!isEmpty(memberInfo) && (
-            <Fragment>
-              <SchoolMemberInfo
-                selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
-                memberInfo={memberInfo}
-                handleInput={this.handleInput}
-                saveAdminNotesInMembers={this.saveAdminNotesInMembers}
-                disabled={slug ? false : true}
-                view={view}
-                classTypeData={get(this.props, "classTypeData", [])}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                isAdmin={isAdmin}
-                notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
-              />
-              {this.renderSchoolMedia(schoolData, memberInfo, slug)}
-            </Fragment>
-          )}
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            {!isEmpty(memberInfo) && (
+              <Fragment>
+                <SchoolMemberInfo
+                  selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
+                  memberInfo={memberInfo}
+                  handleInput={this.handleInput}
+                  saveAdminNotesInMembers={this.saveAdminNotesInMembers}
+                  disabled={slug ? false : true}
+                  view={view}
+                  classTypeData={get(this.props, "classTypeData", [])}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  isAdmin={isAdmin}
+                  notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
+                />
+                {this.renderSchoolMedia(schoolData, memberInfo, slug)}
+              </Fragment>
+            )}
           </Suspense>
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
@@ -924,7 +925,7 @@ export default createContainer(props => {
           adminData = remove(adminsData, (o) => { return o._id == Meteor.userId() });
         }
       }
-     
+
     }
   }
   return {
