@@ -620,8 +620,7 @@ class ClassTimeForm extends React.Component {
                           ref="oneTimeRow"
                           data={
                             data &&
-                            data.scheduleDetails &&
-                            data.scheduleDetails.oneTime
+                            data.scheduleDetails 
                           }
                           roomData={this.state.roomData}
                           saveClassTimes={this.saveClassTimes}
