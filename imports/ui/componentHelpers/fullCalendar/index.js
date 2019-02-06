@@ -123,7 +123,7 @@ class FullCalendar extends React.Component {
     temp.dow = [scheduleDetailsObj.day];
 
     // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
-    temp.start = moment(scheduleDetailsObj.startTime).format("hh:mm");
+    temp.start = moment(scheduleDetailsObj.startTime).format("HH:mm");
     temp.end = moment(new Date(scheduleDetailsObj.startTime))
       .add(scheduleDetailsObj.duration, "minutes")
       .format("hh:mm");
@@ -233,7 +233,7 @@ class FullCalendar extends React.Component {
           let scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
           scheduleData.map((obj, index) => {
-            sevent.start = obj.startDate;
+            sevent.start = obj.startTime;
             sevent.roomId = obj.roomId;
             sevent.eventStartTime = moment(obj.startTime).format("hh:mm A");
             sevent.eventEndTime = moment(new Date(obj.startTime))
