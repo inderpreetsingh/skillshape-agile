@@ -51,15 +51,12 @@ const styles = theme => {
         maxWidth: "100%"
       }
     },
-    iconButton: {
-      height: "auto",
-      width: "auto"
-    },
     phoneIcon: {
-      width: helpers.baseFontSize,
-      height: helpers.baseFontSize,
+      width: 'auto',
+      height: 'auto',
       marginRight: helpers.rhythmDiv,
-      color: helpers.primaryColor
+      color: helpers.primaryColor,
+      background: 'white'
     }
   };
 };
@@ -91,19 +88,13 @@ const Title = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
 `;
 
-const WrapperContact = styled.li`
+const CDWrapper = styled.div`
   ${helpers.flexCenter} display: inline-flex;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv}px;
   border: 1px solid ${helpers.primaryColor};
 `;
 
-const ContactNumbersWrapper = styled.ul`
-  ${helpers.flexCenter} margin: 0;
-  padding: 0;
-  list-style: none;
-  flex-direction: column;
-`;
 
 const Contact = styled.a`
   color: ${helpers.primaryColor};
@@ -114,11 +105,15 @@ const Contact = styled.a`
   }
 `;
 
-const ContactNumber = props => (
-  <WrapperContact>
-    <PhoneIcon className={props.phoneIconClass} />
-    <Contact href={`tel:${props.tel}`}>{props.tel}</Contact>
-  </WrapperContact>
+const CMTitle = Title.extend`
+  margin: ${helpers.rhythmDiv * 2}px 0;
+`;
+
+const ContactDetails = props => (
+  <CDWrapper>
+    <IconButton color="primary" classes={{ root: props.classes.phoneIcon }} >phone</IconButton>
+    <Contact href={`tel:${props.contactNumbers}`}>{props.contactNumbers}</Contact>
+  </CDWrapper>
 );
 
 const CallMemberDialogBox = props => {
@@ -146,12 +141,11 @@ const CallMemberDialogBox = props => {
 
         <DialogContent classes={{ root: props.classes.dialogContent }}>
           <ContentWrapper>
-            <Title>Phone Details:</Title>
-            <ContactNumbersWrapper>
-              {props.contactNumbers
-                ? props.contactNumbers
-                : "No Phone is provided yet"}
-            </ContactNumbersWrapper>
+            <CMTitle>Phone Details:</CMTitle>
+            {props.contactNumbers
+              ? <ContactDetails {...props} />
+              : "No Phone is provided yet"}
+
           </ContentWrapper>
         </DialogContent>
       </MuiThemeProvider>
