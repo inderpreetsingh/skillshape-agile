@@ -59,7 +59,7 @@ const styles = theme => {
       width: helpers.baseFontSize,
       height: helpers.baseFontSize,
       marginRight: helpers.rhythmDiv,
-      color: helpers.primaryColor
+      color: helpers.primaryColor,
     }
   };
 };
@@ -91,14 +91,14 @@ const Title = styled.h2`
   font-size: ${helpers.baseFontSize * 1.5}px;
 `;
 
-const WrapperContact = styled.li`
+const ContactWrapper = styled.li`
   ${helpers.flexCenter} display: inline-flex;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
   padding: ${helpers.rhythmDiv}px;
   border: 1px solid ${helpers.primaryColor};
 `;
 
-const ContactNumbersWrapper = styled.ul`
+const ContactNumbers = styled.ul`
   ${helpers.flexCenter} margin: 0;
   padding: 0;
   list-style: none;
@@ -114,11 +114,11 @@ const Contact = styled.a`
   }
 `;
 
-const ContactNumber = props => (
-  <WrapperContact>
+const ContactDetails = props => (
+  <ContactWrapper>
     <PhoneIcon className={props.phoneIconClass} />
     <Contact href={`tel:${props.tel}`}>{props.tel}</Contact>
-  </WrapperContact>
+  </ContactWrapper>
 );
 
 const CallUsDialogBox = props => {
@@ -147,16 +147,16 @@ const CallUsDialogBox = props => {
         <DialogContent classes={{ root: props.classes.dialogContent }}>
           <ContentWrapper>
             <Title>Call us at any of the following numbers:</Title>
-            <ContactNumbersWrapper>
-{              console.log('TCL: contactNumbers', props.contactNumbers)
-}              {props.contactNumbers.map((contactNumber, i) => (
-                <ContactNumber
+            <ContactNumbers>
+              {console.log('TCL: contactNumbers', props.contactNumbers)
+              }              {props.contactNumbers.map((contactNumber, i) => (
+                <ContactDetails
                   key={i}
                   tel={contactNumber}
                   phoneIconClass={props.classes.phoneIcon}
                 />
               ))}
-            </ContactNumbersWrapper>
+            </ContactNumbers>
           </ContentWrapper>
         </DialogContent>
       </MuiThemeProvider>

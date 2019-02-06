@@ -16,7 +16,14 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
-import { DeleteClassTime, styles, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+import {
+  DeleteClassTime,
+  styles,
+  LinkedTime,
+  CTFormWrapper,
+  CTFormRow,
+  CTFormControlHW
+} from './sharedStyledComponents';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
