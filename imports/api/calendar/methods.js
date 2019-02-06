@@ -4,7 +4,7 @@ import ClassInterest from "/imports/api/classInterest/fields.js";
 import ClassTimes from "/imports/api/classTimes/fields.js";
 import ClassTypes from "/imports/api/classType/fields.js";
 import SLocation from "/imports/api/sLocation/fields.js";
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty,cloneDeep } from 'lodash';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -73,61 +73,68 @@ Meteor.methods({
     }
   },
   "calendar.generateEvents": function (userId) {
-    let events = [];
-    let classInterestData = ClassInterest.find({ userId, }).fetch();
-    if (!isEmpty(classInterestData)) {
-      classInterestData.map((classInterest) => {
-        let event = {};
-        let { classTimeId, classTypeId, _id: id } = classInterest;
-        event._id = id;
-        let classTimeData = ClassTimes.findOne({ _id: classTimeId });
-        let classTypeData = ClassTypes.findOne({ _id: classTypeId });
-        let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;
-        let locationData = SLocation.findOne({ _id: locationId });
-        if (locationData) {
-          let { address, city, state, country } = locationData;
-          let location = `${address ? address + ', ':''} ${city ? city+ ', ':'' } ${state ? state+ ', ':''} ${country ? country : ""}`;
-          event.location = location;
-        }
-        let { name: classTypeName, desc: classTypeDesc } = classTypeData;
-        let summary = `${classTypeName}: ${classTimeName}`;
-        event.summary = summary;
-        event.description = classTimeDesc || classTypeDesc || 'No Description';
-        scheduleDetails.map((obj) => {
-          let { startTime, duration, timeUnits, key } = obj;
-          let date1 = moment(startTime);
-          let date2 = moment(startTime);
-
-          if (duration && timeUnits) {
-            if (timeUnits == 'Minutes') {
-              date2 = moment(date2).add(duration, 'm');
-            } else {
-              date2 = moment(date2).add(duration, 'h');
-            }
+    try {
+      let events = [];
+      let classInterestData = ClassInterest.find({ userId, }).fetch();
+      if (!isEmpty(classInterestData)) {
+        classInterestData.map((classInterest) => {
+          let { classTimeId, classTypeId, _id: id } = classInterest;
+          let classTimeData = ClassTimes.findOne({ _id: classTimeId });
+          let classTypeData = ClassTypes.findOne({ _id: classTypeId });
+          let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;
+          let locationData = SLocation.findOne({ _id: locationId });
+          let location = ''
+          if (locationData) {
+            let { address, city, state, country } = locationData;
+            location = `${address ? address + ', ':''} ${city ? city+ ', ':'' } ${state ? state+ ', ':''} ${country ? country : ""}`;
           }
-          let COUNT = moment(endDate).diff(date1, 'days') + 2;
-          date2 = moment(date2).format();
-          date1 = moment(date1).format();
-          event.start = { dateTime: date1, timeZone: 'Asia/Kolkata' };
-          event.end = { dateTime: date2, timeZone: 'Asia/Kolkata' };
-          if (scheduleType != 'oneTime') {
-            let str = 'RRULE:FREQ=WEEKLY;';
-            if (key) {
-              let byDay = generatorByDay(key);
-              if (byDay) {
-                str += `BYDAY=${byDay};`;
+          let { name: classTypeName, desc: classTypeDesc } = classTypeData;
+          let summary = `${classTypeName}: ${classTimeName}`;
+          scheduleDetails.map((obj) => {
+            let event = {};
+            event._id = id;
+            event.location = location;
+            event.summary = summary;
+            event.description = classTimeDesc || classTypeDesc || 'No Description';
+            let currentObj = cloneDeep(obj);
+            let { startTime, duration, timeUnits, key } = currentObj;
+            let date1 = moment(startTime);
+            let date2 = moment(startTime);
+            let COUNT = moment(endDate).diff(date1, 'days') + 2;
+            if(key && scheduleType != 'oneTime') date1 = getStartDate(key,startTime);
+            else date1 = moment(date1).format();
+            duration = timeUnits ? duration : 1;
+            if (duration) {
+              if (timeUnits == 'Minutes') {
+                date2 = moment(date1).add(duration, 'm');
+              } else {
+                date2 = moment(date1).add(duration, 'h');
               }
             }
-            if (scheduleType == 'recurring') {
-              str += `COUNT=${COUNT};`;
+            date2 = moment(date2).format();
+            event.start = { dateTime: date1, timeZone: 'Asia/Kolkata' };
+            event.end = { dateTime: date2, timeZone: 'Asia/Kolkata' };
+            if (scheduleType != 'oneTime') {
+              let str = 'RRULE:FREQ=WEEKLY;';
+              if (key) {
+                let byDay = generatorByDay(key);
+                if (byDay) {
+                  str += `BYDAY=${byDay};`;
+                 }
+              }
+              if (scheduleType == 'recurring') {
+                str += `COUNT=${COUNT};`;
+              }
+              event.recurrence = [str];
             }
-            event.recurrence = [str];
-          }
-          events.push(event);
+            events.push(event);
+          })
         })
-      })
+      }
+      return events;
+    }catch(error){
+		console.log('error in calendar.generateEvents', error)
     }
-    return events;
   },
   "calendar.getRefreshToken": async function (code) {
     try {
@@ -256,6 +263,19 @@ generatorByDay = (key) => {
     }
   })
   return str.join(",");
+}
+
+getStartDate = (key = [],startTime) => {
+  const dayINeed = get(key[0], 'value', 0); // for Thursday
+  const today = moment(startTime).isoWeekday();
+  // if we haven't yet passed the day of the week that I need:
+  if (today <= dayINeed) {
+    // then just give me this week's instance of that day
+    return moment(startTime).isoWeekday(dayINeed).format();
+  } else {
+    // otherwise, give me *next week's* instance of that same day
+    return moment(startTime).add(1, 'weeks').isoWeekday(dayINeed).format();
+  }
 }
 /* 
       clientId = '696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com',
