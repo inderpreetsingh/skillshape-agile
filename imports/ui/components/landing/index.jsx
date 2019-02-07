@@ -276,7 +276,8 @@ class Landing extends Component {
     const visitorRedirected = JSON.parse(
       localStorage.getItem("visitorRedirected")
     );
-    let query = get(location, 'query', {});
+    const query = get(location, 'query', {});
+    //debugger;
     if (isEmpty(query)) {
       if (!visitorRedirected && previousLocationPathName === "/") {
         if (
@@ -284,6 +285,7 @@ class Landing extends Component {
           currentUser &&
           currentUser.profile.userType === "School"
         ) {
+          console.info("SETTING VISITOR REDIRECT");
           localStorage.setItem("visitorRedirected", true);
           browserHistory.push("/dashboard");
         } else if (
@@ -291,25 +293,25 @@ class Landing extends Component {
           currentUser &&
           currentUser.profile.userType !== "School"
         ) {
+          console.info("SETTING VISITOR REDIRECT");
           localStorage.setItem("visitorRedirected", true);
 
         } else if (isUserSubsReady && !currentUser) {
-          localStorage.setItem("visitorRedirected", true);
           if (visitorType === "school") {
+            console.info("SETTING VISITOR REDIRECT");
+            localStorage.setItem("visitorRedirected", true);
             browserHistory.push("/skillshape-for-school");
-          } else {
-
           }
         }
-      } else {
-        // Lets say we land on any link and from that we clicked on lets back to homepage
-        if (
-          (visitorRedirected && isUserSubsReady) ||
-          (isUserSubsReady && previousLocationPathName !== "/")
-        ) {
-
-        }
       }
+      // } else {
+      //   // Lets say we land on any link and from that we clicked on lets back to homepage
+      //   if ((visitorRedirected && isUserSubsReady) ||
+      //     (isUserSubsReady && previousLocationPathName !== "/")
+      //   ) {
+      //     // NO op atm
+      //   }
+      // }
     }
   };
 
@@ -320,7 +322,7 @@ class Landing extends Component {
   componentDidMount() {
     this._redirectBasedOnVisitorType();
     const visitorTypeValue = localStorage.getItem("visitorType");
-    if(visitorTypeValue){
+    if (visitorTypeValue) {
       let positionCoords = this.getUsersCurrentLocation();
       positionCoords.then(function (value) {
         localStorage.setItem("myLocation", JSON.stringify(value));
@@ -550,63 +552,63 @@ class Landing extends Component {
 
   getMyCurrentLocation = args => {
     const { popUp } = this.props;
-      if (navigator) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let geolocate = new google.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            let latlng = new google.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            let geocoder = new google.maps.Geocoder();
-            let coords = [];
-            coords[0] = position.coords.latitude || config.defaultLocation[0];
-            coords[1] = position.coords.longitude || config.defaultLocation[1];
-            geocoder.geocode({ latLng: latlng }, (results, status) => {
-              let sLocation = "near by me";
-              let oldFilters = { ...this.state.filters };
-              if (status == google.maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                  let place = results[0];
-                  // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
-                  // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
-                  sLocation = results[0].formatted_address;
-                  oldFilters["coords"] = coords;
-                  oldFilters["locationName"] = this._getNormalizedLocation(
-                    results[0].address_components
-                  );
-                  oldFilters["applyFilterStatus"] = true;
-                }
+    if (navigator) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          let geolocate = new google.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          let latlng = new google.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          let geocoder = new google.maps.Geocoder();
+          let coords = [];
+          coords[0] = position.coords.latitude || config.defaultLocation[0];
+          coords[1] = position.coords.longitude || config.defaultLocation[1];
+          geocoder.geocode({ latLng: latlng }, (results, status) => {
+            let sLocation = "near by me";
+            let oldFilters = { ...this.state.filters };
+            if (status == google.maps.GeocoderStatus.OK) {
+              if (results[0]) {
+                let place = results[0];
+                // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
+                // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
+                sLocation = results[0].formatted_address;
+                oldFilters["coords"] = coords;
+                oldFilters["locationName"] = this._getNormalizedLocation(
+                  results[0].address_components
+                );
+                oldFilters["applyFilterStatus"] = true;
               }
-              this.setState({
-                filters: oldFilters,
-                //   locationName: `your location`,
-                //   defaultLocation: sLocation,
-                isLoading: false
-              });
-            });
-            // Toggle map view on click of `Browse classes near by me`
-            // if(!args) {
-            if (!args.noMapView) this.handleToggleMapView();
-            // }
-            // toastr.success("Showing classes around you...","Found your location");
-            // // Session.set("coords",coords)
-          },
-          err => {
-            const geolocationError = this._handleGeoLocationError(err);
-            if (geolocationError) {
-              popUp.appear("alert", { content: geolocationError }, true, {
-                autoClose: true,
-                autoTimeout: 4000
-              });
             }
+            this.setState({
+              filters: oldFilters,
+              //   locationName: `your location`,
+              //   defaultLocation: sLocation,
+              isLoading: false
+            });
+          });
+          // Toggle map view on click of `Browse classes near by me`
+          // if(!args) {
+          if (!args.noMapView) this.handleToggleMapView();
+          // }
+          // toastr.success("Showing classes around you...","Found your location");
+          // // Session.set("coords",coords)
+        },
+        err => {
+          const geolocationError = this._handleGeoLocationError(err);
+          if (geolocationError) {
+            popUp.appear("alert", { content: geolocationError }, true, {
+              autoClose: true,
+              autoTimeout: 4000
+            });
           }
-        );
-      }
-    
+        }
+      );
+    }
+
   };
 
   handleSeeMore = categoyName => {
@@ -1022,7 +1024,7 @@ class Landing extends Component {
                       this.collectSelectedSkillCategories
                     }
                     collectSelectedSkillSubject={this.collectSelectedSkillSubject}
-                    onSearchIconClick={() =>{
+                    onSearchIconClick={() => {
                       this.getMyCurrentLocation()
                       this.scrollTo()
                     }}
