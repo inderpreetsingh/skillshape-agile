@@ -19,8 +19,8 @@ class SchoolMemberView extends Component {
     render() {
         let { currentUser, isUserSubsReady, admin } = this.props;
         let slug = get(this.props.params, 'slug', this.props.slug);
-        let view = get(this.props,'view','classmates');
-        let userId = get(this.props,'userId',null);
+        let view = get(this.props, 'view', 'classmates');
+        let userId = get(this.props, 'userId', null);
         let filters = { ...this.state.filters };
 
         if (!isUserSubsReady)
@@ -39,14 +39,14 @@ class SchoolMemberView extends Component {
 
         return (
             <DocumentTitle title={get(this.props.route, 'name', 'Member Listing')}>
-                <Grid container className="containerDiv" style={{ position: 'relative', backgroundColor: '#fff' }}>
+                <Grid container className="containerDiv" style={{ position: 'relative', backgroundColor: '#fff', margin: '0', width: '100%' }}>
                     <DashBoardView
                         filters={filters}
                         params={this.props.params}
                         location={this.props.location}
                         slug={slug}
-                        view = {view}
-                        userId = {userId}
+                        view={view}
+                        userId={userId}
                     />
                 </Grid>
             </DocumentTitle>
