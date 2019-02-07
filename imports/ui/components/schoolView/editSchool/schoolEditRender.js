@@ -33,9 +33,6 @@ export default function (props) {
   if(schoolData){
     slug=schoolData.slug;
   }
-  if (schoolData) {
-    // this.checkSchoolAccess(currentUser, schoolId)
-    if (this.checkSchoolAccess(currentUser, schoolId)) {
       return (
         <Suspense fallback={ <ContainerLoader />}>
         <DocumentTitle title={this.props.route.name}>
@@ -179,14 +176,5 @@ export default function (props) {
         </DocumentTitle>
         </Suspense>
       );
-    } else {
-      return (
-        <Typography type="display2" gutterBottom align="center">
-          Access Denied!!!
-        </Typography>
-      );
-    }
-  } else {
-    return <ContainerLoader />;
-  }
+   
 }
