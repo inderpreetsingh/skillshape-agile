@@ -81,9 +81,12 @@ Meteor.methods({
           let { classTimeId, classTypeId, _id: id } = classInterest;
           let classTimeData = ClassTimes.findOne({ _id: classTimeId });
           let classTypeData = ClassTypes.findOne({ _id: classTypeId });
-          let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;
+          let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate ,timeZone} = classTimeData;
           let locationData = SLocation.findOne({ _id: locationId });
           let location = ''
+          if(!timeZone){
+            timeZone = "Asia/Kolkata";
+          }
           if (locationData) {
             let { address, city, state, country } = locationData;
             location = `${address ? address + ', ':''} ${city ? city+ ', ':'' } ${state ? state+ ', ':''} ${country ? country : ""}`;
@@ -112,8 +115,8 @@ Meteor.methods({
               }
             }
             date2 = moment(date2).format();
-            event.start = { dateTime: date1, timeZone: 'Asia/Kolkata' };
-            event.end = { dateTime: date2, timeZone: 'Asia/Kolkata' };
+            event.start = { dateTime: date1, timeZone };
+            event.end = { dateTime: date2, timeZone };
             if (scheduleType != 'oneTime') {
               let str = 'RRULE:FREQ=WEEKLY;';
               if (key) {
