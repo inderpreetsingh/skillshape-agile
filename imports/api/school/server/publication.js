@@ -21,12 +21,11 @@ Meteor.publish("UserSchool", function (schoolId) {
     const schoolData = schoolCursor.fetch();
 
     if (this.userId && !isEmpty(schoolData)) {
-        if (Roles.userIsInRole(this.userId, "Superadmin")) {
+        let result = checkIsAdmin({user:Meteor.user(),schoolData:schoolData[0]});
+        if(result){
             return schoolCursor;
-        } else if (isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
-            return schoolCursor
         }
-        return []
+        return [];
     }
     return []
 
