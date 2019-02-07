@@ -6,7 +6,7 @@ import ClassType from "/imports/api/classType/fields";
 import School from "/imports/api/school/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import config from "/imports/config";
-import get from 'lodash/get';
+import {get,isEmpty} from 'lodash';
 import { ContainerLoader } from "/imports/ui/loading/container";
 
 class SchoolEditView extends React.Component {
@@ -97,11 +97,11 @@ class SchoolEditView extends React.Component {
     return !nextProps.isLoading;
   }
   render() {
-    const {schoolData} = this.props;
-    if(this.props.isLoading){
+    const {schoolData,isLoading} = this.props;
+    if(isLoading){
       return <ContainerLoader/>
     }
-    if(!Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData}) ){
+    if(!isLoading  && !isEmpty(schoolData) && !Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData}) ){
       browserHistory.push("/")
       return false;
     }
@@ -110,6 +110,7 @@ class SchoolEditView extends React.Component {
 }
 
 export default createContainer(props => {
+	console.log('TCL: props', props)
   let { schoolId, slug } = props.params;
   let schoolData;
   let locationData;
@@ -125,11 +126,16 @@ export default createContainer(props => {
       schoolId = School.find({ slug: slug }).fetch()[0]._id;
     }
   }
+  console.log('TCL: schoolId', schoolId)
   if (schoolId) {
     userSchoolSub = Meteor.subscribe("UserSchool", schoolId);
+		console.log('TCL: userSchoolSub', userSchoolSub)
     locationSub = Meteor.subscribe("location.getSchoolLocation", { schoolId });
+		console.log('TCL: locationSub', locationSub)
     skillClassSchoolSub = Meteor.subscribe("SkillClassbySchool", schoolId);
+		console.log('TCL: skillClassSchoolSub', skillClassSchoolSub)
     classTypeSub = Meteor.subscribe("classType.getclassType", { schoolId });
+		console.log('TCL: classTypeSub', classTypeSub)
     let isAllSubsReady = userSchoolSub && userSchoolSub.ready() && locationSub && locationSub.ready() && skillClassSchoolSub && skillClassSchoolSub.ready() && classTypeSub && classTypeSub.ready();
     if (props.isUserSubsReady && isAllSubsReady) {
       schoolData = School.findOne({ _id: schoolId });
