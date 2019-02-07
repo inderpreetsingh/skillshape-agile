@@ -1,7 +1,5 @@
 import { Accounts } from "meteor/accounts-base";
-const clearUserInfoStored = obj => {
-  localStorage.setItem("userInfoStored", false);
-};
+import { clearUserCache } from '/imports/util';
 
-Accounts.onLogin(clearUserInfoStored);
-Accounts.onLogout(clearUserInfoStored);
+Accounts.onLogin(clearUserCache);
+Accounts.onLogout(clearUserCache);

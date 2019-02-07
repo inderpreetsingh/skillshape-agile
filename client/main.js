@@ -12,7 +12,9 @@ import { MuiThemeProvider } from "material-ui/styles";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import pickerStyles from "/imports/startup/client/material-ui-picker-styles/styles.js";
 import FirstTimeVisitDialogBox from "/imports/ui/components/landing/components/dialogs/FirstTimeVisitDialogBox.jsx";
-import {isEmpty} from 'lodash';
+import { isEmpty } from 'lodash';
+import { clearUserCache } from '/imports/util';
+
 muiTheme.overrides = pickerStyles;
 
 // All the routes used in application
@@ -28,16 +30,14 @@ class App extends Component {
       debug: true
     });
     // setting it false for first visit(One time redirect)..
-    localStorage.setItem("visitorRedirected", false);
+    clearUserCache();
   };
 
   componentWillUnmount = () => {
     // console.log("visitorRedirected, setting false.......")
-    localStorage.setItem("userInfoStored", false);
-    localStorage.setItem("visitorRedirected", false);
-    localStorage.setItem("mySchoolSlug", null);
-    localStorage.setItem("multipleSchools", true);
+    clearUserCache();
   };
+
   isEmbedLink = () => {
     const { location } = this.props;
     return location.pathname.indexOf("embed") !== -1;
@@ -47,13 +47,13 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <div>
-        <ErrorBoundary>
-        { !visitorTypeValue &&
-          !Meteor.userId() && (
-            <FirstTimeVisitDialogBox isUserSubsReady={true} />
-          )}
-          <Routes />
-				</ErrorBoundary>
+          <ErrorBoundary>
+            {!visitorTypeValue &&
+              !Meteor.userId() && (
+                <FirstTimeVisitDialogBox isUserSubsReady={true} />
+              )}
+            <Routes />
+          </ErrorBoundary>
         </div>
       </MuiThemeProvider>
     );
