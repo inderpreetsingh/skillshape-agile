@@ -97,12 +97,13 @@ class SchoolEditView extends React.Component {
     return !nextProps.isLoading;
   }
   render() {
-    if(!Meteor.userId() || !checkMyAccess({ user: Meteor.user(), schoolId:this.props.schoolId }) ){
-      browserHistory.push("/")
-      return false;
-    }
+    const {schoolData} = this.props;
     if(this.props.isLoading){
       return <ContainerLoader/>
+    }
+    if(!Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData}) ){
+      browserHistory.push("/")
+      return false;
     }
     return SchoolEditRender.call(this, this.props, this.state);
   }
@@ -131,11 +132,11 @@ export default createContainer(props => {
     classTypeSub = Meteor.subscribe("classType.getclassType", { schoolId });
     let isAllSubsReady = userSchoolSub && userSchoolSub.ready() && locationSub && locationSub.ready() && skillClassSchoolSub && skillClassSchoolSub.ready() && classTypeSub && classTypeSub.ready();
     if (props.isUserSubsReady && isAllSubsReady) {
-      isLoading = false;
       schoolData = School.findOne({ _id: schoolId });
       currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
       locationData = SLocation.find().fetch();
       classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
+      isLoading = false;
     }
   }
   return {
