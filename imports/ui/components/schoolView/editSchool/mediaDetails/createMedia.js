@@ -11,7 +11,7 @@ import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { withStyles } from "/imports/util";
-import {get,isEmpty} from 'lodash';
+import { get, isEmpty } from 'lodash';
 const formId = "create-media";
 
 
@@ -46,15 +46,15 @@ class CreateMedia extends React.Component {
 						}
 						if (!isEmpty(res)) {
 							res.map((current, index) => {
-								let {profile:{profile:{firstName,lastName,name},emails}} = current;
+								let { profile: { profile: { firstName, lastName, name }, emails } } = current;
 								let label = '';
-								if(firstName || lastName || name){
-								 label = `${firstName ? firstName : name} ${lastName ? lastName : ''}`;
+								if (firstName || lastName || name) {
+									label = `${firstName ? firstName : name} ${lastName ? lastName : ''}`;
 								}
-								else if(!isEmpty(emails)){
-								 label = `${emails[0].address}`;
+								else if (!isEmpty(emails)) {
+									label = `${emails[0].address}`;
 								}
-								state.schoolMembers.push({ value: current._id, label})
+								state.schoolMembers.push({ value: current._id, label })
 							})
 						}
 
@@ -146,11 +146,11 @@ class CreateMedia extends React.Component {
 			this.setState({ checkedAll: false })
 		}
 	}
-	
+
 	render() {
 		let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose, taggedMemberInfo, openEditTaggedModal, _id, closeEditTaggedModal } = this.props;
 		const { selectedOption, schoolMembers } = this.state;
-		
+
 		return (
 			<Dialog
 				fullScreen={fullScreen}
@@ -186,35 +186,40 @@ class CreateMedia extends React.Component {
 									rows={2}
 									fullWidth
 								/>
-								<div style={{display:'flex'}}>
-								<Grid item md={4} sm={4} xs={4} style={{marginTop:'22px'}}>
-									<Typography >Members: </Typography>
-								</Grid>
-								<Grid item md={8} sm={8} xs={8} >
-									<FormControl fullWidth margin="dense">
-										<FormControlLabel
-											control={
-												<Checkbox
-													checked={this.state.checkedAll}
-													onChange={(e) => { this.handleSelectAll(e) }}
-													value="checkedAll"
-												/>
-											}
-											label="Select All Members"
-											style={{width:'100%'}}
-										/>
-									</FormControl>
-									
-								</Grid>
+								<div style={{ display: 'flex' }}>
+									<Grid item md={4} sm={4} xs={4} style={{ marginTop: '22px' }}>
+										<Typography >Members: </Typography>
+									</Grid>
+									<Grid item md={8} sm={8} xs={8} >
+										<FormControl fullWidth margin="dense">
+											<FormControlLabel
+												control={
+													<Checkbox
+														checked={this.state.checkedAll}
+														onChange={(e) => { this.handleSelectAll(e) }}
+														value="checkedAll"
+													/>
+												}
+												label="Select All Members"
+												style={{ width: '100%' }}
+											/>
+										</FormControl>
+
+									</Grid>
 								</div>
 								<Select
-										name="filters"
-										placeholder="School Members"
-										value={selectedOption}
-										options={schoolMembers}
-										onChange={this.handleChangeForTagging}
-										multi
-									/>
+									inputProps={{
+										style: {
+											fontSize: 16
+										}
+									}}
+									name="filters"
+									placeholder="School Members"
+									value={selectedOption}
+									options={schoolMembers}
+									onChange={this.handleChangeForTagging}
+									multi
+								/>
 							</Grid>
 							<Grid item xs={12} sm={6}>
 								<MediaUpload fullScreen={fullScreen} width={275} onChange={this.handleChange} data={mediaFormData && { file: mediaFormData.sourcePath, isUrl: true }} showVideoOption={false} />
