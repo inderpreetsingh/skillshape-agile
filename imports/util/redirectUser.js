@@ -1,6 +1,14 @@
 import { browserHistory } from "react-router";
 import { isEmpty } from 'lodash';
 
+export const clearUserCache = obj => {
+  localStorage.setItem("userInfoStored", false);
+  localStorage.setItem("visitorRedirected", false);
+  localStorage.setItem("mySchoolSlug", null);
+  localStorage.setItem("multipleSchools", true);
+};
+
+
 export const redirectUserBasedOnType = (currentUser, isUserSubsReady) => e => {
   // console.log(currentUser, isUserSubsReady, "-==================");
   const visitorType = localStorage.getItem("visitorType");
