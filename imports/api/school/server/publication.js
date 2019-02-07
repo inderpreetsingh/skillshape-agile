@@ -21,8 +21,7 @@ Meteor.publish("UserSchool", function (schoolId) {
     const schoolData = schoolCursor.fetch();
 
     if (this.userId && !isEmpty(schoolData)) {
-        let result = checkIsAdmin({user:Meteor.user(),schoolData:schoolData[0]});
-        if(result){
+        if(checkIsAdmin({user:Meteor.user(),schoolData:schoolData[0]})){
             return schoolCursor;
         }
         return [];
@@ -42,14 +41,9 @@ Meteor.publish("UserSchoolbySlug", function (slug,_id) {
 
         if (schoolData[0].isPublish) {
             return schoolCursor;
-        } else if (this.userId) {
-            if (Roles.userIsInRole(this.userId, "Superadmin")) {
-                return schoolCursor;
-            } else if (isArray(schoolData[0].admins) && schoolData[0].admins.indexOf(this.userId) > -1) {
-                return schoolCursor
-            } else {
-                return []
-            }
+        } 
+        else if(checkIsAdmin({user:Meteor.user(),schoolData:schoolData[0]})){
+            return schoolCursor;
         }
         return []
     }
