@@ -85,7 +85,7 @@ Meteor.methods({
           let locationData = SLocation.findOne({ _id: locationId });
           let location = ''
           if(!timeZone){
-            timeZone = "Asia/Kolkata";
+            timeZone = "Europe/Amsterdam";
           }
           if (locationData) {
             let { address, city, state, country } = locationData;
