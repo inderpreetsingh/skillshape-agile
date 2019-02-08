@@ -83,14 +83,11 @@ Meteor.methods({
           let classTypeData = ClassTypes.findOne({ _id: classTypeId });
           let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;
           let locationData = SLocation.findOne({ _id: locationId });
-          let location = '',timeZone;
+          let location = '',timeZone = "Europe/Amsterdam";
           if (locationData) {
             let { address, city, state, country ,timeZone:tz} = locationData;
             location = `${address ? address + ', ':''} ${city ? city+ ', ':'' } ${state ? state+ ', ':''} ${country ? country : ""}`;
-            if(!tz){
-              timeZone = "Europe/Amsterdam";
-            }
-            else{
+            if(tz){
               timeZone = tz;
             }
           }
