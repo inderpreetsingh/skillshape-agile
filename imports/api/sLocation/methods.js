@@ -2,7 +2,8 @@ import SLocation from "./fields";
 import ClassType from "/imports/api/classType/fields";
 import { check } from 'meteor/check';
 import ClassTime from "/imports/api/classTimes/fields";
-
+import axios from 'axios';
+import {get} from 'lodash';
 Meteor.methods({
   "location.getLocationBySchoolId": function({ schoolId }) {
     check(schoolId, String);
@@ -20,6 +21,7 @@ Meteor.methods({
     ) {
       
       doc.createdAt = new Date();
+      doc.timeZone = Meteor.call("location.getTimeZone",doc.loc);
       return SLocation.insert(doc);
     } else {
       throw new Meteor.Error("Permission denied!!");
@@ -51,6 +53,7 @@ Meteor.methods({
          } 
         })
       })
+      doc.timeZone = Meteor.call("location.getTimeZone",doc.loc);
       return SLocation.update({ _id: doc_id }, { $set: doc });
     } else {
       throw new Meteor.Error("Permission denied!!");
@@ -112,5 +115,20 @@ Meteor.methods({
   },
   "location.getLocsFromIds": function(locIds){
     return SLocation.find({_id:{$in:locIds}}).fetch();
+  },
+  "location.getTimeZone": async function (loc) {
+    try {
+
+      let result = await axios({
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/timezone/json?location=${loc[1]},${loc[0]}&timestamp=1331161200&key=AIzaSyAUzsZloT4lEquePIL_uReXGwMYGqyL0NE`,
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 20000,
+      })
+      return get(result.data,"timeZoneId",'Europe/Amsterdam');
+    } catch (error) {
+      console.log('​error in location.getTimeZone', error);
+      throw new Meteor.Error(error);
+    }
   }
 });

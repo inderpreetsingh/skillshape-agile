@@ -76,10 +76,6 @@ ClassTimes.attachSchema(
       type: String,
       optional: true
     },
-    timeZone: {
-      type: String,
-      optional: true
-    },
     deletedEvents: {
       type: Array,
       optional: true

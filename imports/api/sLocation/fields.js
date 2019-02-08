@@ -79,6 +79,10 @@ SLocation.attachSchema(new SimpleSchema({
         type: Schema.Room,
         optional: true
     },
+    timeZone: {
+      type: String,
+      optional: true
+    }
 }));
 
 

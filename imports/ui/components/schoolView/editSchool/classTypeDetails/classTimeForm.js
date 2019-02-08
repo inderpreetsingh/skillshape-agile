@@ -302,7 +302,6 @@ class ClassTimeForm extends React.Component {
       locationId: this.state.locationId,
       roomId: this.state.roomId,
       instructors: this.state.instructors,
-      timeZone: get(Intl.DateTimeFormat().resolvedOptions(),"timeZone","Europe/Amsterdam")
     };
     if (!this.classTimeName.value) {
       popUp.appear("alert", {

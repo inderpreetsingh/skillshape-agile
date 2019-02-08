@@ -81,15 +81,18 @@ Meteor.methods({
           let { classTimeId, classTypeId, _id: id } = classInterest;
           let classTimeData = ClassTimes.findOne({ _id: classTimeId });
           let classTypeData = ClassTypes.findOne({ _id: classTypeId });
-          let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate ,timeZone} = classTimeData;
+          let { locationId, name: classTimeName, desc: classTimeDesc, scheduleType, scheduleDetails, endDate } = classTimeData;
           let locationData = SLocation.findOne({ _id: locationId });
-          let location = ''
-          if(!timeZone){
-            timeZone = "Europe/Amsterdam";
-          }
+          let location = '',timeZone;
           if (locationData) {
-            let { address, city, state, country } = locationData;
+            let { address, city, state, country ,timeZone:tz} = locationData;
             location = `${address ? address + ', ':''} ${city ? city+ ', ':'' } ${state ? state+ ', ':''} ${country ? country : ""}`;
+            if(!tz){
+              timeZone = "Europe/Amsterdam";
+            }
+            else{
+              timeZone = tz;
+            }
           }
           let { name: classTypeName, desc: classTypeDesc } = classTypeData;
           let summary = `${classTypeName}: ${classTimeName}`;
@@ -280,6 +283,8 @@ getStartDate = (key = [],startTime) => {
     return moment(startTime).add(1, 'weeks').isoWeekday(dayINeed).format();
   }
 }
+
+
 /* 
       clientId = '696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com',
      scopes = 'https://www.googleapis.com/auth/calendar',
