@@ -277,7 +277,7 @@ export default class SchoolViewBase extends React.Component {
 						} else {
 							msg = 'This School and all his Class Types of this has been unpublished.';
 						}
-						popUp.appear('success',{title:'Error',content:msg})
+						popUp.appear('success',{title:'Success',content:msg})
 					}
 				});
 			});
