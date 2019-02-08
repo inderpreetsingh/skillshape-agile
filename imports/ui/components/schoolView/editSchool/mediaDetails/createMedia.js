@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import Checkbox from "material-ui/Checkbox";
 import Dialog, { DialogActions, DialogContent, withMobileDialog } from 'material-ui/Dialog';
 import { FormControl, FormControlLabel } from "material-ui/Form";
@@ -12,8 +13,34 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { withStyles } from "/imports/util";
 import { get, isEmpty } from 'lodash';
+import { flexCenter, rhythmDiv, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
 const formId = "create-media";
 
+const FormContainer = styled.div`
+	display: flex;
+
+	@media screen and (max-width: ${mobile}px) {
+		flex-direction: column;
+	}
+`;
+
+const FormRow = styled.div`
+	${flexCenter}
+`;
+
+const FormElemsGroup = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin-right: ${rhythmDiv}px;
+
+	@media screen and (max-width: ${mobile}px) {
+		margin-bottom: ${rhythmDiv * 2}px;
+	}
+`;
+
+const MyTypography = styled(Typography)`
+	margin-right: ${rhythmDiv}px;
+`;
 
 class CreateMedia extends React.Component {
 
@@ -159,54 +186,54 @@ class CreateMedia extends React.Component {
 				aria-labelledby="responsive-dialog-title"
 			>
 				<DialogContent >
-					{
-						this.state.isBusy && <ContainerLoader />
-					}
+					{this.state.isBusy && <ContainerLoader />}
 
 					<form id={formId} onSubmit={this.onSubmit}>
-						<Grid container >
-							<Grid item xs={12} sm={6}>
-								<TextField
-									required={true}
-									defaultValue={mediaFormData && mediaFormData.name}
-									margin="dense"
-									inputRef={(ref) => this.mediaName = ref}
-									label="Media Name"
-									type="text"
-									fullWidth
-								/>
-								<TextField
-									required={false}
-									defaultValue={mediaFormData && mediaFormData.desc}
-									margin="dense"
-									inputRef={(ref) => this.mediaNotes = ref}
-									label="Media Note"
-									type="text"
-									multiline={true}
-									rows={2}
-									fullWidth
-								/>
-								<div style={{ display: 'flex' }}>
-									<Grid item md={4} sm={4} xs={4} style={{ marginTop: '22px' }}>
-										<Typography >Members: </Typography>
-									</Grid>
-									<Grid item md={8} sm={8} xs={8} >
-										<FormControl fullWidth margin="dense">
-											<FormControlLabel
-												control={
-													<Checkbox
-														checked={this.state.checkedAll}
-														onChange={(e) => { this.handleSelectAll(e) }}
-														value="checkedAll"
-													/>
-												}
-												label="Select All Members"
-												style={{ width: '100%' }}
-											/>
-										</FormControl>
+						<FormContainer>
+							<FormElemsGroup>
+								<FormRow>
+									<TextField
+										required={true}
+										defaultValue={mediaFormData && mediaFormData.name}
+										margin="dense"
+										inputRef={(ref) => this.mediaName = ref}
+										label="Media Name"
+										type="text"
+										fullWidth
+									/>
 
-									</Grid>
-								</div>
+								</FormRow>
+								<FormRow>
+									<TextField
+										required={false}
+										defaultValue={mediaFormData && mediaFormData.desc}
+										margin="dense"
+										inputRef={(ref) => this.mediaNotes = ref}
+										label="Media Note"
+										type="text"
+										multiline={true}
+										rows={2}
+										fullWidth
+									/>
+								</FormRow>
+
+								<FormRow>
+									<MyTypography >Members: </MyTypography>
+									<FormControl fullWidth margin="dense">
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={this.state.checkedAll}
+													onChange={(e) => { this.handleSelectAll(e) }}
+													value="checkedAll"
+												/>
+											}
+											label="Select All Members"
+											style={{ width: '100%' }}
+										/>
+									</FormControl>
+								</FormRow>
+
 								<Select
 									inputProps={{
 										style: {
@@ -220,13 +247,19 @@ class CreateMedia extends React.Component {
 									onChange={this.handleChangeForTagging}
 									multi
 								/>
-							</Grid>
-							<Grid item xs={12} sm={6}>
-								<MediaUpload fullScreen={fullScreen} width={275} onChange={this.handleChange} data={mediaFormData && { file: mediaFormData.sourcePath, isUrl: true }} showVideoOption={false} />
-							</Grid>
-						</Grid>
-					</form>
-				</DialogContent>
+
+							</FormElemsGroup>
+							<FormElemsGroup>
+								<MediaUpload
+									fullScreen={fullScreen}
+									width={275}
+									onChange={this.handleChange}
+									data={mediaFormData && { file: mediaFormData.sourcePath, isUrl: true }}
+									showVideoOption={false} />
+							</FormElemsGroup>
+						</FormContainer>
+					</form >
+				</DialogContent >
 				<DialogActions>
 					<div>
 						{
@@ -252,7 +285,7 @@ class CreateMedia extends React.Component {
 						/>
 					</div>
 				</DialogActions>
-			</Dialog>
+			</Dialog >
 		)
 	}
 }
