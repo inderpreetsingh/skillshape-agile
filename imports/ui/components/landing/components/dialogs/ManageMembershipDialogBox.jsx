@@ -141,8 +141,7 @@ const ClassTimesListItem = styled.li`
   z-index: 0;
   align-items: center;
   border-bottom: 1px solid #e3e3e3;
-  padding: 0 ${helpers.rhythmDiv}px;
-  margin-bottom: ${helpers.rhythmDiv}px;  
+  padding: ${helpers.rhythmDiv}px;
   justify-content: space-between;
   
   :first-child {
@@ -366,7 +365,7 @@ const ManageMemberShipDialogBox = props => {
                                             return (<ClassTimesListItem>
                                                 <Text fontSize="18">{get(classTimeData, "name", 'Class Time Name')}</Text>
                                                 <ActionButtons>
-                                                    <ButtonWrapper>
+                                                    <ButtonWrapper noMarginBottom>
                                                         <FormGhostButton
                                                             darkGreyColor
                                                             label="Remove from calendar"
