@@ -89,8 +89,6 @@ export default function () {
                 <CardContent>
                   <Grid container>
                     <Grid item xs={12} sm={12} md={4}>
-
-
                       <MediaUpload
                         fullScreen={false}
                         onChange={this.handleUserImageChange}
@@ -262,7 +260,7 @@ export default function () {
                         />
                           : <PrimaryButton
                             label={`Cancel Sync Google`}
-                            onClick={this.confirmationRemoveGoogleSync} 
+                            onClick={this.confirmationRemoveGoogleSync}
                           />}
                         <SaveBtnWrapper>
                           {/* <Button type="submit" color="accent" raised dense>
