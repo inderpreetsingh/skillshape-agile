@@ -79,6 +79,12 @@ class MyTransaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+        };
+  }
+
+  componentWillMount() {
+    const {schoolView,schoolData} = this.props;
+    let state = {
       transactionData: [],
       perPage: 10,
       pageCount: 1,
@@ -93,18 +99,22 @@ class MyTransaction extends React.Component {
       packageStatusOptions: packageStatus,
       packageTypeOptions: packageTypes,
       transactionTypeOptions: transactionType,
-      filter: {
-        userId: get(this.props.params, 'id', Meteor.userId())
-      },
       limit: 10,
       skip: 0,
       isLoading: true,
       stripeIDealDialog:false
     };
-  }
-
-  componentWillMount() {
-    this.getPurchaseData();
+    if(schoolView){
+      const {_id:schoolId} = schoolData;
+      state.filter = {
+        schoolId
+      }
+    }else{
+      state.filter = {
+        userId: get(this.props.params, 'id', Meteor.userId())
+      }
+    }
+    this.setState({...state},()=>{this.getPurchaseData()});
   }
   // get transaction data from db on page load and page number click.
   getPurchaseData = () => {
@@ -167,7 +177,7 @@ class MyTransaction extends React.Component {
   handleFilter = (event, filterName, stateName) => {
     let filterValue = filterValueOriginal = get(event.target, 'value', null);
     let reg = false;
-    if (filterName == 'packageName') {
+    if (filterName == 'packageName' || filterName == 'userName') {
       reg = true;
     }
     this.setState(state => {
@@ -223,13 +233,13 @@ class MyTransaction extends React.Component {
     const { transactionData, isLoading, selectedFilter, sddb, index, contractDialog } = this.state;
     let columnData = getTableProps()
     const { tableHeaderColumns } = columnData;
-    const { classes, popUp } = this.props;
+    const { classes, popUp,schoolView } = this.props;
     let columnValues = tableHeaderColumns;
     let TableName = TransactionDetailsTable;
     if (!Meteor.userId()) {
       return 'Please Login First.'
     }
-    else if (get(this.props.params, 'id', null) != Meteor.userId()) {
+    else if (get(this.props.params, 'id', null) != Meteor.userId() && !schoolView) {
       return 'Unable to Access Other User Account';
     }
     const color = { color: 'green', cursor: "pointer" };
@@ -237,7 +247,7 @@ class MyTransaction extends React.Component {
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
-        <PageHeading>My Transactions</PageHeading>
+        <PageHeading>{schoolView ? "Transactions": "My Transactions"}</PageHeading>
         <Paper className={classes.root}>
           {/* <PrimaryButton
             label={`IDeal Test`}

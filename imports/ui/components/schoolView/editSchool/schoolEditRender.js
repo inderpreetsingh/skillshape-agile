@@ -153,7 +153,7 @@ export default function (props) {
                 this.state.tabValue === 8 && (
                   <Financial
                   currentUser = {currentUser}
-                  slug = {slug}
+                  schoolData={schoolData}
                   />
                 )
               }
