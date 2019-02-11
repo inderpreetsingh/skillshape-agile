@@ -21,6 +21,7 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import IconInput from "/imports/ui/components/landing/components/form/IconInput";
 import { Loading } from "/imports/ui/loading";
 import { ContainerLoader } from "/imports/ui/loading/container";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const SaveBtnWrapper = styled.div`
   margin: 10px;
   float: right;
@@ -29,6 +30,10 @@ const SaveBtnWrapper = styled.div`
 const ErrorWrapper = styled.span`
   color: red;
   float: right;
+`;
+
+const ProfileForm = styled.form`
+  padding-left: ${rhythmDiv}px;
 `;
 
 export default function () {
@@ -98,7 +103,7 @@ export default function () {
                       />
                     </Grid>
                     <Grid item xs={12} sm={12} md={8}>
-                      <form onSubmit={this.submitUserDetails}>
+                      <ProfileForm onSubmit={this.submitUserDetails}>
                         <IconInput
                           labelText="First Name"
                           value={firstName}
@@ -274,7 +279,7 @@ export default function () {
                         {this.state.errorText && (
                           <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
                         )}
-                      </form>
+                      </ProfileForm>
                     </Grid>
                   </Grid>
                 </CardContent>
