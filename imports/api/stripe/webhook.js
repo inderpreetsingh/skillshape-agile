@@ -6,7 +6,6 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} from '/imports/api/email/index';
 import  bodyParser from "body-parser";
-if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
   Picker.middleware(bodyParser.json());
   Picker.middleware(bodyParser.urlencoded({ extended: false }));
   let dataFile = function (params, request, response, next) {
@@ -96,7 +95,7 @@ if(Meteor.settings.platform == 'local' || Meteor.settings.platform == 'dev'){
     }
   };
   Picker.route("/stripe-webhooks", dataFile);
-}
+
 
 
 
