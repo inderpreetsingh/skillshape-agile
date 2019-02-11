@@ -247,7 +247,7 @@ class MyTransaction extends React.Component {
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
-        <PageHeading>My Transactions</PageHeading>
+        <PageHeading>{schoolView ? "Transactions": "My Transactions"}</PageHeading>
         <Paper className={classes.root}>
           {/* <PrimaryButton
             label={`IDeal Test`}
