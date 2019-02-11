@@ -177,7 +177,7 @@ class MyTransaction extends React.Component {
   handleFilter = (event, filterName, stateName) => {
     let filterValue = filterValueOriginal = get(event.target, 'value', null);
     let reg = false;
-    if (filterName == 'packageName') {
+    if (filterName == 'packageName' || filterName == 'userName') {
       reg = true;
     }
     this.setState(state => {

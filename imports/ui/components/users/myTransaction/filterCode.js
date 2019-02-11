@@ -85,12 +85,25 @@ const StyledTextField = withStyles(textFieldStyles)(props => (
 export const filterForTransaction = function () {
     const { selectedPackageType, packageTypeOptions,
         selectedPackageStatus, packageStatusOptions,
-        packageName, selectedPaymentMethod,
+        packageName, selectedPaymentMethod,userName,
         paymentMethodsOptions, selectedTransactionType, transactionTypeOptions } = this.state;
-    const { classes } = this.props;
+    const { classes ,schoolView} = this.props;
     return (
         <Wrapper>
             <ControlsRow>
+                {
+                    schoolView && (
+            <Control maxWidth={250}>
+                    <StyledTextField
+                        defaultValue={''}
+                        value={userName}
+                        label="Student Name"
+                        type="text"
+                        onChange={(e) => { this.handleFilter(e, 'userName', 'userName') }}
+                    />
+                </Control>
+                    )
+                }
                 <Control className="ss-multi-select ss-select">
                     {/*<ControlLabel>Transaction Type: </ControlLabel>
                     <ReactSelect
@@ -143,6 +156,7 @@ export const filterForTransaction = function () {
                         closeMenuOnSelect={false}
                         clearable={false}
                     />*/}
+                   
                 </Control>
             </ControlsRow>
 
