@@ -51,8 +51,7 @@ const styles = theme => {
       height: 'auto'
     },
     imgIconRoot: {
-      background: helpers.darkBgColor,
-      color: 'white',
+      backgroundColor: 'rgba(255,255,255,0.2)',
       borderRadius: '50%',
       position: "absolute",
       zIndex: 5,

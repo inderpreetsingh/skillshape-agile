@@ -50,11 +50,12 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: auto;
+  ${props => props.addMember && `align-items: center;`}
   ${props => props.addMember && 'pointer: cursor;'}
 
   @media screen and (min-width: ${helpers.mobile - 50}px) {
     width: 160px;
-    height: 180px;
+    height: 250px;
   }
 `;
 
@@ -81,7 +82,7 @@ const ProfilePic = styled.div`
   background-position: 50% 50%;
   background-size: cover;
   width: 100px;
-  height: 100px;
+  height: 140px;
   display: flex;
   flex-shrink: 0;
   // padding: ${helpers.rhythmDiv}px ${helpers.rhythmDiv * 2}px;
@@ -97,8 +98,7 @@ const ProfilePic = styled.div`
     width: 100%;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     flex-shrink: 1;
-    ${props => props.addMember &&
-    ` height: 100px;`
+    ${props => props.addMember && `height: 100px;`
   };
   }
 `;
