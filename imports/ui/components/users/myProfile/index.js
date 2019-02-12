@@ -359,40 +359,53 @@ class MyProfile extends React.Component {
     let self = this;
     this.setState({ isBusy: true }, () => {
       const clientId = Meteor.settings.public.googleAppId;
-      gapi.load('auth2', function () {
-        auth2 = gapi.auth2.init({
-          client_id: clientId,
-          scope:'https://www.googleapis.com/auth/calendar'
+      try{
+        gapi.load('auth2', function () {
+          auth2 = gapi.auth2.init({
+            client_id: clientId,
+            scope:'https://www.googleapis.com/auth/calendar'
+          });
+          auth2.grantOfflineAccess().then((res) => {
+            console.log('TCL: handleCalendarSync -> res', res)
+            if (res.code) {
+              Meteor.call('calendar.getRefreshToken', res.code)
+              const { popUp } = self.props;
+              const data = {
+                popUp,
+                title: 'Success',
+                type: 'success',
+                content: 'Your Google Calendar connected with SkillShape Successfully. All SkillShape events will be sync shortly.',
+                buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+              };
+              self.setState({ isBusy: false });
+              confirmationDialog(data);
+            }
+            else {
+              self.somethingWentWrong();
+            }
+          }).catch((err=>{self.somethingWentWrong(err.error)}));
         });
-        auth2.grantOfflineAccess().then((res) => {
-          if (res.code) {
-            Meteor.call('calendar.getRefreshToken', res.code)
-            const { popUp } = self.props;
-            const data = {
-              popUp,
-              title: 'Success',
-              type: 'success',
-              content: 'Your Google Calendar connected with SkillShape Successfully. All SkillShape events will be sync shortly.',
-              buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
-            };
-            self.setState({ isBusy: false });
-            confirmationDialog(data);
-          }
-          else {
-            this.somethingWentWrong();
-          }
-        });
-      });
+      }catch(error){
+        console.log('error in handleCalendarSync', error);
+        this.somethingWentWrong();
+      }
     })
   }
-  somethingWentWrong = () => {
+  somethingWentWrong = (errorCode) => {
     this.setState({ isBusy: false });
+    let content = 'Oops Something Went Wrong. Please try again.';
+    if(errorCode == 'popup_closed_by_user'){
+      content = 'Google Popup is closed by the user. Pease try again.';
+    }
+    else if(errorCode == 'popup_blocked_by_browser'){
+      content = 'Google Popup is blocked by the browser. Please allow google popup and try again.';
+    }
     const { popUp } = this.props;
     const data = {
       popUp,
       title: 'Error',
       type: 'alert',
-      content: 'Oops Something Went Wrong!',
+      content,
       buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
     };
     confirmationDialog(data);
