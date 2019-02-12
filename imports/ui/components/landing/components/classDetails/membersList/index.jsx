@@ -262,10 +262,10 @@ class MembersListContainer extends Component {
         popUp.appear("alert", { title: "Alert", content: "Oops user don't have any package. Please use Accept payment button to accept payment and send link or else ask user to purchase one itself." });
         return;
       }
-      else if (status == 'signIn') {
-        this.updateClass(filter, status, {}, popUp);
-        return;
-      }
+      // else if (status == 'signIn') {
+      //   this.updateClass(filter, status, {}, popUp);
+      //   return;
+      // }
       else {
         let packageType, packagesRequired, content, title;
         if (!epStatus) {
