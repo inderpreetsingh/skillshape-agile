@@ -199,14 +199,17 @@ class MyTransaction extends React.Component {
       this.getPurchaseData();
     });
   }
-  amountGenerator = (transaction) => {
+  amountGenerator = (transaction,field) => {
     let currency = get(transaction, 'currency', '$');
     let amount = get(transaction, 'amount', 0);
+    let fee = get(transaction,'fee',0)/100;
+    let cost = 0;
     config.currency.map((obj) => {
       if (obj.label == currency)
         currency = obj.value;
     })
-    return `${currency + amount}`;
+    cost = field == 'fee' ? fee : field == 'net' ? amount-fee : amount ;
+    return `${currency + cost}`;
   }
   classesCovered = (transaction) => {
     let covers = get(transaction, 'covers', []);
@@ -231,11 +234,11 @@ class MyTransaction extends React.Component {
   }
   render() {
     const { transactionData, isLoading, selectedFilter, sddb, index, contractDialog } = this.state;
-    let columnData = getTableProps()
-    const { tableHeaderColumns } = columnData;
     const { classes, popUp,schoolView } = this.props;
+    let columnData = getTableProps(schoolView)
+    const { tableHeaderColumns } = columnData;
     let columnValues = tableHeaderColumns;
-    let TableName = TransactionDetailsTable;
+    let TableName = TransactionDetailsTable(schoolView);
     if (!Meteor.userId()) {
       return 'Please Login First.'
     }
@@ -243,7 +246,6 @@ class MyTransaction extends React.Component {
       return 'Unable to Access Other User Account';
     }
     const color = { color: 'green', cursor: "pointer" };
-
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
@@ -274,7 +276,7 @@ class MyTransaction extends React.Component {
           <TableWrapper>
             <TableName>
               {isEmpty(transactionData)
-                ? "No payout found"
+                ? "No Data Found" 
                 : transactionData.map((transaction, index) => {
                   let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
                   let classTypePageCondition = classTypeName && classTypeId;
@@ -309,8 +311,20 @@ class MyTransaction extends React.Component {
                           {this.getColumnValue(transaction, 'paymentMethod') || "..."}
                         </SSTableCell>
                         <SSTableCell data-th={columnValues[4].columnName}>
-                          {this.amountGenerator(transaction)}
+                          {this.amountGenerator(transaction,'amount')}
                         </SSTableCell>
+                        {schoolView && (
+                          <SSTableCell data-th={columnValues[5].columnName}>
+                          {this.amountGenerator(transaction,'net')}
+                        </SSTableCell>
+                        )
+                        }
+                        {schoolView && (
+                          <SSTableCell data-th={columnValues[6].columnName}>
+                          {this.amountGenerator(transaction,'fee')}
+                        </SSTableCell>
+                        )
+                        }
                         <SSTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
                           {this.getColumnValue(transaction, 'schoolName') || "..."}
                         </SSTableCell>
