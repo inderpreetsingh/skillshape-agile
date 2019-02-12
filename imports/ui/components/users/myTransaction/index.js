@@ -238,7 +238,6 @@ class MyTransaction extends React.Component {
     let columnData = getTableProps(schoolView)
     const { tableHeaderColumns } = columnData;
     let columnValues = tableHeaderColumns;
-		console.log('TCL: render -> columnValues', columnValues)
     let TableName = TransactionDetailsTable(schoolView);
     if (!Meteor.userId()) {
       return 'Please Login First.'

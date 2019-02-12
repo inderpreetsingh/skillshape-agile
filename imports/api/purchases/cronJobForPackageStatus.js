@@ -8,7 +8,7 @@ SyncedCron.add({
   name: "cron Job For Package Status",
   schedule: function (parser) {
     // parser is a later.parse object
-    return parser.text("every 24 hours");
+    return parser.text("every 1 hours");
   },
   job: function () {
     try {
@@ -17,11 +17,12 @@ SyncedCron.add({
         packageStatus: "active",
         endDate: { $lte: new Date() }
       }).fetch();
+      console.log('current expired  purchases which is active still', activePurchasesData.length)
       let activeSubscriptionData = ClassSubscription.find({
         status: "successful",
         endDate: { $lte: new Date() }
       }).fetch();
-      console.log('TCL:expired packages found--->', activePurchasesData.length);
+      console.log('current expired subscriptions which is active still', activeSubscriptionData.length)
       let packageIds = [];
       activePurchasesData.map(currentPurchase => {
         packageIds.push(currentPurchase._id);
@@ -32,16 +33,20 @@ SyncedCron.add({
         schoolData = School.findOne({_id:schoolId});
         schoolEmail = schoolData.email;
         schoolName = schoolData.name;
-        if (userEmail && userName && packageName) {
-          sendPackageExpiredEmail(
-            userEmail,
-            userName,
-            packageName
-          );
-        }
-        if (schoolName && schoolEmail&& userName&& userEmail&& packageName) {
-          sendPackageExpiredEmailToSchool( schoolName, schoolEmail, userName, userEmail, packageName );
+        try{
+          if (userEmail && userName && packageName) {
+            sendPackageExpiredEmail(
+              userEmail,
+              userName,
+              packageName
+            );
           }
+          if (schoolName && schoolEmail&& userName&& userEmail&& packageName) {
+            sendPackageExpiredEmailToSchool( schoolName, schoolEmail, userName, userEmail, packageName );
+            }
+        }catch(error){
+			  	console.log('error in expired email code in cron job error', error)
+        }
         let packageId = currentPurchase.packageId;
         let userId = currentPurchase.userId;
         let days = (currentPurchase.startDate-currentPurchase.endDate)/(1000 * 60 * 60 * 24);
@@ -50,11 +55,12 @@ SyncedCron.add({
         let result = Purchases.update( { packageStatus: "inActive", packageId, userId, }, { $set: { packageStatus: "active",startDate, endDate } } );
         newActivePackages = result + newActivePackages ;  
       });
-      console.log('TCL: Package made active', newActivePackages);
+      console.log('New packages activated', newActivePackages);
       if (!isEmpty(packageIds)) {
         Purchases.update(
           { _id: { $in: packageIds } },
-          { $set: { packageStatus: "expired" } }
+          { $set: { packageStatus: "expired" }},
+          {multi:true} 
         );
         packageIds.map((_id)=>{
           Meteor.call("purchases.addTransactionEntry",_id,'expired');
@@ -70,7 +76,6 @@ SyncedCron.add({
             subscriptionId,
             Meteor.bindEnvironment(function (err, confirmation) {
               // asynchronously called
-              console.log(err, confirmation);
               if (confirmation) {
                 ClassSubscription.update({ subscriptionId }, { $set: { status: 'expired', subscriptionCancelResponse: confirmation } });
               }
