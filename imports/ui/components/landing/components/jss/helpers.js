@@ -31,7 +31,7 @@ export const /*******FONTS*********/
   shadowColor = colors.grey[600],
   panelColor = colors.grey[100],
   darkPanelColor = colors.grey[200],
-  darkBgColor = colors.grey[800],
+  darkBgColor = textColor,
   inputErrorColor = "#ff1744",
   caution = "#E9B942",
   action = "#9DC161",

@@ -79,6 +79,12 @@ class MyTransaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+        };
+  }
+
+  componentWillMount() {
+    const {schoolView,schoolData} = this.props;
+    let state = {
       transactionData: [],
       perPage: 10,
       pageCount: 1,
@@ -93,18 +99,22 @@ class MyTransaction extends React.Component {
       packageStatusOptions: packageStatus,
       packageTypeOptions: packageTypes,
       transactionTypeOptions: transactionType,
-      filter: {
-        userId: get(this.props.params, 'id', Meteor.userId())
-      },
       limit: 10,
       skip: 0,
       isLoading: true,
       stripeIDealDialog:false
     };
-  }
-
-  componentWillMount() {
-    this.getPurchaseData();
+    if(schoolView){
+      const {_id:schoolId} = schoolData;
+      state.filter = {
+        schoolId
+      }
+    }else{
+      state.filter = {
+        userId: get(this.props.params, 'id', Meteor.userId())
+      }
+    }
+    this.setState({...state},()=>{this.getPurchaseData()});
   }
   // get transaction data from db on page load and page number click.
   getPurchaseData = () => {
@@ -167,7 +177,7 @@ class MyTransaction extends React.Component {
   handleFilter = (event, filterName, stateName) => {
     let filterValue = filterValueOriginal = get(event.target, 'value', null);
     let reg = false;
-    if (filterName == 'packageName') {
+    if (filterName == 'packageName' || filterName == 'userName') {
       reg = true;
     }
     this.setState(state => {
@@ -189,14 +199,17 @@ class MyTransaction extends React.Component {
       this.getPurchaseData();
     });
   }
-  amountGenerator = (transaction) => {
+  amountGenerator = (transaction,field) => {
     let currency = get(transaction, 'currency', '$');
     let amount = get(transaction, 'amount', 0);
+    let fee = get(transaction,'fee',0)/100;
+    let cost = 0;
     config.currency.map((obj) => {
       if (obj.label == currency)
         currency = obj.value;
     })
-    return `${currency + amount}`;
+    cost = field == 'fee' ? fee : field == 'net' ? amount-fee : amount ;
+    return `${currency + cost}`;
   }
   classesCovered = (transaction) => {
     let covers = get(transaction, 'covers', []);
@@ -221,23 +234,22 @@ class MyTransaction extends React.Component {
   }
   render() {
     const { transactionData, isLoading, selectedFilter, sddb, index, contractDialog } = this.state;
-    let columnData = getTableProps()
+    const { classes, popUp,schoolView } = this.props;
+    let columnData = getTableProps(schoolView)
     const { tableHeaderColumns } = columnData;
-    const { classes, popUp } = this.props;
     let columnValues = tableHeaderColumns;
-    let TableName = TransactionDetailsTable;
+    let TableName = TransactionDetailsTable(schoolView);
     if (!Meteor.userId()) {
       return 'Please Login First.'
     }
-    else if (get(this.props.params, 'id', null) != Meteor.userId()) {
+    else if (get(this.props.params, 'id', null) != Meteor.userId() && !schoolView) {
       return 'Unable to Access Other User Account';
     }
     const color = { color: 'green', cursor: "pointer" };
-
     return (
       <Wrapper>
         {isLoading && <ContainerLoader />}
-        <PageHeading>My Transactions</PageHeading>
+        <PageHeading>{schoolView ? "Transactions": "My Transactions"}</PageHeading>
         <Paper className={classes.root}>
           {/* <PrimaryButton
             label={`IDeal Test`}
@@ -264,7 +276,7 @@ class MyTransaction extends React.Component {
           <TableWrapper>
             <TableName>
               {isEmpty(transactionData)
-                ? "No payout found"
+                ? "No Data Found" 
                 : transactionData.map((transaction, index) => {
                   let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
                   let classTypePageCondition = classTypeName && classTypeId;
@@ -299,8 +311,20 @@ class MyTransaction extends React.Component {
                           {this.getColumnValue(transaction, 'paymentMethod') || "..."}
                         </SSTableCell>
                         <SSTableCell data-th={columnValues[4].columnName}>
-                          {this.amountGenerator(transaction)}
+                          {this.amountGenerator(transaction,'amount')}
                         </SSTableCell>
+                        {schoolView && (
+                          <SSTableCell data-th={columnValues[5].columnName}>
+                          {this.amountGenerator(transaction,'net')}
+                        </SSTableCell>
+                        )
+                        }
+                        {schoolView && (
+                          <SSTableCell data-th={columnValues[6].columnName}>
+                          {this.amountGenerator(transaction,'fee')}
+                        </SSTableCell>
+                        )
+                        }
                         <SSTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
                           {this.getColumnValue(transaction, 'schoolName') || "..."}
                         </SSTableCell>
