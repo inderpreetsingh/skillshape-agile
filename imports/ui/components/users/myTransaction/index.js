@@ -277,7 +277,7 @@ class MyTransaction extends React.Component {
           <TableWrapper>
             <TableName>
               {isEmpty(transactionData)
-                ? "No payout found"
+                ? "No Data Found" 
                 : transactionData.map((transaction, index) => {
                   let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
                   let classTypePageCondition = classTypeName && classTypeId;
