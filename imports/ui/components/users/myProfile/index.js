@@ -366,23 +366,17 @@ class MyProfile extends React.Component {
         });
         auth2.grantOfflineAccess().then((res) => {
           if (res.code) {
-            Meteor.call('calendar.getRefreshToken', res.code, (err, res) => {
-              self.setState({ isBusy: false });
-              const { popUp } = self.props;
-              if(res){
-                const data = {
-                  popUp,
-                  title: 'Success',
-                  type: 'success',
-                  content: 'Your Google Calendar connected with SkillShape Successfully. All SkillShape events will be sync shortly.',
-                  buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
-                };
-                confirmationDialog(data);
-              }
-              else{
-                this.somethingWentWrong();
-              }
-            })
+            Meteor.call('calendar.getRefreshToken', res.code)
+            const { popUp } = self.props;
+            const data = {
+              popUp,
+              title: 'Success',
+              type: 'success',
+              content: 'Your Google Calendar connected with SkillShape Successfully. All SkillShape events will be sync shortly.',
+              buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+            };
+            self.setState({ isBusy: false });
+            confirmationDialog(data);
           }
           else {
             this.somethingWentWrong();
