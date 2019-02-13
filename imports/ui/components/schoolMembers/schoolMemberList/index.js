@@ -12,8 +12,9 @@ class SchoolMemberListItems extends React.Component {
   }
 
   render() {
+    console.log(this.props, "SCHOOL MEMBERS LIST");
     return SchoolMemberListRender.call(this, this.props, this.state);
   }
 }
 
-export default withSubscriptionAndPagination(SchoolMemberListItems, {collection: SchoolMemberDetails, subscriptionName: "MembersBySchool", recordLimit:10});
+export default withSubscriptionAndPagination(SchoolMemberListItems, { collection: SchoolMemberDetails, subscriptionName: "MembersBySchool", recordLimit: 10 });
