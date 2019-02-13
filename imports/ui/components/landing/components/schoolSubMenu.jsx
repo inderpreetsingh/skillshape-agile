@@ -35,14 +35,6 @@ class SchoolSubMenu extends React.Component {
         iconName: "people"
       }
     ];
-    // stripe enabled then need to show financial tab...
-    if (Meteor.settings.public.paymentEnabled) {
-      childData.push({
-        name: "Financials",
-        link: `${school.link}/financials`,
-        iconName: "attach_money"
-      });
-    }
     return childData;
   };
 

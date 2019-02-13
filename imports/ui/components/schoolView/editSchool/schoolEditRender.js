@@ -8,6 +8,8 @@ const MediaDetails = lazy(() => import("./mediaDetails"));
 const PriceDetails = lazy(() => import("./priceDetails"));
 const ContractRequests = lazy(() => import('./contractRequests'));
 const SchoolDetails = lazy(() => import("./schoolDetails"));
+const Settings = lazy(()=>import("./settings"));
+const MyTransaction = lazy(()=>import("/imports/ui/components/users/myTransaction"))
 const SchoolMemberView = lazy(() => import("/imports/ui/components/schoolMembers"));
 const ResponsiveTabs = lazy(() => import("/imports/util/responsiveTabs"));
 const Financial = lazy(() => import("/imports/ui/components/financials"));
@@ -54,7 +56,9 @@ export default function (props) {
                 "Admins",
                 "Financial",
                 "View School",
-                "Requests"
+                "Requests",
+                "Transactions",
+                "Settings"
               ]}
               color="primary"
               onTabChange={this.onTabChange}
@@ -168,6 +172,21 @@ export default function (props) {
                   schoolData= {schoolData}
                   currentUser = {currentUser}
                   />
+                )
+              }
+              {
+                this.state.tabValue === 11 &&(
+                  <MyTransaction
+                  schoolView = {true}
+                  schoolData = {schoolData}
+                  />
+                )
+              }
+              {
+                this.state.tabValue === 12 &&(
+                  <Settings
+                  schoolData = {schoolData}
+                />
                 )
               }
             </div>

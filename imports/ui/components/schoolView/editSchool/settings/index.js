@@ -28,14 +28,12 @@ class Settings extends React.Component {
   componentWillMount() {
     const {schoolData} = this.props;
     let superAdmin = get(schoolData,'superAdmin',null)
-    this.setState({superAdmin});
     Meteor.call("stripe.findAdminStripeAccount",superAdmin,(err,res)=>{
-      this.setState({status:res});      
+      this.setState({status:res,superAdmin});      
     })
   }
   
   render() {
-    const role = this.props && this.props.currentUser && _.indexOf(this.props.currentUser.roles, "Superadmin");
     const {status,superAdmin} = this.state; 
     const {popUp} = this.props;
     return (
