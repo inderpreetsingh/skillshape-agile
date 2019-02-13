@@ -1,5 +1,7 @@
 import React, { lazy, Suspense } from "react";
-const Typography = lazy(() => import("material-ui/Typography"));
+import { browserHistory } from "react-router";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import { FormBuilderModal } from "/imports/ui/modal";
 const DocumentTitle = lazy(() => import("react-document-title"));
 const ClassTypeDetails = lazy(() => import("./classTypeDetails"));
 const EmbedCodes = lazy(() => import("./embedCodes"));
@@ -8,14 +10,12 @@ const MediaDetails = lazy(() => import("./mediaDetails"));
 const PriceDetails = lazy(() => import("./priceDetails"));
 const ContractRequests = lazy(() => import('./contractRequests'));
 const SchoolDetails = lazy(() => import("./schoolDetails"));
+const Settings = lazy(()=>import("./settings"));
+const MyTransaction = lazy(()=>import("/imports/ui/components/users/myTransaction"))
 const SchoolMemberView = lazy(() => import("/imports/ui/components/schoolMembers"));
 const ResponsiveTabs = lazy(() => import("/imports/util/responsiveTabs"));
-const Financial = lazy(() => import("/imports/ui/components/financials"));
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { FormBuilderModal } from "/imports/ui/modal";
-import { browserHistory } from "react-router";
 export default function (props) {
-  const { selecetdView, formBuilderModal } = this.state;
+  const { formBuilderModal } = this.state;
   
   let {
     schoolId,
@@ -52,9 +52,10 @@ export default function (props) {
                 "Embed Codes",
                 "Students",
                 "Admins",
-                "Financial",
                 "View School",
-                "Requests"
+                "Requests",
+                "Transactions",
+                "Settings"
               ]}
               color="primary"
               onTabChange={this.onTabChange}
@@ -149,25 +150,32 @@ export default function (props) {
                   />
                 )
               }
-              {
-                this.state.tabValue === 8 && (
-                  <Financial
-                  currentUser = {currentUser}
-                  schoolData={schoolData}
-                  />
-                )
-              }
                {
-                this.state.tabValue === 9 &&(
+                this.state.tabValue === 8 &&(
                   browserHistory.push(`/schools/${slug}`)
                 )
               }
                {
-                this.state.tabValue === 10 &&(
+                this.state.tabValue === 9 &&(
                   <ContractRequests
                   schoolData= {schoolData}
                   currentUser = {currentUser}
                   />
+                )
+              }
+              {
+                this.state.tabValue === 10 &&(
+                  <MyTransaction
+                  schoolView = {true}
+                  schoolData = {schoolData}
+                  />
+                )
+              }
+              {
+                this.state.tabValue === 11 &&(
+                  <Settings
+                  schoolData = {schoolData}
+                />
                 )
               }
             </div>

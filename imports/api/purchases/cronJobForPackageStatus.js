@@ -76,9 +76,7 @@ SyncedCron.add({
             subscriptionId,
             Meteor.bindEnvironment(function (err, confirmation) {
               // asynchronously called
-              if (confirmation) {
                 ClassSubscription.update({ subscriptionId }, { $set: { status: 'expired', subscriptionCancelResponse: confirmation } });
-              }
             })
           );
         })

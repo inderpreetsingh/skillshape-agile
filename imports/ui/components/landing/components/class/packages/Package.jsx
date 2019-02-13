@@ -272,8 +272,9 @@ class Package extends React.Component {
 		let str = ""
 		if (!isEmpty(data)) {
 			str = data.map(classType => {
-				// console.log(classType.name.toLowerCase(), capitalizeString(classType.name.toLowerCase()))
-				return capitalizeString(classType.name.toLowerCase())
+				let classTypeName = get(classType,'name','No Class Type Name');
+				classTypeName = classTypeName ? classTypeName : 'No Class Type Name'
+				return capitalizeString(classTypeName.toLowerCase())
 			});
 			str = str.join(", ");
 		}

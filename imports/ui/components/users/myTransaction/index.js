@@ -276,7 +276,7 @@ class MyTransaction extends React.Component {
           <TableWrapper>
             <TableName>
               {isEmpty(transactionData)
-                ? "No Data Found" 
+                ? "There are no transactions yet!" 
                 : transactionData.map((transaction, index) => {
                   let { classTypeName, classTypeId, schoolSlug, schoolId, schoolName } = transaction || {};
                   let classTypePageCondition = classTypeName && classTypeId;
@@ -325,16 +325,16 @@ class MyTransaction extends React.Component {
                         </SSTableCell>
                         )
                         }
-                        <SSTableCell data-th={columnValues[5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
+                        <SSTableCell data-th={columnValues[schoolView ? 7 : 5].columnName} style={color} onClick={() => { confirmationDialog(dataForSchool) }}>
                           {this.getColumnValue(transaction, 'schoolName') || "..."}
                         </SSTableCell>
-                        <SSTableCell data-th={columnValues[6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
+                        <SSTableCell data-th={columnValues[schoolView ? 8 : 6].columnName} style={color} onClick={() => { confirmationDialog(dataForClassType) }}>
                           {this.getColumnValue(transaction, 'classTypeName') || "..."}
                         </SSTableCell>
-                        <SSTableCell data-th={columnValues[7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
+                        <SSTableCell data-th={columnValues[schoolView ? 9 : 7].columnName} style={color} onClick={() => { this.setState({ sddb: !this.state.sddb, index }) }}>
                           {this.getColumnValue(transaction, 'packageName') || "..."}
                         </SSTableCell>
-                        <SSTableCell data-th={columnValues[8].columnName}>
+                        <SSTableCell data-th={columnValues[schoolView ? 10 : 8].columnName}>
                           {this.packageType(transaction)}
                         </SSTableCell>
                       </SSTableRow>

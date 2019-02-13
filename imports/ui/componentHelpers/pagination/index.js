@@ -47,7 +47,7 @@ export default class Pagination extends React.Component {
           nextLabel={"Next"}
           nextLinkClassName={"next-link"}
           disabledClassName={"disabled"}
-          breakLabel={<a href="">...</a>}
+          breakLabel={<a>...</a>}
           breakClassName={"break-me"}
           pageCount={this.props.pageCount}
           marginPagesDisplayed={2}

@@ -8,7 +8,6 @@ import { SSImage } from '/imports/ui/components/landing/components/helpers/Profi
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { flexCenter, rhythmDiv, panelColor, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { withImageExists, capitalizeString } from '/imports/util';
-import { reviewerImgSrc } from '/imports/ui/components/landing/site-settings.js';
 
 import {
     SCHOOL_CARD_WIDTH,
@@ -19,7 +18,7 @@ import {
 
 const imageExistsConfig = {
     originalImagePath: 'src',
-    defaultImage: reviewerImgSrc
+    defaultImage: config.defaultProfilePicOptimized
 };
 
 const Wrapper = styled.div`
