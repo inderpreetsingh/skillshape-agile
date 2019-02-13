@@ -8,6 +8,9 @@ const style = theme => {
     card: {
       margin: 5
     },
+    cardHeaderTitle: {
+      textAlign: 'center'
+    },
     actions: {
       display: "flex"
     },
@@ -68,7 +71,7 @@ class MyProfile extends React.Component {
         address: currentUser.profile.address || "",
         currency: currentUser.profile.currency || "",
         about: currentUser.profile.about || "",
-        refresh_token: get(currentUser,'refresh_token',null)
+        refresh_token: get(currentUser, 'refresh_token', null)
       });
     }
   };
@@ -92,15 +95,15 @@ class MyProfile extends React.Component {
     this.setState({ [fieldName]: event.target.value });
   };
   clearAllEvents = () => {
-    this.setState({isBusy:true},()=>{
-      let docId = get(this.props.currentUser,'_id',Meteor.userId());
-      let doc = {refresh_token:null,googleCalendarId:null};
-      Meteor.call("calendar.clearAllEvents",{ doc, docId },(err,res)=>{
-        if(err){
+    this.setState({ isBusy: true }, () => {
+      let docId = get(this.props.currentUser, '_id', Meteor.userId());
+      let doc = { refresh_token: null, googleCalendarId: null };
+      Meteor.call("calendar.clearAllEvents", { doc, docId }, (err, res) => {
+        if (err) {
           this.somethingWentWrong();
-        }else{
-          this.setState({isBusy:false});
-          const {popUp} = this.props;
+        } else {
+          this.setState({ isBusy: false });
+          const { popUp } = this.props;
           const data = {
             popUp,
             title: 'Success',
@@ -113,24 +116,24 @@ class MyProfile extends React.Component {
       })
     })
   }
-  confirmationRemoveGoogleSync = () =>{
-    const {popUp} = this.props;
+  confirmationRemoveGoogleSync = () => {
+    const { popUp } = this.props;
     const data = {
       popUp,
       title: 'Confirmation',
       type: 'inform',
       content: 'You can Disconnect Google Sync as well as Disconnect Google Sync  and clear previous SkillShape events from google calendar.',
-      buttons: [{ label: 'No, Thanks!', onClick: () => { }, greyColor: true },{label: 'Disconnect Google ', onClick: () => {this.removeGoogleSync()}},{ label: 'Disconnect & Clear Events', onClick: () => { this.clearAllEvents()} }]
+      buttons: [{ label: 'No, Thanks!', onClick: () => { }, greyColor: true }, { label: 'Disconnect Google ', onClick: () => { this.removeGoogleSync() } }, { label: 'Disconnect & Clear Events', onClick: () => { this.clearAllEvents() } }]
     };
     confirmationDialog(data);
   }
-  removeGoogleSync = () =>{
-    let docId = get(this.props.currentUser,'_id',Meteor.userId());
-    let doc = {refresh_token:null,googleCalendarId:null};
-    this.setState({isBusy:true},()=>{
-      Meteor.call("user.editUser",{ doc, docId },(err,res)=>{
-        this.setState({isBusy:false});
-        const {popUp} = this.props;
+  removeGoogleSync = () => {
+    let docId = get(this.props.currentUser, '_id', Meteor.userId());
+    let doc = { refresh_token: null, googleCalendarId: null };
+    this.setState({ isBusy: true }, () => {
+      Meteor.call("user.editUser", { doc, docId }, (err, res) => {
+        this.setState({ isBusy: false });
+        const { popUp } = this.props;
         const data = {
           popUp,
           title: 'Success',
@@ -181,7 +184,7 @@ class MyProfile extends React.Component {
         "profile.currency": this.state.currency,
         "profile.about": this.state.about,
         "profile.coords": this.state.loc,
-        refresh_token:this.state.refresh_token
+        refresh_token: this.state.refresh_token
       };
       const { file } = this.state;
       try {
@@ -359,11 +362,11 @@ class MyProfile extends React.Component {
     let self = this;
     this.setState({ isBusy: true }, () => {
       const clientId = Meteor.settings.public.googleAppId;
-      try{
+      try {
         gapi.load('auth2', function () {
           auth2 = gapi.auth2.init({
             client_id: clientId,
-            scope:'https://www.googleapis.com/auth/calendar'
+            scope: 'https://www.googleapis.com/auth/calendar'
           });
           auth2.grantOfflineAccess().then((res) => {
             console.log('TCL: handleCalendarSync -> res', res)
@@ -383,9 +386,9 @@ class MyProfile extends React.Component {
             else {
               self.somethingWentWrong();
             }
-          }).catch((err=>{self.somethingWentWrong(err.error)}));
+          }).catch((err => { self.somethingWentWrong(err.error) }));
         });
-      }catch(error){
+      } catch (error) {
         console.log('error in handleCalendarSync', error);
         this.somethingWentWrong();
       }
@@ -394,10 +397,10 @@ class MyProfile extends React.Component {
   somethingWentWrong = (errorCode) => {
     this.setState({ isBusy: false });
     let content = 'Oops Something Went Wrong. Please try again.';
-    if(errorCode == 'popup_closed_by_user'){
+    if (errorCode == 'popup_closed_by_user') {
       content = 'Google Popup is closed by the user. Pease try again.';
     }
-    else if(errorCode == 'popup_blocked_by_browser'){
+    else if (errorCode == 'popup_blocked_by_browser') {
       content = 'Google Popup is blocked by the browser. Please allow google popup and try again.';
     }
     const { popUp } = this.props;

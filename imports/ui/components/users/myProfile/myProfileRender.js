@@ -22,6 +22,8 @@ import IconInput from "/imports/ui/components/landing/components/form/IconInput"
 import { Loading } from "/imports/ui/loading";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+
+
 const SaveBtnWrapper = styled.div`
   margin: 10px;
   float: right;
@@ -34,6 +36,12 @@ const ErrorWrapper = styled.span`
 
 const ProfileForm = styled.form`
   padding-left: ${rhythmDiv}px;
+`;
+
+const GridWrapper = styled.div`
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
 `;
 
 export default function () {
@@ -64,231 +72,234 @@ export default function () {
   if (this.validateUser()) {
     return (
       <DocumentTitle title={this.props.route.name}>
-        <Grid container>
-          {this.state.isBusy && <ContainerLoader />}
-          <Grid item xs={12} sm={8}>
-            <Card className={classes.card}>
-              <CardHeader
-                title="My Profile"
-                action={
-                  <IconButton
-                    className={classnames(classes.expand, {
-                      [classes.expandOpen]: this.state.profileExpanded
-                    })}
-                    onClick={this.handleExpandClick.bind(
-                      this,
-                      "profileExpanded"
-                    )}
-                    aria-expanded={this.state.profileExpanded}
-                    aria-label="Show more"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                }
-              />
-              <Collapse
-                in={this.state.profileExpanded}
-                timeout="auto"
-                unmountOnExit
-              >
-                <CardContent>
-                  <Grid container>
-                    <Grid item xs={12} sm={12} md={4}>
-                      <MediaUpload
-                        fullScreen={false}
-                        onChange={this.handleUserImageChange}
-                        minWidth={201}
-                        data={{ file: pic, isUrl: true }}
-                        showVideoOption={false}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={8}>
-                      <ProfileForm onSubmit={this.submitUserDetails}>
-                        <IconInput
-                          labelText="First Name"
-                          value={firstName}
-                          onChange={this.handleTextChange.bind(
-                            this,
-                            "firstName"
-                          )}
+        <GridWrapper>
+          <Grid container>
+            {this.state.isBusy && <ContainerLoader />}
+            <Grid item xs={12} sm={12}>
+              <Card className={classes.card}>
+                <CardHeader
+                  classes={{title: classes.cardHeaderTitle}}
+                  title="My Profile"
+                  action={
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: this.state.profileExpanded
+                      })}
+                      onClick={this.handleExpandClick.bind(
+                        this,
+                        "profileExpanded"
+                      )}
+                      aria-expanded={this.state.profileExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  }
+                />
+                <Collapse
+                  in={this.state.profileExpanded}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <CardContent>
+                    <Grid container>
+                      <Grid item xs={12} sm={12} md={4}>
+                        <MediaUpload
+                          fullScreen={false}
+                          onChange={this.handleUserImageChange}
+                          minWidth={201}
+                          data={{ file: pic, isUrl: true }}
+                          showVideoOption={false}
                         />
-                        <IconInput
-                          labelText="Last Name"
-                          value={lastName}
-                          onChange={this.handleTextChange.bind(
-                            this,
-                            "lastName"
-                          )}
-                        />
-                        <Typography
-                          className={classes.inputCaption}
-                          type="caption"
-                        >
-                          Your public profile only shows first name. When you
-                          join a school, your instructors will see your first
-                          and last name.
-                        </Typography>
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel htmlFor="gender">I Am</InputLabel>
-                          <Select
-                            input={<Input id="gender" />}
-                            value={this.state.gender}
-                            onChange={event =>
-                              this.setState({ gender: event.target.value })
-                            }
-                            fullWidth
-                            style={{ fontWeight: 600 }}
-                          >
-                            {config.gender.map((data, index) => {
-                              return (
-                                <MenuItem
-                                  key={`${index}-${data.value}`}
-                                  value={data.value}
-                                >
-                                  {data.label}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                        <Typography
-                          className={classes.inputCaption}
-                          type="caption"
-                        >
-                          We use this data for analysis and never share it with
-                          other users.
-                        </Typography>
-                        <InputLabel fullWidth margin="dense">
-                          <MaterialDatePicker
-                            classes={classes.datePickerProps}
-                            required={false}
-                            emptyLabel="Select a Date"
-                            floatingLabelText={"Birth Date"}
-                            hintText={"Birth Date"}
-                            value={dob}
-                            onChange={this.handleDobChange}
-                            fullWidth={true}
-                            format={"DD-MM-YYYY"}
-                            style={{ fontWeight: 600 }}
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={8}>
+                        <ProfileForm onSubmit={this.submitUserDetails}>
+                          <IconInput
+                            labelText="First Name"
+                            value={firstName}
+                            onChange={this.handleTextChange.bind(
+                              this,
+                              "firstName"
+                            )}
                           />
-                        </InputLabel>
-                        <Typography
-                          className={classes.inputCaption}
-                          type="caption"
-                        >
-                          The wonderful day you took your first breath. We use
-                          this data to help you find classes and never share it
-                          with other users.
+                          <IconInput
+                            labelText="Last Name"
+                            value={lastName}
+                            onChange={this.handleTextChange.bind(
+                              this,
+                              "lastName"
+                            )}
+                          />
+                          <Typography
+                            className={classes.inputCaption}
+                            type="caption"
+                          >
+                            Your public profile only shows first name. When you
+                            join a school, your instructors will see your first
+                            and last name.
                         </Typography>
-                        <IconInput
-                          type="email"
-                          disabled={true}
-                          value={email}
-                          labelText="Email Address"
-                          iconName="email"
-                        />
-                        <Typography
-                          className={classes.inputCaption}
-                          type="caption"
-                        >
-                          We won't be share your private email address with
-                          other Members.
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel htmlFor="gender">I Am</InputLabel>
+                            <Select
+                              input={<Input id="gender" />}
+                              value={this.state.gender}
+                              onChange={event =>
+                                this.setState({ gender: event.target.value })
+                              }
+                              fullWidth
+                              style={{ fontWeight: 600 }}
+                            >
+                              {config.gender.map((data, index) => {
+                                return (
+                                  <MenuItem
+                                    key={`${index}-${data.value}`}
+                                    value={data.value}
+                                  >
+                                    {data.label}
+                                  </MenuItem>
+                                );
+                              })}
+                            </Select>
+                          </FormControl>
+                          <Typography
+                            className={classes.inputCaption}
+                            type="caption"
+                          >
+                            We use this data for analysis and never share it with
+                            other users.
                         </Typography>
-                        {/* <IconInput
+                          <InputLabel fullWidth margin="dense">
+                            <MaterialDatePicker
+                              classes={classes.datePickerProps}
+                              required={false}
+                              emptyLabel="Select a Date"
+                              floatingLabelText={"Birth Date"}
+                              hintText={"Birth Date"}
+                              value={dob}
+                              onChange={this.handleDobChange}
+                              fullWidth={true}
+                              format={"DD-MM-YYYY"}
+                              style={{ fontWeight: 600 }}
+                            />
+                          </InputLabel>
+                          <Typography
+                            className={classes.inputCaption}
+                            type="caption"
+                          >
+                            The wonderful day you took your first breath. We use
+                            this data to help you find classes and never share it
+                            with other users.
+                        </Typography>
+                          <IconInput
+                            type="email"
+                            disabled={true}
+                            value={email}
+                            labelText="Email Address"
+                            iconName="email"
+                          />
+                          <Typography
+                            className={classes.inputCaption}
+                            type="caption"
+                          >
+                            We won't be share your private email address with
+                            other Members.
+                        </Typography>
+                          {/* <IconInput
                           type="tel"
                           labelText="Phone Number"
                           iconName="contact_phone"
                           value={phone}
                           onChange={this.handleTextChange.bind(this, "phone")}
                         /> */}
-                        <ReactPhoneInput
-                          defaultCountry={'us'}
-                          value={phone ? phone.toString() : ''}
-                          onChange={phone => this.setState({ phone })}
-                          inputStyle={{ width: '100%' }}
-                          placeHolder={'Phone Number'}
-                          containerStyle={{ marginTop: '10px' }}
-                          disableAreaCodes={true}
-                        />
-                        <Typography
-                          className={classes.inputCaption}
-                          type="caption"
-                        >
-                          This is only shared with Administrators of a school
-                          you have enrolled in.
-                        </Typography>
-                        <FormControl fullWidth margin="dense">
-                          <InputLabel htmlFor="currency">
-                            Preferred Currency
-                          </InputLabel>
-                          <Select
-                            input={<Input id="currency" />}
-                            value={this.state.currency}
-                            onChange={event =>
-                              this.setState({ currency: event.target.value })
-                            }
-                            fullWidth
-                            style={{ fontWeight: 600 }}
+                          <ReactPhoneInput
+                            defaultCountry={'us'}
+                            value={phone ? phone.toString() : ''}
+                            onChange={phone => this.setState({ phone })}
+                            inputStyle={{ width: '100%' }}
+                            placeHolder={'Phone Number'}
+                            containerStyle={{ marginTop: '10px' }}
+                            disableAreaCodes={true}
+                          />
+                          <Typography
+                            className={classes.inputCaption}
+                            type="caption"
                           >
-                            {config.currency.map((data, index) => {
-                              return (
-                                <MenuItem
-                                  key={`${index}-${data.value}`}
-                                  value={data.value}
-                                >
-                                  {data.label}
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                        <IconInput
-                          onChange={this.locationInputChanged}
-                          iconName="location_on"
-                          googlelocation={true}
-                          labelText="Where you live"
-                          value={address}
-                          defaultValue={address}
-                          onLocationChange={this.onLocationChange}
-                        />
-                        <IconInput
-                          type="text"
-                          multiline={true}
-                          labelText="About You"
-                          defaultValue={about}
-                          value={about}
-                          onChange={this.handleTextChange.bind(this, "about")}
-                        />
-                        {!refresh_token ? <PrimaryButton
-                          label={`Sync Google`}
-                          onClick={this.calendarConformation}
-                        />
-                          : <PrimaryButton
-                            label={`Cancel Sync Google`}
-                            onClick={this.confirmationRemoveGoogleSync}
-                          />}
-                        <SaveBtnWrapper>
-                          {/* <Button type="submit" color="accent" raised dense>
+                            This is only shared with Administrators of a school
+                            you have enrolled in.
+                        </Typography>
+                          <FormControl fullWidth margin="dense">
+                            <InputLabel htmlFor="currency">
+                              Preferred Currency
+                          </InputLabel>
+                            <Select
+                              input={<Input id="currency" />}
+                              value={this.state.currency}
+                              onChange={event =>
+                                this.setState({ currency: event.target.value })
+                              }
+                              fullWidth
+                              style={{ fontWeight: 600 }}
+                            >
+                              {config.currency.map((data, index) => {
+                                return (
+                                  <MenuItem
+                                    key={`${index}-${data.value}`}
+                                    value={data.value}
+                                  >
+                                    {data.label}
+                                  </MenuItem>
+                                );
+                              })}
+                            </Select>
+                          </FormControl>
+                          <IconInput
+                            onChange={this.locationInputChanged}
+                            iconName="location_on"
+                            googlelocation={true}
+                            labelText="Where you live"
+                            value={address}
+                            defaultValue={address}
+                            onLocationChange={this.onLocationChange}
+                          />
+                          <IconInput
+                            type="text"
+                            multiline={true}
+                            labelText="About You"
+                            defaultValue={about}
+                            value={about}
+                            onChange={this.handleTextChange.bind(this, "about")}
+                          />
+                          {!refresh_token ? <PrimaryButton
+                            label={`Sync Google`}
+                            onClick={this.calendarConformation}
+                          />
+                            : <PrimaryButton
+                              label={`Cancel Sync Google`}
+                              onClick={this.confirmationRemoveGoogleSync}
+                            />}
+                          <SaveBtnWrapper>
+                            {/* <Button type="submit" color="accent" raised dense>
                             Save
                           </Button> */}
-                          <FormGhostButton
-                            type="submit"
-                            label='Save'
-                          />
-                        </SaveBtnWrapper>
-                        {this.state.errorText && (
-                          <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
-                        )}
-                      </ProfileForm>
+                            <FormGhostButton
+                              type="submit"
+                              label='Save'
+                            />
+                          </SaveBtnWrapper>
+                          {this.state.errorText && (
+                            <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
+                          )}
+                        </ProfileForm>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Collapse>
-            </Card>
-          </Grid>
+                  </CardContent>
+                </Collapse>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12} sm={4} />
-        </Grid>
+            {/*<Grid item xs={12} sm={4} /> */}
+          </Grid>
+        </GridWrapper>
       </DocumentTitle>
     );
   } else {
