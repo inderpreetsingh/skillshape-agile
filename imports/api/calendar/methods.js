@@ -31,7 +31,7 @@ Meteor.methods({
 
         if (action == 'insert') {
           let eventsList = Meteor.call('calendar.generateEvents', userId);
-          eventsList.map(async (e) => {
+         !isEmpty(eventsList || []) && eventsList.map(async (e) => {
             try {
               let response = await axios({
                 method: 'post',
@@ -92,8 +92,11 @@ Meteor.methods({
             }
           }
           let { name: classTypeName, desc: classTypeDesc } = classTypeData;
+          console.log('TCL: classTimeName', classTimeName)
+					console.log('TCL: classTypeName', classTypeName)
           let summary = `${classTypeName}: ${classTimeName}`;
-          scheduleDetails.map((obj) => {
+          console.log('TCL: scheduleDetails', scheduleDetails)
+          !isEmpty(scheduleDetails || []) && scheduleDetails.map((obj) => {
             let event = {};
             event._id = id;
             event.location = location;
