@@ -24,7 +24,7 @@ const formId = "classTypeForm";
 import styled from "styled-components";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { isThisSecond } from "date-fns";
+import { withPopUp ,confirmationDialog} from '/imports/util';
 import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 const customStyle = {
   marginTop: "10px",
@@ -176,8 +176,18 @@ class ClassTypeForm extends React.Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const { schoolId, data } = this.props;
-
+    const { schoolId, data,popUp } = this.props;
+    if(!this.classTypeName.value){
+      let data = {
+        popUp,
+        title: 'Error',
+        type: 'alert',
+        content: `Class Type Name is Required`,
+        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
+      };
+      confirmationDialog(data);
+      return;
+    }
     const payload = {
       schoolId: schoolId,
       name: this.classTypeName.value,
@@ -431,4 +441,4 @@ class ClassTypeForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(withMobileDialog()(ClassTypeForm));
+export default withStyles(styles)(withPopUp(withMobileDialog()(ClassTypeForm)));
