@@ -3,7 +3,8 @@ import ClassType from "/imports/api/classType/fields";
 import SLocation from "/imports/api/sLocation/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import School from "/imports/api/school/fields";
-import { check } from 'meteor/check';
+import { check} from 'meteor/check';
+import {compact,groupBy,uniq,isEmpty} from 'lodash';
 Meteor.methods({
   "classTimes.getClassTimes": function({
     schoolId,
@@ -68,11 +69,24 @@ Meteor.methods({
         if(  doc && doc.classTypeId  && doc.locationId){
           Meteor.call('classType.addLocationFilter',doc.classTypeId,doc.locationId,doc_id,"editTime")
         }
-        return ClassTimes.update({ _id: doc_id }, { $set: doc });
+        let classInterestData = ClassInterest.find({classTimeId:doc_id}).fetch();
+        let userIds = uniq(compact(classInterestData.map((obj) => obj.userId)));
+        let classInterestDataByUserId = groupBy(classInterestData,'userId');
+        ClassTimes.update({ _id: doc_id }, { $set: doc });
+        userIds.map((userId)=>{
+          let currentUserClassInterestData = classInterestDataByUserId[userId];
+          let eventIds = compact(currentUserClassInterestData.map((obj) => obj.eventId));
+          if(userId && !isEmpty(eventIds))
+          Meteor.call("calendar.handleGoogleCalendar",userId,'delete',eventIds);
+          if(userId && !isEmpty(currentUserClassInterestData))
+          Meteor.call("calendar.handleGoogleCalendar",userId,'insert',[],currentUserClassInterestData);
+        })
+        return true;
       } else {
         throw new Meteor.Error("Permission denied!!");
       }
     }catch(error){
+		console.log(' error in classTimes.editClassTimes', error)
     }
   },
   "classTimes.removeClassTimes": function({ doc }) {
