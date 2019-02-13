@@ -316,6 +316,7 @@ const ManageMemberShipDialogBox = props => {
                                     <ClassProfile>
                                         <ClassImage
                                             imageContainerProps={{
+                                                bgSize: 'cover',
                                                 borderRadius: `50%`,
                                                 width: 84,
                                                 height: 84

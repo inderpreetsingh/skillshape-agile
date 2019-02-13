@@ -30,6 +30,7 @@ import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import { packageCoverProvider } from '/imports/util';
 const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
+//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -47,7 +48,19 @@ const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMem
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
+
 const drawerWidth = 400;
+
+const DrawerWrapper = styled.div`
+  max-width: ${drawerWidth}px;
+  width: 100%;
+`;
+
+const SchoolMemberWrapper = styled.div`
+  width: 100%;
+`;
+
+
 const style = {
   w211: {
     width: 211
@@ -730,7 +743,8 @@ class DashBoardView extends React.Component {
                 isAdmin={isAdmin}
                 superAdminId={superAdminId}
                 view={view}
-              /> : <SchoolMemberListItems
+              /> :
+              <SchoolMemberListItems
                 filters={schoolMemberListFilters}
                 handleMemberDetailsToRightPanel={
                   this.handleMemberDetailsToRightPanel
@@ -826,6 +840,7 @@ class DashBoardView extends React.Component {
             </div>
           </Hidden>
         </Grid>
+
         <Grid
           item
           sm={12}
@@ -856,6 +871,54 @@ class DashBoardView extends React.Component {
             )}
           </Suspense>
         </Grid>
+
+        {/*<DrawerWrapper>
+          <Fragment>
+          <Hidden mdUp>
+            <Drawer
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={this.state.mobileOpen}
+              onClose={this.handleDrawerToggle}
+              style={{ position: "absolute" }}
+              classes={{
+                paper: classes.drawerPaper
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden smDown>
+            <div variant="permanent" open className={classes.drawerPaper}>
+              {drawer}
+            </div>
+          </Hidden>
+          </Fragment>    
+          </DrawerWrapper>
+        
+          <SchoolMemberWrapper>    
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            {!isEmpty(memberInfo) && (
+              <Fragment>
+                <SchoolMemberInfo
+                  selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
+                  memberInfo={memberInfo}
+                  handleInput={this.handleInput}
+                  saveAdminNotesInMembers={this.saveAdminNotesInMembers}
+                  disabled={slug ? false : true}
+                  view={view}
+                  classTypeData={get(this.props, "classTypeData", [])}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  isAdmin={isAdmin}
+                  notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
+                />
+                {this.renderSchoolMedia(schoolData, memberInfo, slug)}
+              </Fragment>
+            )}
+          </Suspense>
+                </SchoolMemberWrapper> */}
       </Grid >
     );
   }
