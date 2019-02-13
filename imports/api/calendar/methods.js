@@ -4,7 +4,7 @@ import ClassInterest from "/imports/api/classInterest/fields.js";
 import ClassTimes from "/imports/api/classTimes/fields.js";
 import ClassTypes from "/imports/api/classType/fields.js";
 import SLocation from "/imports/api/sLocation/fields.js";
-import { get, isEmpty,cloneDeep } from 'lodash';
+import { get, isEmpty,cloneDeep,isArray } from 'lodash';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -96,7 +96,7 @@ Meteor.methods({
 					console.log('TCL: classTypeName', classTypeName)
           let summary = `${classTypeName}: ${classTimeName}`;
           console.log('TCL: scheduleDetails', scheduleDetails)
-          !isEmpty(scheduleDetails || []) && scheduleDetails.map((obj) => {
+          isArray(scheduleDetails) && !isEmpty(scheduleDetails || []) && scheduleDetails.map((obj) => {
             let event = {};
             event._id = id;
             event.location = location;
