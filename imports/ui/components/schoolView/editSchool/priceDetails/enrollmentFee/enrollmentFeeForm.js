@@ -73,7 +73,7 @@ class EnrollmentFeeForm extends React.Component {
       cost: get(this.props, "data.cost", "0"),
       expPeriod: get(this.props, "data.expPeriod", ""),
       noExpiration: get(this.props, "data.noExpiration", ""),
-      expDuration: get(this.props,"data.exDuration",false)
+      expDuration: get(this.props,"data.expDuration",false)
     };
   }
 
