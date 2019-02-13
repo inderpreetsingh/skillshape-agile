@@ -4,12 +4,12 @@ import ClassInterest from "/imports/api/classInterest/fields.js";
 import ClassTimes from "/imports/api/classTimes/fields.js";
 import ClassTypes from "/imports/api/classType/fields.js";
 import SLocation from "/imports/api/sLocation/fields.js";
-import { get, isEmpty,cloneDeep,isArray } from 'lodash';
+import { get, isEmpty,cloneDeep,isArray,compact } from 'lodash';
 import moment from 'moment';
 import axios from 'axios';
 
 Meteor.methods({
-  "calendar.handleGoogleCalendar": async function (userId, action, ids) {
+  "calendar.handleGoogleCalendar": async function (userId, action, eventsIds,classInterestData=[]) {
     try {
       let { refresh_token, googleCalendarId: calendarId } = Meteor.users.findOne({ _id: userId });
       if (refresh_token && calendarId) {
@@ -30,7 +30,7 @@ Meteor.methods({
         let { access_token } = response.data;
 
         if (action == 'insert') {
-          let eventsList = Meteor.call('calendar.generateEvents', userId);
+          let eventsList = Meteor.call('calendar.generateEvents', userId,classInterestData);
          !isEmpty(eventsList || []) && eventsList.map(async (e) => {
             try {
               let response = await axios({
@@ -51,10 +51,8 @@ Meteor.methods({
             }
           })
         }
-        else if (action == 'delete' && !isEmpty(ids)) {
-          let classInterestData = ClassInterest.find({ _id: { $in: ids } }).fetch();
-          classInterestData.map(async (obj) => {
-            let { eventId } = obj;
+        else if (action == 'delete' && !isEmpty(eventsIds)) {
+          eventsIds.map(async (eventId) => {
             if (eventId) {
               let response = await axios({
                 method: 'delete',
@@ -72,10 +70,12 @@ Meteor.methods({
       throw new Meteor.Error(error);
     }
   },
-  "calendar.generateEvents": function (userId) {
+  "calendar.generateEvents": function (userId,classInterestData = []) {
     try {
       let events = [];
-      let classInterestData = ClassInterest.find({ userId, }).fetch();
+      if(isEmpty(classInterestData)){
+        classInterestData = ClassInterest.find({ userId, }).fetch();
+      }
       if (!isEmpty(classInterestData)) {
         classInterestData.map((classInterest) => {
           let { classTimeId, classTypeId, _id: id } = classInterest;
@@ -92,10 +92,7 @@ Meteor.methods({
             }
           }
           let { name: classTypeName, desc: classTypeDesc } = classTypeData;
-          console.log('TCL: classTimeName', classTimeName)
-					console.log('TCL: classTypeName', classTypeName)
           let summary = `${classTypeName}: ${classTimeName}`;
-          console.log('TCL: scheduleDetails', scheduleDetails)
           isArray(scheduleDetails) && !isEmpty(scheduleDetails || []) && scheduleDetails.map((obj) => {
             let event = {};
             event._id = id;
@@ -202,8 +199,8 @@ Meteor.methods({
   "calendar.clearAllEvents": function ({ doc, docId }) {
     try {
       let classInterestData = ClassInterest.find({ userId: this.userId, }).fetch();
-      let ids = classInterestData.map((obj) => obj._id);
-      Meteor.call("calendar.handleGoogleCalendar", this.userId, 'delete', ids,(err,res)=>{
+      let eventIds = compact(classInterestData.map((obj) => obj.eventId));
+      Meteor.call("calendar.handleGoogleCalendar", this.userId, 'delete', eventIds,(err,res)=>{
         Meteor.call("calendar.removeGoogleCalendar",(err,res)=>{
           Meteor.call("user.editUser", { doc, docId });
         });
@@ -346,18 +343,15 @@ request.execute(function(event) {
 */
 
 
-/*  --------FLow For Calendar Sync 
-1. User Click on the sync button.
-2. Open the Google Login PopUp.
-3. Get the access token.
-3.1 Show Loading on the client side.
-4. Call the method with access token and the userId.
-5. Get all the calendar events from the interest collection with userId.
-6. Get all the class times ids.
-7. Get all the class times data from collection.
-8. Generate events based on the class time type.
-9. Map on the events and start calling the api with axios.
-10. After Map show success popUp.
+/*  --------FLow For Update of calendar events 
+1. Get id of class time from classtime.edit code.
+2. Get classInterestData of  which are interested in that from class interest collection.
+2.1 Get Group by userId of classInterestData.
+3. Get EventsIds from  classInterestData;
+4. Call "calendar.handleGoogleCalendar" with those eventsIds to remove them.
+5. Call Again "calendar.handleGoogleCalendar" with those classInterestData to Generate them.
+6. Update calendar.generateEvents with option for classIInterestData.
+
 
 
 */
