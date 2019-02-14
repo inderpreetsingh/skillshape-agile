@@ -346,7 +346,7 @@ class ClassTypeContent extends Component {
         schoolId: schoolData._id
       };
 
-      Meteor.call("classTimesRequest.addRequest", data, (err, res) => {
+      Meteor.call("classTimesRequest.addRequest", data, "save",(err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
             //debugger;

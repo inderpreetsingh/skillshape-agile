@@ -92,7 +92,7 @@ export function withPopUp(WrappedComponent) {
           {open && (
             <SkillShapeDialogBox
               open={open}
-              type={type}
+              type={type ? type : 'inform'}
               {...dialogBoxProps}
               onModalClose={this.handleModalClose}
               onCloseButtonClick={this.handleClose}
