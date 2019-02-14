@@ -29,8 +29,8 @@ import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import { packageCoverProvider } from '/imports/util';
-const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
-//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
+//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
+const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -41,13 +41,14 @@ import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
 const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
+const SchoolMembersScreen = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/index.js'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const drawerWidth = 400;
 
@@ -58,6 +59,20 @@ const DrawerWrapper = styled.div`
 
 const SchoolMemberWrapper = styled.div`
   width: 100%;
+`;
+
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+  background-color: ${helpers.panelColor};
+`;
+
+const SplitScreenWrapper = MembersScreenWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  min-height: 100vh;
+  transition: all .5s linear;
+  opacity: ${props => props.show ? 1 : 0};
 `;
 
 
@@ -407,7 +422,7 @@ class DashBoardView extends React.Component {
     payload.signUpType = "member-signup"
     payload.sendMeSkillShapeNotification = true;
     payload.schoolName = schoolName;
-    console.log("​isAdmin", isAdmin)
+    // console.log("​isAdmin", isAdmin)
     if (!isAdmin) {
 
       let state = {
@@ -760,7 +775,7 @@ class DashBoardView extends React.Component {
 
 
     return (
-      <Grid container className={classes.root}>
+      <Wrapper>
         {joinSkillShape && (
           <ConfirmationModal
             open={joinSkillShape}
@@ -814,7 +829,7 @@ class DashBoardView extends React.Component {
             </form>
           </div>
         )}
-        <Grid
+        {/*<Grid
           item
           md={4}
           style={{ paddingRight: "0px" }}
@@ -870,56 +885,82 @@ class DashBoardView extends React.Component {
               </Fragment>
             )}
           </Suspense>
-        </Grid>
+        </Grid> */}
 
-        {/*<DrawerWrapper>
-          <Fragment>
-          <Hidden mdUp>
-            <Drawer
-              variant="temporary"
-              anchor={theme.direction === "rtl" ? "right" : "left"}
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-              style={{ position: "absolute" }}
-              classes={{
-                paper: classes.drawerPaper
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          <Hidden smDown>
-            <div variant="permanent" open className={classes.drawerPaper}>
-              {drawer}
-            </div>
-          </Hidden>
-          </Fragment>    
+
+        <SplitScreenWrapper show={!isEmpty(this.state.memberInfo)}>
+          <DrawerWrapper>
+            <Fragment>
+              <Hidden mdUp>
+                <Drawer
+                  variant="temporary"
+                  anchor={theme.direction === "rtl" ? "right" : "left"}
+                  open={this.state.mobileOpen}
+                  onClose={this.handleDrawerToggle}
+                  style={{ position: "absolute" }}
+                  classes={{
+                    paper: classes.drawerPaper
+                  }}
+                >
+                  {drawer}
+                </Drawer>
+              </Hidden>
+              <Hidden smDown>
+                <div variant="permanent" open className={classes.drawerPaper}>
+                  {drawer}
+                </div>
+              </Hidden>
+            </Fragment>
           </DrawerWrapper>
-        
-          <SchoolMemberWrapper>    
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-            {!isEmpty(memberInfo) && (
-              <Fragment>
-                <SchoolMemberInfo
-                  selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
-                  memberInfo={memberInfo}
-                  handleInput={this.handleInput}
-                  saveAdminNotesInMembers={this.saveAdminNotesInMembers}
-                  disabled={slug ? false : true}
-                  view={view}
-                  classTypeData={get(this.props, "classTypeData", [])}
-                  handleMemberDetailsToRightPanel={
-                    this.handleMemberDetailsToRightPanel
-                  }
-                  isAdmin={isAdmin}
-                  notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
-                />
-                {this.renderSchoolMedia(schoolData, memberInfo, slug)}
-              </Fragment>
-            )}
-          </Suspense>
-                </SchoolMemberWrapper> */}
-      </Grid >
+
+          <SchoolMemberWrapper>
+            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+              {!isEmpty(memberInfo) && (
+                <Fragment>
+                  <SchoolMemberInfo
+                    selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
+                    memberInfo={memberInfo}
+                    handleInput={this.handleInput}
+                    saveAdminNotesInMembers={this.saveAdminNotesInMembers}
+                    disabled={slug ? false : true}
+                    view={view}
+                    classTypeData={get(this.props, "classTypeData", [])}
+                    handleMemberDetailsToRightPanel={
+                      this.handleMemberDetailsToRightPanel
+                    }
+                    isAdmin={isAdmin}
+                    notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
+                  />
+                  {this.renderSchoolMedia(schoolData, memberInfo, slug)}
+                </Fragment>
+              )}
+            </Suspense>
+          </SchoolMemberWrapper>
+        </SplitScreenWrapper>
+
+        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+          <MembersScreenWrapper show={isEmpty(this.state.memberInfo)}>
+            {view == 'admin' && !_.isEmpty(adminsData) ?
+              <SchoolMembersScreen
+                collectionData={adminsData}
+                handleMemberDetailsToRightPanel={
+                  this.handleMemberDetailsToRightPanel
+                }
+                isAdmin={isAdmin}
+                superAdminId={superAdminId}
+                view={view}
+              /> :
+              <SchoolMembersScreen
+                filters={schoolMemberListFilters}
+                handleMemberDetailsToRightPanel={
+                  this.handleMemberDetailsToRightPanel
+                }
+                view={view}
+                isAdmin={isAdmin}
+              />}
+          </MembersScreenWrapper>
+        </Suspense>
+      </Wrapper>
     );
   }
 }

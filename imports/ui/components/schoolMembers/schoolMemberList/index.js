@@ -1,9 +1,9 @@
 import React from 'react';
 
 import SchoolMemberListRender from "./schoolMemberListRender";
+import SchoolMembersScreen from './SchoolMembersScreen';
 import { withSubscriptionAndPagination } from '/imports/util';
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
-
 
 class SchoolMemberListItems extends React.Component {
 
@@ -13,7 +13,7 @@ class SchoolMemberListItems extends React.Component {
 
   render() {
     console.log(this.props, "SCHOOL MEMBERS LIST");
-    return SchoolMemberListRender.call(this, this.props, this.state);
+    return SchoolMembersScreen.call(this, this.props, this.state);
   }
 }
 
