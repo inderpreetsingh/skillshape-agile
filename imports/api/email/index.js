@@ -71,17 +71,16 @@ export const sendJoinClassEmail = function ({
     Email.send({
       to: to, // Replace value of `to` with Admin email if Admin exists.
       from: config.fromEmailForJoiningClass,
-      subject: "Join Class Request Recieved",
+      subject: "Join Class Request Received",
       html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
                 <br/>You can visit the following link OR links to know more about this request:
                 ${
-        classLink
-          ? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Class</a><br/>`
+        classLink? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">View Class</a><br/>`
           : ""
         }
                 ${
         memberLink
-          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Member</a><br/>`
+          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">View Member</a><br/>`
           : ""
         }
                 <br/><br/>

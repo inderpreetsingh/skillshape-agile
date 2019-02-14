@@ -22,6 +22,8 @@ Meteor.methods({
       return ClassInterest.insert(doc, () => {
         Meteor.call("calendar.handleGoogleCalendar",this.userId,'insert');
         let currentUserRec = Meteor.users.findOne(this.userId);
+        console.log('TCL: currentUserRec', currentUserRec)
+        let {_id:userId} = currentUserRec;
         let classTypeData = ClassType.findOne(doc.classTypeId);
         let classTimes = ClassTimes.findOne(doc.classTimeId);
         let schoolData = School.findOne(classTypeData.schoolId);
@@ -42,7 +44,7 @@ Meteor.methods({
         if (schoolMemberData) {
           memberLink = `${Meteor.absoluteUrl()}schools/${
             schoolData.slug
-          }/members`;
+          }/members?userId=${userId}`;
         }
         if (from != 'signHandler'){
           sendJoinClassEmail({
