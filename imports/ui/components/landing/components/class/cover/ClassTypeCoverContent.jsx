@@ -352,6 +352,7 @@ class ClassTypeCoverContent extends React.Component {
       Meteor.call(
         "classTypeLocationRequest.addRequest",
         payload,
+        "save",
         (err, res) => {
           this.setState({ isBusy: false }, () => {
             if (err) {

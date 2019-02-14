@@ -630,7 +630,7 @@ class ClassTimesDialogBox extends React.Component {
                     <FormGhostButton
                       onClick={e => {
                         onModalClose(e);
-                        this.goToClassTypePage(classTypeName, _id);
+                        classTypeName && this.goToClassTypePage(classTypeName, _id);
                       }}
                       label="View Class"
                     />

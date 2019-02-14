@@ -308,6 +308,7 @@ class SkillShapeDialogBox extends Component {
 			onAffirmationButtonClick,
 			open
 		} = this.props;
+		console.log('TCL: SkillShapeDialogBox -> render -> this.props', this.props)
 		return (
 			<MuiThemeProvider theme={muiTheme}>
 				<Dialog
@@ -363,7 +364,8 @@ SkillShapeDialogBox.propTypes = {
 
 SkillShapeDialogBox.defaultProps = {
 	onAffirmationButtonClick: () => { },
-	defaultButtons: false
+	defaultButtons: false,
+	type:'inform'
 };
 
 export default withStyles(styles)(SkillShapeDialogBox);

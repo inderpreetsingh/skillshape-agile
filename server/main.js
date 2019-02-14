@@ -4,7 +4,7 @@ import _skillCategoryObj from "../imports/startup/server/skillCategoryDump";
 import "../imports/startup/server";
 import SkillCategory from "../imports/api/skillCategory/fields";
 import SkillSubject from "../imports/api/skillSubject/fields";
-
+import {userFeedBack} from "../imports/api/email";
 Meteor.startup(() => {
   // Accounts.config({
   //   sendVerificationEmail: true
@@ -200,25 +200,7 @@ if (Meteor.isServer) {
   //     });
   // }
 
-  var userFeedBack = function(user, email, message, request, subject) {
-    var fromEmail = "Notices@SkillShape.com";
-    var toEmail = "Notices@SkillShape.com";
-    Email.send({
-      from: fromEmail,
-      to: toEmail,
-      replyTo: fromEmail,
-      subject: "skillshape feedback",
-      text: `Hi,
-                We have feedback from : ${user} (${email})
-                His feedback request is ${request}
-                ${subject ? `Subject: ${subject}` : ""}
-                Message : ${message}
-                Thank you.
-                The skillshape Team.
-                ${Meteor.absoluteUrl()}`
-      // + "http://www.graphical.io/assets/img/Graphical-IO.png"
-    });
-  };
+ 
 
   var userPasswordReset = function(user, pass) {
     var fromEmail = "Notices@SkillShape.com";
