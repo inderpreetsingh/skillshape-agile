@@ -4,6 +4,7 @@ import School from "/imports/api/school/fields";
 import config from "/imports/config";
 import { getUserFullName } from "/imports/util/getUserData";
 let platform = Meteor.settings.platform;
+let styleForLinks = "display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;"
 export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
   if (platform == 'local') {
@@ -75,12 +76,12 @@ export const sendJoinClassEmail = function ({
       html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
                 <br/>You can visit the following link OR links to know more about this request:
                 ${
-        classLink? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">View Class</a><br/>`
+        classLink? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">View Class</a><br/>`
           : ""
         }
                 ${
         memberLink
-          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">View Member</a><br/>`
+          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">View Member</a><br/>`
           : ""
         }
                 <br/><br/>
@@ -130,7 +131,7 @@ export const sendClaimASchoolEmail = function (
                    <div>
                        <a href=${
         modifyUsersRoles.keepMeSuperAdmin
-        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>
+        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>
                        <a href=${
         modifyUsersRoles.makeRequesterSuperAdmin
         } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them SuperAdministrator and keep me as an Administrator.</a><br/>
@@ -296,7 +297,7 @@ export const userRegistrationAndVerifyEmail = function (
                 Please click on the button below to verify your email address and set your password.
             <br/><br/>
             <div>
-               <a href=${verificationToken} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Set Password</a>
+               <a href=${verificationToken} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Set Password</a>
             </div>
             <br/><br/>
                 If the link doesn't work, copy and paste this address into your browser.
@@ -431,7 +432,7 @@ export const sendEmailToStudentForClaimAsMember = function (
               <br/>
                ${ rejectionUrl
           ? `<center> 
-                        <a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">
+                        <a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">
                           If this is a mistake, click here to reject the invitation
                         </a>
                       </center><br/>`
@@ -475,10 +476,10 @@ export const sendRequestReceivedEmail = function ({
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
       subject: `${requestFor} request received`,
-      html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ""}
+      html: `Dear ${ownerName}, <br /><a href=${memberLink || ""} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">${currentUserName} </a>
             saw your listing on SkillShape.com ${classTypeName &&
         `for ${classTypeName} `}
-            at <br />${schoolPageLink} <br /> and would you like to update your ${requestFor} <br />${updateLink}
+            at <br /><a href=${schoolPageLink}  style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">School View </a> <br /> and would you like to update your ${requestFor} <br /><a href =${updateLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">School Edit </a>
             <br />
             <br />
             Thanks,
