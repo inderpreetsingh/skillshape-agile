@@ -29,6 +29,7 @@ import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import withImageExists from "/imports/util/withImageExists.js";
 import {normalizeMonthlyPricingData} from "/imports/util";
+import { get } from "lodash";
 const imageExistsConfig = {
   originalImagePath: "classTypeData.classTypeImg",
   defaultImage: classTypeImgSrc
@@ -335,31 +336,30 @@ class ClassTypeContent extends Component {
   };
 
   handleClassTimeRequest = () => {
-    const { popUp, classTypeData, schoolData } = this.props;
-    if (!Meteor.userId()) {
-      this.handleManageRequestsDialogBox("Schedule Info", true);
-
-      // this.handleDialogState('manageRequestsDialog',true);
-    } else {
-      const data = {
-        classTypeId: classTypeData._id,
-        schoolId: schoolData._id
-      };
-
-      Meteor.call("classTimesRequest.addRequest", data, "save",(err, res) => {
-        this.setState({ isBusy: false }, () => {
-          if (err) {
-            //debugger;
-            popUp.appear("alert", { content: err.reason || err.message });
-          } else {
-            popUp.appear("success", {
-              content: "Your request has been processed"
-            });
-            this.handleRequest("Class times");
-          }
+    this.setState({ isBusy: true },()=>{
+      const { popUp, classTypeData, schoolData } = this.props;
+      if (!Meteor.userId()) {
+        this.handleManageRequestsDialogBox("Schedule Info", true);
+      } else {
+        const data = {
+          classTypeId: classTypeData._id,
+          schoolId: schoolData._id
+        };
+        Meteor.call("classTimesRequest.addRequest", data, "save",(err, res) => {
+          this.setState({ isBusy: false }, () => {
+            if (err) {
+              //debugger;
+              popUp.appear("alert", { content: err.reason || err.message });
+            } else {
+              popUp.appear("success", {
+                content: "Your request has been processed"
+              });
+              this.handleRequest("Class times");
+            }
+          });
         });
-      });
-    }
+      }
+    });
     // const { toastr, classTypeData } = this.props;
     // Handle Class time request using mailTo:
     // this.handleRequest('Class Times');
@@ -632,7 +632,7 @@ class ClassTypeContent extends Component {
                 <ClassTimesTitle>
                   Class times for{" "}
                   <ClassTimesName>
-                    {classTypeData && classTypeData.name.toLowerCase()}
+                    {get(classTypeData,"name","").toLowerCase()}
                   </ClassTimesName>
                 </ClassTimesTitle>
                 {isEmpty(formattedClassTimesData) ? (

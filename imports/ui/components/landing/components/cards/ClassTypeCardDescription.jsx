@@ -213,7 +213,7 @@ const ClassTypeCardDescription = (props) => {
 												noMarginBottom
 												fullWidth
 												onClick={() =>
-													goToClassTypePage(
+													cardRevealInfo.name &&	goToClassTypePage(
 														addDelimiter(cardRevealInfo.name),
 														cardRevealInfo._id
 													)}

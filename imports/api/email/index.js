@@ -1,12 +1,8 @@
-import config from "/imports/config";
-import get from "lodash/get";
-import ClassType from "/imports/api/classType/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
-import School from "/imports/api/school/fields";
-import EmailSignature from "./signature.js";
-import { getUserFullName } from "/imports/util/getUserData";
 import moment from 'moment';
+import EmailSignature from "./signature.js";
+import School from "/imports/api/school/fields";
+import config from "/imports/config";
+import { getUserFullName } from "/imports/util/getUserData";
 let platform = Meteor.settings.platform;
 export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
@@ -355,8 +351,18 @@ export const sendEmailForSubscription = function ({
   joinSkillShapeLink
 }) {
   if (Meteor.isServer) {
+    let to;
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else if(platform == 'dev'){
+      to = config.skillshapeAdminEmail;
+    }
+    else{
+      to = toEmail;
+    }
     Email.send({
-      to: toEmail, //emailObj.to
+      to, //emailObj.to
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
       subject: subject,
@@ -455,8 +461,18 @@ export const sendRequestReceivedEmail = function ({
   currentUserName
 }) {
   if (Meteor.isServer) {
+    let to;
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else if (platform == 'dev') {
+      to = config.skillshapeAdminEmail;
+    }
+    else {
+      to = toEmail;
+    }
     Email.send({
-      to: toEmail, //emailObj.to
+      to, //emailObj.to
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
       subject: `${requestFor} request received`,
