@@ -807,3 +807,29 @@ export const newSchoolJoinNotification = function ({
       `
   });
 };
+
+export const userFeedBack = function(user, email, message, request, subject) {
+  let fromEmail = "Notices@SkillShape.com";
+  let to = "Notices@SkillShape.com";
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
+  }
+  else {
+    to = config.skillshapeAdminEmail;
+  }
+  Email.send({
+    from: fromEmail,
+    to,
+    replyTo: fromEmail,
+    subject: "skillshape feedback",
+    text: `Hi,
+              We have feedback from : ${user} (${email})
+              His feedback request is ${request}
+              ${subject ? `Subject: ${subject}` : ""}
+              Message : ${message}
+              Thank you.
+              The skillshape Team.
+              ${Meteor.absoluteUrl()}`
+    // + "http://www.graphical.io/assets/img/Graphical-IO.png"
+  });
+};

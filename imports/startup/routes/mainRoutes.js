@@ -14,8 +14,6 @@ import SchoolSuggestionsView from "/imports/ui/components/landing/components/sch
 import Landing from "/imports/ui/components/landing/index.jsx";
 import School from "/imports/ui/components/landing/School.jsx";
 import SkillShapeButtonsCollection from '/imports/ui/components/landing/SkillShapeButtonsCollection';
-import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
-import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
 import ManageUsers from "/imports/ui/components/manage-users";
 import Optimization from '/imports/ui/components/optimization';
 import PurchasePackage from '/imports/ui/components/purchasePackage';
@@ -35,10 +33,8 @@ import EmbedLayout from "/imports/ui/layout/embedLayout";
 import MainLayout from "/imports/ui/layout/mainLayout";
 import PublicLayout from "/imports/ui/layout/publicLayout";
 //pages
-import AboutUs from "/imports/ui/pages/aboutUs";
-import ContactUs from "/imports/ui/pages/contactUs";
-import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
+import AboutUs from "/imports/ui/pages/aboutUs";
 import { componentLoader } from "/imports/util";
 
 
@@ -62,8 +58,6 @@ export default (Routes = componentLoader(props => (
         name="Skillshape-for-school"
         component={School}
       />
-      <Route path="/popover-dev" name="popover-testing" component={TestPopover} />
-      <Route path="/popups-dev" name="popups-testing" component={TestPopUps} />
       <Route
         path="/classdetails-student"
         name="classdetails-student-development"
@@ -94,12 +88,10 @@ export default (Routes = componentLoader(props => (
         name="Dashboard"
         component={DashBoard}
       />
-      <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
 
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
-        <Route path="/Contactus" name="Contactus" component={ContactUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
         <Route path="/purchasePackage/:packageRequestId" name="Purchase Package" component={PurchasePackage} />

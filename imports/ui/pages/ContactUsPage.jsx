@@ -1,21 +1,25 @@
-import React , {Fragment,Component} from 'react';
+import { isEmpty } from 'lodash';
+import ClearIcon from "material-ui-icons/Clear";
+import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
+import IconButton from "material-ui/IconButton";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import {isEmpty} from 'lodash';
-import DocumentTitle from 'react-document-title';
-
+import ContactUsForm from '/imports/ui/components/landing/components/contactUs/ContactUsForm.jsx';
+import SocialAccounts from '/imports/ui/components/landing/components/contactUs/SocialAccounts.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
+import { siteAddress } from '/imports/ui/components/landing/site-settings.js';
 import { createMarkersOnMap } from '/imports/util';
 
-import BrandBar from '/imports/ui/components/landing/components/BrandBar';
-import Footer from '/imports/ui/components/landing/components/footer/index.jsx';
 
-import ContactUsForm from '/imports/ui/components/landing/components/contactUs/ContactUsForm.jsx';
-import ClassMap from '/imports/ui/components/landing/components/map/ClassMap.jsx';
-import MapView from '/imports/ui/components/landing/components/map/mapView.jsx';
-import SocialAccounts from '/imports/ui/components/landing/components/contactUs/SocialAccounts.jsx';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { siteAddress } from '/imports/ui/components/landing/site-settings.js';
 
+const DialogTitleWrapper = styled.div`
+  ${helpers.flexHorizontalSpaceBetween}
+  font-family: ${helpers.specialFont};
+  width: 100%;
+`;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -30,7 +34,6 @@ const Title = styled.h1`
   font-style: italic;
   text-align: center;
   line-height: 1;
-  margin: ${helpers.rhythmDiv * 8}px 0;
   padding: 0 ${helpers.rhythmDiv * 2}px;
 
   @media screen and (max-width: ${helpers.mobile}px) {
@@ -90,7 +93,40 @@ const MyMap = styled.div`
   width: 100%;
   height: 100%;
 `;
-
+const styles = theme => {
+  return {
+    dialogTitleRoot: {
+      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
+        3}px 0 ${helpers.rhythmDiv * 3}px`,
+      marginBottom: `${helpers.rhythmDiv * 2}px`,
+      "@media screen and (max-width : 500px)": {
+        padding: `0 ${helpers.rhythmDiv * 3}px`
+      }
+    },
+    dialogContent: {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+      paddingBottom: helpers.rhythmDiv * 2,
+      flexGrow: 0,
+      display: "flex",
+      justifyContent: "center",
+      minHeight: 200,
+      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+        padding: `0 ${helpers.rhythmDiv * 2}px`
+      }
+    },
+    dialogRoot: {
+      width: "100%",
+      maxWidth: "fit-content",
+      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+        margin: helpers.rhythmDiv
+      }
+    },
+    iconButton: {
+      height: "auto",
+      width: "auto"
+    }
+  };
+};
 class ContactUs extends Component {
 
   state = {
@@ -99,30 +135,30 @@ class ContactUs extends Component {
 
   getMyCurrentLocation = () => {
     let geocoder = new google.maps.Geocoder();
-    geocoder.geocode({address: siteAddress}, (results, status) => {
-        let sLocation = "near by me";
-        let userLocation = { };
-        let coords = { };
-        if (status == google.maps.GeocoderStatus.OK) {
-          if (results[0]) {
-            userLocation = this._createUserLocationFromAddress(results[0].address_components);
-            coords[1] = results[0].geometry.location.lat();
-            coords[0] = results[0].geometry.location.lng();
-          }
+    geocoder.geocode({ address: siteAddress }, (results, status) => {
+      let sLocation = "near by me";
+      let userLocation = {};
+      let coords = {};
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[0]) {
+          userLocation = this._createUserLocationFromAddress(results[0].address_components);
+          coords[1] = results[0].geometry.location.lat();
+          coords[0] = results[0].geometry.location.lng();
         }
+      }
 
-        const newUserLocation = {
-          ...userLocation,
-          loc: coords,
-          id: results[0].place_id
-        }
+      const newUserLocation = {
+        ...userLocation,
+        loc: coords,
+        id: results[0].place_id
+      }
 
-        this.setState({ userLocation: newUserLocation});
+      this.setState({ userLocation: newUserLocation });
     });
   }
 
   _createUserLocationFromAddress = (addressComponents) => {
-    const localityComponents = ['street_number','route','sublocality','locality'];
+    const localityComponents = ['street_number', 'route', 'sublocality', 'locality'];
     const COUNTRY = 'country';
     const CITY = 'administrative_area_level_1';
 
@@ -130,15 +166,15 @@ class ContactUs extends Component {
     let city = ``;
     let locality = ``;
 
-    for(addressComponent of addressComponents) {
+    for (addressComponent of addressComponents) {
 
-      if(addressComponent.types.indexOf(COUNTRY) != -1) {
+      if (addressComponent.types.indexOf(COUNTRY) != -1) {
         country += addressComponent.long_name;
-      }else if(addressComponent.types.indexOf(CITY) != -1) {
+      } else if (addressComponent.types.indexOf(CITY) != -1) {
         city += addressComponent.long_name;
-      }else {
+      } else {
         localityComponents.forEach(component => {
-          if(addressComponent.types.indexOf(component) != -1) {
+          if (addressComponent.types.indexOf(component) != -1) {
             locality += addressComponent.long_name + (component === 'locality' ? '' : ', ');
           }
         });
@@ -146,7 +182,7 @@ class ContactUs extends Component {
     }
 
     return {
-      address : locality,
+      address: locality,
       city,
       country
     }
@@ -159,44 +195,59 @@ class ContactUs extends Component {
 
   componentDidUpdate = () => {
     // console.info('component updating.............',this.state);
-    if(!isEmpty(this.state.userLocation)) {
+    if (!isEmpty(this.state.userLocation)) {
       createMarkersOnMap("contact-page-map", [this.state.userLocation]);
     }
   }
 
   render() {
-    // console.info('--------------------------------------------------------',this.state, "------ contact us page");
-    return(<DocumentTitle title={this.props.route.name} >
-      <Wrapper>
+    const {props} = this;
+    return (
+      <Dialog
+        open={props.open}
+        onClose={props.onModalClose}
+        onRequestClose={props.onModalClose}
+        aria-labelledby={`Contact Us`}
+        classes={{ paper: props.classes.dialogRoot }}
+      >
+        <MuiThemeProvider theme={muiTheme}>
+          <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
+            <DialogTitleWrapper>
+            <Title>We would love to talk with you</Title>
+              <IconButton
+                color="primary"
+                onClick={props.onModalClose}
+                classes={{ root: props.classes.iconButton }}
+              >
+                <ClearIcon />
+              </IconButton>
+            </DialogTitleWrapper>
+          </DialogTitle>
+          <DialogContent classes={{ root: props.classes.dialogContent }}>
+            <Wrapper>
+              {/* Content section including form and map and social accounts*/}
+              <ContentWrapper>
+                <FormMapWrapper>
+                  <ContactUsForm onModalClose ={props.onModalClose}/>
+                  <MapOuterContainer>
+                    <MapContainer>
+                      <MyMap id="contact-page-map" />
+                    </MapContainer>
 
-      {/* Brand Bar at Top */}
-      <BrandBar navBarHeight="70" positionStatic={true}
-        currentUser={this.props.currentUser}
-        isUserSubsReady={this.props.isUserSubsReady}/>
+                    <SocialAccounts />
+                  </MapOuterContainer>
 
-      {/* Content section including form and map and social accounts*/}
-      <ContentWrapper>
-        <Title>We would love to talk with you</Title>
+                </FormMapWrapper>
+              </ContentWrapper>
+            </Wrapper>
+          </DialogContent>
 
-        <FormMapWrapper>
-          <ContactUsForm />
+          <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
+          </DialogActions>
+        </MuiThemeProvider>
+      </Dialog >
 
-          <MapOuterContainer>
-            <MapContainer>
-              <MyMap id="contact-page-map" />
-            </MapContainer>
-
-            <SocialAccounts />
-          </MapOuterContainer>
-
-        </FormMapWrapper>
-      </ContentWrapper>
-
-      {/* Footer */}
-      <Footer />
-      </Wrapper>
-    </DocumentTitle>);
+    );
   }
 }
-
-export default ContactUs;
+export default withStyles(styles)(ContactUs);
