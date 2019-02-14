@@ -106,8 +106,8 @@ class ContactUs extends Component {
         if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
             userLocation = this._createUserLocationFromAddress(results[0].address_components);
-            coords[0] = results[0].geometry.location.lat();
-            coords[1] = results[0].geometry.location.lng();
+            coords[1] = results[0].geometry.location.lat();
+            coords[0] = results[0].geometry.location.lng();
           }
         }
 
