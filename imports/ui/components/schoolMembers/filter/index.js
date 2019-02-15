@@ -50,7 +50,7 @@ const FilterButtonArea = styled.div`
 const Inputs = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	margin-bottom: ${helpers.rhythmDiv * 4}px;
+	margin-bottom: ${helpers.rhythmDiv * 4}px;															}px;
 `;
 
 class SchoolMemberFilter extends Component {
