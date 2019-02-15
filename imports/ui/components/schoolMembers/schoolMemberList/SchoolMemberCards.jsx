@@ -43,8 +43,8 @@ const MembersGrid = styled.div`
 `;
 
 const MemberWrapper = styled.div`
-    max-width: ${MEMBER_CARD}px;
-    margin-bottom: ${MEMBER_CARD_MARGIN * 3}px;
+    max-width: ${props => props.cardsView === 'list' ? 'none' : MEMBER_CARD}px;
+    margin-bottom: ${props => props.cardsView === 'list' ? MEMBER_CARD_MARGIN : MEMBER_CARD_MARGIN * 3}px;
     margin-right: ${MEMBER_CARD_MARGIN}px;
     width: 100%;
     cursor: pointer;
@@ -56,17 +56,17 @@ const Member = styled.div`
     padding: ${rhythmDiv}px;
     position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    flex-direction: ${props => props.cardsView === 'list' ? 'row' : 'column'};
+    justify-content: ${props => props.cardsView === 'list' ? 'flex-start' : 'flex-end'};
     align-items: center;
     background: white;
     word-break: break-all;
 `;
 
 const MemberProfile = styled.div`
-    position: absolute;
+    position: ${props => props.cardsView === 'list' ? 'static' : 'absolute'};
+    ${props => props.cardsView !== 'list' && 'transform: translateY(-50%);'}
     top: 0;
-    transform: translateY(-50%);
     width: 75px;
     height: 75px;
     border-radius: 50%;
@@ -83,8 +83,9 @@ const MemberProfileText = SubHeading.extend`
 `;
 
 const getNormalizedMembersData = (props) => {
-    const { view, membersByName, handleMemberDetailsToRightPanel } = props;
+    const { view, membersByName, handleMemberDetailsToRightPanel, superAdminId } = props;
     const normalizedData = [];
+    const cardsView = props.listView ? 'list' : 'grid';
     if (!isEmpty(membersByName)) {
         Object.keys(membersByName).sort().forEach(key => {
             //console.info(membersByName[key], key, "................");
@@ -109,10 +110,10 @@ const getNormalizedMembersData = (props) => {
                     });
 
                     normalizedData.push(
-                        <MemberWrapper key={data._id} onClick={() => handleMemberDetailsToRightPanel(data._id, superAdminId)}>
-                            <Member>
+                        <MemberWrapper key={data._id} cardsView={cardsView} onClick={() => handleMemberDetailsToRightPanel(data._id, superAdminId)}>
+                            <Member cardsView={cardsView}>
                                 <ProgressiveImage src={pic} placeholder={config.blurImage}>
-                                    {src => <MemberProfile src={src} />}
+                                    {src => <MemberProfile cardsView={cardsView} src={src} />}
                                 </ProgressiveImage>
                                 <MemberProfileText> {firstName} </MemberProfileText>
                             </Member>
@@ -131,7 +132,7 @@ const SchoolMembersScreen = props => {
     const membersByName = sortByView(view, collectionData);
     const schoolMembersProps = { ...props, membersByName };
     const membersData = getNormalizedMembersData(schoolMembersProps);
-    console.info(membersData, ".........")
+    // console.info(membersData, ".........")
     return (<MembersGridWrapper>
         <MembersGrid>
             {membersData}

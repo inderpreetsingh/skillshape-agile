@@ -1,3 +1,6 @@
+import React, { Fragment, lazy, Suspense } from "react";
+import { CSSTransition } from 'react-transition-group';
+
 import concat from 'lodash/concat';
 import find from "lodash/find";
 import findIndex from 'lodash/findIndex';
@@ -24,7 +27,6 @@ import TextField from "material-ui/TextField";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
-import React, { Fragment, lazy, Suspense } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
@@ -42,9 +44,9 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
-const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
-const SchoolMembersScreen = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/index.js'));
+const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/"));
+const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
+const SchoolMembersScreen = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
@@ -67,14 +69,14 @@ const Wrapper = styled.div`
   background-color: ${helpers.panelColor};
 `;
 
-const SplitScreenWrapper = MembersScreenWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  min-height: 100vh;
+const SplitScreenWrapper = styled.div`
+  display: flex;
   transition: all .5s linear;
-  opacity: ${props => props.show ? 1 : 0};
 `;
 
+const MembersScreenWrapper = SplitScreenWrapper.extend`
+  flex-direction: column;
+`;
 
 const style = {
   w211: {
@@ -751,6 +753,7 @@ class DashBoardView extends React.Component {
           <Suspense fallback={<center><MDSpinner size={50} /></center>}>
             {view == 'admin' && !_.isEmpty(adminsData) ?
               <SchoolAdminListItems
+                listView
                 collectionData={adminsData}
                 handleMemberDetailsToRightPanel={
                   this.handleMemberDetailsToRightPanel
@@ -760,6 +763,7 @@ class DashBoardView extends React.Component {
                 view={view}
               /> :
               <SchoolMemberListItems
+                listView
                 filters={schoolMemberListFilters}
                 handleMemberDetailsToRightPanel={
                   this.handleMemberDetailsToRightPanel
@@ -772,7 +776,7 @@ class DashBoardView extends React.Component {
       </div>
     );
 
-
+    const isMemberSelected = !isEmpty(this.state.memberInfo);
 
     return (
       <Wrapper>
@@ -887,35 +891,42 @@ class DashBoardView extends React.Component {
           </Suspense>
         </Grid> */}
 
+        <CSSTransition
+          in={isMemberSelected}
+          timeout={{
+            enter: 600,
+            exit: 400
+          }}
+          classNames="fade"
+          unmountOnExit
+        >
+          <SplitScreenWrapper>
+            <DrawerWrapper>
+              <Fragment>
+                <Hidden mdUp>
+                  <Drawer
+                    variant="temporary"
+                    anchor={theme.direction === "rtl" ? "right" : "left"}
+                    open={this.state.mobileOpen}
+                    onClose={this.handleDrawerToggle}
+                    style={{ position: "absolute" }}
+                    classes={{
+                      paper: classes.drawerPaper
+                    }}
+                  >
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+                <Hidden smDown>
+                  <div variant="permanent" open className={classes.drawerPaper}>
+                    {drawer}
+                  </div>
+                </Hidden>
+              </Fragment>
+            </DrawerWrapper>
 
-        <SplitScreenWrapper show={!isEmpty(this.state.memberInfo)}>
-          <DrawerWrapper>
-            <Fragment>
-              <Hidden mdUp>
-                <Drawer
-                  variant="temporary"
-                  anchor={theme.direction === "rtl" ? "right" : "left"}
-                  open={this.state.mobileOpen}
-                  onClose={this.handleDrawerToggle}
-                  style={{ position: "absolute" }}
-                  classes={{
-                    paper: classes.drawerPaper
-                  }}
-                >
-                  {drawer}
-                </Drawer>
-              </Hidden>
-              <Hidden smDown>
-                <div variant="permanent" open className={classes.drawerPaper}>
-                  {drawer}
-                </div>
-              </Hidden>
-            </Fragment>
-          </DrawerWrapper>
-
-          <SchoolMemberWrapper>
             <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-              {!isEmpty(memberInfo) && (
+              <SchoolMemberWrapper>
                 <Fragment>
                   <SchoolMemberInfo
                     selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
@@ -933,33 +944,54 @@ class DashBoardView extends React.Component {
                   />
                   {this.renderSchoolMedia(schoolData, memberInfo, slug)}
                 </Fragment>
-              )}
+              </SchoolMemberWrapper>
             </Suspense>
-          </SchoolMemberWrapper>
-        </SplitScreenWrapper>
+          </SplitScreenWrapper>
+        </CSSTransition>
 
-        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-          <MembersScreenWrapper show={isEmpty(this.state.memberInfo)}>
-            {view == 'admin' && !_.isEmpty(adminsData) ?
-              <SchoolMembersScreen
-                collectionData={adminsData}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
+
+        <CSSTransition
+          in={!isMemberSelected}
+          timeout={{
+            enter: 600,
+            exit: 400
+          }}
+          classNames="fade"
+          unmountOnExit
+        >
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <MembersScreenWrapper>
+              <SchoolMemberFilter
+                stickyPosition={this.state.sticky}
+                ref="SchoolMemberFilter"
+                handleClassTypeDataChange={this.handleClassTypeDataChange}
+                handleMemberNameChange={this.handleMemberNameChange}
+                classTypeData={classTypeData}
+                filters={filters}
                 isAdmin={isAdmin}
-                superAdminId={superAdminId}
                 view={view}
-              /> :
-              <SchoolMembersScreen
-                filters={schoolMemberListFilters}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                view={view}
-                isAdmin={isAdmin}
-              />}
-          </MembersScreenWrapper>
-        </Suspense>
+              />
+              {view == 'admin' && !_.isEmpty(adminsData) ?
+                <SchoolMembersScreen
+                  collectionData={adminsData}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  isAdmin={isAdmin}
+                  superAdminId={superAdminId}
+                  view={view}
+                /> :
+                <SchoolMembersScreen
+                  filters={schoolMemberListFilters}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  view={view}
+                  isAdmin={isAdmin}
+                />}
+            </MembersScreenWrapper>
+          </Suspense>
+        </CSSTransition>
       </Wrapper>
     );
   }

@@ -43,6 +43,11 @@ const styles = (theme) => ({
 	}
 });
 
+const Wrapper = styled.div`
+	width: 100%;
+	background: white;
+`;
+
 const UserInfoPanel = styled.div`
 	display: flex;
 	margin: 0 auto ${helpers.rhythmDiv * 2}px auto;
@@ -566,7 +571,7 @@ class SchoolMemberInfo extends Component {
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
 		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', get(memberInfo, 'email', "Old Data"))));
 		return (
-			<Grid container>
+			<Wrapper container>
 				{showConfirmation && (
 					<ConfirmationModal
 						open={showConfirmation}
@@ -713,7 +718,7 @@ class SchoolMemberInfo extends Component {
 							subsData={subscriptionList} />
 					)}
 
-			</Grid>
+			</Wrapper>
 		);
 	}
 }

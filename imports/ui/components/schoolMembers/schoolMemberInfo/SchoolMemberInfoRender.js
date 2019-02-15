@@ -10,14 +10,14 @@ import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
 import styled from 'styled-components';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
-import { FormGhostButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
+import { FormGhostButton, PrimaryButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
 import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { Text, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 const AVATAR_SIZE = 165;
 
@@ -48,10 +48,13 @@ const Wrapper = styled.div`
 	width: 100%;
 	background-color: white;
 	position: relative;
+	padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const UserInfoPanel = styled.div`
 	display: flex;
+	flex-direction: column;
+	max-width: 400px;
 	margin: 0 auto ${helpers.rhythmDiv * 2}px auto;
 	padding: ${helpers.rhythmDiv * 2}px;
 
@@ -87,7 +90,6 @@ const UserProfile = styled.div`
 `;
 
 const UIPanelElem = styled.div`
-	margin-right: ${helpers.rhythmDiv * 4}px;
 	
 	@media screen and (max-width: ${helpers.tablet}px) {
 		margin-right: 0;
@@ -112,7 +114,8 @@ const AvatarContainer = UIPanelElem.extend`
 
 const MemberDetails = UIPanelElem.extend`
 	display: flex;
-	flex-direction: column;
+	justify-content: flex-start;
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
 const AdminNotes = UIPanelElem.extend`
@@ -136,6 +139,15 @@ const ActionButtonsBar = styled.div`
 	@media screen and (max-width: ${helpers.mobile + 50}px) {
 		padding: 0 ${helpers.rhythmDiv * 4}px;
 	}
+`;
+
+const Avatar = styled.div`
+	margin-right: ${helpers.rhythmDiv * 2}px;
+`;
+
+const MemberActions = styled.div`
+	display: flex;
+	flex-direction: column;
 `;
 
 const ActionButtonsWrapper = styled.div` 
@@ -631,11 +643,40 @@ class SchoolMemberInfo extends Component {
 				<UserInfoPanel className="userInfoPanel" >
 					<UserProfile>
 						<AvatarContainer key={memberInfo._id}>
-							<ProgressiveImage
-								src={bgImg}
-								placeholder={config.blurImage}>
-								{(src) => <ProfilePic img={src} />}
-							</ProgressiveImage>
+							<MemberDetails>
+
+								<Avatar>
+									<ProgressiveImage
+										src={bgImg}
+										placeholder={config.blurImage}>
+										{(src) => <ProfilePic img={src} />}
+									</ProgressiveImage>
+								</Avatar>
+
+								<MemberActions>
+
+									<SubHeading fontSize={helpers.baseFontSize * 2}>{userName}</SubHeading>
+									{isAdmin && (
+										<ActionButtonsBar>
+											<ActionButtons
+												memberInfo={this.props.memberInfo}
+												handleCall={this.handleCall}
+												handleEmail={this.handleEmail}
+												onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
+												openEditMemberModal={(event) => {
+													this.setState({ openEditMemberModal: true });
+												}}
+												isAdmin={isAdmin}
+												removeButtonClick={() => {
+													this.setState({ showConfirmation: true });
+												}}
+												superAdmin={superAdmin}
+												view={view}
+											/>
+										</ActionButtonsBar>
+									)}
+								</MemberActions>
+							</MemberDetails>
 
 							{view === 'admin' && (
 								<UploadDiv
@@ -680,7 +721,6 @@ class SchoolMemberInfo extends Component {
 							
 						</MemberDetails> */}
 					</UserProfile>
-
 					{notClassmatePage && <AdminNotes>
 						<Text>Admin Notes</Text>
 						<Input
@@ -694,38 +734,21 @@ class SchoolMemberInfo extends Component {
 						/>
 					</AdminNotes>}
 				</UserInfoPanel>
-				{isAdmin && (
-					<ActionButtonsBar>
-						<ActionButtons
-							memberInfo={this.props.memberInfo}
-							handleCall={this.handleCall}
-							handleEmail={this.handleEmail}
-							onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
-							openEditMemberModal={(event) => {
-								this.setState({ openEditMemberModal: true });
-							}}
-							isAdmin={isAdmin}
-							removeButtonClick={() => {
-								this.setState({ showConfirmation: true });
-							}}
-							superAdmin={superAdmin}
-							view={view}
-						/>
-					</ActionButtonsBar>
-				)}
+
 				{!isEmpty(subscriptionList) &&
 					(isAdmin || userId == Meteor.userId()) &&
 					Meteor.settings.public.paymentEnabled &&
 					(
 						<SubscriptionsList
+							listBgColor={helpers.panelColor}
 							packageProps={{ bgColor: "white", opacity: 1 }}
 							title={"Subscriptions"}
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
 					)}
 				<CornerBtnWrapper>
-					<FormGhostButton icon iconName="edit" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)}/> 		
-				</CornerBtnWrapper>	
+					<PrimaryButton icon iconName="edit" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
+				</CornerBtnWrapper>
 			</Wrapper>
 		);
 	}

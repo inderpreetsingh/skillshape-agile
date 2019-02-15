@@ -42,6 +42,12 @@
   }
 }
 
+.ss-multi-select--transparent {
+   .rw-widget-input, .rw-widget-picker, .rw-widget-container, .rw-multiselect {
+    background-color: transparent;
+  } 
+}
+
 .my-multi-select-filter, .list-multiselect-filter {
    width: 100%;
 
