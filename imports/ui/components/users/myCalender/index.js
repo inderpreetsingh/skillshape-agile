@@ -307,7 +307,7 @@ export default class MyCalender extends React.Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                    this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' ,thinkingAboutAttending:false})
                   }}
                   applyClose
                 />
@@ -365,7 +365,7 @@ export default class MyCalender extends React.Component {
             <FormGhostButton
               label={'Ok'}
               onClick={() => {
-                this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' ,thinkingAboutAttending:false})
               }}
               applyClose
             />
