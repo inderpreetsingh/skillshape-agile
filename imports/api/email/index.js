@@ -475,15 +475,14 @@ export const sendRequestReceivedEmail = function ({
       to, //emailObj.to
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
-      subject: `${requestFor} request received`,
-      html: `Dear ${ownerName}, <br /><a href=${memberLink || ""} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">${currentUserName} </a>
-            saw your listing on SkillShape.com ${classTypeName &&
-        `for ${classTypeName} `}
-            at <br /><a href=${schoolPageLink}  style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">School View </a> <br /> and would you like to update your ${requestFor} <br /><a href =${updateLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">School Edit </a>
+      subject: `I'm interested in your class!`,
+      html: `Hi ${ownerName ? ownerName : ''}, <br />
+      I saw your listing on SkillShape.com <br />
+      <a href=${updateLink}  style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;"> ${classTypeName ? classTypeName : 'School' } </a> <br/>
+      and would like to attend. Can you update your ${requestFor} ? <br/>
             <br />
-            <br />
-            Thanks,
-            <br />
+            Thanks,<br />
+            <a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">${currentUserName ? currentUserName : ''}</a>
             <br />
             ${EmailSignature}`
     });

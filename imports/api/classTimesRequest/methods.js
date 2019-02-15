@@ -54,7 +54,7 @@ Meteor.methods({
         const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
-        const requestFor = "Schedule";
+        const requestFor = "Class time";
 
         let ownerName = '';
         let classTimesRequestId = '';
