@@ -48,9 +48,19 @@ const FilterButtonArea = styled.div`
 `;
 
 const Inputs = styled.div`
+	margin: 0 auto;
 	display: flex;
+	width: 100%;
+	justify-content: center;
 	flex-wrap: wrap;
 	margin-bottom: ${helpers.rhythmDiv * 4}px;															}px;
+`;
+
+const InputWrapper = styled.div`
+	max-width: 300px;
+	width: 100%;
+	margin-right: ${helpers.rhythmDiv * 4}px;
+	${props => props.noMarginRight && 'margin-right: 0;'}
 `;
 
 class SchoolMemberFilter extends Component {
@@ -73,27 +83,31 @@ class SchoolMemberFilter extends Component {
 					<FilterPanelContent stickyPosition={stickyPosition}>
 						<form noValidate autoComplete="off">
 							<Inputs>
-								<IconInput
-									id="search"
-									type="text"
-									margin="normal"
-									onChange={this.props.handleMemberNameChange}
-									skillShapeInput={true}
-									iconName='search'
-									classes={{ widgetInput: classes.widget, widgetRoot: classes.widget }}
-									placeholder={`Search ${view == 'classmates' ? "Member" : "Admin"} by Name`}
-									value={get(this.props, "filters.memberName", "")}
-								/>
-								<div className='ss-multi-select--transparent'>
-									<Multiselect
-										className={classes.input}
-										textField={"name"}
-										valueField={"_id"}
-										placeholder={`Search ${view == 'classmates' ? "Member" : "Admin"} by Class Type`}
-										data={this.props.classTypeData}
-										onChange={this.props.handleClassTypeDataChange}
+								<InputWrapper>
+									<IconInput
+										id="search"
+										type="text"
+										margin="normal"
+										onChange={this.props.handleMemberNameChange}
+										skillShapeInput={true}
+										iconName='search'
+										classes={{ widgetInput: classes.widget, widgetRoot: classes.widget }}
+										placeholder={`Search ${view == 'classmates' ? "Member" : "Admin"} by Name`}
+										value={get(this.props, "filters.memberName", "")}
 									/>
-								</div>
+								</InputWrapper>
+								<InputWrapper noMarginRight>
+									<div className='ss-multi-select--transparent'>
+										<Multiselect
+											className={classes.input}
+											textField={"name"}
+											valueField={"_id"}
+											placeholder={`Search ${view == 'classmates' ? "Member" : "Admin"} by Class Type`}
+											data={this.props.classTypeData}
+											onChange={this.props.handleClassTypeDataChange}
+										/>
+									</div>
+								</InputWrapper>
 							</Inputs>
 						</form>
 					</FilterPanelContent>

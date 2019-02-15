@@ -32,7 +32,6 @@ import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import { packageCoverProvider } from '/imports/util';
 //const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
-const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -44,6 +43,7 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
+const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
 const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/"));
 const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
 const SchoolMembersScreen = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
@@ -156,9 +156,6 @@ const styles = theme => ({
     border: "solid 3px #dddd",
     paddingTop: "0px !important"
   },
-  btnBackGround: {
-    background: `${helpers.action}`
-  }
 });
 
 const ErrorWrapper = styled.span`
@@ -717,62 +714,48 @@ class DashBoardView extends React.Component {
 
     const drawer = (
       <div>
-        <List>
-          <SchoolMemberFilter
-            stickyPosition={this.state.sticky}
-            ref="SchoolMemberFilter"
-            handleClassTypeDataChange={this.handleClassTypeDataChange}
-            handleMemberNameChange={this.handleMemberNameChange}
-            classTypeData={classTypeData}
-            filters={filters}
-            isAdmin={isAdmin}
-            view={view}
+        <SchoolMemberFilter
+          stickyPosition={this.state.sticky}
+          ref="SchoolMemberFilter"
+          handleClassTypeDataChange={this.handleClassTypeDataChange}
+          handleMemberNameChange={this.handleMemberNameChange}
+          classTypeData={classTypeData}
+          filters={filters}
+          isAdmin={isAdmin}
+          view={view}
+        />
+        {slug && (
+
+          <PrimaryButton
+            className={classes.btnBackGround}
+            onClick={() => this.setState({ renderStudentModal: true })}
+            label={view == 'admin' ? "Add New Admin" : "Add New Student"}
           />
-          {slug && (
-            <Grid
-              item
-              sm={12}
-              xs={12}
-              md={12}
-              style={{
-                display: "flex",
-                flexDirection: "row-reverse",
-                padding: "16px"
-              }}
-            >
-              <Button
-                raised
-                className={classes.btnBackGround}
-                color="primary"
-                onClick={() => this.setState({ renderStudentModal: true })}
-              >
-                {view == 'admin' ? "Add New Admin" : "Add New Student"}
-              </Button>
-            </Grid>
-          )}
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-            {view == 'admin' && !_.isEmpty(adminsData) ?
-              <SchoolAdminListItems
-                listView
-                collectionData={adminsData}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                isAdmin={isAdmin}
-                superAdminId={superAdminId}
-                view={view}
-              /> :
-              <SchoolMemberListItems
-                listView
-                filters={schoolMemberListFilters}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                view={view}
-                isAdmin={isAdmin}
-              />}
-          </Suspense>
-        </List>
+
+
+        )}
+        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+          {view == 'admin' && !_.isEmpty(adminsData) ?
+            <SchoolAdminListItems
+              listView
+              collectionData={adminsData}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              isAdmin={isAdmin}
+              superAdminId={superAdminId}
+              view={view}
+            /> :
+            <SchoolMemberListItems
+              listView
+              filters={schoolMemberListFilters}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              view={view}
+              isAdmin={isAdmin}
+            />}
+        </Suspense>
       </div>
     );
 
@@ -800,21 +783,14 @@ class DashBoardView extends React.Component {
             onClose={() => this.setState({ showConfirmationModal: false })}
           />
         )}
-        <AppBar className={classes.appBar}>
+        {/*<AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
+            
             <Typography variant="title" color="inherit" noWrap>
 
             </Typography>
           </Toolbar>
-        </AppBar>
+        </AppBar>*/}
         {!isEmpty(schoolData) && (
           <div>
             <form noValidate autoComplete="off">
@@ -939,6 +915,7 @@ class DashBoardView extends React.Component {
                     handleMemberDetailsToRightPanel={
                       this.handleMemberDetailsToRightPanel
                     }
+                    handleDrawerToggle={this.handleDrawerToggle}
                     isAdmin={isAdmin}
                     notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
                   />

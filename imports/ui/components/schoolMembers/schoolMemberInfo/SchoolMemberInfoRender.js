@@ -10,14 +10,15 @@ import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
 import styled from 'styled-components';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
+import IconButton from "material-ui/IconButton";
+import MenuIcon from 'material-ui-icons/Menu';
 import { FormGhostButton, PrimaryButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
 import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
 import { Text, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const AVATAR_SIZE = 165;
 
@@ -124,7 +125,7 @@ const AdminNotes = UIPanelElem.extend`
 	flex-direction: column;
 `;
 
-const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
+const ButtonWrapper = styled.div`margin-bottom: ${helpers.rhythmDiv}px;`;
 
 const ActionButtonsBar = styled.div`
 	${helpers.flexCenter}
@@ -215,6 +216,18 @@ const CornerBtnWrapper = styled.div`
 	top: -16px;
 	right: 0;
 `;
+
+const MenuIconWrapper = CornerBtnWrapper.extend`
+	display: none;
+	top: 8px;
+	left: 8px;
+	right: auto;
+
+	@media screen and (max-width: ${helpers.mobile - 50}px) {
+		display: block;
+	}
+`;
+
 
 const ActionButtons = (props) => (
 	<ActionButtonsWrapper>
@@ -567,7 +580,8 @@ class SchoolMemberInfo extends Component {
 			isAdmin,
 			currentUser,
 			notClassmatePage,
-			selectedSchoolData
+			selectedSchoolData,
+			handleDrawerToggle
 		} = this.props;
 		const {
 			showUploadAvatarModal,
@@ -746,6 +760,15 @@ class SchoolMemberInfo extends Component {
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
 					)}
+				<MenuIconWrapper>
+					<IconButton
+						color={helpers.black}
+						aria-label="open drawer"
+						onClick={handleDrawerToggle}
+					>
+						<MenuIcon />
+					</IconButton>
+				</MenuIconWrapper>
 				<CornerBtnWrapper>
 					<PrimaryButton icon iconName="edit" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
 				</CornerBtnWrapper>
