@@ -24,7 +24,6 @@ const MembersGridWrapper = styled.div`
     width: 100%;
     margin: 0 auto;
     ${flexCenter}
-    padding-top: 50px;
 `;
 
 const MembersGrid = styled.div`
@@ -39,13 +38,14 @@ const MembersGrid = styled.div`
 
     @media screen and (max-width: ${MEMBERS_GRID_MW}px) {
         max-width: ${MEMBERS_GRID_SW}px;
+        ${props => props.cardsView === 'list' && 'max-width: 100%;'}
     }
 `;
 
 const MemberWrapper = styled.div`
     max-width: ${props => props.cardsView === 'list' ? 'none' : MEMBER_CARD}px;
     margin-bottom: ${props => props.cardsView === 'list' ? MEMBER_CARD_MARGIN : MEMBER_CARD_MARGIN * 3}px;
-    margin-right: ${MEMBER_CARD_MARGIN}px;
+    margin-right: ${props => props.cardsView === 'list' ? 0 : MEMBER_CARD_MARGIN}px;
     width: 100%;
     cursor: pointer;
 `;
@@ -65,6 +65,7 @@ const Member = styled.div`
 
 const MemberProfile = styled.div`
     position: ${props => props.cardsView === 'list' ? 'static' : 'absolute'};
+    margin-right: ${props => props.cardsView === 'list' ? rhythmDiv : 0}px;
     ${props => props.cardsView !== 'list' && 'transform: translateY(-50%);'}
     top: 0;
     width: 75px;
@@ -83,9 +84,8 @@ const MemberProfileText = SubHeading.extend`
 `;
 
 const getNormalizedMembersData = (props) => {
-    const { view, membersByName, handleMemberDetailsToRightPanel, superAdminId } = props;
+    const { view, membersByName, cardsView, handleMemberDetailsToRightPanel, superAdminId } = props;
     const normalizedData = [];
-    const cardsView = props.listView ? 'list' : 'grid';
     if (!isEmpty(membersByName)) {
         Object.keys(membersByName).sort().forEach(key => {
             //console.info(membersByName[key], key, "................");
@@ -128,13 +128,15 @@ const getNormalizedMembersData = (props) => {
 
 const SchoolMembersScreen = props => {
 
-    const { src, collectionData, view, handleMemberDetailsToRightPanel, isAdmin, superAdminId } = props;
+    const { src, listView, collectionData, view, handleMemberDetailsToRightPanel, isAdmin, superAdminId } = props;
     const membersByName = sortByView(view, collectionData);
     const schoolMembersProps = { ...props, membersByName };
     const membersData = getNormalizedMembersData(schoolMembersProps);
+    const cardsView = props.listView ? 'list' : 'grid';
+
     // console.info(membersData, ".........")
     return (<MembersGridWrapper>
-        <MembersGrid>
+        <MembersGrid cardsView={cardsView}>
             {membersData}
         </MembersGrid>
     </MembersGridWrapper>)

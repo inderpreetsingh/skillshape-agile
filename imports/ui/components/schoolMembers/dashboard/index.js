@@ -51,12 +51,17 @@ import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 const drawerWidth = 400;
 
-const DrawerWrapper = styled.div`
+const Drawers = styled.div`
   max-width: ${drawerWidth}px;
   width: 100%;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    width: auto;
+  }
 `;
 
 const SchoolMemberWrapper = styled.div`
@@ -112,18 +117,21 @@ const styles = theme => ({
     }
   },
   toolbar: theme.mixins.toolbar,
+  drawerRoot: {
+    position: 'absolute',
+  },
   drawerPaper: {
     [theme.breakpoints.up("md")]: {
       position: "relative"
     },
+    background: helpers.panelColor,
     [theme.breakpoints.down("sm")]: {
-      width: `${drawerWidth}px !important`
+      maxWidth: `${drawerWidth}px`
     },
     boxShadow: "none !important",
     // height: "100vh",
     overflow: "auto",
-    padding: "0px !important",
-    paddingLeft: "16px !important",
+    padding: helpers.rhythmDiv,
     overflowX: "hidden !important"
   },
   content: {
@@ -711,6 +719,7 @@ class DashBoardView extends React.Component {
         </Typography>
       );
     }
+    const isMemberSelected = !isEmpty(this.state.memberInfo);
 
     const drawer = (
       <div>
@@ -722,21 +731,20 @@ class DashBoardView extends React.Component {
           classTypeData={classTypeData}
           filters={filters}
           isAdmin={isAdmin}
+          cardsView={isMemberSelected ? 'list' : 'grid'}
           view={view}
         />
         {slug && (
-
           <PrimaryButton
             className={classes.btnBackGround}
             onClick={() => this.setState({ renderStudentModal: true })}
             label={view == 'admin' ? "Add New Admin" : "Add New Student"}
           />
-
-
         )}
         <Suspense fallback={<center><MDSpinner size={50} /></center>}>
           {view == 'admin' && !_.isEmpty(adminsData) ?
             <SchoolAdminListItems
+              cardsView={isMemberSelected ? 'list' : 'grid'}
               listView
               collectionData={adminsData}
               handleMemberDetailsToRightPanel={
@@ -747,6 +755,7 @@ class DashBoardView extends React.Component {
               view={view}
             /> :
             <SchoolMemberListItems
+              cardsView={isMemberSelected ? 'list' : 'grid'}
               listView
               filters={schoolMemberListFilters}
               handleMemberDetailsToRightPanel={
@@ -759,7 +768,7 @@ class DashBoardView extends React.Component {
       </div>
     );
 
-    const isMemberSelected = !isEmpty(this.state.memberInfo);
+
 
     return (
       <Wrapper>
@@ -877,29 +886,31 @@ class DashBoardView extends React.Component {
           unmountOnExit
         >
           <SplitScreenWrapper>
-            <DrawerWrapper>
+            <Drawers>
               <Fragment>
-                <Hidden mdUp>
+                <ToggleVisibilityTablet>
                   <Drawer
                     variant="temporary"
                     anchor={theme.direction === "rtl" ? "right" : "left"}
                     open={this.state.mobileOpen}
+
                     onClose={this.handleDrawerToggle}
-                    style={{ position: "absolute" }}
+                    className={classes.drawerRoot}
                     classes={{
                       paper: classes.drawerPaper
                     }}
                   >
                     {drawer}
                   </Drawer>
-                </Hidden>
-                <Hidden smDown>
+                </ToggleVisibilityTablet>
+
+                <ToggleVisibilityTablet show>
                   <div variant="permanent" open className={classes.drawerPaper}>
                     {drawer}
                   </div>
-                </Hidden>
+                </ToggleVisibilityTablet>
               </Fragment>
-            </DrawerWrapper>
+            </Drawers>
 
             <Suspense fallback={<center><MDSpinner size={50} /></center>}>
               <SchoolMemberWrapper>
@@ -911,6 +922,7 @@ class DashBoardView extends React.Component {
                     saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                     disabled={slug ? false : true}
                     view={view}
+                    cardsView={isMemberSelected ? 'list' : 'grid'}
                     classTypeData={get(this.props, "classTypeData", [])}
                     handleMemberDetailsToRightPanel={
                       this.handleMemberDetailsToRightPanel
@@ -946,6 +958,7 @@ class DashBoardView extends React.Component {
                 classTypeData={classTypeData}
                 filters={filters}
                 isAdmin={isAdmin}
+                cardsView={isMemberSelected ? 'list' : 'grid'}
                 view={view}
               />
               {view == 'admin' && !_.isEmpty(adminsData) ?

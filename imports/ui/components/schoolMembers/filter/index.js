@@ -60,7 +60,12 @@ const InputWrapper = styled.div`
 	max-width: 300px;
 	width: 100%;
 	margin-right: ${helpers.rhythmDiv * 4}px;
-	${props => props.noMarginRight && 'margin-right: 0;'}
+	${props => props.cardsView === 'list' && 'max-width: none;'}
+	${props => (props.noMarginRight || props.cardsView === 'list') && 'margin-right: 0;'}
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-right: 0;
+	}
 `;
 
 class SchoolMemberFilter extends Component {
@@ -74,7 +79,7 @@ class SchoolMemberFilter extends Component {
 	}
 
 	render() {
-		const { stickyPosition, isAdmin, view, classes } = this.props;
+		const { stickyPosition, isAdmin, view, classes, cardsView } = this.props;
 
 
 		return (
@@ -83,7 +88,7 @@ class SchoolMemberFilter extends Component {
 					<FilterPanelContent stickyPosition={stickyPosition}>
 						<form noValidate autoComplete="off">
 							<Inputs>
-								<InputWrapper>
+								<InputWrapper cardsView={cardsView}>
 									<IconInput
 										id="search"
 										type="text"
@@ -96,7 +101,7 @@ class SchoolMemberFilter extends Component {
 										value={get(this.props, "filters.memberName", "")}
 									/>
 								</InputWrapper>
-								<InputWrapper noMarginRight>
+								<InputWrapper cardsView={cardsView} noMarginRight>
 									<div className='ss-multi-select--transparent'>
 										<Multiselect
 											className={classes.input}

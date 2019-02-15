@@ -142,6 +142,11 @@ class IconInput extends React.Component {
                       style={{ width: "100%" }}
                       onFocus={this.onFocus}
                       onBlur={this.onBlur}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <InputIcon iconName={props.iconName} />
+                        </InputAdornment>
+                      }
                       inputProps={{
                         min: props.min,
                         max: props.max

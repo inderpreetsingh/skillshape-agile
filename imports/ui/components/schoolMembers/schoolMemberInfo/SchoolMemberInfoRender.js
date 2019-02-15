@@ -45,7 +45,6 @@ const styles = (theme) => ({
 });
 
 const Wrapper = styled.div`
-	max-width: 800px;
 	width: 100%;
 	background-color: white;
 	position: relative;
@@ -60,15 +59,9 @@ const UserInfoPanel = styled.div`
 	padding: ${helpers.rhythmDiv * 2}px;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
-		margin-bottom: 0;
-		max-width: 500px;
 		width: 100%;
 		flex-direction: column;
-		padding: 0;
-	}
-	
-	@media screen and (max-width: ${helpers.mobile + 50}px) {
-		padding: 0 ${helpers.rhythmDiv * 4}px;
+		padding-top: ${helpers.rhythmDiv * 4}px;
 	}
 `;
 
@@ -83,9 +76,6 @@ const UserProfile = styled.div`
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		margin-bottom: 0;
-	}
-
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
 		flex-direction: column;
 	}
 `;
@@ -108,8 +98,9 @@ const AvatarContainer = UIPanelElem.extend`
 		margin-right: ${helpers.rhythmDiv}px;
 	}
 	
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
-		width: 100%;
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-right: 0;
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
 	}
 `;
 
@@ -117,6 +108,12 @@ const MemberDetails = UIPanelElem.extend`
 	display: flex;
 	justify-content: flex-start;
 	margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 0;
+	}
 `;
 
 const AdminNotes = UIPanelElem.extend`
@@ -128,22 +125,24 @@ const AdminNotes = UIPanelElem.extend`
 const ButtonWrapper = styled.div`margin-bottom: ${helpers.rhythmDiv}px;`;
 
 const ActionButtonsBar = styled.div`
-	${helpers.flexCenter}
+	display: flex;
+	align-items: center;
 	flex-wrap: wrap;
 	margin: 0 auto;
 	width: 100%;
-	
-	@media screen and (max-width: ${helpers.tablet}px) {
-		max-width: 500px;
-	}
 
-	@media screen and (max-width: ${helpers.mobile + 50}px) {
-		padding: 0 ${helpers.rhythmDiv * 4}px;
+	@media screen and (max-width: ${helpers.mobile}px) {
+		justify-content: center;
 	}
 `;
 
 const Avatar = styled.div`
 	margin-right: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-right: 0;
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+	}
 `;
 
 const MemberActions = styled.div`
@@ -151,12 +150,23 @@ const MemberActions = styled.div`
 	flex-direction: column;
 `;
 
-const ActionButtonsWrapper = styled.div` 
+const MemberName = SubHeading.extend`
+	font-size: ${helpers.baseFontSize * 2}px;
+	word-break: break-all;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+		font-size: ${helpers.baseFontSize * 2}px;
+		text-align: center;
+	}
+`;
+
+const ActionBtnsWrapper = styled.div` 
 	display: flex;
 	flex-wrap: wrap;
 `;
 
-const ActionButton = styled.div`
+const ActionBtn = styled.div`
 	margin-right: ${helpers.rhythmDiv}px;
 	margin-bottom: ${helpers.rhythmDiv}px;
 	
@@ -176,10 +186,6 @@ const ProfilePic = styled.div`
 	width: 100px;
 	border-radius: 50%;
 	border: 2px solid black;
-	s
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
-		width: 100%;
-	}
 `;
 const UploadDiv = styled.div`
 	// background: #448aff;
@@ -223,31 +229,31 @@ const MenuIconWrapper = CornerBtnWrapper.extend`
 	left: 8px;
 	right: auto;
 
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
+	@media screen and (max-width: ${helpers.tablet}px) {
 		display: block;
 	}
 `;
 
 
 const ActionButtons = (props) => (
-	<ActionButtonsWrapper>
-		<ActionButton
+	<ActionBtnsWrapper>
+		<ActionBtn
 			onClick={() => {
 				props.handleCall(props.memberInfo);
 			}}
 		>
 			<FormGhostButton icon iconName="phone" label="Call" />
-		</ActionButton>
+		</ActionBtn>
 
-		<ActionButton
+		<ActionBtn
 			onClick={() => {
 				props.handleEmail(props.memberInfo);
 			}}
 		>
 			<FormGhostButton noMarginBottom label="Email" icon iconName="email" />
-		</ActionButton>
+		</ActionBtn>
 
-		{/*<ActionButton>
+		{/*<ActionBtn>
 			<MemberActionButton
 				noMarginBottom
 				label="Edit"
@@ -260,10 +266,10 @@ const ActionButtons = (props) => (
 				icon
 				iconName="edit"
 				onClick={props.onEditMemberClick} />
-		</ActionButton>*/}
+		</ActionBtn>*/}
 		{props.isAdmin &&
 			!props.superAdmin && props.view == "admin" && (
-				<ActionButton>
+				<ActionBtn>
 					<MemberActionButton
 						noMarginBottom
 						label="Remove Admin"
@@ -271,9 +277,9 @@ const ActionButtons = (props) => (
 						iconName="remove_circle_outline"
 						onClick={props.removeButtonClick}
 					/>
-				</ActionButton>
+				</ActionBtn>
 			)}
-	</ActionButtonsWrapper>
+	</ActionBtnsWrapper>
 );
 
 class SchoolMemberInfo extends Component {
@@ -658,7 +664,6 @@ class SchoolMemberInfo extends Component {
 					<UserProfile>
 						<AvatarContainer key={memberInfo._id}>
 							<MemberDetails>
-
 								<Avatar>
 									<ProgressiveImage
 										src={bgImg}
@@ -668,8 +673,7 @@ class SchoolMemberInfo extends Component {
 								</Avatar>
 
 								<MemberActions>
-
-									<SubHeading fontSize={helpers.baseFontSize * 2}>{userName}</SubHeading>
+									<MemberName>{userName}</MemberName>
 									{isAdmin && (
 										<ActionButtonsBar>
 											<ActionButtons
