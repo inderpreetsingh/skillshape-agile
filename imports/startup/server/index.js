@@ -37,6 +37,7 @@ import "/imports/api/attendance/methods";
 import '/imports/api/transactions/methods.js';
 import "/imports/api/contracts/methods.js";
 import "/imports/api/calendar/methods.js";
+import "/imports/api/test/methods.js"
 // All publication imported over here
 import '/imports/api/packages/server/publication';
 import "/imports/api/modules/server/publication";

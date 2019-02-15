@@ -243,6 +243,7 @@ class FullCalendar extends React.Component {
               )
               .format("hh:mm");
             sevent.title = classTime.classTypeName.name + ": " + classTime.name;
+            sevent.classTypeName  = classTime.classTypeName.name;
             sevent.durationAndTimeunits = `${obj.duration} ${
               obj.timeUnits ? obj.timeUnits : "Minutes"
               }`;
@@ -297,7 +298,7 @@ class FullCalendar extends React.Component {
                 sevent,
                 scheduleDetailsObject
               );
-
+              newCalendarEvent.classTypeName = classTime.classTypeName.name;
               sevents.push(newCalendarEvent);
             });
           } else {
@@ -312,7 +313,7 @@ class FullCalendar extends React.Component {
                   sevent,
                   scheduleDetailsObject
                 );
-
+              newCalendarEvent.classTypeName = classTime.classTypeName.name;
                 sevents.push(newCalendarEvent);
               });
             });

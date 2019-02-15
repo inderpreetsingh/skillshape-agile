@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import get from 'lodash/get';
 
 import SignUpDialogBox from './dialogs/SignUpDialogBox.jsx';
-import ChangePasswordDialogBox from './dialogs/ChangePasswordDialogBox.jsx';
 import MenuIconButton from './buttons/MenuIconButton.jsx';
 import SideNavItems from './SideNavItems.jsx';
 import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
@@ -181,14 +180,6 @@ class SideNav extends Component {
                         onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
                         onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
 
-                    />
-                }
-                {currentUser && this.state.changePasswordDialogBox &&
-                    <ChangePasswordDialogBox
-                        open={this.state.changePasswordDialogBox}
-                        onModalClose={() => this.handleChangePasswordDialogBoxState(false)}
-                        onSubmit={this.handleChangePasswordSubmit}
-                        hideChangePassword = {(message) =>{this.handleChangePasswordDialogBoxState(false,message)}}
                     />
                 }
                 {

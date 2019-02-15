@@ -14,7 +14,8 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
-import { capitalizeString, confirmationDialog } from '/imports/util';
+import { capitalizeString, getUserFullName } from '/imports/util';
+import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
 
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
@@ -255,27 +256,28 @@ export default class MyCalender extends React.Component {
         }
       }
       else {
-        let packageType, packagesRequired, content, title;
-        if (!epStatus) {
-          packageType = ' Enrollment package ';
-          packagesRequired = 'enrollment';
-          title = 'Enrollment Fee Required';
-          content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
-        } else {
-          packageType = ' Class Fees Due ';
-          packagesRequired = 'perClassAndMonthly';
-          title = `No ${packageType} Purchased Yet.`
-          content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
-        }
-        popUp.appear("inform", {
-          title,
-          content,
-          RenderActions: (<ButtonWrapper>
-            {this.cancelSignIn()}
-            {this.signInAndPurchaseLater(filter, status, popUp)}
-            {this.purchaseNowButton(packagesRequired)}
-          </ButtonWrapper>)
-        }, true);
+        this.setState({thinkingAboutAttending:true,filter});
+        // let packageType, packagesRequired, content, title;
+        // if (!epStatus) {
+        //   packageType = ' Enrollment package ';
+        //   packagesRequired = 'enrollment';
+        //   title = 'Enrollment Fee Required';
+        //   content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
+        // } else {
+        //   packageType = ' Class Fees Due ';
+        //   packagesRequired = 'perClassAndMonthly';
+        //   title = `No ${packageType} Purchased Yet.`
+        //   content = `You do not have any active Per Class or Monthly Packages which cover this class type. You can purchase one here.`;
+        // }
+        // popUp.appear("inform", {
+        //   title,
+        //   content,
+        //   RenderActions: (<ButtonWrapper>
+        //     {this.cancelSignIn()}
+        //     {this.signInAndPurchaseLater(filter, status, popUp)}
+        //     {this.purchaseNowButton(packagesRequired)}
+        //   </ButtonWrapper>)
+        // }, true);
       }
     })
   }
@@ -305,7 +307,7 @@ export default class MyCalender extends React.Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                    this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' ,thinkingAboutAttending:false})
                   }}
                   applyClose
                 />
@@ -363,7 +365,7 @@ export default class MyCalender extends React.Component {
             <FormGhostButton
               label={'Ok'}
               onClick={() => {
-                this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' })
+                this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' ,thinkingAboutAttending:false})
               }}
               applyClose
             />
@@ -469,6 +471,152 @@ export default class MyCalender extends React.Component {
   closeClassTypePackages = () => {
     this.setState({ classTypePackages: false });
   }
+  handleClassClosed = () => {
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
+    const { popUp } = this.props;
+    let emailId;
+    this.props &&
+      this.props.schoolId &&
+      Meteor.call("school.getMySchool", null, false, (err, res) => {
+        if (res) {
+          emailId = res && res[0].email;
+          popUp.appear("success", {
+            content: `Hi ${userName}, This class is closed to registration. ${emailId &&
+              emailId &&
+              `contact the administrator at ${emailId} for more details.`} `
+          });
+        }
+      });
+  };
+  handleAddToMyCalendarButtonClick = () => {
+    const classTimeData = { ...this.props };
+    this.addToMyCalender(classTimeData);
+  };
+  addToMyCalender = data => {
+    // check for user login or not
+    const userId = Meteor.userId();
+    if (!isEmpty(userId)) {
+      const doc = {
+        classTimeId: data._id,
+        classTypeId: data.classTypeId,
+        schoolId: data.schoolId,
+        userId
+      };
+      this.handleClassInterest({
+        methodName: "classInterest.addClassInterest",
+        data: { doc }
+      });
+      this.setState({ addToCalendar: false });
+    } else {
+      // alert("Please login !!!!")
+      //Events.trigger("loginAsUser");
+      this.setState({
+        nonUserDialogBox: true
+      });
+    }
+  };
+  handleClassInterest = ({ methodName, data }) => {
+    this.setState({ isLoading: true });
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
+    Meteor.call(methodName, data, (err, res) => {
+      const { popUp } = this.props;
+      this.setState({ isLoading: false });
+      if (err) {
+        popUp.appear("error", { content: err.message });
+      } else {
+        if (methodName.indexOf("remove") !== -1)
+          popUp.appear("success", {
+            content: `Hi ${userName}, Class removed successfully from your calendar`
+          });
+        else
+          popUp.appear("success", {
+            content: `Hi ${userName}, Class added to your calendar`
+          });
+      }
+    });
+  };
+  handleRemoveFromCalendarButtonClick = () => {
+    // this.setState({ addToCalendar: true });
+    const classTimeData = { ...this.props };
+    this.removeFromMyCalender(classTimeData);
+  };
+
+  removeFromMyCalender = classTimeRec => {
+    const { popUp } = this.props;
+    const result = this.props.classInterestData.filter(
+      data => data.classTimeId == classTimeRec._id
+    );
+    // check for user login or not
+    const userId = Meteor.userId();
+    if (!isEmpty(userId)) {
+      if (!_.isEmpty(result)) {
+        const doc = {
+          _id: result[0]._id,
+          userId
+        };
+        this.handleClassInterest({
+          methodName: "classInterest.removeClassInterest",
+          data: { doc }
+        });
+      }
+      this.setState({ addToCalendar: true });
+    } else {
+      // popUp.error("Please login !","Error");
+      this.setState({
+        nonUserDialogBox: true
+      });
+    }
+  };
+  handleCheckBoxes = CheckBoxes => {
+    const { addToCalendar } = this.props;
+    if (CheckBoxes[0] != !addToCalendar) {
+      if (CheckBoxes[0]) {
+        this.handleAddToMyCalendarButtonClick();
+      } else {
+        this.handleRemoveFromCalendarButtonClick();
+      }
+    }
+    this.handleNotification(CheckBoxes);
+  };
+  handleNotification = CheckBoxes => {
+    this.setState({ isLoading: true });
+    const { schoolId, classTypeId, classType } = this.props;
+    const currentUser = Meteor.user();
+    const userName = getUserFullName(currentUser);
+    if (!isEmpty(currentUser)) {
+      let data = {
+        name: userName,
+        email: currentUser.emails[0].address,
+        schoolId: schoolId,
+        classTypeId: classTypeId,
+        userId: Meteor.userId(),
+        notification: CheckBoxes[1],
+        createdAt: new Date(),
+        classType: classType.name,
+        existingUser: true
+      };
+      Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
+        const { popUp } = this.props;
+        if (res) {
+          Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
+            if (res1) {
+              popUp.appear("success", {
+                content: `Hi ${userName}, You are ${
+                  CheckBoxes[1] ? "subscribed" : "unsubscribed"
+                  } to  notification related to the
+            location and time update of class type ${classType.name}.
+            `
+              });
+              this.componentWillMount();
+            }
+          });
+        }
+      });
+    }
+    this.setState({ isLoading: false });
+  };
   render() {
     const { isOpen,
       eventData,
@@ -483,9 +631,11 @@ export default class MyCalender extends React.Component {
       classTypePackages,
       filter,
       classDetails,
-      packagesRequired
+      packagesRequired,
+      thinkingAboutAttending
     } = this.state;
-    const { routeName, schoolData } = this.props;
+    const {schoolId,classTypeName} = eventData || {};
+    const { routeName, schoolData ,params,popUp} = this.props;
     let name, _id;
     if (!isEmpty(schoolData)) {
       name = get(schoolData, 'name', 'School Name');
@@ -510,6 +660,32 @@ export default class MyCalender extends React.Component {
           manageMyCalendar={true}
         />
         {isLoading && <ContainerLoader />}
+        {thinkingAboutAttending && (
+          <ThinkingAboutAttending
+            schoolId={schoolId}
+            open={thinkingAboutAttending}
+            onModalClose={() => {
+              this.setState({ thinkingAboutAttending: false });
+            }}
+            handleClassClosed={this.handleClassClosed}
+            handleAddToMyCalendarButtonClick={
+              this.handleAddToMyCalendarButtonClick
+            }
+            handleRemoveFromCalendarButtonClick={
+              this.handleRemoveFromCalendarButtonClick
+            }
+            addToCalendar={true}
+            notification={true}
+            purchaseThisPackage={() => {
+              this.setState({ thinkingAboutAttending: false });
+            }}
+            handleCheckBoxes={this.handleCheckBoxes}
+            name={classTypeName}
+            params={params}
+            classTypeId={classTypeId}
+            handleSignIn={()=>{this.handleSIgnInAndPurchaseLater(filter,'signIn',popUp)}}
+          />)}
+
         {classDetailModal && (
           <ClassDetailModal
             eventData={eventData}
