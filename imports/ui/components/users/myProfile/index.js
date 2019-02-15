@@ -90,7 +90,17 @@ class MyProfile extends React.Component {
   handleUserImageChange = file => {
     this.setState({ file });
   };
-
+  passwordChangeMsg = () =>{
+    const {popUp} = this.props;
+    const data = {
+      popUp,
+      title: 'Success',
+      type: 'success',
+      content: 'Your Password Change Successful.',
+      buttons: [{ label: 'Ok', onClick: () => { this.setState({changePasswordDialogBox:false})}, greyColor: true }]
+    };
+    confirmationDialog(data);
+  }
   handleTextChange = (fieldName, event) => {
     this.setState({ [fieldName]: event.target.value });
   };

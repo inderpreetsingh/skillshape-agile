@@ -22,7 +22,7 @@ import IconInput from "/imports/ui/components/landing/components/form/IconInput"
 import { Loading } from "/imports/ui/loading";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-
+import  ChangePasswordDialogBox from "/imports/ui/components/landing/components/dialogs/ChangePasswordDialogBox.jsx";
 
 const SaveBtnWrapper = styled.div`
   margin: 10px;
@@ -55,7 +55,8 @@ export default function () {
     address,
     email,
     about,
-    refresh_token
+    refresh_token,
+    changePasswordDialogBox
   } = this.state;
   let userType = Meteor.user();
   if (!isUserSubsReady) return <Loading />;
@@ -73,6 +74,13 @@ export default function () {
     return (
       <DocumentTitle title={this.props.route.name}>
         <GridWrapper>
+        {currentUser && changePasswordDialogBox &&
+          <ChangePasswordDialogBox
+            open={changePasswordDialogBox}
+            onModalClose={() => this.setState({ changePasswordDialogBox: false })}
+            hideChangePassword={this.passwordChangeMsg}
+          />
+        }
           <Grid container>
             {this.state.isBusy && <ContainerLoader />}
             <Grid item xs={12} sm={12}>
@@ -277,6 +285,10 @@ export default function () {
                               label={`Cancel Sync Google`}
                               onClick={this.confirmationRemoveGoogleSync}
                             />}
+                            <PrimaryButton
+                              label={`Change Password`}
+                              onClick={()=>{this.setState({changePasswordDialogBox:true})}}
+                            />
                           <SaveBtnWrapper>
                             {/* <Button type="submit" color="accent" raised dense>
                             Save

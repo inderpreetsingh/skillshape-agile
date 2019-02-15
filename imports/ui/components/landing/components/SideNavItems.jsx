@@ -150,11 +150,6 @@ const LoginUserSideNav = props => {
       name: "My Media",
       link: `/media/${Meteor.userId()}`,
       iconName: "collections"
-    },
-    {
-      name: "Change Password",
-      iconName: "lock_open",
-      onClick: props.showChangePassword
     }
   ];
   if (Meteor.settings.public.paymentEnabled) {
