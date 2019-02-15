@@ -88,7 +88,7 @@ export default createContainer((props) => {
 		isLoading = false;
 	}
 	Meteor.subscribe('classInterest.getClassInterest');
-	Meteor.subscribe('enrollmentFee.getClassTypeEnrollMentFree', { classTypeId });
+	Meteor.subscribe('enrollmentFee.getEnrollmentFeeByClassTypeId', { classTypeId });
 	classInterestData = ClassInterest.find({}).fetch();
 	if(sub1Ready){
 	classTypeData = ClassType.findOne({ _id: classTypeId });

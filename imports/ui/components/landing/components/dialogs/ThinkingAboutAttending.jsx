@@ -212,7 +212,7 @@ class ThinkingAboutAttending extends React.Component {
   render() {
     const { checkBoxes, classTypePackages, packagesRequired } = this.state;
     const { open, onModalClose, addToCalendar,
-      handleClassClosed, handleCheckBoxes, purchaseThisPackage, name, schoolId, params, classTypeId } = this.props;
+      handleClassClosed, handleCheckBoxes, purchaseThisPackage, name, schoolId, params, classTypeId,handleSignIn } = this.props;
     return (
       <MuiThemeProvider theme={muiTheme}>
         <Dialog
@@ -266,6 +266,7 @@ class ThinkingAboutAttending extends React.Component {
             classTypeId={classTypeId}
             packagesRequired={packagesRequired}
             closeClassTypePackages={this.closeClassTypePackages}
+            handleSignIn = {handleSignIn}
           />}
           <DialogTitle classes={{ root: this.props.classes.dialogTitle }}>
             <DialogTitleWrapper>
@@ -308,7 +309,9 @@ class ThinkingAboutAttending extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 onClick={() => {
-
+                  if(handleSignIn){
+                    handleSignIn()
+                  }
                   if (addToCalendar == 'closed') {
                     handleClassClosed();
                   }

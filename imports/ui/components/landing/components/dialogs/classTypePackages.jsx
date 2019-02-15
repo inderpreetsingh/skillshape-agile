@@ -179,23 +179,23 @@ export default createContainer(props => {
     const currentUser = Meteor.user();
     title = 'Please purchase one of these package.';
     if (packagesRequired == 'enrollment') {
-        Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
-        enrollmentFee = EnrollmentFees.find({ schoolId, classTypeId }).fetch();
+        Meteor.subscribe("enrollmentFee.getEnrollmentFeeByClassTypeId", { classTypeId });
+        enrollmentFee = EnrollmentFees.find({ classTypeId }).fetch();
         title = 'Before purchasing any per class/monthly package covering this class you must purchase enrollment fee.';
     }
     else if (packagesRequired == "perClassAndMonthly") {
-        Meteor.subscribe("classPricing.getClassPricing", { schoolId });
-        Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
-        classPricing = ClassPricing.find({ schoolId: schoolId, classTypeId }).fetch();
-        monthlyPricing = MonthlyPricing.find({ schoolId: schoolId, classTypeId }).fetch();
+        Meteor.subscribe("classPricing.getClassPricingWithClassId", { classTypeId });
+        Meteor.subscribe("monthlyPricing.getMonthlyPricingWithClassId", { classTypeId });
+        classPricing = ClassPricing.find({classTypeId }).fetch();
+        monthlyPricing = MonthlyPricing.find({classTypeId }).fetch();
     }
     else {
-        Meteor.subscribe("classPricing.getClassPricing", { schoolId });
-        Meteor.subscribe("monthlyPricing.getMonthlyPricing", { schoolId });
-        Meteor.subscribe("enrollmentFee.getEnrollmentFee", { schoolId });
-        enrollmentFee = EnrollmentFees.find({ schoolId, classTypeId }).fetch();
-        classPricing = ClassPricing.find({ schoolId: schoolId, classTypeId }).fetch();
-        monthlyPricing = MonthlyPricing.find({ schoolId: schoolId, classTypeId }).fetch();
+        Meteor.subscribe("classPricing.getClassPricingWithClassId", { classTypeId });
+        Meteor.subscribe("monthlyPricing.getMonthlyPricingWithClassId", { classTypeId });
+        Meteor.subscribe("enrollmentFee.getEnrollmentFeeByClassTypeId", { classTypeId });
+        enrollmentFee = EnrollmentFees.find({ classTypeId }).fetch();
+        classPricing = ClassPricing.find({classTypeId }).fetch();
+        monthlyPricing = MonthlyPricing.find({classTypeId }).fetch();
     }
     return {
         schoolData,
