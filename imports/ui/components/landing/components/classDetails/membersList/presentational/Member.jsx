@@ -206,10 +206,11 @@ const Member = props => {
     }
     let payLoad = {
       instructorId: get(props, '_id', 0),
-      _id: get(props.classData[0], "_id", 0),
+      _id: get(props.classData, "_id", 0),
       instructorIds: get(props, "instructorsIds", []),
       action: 'remove',
-      classTimeId: get(props.classData[0], "classTimeId", 0)
+      schoolId: get(props.classData,'schoolId',0),
+      classTimeId: get(props.classData, "classTimeId", 0)
     }
     popUp.appear("inform", {
       title: "Remove Instructor",
@@ -231,6 +232,7 @@ const Member = props => {
 
   }
   handleRemove = (popUp, payLoad, from) => {
+		console.log('TCL: handleRemove -> payLoad, from)', payLoad, from)
     if (!from) {
       Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
         if (res) {

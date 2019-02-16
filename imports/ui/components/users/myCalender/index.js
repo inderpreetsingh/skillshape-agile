@@ -71,8 +71,6 @@ export default class MyCalender extends React.Component {
 
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
   getStudentStatus = (filter) => {
-    //classes.getClassData
-    //classPricing.signInHandler
     Meteor.call("classes.getClassData", filter, (err, res) => {
       if (res) {
         res.students && res.students.map((obj, index) => {
@@ -106,8 +104,9 @@ export default class MyCalender extends React.Component {
       }
     })
     this.setDate()
-    const { schoolId, classTypeId, classTimeId, start } = eventData;
-    let filter = { schoolId, classTypeId, classTimeId, scheduled_date: new Date(start) };
+    const { schoolId, classTypeId, classTimeId, start,startDate,title,eventEndTime,eventStartTime,durationAndTimeunits } = eventData;
+    let eventDataForClass = {startDate:new Date(startDate),title,eventEndTime,eventStartTime,durationAndTimeunits};
+    let filter = { schoolId, classTypeId, classTimeId, scheduled_date: new Date(start),eventData:eventDataForClass };
     this.getStudentStatus(filter);
       Meteor.call("school.getMySchool", schoolId, (err, res) => {
         if (res) {
@@ -407,6 +406,7 @@ export default class MyCalender extends React.Component {
       }, true);
     }
   }
+ 
   getStudentList = (route, status) => (
     <List>
       <ListItem button onClick={() => { this.setState({ classDetailModal: true }) }}>
@@ -415,14 +415,12 @@ export default class MyCalender extends React.Component {
         </PopoverListItemIcon>
         <ListItemText primary="View Class Time" />
       </ListItem>
-      <Link to={{ pathname: route, state: { props: this.props, state: this.state } }}>
-        <ListItem button >
+        <ListItem button onClick={()=>{browserHistory.push(route)}}>
           <PopoverListItemIcon>
             <ClassIcon />
           </PopoverListItemIcon>
           <ListItemText primary="View Class Details" />
         </ListItem>
-      </Link>
       <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
           <Assignment_turned_in />
@@ -446,14 +444,12 @@ export default class MyCalender extends React.Component {
         </PopoverListItemIcon>
         <ListItemText primary="View Class Time" />
       </ListItem>
-      <Link to={{ pathname: route, state: { props: this.props, state: this.state } }}>
-        <ListItem button >
+        <ListItem button onClick={()=>{browserHistory.push(route)}}>
           <PopoverListItemIcon>
             <ClassIcon />
           </PopoverListItemIcon>
           <ListItemText primary="View Class Details" />
         </ListItem>
-      </Link>
       <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
           <Assignment_turned_in />
@@ -641,14 +637,8 @@ export default class MyCalender extends React.Component {
       name = get(schoolData, 'name', 'School Name');
       _id = get(schoolData, '_id', null);
     }
-    let classTypeId;
-    if (!isEmpty(classDetails)) {
-      classTypeId = get(classDetails, 'classTypeId', null);
-    }
-    else {
-      classTypeId = get(filter, 'classTypeId', null);
-    }
-    let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
+   const { classTypeId,_id:classId} = classDetails || {};
+   let route = `/classDetails/${classId}`;
     return (
       <div>
         <FullCalendarContainer

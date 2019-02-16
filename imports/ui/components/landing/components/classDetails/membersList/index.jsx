@@ -53,7 +53,7 @@ class MembersListContainer extends Component {
     let studentsIds = [];
     let purchaseIds = [];
     const { classData, schoolId } = this.props;
-    let { classTypeId } = classData && classData[0] || {};
+    let { classTypeId } = classData && classData|| {};
     let filter = { classTypeId, userId: Meteor.userId() };
     Meteor.call("classPricing.signInHandler", filter, (err, res) => {
       if (!isEmpty(res)) {
@@ -70,7 +70,7 @@ class MembersListContainer extends Component {
       }
     })
     if (classData) {
-      get(classData[0], 'students', []).map((obj, index) => {
+      get(classData, 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
         this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit) })
@@ -308,7 +308,7 @@ class MembersListContainer extends Component {
   handleSignIn = (e, userId, status = 'signIn', packageConnected = false) => {
     e && e.preventDefault();
     const { popUp, classData } = this.props;
-    let classDetails = classData[0];
+    let classDetails = classData;
     if (userId) {
       classDetails.userId = userId;
     }
@@ -367,7 +367,7 @@ class MembersListContainer extends Component {
 
   updateStatus = (n, props) => {
     let { status, popUp, purchaseId, classData } = props;
-    let { scheduled_date } = classData && classData[0] || {};
+    let { scheduled_date } = classData && classData|| {};
     let inc = 0, packageType, packageConnected = false;
     if (n == 1) {
       if (status == 'signIn' || status == 'checkOut') {
@@ -408,9 +408,9 @@ class MembersListContainer extends Component {
       this.handleSignIn(null, props._id, status, packageConnected);
       return;
     }
-    let filter = props.classData[0];
+    let filter = props.classData;
     filter.userId = props._id;
-    props.classData[0].students.map((obj) => {
+    props.classData.students.map((obj) => {
       if (obj.userId == props._id) {
         purchaseId = obj.purchaseId;
         packageType = obj.packageType;
@@ -464,7 +464,7 @@ class MembersListContainer extends Component {
       let { popUp } = props;
       this.toggleIsBusy();
       userId = props._id;
-      classesId = props.classData[0]._id;
+      classesId = props.classData._id;
       valid = true;
       userName = get(props.profile, "firstName", get(props.profile, "name", get(props.profile, "lastName", "Old Data")));
       userEmail = get(props.emails[0], 'address', null);
@@ -561,7 +561,7 @@ class MembersListContainer extends Component {
       planId = get(packageData.pymtDetails[0], 'planId', null);
     }
     data = { userId, packageId, schoolId, packageType, paymentMethod, noClasses, packageName, planId };
-    let classDetails = classData[0];
+    let classDetails = classData;
     classDetails.userId = userId;
     Meteor.call('classPricing.signInHandler', classDetails, (err, res) => {
       let epStatus = get(res, "epStatus", false);
@@ -623,8 +623,8 @@ class MembersListContainer extends Component {
     //     ? "studentsView"
     //     : "instructorsView";
     let classTypeId;
-    !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
-      classTypeId = get(classData[0], "classTypeId", null);
+    !isEmpty(classData) && classData.students && classData.students.map((obj) => {
+      classTypeId = get(classData, "classTypeId", null);
     })
 
     return (
@@ -666,7 +666,7 @@ class MembersListContainer extends Component {
           open={classTypePackages}
           onClose={() => { this.setState({ classTypePackages: false }) }}
           params={params}
-          classTypeId={get(classData[0], 'classTypeId', null)}
+          classTypeId={get(classData, 'classTypeId', null)}
           userId={userId}
           packagesRequired={packagesRequired}
           handleSignIn={this.handleSignIn}

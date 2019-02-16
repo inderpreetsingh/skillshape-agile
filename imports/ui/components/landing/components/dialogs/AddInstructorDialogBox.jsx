@@ -141,8 +141,8 @@ class AddInstructorDialogBox extends Component {
   }
   handleWholeSeries = (popUp, payLoad) => {
     let { classData } = this.props;
-    payLoad.classTimeId = get(classData[0], 'classTimeId', '');
-    payLoad.schoolId = get(classData[0], 'schoolId', '');
+    payLoad.classTimeId = get(classData, 'classTimeId', '');
+    payLoad.schoolId = get(classData, 'schoolId', '');
     Meteor.call("classTimes.editClassTimes", { doc_id: payLoad.classTimeId, doc: payLoad }, (err, res) => {
 
       this.setState({ isLoading: false });
@@ -218,11 +218,11 @@ class AddInstructorDialogBox extends Component {
     let { selectedOption } = this.state;
     let payLoad = {
       action: "add",
-      _id: !isEmpty(this.props.classData) ? get(this.props.classData[0], '_id', null) : '',
+      _id: !isEmpty(this.props.classData) ? get(this.props.classData, '_id', null) : '',
       classTimeForm: this.props.classTimeForm,
-      students: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'students', []) : [],
-      classTypeId: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'classTypeId', '') : "",
-      schoolId: !isEmpty(this.props.classData) ? get(this.props.classData[0], 'schoolId', '') : "",
+      students: !isEmpty(this.props.classData) ? get(this.props.classData, 'students', []) : [],
+      classTypeId: !isEmpty(this.props.classData) ? get(this.props.classData, 'classTypeId', '') : "",
+      schoolId: !isEmpty(this.props.classData) ? get(this.props.classData, 'schoolId', '') : "",
     };
     if (this.props.text == 'Student') {
       selectedOption.map((obj, index) => {
@@ -230,7 +230,7 @@ class AddInstructorDialogBox extends Component {
       })
       payLoad.students = uniq(payLoad.students);
     } else {
-      payLoad.instructors = !isEmpty(this.props.classData) ? get(this.props.classData[0], 'instructors', this.props.instructorsIds) : [],
+      payLoad.instructors = !isEmpty(this.props.classData) ? get(this.props.classData, 'instructors', this.props.instructorsIds) : [],
         payLoad.instructors.push(selectedOption.map(ele => ele.value));
       payLoad.instructors = flatten(payLoad.instructors);
 

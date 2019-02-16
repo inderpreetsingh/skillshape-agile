@@ -126,3 +126,7 @@ Meteor.publish("classTime.getclassType", function({ classTypeIds }) {
   let cursor = ClassType.find({ _id: { $in: classTypeIds } });
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
+Meteor.publish("classTime.getClassTimeById",function(_id){
+  let cursor = ClassTimes.find({_id });
+  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+})
