@@ -409,7 +409,7 @@ export default class SchoolViewBase extends React.Component {
 					} else if (res.message) {
 						popUp.appear('alert',{content:res.message,title:'Error'});
 					} else if (res) {
-						popUp.appear('success',{content:'Your request has been processed',title:'Error'});
+						popUp.appear('success',{content:'Your request has been processed',title:'Success'});
 						this.handleRequest('pricing');
 					}
 				});
