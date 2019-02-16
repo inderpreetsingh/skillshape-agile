@@ -660,9 +660,9 @@ class MembersListContainer extends Component {
         />}
         <ListWrapper>
           <AnimateOnChange
-            animationIn="bounceIn"
-            animationOut="bounceOut"
-            durationOut={500}
+            animationIn="fadeIn"
+            animationOut="fadeOut"
+            durationOut={400}
           >
             <MembersList
               viewType={currentView}
@@ -680,9 +680,9 @@ class MembersListContainer extends Component {
         </ListWrapper>
         <ListWrapper>
           <AnimateOnChange
-            animationIn="bounceIn"
-            animationOut="bounceOut"
-            durationOut={500}
+            animationIn="fadeIn"
+            animationOut="fadeOut"
+            durationOut={400}
           >
             <MembersList
               viewType={currentView}
