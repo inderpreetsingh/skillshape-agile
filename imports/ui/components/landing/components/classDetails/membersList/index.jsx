@@ -130,7 +130,7 @@ class MembersListContainer extends Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : status == 'signOut' ? 'signIn' : 'signOut' , }) : this.setState({ buyPackagesBoxState: false,})
+                     !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : status == 'signOut' ? 'signIn' : 'signOut' , }) : this.setState({ buyPackagesBoxState: false,})
                   }}
                   applyClose
                 />
@@ -140,7 +140,6 @@ class MembersListContainer extends Component {
         })
       }
       else {
-        this.setState({ ...state })
         popUp.appear("alert", {
           title: `Caution`,
           content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
