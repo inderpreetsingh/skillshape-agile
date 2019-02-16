@@ -10,7 +10,6 @@ import DropDownMenu from "/imports/ui/components/landing/components/form/DropDow
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import MemberExpanded from "./MemberExpanded.jsx";
-import { AnimateOnChange } from '@nearform/react-animation'
 import ProgressiveImage from "react-progressive-image";
 
 import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
@@ -279,11 +278,7 @@ const Member = props => {
   }
 
   return (
-    <AnimateOnChange
-      animationIn="bounceIn"
-      animationOut="bounceOut"
-      durationOut={500}
-    >
+    
       <Wrapper
         addMember={props.addMember}
         onClick={props.addMember ? props.onAddIconClick : () => { }}>
@@ -318,7 +313,7 @@ const Member = props => {
             />}
         </Profile>
       </Wrapper>
-    </AnimateOnChange>
+   
   );
 };
 

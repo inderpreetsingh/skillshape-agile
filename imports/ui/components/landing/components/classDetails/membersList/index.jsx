@@ -14,6 +14,7 @@ import FormGhostButton from '/imports/ui/components/landing/components/buttons/F
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Pagination from "/imports/ui/componentHelpers/pagination";
+import { AnimateOnChange } from '@nearform/react-animation'
 import moment from 'moment';
 const Div = styled.div`
     display: flex;
@@ -53,7 +54,7 @@ class MembersListContainer extends Component {
     let studentsIds = [];
     let purchaseIds = [];
     const { classData, schoolId } = this.props;
-    let { classTypeId } = classData && classData|| {};
+    let { classTypeId } = classData && classData || {};
     let filter = { classTypeId, userId: Meteor.userId() };
     Meteor.call("classPricing.signInHandler", filter, (err, res) => {
       if (!isEmpty(res)) {
@@ -130,7 +131,7 @@ class MembersListContainer extends Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                     !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : status == 'signOut' ? 'signIn' : 'signOut' , }) : this.setState({ buyPackagesBoxState: false,})
+                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : status == 'signOut' ? 'signIn' : 'signOut', }) : this.setState({ buyPackagesBoxState: false, })
                   }}
                   applyClose
                 />
@@ -328,7 +329,7 @@ class MembersListContainer extends Component {
   };
   getPurchaseData = _id => {
     Meteor.call("purchase.getDataFromPurchaseId", _id, (err, res) => {
-      this.setState({ purchaseData: res});
+      this.setState({ purchaseData: res });
     });
   }
 
@@ -349,7 +350,7 @@ class MembersListContainer extends Component {
 
   updateStatus = (n, props) => {
     let { status, popUp, purchaseId, classData } = props;
-    let { scheduled_date } = classData && classData|| {};
+    let { scheduled_date } = classData && classData || {};
     let inc = 0, packageType, packageConnected = false;
     if (n == 1) {
       if (status == 'signIn' || status == 'checkOut') {
@@ -658,22 +659,31 @@ class MembersListContainer extends Component {
           setPackagesRequired={this.setPackagesRequired}
         />}
         <ListWrapper>
-          
-          <MembersList
-            viewType={currentView}
-            onSearchChange={this.handleSearchChange("teachersFilterWith")}
-            data={instructorsData}
-            entityType={"teachers"}
-            searchedValue={this.state.teachersFilterWith}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            addInstructor
-          />
+          <AnimateOnChange
+            animationIn="bounceIn"
+            animationOut="bounceOut"
+            durationOut={500}
+          >
+            <MembersList
+              viewType={currentView}
+              onSearchChange={this.handleSearchChange("teachersFilterWith")}
+              data={instructorsData}
+              entityType={"teachers"}
+              searchedValue={this.state.teachersFilterWith}
+              onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
+              classData={classData}
+              popUp={popUp}
+              instructorsIds={instructorsIds}
+              addInstructor
+            />
+          </AnimateOnChange>
         </ListWrapper>
         <ListWrapper>
-        
+          <AnimateOnChange
+            animationIn="bounceIn"
+            animationOut="bounceOut"
+            durationOut={500}
+          >
             <MembersList
               viewType={currentView}
               searchedValue={this.state.studentsFilterWith}
@@ -701,7 +711,8 @@ class MembersListContainer extends Component {
               setNotes={this.setNotes}
               slug={slug}
             />
-          
+          </AnimateOnChange>
+
         </ListWrapper>
         <PaginationWrapper>
           <Pagination

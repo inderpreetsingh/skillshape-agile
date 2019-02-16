@@ -223,6 +223,7 @@ class AddInstructorDialogBox extends Component {
       students: !isEmpty(this.props.classData) ? get(this.props.classData, 'students', []) : [],
       classTypeId: !isEmpty(this.props.classData) ? get(this.props.classData, 'classTypeId', '') : "",
       schoolId: !isEmpty(this.props.classData) ? get(this.props.classData, 'schoolId', '') : "",
+      instructors:get(this.props.classData,'instructors',[])
     };
     if (this.props.text == 'Student') {
       selectedOption.map((obj, index) => {
@@ -231,7 +232,7 @@ class AddInstructorDialogBox extends Component {
       payLoad.students = uniq(payLoad.students);
     } else {
       payLoad.instructors = !isEmpty(this.props.classData) ? get(this.props.classData, 'instructors', this.props.instructorsIds) : [],
-        payLoad.instructors.push(selectedOption.map(ele => ele.value));
+      payLoad.instructors.push(selectedOption.map(ele => ele.value));
       payLoad.instructors = flatten(payLoad.instructors);
 
     }

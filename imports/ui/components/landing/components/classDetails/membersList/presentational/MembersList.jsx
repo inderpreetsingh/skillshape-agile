@@ -31,6 +31,8 @@ const MemberWrapper = styled.div`
   max-width: 500px;
   width: 100%;
   padding: 4px;
+  justify-content: center;
+  display: flex;
 
   @media screen and (min-width: ${mobile - 50}px) {
     max-width: auto;

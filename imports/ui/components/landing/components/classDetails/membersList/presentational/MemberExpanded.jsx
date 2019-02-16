@@ -11,7 +11,6 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { isEmpty, get, isEqual } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
-import { AnimateOnChange } from '@nearform/react-animation'
 import ProgressiveImage from "react-progressive-image";
 
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -303,11 +302,7 @@ class MemberExpanded extends Component {
     const slug = get(props, "slug", null);
     const { _id: userId } = props;
     return (
-      <AnimateOnChange
-        animationIn="bounceIn"
-        animationOut="bounceOut"
-        durationOut={500}
-      >
+     
         <Wrapper key={name}>
           <InnerWrapper>
             <MemberDetails>
@@ -346,7 +341,6 @@ class MemberExpanded extends Component {
             <PaymentAndStatus {...props} />
           </HideOnSmall>
         </Wrapper>
-      </AnimateOnChange>
 
     );
   }
