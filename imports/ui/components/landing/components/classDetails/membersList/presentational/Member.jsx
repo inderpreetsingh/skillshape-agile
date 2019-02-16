@@ -10,6 +10,8 @@ import DropDownMenu from "/imports/ui/components/landing/components/form/DropDow
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import MemberExpanded from "./MemberExpanded.jsx";
+import { AnimateOnChange } from '@nearform/react-animation'
+import ProgressiveImage from "react-progressive-image";
 
 import { addInstructorImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
@@ -209,7 +211,7 @@ const Member = props => {
       _id: get(props.classData, "_id", 0),
       instructorIds: get(props, "instructorsIds", []),
       action: 'remove',
-      schoolId: get(props.classData,'schoolId',0),
+      schoolId: get(props.classData, 'schoolId', 0),
       classTimeId: get(props.classData, "classTimeId", 0)
     }
     popUp.appear("inform", {
@@ -232,7 +234,7 @@ const Member = props => {
 
   }
   handleRemove = (popUp, payLoad, from) => {
-		console.log('TCL: handleRemove -> payLoad, from)', payLoad, from)
+    console.log('TCL: handleRemove -> payLoad, from)', payLoad, from)
     if (!from) {
       Meteor.call("classes.handleInstructors", payLoad, (err, res) => {
         if (res) {
@@ -277,35 +279,46 @@ const Member = props => {
   }
 
   return (
-    <Wrapper
-      addMember={props.addMember}
-      onClick={props.addMember ? props.onAddIconClick : () => { }}>
-      <Profile>
-        <ProfilePic
-          addMember={props.addMember}
-          src={profileSrc}
-          onClick={props.onAddIconClick}
-        />
-        <DetailsWrapper type={props.type}>
-          <Details>
-            <SubHeading align="center" fontSize="20">{cutString(name, 20)}</SubHeading>
-            {props.type !== "student" &&
-              !props.addMember && (
-                <Text align="center">
-                  <Capitalize>{props.designation}</Capitalize>
-                </Text>
-              )}
-          </Details>
-        </DetailsWrapper>
-        {props.viewType === "instructorsView" &&
-          !props.addMember && <DropDownMenu
-            menuIconClass={props.classes.menuIconClass}
-            menuButtonClass={props.classes.menuButtonClass}
-            menuOptions={menuOptions}
-            onMenuItemClick={this.handleMenuItemClick}
-          />}
-      </Profile>
-    </Wrapper>
+    <AnimateOnChange
+      animationIn="bounceIn"
+      animationOut="bounceOut"
+      durationOut={500}
+    >
+      <Wrapper
+        addMember={props.addMember}
+        onClick={props.addMember ? props.onAddIconClick : () => { }}>
+        <Profile>
+          <ProgressiveImage
+            src={profileSrc}
+            placeholder={config.blurImage}>
+            {(profileSrc) => <ProfilePic
+              addMember={props.addMember}
+              src={profileSrc}
+              onClick={props.onAddIconClick}
+            />}
+          </ProgressiveImage>
+
+          <DetailsWrapper type={props.type}>
+            <Details>
+              <SubHeading align="center" fontSize="20">{cutString(name, 20)}</SubHeading>
+              {props.type !== "student" &&
+                !props.addMember && (
+                  <Text align="center">
+                    <Capitalize>{props.designation}</Capitalize>
+                  </Text>
+                )}
+            </Details>
+          </DetailsWrapper>
+          {props.viewType === "instructorsView" &&
+            !props.addMember && <DropDownMenu
+              menuIconClass={props.classes.menuIconClass}
+              menuButtonClass={props.classes.menuButtonClass}
+              menuOptions={menuOptions}
+              onMenuItemClick={this.handleMenuItemClick}
+            />}
+        </Profile>
+      </Wrapper>
+    </AnimateOnChange>
   );
 };
 

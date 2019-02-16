@@ -18,6 +18,7 @@ const ListHeadWrapper = styled.div`
 
 const MembersGrid = styled.div`
   display: flex;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   ${props => props.expanded && `flex-direction: column`};
 

@@ -210,28 +210,10 @@ class MembersListContainer extends Component {
           }
         })
         if (purchased.length == 1) {
-          // let data = {};
-          // data = {
-          //   popUp,
-          //   title: 'Confirmation',
-          //   type: 'inform',
-          //   content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
-          //   buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp,packageConnected) } }]
-          // }
-          // confirmationDialog(data);
           this.updateClass(filter, status, purchased[0], popUp, packageConnected)
           return;
         }
         if (pos != -1) {
-          // let data = {};
-          // data = {
-          //   popUp,
-          //   title: 'Confirmation',
-          //   type: 'inform',
-          //   content: <div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
-          //   buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => {  } }]
-          // }
-          // confirmationDialog(data);
           this.updateClass(filter, status, purchased[pos], popUp, packageConnected)
           return;
         }
@@ -346,7 +328,7 @@ class MembersListContainer extends Component {
   };
   getPurchaseData = _id => {
     Meteor.call("purchase.getDataFromPurchaseId", _id, (err, res) => {
-      this.setState({ purchaseData: res });
+      this.setState({ purchaseData: res});
     });
   }
 

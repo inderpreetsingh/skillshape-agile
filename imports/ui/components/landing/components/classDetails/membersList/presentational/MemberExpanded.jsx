@@ -12,6 +12,8 @@ import { isEmpty, get, isEqual } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
 import { AnimateOnChange } from '@nearform/react-animation'
+import ProgressiveImage from "react-progressive-image";
+
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
@@ -30,7 +32,7 @@ const menuOptions = [
 
 const Wrapper = styled.div`
   display: flex;
-  width: 100%;
+  width: 450px;
   height: 250px;
   background: ${helpers.panelColor};
   padding: ${helpers.rhythmDiv * 2}px;
@@ -302,43 +304,48 @@ class MemberExpanded extends Component {
     const { _id: userId } = props;
     return (
       <AnimateOnChange
-      animationIn="bounceIn"
-      animationOut="bounceOut"
-      durationOut={500}
-  >
-      <Wrapper key={name}>
-        <InnerWrapper>
-          <MemberDetails>
-            <MemberDetailsInner>
-              <MemberPic url={profileSrc} />
-              <MemberStatus>
-                <Name>{name}</Name>
-                <Text color={getStatusColor(props.status)}>
-                  {getStatusInfo(props.status)}
-                </Text>
-              </MemberStatus>
-            </MemberDetailsInner>
+        animationIn="bounceIn"
+        animationOut="bounceOut"
+        durationOut={500}
+      >
+        <Wrapper key={name}>
+          <InnerWrapper>
+            <MemberDetails>
+              <MemberDetailsInner>
+                <ProgressiveImage
+                  src={profileSrc}
+                  placeholder={config.blurImage}>
+                  {(profileSrc) => <MemberPic url={profileSrc} />}
+                </ProgressiveImage>
 
-            <DropDownMenu
-              onMenuItemClick={(value) => { onMenuItemClick(value, slug, userId) }}
-              menuButtonClass={props.classes.iconButton}
-              menuOptions={menuOptions}
-            />
-          </MemberDetails>
+                <MemberStatus>
+                  <Name>{name}</Name>
+                  <Text color={getStatusColor(props.status)}>
+                    {getStatusInfo(props.status)}
+                  </Text>
+                </MemberStatus>
+              </MemberDetailsInner>
 
-          <ShowOnSmallScreen>
+              <DropDownMenu
+                onMenuItemClick={(value) => { onMenuItemClick(value, slug, userId) }}
+                menuButtonClass={props.classes.iconButton}
+                menuOptions={menuOptions}
+              />
+            </MemberDetails>
+
+            <ShowOnSmallScreen>
+              <PaymentAndStatus {...props} />
+            </ShowOnSmallScreen>
+
+            <StudentNotes>
+              <StudentNotesContent onChange={(e) => { props.setNotes(e.target.value) }}>{props.notes}</StudentNotesContent>
+            </StudentNotes>
+          </InnerWrapper>
+
+          <HideOnSmall>
             <PaymentAndStatus {...props} />
-          </ShowOnSmallScreen>
-
-          <StudentNotes>
-            <StudentNotesContent onChange={(e) => { props.setNotes(e.target.value) }}>{props.notes}</StudentNotesContent>
-          </StudentNotes>
-        </InnerWrapper>
-
-        <HideOnSmall>
-          <PaymentAndStatus {...props} />
-        </HideOnSmall>
-      </Wrapper>
+          </HideOnSmall>
+        </Wrapper>
       </AnimateOnChange>
 
     );

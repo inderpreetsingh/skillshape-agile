@@ -48,7 +48,6 @@ Meteor.methods({
         }
     },
     "classes.updateClassData":function(filter,status,purchaseId,packageType,from){
-		console.log('TCL: filter,status,purchaseId,packageType,from', filter,status,purchaseId,packageType,from)
         try{
             if(from == 'purchasePackage'){
              filter.students = get(Classes.findOne({_id:filter._id}),"students",[]);
