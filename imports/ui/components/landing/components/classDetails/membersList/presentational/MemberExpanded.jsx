@@ -11,6 +11,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { isEmpty, get, isEqual } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
+import { AnimateOnChange } from '@nearform/react-animation'
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
@@ -291,6 +292,7 @@ class MemberExpanded extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(nextProps, this.props);
   }
+
   render() {
     const { props } = this;
     const profile = props.profile;
@@ -298,10 +300,12 @@ class MemberExpanded extends Component {
     const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
     const slug = get(props, "slug", null);
     const { _id: userId } = props;
-    let classTypeId = get(props.classData[0], 'classTypeId', null);
-    let buyPackagesBoxState = props.buyPackagesBoxState;
-    console.count('memberExpand 160');
     return (
+      <AnimateOnChange
+      animationIn="bounceIn"
+      animationOut="bounceOut"
+      durationOut={500}
+  >
       <Wrapper key={name}>
         <InnerWrapper>
           <MemberDetails>
@@ -335,6 +339,8 @@ class MemberExpanded extends Component {
           <PaymentAndStatus {...props} />
         </HideOnSmall>
       </Wrapper>
+      </AnimateOnChange>
+
     );
   }
 };

@@ -16,7 +16,9 @@ class ClassDetailsContainer extends Component {
     super(props);
     this.state={}
   }
-
+  // componentWillMount(){
+  //   window.scroll({ top: 0, left: 0, behavior: 'auto' })
+  // }
   getBgImage() {
     const { state: { school, classType } } = this.props.location.state;
     return get(classType, 'classTypeImg', get(classType, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc))));

@@ -85,11 +85,6 @@ const ClassDetails = props => {
 
   return (
     <Wrapper>
-      {window.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'auto'
-      })}
       <PageContent>
         <TopSearchBar {...props.topSearchBarProps} />
         
