@@ -5,10 +5,10 @@ import CloseIcon from 'material-ui-icons/Close';
 import UpdateClassTimeIcon from 'material-ui-icons/Update';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
-import React from "react";
+import React ,{lazy,Suspense}from "react";
 import { browserHistory, Link } from "react-router";
 import styled from "styled-components";
-import FullCalendarContainer from "/imports/ui/componentHelpers/fullCalendar";
+const  FullCalendarContainer  = lazy(()=>import("/imports/ui/componentHelpers/fullCalendar"));
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
@@ -16,6 +16,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 import { capitalizeString, getUserFullName } from '/imports/util';
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
+import MDSpinner from "react-md-spinner";
 
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
@@ -641,6 +642,7 @@ export default class MyCalender extends React.Component {
    let route = `/classDetails/${classId}`;
     return (
       <div>
+        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
         <FullCalendarContainer
           subscriptionName="ClassSchedule"
           setDate={this.setDate}
@@ -649,6 +651,7 @@ export default class MyCalender extends React.Component {
           {...this.props}
           manageMyCalendar={true}
         />
+        </Suspense>
         {isLoading && <ContainerLoader />}
         {thinkingAboutAttending && (
           <ThinkingAboutAttending
