@@ -55,7 +55,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
       justifyContent: "flex-start"
     },
