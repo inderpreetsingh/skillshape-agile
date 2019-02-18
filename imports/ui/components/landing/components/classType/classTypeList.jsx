@@ -20,6 +20,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import MapView from '/imports/ui/components/landing/components/map/mapView.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import SuggestionFormWrapper from '/imports/ui/components/landing/components/schoolSuggestions/SuggestionFormWrapper.jsx';
+import MDSpinner from "react-md-spinner";
 
 const MainContentWrapper = styled.div`
   // margin-top: ${(props) => (props.isAnyFilterApplied ? -56 : 0)}px;
@@ -206,7 +207,9 @@ class ClassTypeList extends Component {
 		const { handleIsCardsSearching, isLoading } = this.props;
 		if (prevProps.isLoading !== isLoading) handleIsCardsSearching && handleIsCardsSearching(isLoading);
 	};
-
+	shouldComponentUpdate(nextProps){
+		return !nextProps.isLoading	
+	}
 	render() {
 		// debugger;
 		const {
@@ -221,6 +224,9 @@ class ClassTypeList extends Component {
 			classTimesData,
 			params
 		} = this.props;
+		if(isLoading){
+			return <center><MDSpinner size={50} /></center>
+		}
 		return (
 			<MainContentWrapper>
 				{mapView ? (
@@ -329,7 +335,7 @@ export default createContainer((props) => {
 		subscription = Meteor.subscribe(props.classTypeBySchool, props.filters);
 	}
 
-	Meteor.subscribe('classInterest.getClassInterest');
+	let classInterestSub = Meteor.subscribe('classInterest.getClassInterest');
 	// debugger;
 	if (props.filters.schoolId) {
 		classTypeData = ClassType.find({
@@ -345,34 +351,17 @@ export default createContainer((props) => {
 	// We will subscribe only those reviews && classTimes with classtype ids
 	reviewsSubscription = Meteor.subscribe('review.getReviewsWithReviewForIds', classTypeIds);
 
-	classTimesSubscription = Meteor.subscribe('classType.getClassTimesWithIds', classTypeIds);
+	classTimesSubscription = Meteor.subscribe('classType.getClassTimesWithIds', {classTypeIds});
 
 	schoolData = School.find().fetch();
 	skillCategoryData = SkillCategory.find().fetch();
 	classTimesData = ClassTimes.find().fetch();
 	classInterestData = ClassInterest.find().fetch();
 	sLocationData = SLocation.find().fetch();
-	// debugger;
-	// console.group("ALL LOCATIONS");
-	// console.log(sLocationData, classTimesData);
-	// console.groupEnd();
-
-	/*Find SkillCategory,SkillSubject and SLocation to make this container reactive on these collection
-    other wise skills are joined with collections using package
-    perak:joins */
 	SkillSubject.find().fetch();
-
-	if (
-		(subscription.ready() && reviewsSubscription.ready()) ||
-		ClassType.find().count() > 0
-		// classTimesSubscription.ready()
-	) {
+	let isAllSubReady = classInterestSub && classInterestSub.ready() && reviewsSubscription && reviewsSubscription.ready() &&  subscription &&subscription.ready()
+	if ( isAllSubReady ) {
 		reviewsData = Reviews.find().fetch();
-		// console.info(
-		//   "class type data...................................................",
-		//   classTimesData,
-		//   classTypeData
-		// );
 		isLoading = false;
 	}
 	return {
