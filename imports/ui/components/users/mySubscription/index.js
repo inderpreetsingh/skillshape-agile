@@ -150,13 +150,20 @@ class MySubscription extends React.Component {
 	}
 	leaveSchool = () => {
 		let { popUp, currentUser, schoolData } = this.props;
-		let { _id: schoolId } = schoolData[0];
+		let { _id: schoolId ,name:schoolName} = schoolData[0];
 		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
+		let content = '';
+		if(checkIsAdmin({user:currentUser,schoolData})){
+			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
+		}
+		else {
+			content = `You are about to leave from all class types at ${schoolName}. The classes will no longer appear in your calendar and you will no longer receive notifications. Are you sure?`
+		}
 		popUp.appear(
 			'inform',
 			{
 				title: 'Confirmation',
-				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				content,
 				RenderActions: (
 					<ButtonWrapper>
 						<FormGhostButton

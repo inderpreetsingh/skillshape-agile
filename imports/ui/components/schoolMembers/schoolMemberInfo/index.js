@@ -4,8 +4,6 @@ import FileUpload from 'material-ui-icons/FileUpload';
 import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
 import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import MobileDetect from 'mobile-detect';
 import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
 import styled from 'styled-components';
@@ -14,10 +12,10 @@ import { FormGhostButton, MemberActionButton } from '/imports/ui/components/land
 import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { confirmationDialog, verifyImageURL, withPopUp } from '/imports/util';
 
 const AVATAR_SIZE = 165;
 
@@ -465,14 +463,23 @@ class SchoolMemberInfo extends Component {
 		});
 	}
 	leaveSchool = () => {
-		let { popUp, memberInfo } = this.props;
+		let { popUp, memberInfo ,isAdmin} = this.props;
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
 		let schoolId = get(memberInfo, 'schoolId', null);
+		let superAdmin = get(memberInfo, 'superAdmin', false);
+		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
+		let content = '';
+		if(superAdmin || isAdmin){
+			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
+		}
+		else {
+			content = `You are about to leave from all class types at ${schoolName}. The classes will no longer appear in your calendar and you will no longer receive notifications. Are you sure?`
+		}
 		popUp.appear(
 			'inform',
 			{
 				title: 'Confirmation',
-				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				content,
 				RenderActions: (
 					<ButtonWrapper>
 						<FormGhostButton
