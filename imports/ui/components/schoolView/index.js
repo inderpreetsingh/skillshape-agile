@@ -59,6 +59,9 @@ class SchoolView extends SchoolViewBase {
   componentDidUpdate = () => {
     document.title =
       this.props.schoolData && this.props.schoolData.name.toLowerCase();
+      if(!this.props.showLoading && !this.state.loadComplete){
+        this.setState({loadComplete:true})
+      }
   };
   shouldComponentUpdate(nextProps){
     return !nextProps.showLoading;
@@ -106,11 +109,6 @@ export default createContainer(props => {
 
   const sub1 = reviewsSubscriptions && reviewsSubscriptions.ready();
   const sub2 = subscription && subscription.ready();
-
-  if (sub1 && sub2) {
-    showLoading = false;
-  }
-
   if (schoolId) {
     Meteor.subscribe("UserSchool", schoolId);
     Meteor.subscribe("SkillClassbySchool", schoolId);
@@ -130,14 +128,14 @@ export default createContainer(props => {
     enrollmentFee = EnrollmentFees.find({ schoolId }).fetch();
     // Class times subscription.
     let classTypeIds = classType && classType.map(data => data._id);
-    Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
+    let classTimesSub = Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
       schoolId,
       classTypeIds
     });
-    classTimesData = ClassTimes.find(
-      { schoolId },
-      { sort: { _id: -1 } }
-    ).fetch();
+    if(classTimesSub && classTimesSub.ready()){
+      classTimesData = ClassTimes.find( { schoolId }, { sort: { _id: -1 } } ).fetch();
+      showLoading = false;
+    }
   }
 
   return {

@@ -38,9 +38,7 @@ export default class SchoolViewBase extends React.Component {
 			createMarkersOnMap('schoolLocationMap', this.props.schoolLocation);
 		}
 	}
-	componentDidMount() {
-		this.setState({loadComplete:true})
-	}
+	
 	
 	validateString = (value) => {
 		if (value) return value;
