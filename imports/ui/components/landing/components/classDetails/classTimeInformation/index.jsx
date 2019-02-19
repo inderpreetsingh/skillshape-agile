@@ -9,6 +9,7 @@ import { classTimeData } from "/imports/ui/components/landing/constants/classDet
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
 import { getUserFullName, } from "/imports/util";
 import { isEmpty, get } from "lodash";
+import {  formatTime } from "/imports/util";
 
 const Wrapper = styled.div`
   padding: 0;
@@ -196,7 +197,8 @@ class ClassTimeInformation extends Component {
        desc, address, 
       website, start, schoolId, classType, params, classData,selectedLocation,notification
     } = this.props;
-    const {scheduled_date,eventData:{eventStartTime}} = classData || {}
+    const {scheduled_date} = classData || {};
+    const eventStartTime = formatTime(scheduled_date)
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
       return `${get(selectedLocation,'address','')}, ${get(selectedLocation, 'city', '')}, ${get(selectedLocation, 'state', '')}, ${get(selectedLocation, 'country', '')}, ${get(selectedLocation, 'zip', '')}`
