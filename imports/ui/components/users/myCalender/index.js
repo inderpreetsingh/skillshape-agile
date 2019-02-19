@@ -105,8 +105,8 @@ export default class MyCalender extends React.Component {
       }
     })
     this.setDate()
-    const { schoolId, classTypeId, classTimeId, start,scheduled_date,startDate,title,eventEndTime,eventStartTime,durationAndTimeunits } = eventData;
-    let eventDataForClass = {title,durationAndTimeunits};
+    const { schoolId, classTypeId, classTimeId, start,scheduled_date,startDate,title,eventEndTime,eventStartTime,durationAndTimeunits,timeZone } = eventData;
+    let eventDataForClass = {title,durationAndTimeunits,timeZone};
     let filter = { schoolId, classTypeId, classTimeId, scheduled_date,eventData:eventDataForClass };
     this.getStudentStatus(filter);
       Meteor.call("school.getMySchool", schoolId, (err, res) => {
