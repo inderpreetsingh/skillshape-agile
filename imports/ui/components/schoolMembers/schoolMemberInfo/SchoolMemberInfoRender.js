@@ -507,14 +507,24 @@ class SchoolMemberInfo extends Component {
 		});
 	}
 	leaveSchool = () => {
-		let { popUp, memberInfo } = this.props;
+		let { popUp, memberInfo ,isAdmin} = this.props;
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
 		let schoolId = get(memberInfo, 'schoolId', null);
+		let superAdmin = get(memberInfo, 'superAdmin', false);
+		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
+		let isThisMyMemberShip = get(memberInfo,'_id',0) == Meteor.userId();
+		let content = '';
+		if(!isThisMyMemberShip && (superAdmin || isAdmin)){
+			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
+		}
+		else {
+			content = `You are about to leave from all class types at ${schoolName}. The classes will no longer appear in your calendar and you will no longer receive notifications. Are you sure?`
+		}
 		popUp.appear(
 			'inform',
 			{
 				title: 'Confirmation',
-				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				content,
 				RenderActions: (
 					<ButtonWrapper>
 						<FormGhostButton
