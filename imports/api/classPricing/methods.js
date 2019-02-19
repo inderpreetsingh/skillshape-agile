@@ -134,7 +134,8 @@ Meteor.methods({
         records = MonthlyPricing.find({classTypeId:filter.classTypeId}).fetch();
         packageIds = concat(records.map((obj)=>obj._id),packageIds);
         records = Meteor.call("purchases.getPackagesFromIds",packageIds,filter.userId);
-        return {epStatus,purchased:records,purchasedEP};
+        noPackageRequired = isEmpty(packageIds);
+        return {epStatus,purchased:records,purchasedEP,noPackageRequired};
       }catch(error){
           console.log("​classPricing.signInHandler}catch -> error", error)
           throw new Meteor.Error(error);

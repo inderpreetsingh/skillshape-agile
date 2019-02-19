@@ -37,8 +37,8 @@ class MembersListContainer extends Component {
       teachersFilterWith: "",
       studentsFilterWith: "",
       addInstructorDialogBoxState: false,
-      notification: true,
-      packagesRequired: 'enrollment',
+      notification: this.props.notification,
+      packagesRequired: this.props.packagesRequired,
       limit: 40,
       skip: 0,
       pageCount: 0,
@@ -53,28 +53,14 @@ class MembersListContainer extends Component {
   studentsData = () => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData, schoolId } = this.props;
+    const { classData, schoolId,packagesRequired,notification } = this.props;
     let { classTypeId } = classData && classData || {};
-    let filter = { classTypeId, userId: Meteor.userId() };
-    Meteor.call("classPricing.signInHandler", filter, (err, res) => {
-      if (!isEmpty(res)) {
-        let { epStatus, purchased } = res;
-        if (epStatus && !isEmpty(purchased)) {
-          this.setState({ notification: false });
-        }
-        else if (!epStatus) {
-          this.setState({ packagesRequired: 'enrollment' })
-        }
-        else {
-          this.setState({ packagesRequired: 'perClassAndMonthly' })
-        }
-      }
-    })
+   
     if (classData) {
       get(classData, 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
-        this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit) })
+      this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit),packagesRequired,notification })
       })
       if (!isEmpty(studentsIds)) {
         let { limit, skip } = this.state;

@@ -85,12 +85,31 @@ class ThinkingAboutAttending extends React.Component {
       let { userType, userEmail, userName } = data;
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
     });
-    this.isEnrollmentPurchase(this.props.enrollmentIds);
+    this.checkUserPurchases(this.props);
   }
   componentWillReceiveProps(nextProps) {
-    !isEmpty(nextProps) && this.isEnrollmentPurchase(nextProps.enrollmentIds);
+    !isEmpty(nextProps) && this.checkUserPurchases(nextProps);
   }
-
+  checkUserPurchases = (props) =>{
+    if(props.classTypeId && Meteor.userId()){
+      const {classTypeId} = props;
+      let filter = { classTypeId, userId: Meteor.userId() };
+      Meteor.call("classPricing.signInHandler", filter, (err, res) => {
+        if (!isEmpty(res)) {
+          let { epStatus, purchased ,noPackageRequired} = res;
+          if (epStatus && !isEmpty(purchased) || noPackageRequired) {
+            this.setState({ alreadyPurchased: true ,loginUserPurchases:res});
+          }
+          else if (!epStatus) {
+            this.setState({ packagesRequired: 'enrollment' })
+          }
+          else {
+            this.setState({ packagesRequired: 'perClassAndMonthly' })
+          }
+        }
+      })
+    }
+  }
   handleSignUpDialogBoxState = (state, userType, userEmail, userName) => {
     this.setState({
       signUpDialogBox: state,
@@ -117,18 +136,7 @@ class ThinkingAboutAttending extends React.Component {
   handleServiceAgreementSubmit = () => {
     this.setState({ emailConfirmationDialogBox: true });
   };
-  isEnrollmentPurchase = (enrollmentIds) => {
-    if (!isEmpty(enrollmentIds)) {
-      Meteor.call("purchases.getPurchasedFromPackageIds", enrollmentIds, Meteor.userId(), (err, res) => {
-        if (isEmpty(res)) {
-          this.setState({ packagesRequired: 'enrollment' });
-        }
-        else if (!isEmpty(res)) {
-          this.setState({ packagesRequired: 'perClassAndMonthly' });
-        }
-      })
-    }
-  }
+  
   handleEmailConfirmationSubmit = () => {
     this.setState({ isBusy: true });
     const { popUp } = this.props;
@@ -210,10 +218,15 @@ class ThinkingAboutAttending extends React.Component {
     this.setState({ classTypePackages: false });
   }
   render() {
-    const { checkBoxes, classTypePackages, packagesRequired } = this.state;
+    const { checkBoxes, classTypePackages, packagesRequired,loginUserPurchases ,alreadyPurchased} = this.state;
     const { open, onModalClose, addToCalendar,
-      handleClassClosed, handleCheckBoxes, purchaseThisPackage, name, schoolId, params, classTypeId,handleSignIn } = this.props;
-    return (
+      handleClassClosed, handleCheckBoxes,  name, schoolId, params, classTypeId,handleSignIn, } = this.props;
+    let packagesLength = 0;
+    if(!isEmpty(loginUserPurchases)){
+      const {purchased=[]} = loginUserPurchases;
+      packagesLength = purchased.length;
+    }
+      return (
       <MuiThemeProvider theme={muiTheme}>
         <Dialog
           title="Select Package"
@@ -278,7 +291,7 @@ class ThinkingAboutAttending extends React.Component {
             </DialogTitleWrapper>
           </DialogTitle>
           <DialogContent style={{ fontSize: '18px' }}>
-            {checkBoxes.map((i, index) => {
+          {!alreadyPurchased && checkBoxes.map((i, index) => {
               return (<FormControl fullWidth margin="dense">
                 <FormControlLabel
                   control={
@@ -296,7 +309,8 @@ class ThinkingAboutAttending extends React.Component {
                 />
               </FormControl>)
             })}
-            <TextWrapper> To attend you must purchase a class package.</TextWrapper>
+            
+            <TextWrapper> {!alreadyPurchased ? 'To attend you must purchase a class package.' : `Congratulations! You have ${packagesLength} subscription that covers this ${name} class! `}</TextWrapper>
           </DialogContent>
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             <ButtonWrapper>
@@ -306,7 +320,7 @@ class ThinkingAboutAttending extends React.Component {
                 label="Close!"
               />
             </ButtonWrapper>
-            <ButtonWrapper>
+            {!alreadyPurchased && <ButtonWrapper>
               <FormGhostButton
                 onClick={() => {
                   if(handleSignIn){
@@ -322,23 +336,16 @@ class ThinkingAboutAttending extends React.Component {
                 }}
                 label={"Join but Purchase Later"}
               />
-            </ButtonWrapper>
-            <ButtonWrapper>
+            </ButtonWrapper>}
+            {!alreadyPurchased && <ButtonWrapper>
               <Button
                 onClick={() => { this.setState({ classTypePackages: true }) }}
                 classes={{ root: this.props.classes.StyleForButton }}
               >
                 Purchase Package Now
 		                        </Button>
-              {/* <FormGhostButton
-                                onClick={purchaseThisPackage}
-                                label="Purchase Package Now"
-                            /> */}
-            </ButtonWrapper>
-
-
+            </ButtonWrapper> }
           </DialogActions>
-
         </Dialog>
       </MuiThemeProvider>
     )

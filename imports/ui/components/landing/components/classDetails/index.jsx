@@ -80,7 +80,10 @@ const ClassDetails = props => {
     currentView,
     topSearchBarProps,
     params,
-    classTimeInformationProps
+    classTimeInformationProps,
+    notification,
+    loginUserPurchases,
+    packagesRequired
   } = props;
   return (
     <Wrapper>
@@ -105,6 +108,9 @@ const ClassDetails = props => {
               popUp={popUp}
               params={params}
               classData={classData }
+              notification={notification}
+              loginUserPurchases={loginUserPurchases}
+              packagesRequired={packagesRequired}
               {...classTimeInformationProps}
             />
           </ClassTimeWrapper>
@@ -121,6 +127,9 @@ const ClassDetails = props => {
             params={params}
             schoolData={schoolData}
             slug={schoolData.slug}
+            notification={notification}
+            loginUserPurchases={loginUserPurchases}
+            packagesRequired={packagesRequired}
           />
         </InnerWrapper>
       </PageContent>

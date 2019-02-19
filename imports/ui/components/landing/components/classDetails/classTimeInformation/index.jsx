@@ -190,11 +190,11 @@ class ClassTimeInformation extends Component {
   };
   render() {
     const {
-      classTimeData,
+      classData:{eventData:{title}},
       schoolName,
       schoolCoverSrc,
-      title, desc, address, 
-      website, start, schoolId, classType, params, classData,selectedLocation
+       desc, address, 
+      website, start, schoolId, classType, params, classData,selectedLocation,notification
     } = this.props;
     const {scheduled_date,eventData:{eventStartTime}} = classData || {}
     const { thinkingAboutAttending } = this.state;

@@ -14,7 +14,8 @@ import MDSpinner from "react-md-spinner";
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+    }
   }
   getBgImage() {
     const { school, classTypeData } = this.props;
@@ -24,6 +25,26 @@ class ClassDetailsContainer extends Component {
   getLogoImage() {
     const { school } = this.props;
     return get(school, 'logoImg', get(school, "logoImgMedium", ""));
+  }
+  componentWillReceiveProps(nextProps){
+    if(!isEmpty(nextProps.classTypeData) && Meteor.userId()){
+      const {_id:classTypeId} = nextProps.classTypeData;
+      let filter = { classTypeId, userId: Meteor.userId() };
+      Meteor.call("classPricing.signInHandler", filter, (err, res) => {
+        if (!isEmpty(res)) {
+          let { epStatus, purchased ,noPackageRequired} = res;
+          if (epStatus && !isEmpty(purchased) || noPackageRequired) {
+            this.setState({ notification: false ,loginUserPurchases:res});
+          }
+          else if (!epStatus) {
+            this.setState({ packagesRequired: 'enrollment' })
+          }
+          else {
+            this.setState({ packagesRequired: 'perClassAndMonthly' })
+          }
+        }
+      })
+    }
   }
   shouldComponentUpdate(nextProps){
     if(nextProps.error){
@@ -46,7 +67,6 @@ class ClassDetailsContainer extends Component {
       params = {slug:schoolData.slug};
       currentView =  checkIsAdmin({user:currentUser,schoolData}) ? "instructorsView" : "studentsView";
     }
-    
     return (
       <Suspense fallback={<center><MDSpinner size={50} /></center>}>
         <ClassDetails
@@ -67,6 +87,7 @@ class ClassDetailsContainer extends Component {
         schoolData={schoolData}
         currentView={currentView}
         params= {params}
+        {...this.state}
       />
       </Suspense>
     );
