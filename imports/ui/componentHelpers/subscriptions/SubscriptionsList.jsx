@@ -15,6 +15,7 @@ const Wrapper = styled.div`
 	position: relative;
 	padding: ${helpers.rhythmDiv * 2}px;
 	width: 100%;
+	${props => props.bgColor && `background: ${props.bgColor};`}
 
 	:after {
 		content: "";
@@ -65,11 +66,12 @@ const SubscriptionsList = (props) => {
 		title,
 		subsData,
 		subsType,
+		listBgColor,
 		packageProps,
 		maxListHeight
 	} = props;
 	return (
-		<Wrapper active={active}>
+		<Wrapper bgColor={listBgColor} active={active}>
 			<SubscriptionsTitle>{title}</SubscriptionsTitle>
 
 			{!isEmpty(subsData) && (

@@ -1,3 +1,6 @@
+import React, { Fragment, lazy, Suspense } from "react";
+import { CSSTransition } from 'react-transition-group';
+
 import concat from 'lodash/concat';
 import find from "lodash/find";
 import findIndex from 'lodash/findIndex';
@@ -24,13 +27,11 @@ import TextField from "material-ui/TextField";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
-import React, { Fragment, lazy, Suspense } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
 import { packageCoverProvider } from '/imports/util';
-const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
-//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
+//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -41,25 +42,46 @@ import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
-const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
+const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
+const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/"));
+const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
+const SchoolMembersScreen = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 const drawerWidth = 400;
 
-const DrawerWrapper = styled.div`
+const Drawers = styled.div`
   max-width: ${drawerWidth}px;
   width: 100%;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    width: auto;
+  }
 `;
 
 const SchoolMemberWrapper = styled.div`
   width: 100%;
 `;
 
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+  background-color: ${helpers.panelColor};
+`;
+
+const SplitScreenWrapper = styled.div`
+  display: flex;
+  transition: all .5s linear;
+`;
+
+const MembersScreenWrapper = SplitScreenWrapper.extend`
+  flex-direction: column;
+`;
 
 const style = {
   w211: {
@@ -95,18 +117,21 @@ const styles = theme => ({
     }
   },
   toolbar: theme.mixins.toolbar,
+  drawerRoot: {
+    position: 'absolute',
+  },
   drawerPaper: {
     [theme.breakpoints.up("md")]: {
       position: "relative"
     },
+    background: helpers.panelColor,
     [theme.breakpoints.down("sm")]: {
-      width: `${drawerWidth}px !important`
+      maxWidth: `${drawerWidth}px`
     },
     boxShadow: "none !important",
     // height: "100vh",
     overflow: "auto",
-    padding: "0px !important",
-    paddingLeft: "16px !important",
+    padding: helpers.rhythmDiv,
     overflowX: "hidden !important"
   },
   content: {
@@ -139,9 +164,6 @@ const styles = theme => ({
     border: "solid 3px #dddd",
     paddingTop: "0px !important"
   },
-  btnBackGround: {
-    background: `${helpers.action}`
-  }
 });
 
 const ErrorWrapper = styled.span`
@@ -407,7 +429,7 @@ class DashBoardView extends React.Component {
     payload.signUpType = "member-signup"
     payload.sendMeSkillShapeNotification = true;
     payload.schoolName = schoolName;
-    console.log("​isAdmin", isAdmin)
+    // console.log("​isAdmin", isAdmin)
     if (!isAdmin) {
 
       let state = {
@@ -697,70 +719,59 @@ class DashBoardView extends React.Component {
         </Typography>
       );
     }
+    const isMemberSelected = !isEmpty(this.state.memberInfo);
 
     const drawer = (
       <div>
-        <List>
-          <SchoolMemberFilter
-            stickyPosition={this.state.sticky}
-            ref="SchoolMemberFilter"
-            handleClassTypeDataChange={this.handleClassTypeDataChange}
-            handleMemberNameChange={this.handleMemberNameChange}
-            classTypeData={classTypeData}
-            filters={filters}
-            isAdmin={isAdmin}
-            view={view}
+        <SchoolMemberFilter
+          stickyPosition={this.state.sticky}
+          ref="SchoolMemberFilter"
+          handleClassTypeDataChange={this.handleClassTypeDataChange}
+          handleMemberNameChange={this.handleMemberNameChange}
+          classTypeData={classTypeData}
+          filters={filters}
+          isAdmin={isAdmin}
+          cardsView={isMemberSelected ? 'list' : 'grid'}
+          view={view}
+        />
+        {slug && (
+          <PrimaryButton
+            className={classes.btnBackGround}
+            onClick={() => this.setState({ renderStudentModal: true })}
+            label={view == 'admin' ? "Add New Admin" : "Add New Student"}
           />
-          {slug && (
-            <Grid
-              item
-              sm={12}
-              xs={12}
-              md={12}
-              style={{
-                display: "flex",
-                flexDirection: "row-reverse",
-                padding: "16px"
-              }}
-            >
-              <Button
-                raised
-                className={classes.btnBackGround}
-                color="primary"
-                onClick={() => this.setState({ renderStudentModal: true })}
-              >
-                {view == 'admin' ? "Add New Admin" : "Add New Student"}
-              </Button>
-            </Grid>
-          )}
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-            {view == 'admin' && !_.isEmpty(adminsData) ?
-              <SchoolAdminListItems
-                collectionData={adminsData}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                isAdmin={isAdmin}
-                superAdminId={superAdminId}
-                view={view}
-              /> :
-              <SchoolMemberListItems
-                filters={schoolMemberListFilters}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                view={view}
-                isAdmin={isAdmin}
-              />}
-          </Suspense>
-        </List>
+        )}
+        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+          {view == 'admin' && !_.isEmpty(adminsData) ?
+            <SchoolAdminListItems
+              cardsView={isMemberSelected ? 'list' : 'grid'}
+              listView
+              collectionData={adminsData}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              isAdmin={isAdmin}
+              superAdminId={superAdminId}
+              view={view}
+            /> :
+            <SchoolMemberListItems
+              cardsView={isMemberSelected ? 'list' : 'grid'}
+              listView
+              filters={schoolMemberListFilters}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              view={view}
+              isAdmin={isAdmin}
+            />}
+        </Suspense>
       </div>
     );
 
 
 
     return (
-      <Grid container className={classes.root}>
+      <Wrapper>
         {joinSkillShape && (
           <ConfirmationModal
             open={joinSkillShape}
@@ -781,21 +792,14 @@ class DashBoardView extends React.Component {
             onClose={() => this.setState({ showConfirmationModal: false })}
           />
         )}
-        <AppBar className={classes.appBar}>
+        {/*<AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
+            
             <Typography variant="title" color="inherit" noWrap>
 
             </Typography>
           </Toolbar>
-        </AppBar>
+        </AppBar>*/}
         {!isEmpty(schoolData) && (
           <div>
             <form noValidate autoComplete="off">
@@ -814,7 +818,7 @@ class DashBoardView extends React.Component {
             </form>
           </div>
         )}
-        <Grid
+        {/*<Grid
           item
           md={4}
           style={{ paddingRight: "0px" }}
@@ -870,56 +874,115 @@ class DashBoardView extends React.Component {
               </Fragment>
             )}
           </Suspense>
-        </Grid>
+        </Grid> */}
 
-        {/*<DrawerWrapper>
-          <Fragment>
-          <Hidden mdUp>
-            <Drawer
-              variant="temporary"
-              anchor={theme.direction === "rtl" ? "right" : "left"}
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-              style={{ position: "absolute" }}
-              classes={{
-                paper: classes.drawerPaper
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          <Hidden smDown>
-            <div variant="permanent" open className={classes.drawerPaper}>
-              {drawer}
-            </div>
-          </Hidden>
-          </Fragment>    
-          </DrawerWrapper>
-        
-          <SchoolMemberWrapper>    
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-            {!isEmpty(memberInfo) && (
+        <CSSTransition
+          in={isMemberSelected}
+          timeout={{
+            enter: 600,
+            exit: 400
+          }}
+          classNames="fade"
+          unmountOnExit
+        >
+          <SplitScreenWrapper>
+            <Drawers>
               <Fragment>
-                <SchoolMemberInfo
-                  selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
-                  memberInfo={memberInfo}
-                  handleInput={this.handleInput}
-                  saveAdminNotesInMembers={this.saveAdminNotesInMembers}
-                  disabled={slug ? false : true}
-                  view={view}
-                  classTypeData={get(this.props, "classTypeData", [])}
+                <ToggleVisibilityTablet>
+                  <Drawer
+                    variant="temporary"
+                    anchor={theme.direction === "rtl" ? "right" : "left"}
+                    open={this.state.mobileOpen}
+
+                    onClose={this.handleDrawerToggle}
+                    className={classes.drawerRoot}
+                    classes={{
+                      paper: classes.drawerPaper
+                    }}
+                  >
+                    {drawer}
+                  </Drawer>
+                </ToggleVisibilityTablet>
+
+                <ToggleVisibilityTablet show>
+                  <div variant="permanent" open className={classes.drawerPaper}>
+                    {drawer}
+                  </div>
+                </ToggleVisibilityTablet>
+              </Fragment>
+            </Drawers>
+
+            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+              <SchoolMemberWrapper>
+                <Fragment>
+                  <SchoolMemberInfo
+                    selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
+                    memberInfo={memberInfo}
+                    handleInput={this.handleInput}
+                    saveAdminNotesInMembers={this.saveAdminNotesInMembers}
+                    disabled={slug ? false : true}
+                    view={view}
+                    cardsView={isMemberSelected ? 'list' : 'grid'}
+                    classTypeData={get(this.props, "classTypeData", [])}
+                    handleMemberDetailsToRightPanel={
+                      this.handleMemberDetailsToRightPanel
+                    }
+                    handleDrawerToggle={this.handleDrawerToggle}
+                    isAdmin={isAdmin}
+                    notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
+                  />
+                  {this.renderSchoolMedia(schoolData, memberInfo, slug)}
+                </Fragment>
+              </SchoolMemberWrapper>
+            </Suspense>
+          </SplitScreenWrapper>
+        </CSSTransition>
+
+
+        <CSSTransition
+          in={!isMemberSelected}
+          timeout={{
+            enter: 600,
+            exit: 400
+          }}
+          classNames="fade"
+          unmountOnExit
+        >
+          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <MembersScreenWrapper>
+              <SchoolMemberFilter
+                stickyPosition={this.state.sticky}
+                ref="SchoolMemberFilter"
+                handleClassTypeDataChange={this.handleClassTypeDataChange}
+                handleMemberNameChange={this.handleMemberNameChange}
+                classTypeData={classTypeData}
+                filters={filters}
+                isAdmin={isAdmin}
+                cardsView={isMemberSelected ? 'list' : 'grid'}
+                view={view}
+              />
+              {view == 'admin' && !_.isEmpty(adminsData) ?
+                <SchoolMembersScreen
+                  collectionData={adminsData}
                   handleMemberDetailsToRightPanel={
                     this.handleMemberDetailsToRightPanel
                   }
                   isAdmin={isAdmin}
-                  notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
-                />
-                {this.renderSchoolMedia(schoolData, memberInfo, slug)}
-              </Fragment>
-            )}
+                  superAdminId={superAdminId}
+                  view={view}
+                /> :
+                <SchoolMembersScreen
+                  filters={schoolMemberListFilters}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  view={view}
+                  isAdmin={isAdmin}
+                />}
+            </MembersScreenWrapper>
           </Suspense>
-                </SchoolMemberWrapper> */}
-      </Grid >
+        </CSSTransition>
+      </Wrapper>
     );
   }
 }

@@ -10,14 +10,15 @@ import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
 import styled from 'styled-components';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
-import { FormGhostButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
+import IconButton from "material-ui/IconButton";
+import MenuIcon from 'material-ui-icons/Menu';
+import { FormGhostButton, PrimaryButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
 import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { Text, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const AVATAR_SIZE = 165;
 
@@ -44,27 +45,23 @@ const styles = (theme) => ({
 });
 
 const Wrapper = styled.div`
-	max-width: 800px;
 	width: 100%;
 	background-color: white;
 	position: relative;
+	padding: ${helpers.rhythmDiv * 2}px;
 `;
 
 const UserInfoPanel = styled.div`
 	display: flex;
+	flex-direction: column;
+	max-width: 400px;
 	margin: 0 auto ${helpers.rhythmDiv * 2}px auto;
 	padding: ${helpers.rhythmDiv * 2}px;
 
 	@media screen and (max-width: ${helpers.tablet}px) {
-		margin-bottom: 0;
-		max-width: 500px;
 		width: 100%;
 		flex-direction: column;
-		padding: 0;
-	}
-	
-	@media screen and (max-width: ${helpers.mobile + 50}px) {
-		padding: 0 ${helpers.rhythmDiv * 4}px;
+		padding-top: ${helpers.rhythmDiv * 4}px;
 	}
 `;
 
@@ -79,15 +76,11 @@ const UserProfile = styled.div`
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		margin-bottom: 0;
-	}
-
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
 		flex-direction: column;
 	}
 `;
 
 const UIPanelElem = styled.div`
-	margin-right: ${helpers.rhythmDiv * 4}px;
 	
 	@media screen and (max-width: ${helpers.tablet}px) {
 		margin-right: 0;
@@ -105,14 +98,22 @@ const AvatarContainer = UIPanelElem.extend`
 		margin-right: ${helpers.rhythmDiv}px;
 	}
 	
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
-		width: 100%;
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-right: 0;
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
 	}
 `;
 
 const MemberDetails = UIPanelElem.extend`
 	display: flex;
-	flex-direction: column;
+	justify-content: flex-start;
+	margin-bottom: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 0;
+	}
 `;
 
 const AdminNotes = UIPanelElem.extend`
@@ -121,29 +122,51 @@ const AdminNotes = UIPanelElem.extend`
 	flex-direction: column;
 `;
 
-const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
+const ButtonWrapper = styled.div`margin-bottom: ${helpers.rhythmDiv}px;`;
 
 const ActionButtonsBar = styled.div`
-	${helpers.flexCenter}
+	display: flex;
+	align-items: center;
 	flex-wrap: wrap;
 	margin: 0 auto;
 	width: 100%;
-	
-	@media screen and (max-width: ${helpers.tablet}px) {
-		max-width: 500px;
-	}
 
-	@media screen and (max-width: ${helpers.mobile + 50}px) {
-		padding: 0 ${helpers.rhythmDiv * 4}px;
+	@media screen and (max-width: ${helpers.mobile}px) {
+		justify-content: center;
 	}
 `;
 
-const ActionButtonsWrapper = styled.div` 
+const Avatar = styled.div`
+	margin-right: ${helpers.rhythmDiv * 2}px;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-right: 0;
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+	}
+`;
+
+const MemberActions = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+const MemberName = SubHeading.extend`
+	font-size: ${helpers.baseFontSize * 2}px;
+	word-break: break-all;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		margin-bottom: ${helpers.rhythmDiv * 2}px;
+		font-size: ${helpers.baseFontSize * 2}px;
+		text-align: center;
+	}
+`;
+
+const ActionBtnsWrapper = styled.div` 
 	display: flex;
 	flex-wrap: wrap;
 `;
 
-const ActionButton = styled.div`
+const ActionBtn = styled.div`
 	margin-right: ${helpers.rhythmDiv}px;
 	margin-bottom: ${helpers.rhythmDiv}px;
 	
@@ -163,10 +186,6 @@ const ProfilePic = styled.div`
 	width: 100px;
 	border-radius: 50%;
 	border: 2px solid black;
-	s
-	@media screen and (max-width: ${helpers.mobile - 50}px) {
-		width: 100%;
-	}
 `;
 const UploadDiv = styled.div`
 	// background: #448aff;
@@ -204,25 +223,37 @@ const CornerBtnWrapper = styled.div`
 	right: 0;
 `;
 
+const MenuIconWrapper = CornerBtnWrapper.extend`
+	display: none;
+	top: 8px;
+	left: 8px;
+	right: auto;
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		display: block;
+	}
+`;
+
+
 const ActionButtons = (props) => (
-	<ActionButtonsWrapper>
-		<ActionButton
+	<ActionBtnsWrapper>
+		<ActionBtn
 			onClick={() => {
 				props.handleCall(props.memberInfo);
 			}}
 		>
 			<FormGhostButton icon iconName="phone" label="Call" />
-		</ActionButton>
+		</ActionBtn>
 
-		<ActionButton
+		<ActionBtn
 			onClick={() => {
 				props.handleEmail(props.memberInfo);
 			}}
 		>
 			<FormGhostButton noMarginBottom label="Email" icon iconName="email" />
-		</ActionButton>
+		</ActionBtn>
 
-		{/*<ActionButton>
+		{/*<ActionBtn>
 			<MemberActionButton
 				noMarginBottom
 				label="Edit"
@@ -235,10 +266,10 @@ const ActionButtons = (props) => (
 				icon
 				iconName="edit"
 				onClick={props.onEditMemberClick} />
-		</ActionButton>*/}
+		</ActionBtn>*/}
 		{props.isAdmin &&
 			!props.superAdmin && props.view == "admin" && (
-				<ActionButton>
+				<ActionBtn>
 					<MemberActionButton
 						noMarginBottom
 						label="Remove Admin"
@@ -246,9 +277,9 @@ const ActionButtons = (props) => (
 						iconName="remove_circle_outline"
 						onClick={props.removeButtonClick}
 					/>
-				</ActionButton>
+				</ActionBtn>
 			)}
-	</ActionButtonsWrapper>
+	</ActionBtnsWrapper>
 );
 
 class SchoolMemberInfo extends Component {
@@ -555,7 +586,8 @@ class SchoolMemberInfo extends Component {
 			isAdmin,
 			currentUser,
 			notClassmatePage,
-			selectedSchoolData
+			selectedSchoolData,
+			handleDrawerToggle
 		} = this.props;
 		const {
 			showUploadAvatarModal,
@@ -631,11 +663,38 @@ class SchoolMemberInfo extends Component {
 				<UserInfoPanel className="userInfoPanel" >
 					<UserProfile>
 						<AvatarContainer key={memberInfo._id}>
-							<ProgressiveImage
-								src={bgImg}
-								placeholder={config.blurImage}>
-								{(src) => <ProfilePic img={src} />}
-							</ProgressiveImage>
+							<MemberDetails>
+								<Avatar>
+									<ProgressiveImage
+										src={bgImg}
+										placeholder={config.blurImage}>
+										{(src) => <ProfilePic img={src} />}
+									</ProgressiveImage>
+								</Avatar>
+
+								<MemberActions>
+									<MemberName>{userName}</MemberName>
+									{isAdmin && (
+										<ActionButtonsBar>
+											<ActionButtons
+												memberInfo={this.props.memberInfo}
+												handleCall={this.handleCall}
+												handleEmail={this.handleEmail}
+												onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
+												openEditMemberModal={(event) => {
+													this.setState({ openEditMemberModal: true });
+												}}
+												isAdmin={isAdmin}
+												removeButtonClick={() => {
+													this.setState({ showConfirmation: true });
+												}}
+												superAdmin={superAdmin}
+												view={view}
+											/>
+										</ActionButtonsBar>
+									)}
+								</MemberActions>
+							</MemberDetails>
 
 							{view === 'admin' && (
 								<UploadDiv
@@ -680,7 +739,6 @@ class SchoolMemberInfo extends Component {
 							
 						</MemberDetails> */}
 					</UserProfile>
-
 					{notClassmatePage && <AdminNotes>
 						<Text>Admin Notes</Text>
 						<Input
@@ -694,38 +752,30 @@ class SchoolMemberInfo extends Component {
 						/>
 					</AdminNotes>}
 				</UserInfoPanel>
-				{isAdmin && (
-					<ActionButtonsBar>
-						<ActionButtons
-							memberInfo={this.props.memberInfo}
-							handleCall={this.handleCall}
-							handleEmail={this.handleEmail}
-							onEditMemberClick={() => this.handleDialogState('manageMemberShipDialog', true)}
-							openEditMemberModal={(event) => {
-								this.setState({ openEditMemberModal: true });
-							}}
-							isAdmin={isAdmin}
-							removeButtonClick={() => {
-								this.setState({ showConfirmation: true });
-							}}
-							superAdmin={superAdmin}
-							view={view}
-						/>
-					</ActionButtonsBar>
-				)}
+
 				{!isEmpty(subscriptionList) &&
 					(isAdmin || userId == Meteor.userId()) &&
 					Meteor.settings.public.paymentEnabled &&
 					(
 						<SubscriptionsList
+							listBgColor={helpers.panelColor}
 							packageProps={{ bgColor: "white", opacity: 1 }}
 							title={"Subscriptions"}
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
 					)}
+				<MenuIconWrapper>
+					<IconButton
+						color={helpers.black}
+						aria-label="open drawer"
+						onClick={handleDrawerToggle}
+					>
+						<MenuIcon />
+					</IconButton>
+				</MenuIconWrapper>
 				<CornerBtnWrapper>
-					<FormGhostButton icon iconName="edit" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)}/> 		
-				</CornerBtnWrapper>	
+					<PrimaryButton icon iconName="edit" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
+				</CornerBtnWrapper>
 			</Wrapper>
 		);
 	}
