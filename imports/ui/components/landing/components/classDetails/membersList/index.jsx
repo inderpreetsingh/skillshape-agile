@@ -14,6 +14,7 @@ import FormGhostButton from '/imports/ui/components/landing/components/buttons/F
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Pagination from "/imports/ui/componentHelpers/pagination";
+import { AnimateOnChange } from '@nearform/react-animation'
 import moment from 'moment';
 const Div = styled.div`
     display: flex;
@@ -36,8 +37,8 @@ class MembersListContainer extends Component {
       teachersFilterWith: "",
       studentsFilterWith: "",
       addInstructorDialogBoxState: false,
-      notification: true,
-      packagesRequired: 'enrollment',
+      notification: this.props.notification,
+      packagesRequired: this.props.packagesRequired,
       limit: 40,
       skip: 0,
       pageCount: 0,
@@ -52,28 +53,14 @@ class MembersListContainer extends Component {
   studentsData = () => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData, schoolId } = this.props;
-    let { classTypeId } = classData && classData[0] || {};
-    let filter = { classTypeId, userId: Meteor.userId() };
-    Meteor.call("classPricing.signInHandler", filter, (err, res) => {
-      if (!isEmpty(res)) {
-        let { epStatus, purchased } = res;
-        if (epStatus && !isEmpty(purchased)) {
-          this.setState({ notification: false });
-        }
-        else if (!epStatus) {
-          this.setState({ packagesRequired: 'enrollment' })
-        }
-        else {
-          this.setState({ packagesRequired: 'perClassAndMonthly' })
-        }
-      }
-    })
+    const { classData, schoolId,packagesRequired,notification } = this.props;
+    let { classTypeId } = classData && classData || {};
+   
     if (classData) {
-      get(classData[0], 'students', []).map((obj, index) => {
+      get(classData, 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
-        this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit) })
+      this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit),packagesRequired,notification })
       })
       if (!isEmpty(studentsIds)) {
         let { limit, skip } = this.state;
@@ -115,16 +102,13 @@ class MembersListContainer extends Component {
       inc = -1;
     }
     /*  */
-    this.setState({ isBusy: true });
     Meteor.call('purchase.manageAttendance', _id, packageType, inc, (err, res) => {
       if (condition <= 0) {
         condition = res;
       }
-      let state = { isBusy: false }
       if (condition > 0 || res == undefined) {
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
           if (res) {
-            state.status = 'Sign In';
             let newStatus = `${status == 'signIn' ? 'Sign In' : status == 'checkIn' ? 'Check In' : 'Sign Out'}`
             popUp.appear("success", {
               title: packageConnected ? 'Package successfully purchased.' : `${newStatus} successfully`,
@@ -133,18 +117,16 @@ class MembersListContainer extends Component {
                 <FormGhostButton
                   label={'Ok'}
                   onClick={() => {
-                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : 'Sign In' }) : this.setState({ buyPackagesBoxState: false })
+                    !packageConnected ? this.setState({ status: status == 'signIn' ? 'Sign Out' : status == 'signOut' ? 'signIn' : 'signOut', }) : this.setState({ buyPackagesBoxState: false, })
                   }}
                   applyClose
                 />
               </ButtonWrapper>)
             }, true);
           }
-          this.setState({ ...state })
         })
       }
       else {
-        this.setState({ ...state })
         popUp.appear("alert", {
           title: `Caution`,
           content: `You have ${condition} classes left of package ${packageName}. Sorry you can't Sign in. Please renew your package.`,
@@ -182,7 +164,6 @@ class MembersListContainer extends Component {
     />
   )
   handleClassUpdate = (filter, status, popUp, packageConnected) => {
-		console.log('TCL: MembersListContainer -> handleClassUpdate -> filter, status, popUp, packageConnected', filter, status, popUp, packageConnected)
     Meteor.call('classPricing.signInHandler', filter, (err, res) => {
       let purchased = get(res, 'purchased', []);
       let epStatus = get(res, "epStatus", false);
@@ -216,28 +197,10 @@ class MembersListContainer extends Component {
           }
         })
         if (purchased.length == 1) {
-          // let data = {};
-          // data = {
-          //   popUp,
-          //   title: 'Confirmation',
-          //   type: 'inform',
-          //   content: <div>This class is covered by <b>{purchased[0].packageName}</b>.</div>,
-          //   buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => { this.updateClass(filter, status, purchased[0], popUp,packageConnected) } }]
-          // }
-          // confirmationDialog(data);
           this.updateClass(filter, status, purchased[0], popUp, packageConnected)
           return;
         }
         if (pos != -1) {
-          // let data = {};
-          // data = {
-          //   popUp,
-          //   title: 'Confirmation',
-          //   type: 'inform',
-          //   content: <div>This class is covered by <b>{purchased[pos].packageName}</b>.</div>,
-          //   buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Confirm Check-In', onClick: () => {  } }]
-          // }
-          // confirmationDialog(data);
           this.updateClass(filter, status, purchased[pos], popUp, packageConnected)
           return;
         }
@@ -314,7 +277,7 @@ class MembersListContainer extends Component {
   handleSignIn = (e, userId, status = 'signIn', packageConnected = false) => {
     e && e.preventDefault();
     const { popUp, classData } = this.props;
-    let classDetails = classData[0];
+    let classDetails = classData;
     if (userId) {
       classDetails.userId = userId;
     }
@@ -372,9 +335,8 @@ class MembersListContainer extends Component {
   };
 
   updateStatus = (n, props) => {
-		console.log('TCL: MembersListContainer -> updateStatus -> n, props', n, props)
     let { status, popUp, purchaseId, classData } = props;
-    let { scheduled_date } = classData && classData[0] || {};
+    let { scheduled_date } = classData && classData || {};
     let inc = 0, packageType, packageConnected = false;
     if (n == 1) {
       if (status == 'signIn' || status == 'checkOut') {
@@ -415,9 +377,9 @@ class MembersListContainer extends Component {
       this.handleSignIn(null, props._id, status, packageConnected);
       return;
     }
-    let filter = props.classData[0];
+    let filter = props.classData;
     filter.userId = props._id;
-    props.classData[0].students.map((obj) => {
+    props.classData.students.map((obj) => {
       if (obj.userId == props._id) {
         purchaseId = obj.purchaseId;
         packageType = obj.packageType;
@@ -426,7 +388,6 @@ class MembersListContainer extends Component {
     Meteor.call("classes.updateClassData", filter, status, purchaseId, packageType, (err, res) => {
       if (res) {
         Meteor.call('purchase.manageAttendance', purchaseId, packageType, inc);
-        this.setState({})
         popUp.appear("success", {
           title: `Successfully`,
           content: `${this.getStatusInfo(status)} Performed Successfully.`,
@@ -472,7 +433,7 @@ class MembersListContainer extends Component {
       let { popUp } = props;
       this.toggleIsBusy();
       userId = props._id;
-      classesId = props.classData[0]._id;
+      classesId = props.classData._id;
       valid = true;
       userName = get(props.profile, "firstName", get(props.profile, "name", get(props.profile, "lastName", "Old Data")));
       userEmail = get(props.emails[0], 'address', null);
@@ -569,7 +530,7 @@ class MembersListContainer extends Component {
       planId = get(packageData.pymtDetails[0], 'planId', null);
     }
     data = { userId, packageId, schoolId, packageType, paymentMethod, noClasses, packageName, planId };
-    let classDetails = classData[0];
+    let classDetails = classData;
     classDetails.userId = userId;
     Meteor.call('classPricing.signInHandler', classDetails, (err, res) => {
       let epStatus = get(res, "epStatus", false);
@@ -624,15 +585,15 @@ class MembersListContainer extends Component {
     this.setState({ isBusy: !this.state.isBusy });
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData,slug } = this.props;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData, slug } = this.props;
     const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification, isBusy } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
     let classTypeId;
-    !isEmpty(classData) && classData[0].students && classData[0].students.map((obj) => {
-      classTypeId = get(classData[0], "classTypeId", null);
+    !isEmpty(classData) && classData.students && classData.students.map((obj) => {
+      classTypeId = get(classData, "classTypeId", null);
     })
 
     return (
@@ -674,7 +635,7 @@ class MembersListContainer extends Component {
           open={classTypePackages}
           onClose={() => { this.setState({ classTypePackages: false }) }}
           params={params}
-          classTypeId={get(classData[0], 'classTypeId', null)}
+          classTypeId={get(classData, 'classTypeId', null)}
           userId={userId}
           packagesRequired={packagesRequired}
           handleSignIn={this.handleSignIn}
@@ -684,49 +645,60 @@ class MembersListContainer extends Component {
           setPackagesRequired={this.setPackagesRequired}
         />}
         <ListWrapper>
-
-          <MembersList
-            viewType={currentView}
-            onSearchChange={this.handleSearchChange("teachersFilterWith")}
-            data={instructorsData}
-            entityType={"teachers"}
-            searchedValue={this.state.teachersFilterWith}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            addInstructor
-          />
+          <AnimateOnChange
+            animationIn="fadeIn"
+            animationOut="fadeOut"
+            durationOut={400}
+          >
+            <MembersList
+              viewType={currentView}
+              onSearchChange={this.handleSearchChange("teachersFilterWith")}
+              data={instructorsData}
+              entityType={"teachers"}
+              searchedValue={this.state.teachersFilterWith}
+              onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Instructor")}
+              classData={classData}
+              popUp={popUp}
+              instructorsIds={instructorsIds}
+              addInstructor
+            />
+          </AnimateOnChange>
         </ListWrapper>
         <ListWrapper>
+          <AnimateOnChange
+            animationIn="fadeIn"
+            animationOut="fadeOut"
+            durationOut={400}
+          >
+            <MembersList
+              viewType={currentView}
+              searchedValue={this.state.studentsFilterWith}
+              onSearchChange={this.handleSearchChange("studentsFilterWith")}
+              data={studentsData}
+              entityType={"students"}
+              searchedValue={this.state.studentsFilterWith}
+              classData={classData}
+              popUp={popUp}
+              instructorsIds={instructorsIds}
+              onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
+              addStudent
+              onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
+              params={params}
+              onJoinClassClick={this.handleSignIn}
+              schoolName={schoolName}
+              classTypeName={classTypeName}
+              toggleIsBusy={this.toggleIsBusy}
+              schoolId={schoolId}
+              onAcceptPaymentClick={this.handleDialogBoxState}
+              buyPackagesBoxState={buyPackagesBoxState}
+              currentProps={currentProps}
+              updateStatus={this.updateStatus}
+              handleNoteChange={this.handleNoteChange}
+              setNotes={this.setNotes}
+              slug={slug}
+            />
+          </AnimateOnChange>
 
-          <MembersList
-            viewType={currentView}
-            searchedValue={this.state.studentsFilterWith}
-            onSearchChange={this.handleSearchChange("studentsFilterWith")}
-            data={studentsData}
-            entityType={"students"}
-            searchedValue={this.state.studentsFilterWith}
-            classData={classData}
-            popUp={popUp}
-            instructorsIds={instructorsIds}
-            onAddIconClick={this.handleAddInstructorDialogBoxState(true, "Student")}
-            addStudent
-            onViewStudentClick={(userId) => { this.setState({ classTypePackages: true, userId }) }}
-            params={params}
-            onJoinClassClick={this.handleSignIn}
-            schoolName={schoolName}
-            classTypeName={classTypeName}
-            toggleIsBusy={this.toggleIsBusy}
-            schoolId={schoolId}
-            onAcceptPaymentClick={this.handleDialogBoxState}
-            buyPackagesBoxState={buyPackagesBoxState}
-            currentProps={currentProps}
-            updateStatus={this.updateStatus}
-            handleNoteChange={this.handleNoteChange}
-            setNotes={this.setNotes}
-            slug = {slug}
-          />
         </ListWrapper>
         <PaginationWrapper>
           <Pagination

@@ -59,13 +59,8 @@ export default (Routes = componentLoader(props => (
         component={School}
       />
       <Route
-        path="/classdetails-student"
-        name="classdetails-student-development"
-        component={ClassDetails}
-      />
-      <Route
-        path="/classdetails-instructor"
-        name="classdetails-instructor-development"
+        path="/classDetails/:classId"
+        name="Class Details"
         component={ClassDetails}
       />
       <Route

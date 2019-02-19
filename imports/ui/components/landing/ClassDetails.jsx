@@ -1,41 +1,76 @@
-import React, { Component ,lazy, Suspense,} from "react";
-import { get, isEmpty, includes, remove,isEqual } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
-const   ClassDetails  = lazy(()=>import("/imports/ui/components/landing/components/classDetails/index.jsx"))
-import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import { classModulesData, classTimeData } from "/imports/ui/components/landing/constants/classDetails/";
-import { withPopUp } from '/imports/util';
+import React, { Component, lazy, Suspense } from "react";
 import Classes from "/imports/api/classes/fields";
 import ClassTime from '/imports/api/classTimes/fields.js';
 import ClassType from '/imports/api/classType/fields';
-import { coverSrc, classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import School from "/imports/api/school/fields";
+import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
+import { withPopUp,redirectToHome } from '/imports/util';
+const ClassDetails = lazy(() => import("/imports/ui/components/landing/components/classDetails/index.jsx"))
+import MDSpinner from "react-md-spinner";
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
-    this.state={}
+    this.state = {
+    }
   }
-
   getBgImage() {
-    const { state: { school, classType } } = this.props.location.state;
-    return get(classType, 'classTypeImg', get(classType, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc))));
+    const { school, classTypeData } = this.props;
+    return get(classTypeData, 'classTypeImg', get(classTypeData, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc))));
   }
 
   getLogoImage() {
-    const { state: { school } } = this.props.location.state;
+    const { school } = this.props;
     return get(school, 'logoImg', get(school, "logoImgMedium", ""));
   }
+  componentWillReceiveProps(nextProps){
+    if(!isEmpty(nextProps.classTypeData) && Meteor.userId()){
+      const {_id:classTypeId} = nextProps.classTypeData;
+      let filter = { classTypeId, userId: Meteor.userId() };
+      Meteor.call("classPricing.signInHandler", filter, (err, res) => {
+        if (!isEmpty(res)) {
+          let { epStatus, purchased ,noPackageRequired} = res;
+          if (epStatus && !isEmpty(purchased) || noPackageRequired) {
+            this.setState({ notification: false ,loginUserPurchases:res});
+          }
+          else if (!epStatus) {
+            this.setState({ packagesRequired: 'enrollment' })
+          }
+          else {
+            this.setState({ packagesRequired: 'perClassAndMonthly' })
+          }
+        }
+      })
+    }
+  }
+  shouldComponentUpdate(nextProps){
+    if(nextProps.error){
+      return true;
+    }
+    return !nextProps.isBusy ;
+  }
   render() {
-    const { currentUser, isUserSubsReady, classData, instructorsData, popUp, instructorsIds ,currentClassTypeData,isBusy} = this.props;
-    // console.count('class Details Container 2')
-    if(isBusy){
-      return <ContainerLoader/>
+    const {error, currentUser, classTimeData,isUserSubsReady, classData, instructorsData, popUp, instructorsIds, classTypeData, isBusy,schoolData } = this.props;
+    if(error){
+      redirectToHome();
+    }
+    if (isBusy || isEmpty(schoolData)) {
+      return  <ContainerLoader/>
+    }
+    const {scheduled_date:startTime} = classData;
+    let currentView ;
+    let params ;
+    if(!isEmpty(schoolData)){
+      params = {slug:schoolData.slug};
+      currentView =  checkIsAdmin({user:currentUser,schoolData}) ? "instructorsView" : "studentsView";
     }
     return (
-      <Suspense fallback={<ContainerLoader/>}>
-      <ClassDetails
-      currentClassTypeData = {currentClassTypeData}
+      <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+        <ClassDetails
+      classTypeData = {classTypeData}
         topSearchBarProps={{
           currentUser,
           isUserSubsReady
@@ -44,16 +79,15 @@ class ClassDetailsContainer extends Component {
           bgImg: this.getBgImage(),
           logoImg: this.getLogoImage()
         }}
-        timeLineProps={{
-          startTime: classTimeData.startTime,
-          totalEventTime: classTimeData.totalEventTime,
-          classModulesData: classModulesData
-        }}
         classTimeInformationProps={{ ...classTimeData }}
         classData={classData}
         instructorsData={instructorsData}
         popUp={popUp}
         instructorsIds={instructorsIds}
+        schoolData={schoolData}
+        currentView={currentView}
+        params= {params}
+        {...this.state}
       />
       </Suspense>
     );
@@ -61,62 +95,70 @@ class ClassDetailsContainer extends Component {
 }
 
 export default createContainer((props) => {
-  const { state } = props.location.state;
-  const dataProps = props.location.state.props;
-  let schoolId, classTypeId, classTimeId, scheduled_date, classesSubscription, classData, instructorsIds,
-    instructorsData = [], userSubscription, classTimeSubscription, ClassTimeData;
-  schoolId = state.school._id;
-  classTimeId = state.eventData.classTimeId;
-  classTypeId = state.eventData.classTypeId;
-  filter = { _id: state.classDetails._id };
-  let currentClassTypeData = {},classTypeSub;
+  const { classId } = props.params || {};
+  let classesSubscription, classData, classTypeSub, classTimeSubscription, classTimeData, schoolData;
+  let instructorsIds = []
+  let instructorsData = []
+  let filter = { _id: classId };
+  let classTypeData = {};
   let isBusy = true;
-  classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
-  if(classTypeId){
-    classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds",{classTypeIds:[classTypeId]});
+  let error = false;
+  
+  if(!classId){
+      error = true;
   }
-  if (classesSubscription && classesSubscription.ready() && classTypeSub && classTypeSub.ready()) {
-   currentClassTypeData = ClassType.findOne({});
-   classData = Classes.find().fetch();
-    instructorsIds = get(classData[0], 'instructors', []);
-    if (isEmpty(instructorsIds)) {
-      classTimeSubscription = Meteor.subscribe('classTimes.getclassTimes', { schoolId, classTypeId });
-      if (classTimeSubscription && classTimeSubscription.ready()) {
-        ClassTimeData = ClassTime.find().fetch();
-        instructorsIds = get(ClassTimeData[0], 'instructors', []);
-        if(!isEmpty(instructorsIds)){
-          userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
-          if (userSubscription && userSubscription.ready()) {
-            isBusy = false;
-            instructorsData = Meteor.users.find({_id:{$in:instructorsIds}}).fetch();
-           
-          }
-        }
-        else{
-          isBusy = false;
-        }
-      }
-
-    }
-    else if (!isEmpty(instructorsIds)) {
-      userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
-      if (userSubscription && userSubscription.ready()) {
-        isBusy = false;
-        instructorsData = Meteor.users.find({_id:{$in:instructorsIds}}).fetch();
-      }
+  classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
+  if (classesSubscription && classesSubscription.ready()) {
+    classData = Classes.findOne();
+    if(isEmpty(classData)){
+      error = true;
     }
     else{
-      isBusy = false;
+      let { classTypeId, classTimeId, schoolId, instructors: classInstructors } = classData;
+      instructorsIds = classInstructors;
+      if (schoolId) {
+        let schoolSub = Meteor.subscribe("school.findSchoolByIds", [schoolId]);
+        if (schoolSub && schoolSub.ready()) {
+          schoolData = School.findOne();
+        }
+      }
+      if (classTypeId) {
+        classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds", { classTypeIds: [classTypeId] });
+        if (classTypeSub && classTypeSub.ready()) {
+          classTypeData = ClassType.findOne({});
+        }
+      }
+      if (classTimeId) {
+        classTimeSubscription = Meteor.subscribe('classTime.getClassTimeById', classTimeId);
+        if (classTimeSubscription && classTimeSubscription.ready()) {
+          classTimeData = ClassTime.findOne();
+          const { instructors: classTimeInstructors } = classTimeData
+          instructorsIds = isEmpty(classInstructors) ? classTimeInstructors : classInstructors;
+        }
+      }
+      if (!isEmpty(instructorsIds)) {
+        let userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
+        if (userSubscription && userSubscription.ready()) {
+          isBusy = false;
+          instructorsData = Meteor.users.find({ _id: { $in: instructorsIds } }).fetch();
+        }
+      }
+      else {
+        isBusy = false;
+      }
     }
-
   }
+  
+  
   return {
     isBusy,
     classData,
     instructorsData,
     instructorsIds,
-    currentClassTypeData,
-    ...props
+    classTypeData,
+    classTimeData,
+    schoolData,
+    error
   };
 }, withPopUp(ClassDetailsContainer));
 

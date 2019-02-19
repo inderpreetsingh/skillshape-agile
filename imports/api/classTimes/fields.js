@@ -101,7 +101,8 @@ ClassTimes.join(SLocation, "locationId", "selectedLocation", [
   "city",
   "state",
   "country",
-  "rooms"
+  "rooms",
+  "loc"
 ]);
 ClassTimes.join(ClassType, "classTypeId", "classTypeName", ["name"]);
 

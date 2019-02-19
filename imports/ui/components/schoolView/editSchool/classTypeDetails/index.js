@@ -8,6 +8,7 @@ import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import { formatClassTimesData, withPopUp } from "/imports/util";
+import MDSpinner from "react-md-spinner";
 
 
 class ClassTypeDetails extends React.Component {
@@ -15,7 +16,7 @@ class ClassTypeDetails extends React.Component {
     super(props);
 
     this.state = {
-      file: null
+      file: null,
     };
   }
 
@@ -194,7 +195,6 @@ class ClassTypeDetails extends React.Component {
   }
 
   handleDeleteData = () => {
-    debugger;
     this.setState({ isBusy: true });
     const { popUp } = this.props;
     const { classTypeData } = this.state;
@@ -223,7 +223,6 @@ class ClassTypeDetails extends React.Component {
   };
 
   closeDeleteConfirmationModal = () => {
-    debugger;
     this.setState(state => {
       return {
         ...state,
@@ -329,6 +328,7 @@ class ClassTypeDetails extends React.Component {
       notifyFor
     });
   };
+  
 
 
   handleClassTimeFormClose = () => {
@@ -368,15 +368,11 @@ class ClassTypeDetails extends React.Component {
       });
     }
   }
-
   render() {
-    // return <ClassTypeDetailsRender
-    //   {...this.props}
-    //   modifySelectSubjectsInClassTypeData={this.modifySelectSubjectsInClassTypeData}
-    // />
-    // console.group("MY CLASSTYPE DETAILS RENDER");
-    // console.log(this.state);
-    // console.groupEnd();
+    const {isLoading} = this.props;
+    if(isLoading){
+      return <center><MDSpinner size={50}/></center>
+    }
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
 }

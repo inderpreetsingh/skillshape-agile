@@ -9,8 +9,7 @@ import ContactUsForm from '/imports/ui/components/landing/components/contactUs/C
 import SocialAccounts from '/imports/ui/components/landing/components/contactUs/SocialAccounts.jsx';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import { siteAddress } from '/imports/ui/components/landing/site-settings.js';
-import { createMarkersOnMap } from '/imports/util';
+import { logoSrc } from '/imports/ui/components/landing/site-settings.js';
 
 
 
@@ -26,7 +25,22 @@ const Wrapper = styled.div`
   justify-content: space-between;
   min-height: 100vh;
 `;
-
+const SkillShapeLogo = styled.div`
+  background-image: url(${props => props.src});
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
+  width: 100px;
+  height: 231px;
+  display: flex;
+  flex-shrink: 0;
+  @media screen and (min-width: ${helpers.mobile - 50}px) {
+    width: 100%;
+    margin-bottom: ${helpers.rhythmDiv * 2}px;
+    flex-shrink: 1;
+    ${props => props.addMember && `height: 100px;`
+  };
+`;
 const Title = styled.h1`
   font-size: ${helpers.baseFontSize * 3}px;
   font-family: ${helpers.specialFont};
@@ -78,7 +92,6 @@ const MapOuterContainer = styled.div`
 const MapContainer = styled.div`
   max-width: 500px;
   width: 100%;
-  height: 400px;
 
   @media screen and (max-width: ${helpers.tablet + 50}px) {
     max-width: 100%;
@@ -130,74 +143,17 @@ const styles = theme => {
 class ContactUs extends Component {
 
   state = {
-    userLocation: {},
   }
 
-  getMyCurrentLocation = () => {
-    let geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address: siteAddress }, (results, status) => {
-      let sLocation = "near by me";
-      let userLocation = {};
-      let coords = {};
-      if (status == google.maps.GeocoderStatus.OK) {
-        if (results[0]) {
-          userLocation = this._createUserLocationFromAddress(results[0].address_components);
-          coords[1] = results[0].geometry.location.lat();
-          coords[0] = results[0].geometry.location.lng();
-        }
-      }
+ 
 
-      const newUserLocation = {
-        ...userLocation,
-        loc: coords,
-        id: results[0].place_id
-      }
-
-      this.setState({ userLocation: newUserLocation });
-    });
-  }
-
-  _createUserLocationFromAddress = (addressComponents) => {
-    const localityComponents = ['street_number', 'route', 'sublocality', 'locality'];
-    const COUNTRY = 'country';
-    const CITY = 'administrative_area_level_1';
-
-    let country = ``;
-    let city = ``;
-    let locality = ``;
-
-    for (addressComponent of addressComponents) {
-
-      if (addressComponent.types.indexOf(COUNTRY) != -1) {
-        country += addressComponent.long_name;
-      } else if (addressComponent.types.indexOf(CITY) != -1) {
-        city += addressComponent.long_name;
-      } else {
-        localityComponents.forEach(component => {
-          if (addressComponent.types.indexOf(component) != -1) {
-            locality += addressComponent.long_name + (component === 'locality' ? '' : ', ');
-          }
-        });
-      }
-    }
-
-    return {
-      address: locality,
-      city,
-      country
-    }
-
-  }
+  
 
   componentDidMount = () => {
-    this.getMyCurrentLocation();
   }
 
   componentDidUpdate = () => {
-    // console.info('component updating.............',this.state);
-    if (!isEmpty(this.state.userLocation)) {
-      createMarkersOnMap("contact-page-map", [this.state.userLocation]);
-    }
+    
   }
 
   render() {
@@ -231,9 +187,8 @@ class ContactUs extends Component {
                   <ContactUsForm onModalClose ={props.onModalClose}/>
                   <MapOuterContainer>
                     <MapContainer>
-                      <MyMap id="contact-page-map" />
-                    </MapContainer>
-
+                      <SkillShapeLogo src={logoSrc}/>
+                      </MapContainer>
                     <SocialAccounts />
                   </MapOuterContainer>
 

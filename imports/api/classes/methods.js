@@ -1,5 +1,5 @@
 import Classes from './fields';
-import {get,isEmpty,uniq,includes,flatten} from 'lodash';
+import {get,isEmpty,uniq,includes,flatten,cloneDeep} from 'lodash';
 import School from "../school/fields";
 import ClassType from "/imports/api/classType/fields.js"
 Meteor.methods({
@@ -36,6 +36,7 @@ Meteor.methods({
     },
     "classes.getClassData":function(filter){
         filter.scheduled_date = new Date (filter.scheduled_date);
+        filter.eventData.startDate = new Date(filter.eventData.startDate);
         let record = Classes.findOne(filter);
         if(!isEmpty(record)){
             return record;

@@ -4,6 +4,7 @@ import FullCalendarRender from "./fullCalendarRender";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import moment from "moment";
+import tz from 'moment-timezone';
 import ClassType from "/imports/api/classType/fields";
 import { uniq } from "lodash";
 import fullCalendarRender from "./fullCalendarRender";
@@ -124,10 +125,12 @@ class FullCalendar extends React.Component {
 
     // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
     temp.start = moment(scheduleDetailsObj.startTime).format("HH:mm");
+    temp.scheduled_date = scheduleDetailsObj.startTime;
     temp.end = moment(new Date(scheduleDetailsObj.startTime))
       .add(scheduleDetailsObj.duration, "minutes")
       .format("hh:mm");
-    temp.eventStartTime = moment(scheduleDetailsObj.startTime).format("hh:mm A");
+      
+    temp.eventStartTime = moment(scheduleDetailsObj.startTime).tz(moment.tz.guess()).format('hh:mm A z');
     temp.eventEndTime = moment(new Date(scheduleDetailsObj.startTime))
       .add(
         scheduleDetailsObj.duration,
@@ -234,8 +237,9 @@ class FullCalendar extends React.Component {
           sevent.scheduleDetails = classTime.scheduleDetails;
           scheduleData.map((obj, index) => {
             sevent.start = obj.startTime;
+            sevent.scheduled_date = obj.startTime;
             sevent.roomId = obj.roomId;
-            sevent.eventStartTime = moment(obj.startTime).format("hh:mm A");
+            sevent.eventStartTime = moment(obj.startTime).tz(moment.tz.guess()).format('hh:mm A z');
             sevent.eventEndTime = moment(new Date(obj.startTime))
               .add(
                 obj.duration,

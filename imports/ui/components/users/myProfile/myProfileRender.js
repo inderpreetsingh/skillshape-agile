@@ -278,11 +278,11 @@ export default function () {
                             onChange={this.handleTextChange.bind(this, "about")}
                           />
                           {!refresh_token ? <PrimaryButton
-                            label={`Sync Google`}
+                            label={`Sync Google Calendar`}
                             onClick={this.calendarConformation}
                           />
                             : <PrimaryButton
-                              label={`Cancel Sync Google`}
+                              label={`Cancel Google Calendar Sync`}
                               onClick={this.confirmationRemoveGoogleSync}
                             />}
                             <PrimaryButton

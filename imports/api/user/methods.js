@@ -206,7 +206,7 @@ Meteor.methods({
        }
 });
 studentsListMaker = (studentsData, classData, purchaseData) => {
-    let studentStatus = classData && classData[0] ? classData[0].students : [];
+    let studentStatus = classData && classData ? classData.students : [];
     studentsData && studentsData.map((obj, index) => {
       studentStatus.map((obj1, index2) => {
         if (obj1.userId == obj._id) {

@@ -5,10 +5,10 @@ import CloseIcon from 'material-ui-icons/Close';
 import UpdateClassTimeIcon from 'material-ui-icons/Update';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
-import React from "react";
+import React ,{lazy,Suspense}from "react";
 import { browserHistory, Link } from "react-router";
 import styled from "styled-components";
-import FullCalendarContainer from "/imports/ui/componentHelpers/fullCalendar";
+const  FullCalendarContainer  = lazy(()=>import("/imports/ui/componentHelpers/fullCalendar"));
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
@@ -16,6 +16,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 import { capitalizeString, getUserFullName } from '/imports/util';
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
+import MDSpinner from "react-md-spinner";
 
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
@@ -71,8 +72,6 @@ export default class MyCalender extends React.Component {
 
   setDate = (startDate, endDate) => this.setState({ startDate, endDate });
   getStudentStatus = (filter) => {
-    //classes.getClassData
-    //classPricing.signInHandler
     Meteor.call("classes.getClassData", filter, (err, res) => {
       if (res) {
         res.students && res.students.map((obj, index) => {
@@ -106,8 +105,9 @@ export default class MyCalender extends React.Component {
       }
     })
     this.setDate()
-    const { schoolId, classTypeId, classTimeId, start } = eventData;
-    let filter = { schoolId, classTypeId, classTimeId, scheduled_date: new Date(start) };
+    const { schoolId, classTypeId, classTimeId, start,scheduled_date,startDate,title,eventEndTime,eventStartTime,durationAndTimeunits } = eventData;
+    let eventDataForClass = {title,durationAndTimeunits};
+    let filter = { schoolId, classTypeId, classTimeId, scheduled_date,eventData:eventDataForClass };
     this.getStudentStatus(filter);
       Meteor.call("school.getMySchool", schoolId, (err, res) => {
         if (res) {
@@ -407,6 +407,7 @@ export default class MyCalender extends React.Component {
       }, true);
     }
   }
+ 
   getStudentList = (route, status) => (
     <List>
       <ListItem button onClick={() => { this.setState({ classDetailModal: true }) }}>
@@ -415,14 +416,12 @@ export default class MyCalender extends React.Component {
         </PopoverListItemIcon>
         <ListItemText primary="View Class Time" />
       </ListItem>
-      <Link to={{ pathname: route, state: { props: this.props, state: this.state } }}>
-        <ListItem button >
+        <ListItem button onClick={()=>{browserHistory.push(route)}}>
           <PopoverListItemIcon>
             <ClassIcon />
           </PopoverListItemIcon>
           <ListItemText primary="View Class Details" />
         </ListItem>
-      </Link>
       <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
           <Assignment_turned_in />
@@ -446,14 +445,12 @@ export default class MyCalender extends React.Component {
         </PopoverListItemIcon>
         <ListItemText primary="View Class Time" />
       </ListItem>
-      <Link to={{ pathname: route, state: { props: this.props, state: this.state } }}>
-        <ListItem button >
+        <ListItem button onClick={()=>{browserHistory.push(route)}}>
           <PopoverListItemIcon>
             <ClassIcon />
           </PopoverListItemIcon>
           <ListItemText primary="View Class Details" />
         </ListItem>
-      </Link>
       <ListItem button onClick={this.handleSignIn}>
         <PopoverListItemIcon>
           <Assignment_turned_in />
@@ -641,16 +638,11 @@ export default class MyCalender extends React.Component {
       name = get(schoolData, 'name', 'School Name');
       _id = get(schoolData, '_id', null);
     }
-    let classTypeId;
-    if (!isEmpty(classDetails)) {
-      classTypeId = get(classDetails, 'classTypeId', null);
-    }
-    else {
-      classTypeId = get(filter, 'classTypeId', null);
-    }
-    let route = this.state.isAdmin ? '/classdetails-instructor' : '/classdetails-student';
+   const { classTypeId,_id:classId} = classDetails || {};
+   let route = `/classDetails/${classId}`;
     return (
       <div>
+        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
         <FullCalendarContainer
           subscriptionName="ClassSchedule"
           setDate={this.setDate}
@@ -659,6 +651,7 @@ export default class MyCalender extends React.Component {
           {...this.props}
           manageMyCalendar={true}
         />
+        </Suspense>
         {isLoading && <ContainerLoader />}
         {thinkingAboutAttending && (
           <ThinkingAboutAttending

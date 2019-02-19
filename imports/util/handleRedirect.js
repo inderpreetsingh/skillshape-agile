@@ -31,3 +31,6 @@ export function checkForAddToCalender(data) {
         return isEmpty(ClassInterest.find({classTimeId: data._id, userId}).fetch());
     }
 }
+export const redirectToHome = () =>{
+  browserHistory.push(`/`);
+}

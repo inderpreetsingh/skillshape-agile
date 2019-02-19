@@ -19,7 +19,6 @@ class SchoolEditView extends React.Component {
   }
   componentWillMount() {
     // Listen for `?classDetails=true` so that we can click on tab.
-    console.log('cwm run')
     if (this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
       this.setState({ queryTabValue: this.props.location.query.tabValue });
@@ -81,7 +80,6 @@ class SchoolEditView extends React.Component {
   }
   render() {
     const {schoolData,isLoading} = this.props;
-		console.log('TCL: SchoolEditView -> render -> this.props', this.props)
     if(isLoading){
       return <ContainerLoader/>
     }

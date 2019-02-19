@@ -9,6 +9,7 @@ import { classTimeData } from "/imports/ui/components/landing/constants/classDet
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
 import { getUserFullName, } from "/imports/util";
 import { isEmpty, get } from "lodash";
+import {  formatTime } from "/imports/util";
 
 const Wrapper = styled.div`
   padding: 0;
@@ -190,16 +191,17 @@ class ClassTimeInformation extends Component {
   };
   render() {
     const {
-      classTimeData,
+      classData:{eventData:{title}},
       schoolName,
       schoolCoverSrc,
-      title, desc, locationData, eventStartTime,
-      website, start, schoolId, classType, params, classData
+       desc, address, 
+      website, start, schoolId, classType, params, classData,selectedLocation,notification
     } = this.props;
-    const {scheduled_date} = classData || {}
+    const {scheduled_date} = classData || {};
+    const eventStartTime = formatTime(scheduled_date)
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
-      return `${get(locationData,'address','')}, ${get(locationData, 'city', '')}, ${get(locationData, 'state', '')}, ${get(locationData, 'country', '')}, ${get(locationData, 'zip', '')}`
+      return `${get(selectedLocation,'address','')}, ${get(selectedLocation, 'city', '')}, ${get(selectedLocation, 'state', '')}, ${get(selectedLocation, 'country', '')}, ${get(selectedLocation, 'zip', '')}`
     }
 
     return (
@@ -240,7 +242,7 @@ class ClassTimeInformation extends Component {
           time={eventStartTime}
           startDate={scheduled_date}
           address={locationName()}
-          locationData={{ lat: get(locationData, 'loc[1]', ''), lng: get(locationData, "loc[0]", '') }}
+          locationData={{ lat: get(selectedLocation, 'loc[1]', ''), lng: get(selectedLocation, "loc[0]", '') }}
         />
 
       </Wrapper>

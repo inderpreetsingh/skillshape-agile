@@ -19,6 +19,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import MyCalender from "/imports/ui/components/users/myCalender";
 import { cutString, formStyles,withPopUp,confirmationDialog } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
+import MDSpinner from "react-md-spinner";
 
 const styles = formStyles();
 
@@ -58,6 +59,7 @@ class ManageMyCalendar extends React.Component {
       manageAll: true,
       attendAll: true,
       schollAll: true,
+      isLoading:false,
       schoolClassTime: true,
       managedClassTimes: [],
       schoolClassTimes: [],
@@ -118,6 +120,7 @@ class ManageMyCalendar extends React.Component {
         manageClassTimeIds,
         schoolClassTimeId
       } = this.state.filter;
+      this.setState({isLoading:true})
       let myClassTimes = [];
       let managedClassTime = [];
       let myClassTimesIds = classInterestData.map(data => data.classTimeId);
@@ -166,6 +169,7 @@ class ManageMyCalendar extends React.Component {
       }
       classTimesIds = _.union(classTimesIds, myClassTimesIds);
       this.setState({
+        isLoading:false,
         classTimesData,
         myClassTimes,
         managedClassTimes: managedClassTime,
@@ -505,7 +509,11 @@ class ManageMyCalendar extends React.Component {
     });
     return value[0] + ": " + Time;
   };
- 
+ shouldComponentUpdate(nextProps,nextState){
+   if(nextState.isLoading || nextProps.containerLoad)
+     return false
+     return true;;
+ }
   render() {
     // const { schoolClassTimes } = this.props;
     const { classes, classInterestData } = this.props;
@@ -522,10 +530,14 @@ class ManageMyCalendar extends React.Component {
       classTypeForInterests,
       isLoading
     } = this.state;
+    const {containerLoad} =this.props;
+    if(isLoading || containerLoad){
+      return <center><MDSpinner size={50} /></center>
+    }
+    console.count('manageCalendarRenderCount 3')
     return (
       <DocumentTitle title={this.props.route && this.props.route.name}>
         <div>
-          {isLoading && <ContainerLoader />}
           {/*<Card style={{padding: 10, margin: 15}}> */}
           <Card style={{ padding: 8 }}>
             <FormControl component="fieldset" required>
@@ -960,7 +972,7 @@ export default createContainer(props => {
   const { classCalendar, schoolCalendar } = props;
   const currentClassTypeData = props.classTypeData;
   let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
-
+  let containerLoad = true;
   if (classCalendar && currentClassTypeData) {
     classTimesData = ClassTimes.find({ classTypeId: currentClassTypeData._id }).fetch();
   } else if (schoolCalendar && schoolId) {
@@ -970,9 +982,12 @@ export default createContainer(props => {
     classTimesData = ClassTimes.find({}).fetch();
   }
   let classTypeIds = classTimesData.map(item => item.classTypeId);
-  Meteor.subscribe("classTime.getclassType", {
+  let classTimeSub = Meteor.subscribe("classTime.getclassType", {
     classTypeIds
   });
+  if(classTimeSub && classTimeSub.ready()){
+    containerLoad = false;
+  }
   let classTypeData = ClassType.find({ _id: { $in: classTypeIds } }).fetch();
 
   let managedClassTimes = [];
@@ -1011,6 +1026,7 @@ export default createContainer(props => {
     classTypeData,
     schoolClassTypesData,
     managedClassTypeData,
-    classTypeForInterests
+    classTypeForInterests,
+    containerLoad
   };
 }, withStyles(newStyles)(withPopUp(ManageMyCalendar)));
