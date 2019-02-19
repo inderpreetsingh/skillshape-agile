@@ -147,7 +147,7 @@ const ClassTimesList = props => {
     const { day, eventDate, eventStartTime, time, timePeriod, duration } = data;
 
     if (scheduleType === "recurring" || scheduleType === "ongoing") {
-      eventTime = `${formatTime(eventStartTime)} ${formatAmPm(eventStartTime)}`;
+      eventTime = `${formatTime(eventStartTime)} `;
     } else {
       eventTime = `${time} ${timePeriod}`;
     }
