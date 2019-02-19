@@ -468,8 +468,9 @@ class SchoolMemberInfo extends Component {
 		let schoolId = get(memberInfo, 'schoolId', null);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
 		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
+		let isThisMyMemberShip = get(memberInfo,'_id',0) == Meteor.userId();
 		let content = '';
-		if(superAdmin || isAdmin){
+		if(!isThisMyMemberShip && (superAdmin || isAdmin)){
 			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
 		}
 		else {

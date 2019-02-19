@@ -149,11 +149,11 @@ class MySubscription extends React.Component {
 		})
 	}
 	leaveSchool = () => {
-		let { popUp, currentUser, schoolData } = this.props;
+		let { popUp, currentUser, schoolData ,userId} = this.props;
 		let { _id: schoolId ,name:schoolName} = schoolData[0];
 		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
 		let content = '';
-		if(checkIsAdmin({user:currentUser,schoolData})){
+		if(checkIsAdmin({user:currentUser,schoolData}) && userId != Meteor.userId()){
 			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
 		}
 		else {
@@ -401,6 +401,7 @@ export default createContainer((props) => {
 		currentUser,
 		isLoading,
 		schoolData,
-		purchaseData
+		purchaseData,
+		userId
 	};
 }, withPopUp(MySubscription));
