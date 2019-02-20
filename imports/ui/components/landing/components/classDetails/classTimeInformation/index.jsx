@@ -197,8 +197,8 @@ class ClassTimeInformation extends Component {
        desc, address, 
       website, start, schoolId, classType, params, classData,selectedLocation,notification
     } = this.props;
-    const {scheduled_date} = classData || {};
-    const eventStartTime = formatTime(scheduled_date)
+    const {scheduled_date,eventData:{timeZone}} = classData || {};
+    const eventStartTime = formatTime(scheduled_date,timeZone)
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
       return `${get(selectedLocation,'address','')}, ${get(selectedLocation, 'city', '')}, ${get(selectedLocation, 'state', '')}, ${get(selectedLocation, 'country', '')}, ${get(selectedLocation, 'zip', '')}`

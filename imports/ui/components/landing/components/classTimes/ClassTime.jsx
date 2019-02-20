@@ -654,7 +654,7 @@ class ClassTime extends Component {
     // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
-    
+    const {selectedLocation:{timeZone}} = classTimeData;
     const dotColor = this.getDotColor(this.props.addToCalendar);
     return (
       <Fragment>
@@ -737,6 +737,7 @@ class ClassTime extends Component {
                         show={true}
                         formattedClassTimes={this.reformatNewFlowData()}
                         scheduleType={scheduleType}
+                        timeZone={timeZone}
                       />
                     </ClassTimesCardWrapper>
                   </ClassTimeContentInnerWrapper>
