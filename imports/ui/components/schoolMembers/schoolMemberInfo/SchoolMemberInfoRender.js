@@ -19,6 +19,7 @@ import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
 import { Text, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { SectionTitle } from '../sharedStyledComponents.js';
 
 const AVATAR_SIZE = 165;
 
@@ -158,17 +159,6 @@ const MemberName = SubHeading.extend`
 		margin-bottom: ${helpers.rhythmDiv * 2}px;
 		font-size: ${helpers.baseFontSize * 2}px;
 		text-align: center;
-	}
-`;
-
-const MediaTitle = SubscriptionsTitle = MemberName.extend`
-	font-size: ${helpers.baseFontSize * 1.5}px;
-	text-align: center;
-	font-weight: 300;
-	font-style: italic;
-
-	@media screen and (max-width: ${helpers.mobile}px) {
-		font-size: ${helpers.baseFontSize * 1.5}px;
 	}
 `;
 
@@ -781,7 +771,7 @@ class SchoolMemberInfo extends Component {
 					(isAdmin || userId == Meteor.userId()) &&
 					Meteor.settings.public.paymentEnabled &&
 					(<React.Fragment>
-						<SubscriptionsTitle>Subscriptions</SubscriptionsTitle>
+						<SectionTitle>Subscriptions</SectionTitle>
 						<SubscriptionsList
 							listBgColor={helpers.panelColor}
 							packageProps={{ bgColor: "white", opacity: 1 }}
