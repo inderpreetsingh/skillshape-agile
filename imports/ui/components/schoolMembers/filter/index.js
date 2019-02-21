@@ -32,21 +32,6 @@ const FilterPanelContainer = styled.div`
 const FilterPanelContent = styled.div`
 `;
 
-const FilterPanelInnerContent = styled.div`
-    overflow: hidden;
-`;
-
-const FilterPanelAction = styled.div`
-    padding:${helpers.rhythmDiv * 2}px 0px;
-`;
-
-const FilterButtonArea = styled.div`
-    ${helpers.flexCenter}
-    max-width: 300px;
-    margin: auto;
-    margin-top:-24px;
-`;
-
 const Inputs = styled.div`
 	margin: 0 auto;
 	display: flex;
@@ -54,6 +39,7 @@ const Inputs = styled.div`
 	justify-content: center;
 	flex-wrap: wrap;
 	margin-bottom: ${helpers.rhythmDiv * 4}px;															}px;
+	${props => props.cardsView === 'list' && 'margin-bottom: 0;'}
 `;
 
 const InputWrapper = styled.div`
@@ -81,13 +67,12 @@ class SchoolMemberFilter extends Component {
 	render() {
 		const { stickyPosition, isAdmin, view, classes, cardsView } = this.props;
 
-
 		return (
 			<MuiThemeProvider theme={muiTheme}>
 				<FilterPanelContainer stickyPosition={stickyPosition}>
 					<FilterPanelContent stickyPosition={stickyPosition}>
 						<form noValidate autoComplete="off">
-							<Inputs>
+							<Inputs cardsView={cardsView}>
 								<InputWrapper cardsView={cardsView}>
 									<IconInput
 										id="search"
@@ -101,7 +86,7 @@ class SchoolMemberFilter extends Component {
 										value={get(this.props, "filters.memberName", "")}
 									/>
 								</InputWrapper>
-								<InputWrapper cardsView={cardsView} noMarginRight>
+								<InputWrapper cardsView={cardsView}>
 									<div className='ss-multi-select--transparent'>
 										<Multiselect
 											className={classes.input}

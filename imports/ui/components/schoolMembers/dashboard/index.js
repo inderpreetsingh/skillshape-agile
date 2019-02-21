@@ -64,6 +64,20 @@ const Drawers = styled.div`
   }
 `;
 
+const FixedDrawer = styled.div`
+  max-width: ${drawerWidth}px;
+  width: 100%;
+  display: 'block';
+  background: ${helpers.panelColor};
+  boxShadow: none;
+  overflow: auto;
+  padding: ${helpers.rhythmDiv}px;
+  
+  @media screen and (max-width: ${helpers.tablet}px) {
+    width: auto;
+  }
+`;
+
 const SchoolMemberWrapper = styled.div`
   width: 100%;
 `;
@@ -104,30 +118,24 @@ const styles = theme => ({
     display: "flex",
     width: "100%"
   },
-  appBar: {
-    position: "absolute",
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  navIconHide: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
+  // appBar: {
+  //   position: "absolute",
+  //   marginLeft: drawerWidth,
+  //   [theme.breakpoints.up("md")]: {
+  //     display: "none"
+  //   }
+  // },
   toolbar: theme.mixins.toolbar,
   drawerRoot: {
     position: 'absolute',
   },
   drawerPaper: {
-    [theme.breakpoints.up("md")]: {
-      position: "relative"
+    maxWidth: `${drawerWidth}px`,
+    display: 'block',
+    [`@media screen and ($max-width: ${helpers.tablet}px)`]: {
+      position: "relative",
     },
     background: helpers.panelColor,
-    [theme.breakpoints.down("sm")]: {
-      maxWidth: `${drawerWidth}px`
-    },
     boxShadow: "none !important",
     // height: "100vh",
     overflow: "auto",
@@ -184,12 +192,22 @@ class DashBoardView extends React.Component {
       classTypeIds: [],
       memberName: ""
     },
+    slidingDrawerState: false,
     studentWithoutEmail: false,
     mobileOpen: true,
     joinSkillShape: false,
     to: null,
     userName: null
   };
+
+  componentWillUnmount = () => {
+    window.removeEventListener('resize', this.handleSlidingDrawerState);
+  }
+
+  componentDidMount = (nextProps, nextState) => {
+    this.handleSlidingDrawerState();
+    window.addEventListener('resize', this.handleSlidingDrawerState);
+  }
 
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
     so that right panel gets removed from UI*/
@@ -231,6 +249,16 @@ class DashBoardView extends React.Component {
           });
         }
       })
+    }
+  }
+
+  handleSlidingDrawerState = () => {
+    if (window.innerWidth <= helpers.tablet) {
+      if (!this.state.slidingDrawerState)
+        this.setState(state => ({ ...state, slidingDrawerState: true }));
+    } else {
+      if (this.state.slidingDrawerState)
+        this.setState(state => ({ ...state, slidingDrawerState: false }));
     }
   }
 
@@ -676,8 +704,13 @@ class DashBoardView extends React.Component {
   //     this.refs.SchoolMemberFilter.setClassTypeData(data);
   // }
 
-  handleDrawerToggle = () => {
+  handleDrawerToggle = (e) => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
+    // if (window.innerWidth <= helpers.tablet) {
+    // } else {
+    //   e.preventDefault();
+    //   return;
+    // }
   };
   // Return Dash view from here
   joinSkillShape = () => {
@@ -698,7 +731,7 @@ class DashBoardView extends React.Component {
   }
   render() {
     const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, isAdmin, adminsData, superAdminId, isLoading, view } = this.props;
-    const { renderStudentModal, memberInfo, joinSkillShape } = this.state;
+    const { renderStudentModal, memberInfo, joinSkillShape, slidingDrawerState } = this.state;
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
       schoolMemberListFilters.schoolId =
@@ -889,7 +922,7 @@ class DashBoardView extends React.Component {
             <Drawers>
               <Fragment>
                 <ToggleVisibilityTablet>
-                  <Drawer
+                  {slidingDrawerState && <Drawer
                     variant="temporary"
                     anchor={theme.direction === "rtl" ? "right" : "left"}
                     open={this.state.mobileOpen}
@@ -901,13 +934,13 @@ class DashBoardView extends React.Component {
                     }}
                   >
                     {drawer}
-                  </Drawer>
+                  </Drawer>}
                 </ToggleVisibilityTablet>
 
                 <ToggleVisibilityTablet show>
-                  <div variant="permanent" open className={classes.drawerPaper}>
+                  <FixedDrawer variant="permanent">
                     {drawer}
-                  </div>
+                  </FixedDrawer>
                 </ToggleVisibilityTablet>
               </Fragment>
             </Drawers>

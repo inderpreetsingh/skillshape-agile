@@ -44,7 +44,7 @@ const MembersGrid = styled.div`
 
 const MemberWrapper = styled.div`
     max-width: ${props => props.cardsView === 'list' ? 'none' : MEMBER_CARD}px;
-    margin-bottom: ${props => props.cardsView === 'list' ? MEMBER_CARD_MARGIN : MEMBER_CARD_MARGIN * 3}px;
+    margin-bottom: ${props => props.cardsView === 'list' ? helpers.rhythmDiv : MEMBER_CARD_MARGIN * 3}px;
     margin-right: ${props => props.cardsView === 'list' ? 0 : MEMBER_CARD_MARGIN}px;
     width: 100%;
     cursor: pointer;

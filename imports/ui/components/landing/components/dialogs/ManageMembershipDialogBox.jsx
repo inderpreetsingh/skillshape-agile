@@ -256,20 +256,20 @@ const ManageMemberShipDialogBox = props => {
     //     return null;
     // }
     const {
+        open,
+        isBusy,
+        userId,
         classes,
+        schoolImg,
         onModalClose,
         schoolName,
         studentName,
         selectedSchoolData,
         subscriptionsData,
-        open,
         stopNotification,
-        isBusy,
         removeFromCalendar,
-        userId,
         removeAll,
         leaveSchool,
-        schoolImg
     } = props;
     // console.log("​subscriptionsData", subscriptionsData)
     return (
@@ -286,7 +286,7 @@ const ManageMemberShipDialogBox = props => {
                     <ProfileImage
                         src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
                     <DialogTitleWrapper>
-                        <SchoolName>{capitalizeString(get(selectedSchoolData, 'name', 'schoolName'))}</SchoolName>
+                        <SchoolName>{capitalizeString(schoolName || get(selectedSchoolData, 'name', 'schoolName'))}</SchoolName>
                         <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>
                     </DialogTitleWrapper>
                     <IconButton
@@ -294,7 +294,7 @@ const ManageMemberShipDialogBox = props => {
                         onClick={props.onModalClose}
                         classes={{ root: props.classes.iconButton }}>
                         <ClearIcon />
-                    </IconButton >
+                    </IconButton>
                 </DialogTitleContainer>
 
                 <DialogContent classes={{ root: classes.dialogContent }}>
