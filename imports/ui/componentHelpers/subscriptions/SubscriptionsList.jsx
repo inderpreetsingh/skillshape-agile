@@ -68,11 +68,11 @@ const SubscriptionsList = (props) => {
 		subsType,
 		listBgColor,
 		packageProps,
-		maxListHeight
+		maxListHeight,
 	} = props;
 	return (
 		<Wrapper bgColor={listBgColor} active={active}>
-			<SubscriptionsTitle>{title}</SubscriptionsTitle>
+			{title && <SubscriptionsTitle>{title}</SubscriptionsTitle>}
 
 			{!isEmpty(subsData) && (
 				<AllSubscriptions maxListHeight={maxListHeight}>

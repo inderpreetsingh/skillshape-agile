@@ -161,17 +161,27 @@ const MemberName = SubHeading.extend`
 	}
 `;
 
+const MediaTitle = SubscriptionsTitle = MemberName.extend`
+	font-size: ${helpers.baseFontSize * 1.5}px;
+	text-align: center;
+	font-weight: 300;
+	font-style: italic;
+
+	@media screen and (max-width: ${helpers.mobile}px) {
+		font-size: ${helpers.baseFontSize * 1.5}px;
+	}
+`;
+
+
 const ActionBtnsWrapper = styled.div` 
 	display: flex;
 	flex-wrap: wrap;
 `;
 
 const ActionBtn = styled.div`
-	margin-right: ${helpers.rhythmDiv}px;
 	margin-bottom: ${helpers.rhythmDiv}px;
 	
 	:last-of-type {
-		margin-right: 0;
 		margin-bottom: 0;
 	}
 `;
@@ -216,6 +226,7 @@ const UploadDiv = styled.div`
 		width: 100%;
 	}
 `;
+
 
 const CornerBtnWrapper = styled.div`
 	position: absolute;
@@ -507,14 +518,14 @@ class SchoolMemberInfo extends Component {
 		});
 	}
 	leaveSchool = () => {
-		let { popUp, memberInfo ,isAdmin} = this.props;
+		let { popUp, memberInfo, isAdmin } = this.props;
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
 		let schoolId = get(memberInfo, 'schoolId', null);
 		let superAdmin = get(memberInfo, 'superAdmin', false);
 		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
-		let isThisMyMemberShip = get(memberInfo,'_id',0) == Meteor.userId();
+		let isThisMyMemberShip = get(memberInfo, '_id', 0) == Meteor.userId();
 		let content = '';
-		if(!isThisMyMemberShip && (superAdmin || isAdmin)){
+		if (!isThisMyMemberShip && (superAdmin || isAdmin)) {
 			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
 		}
 		else {
@@ -618,6 +629,9 @@ class SchoolMemberInfo extends Component {
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
 		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', get(memberInfo, 'email', "Old Data"))));
+
+		console.info(memberInfo, "...................");
+
 		return (
 			<Wrapper>
 				{showConfirmation && (
@@ -766,13 +780,14 @@ class SchoolMemberInfo extends Component {
 				{!isEmpty(subscriptionList) &&
 					(isAdmin || userId == Meteor.userId()) &&
 					Meteor.settings.public.paymentEnabled &&
-					(
+					(<React.Fragment>
+						<SubscriptionsTitle>Subscriptions</SubscriptionsTitle>
 						<SubscriptionsList
 							listBgColor={helpers.panelColor}
 							packageProps={{ bgColor: "white", opacity: 1 }}
-							title={"Subscriptions"}
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
+					</React.Fragment>
 					)}
 				<MenuIconWrapper>
 					<IconButton
