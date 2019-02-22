@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
