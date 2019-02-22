@@ -222,6 +222,10 @@ const CornerBtnWrapper = styled.div`
 	position: absolute;
 	top: -16px;
 	right: 0;
+
+	@media screen and (max-width: ${helpers.tablet}px) {
+		top: -8px;
+	}
 `;
 
 const MenuIconWrapper = CornerBtnWrapper.extend`
