@@ -7,19 +7,28 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 
 class SchoolMemberMedia extends MediaDetails {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-        	memberInfo : this.props.schoolMemberDetailsFilters &&  SchoolMemberDetails.findOne(this.props.schoolMemberDetailsFilters),
+            memberInfo: this.props.schoolMemberDetailsFilters && SchoolMemberDetails.findOne(this.props.schoolMemberDetailsFilters),
         }
     }
 
+
     componentWillReceiveProps(nextProps) {
-        if(nextProps.schoolMemberDetailsFilters) {
+        if (nextProps.schoolMemberDetailsFilters) {
             this.setState({
-                memberInfo : nextProps.schoolMemberDetailsFilters &&  SchoolMemberDetails.findOne(nextProps.schoolMemberDetailsFilters)
+                memberInfo: nextProps.schoolMemberDetailsFilters && SchoolMemberDetails.findOne(nextProps.schoolMemberDetailsFilters)
             })
         }
+    }
+    handleDialogState = (dBoxName, dBoxState) => (e) => {
+        this.setState(state => {
+            return {
+                ...state,
+                [dBoxName]: dBoxState
+            }
+        });
     }
 
     render() {
