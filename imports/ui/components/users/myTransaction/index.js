@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import styled from 'styled-components';
-import { get, isEmpty } from "lodash";
+import { get, isEmpty ,isArray} from "lodash";
 import Paper from 'material-ui/Paper';
 import { withStyles } from "material-ui/styles";
 import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -83,7 +83,13 @@ class MyTransaction extends React.Component {
   }
 
   componentWillMount() {
-    const {schoolView,schoolData} = this.props;
+   this.setInitialFilters(this.props);
+  }
+  componentWillReceiveProps(nextProps){
+    this.setInitialFilters(nextProps);
+  }
+  setInitialFilters = (props) => {
+    const {schoolView,schoolData} = props;
     let state = {
       transactionData: [],
       perPage: 10,
@@ -104,14 +110,21 @@ class MyTransaction extends React.Component {
       isLoading: true,
       stripeIDealDialog:false
     };
-    if(schoolView){
-      const {_id:schoolId} = schoolData;
+    if(schoolView && !isEmpty(schoolData)){
+      let schoolId;
+      if(isArray(schoolData) ){
+        schoolId = schoolData.map((obj)=>obj._id);
+      }
+      else{
+        const {_id} = schoolData;
+        schoolId = _id;
+      }
       state.filter = {
         schoolId
       }
     }else{
       state.filter = {
-        userId: get(this.props.params, 'id', Meteor.userId())
+        userId: get(props.params, 'id', Meteor.userId())
       }
     }
     this.setState({...state},()=>{this.getPurchaseData()});

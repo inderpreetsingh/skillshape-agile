@@ -1,9 +1,8 @@
 import React, { Component,lazy,Suspense } from 'react';
 import { browserHistory } from 'react-router';
 import { get } from 'lodash';
-
+import MDSpinner from "react-md-spinner";
 import { withPopUp, getUserFullName } from '/imports/util';
-import { ContainerLoader } from "/imports/ui/loading/container";
 const DashBoardRender = lazy(()=>import('./DashboardRender'));
 
 class MyDashBoard extends Component {
@@ -93,7 +92,7 @@ class MyDashBoard extends Component {
             isUserSubsReady
         } = this.props;
         return (
-            <Suspense fallback={<ContainerLoader/>}>
+            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
             <DashBoardRender
                 headerProps={{
                     currentUser: currentUser,

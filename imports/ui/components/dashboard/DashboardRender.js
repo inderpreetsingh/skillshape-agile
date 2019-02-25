@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment,lazy,Suspense } from 'react';
 import styled from 'styled-components';
 import { browserHistory } from 'react-router';
 
@@ -6,6 +6,8 @@ import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import Header from './header';
 import SchoolsList from './schools/';
+const MyTransaction = lazy(()=>import("/imports/ui/components/users/myTransaction"))
+import MDSpinner from "react-md-spinner";
 
 import { getUserFullName } from '/imports/util';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
@@ -64,6 +66,12 @@ export default (props) => {
                 <SchoolsList schools={bodyProps.schools} />
                 {/*<AddSchool><MyLink onClick={onCreateNewSchoolClick}>click here</MyLink> to add a new school.</AddSchool>*/}
             </BodyWrapper>
+            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <MyTransaction
+                  schoolView = {true}
+                  schoolData = {bodyProps.schools}
+                  />
+            </Suspense>
             <Footer />
         </DashBoardContent>
     </Wrapper>)

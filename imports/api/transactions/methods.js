@@ -2,6 +2,7 @@ import Transactions from './fields';
 import {get,isEmpty,uniq,includes,flatten,compact} from 'lodash';
 import { check } from 'meteor/check';
 import Purchases from '/imports/api/purchases/fields.js';
+import { isArray } from 'util';
 Meteor.methods({
     'transactions.handleEntry':function(data){
         check(data,Object);
@@ -14,8 +15,17 @@ Meteor.methods({
     },
     "transactions.getFilteredPurchases":function (filter,limitAndSkip){
         try{
-          let count = Transactions.find(filter,limitAndSkip).count();
-          let transactionData = Transactions.find(filter,limitAndSkip).fetch();
+          let count,transactionData;
+          if(filter.schoolId && isArray(filter.schoolId)){
+              let {schoolId} = filter;
+              delete filter.schoolId;
+              count = Transactions.find({schoolId:{$in:schoolId},...filter},limitAndSkip).count();
+              transactionData = Transactions.find({schoolId:{$in:schoolId},...filter},limitAndSkip).fetch();
+          }
+          else{
+              count = Transactions.find(filter,limitAndSkip).count();
+              transactionData = Transactions.find(filter,limitAndSkip).fetch();
+          }
           let packageType,covers=[],methodName,newPurchaseData=[],data,finalData=[];
           if(!isEmpty(transactionData)){
             transactionData = compact(transactionData);
