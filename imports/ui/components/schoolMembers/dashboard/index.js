@@ -44,9 +44,8 @@ import PrimaryButton from "/imports/ui/components/landing/components/buttons/Pri
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
 const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
-const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/"));
-const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
-const SchoolMembersScreen = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
+const SchoolAdminsList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
+const SchoolMembersList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
 import MDSpinner from "react-md-spinner";
@@ -595,6 +594,7 @@ class DashBoardView extends React.Component {
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
+    console.log(this.props, memberId, Meteor.user(), "................")
     if (view == 'classmates') {
       memberInfo = SchoolMemberDetails.findOne(memberId);
       profile = memberInfo.profile.profile;
@@ -603,9 +603,12 @@ class DashBoardView extends React.Component {
     }
     else {
       memberInfo = adminsData.find(ele => ele._id == memberId);
-      profile = memberInfo.profile;
-      email = memberInfo.emails[0].address;
-      _id = memberInfo._id;
+      if (memberInfo) {
+        profile = memberInfo.profile;
+        email = memberInfo.emails[0].address;
+        _id = memberInfo._id;
+
+      }
     }
     superAdmin = superAdminId == _id ? true : false;
     pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePic;
@@ -776,7 +779,7 @@ class DashBoardView extends React.Component {
         )}
         <Suspense fallback={<center><MDSpinner size={50} /></center>}>
           {view == 'admin' && !_.isEmpty(adminsData) ?
-            <SchoolAdminListItems
+            <SchoolAdminsList
               cardsView={isMemberSelected ? 'list' : 'grid'}
               listView
               collectionData={adminsData}
@@ -787,7 +790,7 @@ class DashBoardView extends React.Component {
               superAdminId={superAdminId}
               view={view}
             /> :
-            <SchoolMemberListItems
+            <SchoolMembersList
               cardsView={isMemberSelected ? 'list' : 'grid'}
               listView
               filters={schoolMemberListFilters}
@@ -995,7 +998,7 @@ class DashBoardView extends React.Component {
                 view={view}
               />
               {view == 'admin' && !_.isEmpty(adminsData) ?
-                <SchoolMembersScreen
+                <SchoolAdminsList
                   collectionData={adminsData}
                   handleMemberDetailsToRightPanel={
                     this.handleMemberDetailsToRightPanel
@@ -1004,7 +1007,7 @@ class DashBoardView extends React.Component {
                   superAdminId={superAdminId}
                   view={view}
                 /> :
-                <SchoolMembersScreen
+                <SchoolMembersList
                   filters={schoolMemberListFilters}
                   handleMemberDetailsToRightPanel={
                     this.handleMemberDetailsToRightPanel
