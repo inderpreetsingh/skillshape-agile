@@ -61,3 +61,4 @@ export { inputRestriction, formatMoney } from './inputRestriction.js';
 export { stripePaymentHelper } from './stripePaymentHelper.js';
 export { packageCoverProvider } from "./packageHelper";
 export { confirmationDialog } from './confirmationDialog';
+export {generateGraphData} from "./generateGraphData";

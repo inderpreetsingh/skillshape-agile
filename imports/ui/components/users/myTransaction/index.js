@@ -120,7 +120,7 @@ class MyTransaction extends React.Component {
       }
       else{
         const {_id} = schoolData;
-        schoolId = _id;
+        schoolId = [_id];
       }
       state.filter = {
         schoolId,
@@ -143,7 +143,7 @@ class MyTransaction extends React.Component {
     Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
       let state = {};
       if (res) {
-        state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records }
+        state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records ,graphData:res.graphData}
       }
       state.isLoading = false;
       this.setState(state);
@@ -251,7 +251,7 @@ class MyTransaction extends React.Component {
     confirmationDialog(data);
   }
   render() {
-    const { transactionData, isLoading, isDashboard, sddb, index, contractDialog } = this.state;
+    const { transactionData, isLoading, isDashboard, sddb, index, contractDialog ,graphData} = this.state;
     const { classes, popUp,schoolView } = this.props;
     let columnData = getTableProps(schoolView)
     const { tableHeaderColumns } = columnData;
@@ -280,7 +280,7 @@ class MyTransaction extends React.Component {
               handleResult={this.handleIDealResult}
             />}
           {filterForTransaction.call(this)}
-         {isDashboard &&  <ChartComponent/>} 
+         {isDashboard &&  <ChartComponent graphData={graphData}/>} 
         </Paper>
         {sddb &&
           <SubscriptionsDetailsDialogBox

@@ -15,24 +15,18 @@ Meteor.methods({
     },
     "transactions.getFilteredPurchases":function (filter,limitAndSkip){
         try{
-          let count,transactionData;
-          if(filter.schoolId && isArray(filter.schoolId)){
-              let {schoolId} = filter;
-              delete filter.schoolId;
-              count = Transactions.find({schoolId:{$in:schoolId},...filter},limitAndSkip).count();
-              transactionData = Transactions.find({schoolId:{$in:schoolId},...filter},limitAndSkip).fetch();
-          }
-          else{
-              count = Transactions.find(filter,limitAndSkip).count();
-              transactionData = Transactions.find(filter,limitAndSkip).fetch();
-          }
-          let packageType,covers=[],methodName,newPurchaseData=[],data,finalData=[];
-          if(!isEmpty(transactionData)){
-            transactionData = compact(transactionData);
-              transactionData.map((obj,index)=>{
-                  let wholePurchaseData = Purchases.findOne({_id:obj.purchaseId});
-                  let {packageId} = wholePurchaseData;
-                  packageType = get(obj,'packageType','MP');
+            let count, transactionData;
+            let { schoolId } = filter;
+            delete filter.schoolId;
+            count = Transactions.find({ schoolId: { $in: schoolId }, ...filter }).count();
+            transactionData = Transactions.find({ schoolId: { $in: schoolId }, ...filter }, limitAndSkip).fetch();
+            let packageType, covers = [], methodName, newPurchaseData = [], data, finalData = [];
+            if (!isEmpty(transactionData)) {
+                transactionData = compact(transactionData);
+                transactionData.map((obj, index) => {
+                    let wholePurchaseData = Purchases.findOne({ _id: obj.purchaseId });
+                    let { packageId } = wholePurchaseData;
+                    packageType = get(obj,'packageType','MP');
                   if(packageType == "MP"){
                       methodName = 'monthlyPricing.getCover';
                             }
@@ -52,11 +46,32 @@ Meteor.methods({
                 finalData.push(data);
               })
           }
-          return {count,records:finalData}
+          let graphData = Meteor.call("transactions.getDataForGraph",{schoolId})
+          return {count,records:finalData,graphData}
         }catch(error){
                 console.log("​ error in transactions.getFilteredPurchases", error)
           
         }
        
+      },
+      "transactions.getDataForGraph":function(filter){
+          try{
+           let {schoolId} = filter;
+           return Transactions.aggregate(
+                [ { $match : { schoolId :{$in: schoolId}} },
+                    { $match : { transactionType:'purchase' }},
+                    {
+                        $group : {
+                           _id : { month: { $month: "$transactionDate" },year: { $year: "$transactionDate" } },
+                           count: { $sum: 1 }
+                        }
+                      }
+                 ]
+            );
+              
+          }catch(error){
+              console.log('error in transactions.getDataForGraph', error)
+              throw new Meteor.Error(error)
+          }
       }
 })
