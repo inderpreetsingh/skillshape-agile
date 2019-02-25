@@ -195,6 +195,7 @@ export default function () {
                 className={classes.expansionPanel}
                 key={index}
                 defaultExpanded={
+                  index == 0 || 
                   this.state.expansionPanelDefaultOpen ||
                   (this.state.showClassTimeFormModal &&
                     this.state.showClassTimeFormModal[tableData._id])

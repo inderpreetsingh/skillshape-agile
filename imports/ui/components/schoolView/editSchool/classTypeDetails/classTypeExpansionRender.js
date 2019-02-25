@@ -232,9 +232,9 @@ const ClassTypeExpansionRender = (props) => {
 			</Paper>
 			<ExpansionsWrapper>
 				<Suspense fallback={<center><MDSpinner size={50}/></center>}>
-				{classTypeData && classTypeData.map(ctData => {
+				{classTypeData && classTypeData.map((ctData,index) => {
 					return (
-					< ExpansionPanel className={expansionPanelRoot} >
+					< ExpansionPanel className={expansionPanelRoot} defaultExpanded={index == 0} >
 						<ExpansionPanelSummary
 							classes={{ content: props.classes.expansionPanelSummaryContent }}
 							expandIcon={<Icon>{'expand_more'}</Icon>}>
