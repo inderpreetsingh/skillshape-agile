@@ -127,12 +127,13 @@ const getNormalizedMembersData = (props) => {
 }
 
 const SchoolMembersScreen = props => {
-
     const { src, listView, collectionData, view, handleMemberDetailsToRightPanel, isAdmin, superAdminId } = props;
     const membersByName = sortByView(view, collectionData);
     const schoolMembersProps = { ...props, membersByName };
     const membersData = getNormalizedMembersData(schoolMembersProps);
     const cardsView = props.listView ? 'list' : 'grid';
+
+
 
     // console.info(membersData, ".........")
     return (<MembersGridWrapper>
