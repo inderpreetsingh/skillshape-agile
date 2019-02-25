@@ -20,6 +20,7 @@ import {
   goToSchoolPage,
   withPopUp, confirmationDialog
 } from "/imports/util";
+import {ChartComponent} from './chart.jsx'
 
 import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 1 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
@@ -108,11 +109,13 @@ class MyTransaction extends React.Component {
       limit: 10,
       skip: 0,
       isLoading: true,
-      stripeIDealDialog:false
+      stripeIDealDialog:false,
     };
+    let isDashboard = false;
     if(schoolView && !isEmpty(schoolData)){
       let schoolId;
       if(isArray(schoolData) ){
+        isDashboard = true;
         schoolId = schoolData.map((obj)=>obj._id);
       }
       else{
@@ -120,13 +123,15 @@ class MyTransaction extends React.Component {
         schoolId = _id;
       }
       state.filter = {
-        schoolId
-      }
+        schoolId,
+        }
     }else{
+      isDashboard = false;
       state.filter = {
-        userId: get(props.params, 'id', Meteor.userId())
+        userId: get(props.params, 'id', Meteor.userId()),
       }
     }
+    state.isDashboard = isDashboard;
     this.setState({...state},()=>{this.getPurchaseData()});
   }
   // get transaction data from db on page load and page number click.
@@ -246,7 +251,7 @@ class MyTransaction extends React.Component {
     confirmationDialog(data);
   }
   render() {
-    const { transactionData, isLoading, selectedFilter, sddb, index, contractDialog } = this.state;
+    const { transactionData, isLoading, isDashboard, sddb, index, contractDialog } = this.state;
     const { classes, popUp,schoolView } = this.props;
     let columnData = getTableProps(schoolView)
     const { tableHeaderColumns } = columnData;
@@ -275,6 +280,7 @@ class MyTransaction extends React.Component {
               handleResult={this.handleIDealResult}
             />}
           {filterForTransaction.call(this)}
+         {isDashboard &&  <ChartComponent/>} 
         </Paper>
         {sddb &&
           <SubscriptionsDetailsDialogBox
