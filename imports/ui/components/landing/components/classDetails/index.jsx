@@ -83,7 +83,8 @@ const ClassDetails = props => {
     classTimeInformationProps,
     notification,
     loginUserPurchases,
-    packagesRequired
+    packagesRequired,
+    classInterestData
   } = props;
   return (
     <Wrapper>
@@ -111,6 +112,7 @@ const ClassDetails = props => {
               notification={notification}
               loginUserPurchases={loginUserPurchases}
               packagesRequired={packagesRequired}
+              classInterestData = {classInterestData}
               {...classTimeInformationProps}
             />
           </ClassTimeWrapper>

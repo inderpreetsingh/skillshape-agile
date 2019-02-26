@@ -69,10 +69,11 @@ class ClassTimeInformation extends Component {
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
+      const {classTimeId,classTypeId,schoolId} = this.props.classData;
       const doc = {
-        classTimeId: data._id,
-        classTypeId: data.classTypeId,
-        schoolId: data.schoolId,
+        classTimeId,
+        classTypeId,
+        schoolId,
         userId
       };
       this.handleClassInterest({
@@ -93,20 +94,7 @@ class ClassTimeInformation extends Component {
     const currentUser = Meteor.user();
     const userName = getUserFullName(currentUser);
     Meteor.call(methodName, data, (err, res) => {
-      const { popUp } = this.props;
       this.setState({ isLoading: false });
-      if (err) {
-        popUp.appear("error", { content: err.message });
-      } else {
-        if (methodName.indexOf("remove") !== -1)
-          popUp.appear("success", {
-            content: `Hi ${userName}, Class removed successfully from your calendar`
-          });
-        else
-          popUp.appear("success", {
-            content: `Hi ${userName}, Class added to your calendar`
-          });
-      }
     });
   };
   handleRemoveFromCalendarButtonClick = () => {
@@ -117,15 +105,13 @@ class ClassTimeInformation extends Component {
 
   removeFromMyCalender = classTimeRec => {
     const { popUp } = this.props;
-    const result = this.props.classInterestData.filter(
-      data => data.classTimeId == classTimeRec._id
-    );
+    const {_id}= this.props.classInterestData;
     // check for user login or not
     const userId = Meteor.userId();
     if (!isEmpty(userId)) {
-      if (!_.isEmpty(result)) {
+      if (_id) {
         const doc = {
-          _id: result[0]._id,
+          _id,
           userId
         };
         this.handleClassInterest({
@@ -135,22 +121,22 @@ class ClassTimeInformation extends Component {
       }
       this.setState({ addToCalendar: true });
     } else {
-      // popUp.error("Please login !","Error");
       this.setState({
         nonUserDialogBox: true
       });
     }
   };
   handleCheckBoxes = CheckBoxes => {
-    const { addToCalendar } = this.props;
-    if (CheckBoxes[0] != !addToCalendar) {
+    const {popUp} = this.props;
       if (CheckBoxes[0]) {
         this.handleAddToMyCalendarButtonClick();
       } else {
         this.handleRemoveFromCalendarButtonClick();
       }
-    }
     this.handleNotification(CheckBoxes);
+    popUp.appear("success", {
+      content: `Operation performed successfully.`
+    });
   };
   handleNotification = CheckBoxes => {
     this.setState({ isLoading: true });
@@ -171,20 +157,6 @@ class ClassTimeInformation extends Component {
       };
       Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
         const { popUp } = this.props;
-        if (res) {
-          Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-            if (res1) {
-              popUp.appear("success", {
-                content: `Hi ${userName}, You are ${
-                  CheckBoxes[1] ? "subscribed" : "unsubscribed"
-                  } to  notification related to the
-            location and time update of class type ${classType.name}.
-            `
-              });
-              this.componentWillMount();
-            }
-          });
-        }
       });
     }
     this.setState({ isLoading: false });

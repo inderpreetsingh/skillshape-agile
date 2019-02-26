@@ -291,7 +291,8 @@ class ThinkingAboutAttending extends React.Component {
             </DialogTitleWrapper>
           </DialogTitle>
           <DialogContent style={{ fontSize: '18px' }}>
-          {!alreadyPurchased && checkBoxes.map((i, index) => {
+          <TextWrapper> {!alreadyPurchased ? 'To attend you must purchase a class package.' : `Congratulations! You have ${packagesLength} subscription that covers this ${name} class! `}</TextWrapper>
+          {checkBoxes.map((i, index) => {
               return (<FormControl fullWidth margin="dense">
                 <FormControlLabel
                   control={
@@ -309,8 +310,6 @@ class ThinkingAboutAttending extends React.Component {
                 />
               </FormControl>)
             })}
-            
-            <TextWrapper> {!alreadyPurchased ? 'To attend you must purchase a class package.' : `Congratulations! You have ${packagesLength} subscription that covers this ${name} class! `}</TextWrapper>
           </DialogContent>
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             <ButtonWrapper>
@@ -320,7 +319,7 @@ class ThinkingAboutAttending extends React.Component {
                 label="Close!"
               />
             </ButtonWrapper>
-            {!alreadyPurchased && <ButtonWrapper>
+             <ButtonWrapper>
               <FormGhostButton
                 onClick={() => {
                   if(handleSignIn){
@@ -334,9 +333,9 @@ class ThinkingAboutAttending extends React.Component {
                   }
                   onModalClose()
                 }}
-                label={"Join but Purchase Later"}
+                label={!alreadyPurchased ? "Join but Purchase Later" : "Save"}
               />
-            </ButtonWrapper>}
+            </ButtonWrapper>
             {!alreadyPurchased && <ButtonWrapper>
               <Button
                 onClick={() => { this.setState({ classTypePackages: true }) }}

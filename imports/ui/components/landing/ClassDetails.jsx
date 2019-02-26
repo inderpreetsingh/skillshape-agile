@@ -10,6 +10,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import { withPopUp,redirectToHome } from '/imports/util';
 const ClassDetails = lazy(() => import("/imports/ui/components/landing/components/classDetails/index.jsx"))
 import MDSpinner from "react-md-spinner";
+import ClassInterest from '/imports/api/classInterest/fields';
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
@@ -53,7 +54,7 @@ class ClassDetailsContainer extends Component {
     return !nextProps.isBusy ;
   }
   render() {
-    const {error, currentUser, classTimeData,isUserSubsReady, classData, instructorsData, popUp, instructorsIds, classTypeData, isBusy,schoolData } = this.props;
+    const {error, currentUser, classTimeData,isUserSubsReady, classData, instructorsData, popUp, instructorsIds, classTypeData, isBusy,schoolData ,classInterestData} = this.props;
     if(error){
       redirectToHome();
     }
@@ -87,6 +88,7 @@ class ClassDetailsContainer extends Component {
         schoolData={schoolData}
         currentView={currentView}
         params= {params}
+        classInterestData = {classInterestData}
         {...this.state}
       />
       </Suspense>
@@ -96,7 +98,7 @@ class ClassDetailsContainer extends Component {
 
 export default createContainer((props) => {
   const { classId } = props.params || {};
-  let classesSubscription, classData, classTypeSub, classTimeSubscription, classTimeData, schoolData;
+  let classesSubscription, classData, classTypeSub, classTimeSubscription, classTimeData, schoolData,classInterestData;
   let instructorsIds = []
   let instructorsData = []
   let filter = { _id: classId };
@@ -120,6 +122,10 @@ export default createContainer((props) => {
         let schoolSub = Meteor.subscribe("school.findSchoolByIds", [schoolId]);
         if (schoolSub && schoolSub.ready()) {
           schoolData = School.findOne();
+        }
+        let classInterestSub = Meteor.subscribe("classInterest.getClassInterest",classTimeId,schoolId,classTypeId);
+        if(classInterestSub && classInterestSub.ready()){
+          classInterestData = ClassInterest.findOne();
         }
       }
       if (classTypeId) {
@@ -158,7 +164,8 @@ export default createContainer((props) => {
     classTypeData,
     classTimeData,
     schoolData,
-    error
+    error,
+    classInterestData
   };
 }, withPopUp(ClassDetailsContainer));
 
