@@ -689,8 +689,6 @@ class SchoolMemberInfo extends Component {
 											borderRadius: '50%',
 											position: 'relative',
 											bgSize: 'cover',
-											width: AVATAR_SIZE,
-											height: AVATAR_SIZE,
 											noMarginRight: true,
 											noMarginBottom: true
 										}}
