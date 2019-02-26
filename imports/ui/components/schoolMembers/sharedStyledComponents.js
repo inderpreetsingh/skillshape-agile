@@ -3,12 +3,13 @@ import { SubHeading } from '/imports/ui/components/landing/components/jss/shared
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 export const SectionTitle = SubHeading.extend`
-    font-size: ${helpers.baseFontSize * 1.5}px;
+    font-size: font-size: ${helpers.baseFontSize * 1.5}px;
     width: 100%;
 	text-align: center;
-	font-weight: 300;
+	font-weight: 400;
     font-style: italic;
     word-break: break-all;
+    font-family: ${helpers.commonFont};
     ${props => props.bgColor && `background-color: ${props.bgColor}`};
 
 	@media screen and (max-width: ${helpers.mobile}px) {

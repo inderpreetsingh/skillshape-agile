@@ -10,7 +10,7 @@ import IconButton from "material-ui/IconButton";
 import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import ProfileImage, { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import ProfileImage, { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
 import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 import { ContainerLoader } from "/imports/ui/loading/container";
@@ -212,7 +212,7 @@ const imageExistsConfig = {
     defaultImage: coverSrc
 };
 
-const ClassImage = withImageExists(SSImage, imageExistsConfig);
+const ClassImage = withImageExists(SSAvatar, imageExistsConfig);
 
 const ClassDataButtons = (props) => (
     <CDButtonsWrapper>
