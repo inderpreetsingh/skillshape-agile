@@ -150,17 +150,17 @@ class LocationForm extends React.Component {
     return "";
   };
 
-  componentDidMount = () => {
-    const myLocation = this._getMyLocation();
+  // componentDidMount = () => {
+  //   const myLocation = this._getMyLocation();
 
-    if (!myLocation.lat || !myLocation.lng) {
-      const defaultLocation = this.getMyDefaultLocation();
-      this.getAddressFromLocation({
-        lat: defaultLocation[0],
-        lng: defaultLocation[1]
-      });
-    }
-  };
+  //   if (!myLocation.lat || !myLocation.lng) {
+  //     const defaultLocation = this.getMyDefaultLocation();
+  //     this.getAddressFromLocation({
+  //       lat: defaultLocation[0],
+  //       lng: defaultLocation[1]
+  //     });
+  //   }
+  // };
 
   _compareCompleteAddress = (address1, address2) => {
     const propertiesToCompare = ["street", "zip", "city", "state", "country"];
