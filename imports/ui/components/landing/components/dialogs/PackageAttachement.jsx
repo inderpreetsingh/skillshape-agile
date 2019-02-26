@@ -71,7 +71,7 @@ class PackageAttachment extends React.Component {
                     </DialogTitle>
                     <DialogContent style={{ fontSize: '18px' }}>
                         {closed ? 'You have created a Closed Series/Set. Often, their is an enrollment fee for a closed series.'
-                            : 'Would you like to connect class package to this class type.'
+                            : 'Would you like to connect class packages to this class type?'
                         }
 
                     </DialogContent>
