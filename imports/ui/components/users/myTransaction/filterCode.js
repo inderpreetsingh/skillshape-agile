@@ -1,13 +1,11 @@
-import styled from "styled-components";
-import React, { Fragment } from "react";
-import ReactSelect from "react-select";
-import Grid from "material-ui/Grid";
 import { withStyles } from 'material-ui/styles';
 import TextField from "material-ui/TextField";
-
+import React from "react";
+import styled from "styled-components";
 import { IconSelect } from '/imports/ui/components/landing/components/form/';
+import { commonFont, mobile, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { rhythmDiv, commonFont, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const Wrapper = styled.div`
     margin-bottom: ${rhythmDiv * 4}px;
@@ -41,10 +39,7 @@ const ControlLabel = Text.extend`
     font-family: ${commonFont}
 `;
 
-const customStyle = {
-    marginTop: rhythmDiv,
-    marginBottom: rhythmDiv,
-}
+
 
 const textFieldStyles = {
     root: {
@@ -86,8 +81,8 @@ export const filterForTransaction = function () {
     const { selectedPackageType, packageTypeOptions,
         selectedPackageStatus, packageStatusOptions,
         packageName, selectedPaymentMethod,userName,
-        paymentMethodsOptions, selectedTransactionType, transactionTypeOptions } = this.state;
-    const { classes ,schoolView} = this.props;
+        paymentMethodsOptions, selectedTransactionType, transactionTypeOptions ,isDashboard,schoolOptions,selectedSchool} = this.state;
+    const { schoolView} = this.props;
     return (
         <Wrapper>
             <ControlsRow>
@@ -105,16 +100,6 @@ export const filterForTransaction = function () {
                     )
                 }
                 <Control className="ss-multi-select ss-select">
-                    {/*<ControlLabel>Transaction Type: </ControlLabel>
-                    <ReactSelect
-                        name="filters"
-                        placeholder={<b>Transaction Type</b>}
-                        value={selectedTransactionType}
-                        options={transactionTypeOptions}
-                        onChange={(data) => { this.handleFilter(data, 'transactionType', 'selectedTransactionType') }}
-                        closeMenuOnSelect={false}
-                        clearable={false}
-                    /> */}
 
                     <IconSelect
                         labelText='Transaction Type'
@@ -141,23 +126,24 @@ export const filterForTransaction = function () {
                             id: 'paymentMethod'
                         }}
                         onChange={(data) => {
-                            //console.log(data, ".....")
                             this.handleFilter(data, 'paymentMethod', 'selectedPaymentMethod')
                         }}
                     />
-
-                    {/*<ControlLabel>Payment Method: </ControlLabel>
-                    <ReactSelect
-                        name="filters"
-                        placeholder={<b>Payment Method</b>}
-                        value={selectedPaymentMethod}
-                        options={paymentMethodsOptions}
-                        onChange={(data) => { this.handleFilter(data, 'paymentMethod', 'selectedPaymentMethod') }}
-                        closeMenuOnSelect={false}
-                        clearable={false}
-                    />*/}
-                   
                 </Control>
+                {isDashboard && <Control className="ss-multi-select ss-select">
+                    <IconSelect
+                        labelText='School'
+                        value={selectedSchool}
+                        options={schoolOptions}
+                        inputProps={{
+                            name: 'schoolId',
+                            id: 'schoolId'
+                        }}
+                        onChange={(data) => {
+                            this.handleFilter(data, 'schoolId', 'selectedSchool')
+                        }}
+                    />
+                </Control>}
             </ControlsRow>
 
             <ControlLabel>Filter By Package: </ControlLabel>
@@ -173,18 +159,6 @@ export const filterForTransaction = function () {
                 </Control>
 
                 <Control className="ss-multi-select ss-select" maxWidth={250}>
-                    {/*<ReactSelect
-                        name="filters"
-                        placeholder={<b>Package Type</b>}
-                        value={selectedPackageType}
-                        options={packageTypeOptions}
-                        onChange={(data) => {
-                            this.handleFilter(data, 'packageType', 'selectedPackageType')
-                        }}
-                        closeMenuOnSelect={false}
-                        clearable={false}
-                    />*/}
-
                     <IconSelect
                         labelText='Package Type'
                         value={selectedPackageType}
@@ -201,16 +175,6 @@ export const filterForTransaction = function () {
                 </Control>
 
                 <Control className="ss-multi-select ss-select" maxWidth={250}>
-                    {/*<ReactSelect
-                        name="filters"
-                        placeholder={<b>Package Status</b>}
-                        value={selectedPackageStatus}
-                        options={packageStatusOptions}
-                        onChange={(data) => { this.handleFilter(data, 'packageStatus', 'selectedPackageStatus') }}
-                        closeMenuOnSelect={false}
-                        clearable={false}
-                    />*/}
-
                     <IconSelect
                         labelText='Package Status'
                         value={selectedPackageStatus}
@@ -220,7 +184,6 @@ export const filterForTransaction = function () {
                             id: 'packageStatus'
                         }}
                         onChange={(data) => {
-                            //console.log(data, ".....")
                             this.handleFilter(data, 'packageStatus', 'selectedPackageStatus')
                         }}
                     />

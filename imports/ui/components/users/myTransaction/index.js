@@ -112,11 +112,16 @@ class MyTransaction extends React.Component {
       stripeIDealDialog:false,
     };
     let isDashboard = false;
+    let schoolOptions = [{label:'All',value:1}];
+    let schoolId=[];
     if(schoolView && !isEmpty(schoolData)){
-      let schoolId;
       if(isArray(schoolData) ){
         isDashboard = true;
-        schoolId = schoolData.map((obj)=>obj._id);
+        schoolData.map((obj)=>{
+          const {_id:value,name:label} = obj;
+          schoolId.push(value);
+          schoolOptions.push({label,value});
+        });
       }
       else{
         const {_id} = schoolData;
@@ -132,6 +137,8 @@ class MyTransaction extends React.Component {
       }
     }
     state.isDashboard = isDashboard;
+    state.schoolOptions = schoolOptions;
+    state.allSchoolIds = schoolId;
     this.setState({...state},()=>{this.getPurchaseData()});
   }
   // get transaction data from db on page load and page number click.
@@ -172,25 +179,7 @@ class MyTransaction extends React.Component {
       textFieldValue: e.target.value
     });
   }
-  // handleFilter = (value, filterName, stateName) => {
-  //   let stringValue = get(value.target, "value", null)
-  //   if (filterName == 'packageName') {
-  //     value = stringValue ? stringValue : "";
-  //   }
-  //   this.setState(state => {
-  //     let { filter } = state;
-  //     if (value.value && filterName || typeof value == 'string' && value)
-  //       filter[filterName] = value.value ? value.value : new RegExp(`^${value}`, 'i');
-  //     else
-  //       delete filter[filterName];
-  //     return {
-  //       [stateName]: value,
-  //       filter,
-  //       isLoading: true,
-  //       skip: 0,
-  //     };
-  //   }, () => { this.getPurchaseData(); });
-  // };
+
 
   handleFilter = (event, filterName, stateName) => {
     let filterValue = filterValueOriginal = get(event.target, 'value', null);
@@ -199,9 +188,18 @@ class MyTransaction extends React.Component {
       reg = true;
     }
     this.setState(state => {
-      const { filter } = state;
-      if (filterValue && typeof filterValue === 'number') filterValue = 0;
-      if (filterValue && filterName || typeof filterValue == 'string') {
+      const { filter ,allSchoolIds} = state;
+      if (filterValue && typeof filterValue === 'number' && filterName!='schoolId') filterValue = 0;
+      if (filterValue && filterName ) {
+        if(filterName == 'schoolId' && filterValue)
+        {
+          if(filterValue == 1){
+           filter[filterName] = allSchoolIds;
+          }
+          else
+          filter[filterName] = [filterValue]
+        }
+        else
         filter[filterName] = !reg ? filterValue : new RegExp(`.*${filterValue}.*`, 'i');;
       } else {
         delete filter[filterName];
