@@ -64,7 +64,7 @@ Meteor.methods({
       "transactions.getDataForGraph":function(filter){
           try{
            let {schoolId} = filter;
-           return Transactions.aggregate(
+           let purchases = Transactions.aggregate(
                 [ { $match : { schoolId :{$in: schoolId}} },
                     { $match : { transactionType:'purchase' }},
                     {
@@ -76,7 +76,19 @@ Meteor.methods({
                  ]
                  , {cursor:{}}
             );
-              
+           let attendance = Transactions.aggregate(
+            [ { $match : { schoolId :{$in: schoolId}} },
+                { $match : { transactionType:'attendance' }},
+                {
+                    $group : {
+                       _id : { month: { $month: "$transactionDate" },year: { $year: "$transactionDate" } },
+                       count: { $sum: 1 }
+                    }
+                  }
+             ]
+             , {cursor:{}}
+        );
+        return {purchases,attendance}
           }catch(error){
               console.log('error in transactions.getDataForGraph', error)
               throw new Meteor.Error(error)
