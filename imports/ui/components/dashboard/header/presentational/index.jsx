@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
-import { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { Heading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { flexCenter, rhythmDiv, panelColor, mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { withImageExists, capitalizeString } from '/imports/util';
@@ -80,7 +80,7 @@ const Greeting = Heading.extend`
     }
 `;
 
-const UserImage = withImageExists(SSImage, imageExistsConfig);
+const UserImage = withImageExists(SSAvatar, imageExistsConfig);
 
 
 const Header = (props) => {
