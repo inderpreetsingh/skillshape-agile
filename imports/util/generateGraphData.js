@@ -1,71 +1,52 @@
-import {isEmpty,cloneDeep} from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
+const colors = { 'Attendance': helpers.alertColor, "Purchases": helpers.primaryColor,"Expired":helpers.black,'Cancelled':"dodgerblue" };
 export function generateGraphData(graphData, options) {
-   let data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July',"August","September" ,"October" ,"November","December"],
-        datasets: [
-          
-        ]
-      };
-
-      
-    let graphValues = [];
-    let maxMonth = 0;
-    let objForDataSets = {
-      label: 'Purchases',
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: helpers.primaryColor,
-      borderColor: helpers.primaryColor,
-      borderCapStyle: 'butt',
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: 'miter',
-      pointBorderColor: helpers.primaryColor,
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: helpers.primaryColor,
-      pointHoverBorderColor: helpers.primaryColor,
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-    };
-    if(graphData && !isEmpty(graphData)){
-        let {purchases,attendance} = graphData; 
-    // code for purchases graph
-    if(!isEmpty(purchases)){
-      purchases.map((obj,index)=>{
-          let {_id:{month},count} = obj;
-          graphValues[month-1] = count;
-          if(month> maxMonth){
-              maxMonth = month;
-          }
-      })
-      graphValues = Array.from(graphValues, item => item || 0)
-      objForDataSets.data = graphValues;
-      data.datasets.push(cloneDeep(objForDataSets));
-    }
-    // code for attendance graph
-    if(!isEmpty(attendance)){
-      attendance.map((obj,index)=>{
-        let {_id:{month},count} = obj;
-        graphValues[month-1] = count;
-        if(month> maxMonth){
+  let data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"],
+    datasets: []
+  };
+  let graphValues = [];
+  let maxMonth = 0;
+  if (graphData && !isEmpty(graphData)) {
+    let keyNames = Object.keys(graphData);
+    keyNames.map((keyName) => {
+      let currentGraphData = graphData[keyName];
+      let color = colors[keyName] || helpers.alertColor;
+      if (!isEmpty(currentGraphData)) {
+        currentGraphData.map((obj, index) => {
+          let { _id: { month }, count } = obj;
+          graphValues[month - 1] = count;
+          if (month > maxMonth) {
             maxMonth = month;
-        }
+          }
+        })
+        graphValues = Array.from(graphValues, item => item || 0);
+        let objForDataSets = {
+          label: keyName,
+          fill: false,
+          lineTension: 0.1,
+          backgroundColor: color,
+          borderColor: color,
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: color,
+          pointBackgroundColor: '#fff',
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: color,
+          pointHoverBorderColor: color,
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data: graphValues
+        };
+        data.datasets.push(cloneDeep(objForDataSets));
+      }
     })
-    graphValues = Array.from(graphValues, item => item || 0)
-    objForDataSets.backgroundColor = helpers.alertColor,
-    objForDataSets.borderColor = helpers.alertColor,
-    objForDataSets.pointBorderColor = helpers.alertColor,
-    objForDataSets.pointHoverBackgroundColor = helpers.alertColor,
-    objForDataSets.pointHoverBorderColor = helpers.alertColor,
-    objForDataSets.label = 'Attendance'
-    objForDataSets.data = graphValues;
-    data.datasets.push(cloneDeep(objForDataSets));
-    }
-    }
-    return data;
   }
+  return data;
+}
+
