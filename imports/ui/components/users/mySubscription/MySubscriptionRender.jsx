@@ -285,21 +285,18 @@ const MySubscriptionRender = (props) => {
             <PageTitle>My Subscriptions</PageTitle>
             <Wrapper>
                 {!isEmpty(schoolData) &&
-                    schoolData.map((school) => {
+                    schoolData.map((school,index) => {
                         const EXPIRED = 'expired';
                         const subscriptionsData = getSubsDataBasedOnSchool(school._id, purchaseData);
                         const activeSubsData = subscriptionsData.filter(subs => subs.packageStatus != EXPIRED);
                         const expiredSubsData = subscriptionsData.filter(subs => subs.packageStatus == EXPIRED || subs.status == EXPIRED);
-
-                        // console.group(' MY SUBSCRIPTION');
-                        // console.log(activeSubsData, expiredSubsData, '===============');
-                        // console.group();
 
                         return (
                             <ExpansionPanel
                                 classes={{
                                     root: classes.expansionPanelRoot
                                 }}
+                                defaultExpanded={index == 0}
                             >
                                 <ExpansionPanelSummary
                                     classes={{
