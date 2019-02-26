@@ -43,7 +43,7 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
+const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
 const SchoolAdminsList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
 const SchoolMembersList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";

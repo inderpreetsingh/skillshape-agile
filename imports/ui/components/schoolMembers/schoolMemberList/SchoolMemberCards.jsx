@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { get, isEmpty } from 'lodash';
-import ProgressiveImage from 'react-progressive-image';
 
 import Avatar from 'material-ui/Avatar';
-import List, { ListItem, ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
+import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
+
+import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
 import { verifyImageURL } from '/imports/util';
 import { sortByView } from './helpers.js';
 import { flexCenter, tablet, mobile, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -68,14 +70,6 @@ const MemberProfile = styled.div`
     margin-right: ${props => props.cardsView === 'list' ? rhythmDiv : 0}px;
     ${props => props.cardsView !== 'list' && 'transform: translateY(-50%);'}
     top: 0;
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-image: url('${props => props.src}');
-    transition: background-image 1s linear;
 `;
 
 const MemberProfileText = SubHeading.extend`
@@ -109,12 +103,24 @@ const getNormalizedMembersData = (props) => {
                         }
                     });
 
+                    // console.info(pic, ">>>>>>>>Pic");
+
                     normalizedData.push(
                         <MemberWrapper key={data._id} cardsView={cardsView} onClick={() => handleMemberDetailsToRightPanel(data._id, superAdminId)}>
                             <Member cardsView={cardsView}>
-                                <ProgressiveImage src={pic} placeholder={config.blurImage}>
-                                    {src => <MemberProfile cardsView={cardsView} src={src} />}
-                                </ProgressiveImage>
+                                <MemberProfile cardsView={cardsView}>
+                                    <ProfileImage
+                                        imageContainerProps={{
+                                            borderRadius: '50%',
+                                            bgSize: 'cover',
+                                            width: 75,
+                                            height: 75,
+                                            noMarginRight: true,
+                                            noMarginBottom: true
+                                        }}
+                                        src={pic}
+                                    />
+                                </MemberProfile>
                                 <MemberProfileText> {firstName} </MemberProfileText>
                             </Member>
                         </MemberWrapper>
