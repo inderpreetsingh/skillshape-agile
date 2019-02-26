@@ -36,6 +36,7 @@ export function generateGraphData(graphData, options) {
             }
         })
     }
+    graphValues = Array.from(graphValues, item => item || 0)
     data.datasets[0].data = graphValues;
     return data;
   }

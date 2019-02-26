@@ -15,11 +15,19 @@ Meteor.methods({
     },
     "transactions.getFilteredPurchases":function (filter,limitAndSkip){
         try{
-            let count, transactionData;
+            let count, transactionData,graphData;
             let { schoolId } = filter;
             delete filter.schoolId;
-            count = Transactions.find({ schoolId: { $in: schoolId }, ...filter }).count();
-            transactionData = Transactions.find({ schoolId: { $in: schoolId }, ...filter }, limitAndSkip).fetch();
+            if(schoolId && isArray(schoolId) && !isEmpty(schoolId)){
+                count = Transactions.find({ schoolId: { $in: schoolId }, ...filter }).count();
+                transactionData = Transactions.find({ schoolId: { $in: schoolId }, ...filter }, limitAndSkip).fetch();
+                graphData = Meteor.call("transactions.getDataForGraph",{schoolId})
+            }
+            else
+            {
+                count = Transactions.find(filter ).count();
+                transactionData = Transactions.find(filter , limitAndSkip).fetch();
+            }
             let packageType, covers = [], methodName, newPurchaseData = [], data, finalData = [];
             if (!isEmpty(transactionData)) {
                 transactionData = compact(transactionData);
@@ -46,7 +54,6 @@ Meteor.methods({
                 finalData.push(data);
               })
           }
-          let graphData = Meteor.call("transactions.getDataForGraph",{schoolId})
           return {count,records:finalData,graphData}
         }catch(error){
                 console.log("​ error in transactions.getFilteredPurchases", error)
@@ -67,6 +74,7 @@ Meteor.methods({
                         }
                       }
                  ]
+                 , {cursor:{}}
             );
               
           }catch(error){
