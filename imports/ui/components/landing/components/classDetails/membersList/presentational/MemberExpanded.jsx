@@ -209,6 +209,19 @@ PaymentAndStatus = (props) => {
   if (epStatus && isEmpty(purchased)) {
     packageRequired = 'perClassAndMonthly';
   }
+  let pos = -1;
+  let show = true;
+  if(purchased.length == 1){
+    show = false;
+  }
+  else{
+    purchased.map((obj, index) => {
+      if (obj.noClasses == null && obj.packageType == 'MP') {
+        show = false;
+      }
+    })
+  }
+  
   if (props.purchaseData) {
     let { endDate, packageType, noClasses } = props.purchaseData;
     let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses > 1 ? 'Classes' : 'Class'} Remaining`
@@ -221,7 +234,7 @@ PaymentAndStatus = (props) => {
     </PaymentAndStatusDetails>
     )
   }
-  if (epStatus && !isEmpty(purchased)) {
+  if (epStatus && !isEmpty(purchased) && show ) {
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
         <SkillShapeButton
@@ -235,6 +248,12 @@ PaymentAndStatus = (props) => {
       <StatusOptions {...props} />
     </PaymentAndStatusDetails>
     )
+  }
+  if(!show){
+    return <PaymentAndStatusDetails>
+      <Text color={helpers.primaryColor}>{`${purchased.length} Packages Found` }</Text>
+    <StatusOptions {...props} />
+  </PaymentAndStatusDetails>;
   }
   return (<PaymentAndStatusDetails>
     <PaymentDetails>
