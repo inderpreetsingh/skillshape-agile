@@ -26,150 +26,15 @@ class ClassTimeInformation extends Component {
     super(props);
     this.state = {};
   }
-  getTitle = () => {
-    const { classType } = this.props;
-    return get(classType, 'name', '');
-  }
-
-  handleJoinNowButtonClick = () => {
-    // No package type purchased ---> packages list dialogBox should appear
-    // if ---> unlimited monthly package is purchased
-    // if not ---> show all packages 
-    const { classTypeId } = this.props;
-    Meteor.call("purchases.checkPurchasedPackagesWithClassId", classTypeId, (err, res) => {
-      if (res) {
-        const anyActivePackage = res.any
-      }
-    });
-  }
-
-  handleClassClosed = () => {
-    const currentUser = Meteor.user();
-    const userName = getUserFullName(currentUser);
-    const { popUp } = this.props;
-    let emailId;
-    this.props &&
-      this.props.schoolId &&
-      Meteor.call("school.getMySchool", null, false, (err, res) => {
-        if (res) {
-          emailId = res && res[0].email;
-          popUp.appear("success", {
-            content: `Hi ${userName}, This class is closed to registration. ${emailId &&
-              emailId &&
-              `contact the administrator at ${emailId} for more details.`} `
-          });
-        }
-      });
-  };
-  handleAddToMyCalendarButtonClick = () => {
-    const classTimeData = { ...this.props };
-    this.addToMyCalender(classTimeData);
-  };
-  addToMyCalender = data => {
-    // check for user login or not
-    const userId = Meteor.userId();
-    if (!isEmpty(userId)) {
-      const {classTimeId,classTypeId,schoolId} = this.props.classData;
-      const doc = {
-        classTimeId,
-        classTypeId,
-        schoolId,
-        userId
-      };
-      this.handleClassInterest({
-        methodName: "classInterest.addClassInterest",
-        data: { doc }
-      });
-      this.setState({ addToCalendar: false });
-    } else {
-      // alert("Please login !!!!")
-      //Events.trigger("loginAsUser");
-      this.setState({
-        nonUserDialogBox: true
-      });
-    }
-  };
-  handleClassInterest = ({ methodName, data }) => {
-    this.setState({ isLoading: true });
-    const currentUser = Meteor.user();
-    const userName = getUserFullName(currentUser);
-    Meteor.call(methodName, data, (err, res) => {
-      this.setState({ isLoading: false });
-    });
-  };
-  handleRemoveFromCalendarButtonClick = () => {
-    // this.setState({ addToCalendar: true });
-    const classTimeData = { ...this.props };
-    this.removeFromMyCalender(classTimeData);
-  };
-
-  removeFromMyCalender = classTimeRec => {
-    const { popUp } = this.props;
-    const {_id}= this.props.classInterestData;
-    // check for user login or not
-    const userId = Meteor.userId();
-    if (!isEmpty(userId)) {
-      if (_id) {
-        const doc = {
-          _id,
-          userId
-        };
-        this.handleClassInterest({
-          methodName: "classInterest.removeClassInterest",
-          data: { doc }
-        });
-      }
-      this.setState({ addToCalendar: true });
-    } else {
-      this.setState({
-        nonUserDialogBox: true
-      });
-    }
-  };
-  handleCheckBoxes = CheckBoxes => {
-    const {popUp} = this.props;
-      if (CheckBoxes[0]) {
-        this.handleAddToMyCalendarButtonClick();
-      } else {
-        this.handleRemoveFromCalendarButtonClick();
-      }
-    this.handleNotification(CheckBoxes);
-    popUp.appear("success", {
-      content: `Operation performed successfully.`
-    });
-  };
-  handleNotification = CheckBoxes => {
-    this.setState({ isLoading: true });
-    const { schoolId, classTypeId, classType } = this.props;
-    const currentUser = Meteor.user();
-    const userName = getUserFullName(currentUser);
-    if (!isEmpty(currentUser)) {
-      let data = {
-        name: userName,
-        email: currentUser.emails[0].address,
-        schoolId: schoolId,
-        classTypeId: classTypeId,
-        userId: Meteor.userId(),
-        notification: CheckBoxes[1],
-        createdAt: new Date(),
-        classType: classType.name,
-        existingUser: true
-      };
-      Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-        const { popUp } = this.props;
-      });
-    }
-    this.setState({ isLoading: false });
-  };
   render() {
     const {
       classData:{eventData:{title}},
       schoolName,
       schoolCoverSrc,
        desc, address, 
-      website, start, schoolId, classType, params, classData,selectedLocation,notification
+      website, start, schoolId, classType, params, classData,selectedLocation,popUp
     } = this.props;
-    const {scheduled_date,eventData:{timeZone}} = classData || {};
+    const {scheduled_date,eventData:{timeZone},classTimeId} = classData || {};
     const eventStartTime = formatTime(scheduled_date,timeZone)
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
@@ -185,22 +50,11 @@ class ClassTimeInformation extends Component {
             onModalClose={() => {
               this.setState({ thinkingAboutAttending: false });
             }}
-            handleClassClosed={this.handleClassClosed}
-            handleAddToMyCalendarButtonClick={
-              this.handleAddToMyCalendarButtonClick
-            }
-            handleRemoveFromCalendarButtonClick={
-              this.handleRemoveFromCalendarButtonClick
-            }
-            addToCalendar={true}
-            notification={true}
-            purchaseThisPackage={() => {
-              this.setState({ thinkingAboutAttending: false });
-            }}
-            handleCheckBoxes={this.handleCheckBoxes}
             name={classType.name}
             params={params}
             classTypeId={classType._id}
+            popUp = {popUp}
+            classTimeId = {classTimeId}
           />)}
 
         <NameBar

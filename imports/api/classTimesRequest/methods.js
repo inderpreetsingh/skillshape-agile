@@ -165,12 +165,6 @@ Meteor.methods({
       }
    },
     'classTimesRequest.getUserRecord':function(classTypeId){
-      let result = ClassTimesRequest.findOne({userId:this.userId,classTypeId});
-      if(result){
-        return result.notification;
-      }
-      else {
-        return false;
-      }
+      return ClassTimesRequest.findOne({userId:this.userId,classTypeId});
     }
 })

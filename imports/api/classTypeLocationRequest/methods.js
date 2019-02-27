@@ -132,12 +132,6 @@ Meteor.methods({
      }
   },
    'classTypeLocationRequest.getUserRecord':function(classTypeId){
-     let result = ClassTypeLocationRequest.findOne({userId:this.userId,classTypeId});
-     if(result){
-       return result.notification;
-     }
-     else {
-       return false;
-     }
+     return  ClassTypeLocationRequest.findOne({userId:this.userId,classTypeId});
    }
 })

@@ -1,16 +1,11 @@
 
-import {sendRequestReceivedEmail} from '/imports/api/email/index.js';
 Meteor.methods({
-    'test.email':()=>{
+    'test.notification':function () {
         try{
-            let email = 'ramesh.bansal.daffodilsw.com';
-            let name  = "random";
-            let url = Meteor.absoluteUrl();
-            sendRequestReceivedEmail({toEmail:email, fromEmail:email, ownerName:name, currentUserName:name,  classTypeName:name, schoolPageLink:url, updateLink: url, memberLink:url, requestFor:name});
-            
+            return Meteor.call("classInterest.getClassInterest",{userId:this.userId,classTimeId:"nEYbGZr2GRMXkmGw5",classTypeId:"Lmg8xwxztxnSWEJ7f"})            
         }
         catch(error){
-			console.log('TCL: catch -> error', error)
+			console.log('error in test methods', error)
         }
     }
 })

@@ -14,6 +14,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypePackages from './classTypePackages.jsx';
 import Button from 'material-ui/Button';
 import Events from "/imports/util/events";
+import {handleJoin} from "/imports/util";
 import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
@@ -74,8 +75,12 @@ const labelValue = ['Add this class to my calendar.', 'Sign me up for notificati
 class ThinkingAboutAttending extends React.Component {
   constructor(props) {
     super(props);
-    const { addToCalendar, notification } = this.props;
-    this.state = { checkBoxes: [true, true, true], classTypePackages: false, packagesRequired: 'perClassAndMonthly' }
+    this.state = { 
+      checkBoxes: [true, true],
+       classTypePackages: false,
+        packagesRequired: 'perClassAndMonthly',
+      isLoading :this.props.isLoading
+      }
   }
   componentWillMount() {
     Events.on("loginAsUser", "123456", data => {
@@ -86,9 +91,23 @@ class ThinkingAboutAttending extends React.Component {
       this.handleSignUpDialogBoxState(true, userType, userEmail, userName);
     });
     this.checkUserPurchases(this.props);
+    this.getCheckBoxValues();
   }
   componentWillReceiveProps(nextProps) {
     !isEmpty(nextProps) && this.checkUserPurchases(nextProps);
+  }
+  getCheckBoxValues = () =>{
+    const {classTypeId,classTimeId} = this.props;
+    let filterForNotificationStatus = {classTimeId,classTypeId,userId:Meteor.userId()}
+      Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,(err,result)=>{
+        if(!isEmpty(result)){
+          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest}} = result;
+          let calendar = !isEmpty(classInterestData);
+          let notification = !isEmpty(classTimesRequest) && classTimesRequest.notification && !isEmpty(classTypeLocationRequest) && classTypeLocationRequest.notification;
+          let checkBoxes = [calendar,notification]
+          this.setState({checkBoxes,checkBoxesData:result});
+        }
+      })
   }
   checkUserPurchases = (props) =>{
     if(props.classTypeId && Meteor.userId()){
@@ -98,13 +117,13 @@ class ThinkingAboutAttending extends React.Component {
         if (!isEmpty(res)) {
           let { epStatus, purchased ,noPackageRequired} = res;
           if (epStatus && !isEmpty(purchased) || noPackageRequired) {
-            this.setState({ alreadyPurchased: true ,loginUserPurchases:res});
+            this.setState({ alreadyPurchased: true ,loginUserPurchases:res},);
           }
           else if (!epStatus) {
-            this.setState({ packagesRequired: 'enrollment' })
+            this.setState({ packagesRequired: 'enrollment' },)
           }
           else {
-            this.setState({ packagesRequired: 'perClassAndMonthly' })
+            this.setState({ packagesRequired: 'perClassAndMonthly' },)
           }
         }
       })
@@ -218,9 +237,8 @@ class ThinkingAboutAttending extends React.Component {
     this.setState({ classTypePackages: false });
   }
   render() {
-    const { checkBoxes, classTypePackages, packagesRequired,loginUserPurchases ,alreadyPurchased} = this.state;
-    const { open, onModalClose, addToCalendar,
-      handleClassClosed, handleCheckBoxes,  name, schoolId, params, classTypeId,handleSignIn, } = this.props;
+    const { checkBoxes, classTypePackages, packagesRequired,loginUserPurchases ,alreadyPurchased,isLoading} = this.state;
+    const { open, onModalClose, name, schoolId, params, classTypeId,handleSignIn, } = this.props;
     let packagesLength = 0;
     if(!isEmpty(loginUserPurchases)){
       const {purchased=[]} = loginUserPurchases;
@@ -270,7 +288,7 @@ class ThinkingAboutAttending extends React.Component {
               onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
             />
           )}
-          {this.props.isLoading && <ContainerLoader />}
+          {isLoading && <ContainerLoader />}
           {classTypePackages && <ClassTypePackages
             schoolId={schoolId}
             open={classTypePackages}
@@ -321,19 +339,8 @@ class ThinkingAboutAttending extends React.Component {
             </ButtonWrapper>
              <ButtonWrapper>
               <FormGhostButton
-                onClick={() => {
-                  if(handleSignIn){
-                    handleSignIn()
-                  }
-                  if (addToCalendar == 'closed') {
-                    handleClassClosed();
-                  }
-                  else {
-                    handleCheckBoxes(checkBoxes);
-                  }
-                  onModalClose()
-                }}
-                label={!alreadyPurchased ? "Join but Purchase Later" : "Save"}
+                onClick={()=>{handleJoin.call(this)}}
+                label={"Join"}
               />
             </ButtonWrapper>
             {!alreadyPurchased && <ButtonWrapper>

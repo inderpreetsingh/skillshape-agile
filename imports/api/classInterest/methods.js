@@ -133,5 +133,19 @@ Meteor.methods({
       })
     }
     return classData;
+  },"classInterest.getClassInterest": function(filter) {
+    try{
+      if(!isEmpty(filter)){
+        const {classTypeId} = filter;
+        let classInterestData = ClassInterest.findOne(filter) || {};
+        let classTimesRequest = Meteor.call("classTimesRequest.getUserRecord",classTypeId) || {}
+        let classTypeLocationRequest = Meteor.call("classTypeLocationRequest.getUserRecord",classTypeId) || {}
+        return {classInterestData:classInterestData,notification:{classTimesRequest,classTypeLocationRequest}}
+      }
+      return {};
+    }catch(error){
+			console.log('error in classInterest.getClassInterest', error)
+      throw new Meteor.Error(error);
+    }
   }
 });

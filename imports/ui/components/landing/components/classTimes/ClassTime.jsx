@@ -260,10 +260,7 @@ class ClassTime extends Component {
     }
   };
 
-  handleAddToMyCalendarButtonClick = () => {
-    const classTimeData = { ...this.props };
-    this.addToMyCalender(classTimeData);
-  };
+  
 
   handleNonUserDialogBoxState = state => e => {
     this.setState({
@@ -271,130 +268,10 @@ class ClassTime extends Component {
     });
   };
 
-  handleRemoveFromCalendarButtonClick = () => {
-    // this.setState({ addToCalendar: true });
-    const classTimeData = { ...this.props };
-    this.removeFromMyCalender(classTimeData);
-  };
-
-  removeFromMyCalender = classTimeRec => {
-    const { popUp } = this.props;
-    const result = this.props.classInterestData.filter(
-      data => data.classTimeId == classTimeRec._id
-    );
-    // check for user login or not
-    const userId = Meteor.userId();
-    if (!isEmpty(userId)) {
-      if (!_.isEmpty(result)) {
-        const doc = {
-          _id: result[0]._id,
-          userId
-        };
-        this.handleClassInterest({
-          methodName: "classInterest.removeClassInterest",
-          data: { doc }
-        });
-      }
-      this.setState({ addToCalendar: true });
-    } else {
-      // popUp.error("Please login !","Error");
-      this.setState({
-        nonUserDialogBox: true
-      });
-    }
-  };
-
-  addToMyCalender = data => {
-    // check for user login or not
-    const userId = Meteor.userId();
-    if (!isEmpty(userId)) {
-      const doc = {
-        classTimeId: data._id,
-        classTypeId: data.classTypeId,
-        schoolId: data.schoolId,
-        userId
-      };
-      this.handleClassInterest({
-        methodName: "classInterest.addClassInterest",
-        data: { doc }
-      });
-      this.setState({ addToCalendar: false });
-    } else {
-      // alert("Please login !!!!")
-      //Events.trigger("loginAsUser");
-      this.setState({
-        nonUserDialogBox: true
-      });
-    }
-  };
-
-  handleClassInterest = ({ methodName, data }) => {
-    this.setState({ isLoading: true });
-    const currentUser = Meteor.user();
-    const userName = getUserFullName(currentUser);
-    Meteor.call(methodName, data, (err, res) => {
-      const { popUp } = this.props;
-      this.setState({ isLoading: false });
-      if (err) {
-        popUp.appear("error", { content: err.message });
-      } else {
-        if (methodName.indexOf("remove") !== -1)
-          popUp.appear("success", {
-            content: `Hi ${userName}, Class removed successfully from your calendar`
-          });
-        else
-          popUp.appear("success", {
-            content: `Hi ${userName}, Class added successfully to your calendar`
-          });
-      }
-    });
-  };
-  handleClassClosed = () => {
-    const currentUser = Meteor.user();
-    const userName = getUserFullName(currentUser);
-    const { popUp } = this.props;
-    let emailId;
-    this.props &&
-      this.props.schoolId &&
-      Meteor.call("school.getMySchool", null, false, (err, res) => {
-        if (res) {
-          emailId = res && res[0].email;
-          popUp.appear("success", {
-            content: `Hi ${userName}, This class is closed to registration. ${emailId &&
-              emailId &&
-              `contact the administrator at ${emailId} for more details.`} `
-          });
-        }
-      });
-  };
-
   reformatNewFlowData = () => {
     const newData = {};
     let { formattedClassTimesDetails, scheduleType } = this.props;
     scheduleType = scheduleType.toLowerCase();
-
-    // if (scheduleType === "recurring" || scheduleType === "ongoing") {
-    //   if (typeof formattedClassTimesDetails[0] !== "object") {
-    //     return formattedClassTimesDetails;
-    //   }
-    //
-    //   // key attr specifies the day information is stored on keys
-    //   formattedClassTimesDetails.forEach((scheduleData, index) => {
-    //     scheduleData.key.forEach(dowObj => {
-    //       // debugger;
-    //       if (!newData[dowObj.label]) {
-    //         newData[dowObj.label] = [];
-    //       }
-    //
-    //       const scheduleDataCopy = JSON.parse(JSON.stringify(scheduleData));
-    //       delete scheduleDataCopy.key;
-    //       newData[dowObj.label].push(scheduleDataCopy);
-    //     });
-    //   });
-    //
-    //   return newData;
-    // }
-
     return formattedClassTimesDetails;
   };
 
@@ -500,45 +377,7 @@ class ClassTime extends Component {
     });
   }
 
-  handleNotification = CheckBoxes => {
-    this.setState({ isLoading: true });
-    const { schoolId, classTypeId, classTypeName,schoolName='' } = this.props;
-		console.log("​getScheduleTypeFormatted -> schoolName", schoolName)
-    const currentUser = Meteor.user();
-    const userName = getUserFullName(currentUser);
-    if(!isEmpty(currentUser)){
-    let data = {
-      name: userName,
-      email: currentUser.emails[0].address,
-      schoolId: schoolId,
-      classTypeId: classTypeId,
-      userId: Meteor.userId(),
-      notification: CheckBoxes[1],
-      createdAt: new Date(),
-      classTypeName: classTypeName.name,
-      existingUser: true
-    };
-    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-      const { popUp } = this.props;
-      if (res) {
-        Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-          if (res1) {
-            popUp.appear("success", {
-              content: `Hi ${userName}, You are now ${
-                CheckBoxes[1] ? "subscribed" : "unsubscribed"
-              } to  notification related to the
-            location and time updates for ${schoolName && schoolName} ${classTypeName.name}.
-             You can change this in the My Subscriptions area.
-            `
-            });
-            this.componentWillMount();
-          }
-        });
-      }
-    });
-  }
-  this.setState({ isLoading: false });
-  };
+ 
 
   getClassTimeRoomInfo = () => {
     const { selectedLocation, classes } = this.props;
@@ -597,17 +436,7 @@ class ClassTime extends Component {
     );
   };
 
-  handleCheckBoxes = CheckBoxes => {
-    const { addToCalendar } = this.props;
-    if (CheckBoxes[0] != !addToCalendar) {
-      if (CheckBoxes[0]) {
-        this.handleAddToMyCalendarButtonClick();
-      } else {
-        this.handleRemoveFromCalendarButtonClick();
-      }
-    }
-    this.handleNotification(CheckBoxes);
-  };
+  
 
   handleDescriptionState = descriptionState => e => {
     e.stopPropagation();
@@ -649,7 +478,7 @@ class ClassTime extends Component {
       addToCalendar,
       notification
     } = this.state;
-
+    const {_id:classTimeId} = classTimeData || {};
     // console.group("formattedClassTimes");
     // console.groupEnd();
 
@@ -678,26 +507,12 @@ class ClassTime extends Component {
                   onModalClose={() => {
                     this.setState({ thinkingAboutAttending: false });
                   }}
-                  handleClassClosed={this.handleClassClosed}
-                  handleAddToMyCalendarButtonClick={
-                    this.handleAddToMyCalendarButtonClick
-                  }
-                  handleRemoveFromCalendarButtonClick={
-                    this.handleRemoveFromCalendarButtonClick
-                  }
-                  addToCalendar={addToCalendar}
-                  notification={notification}
-                  purchaseThisPackage={() => {
-                    this.setState({ thinkingAboutAttending: false });
-                    this.scrollTo("price-section");
-                    onModalClose();
-                  }}
-                  handleCheckBoxes={this.handleCheckBoxes}
                   name= {name}
                   params = {params}
                   classTypeId = {classTypeId}
+                  classTimeId = {classTimeId}
                   popUp={popUp}
-                  enrollmentIds = {enrollmentIds}
+                  
                 />
               )}
             <div>
