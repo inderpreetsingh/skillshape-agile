@@ -14,7 +14,6 @@ import FormGhostButton from '/imports/ui/components/landing/components/buttons/F
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Pagination from "/imports/ui/componentHelpers/pagination";
-import { AnimateOnChange } from '@nearform/react-animation'
 import moment from 'moment';
 const Div = styled.div`
     display: flex;
@@ -645,11 +644,6 @@ class MembersListContainer extends Component {
           setPackagesRequired={this.setPackagesRequired}
         />}
         <ListWrapper>
-          <AnimateOnChange
-            animationIn="fadeIn"
-            animationOut="fadeOut"
-            durationOut={400}
-          >
             <MembersList
               viewType={currentView}
               onSearchChange={this.handleSearchChange("teachersFilterWith")}
@@ -662,14 +656,8 @@ class MembersListContainer extends Component {
               instructorsIds={instructorsIds}
               addInstructor
             />
-          </AnimateOnChange>
         </ListWrapper>
         <ListWrapper>
-          <AnimateOnChange
-            animationIn="fadeIn"
-            animationOut="fadeOut"
-            durationOut={400}
-          >
             <MembersList
               viewType={currentView}
               searchedValue={this.state.studentsFilterWith}
@@ -697,8 +685,6 @@ class MembersListContainer extends Component {
               setNotes={this.setNotes}
               slug={slug}
             />
-          </AnimateOnChange>
-
         </ListWrapper>
         <PaginationWrapper>
           <Pagination
