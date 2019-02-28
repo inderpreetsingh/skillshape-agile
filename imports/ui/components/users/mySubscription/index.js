@@ -149,8 +149,9 @@ class MySubscription extends React.Component {
 		})
 	}
 	leaveSchool = () => {
-		let { popUp, currentUser, schoolData ,userId} = this.props;
-		let { _id: schoolId ,name:schoolName} = schoolData[0];
+		let { popUp, currentUser, userId} = this.props;
+		let {selectedSchool:schoolData} = this.state;
+		let { _id: schoolId ,name:schoolName} = schoolData;
 		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
 		let content = '';
 		if(checkIsAdmin({user:currentUser,schoolData}) && userId != Meteor.userId()){
