@@ -50,7 +50,7 @@ class ClassTimeInformation extends Component {
             onModalClose={() => {
               this.setState({ thinkingAboutAttending: false });
             }}
-            name={classType.name}
+            name={title}
             params={params}
             classTypeId={classType._id}
             popUp = {popUp}

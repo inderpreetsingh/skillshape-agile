@@ -460,7 +460,6 @@ class ClassTime extends Component {
       classes,
       inPopUp,
       formattedClassTimesDetails,
-      classTypeName,
       onModalClose,
       editMode,
       classTimeData,
@@ -484,7 +483,9 @@ class ClassTime extends Component {
 
     //const showDescription = this.showDescription(formattedClassTimes);
     const {selectedLocation:{timeZone}} = classTimeData;
+    const {name:classTimeName,classTypeName:{name:className}} = classTimeData;
     const dotColor = this.getDotColor(this.props.addToCalendar);
+    const title = `${className}: ${classTimeName}`; 
     return (
       <Fragment>
         {" "}
@@ -507,7 +508,7 @@ class ClassTime extends Component {
                   onModalClose={() => {
                     this.setState({ thinkingAboutAttending: false });
                   }}
-                  name= {name}
+                  name= {title}
                   params = {params}
                   classTypeId = {classTypeId}
                   classTimeId = {classTimeId}

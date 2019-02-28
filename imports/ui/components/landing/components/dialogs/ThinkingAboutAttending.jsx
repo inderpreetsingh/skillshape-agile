@@ -70,7 +70,7 @@ const ErrorWrapper = styled.span`
     color: red;
     float: right;
 `;
-const labelValue = ['Add this class to my calendar.', 'Sign me up for notification of class time or location changes.',
+const labelValue = ['Add this class to my calendar.', 'Sign me up for notifications regarding class time or Location changes.',
   'Sign me up for emails from the school about this class.']
 class ThinkingAboutAttending extends React.Component {
   constructor(props) {
@@ -309,7 +309,7 @@ class ThinkingAboutAttending extends React.Component {
             </DialogTitleWrapper>
           </DialogTitle>
           <DialogContent style={{ fontSize: '18px' }}>
-          <TextWrapper> {!alreadyPurchased ? 'To attend you must purchase a class package.' : `Congratulations! You have ${packagesLength} subscription that covers this ${name} class! `}</TextWrapper>
+          <TextWrapper> {!alreadyPurchased ? 'To attend you must purchase a class package.' : `Congratulations! You have ${packagesLength} subscription that will allow you to attend ${name} classes. `}</TextWrapper>
           {checkBoxes.map((i, index) => {
               return (<FormControl fullWidth margin="dense">
                 <FormControlLabel
