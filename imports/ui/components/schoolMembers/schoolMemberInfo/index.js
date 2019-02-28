@@ -593,6 +593,7 @@ class SchoolMemberInfo extends Component {
 		Meteor.call("schoolMemberDetails.emailAccessEdit",doc_id,doc,(err,res)=>{
 			const {popUp} = this.props;
 			if(res){
+				this.props.handleMemberDetailsToRightPanel(doc_id._id)
 				confirmationDialog({popUp,defaultDialog:true});
 			}
 			else if(err){

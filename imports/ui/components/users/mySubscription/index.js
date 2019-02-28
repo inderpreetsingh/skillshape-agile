@@ -295,6 +295,7 @@ class MySubscription extends React.Component {
 	handleEmailAccess = (doc_id,doc) => {
 		Meteor.call("schoolMemberDetails.emailAccessEdit",doc_id,doc,(err,res)=>{
 			const {popUp} = this.props;
+			this.okClick()
 			if(res){
 				confirmationDialog({popUp,defaultDialog:true});
 			}
