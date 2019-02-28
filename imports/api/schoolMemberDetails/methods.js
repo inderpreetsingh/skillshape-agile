@@ -170,7 +170,7 @@ Meteor.methods({
   },
   "schoolMemberDetails.getNotes":function(filter){
     let result  = SchoolMemberDetails.findOne(filter);
-     return {notes:get(result,'adminNotes',''),smdId:result._id};
+     return {notes:get(result,'adminNotes',''),smdId:get(result,"_id","")};
   },
   "schoolMemberDetails.getMemberData":function(filter){
     return SchoolMemberDetails.findOne(filter);
