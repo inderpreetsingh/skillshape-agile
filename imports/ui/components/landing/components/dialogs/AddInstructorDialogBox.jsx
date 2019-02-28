@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-
 import ClearIcon from "material-ui-icons/Clear";
 import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
 import IconButton from "material-ui/IconButton";
 import { MuiThemeProvider, withStyles } from "material-ui/styles";
-
-
+import { ContainerLoader } from "/imports/ui/loading/container";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
@@ -276,7 +274,7 @@ class AddInstructorDialogBox extends Component {
     const { props } = this;
     let birthYears = [];
     let adminView = true;
-    let { selectedOption, emailList } = this.state;
+    let { selectedOption, emailList,isLoading } = this.state;
     let text = props.text ? props.text : 'Instructor';
     return (
       <Dialog
@@ -286,6 +284,7 @@ class AddInstructorDialogBox extends Component {
         aria-labelledby={`add ${text}`}
         classes={{ paper: props.classes.dialogRoot }}
       >
+      {isLoading && <ContainerLoader/>}
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
@@ -316,47 +315,6 @@ class AddInstructorDialogBox extends Component {
                 onChange={this.handleEmail}
                 multi
               />
-
-
-
-
-              {/*package details will be show later and the commented code will be used after currency task*/}
-
-
-              {/* {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&& <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
-          <Multiselect
-            textField={"name"}
-            valueField={"_id"}
-            data={this.props.enrollmentFee}
-            placeholder="Enrollment Fee"
-            onChange={this.collectSelectedClassTypes}
-          />
-          
-          
-        </Grid>}
-        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
-        <Multiselect
-            textField={"packageName"}
-            valueField={"_id"}
-            data={this.props.classPricing}
-            placeholder="Class Packages"
-            onChange={this.collectSelectedClassTypes}
-          />
-          </Grid>}
-        {this.state.selectedClassTypes!=null && !isEmpty(this.state.selectedClassTypes)&&  <Grid item xs={12} sm={6} style={{ marginTop: "26px" }}>
-           <Multiselect
-            textField={"packageName"}
-            valueField={"_id"}
-            data={this.props.monthlyPricing}
-            placeholder="Monthly Packages"
-            onChange={this.collectSelectedClassTypes}
-          />
-          </Grid>}
-         */}
-
-
-
-
               <ActionButtons>
                 {this.state.error && <ErrorWrapper>{this.state.error}</ErrorWrapper>}
                 {this.state.selectedOption.length ? <PrimaryButton
@@ -372,10 +330,8 @@ class AddInstructorDialogBox extends Component {
                   onClick={props.onModalClose}
                 />
               </ActionButtons>
-
             </form>
           </DialogContent>
-
           <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
           </DialogActions>
         </MuiThemeProvider>
