@@ -44,7 +44,11 @@ SchoolMemberDetails.attachSchema(
     studentWithoutEmail: {
       type: Boolean,
       optional: true
-    }
+    },
+    addedOn: {
+      type: Date,
+      optional: true
+  }
   })
 );
 Meteor.startup(function() {

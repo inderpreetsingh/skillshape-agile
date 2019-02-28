@@ -135,9 +135,9 @@ Meteor.methods({
     }
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
-		console.log('TCL: memberData', memberData)
     check(memberData,Object);
     const {activeUserId,schoolId,classTypeIds,classTypeId} = memberData;
+    memberData.addedOn = new Date();
     // First time new member added.
     if(!classTypeId){
       let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};
@@ -151,7 +151,7 @@ Meteor.methods({
         return SchoolMemberDetails.insert(memberData);
       }
     }
-    // member going to add future need to add class type ids in existing records
+    // member going to in the future need to add class type ids in existing records
     else if(classTypeId){
       let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};
       if(!isEmpty(data)){
