@@ -3,6 +3,7 @@ import {get,isEmpty,uniq,includes,flatten,compact} from 'lodash';
 import { check } from 'meteor/check';
 import Purchases from '/imports/api/purchases/fields.js';
 import { isArray } from 'util';
+import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields.js";
 Meteor.methods({
     'transactions.handleEntry':function(data){
         check(data,Object);
@@ -112,7 +113,18 @@ Meteor.methods({
              ]
              , {cursor:{}}
         );
-        return {Purchases,Attendance,Expired,Cancelled}
+        let Members = SchoolMemberDetails.aggregate(
+            [ { $match : { schoolId :{$in: schoolId}} },
+                {
+                    $group : {
+                       _id : { month: { $month: "$addedOn" },year: { $year: "$addedOn" } },
+                       count: { $sum: 1 }
+                    }
+                  }
+             ]
+             , {cursor:{}}
+        )
+        return {Purchases,Attendance,Expired,Cancelled,Members}
           }catch(error){
               console.log('error in transactions.getDataForGraph', error)
               throw new Meteor.Error(error)

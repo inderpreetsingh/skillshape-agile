@@ -1,16 +1,16 @@
 import { isEmpty, cloneDeep } from 'lodash';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-const colors = { 'Attendance': helpers.alertColor, "Purchases": helpers.primaryColor,"Expired":helpers.black,'Cancelled':"dodgerblue" };
+const colors = { 'Attendance': helpers.alertColor, "Purchases": helpers.primaryColor,"Expired":helpers.black,'Cancelled':"dodgerblue","Members":helpers.cancel };
 export function generateGraphData(graphData, options) {
   let data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"],
     datasets: []
   };
-  let graphValues = [];
   let maxMonth = 0;
   if (graphData && !isEmpty(graphData)) {
     let keyNames = Object.keys(graphData);
     keyNames.map((keyName) => {
+      let graphValues = [];
       let currentGraphData = graphData[keyName];
       let color = colors[keyName] || helpers.alertColor;
       if (!isEmpty(currentGraphData)) {
@@ -47,6 +47,7 @@ export function generateGraphData(graphData, options) {
       }
     })
   }
+	console.log('TCL: generateGraphData -> data', data)
   return data;
 }
 
