@@ -48,7 +48,11 @@ SchoolMemberDetails.attachSchema(
     addedOn: {
       type: Date,
       optional: true
-  }
+  },
+    emailAccess: {
+      type: Boolean,
+      optional: true
+    } 
   })
 );
 Meteor.startup(function() {
