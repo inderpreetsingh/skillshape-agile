@@ -11,61 +11,10 @@ const SchoolMemberDetails = new Mongo.Collection(
  */
 SchoolMemberDetails.attachSchema(
   new SimpleSchema({
-    firstName: {
-      optional: true,
-      type: String
-    },
-    lastName: {
-      optional: true,
-      type: String
-    },
-    phone: {
-      optional: true,
-      type: String
-    },
-    pic: {
-      optional: true,
-      type: String
-    },
-    medium: {
-      optional: true,
-      type: String
-    },
-    low: {
-      optional: true,
-      type: String
-    },
-    dob: {
-      optional: true,
-      type: Date
-    },
-    address: {
-      optional: true,
-      type: String
-    },
-    gender: {
-      optional: true,
-      type: String
-    },
-    expertise: {
-      optional: true,
-      type: String
-    },
-    state: {
-      optional: true,
-      type: String
-    },
-    role: {
-      optional: true,
-      type: String
-    },
+   
     classTypeIds: {
       type: [String],
       optional: true
-    },
-    classTypeId:{
-      optional: true,
-      type: String
     },
     schoolId: {
       type: String,
@@ -76,15 +25,6 @@ SchoolMemberDetails.attachSchema(
       optional: true
     },
     adminNotes: {
-      type: String,
-      optional: true
-    },
-    createdBy: {
-      // Memeber who created an entry for new member.
-      type: String,
-      optional: true
-    },
-    email: {
       type: String,
       optional: true
     },
@@ -100,10 +40,6 @@ SchoolMemberDetails.attachSchema(
       type: Object,
       optional: true,
       blackbox: true
-    },
-    birthYear: {
-      type: String,
-      optional: true
     },
     studentWithoutEmail: {
       type: Boolean,

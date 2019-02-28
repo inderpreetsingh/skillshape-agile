@@ -21,11 +21,12 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,monthlyAttendance={};
+    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,monthlyAttendance={},classTypeIds=[];
     packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
       let enrollmentData = EnrollmentFees.findOne({ _id: packageId });
+      classTypeIds = get(enrollmentData,'classTypeId',[]);
       currency = enrollmentData.currency;
       amount = enrollmentData.cost;
       if(get(enrollmentData,'noExpiration',false)){
@@ -40,6 +41,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     }
     else if(packageType == 'CP'){
       let classData = ClassPricing.findOne({ _id: packageId })
+      classTypeIds = get(classData,'classTypeId',[]);
       currency = get(classData,"currency",'$');
       amount = get(classData,'cost',0);
       if(get(classData,'noExpiration',false)){
@@ -54,6 +56,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     }
     else {
       let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
+      classTypeIds = get(MonthlyData,'classTypeId',[]);
       MonthlyData.pymtDetails.map((current,index)=>{
         if(current.planId == planId){
           amount = current.cost ;
@@ -155,32 +158,19 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       userName=currentUserRec.profile.name || currentUserRec.profile.firstName;
       userEmail=currentUserRec.emails[0].address;
       let memberData = {
-        firstName:
-        currentUserRec.profile.name || currentUserRec.profile.firstName,
-        lastName: currentUserRec.profile.firstName || "",
-        email: currentUserRec.emails[0].address,
-        phone: "",
-        schoolId: schoolId,
-        birthYear: "",
-        studentWithoutEmail: false,
-        sendMeSkillShapeNotification: true,
+        schoolId,
         activeUserId: currentUserRec._id,
-        createdBy: "",
-        inviteAccepted: false
+        classTypeIds
       };
-      Meteor.call( "schoolMemberDetails.addNewMember", memberData, (error, result) => {
-          let memberId = result;
-          Meteor.call( "purchases.checkExisitingPackagePurchases", userId, packageId, (error, result) => {
-              status = result;
-              payload = { memberId: memberId, packageStatus: status };
-              Meteor.call("purchases.updatePurchases", { payload, recordId });
-            }
-          );
-        }
-      );
+      Meteor.call( "schoolMemberDetails.addNewMember", memberData);
+      Meteor.call( "purchases.checkExisitingPackagePurchases", userId, packageId, (error, result) => {
+        status = result;
+        payload = {packageStatus: status };
+        Meteor.call("purchases.updatePurchases", { payload, recordId });
+      }
+    );
       // stripe.balance.retrieve(function(err, balance) {
       // });
-      
       sendPackagePurchasedEmailToStudent(userName, userEmail, packageName);
       sendPackagePurchasedEmailToSchool(schoolName, schoolEmail, userName, userEmail, packageName)
       return "Payment Successfully Done";
@@ -319,7 +309,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     check(packageId,String);
     check(monthlyPymtDetails,[Object]);
     //customer creation and subscribe if new otherwise straight to subscribe
-    let startDate, expiryDate, subscriptionRequest, subscriptionDbId, payload, subscriptionResponse, stripeCusId,stripeCusIds=[],fee,currency,contractLength,monthlyAttendance={};
+    let startDate, expiryDate,classTypeIds, subscriptionRequest, subscriptionDbId, payload, subscriptionResponse, stripeCusId,stripeCusIds=[],fee,currency,contractLength,monthlyAttendance={};
     try {
       let userId = this.userId;
       let emailId=Meteor.user().emails[0].address;
@@ -344,6 +334,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         items: [{ plan: planId }]
       };
       let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
+      classTypeIds = get(MonthlyData,'classTypeId',[]);
       if(MonthlyData.duPeriod){
         monthlyAttendance.duPeriod = MonthlyData.duPeriod;
         monthlyAttendance.duPeriod = MonthlyData.noClasses;
@@ -385,6 +376,12 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         };
         // add subscription id in collection
          ClassSubscription.update({ _id: subscriptionDbId }, { $set: payload });
+         let memberData = {
+          schoolId,
+          activeUserId: userId,
+          classTypeIds
+        };
+        Meteor.call( "schoolMemberDetails.addNewMember", memberData);
         }
         return true;
     } catch (error) {
@@ -402,7 +399,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     try {
       let {userId,packageId,schoolId,packageType,paymentMethod,packageName,noClasses,planId} = data;
       let user = Meteor.users.findOne({_id:userId});
-      let payload,status,userName,emailId,fee,amount,
+      let payload,status,userName,emailId,fee,amount,classTypeIds,
       monthlyAttendance={},currency,expDuration,expPeriod,
       contractLength = 0,payAsYouGo = false,payUpFront = false,
       autoWithdraw=false,startDate,endDate,recordId;
@@ -412,6 +409,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       status = 'succeeded';
       if (packageType == "EP") {
         let enrollmentData = EnrollmentFees.findOne({ _id: packageId });
+        classTypeIds = get(enrollmentData,'classTypeId',[]);
         currency = enrollmentData.currency;
         amount = enrollmentData.cost;
         if(get(enrollmentData,'noExpiration',false)){
@@ -426,6 +424,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       }
       else if(packageType == 'CP'){
         let classData = ClassPricing.findOne({ _id: packageId })
+        classTypeIds = get(classData,'classTypeId',[]);
         currency = get(classData,"currency",'$');
         amount = get(classData,'cost',0);
         if(get(classData,'noExpiration',false)){
@@ -440,6 +439,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       }
       else {
         let MonthlyData = MonthlyPricing.findOne({'pymtDetails.planId':planId})
+        classTypeIds = get(MonthlyData,'classTypeId',[]);
         MonthlyData.pymtDetails && MonthlyData.pymtDetails.map((current,index)=>{
           if(current.planId == planId){
             amount = current.cost ;
@@ -503,6 +503,12 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
       status = result;
       payload.packageStatus = status;
       recordId = Meteor.call("purchases.addPurchase", payload);
+      let memberData = {
+        schoolId,
+        activeUserId: userId,
+        classTypeIds
+      };
+      Meteor.call( "schoolMemberDetails.addNewMember", memberData);
       return recordId;
     }catch(error){
 			console.log("error in ​stripe.handleOtherPaymentMethods", error)

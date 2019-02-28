@@ -902,33 +902,6 @@ handleCharge = (
         (error, result) => {
             if (result) {
                 if (result == 'Payment Successfully Done') {
-                    let x = new Date().getTime();
-                    let memberData = {
-                        firstName: currentUser.profile.name || currentUser.profile.firstName,
-                        lastName: currentUser.profile.firstName || '',
-                        email: currentUser.emails[0].address,
-                        phone: '',
-                        schoolId: self.props.schoolId,
-                        birthYear: '',
-                        studentWithoutEmail: false,
-                        sendMeSkillShapeNotification: true,
-                        activeUserId: currentUser._id,
-                        createdBy: '',
-                        inviteAccepted: false,
-                        packageDetails: {
-                            [x]: {
-                                packageName: packageName,
-                                createdOn: new Date(),
-                                packageType: packageType,
-                                packageId: packageId,
-                                expDuration: expDuration,
-                                expPeriod: expPeriod,
-                                noClasses: noClasses
-                            }
-                        }
-                    };
-                    Meteor.call('schoolMemberDetails.addNewMember', memberData);
-
                     popUp.appear(
                         'success',
                         {

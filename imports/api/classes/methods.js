@@ -94,6 +94,17 @@ Meteor.methods({
                 delete data._id;
                 Meteor.call(methodName,{doc:data});
             }
+            if(filter && filter.students && !isEmpty(filter.students)){
+                filter.students.map((obj,index)=>{
+                let memberData = {
+                    activeUserId:obj.userId,
+                    schoolId:filter.schoolId,
+                    classTypeId:filter.classTypeId,
+                    from:'classes'
+                }
+                Meteor.call("schoolMemberDetails.addNewMember",memberData);
+                })
+            }
             if(!filter._id){
                 filter.students=[obj];
                 filter.scheduled_date = new Date (filter.scheduled_date);
@@ -121,18 +132,8 @@ Meteor.methods({
                     filter.students = uniq(filter.students);
                     return Classes.update({_id:filter._id},{$set:filter});
                 }
+                                    
             }  
-            if(filter && filter.students && !isEmpty(filter.students)){
-                filter.students.map((obj,index)=>{
-                let memberData = {
-                    activeUserId:obj.userId,
-                    schoolId:filter.schoolId,
-                    classTypeId:filter.classTypeId,
-                    from:'classes'
-                }
-                Meteor.call("schoolMemberDetails.addNewMember",memberData);
-                })
-            }
         }catch(error){
 		console.log("classes.updateClassData in error", error)
 
