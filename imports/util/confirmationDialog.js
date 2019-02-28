@@ -12,20 +12,36 @@ const ButtonsWrapper = styled.div`
 `;
 
 export function confirmationDialog(data) {
-    const { title, content, buttons, type, popUp } = data;
-    popUp.appear(type, {
-        title,
-        content,
-        RenderActions: (
-            <ButtonsWrapper>
-                {buttons.map((obj) => {
-                    return (
-                        <FormGhostButton
-                            applyClose
-                            {...obj}
-                        />
-                    )
-                })}
-            </ButtonsWrapper>)
-    }, true);
+    const { title, content, buttons, type, popUp ,defaultDialog,errDialog } = data;
+    if(defaultDialog || errDialog){
+        popUp.appear("success", {
+            title:'Success',
+            content:errDialog? "Something went Wrong !" :'Operation Completed Successfully.',
+            RenderActions: (
+                <ButtonsWrapper>
+                            <FormGhostButton
+                                applyClose
+                                label= {'Ok'}
+                                onClick= {()=>{}}
+                            />
+                </ButtonsWrapper>)
+        }, true);
+    }
+    else{
+        popUp.appear(type, {
+            title,
+            content,
+            RenderActions: (
+                <ButtonsWrapper>
+                    {buttons.map((obj) => {
+                        return (
+                            <FormGhostButton
+                                applyClose
+                                {...obj}
+                            />
+                        )
+                    })}
+                </ButtonsWrapper>)
+        }, true);
+    }
 }

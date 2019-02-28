@@ -593,13 +593,14 @@ class DashBoardView extends React.Component {
     const { isAdmin, schoolData, adminsData, purchaseByUserId, view } = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
+    let emailAccess = false;
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
-    console.log(this.props, memberId, Meteor.user(), "................")
     if (view == 'classmates') {
       memberInfo = SchoolMemberDetails.findOne(memberId);
       profile = memberInfo.profile.profile;
       email = memberInfo.profile.emails[0].address;
       _id = memberInfo.activeUserId;
+      emailAccess = memberInfo.emailAccess;
     }
     else {
       memberInfo = adminsData.find(ele => ele._id == memberId);
@@ -622,6 +623,7 @@ class DashBoardView extends React.Component {
         name: profile.name,
         phone: profile.phone,
         email: email,
+        emailAccess,
         activeUserId: get(memberInfo, 'activeUserId', _id),
         schoolId: schoolId,
         adminNotes: memberInfo.adminNotes,

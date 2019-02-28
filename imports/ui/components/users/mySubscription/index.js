@@ -51,6 +51,13 @@ class MySubscription extends React.Component {
 		let { currentUser } = this.props;
 		let schoolId = get(schoolData, '_id', null);
 		let userId = get(currentUser, '_id', null);
+		let filter = {schoolId,activeUserId:userId};
+		Meteor.call("schoolMemberDetails.getMemberData",filter,(err,res)=>{
+			if(!isEmpty(res)){
+				const {emailAccess,_id:memberId} = res;
+				this.setState({emailAccess:emailAccess ? emailAccess : false,memberId});
+			}
+		})
 		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
 			if (res)
 				this.setState({ subscriptionsData: res })
@@ -285,8 +292,33 @@ class MySubscription extends React.Component {
 			}
 		});
 	}
+	handleEmailAccess = (doc_id,doc) => {
+		Meteor.call("schoolMemberDetails.emailAccessEdit",doc_id,doc,(err,res)=>{
+			const {popUp} = this.props;
+			if(res){
+				confirmationDialog({popUp,defaultDialog:true});
+			}
+			else if(err){
+				confirmationDialog({popUp,errDialog:true});
+			}
+		})
+	}
+	confirmationForAccessEmail = () =>{
+		const {emailAccess,memberId:_id,selectedSchool:{name}} = this.state;
+		let doc_id = {_id};
+		let doc = {emailAccess:!emailAccess};
+		const {popUp} = this.props;
+		let	data = {
+				popUp,
+				title: 'Confirmation',
+				type: 'inform',
+				content :`By ${doc.emailAccess ? 'Allowing' : 'Disabling'} Email access ${name} will ${doc.emailAccess ? 'able' : 'unable'} to send email notification. We don't spam.`,
+		        buttons : [{ label: 'Cancel', onClick: () => {  }, alert: true }, { label: 'Ok', onClick: () => {this.handleEmailAccess(doc_id,doc) }, greyColor: true }]
+		}
+		confirmationDialog(data);
+	}
 	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData } = this.state;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,memberId } = this.state;
 		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -323,6 +355,9 @@ class MySubscription extends React.Component {
 						stopNotification={this.stopNotification}
 						leaveSchool={this.leaveSchool}
 						removeFromCalendar={this.removeFromCalendar}
+						emailAccess={emailAccess}
+						memberId = {memberId}
+						confirmationForAccessEmail={this.confirmationForAccessEmail}
 					/>
 				</Wrapper>
 			</React.Suspense>

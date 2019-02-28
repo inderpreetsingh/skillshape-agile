@@ -174,5 +174,13 @@ Meteor.methods({
   },
   "schoolMemberDetails.getMemberData":function(filter){
     return SchoolMemberDetails.findOne(filter);
+  },
+  "schoolMemberDetails.emailAccessEdit":function(doc_id,doc){
+    try{
+      return SchoolMemberDetails.update(doc_id,{$set:doc});
+    }catch(error){
+			console.log('error in schoolMemberDetails.emailAccessEdit', error)
+      throw new Meteor.Error(error);
+    }
   }
 });

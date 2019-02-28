@@ -1,27 +1,22 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import FileUpload from 'material-ui-icons/FileUpload';
-import Grid from 'material-ui/Grid';
+import MenuIcon from 'material-ui-icons/Menu';
+import IconButton from "material-ui/IconButton";
 import Input from 'material-ui/Input';
 import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import MobileDetect from 'mobile-detect';
 import React, { Component } from 'react';
-import ProgressiveImage from 'react-progressive-image';
 import styled from 'styled-components';
+import { SectionTitle } from '../sharedStyledComponents.js';
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
-import IconButton from "material-ui/IconButton";
-import MenuIcon from 'material-ui-icons/Menu';
-
-import { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, PrimaryButton, MemberActionButton } from '/imports/ui/components/landing/components/buttons/';
+import { FormGhostButton, PrimaryButton } from '/imports/ui/components/landing/components/buttons/';
 import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
-import { Text, SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { SectionTitle } from '../sharedStyledComponents.js';
+import { confirmationDialog, verifyImageURL, withPopUp } from '/imports/util';
+
 
 const AVATAR_SIZE = 165;
 
@@ -594,6 +589,31 @@ class SchoolMemberInfo extends Component {
 			}
 		);
 	}
+	handleEmailAccess = (doc_id,doc) => {
+		Meteor.call("schoolMemberDetails.emailAccessEdit",doc_id,doc,(err,res)=>{
+			const {popUp} = this.props;
+			if(res){
+				confirmationDialog({popUp,defaultDialog:true});
+			}
+			else if(err){
+				confirmationDialog({popUp,errDialog:true});
+			}
+		})
+	}
+	confirmationForAccessEmail = () =>{
+		const {emailAccess,memberId:_id,schoolName:name} = this.props.memberInfo;
+		let doc_id = {_id};
+		let doc = {emailAccess:!emailAccess};
+		const {popUp} = this.props;
+		let	data = {
+				popUp,
+				title: 'Confirmation',
+				type: 'inform',
+				content :`By ${doc.emailAccess ? 'Allowing' : 'Disabling'} Email access ${name} will ${doc.emailAccess ? 'able' : 'unable'} to send email notification. We don't spam.`,
+		        buttons : [{ label: 'Cancel', onClick: () => {  }, alert: true }, { label: 'Ok', onClick: () => {this.handleEmailAccess(doc_id,doc) }, greyColor: true }]
+		}
+		confirmationDialog(data);
+	}
 	render() {
 		const {
 			memberInfo,
@@ -624,8 +644,7 @@ class SchoolMemberInfo extends Component {
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
 		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', get(memberInfo, 'email', "Old Data"))));
-
-		console.info(bgImg, "...................");
+		const {emailAccess,memberId} = memberInfo;
 
 		return (
 			<Wrapper>
@@ -653,6 +672,9 @@ class SchoolMemberInfo extends Component {
 						isBusy={isBusy}
 						userId={userId}
 						schoolImg={schoolImg}
+						emailAccess= {emailAccess}
+						memberId= {memberId}
+						confirmationForAccessEmail= {this.confirmationForAccessEmail}
 					/>
 				)}
 				{callMemberDialog && (

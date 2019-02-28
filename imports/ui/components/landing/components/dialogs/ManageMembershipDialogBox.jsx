@@ -270,6 +270,9 @@ const ManageMemberShipDialogBox = props => {
         removeFromCalendar,
         removeAll,
         leaveSchool,
+        emailAccess,
+        confirmationForAccessEmail,
+        memberId
     } = props;
     // console.log("​subscriptionsData", subscriptionsData)
     return (
@@ -393,7 +396,11 @@ const ManageMemberShipDialogBox = props => {
                     {(!isEmpty(subscriptionsData)) && (<ButtonWrapper>
                         <FormGhostButton alertColor label="Leave school" onClick={leaveSchool} />
                     </ButtonWrapper>)}
-
+                    {memberId &&  <ButtonWrapper>
+                        <FormGhostButton alertColor={emailAccess} darkGreyColor={!emailAccess} label={emailAccess ? 'Disallow Email' : 'Allow Email'} onClick={confirmationForAccessEmail} />
+                    </ButtonWrapper>
+                }
+                   
                     <ButtonWrapper>
                         <FormGhostButton darkGreyColor label="Close" onClick={onModalClose} />
                     </ButtonWrapper>

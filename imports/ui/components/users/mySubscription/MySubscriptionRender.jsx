@@ -17,34 +17,6 @@ import ProfileImage from '/imports/ui/components/landing/components/helpers/Prof
 import { Heading, SubHeading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-stopNotification = (payload) => {
-    this.setState({ isBusy: true });
-    let data = {};
-    data.classTypeId = payload.classTypeId;
-    data.userId = payload.userId;
-    data.notification = !payload.notification;
-    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-        const { popUp } = this.props;
-        if (res) {
-            Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-                if (res1) {
-                    this.setState({ isBusy: false });
-                    popUp.appear("success", {
-                        content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-                    });
-                }
-            });
-        }
-        else {
-            this.setState({ isBusy: false });
-            popUp.appear("success", {
-                content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-            });
-        }
-    });
-}
-
 const styles = {
     contactIconButton: {
         background: 'white',
@@ -244,7 +216,10 @@ const MySubscriptionRender = (props) => {
         leaveSchool,
         removeFromCalendar,
         isBusy,
-        subscriptionsData
+        subscriptionsData,
+        confirmationForAccessEmail,
+        emailAccess,
+        memberId
     } = props;
 
     let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
@@ -265,6 +240,9 @@ const MySubscriptionRender = (props) => {
                     isBusy={isBusy}
                     userId={userId}
                     selectedSchoolData={selectedSchool}
+                    emailAccess = {emailAccess}
+                    memberId = {memberId}
+                    confirmationForAccessEmail = {confirmationForAccessEmail}
                 />
             )}
             {callUsDialog && (
