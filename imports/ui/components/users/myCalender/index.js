@@ -17,7 +17,7 @@ import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 import { capitalizeString, getUserFullName } from '/imports/util';
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
 import MDSpinner from "react-md-spinner";
-
+import moment from "moment";
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
     display: flex;
@@ -105,9 +105,9 @@ export default class MyCalender extends React.Component {
       }
     })
     this.setDate()
-    const { schoolId, classTypeId, classTimeId, start,scheduled_date,startDate,title,eventEndTime,eventStartTime,durationAndTimeunits,timeZone } = eventData;
-    let eventDataForClass = {title,durationAndTimeunits,timeZone};
-    let filter = { schoolId, classTypeId, classTimeId, scheduled_date,eventData:eventDataForClass };
+    const { schoolId, classTypeId, classTimeId, start,startTime,startDate,title,eventEndTime,eventStartTime,durationAndTimeunits,timeZone } = eventData;
+    let eventDataForClass = {title,durationAndTimeunits,timeZone,startTime};
+    let filter = { schoolId, classTypeId, classTimeId, scheduled_date:moment(start).toDate(),eventData:eventDataForClass };
     this.getStudentStatus(filter);
       Meteor.call("school.getMySchool", schoolId, (err, res) => {
         if (res) {
@@ -336,35 +336,49 @@ export default class MyCalender extends React.Component {
   handleSignIn = () => {
     const { popUp } = this.props;
     const { classDetails, filter, status } = this.state;
-
-    if (status == "Sign In") {
-      this.handleClassUpdate(classDetails ? classDetails : filter, 'signIn', popUp)
-    }
-    else {
-      popUp.appear("inform", {
-        title: "Confirmation",
-        content: `You are currently signed in. Do you want to sign out?`,
-        RenderActions: (<Div >
-          <ButtonWrapper>
-            <FormGhostButton
-              label={'No'}
-              onClick={() => {
-              }}
-              applyClose
-            />
-          </ButtonWrapper>
-          <ButtonWrapper>
-            <FormGhostButton
-              label={'Yes'}
-              onClick={() => {
-                this.handleClassUpdate(classDetails ? classDetails : filter, 'signOut', popUp)
-              }}
-              applyClose
-            />
-          </ButtonWrapper>
-        </Div>)
-      }, true);
-    }
+    const {classTypeId,classTimeId} = classDetails;
+    let filterForNotificationStatus = {classTimeId,classTypeId,userId:Meteor.userId()}
+      Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,(err,result)=>{
+        if(!isEmpty(result)){
+          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest}} = result;
+          let calendar = !isEmpty(classInterestData);
+          let notification = !isEmpty(classTimesRequest)&& !isEmpty(classTypeLocationRequest) ;
+          if(calendar && notification){
+            if (status == "Sign In") {
+              this.handleClassUpdate(classDetails ? classDetails : filter, 'signIn', popUp)
+            }
+            else {
+              popUp.appear("inform", {
+                title: "Confirmation",
+                content: `You are currently signed in. Do you want to sign out?`,
+                RenderActions: (<Div >
+                  <ButtonWrapper>
+                    <FormGhostButton
+                      label={'No'}
+                      onClick={() => {
+                      }}
+                      applyClose
+                    />
+                  </ButtonWrapper>
+                  <ButtonWrapper>
+                    <FormGhostButton
+                      label={'Yes'}
+                      onClick={() => {
+                        this.handleClassUpdate(classDetails ? classDetails : filter, 'signOut', popUp)
+                      }}
+                      applyClose
+                    />
+                  </ButtonWrapper>
+                </Div>)
+              }, true);
+            }
+          }
+          else{
+            this.setState({thinkingAboutAttending:true})
+          }
+        }
+      })
+   
   }
  
   getStudentList = (route, status) => (

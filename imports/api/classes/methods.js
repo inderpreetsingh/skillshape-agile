@@ -36,7 +36,7 @@ Meteor.methods({
     },
     "classes.getClassData":function(filter){
         filter.scheduled_date = new Date (filter.scheduled_date);
-        filter.eventData.startDate = new Date(filter.eventData.startDate);
+        filter.eventData.startTime = new Date(filter.eventData.startTime);
         let record = Classes.findOne(filter);
         if(!isEmpty(record)){
             return record;

@@ -28,14 +28,13 @@ class ClassTimeInformation extends Component {
   }
   render() {
     const {
-      classData:{eventData:{title}},
       schoolName,
       schoolCoverSrc,
        desc, address, 
       website, start, schoolId, classType, params, classData,selectedLocation,popUp
     } = this.props;
-    const {scheduled_date,eventData:{timeZone},classTimeId} = classData || {};
-    const eventStartTime = formatTime(scheduled_date,timeZone)
+    const {scheduled_date,eventData:{timeZone,title,startTime},classTimeId} = classData || {};
+    const eventStartTime = formatTime(startTime,timeZone)
     const { thinkingAboutAttending } = this.state;
     locationName = () => {
       return `${get(selectedLocation,'address','')}, ${get(selectedLocation, 'city', '')}, ${get(selectedLocation, 'state', '')}, ${get(selectedLocation, 'country', '')}, ${get(selectedLocation, 'zip', '')}`
