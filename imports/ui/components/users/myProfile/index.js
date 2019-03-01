@@ -45,11 +45,21 @@ class MyProfile extends React.Component {
       about: "",
       profileExpanded: true,
       mediaExpanded: true,
-      isBusy: false
+      isBusy: false,
+      isSaved:true
     };
   }
-
+  routerWillLeave = (nextLocation) => {
+    // return false to prevent a transition w/o prompting the user,
+    // or return a string to allow the user to decide:
+    // return `null` or nothing to let other hooks to be executed
+    //
+    // NOTE: if you return true, other hooks will not be executed!
+    if (!this.state.isSaved)
+      return 'Your work is not saved! Are you sure you want to leave?'
+  }
   componentDidMount() {
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
     this.initialzeUserProfileForm(this.props.currentUser);
   }
 
@@ -102,7 +112,7 @@ class MyProfile extends React.Component {
     confirmationDialog(data);
   }
   handleTextChange = (fieldName, event) => {
-    this.setState({ [fieldName]: event.target.value });
+    this.setState({ [fieldName]: event.target.value,isSaved:false });
   };
   clearAllEvents = () => {
     this.setState({ isBusy: true }, () => {
@@ -156,20 +166,22 @@ class MyProfile extends React.Component {
     })
   }
   handleDobChange = date => {
-    this.setState({ dob: date })
+    this.setState({ dob: date ,isSaved:false})
   }
 
   onLocationChange = location => {
     this.setState({
       loc: location.coords,
-      address: location.fullAddress
+      address: location.fullAddress,
+      isSaved:false
     });
   };
 
   locationInputChanged = event => {
     // Need to update address otherwise we can not edit location.
     this.setState({
-      address: event.target.value
+      address: event.target.value,
+      isSaved:false
     });
     if (!event.target.value) {
       this.setState({
@@ -285,7 +297,7 @@ class MyProfile extends React.Component {
       "user.editUser",
       { doc: userData, docId: currentUser._id },
       (error, result) => {
-        let state = { isBusy: false };
+        let state = { isBusy: false ,isSaved:true};
         if (error) {
           state.errorText = error.reason || error.message;
           const data = {

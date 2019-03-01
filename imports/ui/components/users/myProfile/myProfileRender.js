@@ -152,7 +152,7 @@ export default function () {
                               input={<Input id="gender" />}
                               value={this.state.gender}
                               onChange={event =>
-                                this.setState({ gender: event.target.value })
+                                this.setState({ gender: event.target.value ,isSaved:false})
                               }
                               fullWidth
                               style={{ fontWeight: 600 }}
@@ -222,7 +222,7 @@ export default function () {
                           <ReactPhoneInput
                             defaultCountry={'us'}
                             value={phone ? phone.toString() : ''}
-                            onChange={phone => this.setState({ phone })}
+                            onChange={phone => this.setState({ phone,isSaved:false })}
                             inputStyle={{ width: '100%' }}
                             placeHolder={'Phone Number'}
                             containerStyle={{ marginTop: '10px' }}
@@ -243,7 +243,7 @@ export default function () {
                               input={<Input id="currency" />}
                               value={this.state.currency}
                               onChange={event =>
-                                this.setState({ currency: event.target.value })
+                                this.setState({ currency: event.target.value,isSaved:false })
                               }
                               fullWidth
                               style={{ fontWeight: 600 }}
