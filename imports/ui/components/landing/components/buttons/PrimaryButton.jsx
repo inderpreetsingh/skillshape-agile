@@ -170,7 +170,6 @@ const PrimaryButton = props => {
       disabled={props.disabled}
       type={props.type}
       formId={props.formId}
-      disabled={props.disabled}
     >
       {getIconForButton(props)}
 

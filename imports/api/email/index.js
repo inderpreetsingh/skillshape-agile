@@ -832,3 +832,30 @@ export const userFeedBack = function(user, email, message, request, subject) {
     // + "http://www.graphical.io/assets/img/Graphical-IO.png"
   });
 };
+
+export const sendEmail = function(data) {
+  const {To,subject,text} = data;
+  let fromEmail = "Notices@SkillShape.com";
+  let to = "Notices@SkillShape.com";
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
+  }
+  else if(platform == 'dev') {
+    to = config.skillshapeAdminEmail;
+  }
+  else{
+    to = To;
+  }
+  Email.send({
+    from: fromEmail,
+    to,
+    replyTo: fromEmail,
+    subject,
+    html: `Hi,
+             ${text}. <br/>
+              Thank you.<br/>
+              The skillshape Team.<br/>
+              ${EmailSignature}
+              `
+  });
+};

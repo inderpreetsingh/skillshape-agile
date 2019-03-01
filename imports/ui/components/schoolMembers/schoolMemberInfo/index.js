@@ -646,7 +646,7 @@ class SchoolMemberInfo extends Component {
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
 		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', get(memberInfo, 'email', "Old Data"))));
-		const {emailAccess,memberId} = memberInfo;
+		const {emailAccess,memberId,email} = memberInfo;
 
 		return (
 			<Wrapper>
@@ -689,6 +689,7 @@ class SchoolMemberInfo extends Component {
 				{this.state.emailMemberDialog && (
 					<EmailMemberDialogBox
 						open={this.state.emailMemberDialog}
+						email = {email}
 						onModalClose={() => this.handleDialogState('emailMemberDialog', false)}
 					/>
 				)}

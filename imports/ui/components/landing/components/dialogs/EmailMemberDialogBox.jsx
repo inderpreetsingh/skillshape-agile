@@ -1,30 +1,16 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-
-import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import TextField from 'material-ui/TextField';
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-
+import PrimaryButton from '../buttons/PrimaryButton';
 import IconInput from '../form/IconInput.jsx';
-
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
-
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
-
-import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
-
-import { ContainerLoader } from '/imports/ui/loading/container';
+import {sendEmail,withPopUp} from "/imports/util";
+import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 const styles = theme => {
   return {
@@ -63,12 +49,6 @@ const styles = theme => {
   }
 }
 
-const Link = styled.a`
-  color:${helpers.textColor};
-  &:hover {
-    color:${helpers.focalColor};
-  }
-`;
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -80,18 +60,6 @@ const DialogTitleWrapper = styled.div`
 const ButtonWrapper = styled.div`
   ${helpers.flexCenter}
   margin: ${helpers.rhythmDiv * 4}px 0;
-`;
-
-const DialogActionText = styled.p`
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv}px;
-  flex-shrink: 0;
-`;
-
-const ActionWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter}
-  justify-content: flex-end;
 `;
 
 const InputWrapper = styled.div`
@@ -119,24 +87,15 @@ class EmailMemberDialogBox extends Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault();
-
+    this.setState({isLoading:true})
     const {subject,message} = this.state;
-    const mailTo = `mailto:${this.props.ourEmail}?subject=${subject}&body=${message}`;
-    const mailToNormalized = encodeURI(mailTo);
-
-    // console.log('================================',mailToNormalized);
-
-    if(this.props.onFormSubmit) {
-      this.props.onFormSubmit();
-    }
-
-    window.location.href = mailToNormalized;
-
-    this.props.onModalClose();
+    const {email,popUp,onModalClose }= this.props;
+    const data = { To:email,subject,text:message,popUp,onModalClose};
+    sendEmail(data,popUp)
   }
 
   render() {
-    const {props} = this;
+    const {props,state:{isLoading,subject,message}} = this;
     const {schoolData} = props;
     const {name:schoolName} = schoolData || {};
     return (
@@ -148,6 +107,7 @@ class EmailMemberDialogBox extends Component {
         aria-labelledby="contact us"
         classes={{paper: props.classes.dialogRoot}}
       >
+      {isLoading && <ContainerLoader/>}
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
@@ -161,18 +121,18 @@ class EmailMemberDialogBox extends Component {
         <DialogContent classes={{root : props.classes.dialogContent}}>
             <form onSubmit={this.handleFormSubmit}>
               <InputWrapper>
-                <IconInput inputId="subject" labelText="Subject" value={this.state.subject} onChange={this.handleInputFieldChange('subject')}/>
+                <IconInput inputId="subject" labelText="Subject" value={subject} onChange={this.handleInputFieldChange('subject')}/>
               </InputWrapper>
 
               <InputWrapper>
-                <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={this.state.message} onChange={this.handleInputFieldChange('message')} />
+                <IconInput inputId="message" labelText="Your message goes here" multiline={true} value={message} onChange={this.handleInputFieldChange('message')} />
               </InputWrapper>
-
               <ButtonWrapper>
                   <PrimaryButton
                       type="submit"
                       label="Send Message"
                       noMarginBottom
+                      disabled={!subject || !message}
                       onClick={this.handleFormSubmit}
                   />
               </ButtonWrapper>
@@ -191,4 +151,4 @@ EmailMemberDialogBox.propTypes = {
   loading: PropTypes.bool,
 }
 
-export default withMobileDialog()(withStyles(styles)(EmailMemberDialogBox));
+export default withStyles(styles)(withMobileDialog()(withPopUp(EmailMemberDialogBox)));

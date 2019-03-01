@@ -63,3 +63,4 @@ export { packageCoverProvider } from "./packageHelper";
 export { confirmationDialog } from './confirmationDialog';
 export {generateGraphData} from "./generateGraphData";
 export {handleJoin} from "./handleJoin";
+export {sendEmail} from './reuseableFunctions';
