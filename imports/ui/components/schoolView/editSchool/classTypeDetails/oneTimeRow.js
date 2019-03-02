@@ -1,24 +1,19 @@
-import React from "react";
-import styled from "styled-components";
-import { withStyles } from 'material-ui/styles';
-
-import Grid from "material-ui/Grid";
+import { FormControl } from "material-ui/Form";
+import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
 import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
-
-import Button from "material-ui/Button";
-import { FormControl } from "material-ui/Form";
-import { MenuItem } from "material-ui/Menu";
-import Typography from "material-ui/Typography";
-import { DialogActions } from "material-ui/Dialog";
-
+import React from "react";
+import styled from "styled-components";
+import { CTFormControlHW, CTFormRow, CTFormWrapper, LinkedTime } from './sharedStyledComponents';
+import config from "/imports/config";
 import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import config from "/imports/config";
-import { styles, DeleteClassTime, LinkedTime, CTFormWrapper, CTFormRow, CTFormControlHW } from './sharedStyledComponents';
+
+
+
 
 
 const Wrapper = styled.div`
@@ -91,6 +86,8 @@ export class OneTimeRow extends React.Component {
   };
 
   handleChangeDate = (index, fieldName, date) => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState();
     const oldRow = [...this.state.row];
     if (fieldName == "startTime") {
       let selectedDate = oldRow[index]["startDate"];
@@ -110,8 +107,8 @@ export class OneTimeRow extends React.Component {
   }
   handleSelectInputChange = (index, fieldName, event) => {
     //index condition in if below is removed
-    const { locationData } = this.props;
-
+    const { locationData,handleIsSavedState } = this.props;
+    handleIsSavedState();
     if (fieldName && event) {
       const oldRow = [...this.state.row];
       if (fieldName === "duration") {

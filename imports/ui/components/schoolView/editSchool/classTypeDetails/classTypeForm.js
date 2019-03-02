@@ -247,7 +247,11 @@ class ClassTypeForm extends React.Component {
     this.setState({ location: defaultLocId })
     return defaultLocId;
   }
-
+  handleIsSavedState = () =>{
+    if(this.state.isSaved){
+      this.setState({isSaved:false})
+    }
+  }
   unSavedChecker = () => {
     const {isSaved} = this.state;
     const {onClose,popUp} = this.props;
@@ -307,7 +311,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.classTypeName = ref)}
                     label="Class Type Name"
                     type="text"
-                    onChange={()=>{this.setState({isSaved:false})}}
+                    onChange={this.handleIsSavedState}
                     fullWidth
                   />
                   <TextField
@@ -316,7 +320,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.desc = ref)}
                     label="Brief Description (200 Characters)"
                     type="text"
-                    onChange={()=>{this.setState({isSaved:false})}}
+                    onChange={this.handleIsSavedState}
                     fullWidth
                     multiline
                     inputProps={{ maxLength: 200 }}
@@ -370,7 +374,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
-                          onChange={()=>{this.setState({isSaved:false})}}
+                          onChange={this.handleIsSavedState}
                         />
                         <TextField
                           defaultValue={data && data.ageMax}
@@ -385,7 +389,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
-                          onChange={()=>{this.setState({isSaved:false})}}
+                          onChange={this.handleIsSavedState}
                         />
                       </div>
                     </Grid>
