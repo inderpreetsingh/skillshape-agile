@@ -10,7 +10,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import {isEmpty,get} from "lodash";
-import {confirmationDialog,withPopUp} from "/imports/util";
+import {confirmationDialog,withPopUp,unSavedChecker,handleIsSavedState} from "/imports/util";
 
 
 const formId = "LocationForm";
@@ -449,24 +449,7 @@ class LocationForm extends React.Component {
       );
     }
   };
-  unSavedChecker = () => {
-    const {isSaved} = this.state;
-    const {onClose,popUp} = this.props;
-    if(isSaved){
-      onClose();
-    }else{
-      let data = {};
-      data = {
-        popUp,
-        title: 'Oops',
-        type: 'alert',
-        content: 'You have still some unsaved changes. Please save first.',
-        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
-      }
-      confirmationDialog(data);
-    }
-
-  }
+  
   render() {
     const { fullScreen, data, classes, currentUser } = this.props;
     return (
@@ -592,7 +575,7 @@ class LocationForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={this.unSavedChecker}
+                onClick={()=>{unSavedChecker.call(this)}}
                 label="Cancel"
                 className={classes.cancel}
               />

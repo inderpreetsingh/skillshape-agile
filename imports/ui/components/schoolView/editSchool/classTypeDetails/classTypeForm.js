@@ -17,7 +17,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { confirmationDialog, withPopUp } from '/imports/util';
+import { confirmationDialog, withPopUp ,unSavedChecker,handleIsSavedState} from '/imports/util';
 const formId = "classTypeForm";
 const customStyle = {
   marginTop: "10px",
@@ -247,28 +247,7 @@ class ClassTypeForm extends React.Component {
     this.setState({ location: defaultLocId })
     return defaultLocId;
   }
-  handleIsSavedState = () =>{
-    if(this.state.isSaved){
-      this.setState({isSaved:false})
-    }
-  }
-  unSavedChecker = () => {
-    const {isSaved} = this.state;
-    const {onClose,popUp} = this.props;
-    if(isSaved){
-      onClose();
-    }else{
-      let data = {};
-      data = {
-        popUp,
-        title: 'Oops',
-        type: 'alert',
-        content: 'You have still some unsaved changes. Please save first.',
-        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
-      }
-      confirmationDialog(data);
-    }
-  }
+  
   render() {
     const { fullScreen, data, classes,  } = this.props;
     const {  skillSubjectData, selectedOption } = this.state;
@@ -310,7 +289,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.classTypeName = ref)}
                     label="Class Type Name"
                     type="text"
-                    onChange={this.handleIsSavedState}
+                    onChange={()=>{handleIsSavedState.call(this)}}
                     fullWidth
                   />
                   <TextField
@@ -319,7 +298,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.desc = ref)}
                     label="Brief Description (200 Characters)"
                     type="text"
-                    onChange={this.handleIsSavedState}
+                    onChange={()=>{handleIsSavedState.call(this)}}
                     fullWidth
                     multiline
                     inputProps={{ maxLength: 200 }}
@@ -373,7 +352,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
-                          onChange={this.handleIsSavedState}
+                          onChange={()=>{handleIsSavedState.call(this)}}
                         />
                         <TextField
                           defaultValue={data && data.ageMax}
@@ -388,7 +367,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
-                          onChange={this.handleIsSavedState}
+                          onChange={()=>{handleIsSavedState.call(this)}}
                         />
                       </div>
                     </Grid>
@@ -437,7 +416,7 @@ class ClassTypeForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={this.unSavedChecker}
+                onClick={()=>{unSavedChecker.call(this)}}
                 label="Cancel"
                 className={classes.cancel}
               />

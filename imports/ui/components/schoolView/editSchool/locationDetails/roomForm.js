@@ -8,7 +8,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import { withPopUp,confirmationDialog } from "/imports/util";
+import { withPopUp,confirmationDialog ,unSavedChecker,handleIsSavedState} from "/imports/util";
 import {get} from 'lodash';
 
 const formId = "RoomForm";
@@ -106,24 +106,7 @@ class RoomForm extends React.Component {
       isSaved:false
     })
   }
-  unSavedChecker = () => {
-    const {isSaved} = this.state;
-    const {onClose,popUp} = this.props;
-    if(isSaved){
-      onClose();
-    }else{
-      let data = {};
-      data = {
-        popUp,
-        title: 'Oops',
-        type: 'alert',
-        content: 'You have still some unsaved changes. Please save first.',
-        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
-      }
-      confirmationDialog(data);
-    }
-
-  }
+ 
   render() {
     const { fullScreen, data, classes } = this.props;
     const {name,capacity} = this.state;
@@ -202,7 +185,7 @@ class RoomForm extends React.Component {
               <FormGhostButton
               type="button"
                 color="dark-grey"
-                onClick={this.unSavedChecker}
+                onClick={()=>{unSavedChecker.call(this)}}
                 label="Cancel"
               />
             </ButtonWrapper>

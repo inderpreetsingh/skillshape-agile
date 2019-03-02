@@ -26,7 +26,7 @@ import LocationForm from '/imports/ui/components/schoolView/editSchool/locationD
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { withPopUp ,confirmationDialog} from '/imports/util';
+import { withPopUp ,confirmationDialog,unSavedChecker,handleIsSavedState} from '/imports/util';
 import ResponsiveTabs from "/imports/util/responsiveTabs";
 
 
@@ -203,7 +203,7 @@ class ClassTimeForm extends React.Component {
   };
 
   handleLocAndRoom = (key, event) => {
-    this.handleIsSavedState()
+    handleIsSavedState.call(this)
     if (event.target.value === 'add_new_location') {
       this.handleAddNewLocation();
       return;
@@ -386,28 +386,7 @@ class ClassTimeForm extends React.Component {
     }
     this.setState({ instructors, addInstructorDialogBoxState: false });
   }
-  handleIsSavedState = () =>{
-    if(this.state.isSaved){
-      this.setState({isSaved:false})
-    }
-  } 
-  unSavedChecker = () => {
-    const {isSaved} = this.state;
-    const {onClose,popUp} = this.props;
-    if(isSaved){
-      onClose();
-    }else{
-      let data = {};
-      data = {
-        popUp,
-        title: 'Oops',
-        type: 'alert',
-        content: 'You have still some unsaved changes. Please save first.',
-        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
-      }
-      confirmationDialog(data);
-    }
-  }
+  
   render() {
     const { fullScreen, data, classes, schoolId, parentKey, parentData, locationData, popUp, instructorsData } = this.props;
     const { roomId, locationId, roomData, addInstructorDialogBoxState } = this.state;
@@ -482,7 +461,7 @@ class ClassTimeForm extends React.Component {
                       label="Class Time Name"
                       type="text"
                       fullWidth
-                      onChange={this.handleIsSavedState}
+                      onChange={()=>{handleIsSavedState.call(this)}}
                       className={classes.textField}
                     />
 
@@ -501,7 +480,7 @@ class ClassTimeForm extends React.Component {
                       fullWidth
                       multiline
                       className={classes.textField}
-                      onChange={this.handleIsSavedState}
+                      onChange={()=>{handleIsSavedState.call(this)}}
                       inputProps={{ maxLength: 200 }}
                     />
                     <FormControl className={classes.formControl} fullWidth margin="dense">
@@ -612,7 +591,7 @@ class ClassTimeForm extends React.Component {
                           saveClassTimes={this.saveClassTimes}
                           handleNoOfRow={this.handleNoOfRow}
                           locationData={locationData}
-                          handleIsSavedState={this.handleIsSavedState}
+                          handleIsSavedState={()=>{handleIsSavedState.call(this)}}
                         />
                       </div>
                     )}
@@ -624,7 +603,7 @@ class ClassTimeForm extends React.Component {
                           roomData={this.state.roomData}
                           saveClassTimes={this.saveClassTimes}
                           locationData={locationData}
-                          handleIsSavedState={this.handleIsSavedState}
+                          handleIsSavedState={()=>{handleIsSavedState.call(this)}}
                         />
                       </div>
                     )}
@@ -669,7 +648,7 @@ class ClassTimeForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={this.unSavedChecker}
+                onClick={()=>{unSavedChecker.call(this)}}
                 label="Cancel"
                 className={classes.cancel}
               />

@@ -18,7 +18,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { withPopUp, withStyles ,confirmationDialog} from "/imports/util";
+import { withPopUp, withStyles ,confirmationDialog,unSavedChecker,handleIsSavedState} from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -186,29 +186,7 @@ class MonthlyPriceForm extends React.Component {
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
   
-  handleIsSavedState = () =>{
-      if(this.state.isSaved){
-        this.setState({isSaved:false})
-      }
-    }
-
- unSavedChecker = () => {
-      const {isSaved} = this.state;
-      const {onClose,popUp} = this.props;
-      if(isSaved){
-        onClose();
-      }else{
-        let data = {};
-        data = {
-          popUp,
-          title: 'Oops',
-          type: 'alert',
-          content: 'You have still some unsaved changes. Please save first.',
-          buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
-        }
-        confirmationDialog(data);
-      }
-    }
+ 
   render() {
     const { fullScreen, data, classes, schoolData, currency } = this.props;
     const { classTypeData, pymtMethod, pymtDetails } = this.state;
@@ -251,7 +229,7 @@ class MonthlyPriceForm extends React.Component {
                   label="Package Name"
                   type="text"
                   fullWidth
-                  onChange={this.handleIsSavedState}
+                  onChange={()=>{handleIsSavedState.call(this)}}
                 />
                 <SelectArrayInput
                   disabled={false}
@@ -288,7 +266,7 @@ class MonthlyPriceForm extends React.Component {
                   type="number"
                   fullWidth
                   inputProps={{ min: "0"}}
-                  onChange={this.handleIsSavedState}
+                  onChange={()=>{handleIsSavedState.call(this)}}
                 />
    
                 
@@ -399,7 +377,7 @@ class MonthlyPriceForm extends React.Component {
                     }
                     classes={classes}
                     currency={currency}
-                    handleIsSavedState={this.handleIsSavedState}
+                    handleIsSavedState={()=>{handleIsSavedState.call(this)}}
                   />
                 </div>
               </form>
@@ -419,7 +397,7 @@ class MonthlyPriceForm extends React.Component {
         <ButtonWrapper>
           <FormGhostButton
             darkGreyColor
-            onClick={this.unSavedChecker}
+            onClick={()=>{unSavedChecker.call(this)}}
             label="Cancel"
             className={classes.cancel}
           />
