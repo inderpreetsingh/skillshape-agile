@@ -123,13 +123,15 @@ Meteor.methods({
        }
        else{
         current = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1,classTypeImg:1,medium:1}});
-        current.classTimes = [];
-        classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
-        if(classTimeRecord)
-        current.classTimes.push(classTimeRecord);
-        current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
-        classData.push(current);                   
-      }
+        if(!isEmpty(current)){
+          current.classTimes = [];
+          classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+          if(classTimeRecord)
+          current.classTimes.push(classTimeRecord);
+          current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
+          classData.push(current);                   
+        }
+        }
       })
     }
     return classData;
