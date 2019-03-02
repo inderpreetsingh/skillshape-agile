@@ -4,15 +4,13 @@ import { withStyles } from "material-ui/styles";
 import TextField from "material-ui/TextField";
 import React from "react";
 import styled from "styled-components";
-import "/imports/api/sLocation/methods";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import {isEmpty} from "lodash";
-
-
+import {isEmpty,get} from "lodash";
+import {confirmationDialog,withPopUp} from "/imports/util";
 
 
 const formId = "LocationForm";
@@ -106,7 +104,8 @@ class LocationForm extends React.Component {
     this.state = {
       isBusy: false,
       myLocation: this._getMyLocation(),
-      completeAddress: this._getMyCompleteAddress()
+      completeAddress: this._getMyCompleteAddress(),
+      isSaved:true
     };
   }
 
@@ -121,11 +120,12 @@ class LocationForm extends React.Component {
   _getMyCompleteAddress = (nextProps = {}) => {
     const data = nextProps.data || this.props.data || {};
     return {
-      street: data.address || "",
+      address: data.address || "",
       city: data.city || "",
       state: data.state || "",
       zip: data.zip || "",
-      country: data.country || ""
+      country: data.country || "",
+      title:data.title || ''
     };
   };
 
@@ -154,7 +154,7 @@ class LocationForm extends React.Component {
   };
 
   _compareCompleteAddress = (address1, address2) => {
-    const propertiesToCompare = ["street", "zip", "city", "state", "country"];
+    const propertiesToCompare = ["address", "zip", "city", "state", "country"];
     for (let i = 0; i < propertiesToCompare.length; ++i) {
       const currentProperty = propertiesToCompare[i];
       if (address1[currentProperty] !== address2[currentProperty]) {
@@ -242,7 +242,7 @@ class LocationForm extends React.Component {
                 "administrative_area_level_2",
                 addressComponents
               ),
-              street:
+              address:
                 this._getComponentFromCompleteAddress(
                   "route",
                   addressComponents
@@ -292,6 +292,7 @@ class LocationForm extends React.Component {
     this.setState(state => {
       return {
         ...state,
+        isSaved:false,
         completeAddress: {
           ...state.completeAddress,
           [name]: value
@@ -303,15 +304,22 @@ class LocationForm extends React.Component {
   onSubmit = (event, submit = true) => {
     event.preventDefault();
     // debugger;
+    const {title,address,city,state,zip,country} = this.state.completeAddress;
+    if(!title){
+      const {popUp} =this.props;
+      const content = 'Location Name is required.';
+      confirmationDialog({popUp,errDialog:true,content});
+      return;
+    }
     const payload = {
       createdBy: Meteor.userId(),
       schoolId: this.props.schoolId,
-      title: this.locationName.value,
-      address: this.streetAddress.value,
-      city: this.city.value,
-      state: this.locState.value,
-      zip: this.zipCode.value,
-      country: this.country.value
+      title,
+      address,
+      city,
+      state,
+      zip,
+      country,
     };
     const sLocationDetail =
       payload.address +
@@ -338,7 +346,7 @@ class LocationForm extends React.Component {
             ...state,
             isBusy: false,
             completeAddress: {
-              street: payload.address,
+              address: payload.address,
               zip: payload.zip,
               country: payload.country,
               city: payload.city,
@@ -367,7 +375,7 @@ class LocationForm extends React.Component {
                 ...state,
                 isBusy: false,
                 completeAddress: {
-                  street: payload.address,
+                  address: payload.address,
                   zip: payload.zip,
                   country: payload.country,
                   city: payload.city,
@@ -388,7 +396,6 @@ class LocationForm extends React.Component {
   };
 
   handleSubmit = (payload, deleteObj) => {
-  console.log('TCL: handleSubmit -> handleSubmit');
   this.setState({ isBusy: true });
     
     const { data } = this.props;
@@ -413,7 +420,7 @@ class LocationForm extends React.Component {
       if (result) {
         this.props.onClose(result);
       }
-      this.setState({ isBusy: false, error });
+      this.setState({ isBusy: false, error,isSaved:true });
     });
   };
 
@@ -494,21 +501,22 @@ class LocationForm extends React.Component {
               <MyForm id={formId} onSubmit={this.onSubmit}>
                 <TextField
                   required={true}
-                  defaultValue={data && data.title}
+                  value={this.state.completeAddress.title}
+                  inputRef={ref => (this.title = ref)}
                   margin="dense"
-                  inputRef={ref => (this.locationName = ref)}
+                  onChange={this.handleAddressChange('title')}
                   label="Location Name"
                   type="text"
                   fullWidth
                 />
                 <TextField
-                  value={this.state.completeAddress.street}
+                  value={this.state.completeAddress.address}
                   margin="dense"
                   inputRef={ref => (this.streetAddress = ref)}
                   label="Street Address"
                   type="text"
                   fullWidth
-                  onChange={this.handleAddressChange("street")}
+                  onChange={this.handleAddressChange("address")}
                   onBlur={this.handleBlur}
                 />
                 <TextField
@@ -593,4 +601,4 @@ class LocationForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(withMobileDialog()(LocationForm));
+export default withStyles(styles)(withMobileDialog()(withPopUp(LocationForm)));

@@ -15,7 +15,7 @@ export function confirmationDialog(data) {
     const { title, content, buttons, type, popUp ,defaultDialog,errDialog ,onModalClose} = data;
     if(defaultDialog || errDialog){
         popUp.appear(defaultDialog ? "success" : 'alert', {
-            title:'Success',
+            title:defaultDialog ? 'Success' : 'Error',
             content:content ? content : errDialog? "Something went Wrong !" :'Operation Completed Successfully.',
             RenderActions: (
                 <ButtonsWrapper>
