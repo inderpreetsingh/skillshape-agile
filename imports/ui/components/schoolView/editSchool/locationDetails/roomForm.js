@@ -1,26 +1,15 @@
+import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
 import React from "react";
 import styled from "styled-components";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { withStyles } from "material-ui/styles";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import {
-  mobile,
-  rhythmDiv
-} from "/imports/ui/components/landing/components/jss/helpers.js";
-
 import "/imports/api/sLocation/methods";
-import { toastrModal } from "/imports/util";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import { withPopUp,confirmationDialog } from "/imports/util";
+import {get} from 'lodash';
 
 const formId = "RoomForm";
 
@@ -46,24 +35,34 @@ const ButtonWrapper = styled.div`
 class RoomForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isBusy: false
-    };
+    this.state = this.initializeState(this.props);
   }
-
+  
+  initializeState = (props) =>{
+    let state =  {
+      isBusy: false,
+      isSaved:true,
+      name: get(props,'data.name','Main Room'),
+      capacity: get(props,'data.capacity',null)
+    }
+    return state;
+  }
   saveRoomFormData = (nextTab, event) => {
     event.preventDefault();
-    const { data, parentKey, toastr } = this.props;
-    if (!this.roomName.value) {
-      toastr.error("Please enter room name.", "Error");
+    const { data, parentKey } = this.props;
+    const {name,capacity} = this.state;
+    if (!name) {
+      const {popUp} =this.props;
+      const content = 'Location Name is required.';
+      confirmationDialog({popUp,errDialog:true,content});
       return false;
     }
 
     const payload = {
-      name: this.roomName.value
+      name: name
     };
-    if (this.capicity.value) {
-      payload.capicity = this.capicity.value;
+    if (capacity ){
+      payload.capacity = capacity;
     }
     this.setState({ isBusy: true });
     if (data) {
@@ -86,7 +85,7 @@ class RoomForm extends React.Component {
 
   handleSubmit = ({ methodName, data, locationId, nextTab }) => {
     Meteor.call(methodName, { locationId, data }, (error, result) => {
-      let stateObj = { isBusy: false };
+      let stateObj = { isBusy: false,isSaved:true };
       if (error) {
         stateObj.error = error.reason || error.message;
       }
@@ -100,9 +99,34 @@ class RoomForm extends React.Component {
       // this.setState();
     });
   };
+  handleDataChange = name => event => {
+    const value = event.target.value;
+    this.setState({
+      [name]:value,
+      isSaved:false
+    })
+  }
+  unSavedChecker = () => {
+    const {isSaved} = this.state;
+    const {onClose,popUp} = this.props;
+    if(isSaved){
+      onClose();
+    }else{
+      let data = {};
+      data = {
+        popUp,
+        title: 'Oops',
+        type: 'alert',
+        content: 'You have still some unsaved changes. Please save first.',
+        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
+      }
+      confirmationDialog(data);
+    }
 
+  }
   render() {
     const { fullScreen, data, classes } = this.props;
+    const {name,capacity} = this.state;
     return (
       <div>
         <Dialog
@@ -143,26 +167,24 @@ class RoomForm extends React.Component {
                 room or area. You can say "Main Room" or "Main Area" or give the
                 room name.
               </DialogContentText>
-              <form id={formId} onSubmit={this.onSubmit}>
                 <TextField
                   required={true}
-                  defaultValue={(data && data.name) || "Main Room"}
                   margin="dense"
-                  inputRef={ref => (this.roomName = ref)}
                   label="Name"
+                  value={name}
                   type="text"
+                  onChange={this.handleDataChange('name')}
                   fullWidth
                 />
                 <TextField
-                  defaultValue={data && data.capicity}
                   margin="dense"
-                  inputRef={ref => (this.capicity = ref)}
                   label="Capacity"
                   type="number"
+                  value={capacity}
                   fullWidth
+                  onChange={this.handleDataChange('capacity')}
                   inputProps={{ min: "0"}}
                 />
-              </form>
             </DialogContent>
           )}
           <DialogActions classes={{ root: classes.dialogActionsRoot }}>
@@ -170,6 +192,7 @@ class RoomForm extends React.Component {
               <ButtonWrapper>
                 <FormGhostButton
                   color="alert"
+                  type="button"
                   onClick={() => this.setState({ showConfirmationModal: true })}
                   label="Delete"
                 />
@@ -177,15 +200,15 @@ class RoomForm extends React.Component {
             )}
             <ButtonWrapper>
               <FormGhostButton
+              type="button"
                 color="dark-grey"
-                onClick={() => this.props.onClose()}
+                onClick={this.unSavedChecker}
                 label="Cancel"
               />
             </ButtonWrapper>
             <ButtonWrapper>
               <FormGhostButton
                 type="button"
-                form={formId}
                 onClick={this.saveRoomFormData.bind(this, null)}
                 label={data ? "Save" : "Submit"}
               />
@@ -193,13 +216,10 @@ class RoomForm extends React.Component {
             {this.props && this.props.from && this.props.from=='classTime' ? '' : <ButtonWrapper>
               <FormGhostButton
                 type="button"
-                form={formId}
                 onClick={this.saveRoomFormData.bind(this, "nextTab")}
                 label="Save and Add Classes"
               />
             </ButtonWrapper>}
-            
-
           </DialogActions>
         </Dialog>
       </div>
@@ -207,4 +227,4 @@ class RoomForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(toastrModal(withMobileDialog()(RoomForm)));
+export default withStyles(styles)(withPopUp(withMobileDialog()(RoomForm)));

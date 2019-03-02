@@ -14,7 +14,7 @@ Schema.Room = new SimpleSchema({
     name: {
        type: String
     },
-    capicity: {
+    capacity: {
         optional: true,
         type: Number
     }

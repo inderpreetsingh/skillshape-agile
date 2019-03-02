@@ -89,7 +89,7 @@ export default (locationSettings = {
       title: "Room",
       formFields: [
         { key: "name", label: "Name", type: "text", required: true },
-        { key: "capicity", label: "Capacity", type: "text", required: false }
+        { key: "capacity", label: "Capacity", type: "text", required: false }
       ]
     }
   },
@@ -97,7 +97,7 @@ export default (locationSettings = {
     title: "Room",
     tableFields: [
       { key: "name", label: "Name" },
-      { key: "capicity", label: "Capacity" }
+      { key: "capacity", label: "Capacity" }
     ],
     actions: {
       parentKey: "_id",
@@ -111,7 +111,7 @@ export default (locationSettings = {
         editByField: "id",
         formFields: [
           { key: "name", label: "Name", type: "text", required: true },
-          { key: "capicity", label: "Capacity", type: "text", required: false }
+          { key: "capacity", label: "Capacity", type: "text", required: false }
         ]
       },
       delete: "removeRoom",
