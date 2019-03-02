@@ -1,43 +1,28 @@
-import React from "react";
 import { get } from "lodash";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import { withStyles } from "/imports/util";
+import isEmpty from 'lodash/isEmpty';
 import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
+import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
-import Grid from "material-ui/Grid";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-import Checkbox from "material-ui/Checkbox";
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import AddRow from "./addRow";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import "/imports/api/sLocation/methods";
-import { Card } from "material-ui";
-import Input, { InputLabel} from "material-ui/Input";
+import TextField from "material-ui/TextField";
+import React from "react";
 import styled from "styled-components";
+import AddRow from "./addRow";
+import "/imports/api/sLocation/methods";
+import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { withPopUp } from "/imports/util";
-import isEmpty from 'lodash/isEmpty';
+import { ContainerLoader } from "/imports/ui/loading/container";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { withPopUp, withStyles ,confirmationDialog} from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
-// 1.perTime field in the collection monthyPricing.(Done)
-// 2.dropDown for selecting the perTime classes.(Done)
-// 3.saving in the collection.(Done)
-// 4.on edit retrieving the value.(Done)
-// 5.show perTime no of classes in the monthly pricing Card.
-// 6. displaying the perTime no of classes in the package listing also.
-// 7.maxmium classes only in monthly package.
+
 const formId = "LocationForm";
 const styles = theme => {
   return {
@@ -87,7 +72,8 @@ class MonthlyPriceForm extends React.Component {
       ]),
       pymtMethod: pymtMethod,
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
-      duPeriod: get(this.props, "data.duPeriod", "")
+      duPeriod: get(this.props, "data.duPeriod", ""),
+      isSaved:true
     };
     
     if (pymtMethod && pymtMethod === "Pay Up Front") state.tabValue = 1;
@@ -178,7 +164,7 @@ class MonthlyPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    this.setState({ selectedClassType: values });
+    this.setState({ selectedClassType: values,isSaved:false });
   };
 
   handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
@@ -189,16 +175,40 @@ class MonthlyPriceForm extends React.Component {
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
-      [disableKey]:!isInputChecked
+      [disableKey]:!isInputChecked,
+      isSaved:false
     });
   };
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
+    this.setState({ [name]: event.target.checked,isSaved:false });
   };
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
+  
+  handleIsSavedState = () =>{
+      if(this.state.isSaved){
+        this.setState({isSaved:false})
+      }
+    }
 
+ unSavedChecker = () => {
+      const {isSaved} = this.state;
+      const {onClose,popUp} = this.props;
+      if(isSaved){
+        onClose();
+      }else{
+        let data = {};
+        data = {
+          popUp,
+          title: 'Oops',
+          type: 'alert',
+          content: 'You have still some unsaved changes. Please save first.',
+          buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
+        }
+        confirmationDialog(data);
+      }
+    }
   render() {
     const { fullScreen, data, classes, schoolData, currency } = this.props;
     const { classTypeData, pymtMethod, pymtDetails } = this.state;
@@ -241,6 +251,7 @@ class MonthlyPriceForm extends React.Component {
                   label="Package Name"
                   type="text"
                   fullWidth
+                  onChange={this.handleIsSavedState}
                 />
                 <SelectArrayInput
                   disabled={false}
@@ -277,6 +288,7 @@ class MonthlyPriceForm extends React.Component {
                   type="number"
                   fullWidth
                   inputProps={{ min: "0"}}
+                  onChange={this.handleIsSavedState}
                 />
    
                 
@@ -289,7 +301,7 @@ class MonthlyPriceForm extends React.Component {
                       input={<Input id="duration-period" />}
                       value={this.state && this.state.duPeriod ? this.state.duPeriod : 'day'}
                       onChange={event =>
-                        this.setState({ duPeriod: event.target.value })
+                        this.setState({ duPeriod: event.target.value ,isSaved:false})
                       }
                       fullWidth
                     >
@@ -387,6 +399,7 @@ class MonthlyPriceForm extends React.Component {
                     }
                     classes={classes}
                     currency={currency}
+                    handleIsSavedState={this.handleIsSavedState}
                   />
                 </div>
               </form>
@@ -394,20 +407,6 @@ class MonthlyPriceForm extends React.Component {
           )}
           <DialogActions>
             {data && !data.from && (
-            //   <Button
-            //     onClick={() => this.setState({ showConfirmationModal: true })}
-            //     color="accent"
-            //     className={classes.delete}
-            //   >
-            //     Delete
-            //   </Button>
-            // )}
-            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-            //   Cancel
-            // </Button>
-            // <Button type="submit" form={formId} color="primary" className={classes.save}>
-            //   {data ? "Save" : "Submit"}
-            // </Button>
             <ButtonWrapper>
             <FormGhostButton
               alertColor
@@ -420,7 +419,7 @@ class MonthlyPriceForm extends React.Component {
         <ButtonWrapper>
           <FormGhostButton
             darkGreyColor
-            onClick={() => this.props.onClose()}
+            onClick={this.unSavedChecker}
             label="Cancel"
             className={classes.cancel}
           />
@@ -441,6 +440,4 @@ class MonthlyPriceForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  withMobileDialog()(withPopUp(MonthlyPriceForm))
-);
+export default withStyles(styles)( withMobileDialog()(withPopUp(MonthlyPriceForm)) );
