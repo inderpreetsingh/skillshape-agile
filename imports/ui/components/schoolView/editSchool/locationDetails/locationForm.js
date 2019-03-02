@@ -1,26 +1,19 @@
+import Button from "material-ui/Button";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
 import React from "react";
 import styled from "styled-components";
-import { withStyles } from "material-ui/styles";
-
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
-
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import { ContainerLoader } from "/imports/ui/loading/container";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-
 import "/imports/api/sLocation/methods";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import {isEmpty} from "lodash";
+
+
+
 
 const formId = "LocationForm";
 
@@ -150,17 +143,15 @@ class LocationForm extends React.Component {
     return "";
   };
 
-  // componentDidMount = () => {
-  //   const myLocation = this._getMyLocation();
+  componentDidMount = () => {
+    const myLocation = this._getMyLocation();
 
-  //   if (!myLocation.lat || !myLocation.lng) {
-  //     const defaultLocation = this.getMyDefaultLocation();
-  //     this.getAddressFromLocation({
-  //       lat: defaultLocation[0],
-  //       lng: defaultLocation[1]
-  //     });
-  //   }
-  // };
+    if (!myLocation.lat || !myLocation.lng) {
+      const defaultLocation = this.getMyDefaultLocation();
+      if(!isEmpty(defaultLocation))
+      this.getAddressFromLocation({ lat: defaultLocation[0], lng: defaultLocation[1] });
+    }
+  };
 
   _compareCompleteAddress = (address1, address2) => {
     const propertiesToCompare = ["street", "zip", "city", "state", "country"];
