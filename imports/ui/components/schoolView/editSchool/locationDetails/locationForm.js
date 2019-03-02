@@ -288,7 +288,6 @@ class LocationForm extends React.Component {
   };
   handleAddressChange = name => event => {
     // event.preventDefault();
-    console.log("zzzz")
     const value = event.target.value;
     this.setState(state => {
       return {
@@ -451,7 +450,6 @@ class LocationForm extends React.Component {
     }
   };
   unSavedChecker = () => {
-    console.log("in unsavedChecker")
     const {isSaved} = this.state;
     const {onClose,popUp} = this.props;
     if(isSaved){
