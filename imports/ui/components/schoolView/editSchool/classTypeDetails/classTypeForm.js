@@ -268,7 +268,6 @@ class ClassTypeForm extends React.Component {
       }
       confirmationDialog(data);
     }
-
   }
   render() {
     const { fullScreen, data, classes,  } = this.props;
