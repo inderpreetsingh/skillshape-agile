@@ -248,7 +248,7 @@ class ThinkingAboutAttending extends React.Component {
       return (
       <MuiThemeProvider theme={muiTheme}>
         <Dialog
-          title="Select Package"
+          title="Thinking About Attending"
           open={open}
           onClose={onModalClose}
           onRequestClose={onModalClose}

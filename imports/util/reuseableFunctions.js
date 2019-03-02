@@ -5,7 +5,9 @@ export const sendEmail = (data) => {
     if(!isEmpty(data)){
         Meteor.call("emailMethods.sendEmail",data,(err,res)=>{
 			if(res){
-                confirmationDialog({popUp,defaultDialog:true,onModalClose});
+                const {studentName} = data;
+                const content = `Your message to ${studentName} was successfully sent.`
+                confirmationDialog({popUp,defaultDialog:true,onModalClose,content});
             }
             else if(err){
                 confirmationDialog({popUp,errDialog:true,onModalClose});
