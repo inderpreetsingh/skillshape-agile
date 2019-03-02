@@ -98,11 +98,12 @@ class ThinkingAboutAttending extends React.Component {
   }
   getCheckBoxValues = () =>{
     const {classTypeId,classTimeId} = this.props;
-    let filterForNotificationStatus = {classTimeId,classTypeId,userId:Meteor.userId()}
+    let filterForNotificationStatus = {classTypeId,userId:Meteor.userId()}
       Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,(err,result)=>{
         if(!isEmpty(result)){
           const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest}} = result;
-          let calendar = !isEmpty(classInterestData);
+          // let calendar = !isEmpty(classInterestData),default always be true;
+          let calendar = true;
           let notification = !isEmpty(classTimesRequest) && classTimesRequest.notification && !isEmpty(classTypeLocationRequest) && classTypeLocationRequest.notification;
           let checkBoxes = [calendar,notification]
           this.setState({checkBoxes,checkBoxesData:result});
@@ -340,7 +341,7 @@ class ThinkingAboutAttending extends React.Component {
              <ButtonWrapper>
               <FormGhostButton
                 onClick={()=>{handleJoin.call(this)}}
-                label={"Join"}
+                label={"Join and Pay Later"}
               />
             </ButtonWrapper>
             {!alreadyPurchased && <ButtonWrapper>

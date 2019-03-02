@@ -343,7 +343,7 @@ export default class MyCalender extends React.Component {
           const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest}} = result;
           let calendar = !isEmpty(classInterestData);
           let notification = !isEmpty(classTimesRequest)&& !isEmpty(classTypeLocationRequest) ;
-          if(calendar && notification){
+          if(!isEmpty(classTimesRequest) || status == 'Sign Out'){
             if (status == "Sign In") {
               this.handleClassUpdate(classDetails ? classDetails : filter, 'signIn', popUp)
             }
