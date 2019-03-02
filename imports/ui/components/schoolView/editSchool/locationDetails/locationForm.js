@@ -288,6 +288,7 @@ class LocationForm extends React.Component {
   };
   handleAddressChange = name => event => {
     // event.preventDefault();
+    console.log("zzzz")
     const value = event.target.value;
     this.setState(state => {
       return {
@@ -449,7 +450,25 @@ class LocationForm extends React.Component {
       );
     }
   };
+  unSavedChecker = () => {
+    console.log("in unsavedChecker")
+    const {isSaved} = this.state;
+    const {onClose,popUp} = this.props;
+    if(isSaved){
+      onClose();
+    }else{
+      let data = {};
+      data = {
+        popUp,
+        title: 'Oops',
+        type: 'alert',
+        content: 'You have still some unsaved changes. Please save first.',
+        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
+      }
+      confirmationDialog(data);
+    }
 
+  }
   render() {
     const { fullScreen, data, classes, currentUser } = this.props;
     return (
@@ -498,7 +517,7 @@ class LocationForm extends React.Component {
                 />
               </MapContainer>
 
-              <MyForm id={formId} onSubmit={this.onSubmit}>
+              <MyForm >
                 <TextField
                   required={true}
                   value={this.state.completeAddress.title}
@@ -517,7 +536,6 @@ class LocationForm extends React.Component {
                   type="text"
                   fullWidth
                   onChange={this.handleAddressChange("address")}
-                  onBlur={this.handleBlur}
                 />
                 <TextField
                   required={true}
@@ -527,7 +545,6 @@ class LocationForm extends React.Component {
                   label="City"
                   type="text"
                   onChange={this.handleAddressChange("city")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
                 {/* state ==> for the state in a country*/}
@@ -538,7 +555,6 @@ class LocationForm extends React.Component {
                   label="State"
                   type="text"
                   onChange={this.handleAddressChange("state")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
                 <TextField
@@ -549,7 +565,6 @@ class LocationForm extends React.Component {
                   label="Zip Code"
                   type="text"
                   onChange={this.handleAddressChange("zip")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
                 <TextField
@@ -560,7 +575,6 @@ class LocationForm extends React.Component {
                   label="Country"
                   type="text"
                   onChange={this.handleAddressChange("country")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
               </MyForm>
@@ -580,15 +594,13 @@ class LocationForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={() => this.props.onClose()}
+                onClick={this.unSavedChecker}
                 label="Cancel"
                 className={classes.cancel}
               />
             </ButtonWrapper>
             <ButtonWrapper>
               <FormGhostButton
-                type="submit"
-                form={formId}
                 onClick={this.onSubmit}
                 label={data ? "Save" : "Submit"}
                 className={classes.save}
