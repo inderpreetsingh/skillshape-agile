@@ -97,8 +97,7 @@ class EmailMemberDialogBox extends Component {
 
   render() {
     const {props,state:{isLoading,subject,message}} = this;
-    const {schoolData} = props;
-    const {name:schoolName} = schoolData || {};
+    const {studentName} = props;
     return (
       <Dialog
         fullScreen={props.fullScreen}
@@ -112,7 +111,7 @@ class EmailMemberDialogBox extends Component {
       <MuiThemeProvider theme={muiTheme}>
         <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
           <DialogTitleWrapper>
-              <Title>Email {schoolName ? schoolName : 'Member'}</Title>
+              <Title>Email {studentName ? studentName : 'Member'}</Title>
               <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
                 <ClearIcon/>
               </IconButton>
