@@ -1,32 +1,23 @@
-import React from "react";
 import { get } from "lodash";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import { withStyles } from "/imports/util";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
+import isEmpty from "lodash/isEmpty";
+import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
-import Grid from "material-ui/Grid";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import Input, { InputLabel, InputAdornment } from "material-ui/Input";
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import "/imports/api/enrollmentFee/methods";
-import Checkbox from "material-ui/Checkbox";
+import TextField from "material-ui/TextField";
+import Tooltip from "rc-tooltip";
+import React from "react";
 import styled from "styled-components";
-import { inputRestriction, formatMoney } from "/imports/util";
+import "/imports/api/enrollmentFee/methods";
+import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import Tooltip from "rc-tooltip";
-import { withPopUp } from "/imports/util";
-import isEmpty from "lodash/isEmpty";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { formatMoney, inputRestriction, withPopUp, withStyles,confirmationDialog } from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -73,7 +64,8 @@ class EnrollmentFeeForm extends React.Component {
       cost: get(this.props, "data.cost", "0"),
       expPeriod: get(this.props, "data.expPeriod", ""),
       noExpiration: get(this.props, "data.noExpiration", ""),
-      expDuration: get(this.props,"data.expDuration",false)
+      expDuration: get(this.props,"data.expDuration",false),
+      isSaved:true
     };
   }
 
@@ -90,7 +82,7 @@ class EnrollmentFeeForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    this.setState({ selectedClassType: values });
+    this.setState({ selectedClassType: values,isSaved:false });
   };
 
   onSubmit = event => {
@@ -151,12 +143,34 @@ class EnrollmentFeeForm extends React.Component {
   };
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
+    this.setState({ [name]: event.target.checked ,isSaved:false});
   };
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
-
+  
+  handleIsSavedState = () =>{
+      if(this.state.isSaved){
+        this.setState({isSaved:false})
+      }
+    }
+  unSavedChecker = () => {
+      const {isSaved} = this.state;
+      const {onClose,popUp} = this.props;
+      if(isSaved){
+        onClose();
+      }else{
+        let data = {};
+        data = {
+          popUp,
+          title: 'Oops',
+          type: 'alert',
+          content: 'You have still some unsaved changes. Please save first.',
+          buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
+        }
+        confirmationDialog(data);
+      }
+    }
   render() {
     const { fullScreen, data, classes, schoolData, currency } = this.props;
     const { classTypeData } = this.state;
@@ -207,6 +221,7 @@ class EnrollmentFeeForm extends React.Component {
                 label="Enrollment Fee Name"
                 type="text"
                 fullWidth
+                onChange={this.handleIsSavedState}
               />
               {!this.state.includeAllClassTypes &&  <SelectArrayInput
                 disabled={false}
@@ -248,6 +263,7 @@ class EnrollmentFeeForm extends React.Component {
                     label="Expiration Duration"
                     fullWidth
                     inputProps={{ min: "0" }}
+                    onChange={this.handleIsSavedState}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -260,7 +276,7 @@ class EnrollmentFeeForm extends React.Component {
                       input={<Input id="expiration-period" />}
                       value={this.state.expPeriod || null}
                       onChange={event =>
-                        this.setState({ expPeriod: event.target.value })
+                        this.setState({ expPeriod: event.target.value,isSaved:false })
                       }
                       fullWidth
                       disabled={this.state.noExpiration}
@@ -307,7 +323,7 @@ class EnrollmentFeeForm extends React.Component {
                     onChange={e => {
                       let x = inputRestriction(e);
                       this.enrollmentCost.value = x;
-                      this.setState({ cost: x });
+                      this.setState({ cost: x,isSaved:false });
                     }}
                     startAdornment={
                       <Select
@@ -315,7 +331,7 @@ class EnrollmentFeeForm extends React.Component {
                         input={<Input id="currency" />}
                         value={this.state.currency}
                         onChange={event =>
-                          this.setState({ currency: event.target.value })
+                          this.setState({ currency: event.target.value,isSaved:false })
                         }
                       >
                         {config.currency.map((data, index) => {
@@ -340,17 +356,6 @@ class EnrollmentFeeForm extends React.Component {
         <DialogActions>
           {data &&
             !data.from && (
-              //         <Button onClick={() => this.setState({showConfirmationModal: true})} color="accent" className={classes.delete}>
-              //             Delete
-              //         </Button>
-              //     )
-              // }
-              // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-              //   Cancel
-              // </Button>
-              // <Button type="submit" form={formId} color="primary" className={classes.save}>
-              //   { data ? "Save" : "Submit" }
-              // </Button>
               <ButtonWrapper>
                 <FormGhostButton
                   alertColor
@@ -363,7 +368,7 @@ class EnrollmentFeeForm extends React.Component {
           <ButtonWrapper>
             <FormGhostButton
               darkGreyColor
-              onClick={() => this.props.onClose()}
+              onClick={this.unSavedChecker}
               label="Cancel"
               className={classes.cancel}
             />
@@ -383,6 +388,4 @@ class EnrollmentFeeForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  withMobileDialog()(withPopUp(EnrollmentFeeForm))
-);
+export default withStyles(styles)( withMobileDialog()(withPopUp(EnrollmentFeeForm)) );
