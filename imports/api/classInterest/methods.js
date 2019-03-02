@@ -115,7 +115,7 @@ Meteor.methods({
            indexLoc = index1
          }
        })
-       if(indexLoc != -1){
+       if(indexLoc != -1 && !isEmpty(classData)){
         classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
         if(classTimeRecord)
         classData[indexLoc].classTimes.push(classTimeRecord);
