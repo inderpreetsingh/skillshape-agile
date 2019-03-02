@@ -690,6 +690,8 @@ class SchoolMemberInfo extends Component {
 					<EmailMemberDialogBox
 						open={this.state.emailMemberDialog}
 						email = {email}
+						studentName = {userName}
+						schoolName = {schoolName}
 						onModalClose={() => this.handleDialogState('emailMemberDialog', false)}
 					/>
 				)}

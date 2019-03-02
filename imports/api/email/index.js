@@ -834,7 +834,7 @@ export const userFeedBack = function(user, email, message, request, subject) {
 };
 
 export const sendEmail = function(data) {
-  const {To,subject,text} = data;
+  const {To,subject,text,studentName='Guest',schoolName='School',senderName='School Admin'} = data;
   let fromEmail = "Notices@SkillShape.com";
   let to = "Notices@SkillShape.com";
   if (platform == 'local') {
@@ -851,8 +851,9 @@ export const sendEmail = function(data) {
     to,
     replyTo: fromEmail,
     subject,
-    html: `Hi,
-             ${text}. <br/>
+    html: `Hello ${studentName} <br/>
+          ${senderName} from ${schoolName} sent you the following message:<br/>
+              ${text}<br/>
               Thank you.<br/>
               The skillshape Team.<br/>
               ${EmailSignature}

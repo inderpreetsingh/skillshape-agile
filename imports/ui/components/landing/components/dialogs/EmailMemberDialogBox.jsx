@@ -9,7 +9,7 @@ import PrimaryButton from '../buttons/PrimaryButton';
 import IconInput from '../form/IconInput.jsx';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
-import {sendEmail,withPopUp} from "/imports/util";
+import {sendEmail,withPopUp,getUserFullName} from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 const styles = theme => {
@@ -89,8 +89,9 @@ class EmailMemberDialogBox extends Component {
     e.preventDefault();
     this.setState({isLoading:true})
     const {subject,message} = this.state;
-    const {email,popUp,onModalClose }= this.props;
-    const data = { To:email,subject,text:message,popUp,onModalClose};
+    const {email,popUp,onModalClose,schoolName,studentName }= this.props;
+    const senderName = getUserFullName();
+    const data = { To:email,subject,text:message,popUp,onModalClose,senderName,schoolName,studentName};
     sendEmail(data,popUp)
   }
 

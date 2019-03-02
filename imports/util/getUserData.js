@@ -1,4 +1,4 @@
-import get from 'lodash/get';
+import {get,isEmpty} from 'lodash';
 
 export function validateImage(currentUser) {
 
@@ -9,8 +9,11 @@ export function validateImage(currentUser) {
 	return imageUrl;
 }
 
-export function getUserFullName(currentUser) {
+export function getUserFullName(currentUser={}) {
 	let userName = "";
+	if(isEmpty(currentUser)){
+		currentUser = Meteor.user();
+	}
 	if(currentUser) {
 		let name = get(currentUser, "profile.name");
 		let firstName = get(currentUser, "profile.firstName");
