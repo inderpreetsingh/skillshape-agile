@@ -258,9 +258,9 @@ class ClassTypeForm extends React.Component {
       <div>
         <Dialog
           open={this.props.open}
-          onClose={this.props.onClose}
+          onClose={()=>{unSavedChecker.call(this)}}
           aria-labelledby="form-dialog-title"
-          fullScreen={fullScreen}
+          fullScreen={false}
         >
           <DialogTitle id="form-dialog-title">Add Class Type</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
@@ -423,7 +423,7 @@ class ClassTypeForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={()=>{unSavedChecker.call(this)}}
+                onClick={this.props.onClose}
                 label="Cancel"
                 className={classes.cancel}
               />

@@ -115,7 +115,7 @@ class RoomForm extends React.Component {
       <div>
         <Dialog
           open={this.props.open}
-          onClose={this.props.onClose}
+          onClose={()=>{unSavedChecker.call(this)}}
           aria-labelledby="form-dialog-title"
           fullScreen={fullScreen}
         >
@@ -186,7 +186,7 @@ class RoomForm extends React.Component {
               <FormGhostButton
               type="button"
                 color="dark-grey"
-                onClick={()=>{unSavedChecker.call(this)}}
+                onClick={this.props.onClose}
                 label="Cancel"
               />
             </ButtonWrapper>

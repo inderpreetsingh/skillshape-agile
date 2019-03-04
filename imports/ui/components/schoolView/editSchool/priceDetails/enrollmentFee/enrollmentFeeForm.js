@@ -166,7 +166,8 @@ class EnrollmentFeeForm extends React.Component {
       <Dialog
         open={this.props.open}
         aria-labelledby="form-dialog-title"
-        fullScreen={fullScreen}
+        fullScreen={false}
+        onClose={()=>{unSavedChecker.call(this)}}
       >
         <DialogTitle id="form-dialog-title">Add Enrollment Fee</DialogTitle>
         <EnrollmentText>
@@ -353,7 +354,7 @@ class EnrollmentFeeForm extends React.Component {
           <ButtonWrapper>
             <FormGhostButton
               darkGreyColor
-              onClick={()=>{unSavedChecker.call(this)}}
+              onClick={this.props.onClose}
               label="Cancel"
               className={classes.cancel}
             />
