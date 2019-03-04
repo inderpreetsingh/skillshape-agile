@@ -17,7 +17,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { formatMoney, inputRestriction, withPopUp, withStyles,confirmationDialog,unSavedChecker,handleIsSavedState } from "/imports/util";
+import { formatMoney, inputRestriction, withPopUp, withStyles,confirmationDialog,unSavedChecker } from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -65,8 +65,8 @@ class EnrollmentFeeForm extends React.Component {
       expPeriod: get(this.props, "data.expPeriod", ""),
       noExpiration: get(this.props, "data.noExpiration", ""),
       expDuration: get(this.props,"data.expDuration",false),
-      isSaved:true
     };
+    this.props.handleIsSavedState(true);
   }
 
   handleClassTypeInputChange = value => {
@@ -82,7 +82,8 @@ class EnrollmentFeeForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    this.setState({ selectedClassType: values,isSaved:false });
+    this.props.handleIsSavedState(false);
+    this.setState({ selectedClassType: values });
   };
 
   onSubmit = event => {
@@ -143,14 +144,15 @@ class EnrollmentFeeForm extends React.Component {
   };
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked ,isSaved:false});
+    this.props.handleIsSavedState(false);
+    this.setState({ [name]: event.target.checked });
   };
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
   
   render() {
-    const { fullScreen, data, classes, schoolData, currency } = this.props;
+    const { fullScreen, data, classes, handleIsSavedState} = this.props;
     const { classTypeData } = this.state;
     let selectedCost, selectedCurrency;
     selectedCost = get(this.state, "cost", get(this.props, "data.cost", 0));
@@ -199,7 +201,7 @@ class EnrollmentFeeForm extends React.Component {
                 label="Enrollment Fee Name"
                 type="text"
                 fullWidth
-                onChange={()=>{handleIsSavedState.call(this)}}
+                onChange={()=>{handleIsSavedState(false)}}
               />
               {!this.state.includeAllClassTypes &&  <SelectArrayInput
                 disabled={false}
@@ -241,7 +243,7 @@ class EnrollmentFeeForm extends React.Component {
                     label="Expiration Duration"
                     fullWidth
                     inputProps={{ min: "0" }}
-                    onChange={()=>{handleIsSavedState.call(this)}}
+                    onChange={()=>{handleIsSavedState(false)}}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -253,8 +255,10 @@ class EnrollmentFeeForm extends React.Component {
                       required={true}
                       input={<Input id="expiration-period" />}
                       value={this.state.expPeriod || null}
-                      onChange={event =>
-                        this.setState({ expPeriod: event.target.value,isSaved:false })
+                      onChange={event =>{
+                        handleIsSavedState(false);
+                        this.setState({ expPeriod: event.target.value})
+                      }
                       }
                       fullWidth
                       disabled={this.state.noExpiration}
@@ -300,16 +304,19 @@ class EnrollmentFeeForm extends React.Component {
                     inputRef={ref => (this.enrollmentCost = ref)}
                     onChange={e => {
                       let x = inputRestriction(e);
+                      handleIsSavedState(false)
                       this.enrollmentCost.value = x;
-                      this.setState({ cost: x,isSaved:false });
+                      this.setState({ cost: x });
                     }}
                     startAdornment={
                       <Select
                         required={true}
                         input={<Input id="currency" />}
                         value={this.state.currency}
-                        onChange={event =>
-                          this.setState({ currency: event.target.value,isSaved:false })
+                        onChange={event =>{
+                          handleIsSavedState(false)
+                          this.setState({ currency: event.target.value})
+                        }
                         }
                       >
                         {config.currency.map((data, index) => {
