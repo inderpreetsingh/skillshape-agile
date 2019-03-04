@@ -54,7 +54,10 @@ export default function (props) {
     parentKey,
     parentData,
     schoolId,
-    locationData
+    locationData,
+    isSaved,
+    handleIsSavedState
+
   } = this.props;
   const FormComponent = childPanelHeader.actions.component;
   return (
@@ -82,6 +85,8 @@ export default function (props) {
                 onClose={this.handleFormModal}
                 moveToNextTab={this.props.moveToNextTab}
                 locationData={locationData}
+                isSaved={isSaved}
+                handleIsSavedState={handleIsSavedState}
               />
             )}
 
@@ -282,6 +287,8 @@ export default function (props) {
                   }
                   onClose={this.handleFormModal}
                   moveToNextTab={this.props.moveToNextTab}
+                  isSaved={isSaved}
+                  handleIsSavedState={handleIsSavedState}
                 />
               )}
             {this.state.deleteConfirmationModal && (

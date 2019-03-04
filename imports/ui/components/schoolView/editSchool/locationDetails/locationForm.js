@@ -10,7 +10,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import {isEmpty,get} from "lodash";
-import {confirmationDialog,withPopUp,unSavedChecker,handleIsSavedState} from "/imports/util";
+import {confirmationDialog,withPopUp,unSavedChecker} from "/imports/util";
 
 
 const formId = "LocationForm";
@@ -105,7 +105,6 @@ class LocationForm extends React.Component {
       isBusy: false,
       myLocation: this._getMyLocation(),
       completeAddress: this._getMyCompleteAddress(),
-      isSaved:true
     };
   }
 
@@ -145,7 +144,7 @@ class LocationForm extends React.Component {
 
   componentDidMount = () => {
     const myLocation = this._getMyLocation();
-
+    this.props.handleIsSavedState(true)
     if (!myLocation.lat || !myLocation.lng) {
       const defaultLocation = this.getMyDefaultLocation();
       if(!isEmpty(defaultLocation))
@@ -289,10 +288,10 @@ class LocationForm extends React.Component {
   handleAddressChange = name => event => {
     // event.preventDefault();
     const value = event.target.value;
+    this.props.handleIsSavedState(false);
     this.setState(state => {
       return {
         ...state,
-        isSaved:false,
         completeAddress: {
           ...state.completeAddress,
           [name]: value
@@ -420,7 +419,8 @@ class LocationForm extends React.Component {
       if (result) {
         this.props.onClose(result);
       }
-      this.setState({ isBusy: false, error,isSaved:true });
+      this.props.handleIsSavedState(true);
+      this.setState({ isBusy: false, error });
     });
   };
 

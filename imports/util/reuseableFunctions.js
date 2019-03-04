@@ -18,15 +18,14 @@ export const sendEmail = (data) => {
         confirmationDialog({popUp,errDialog:true,onModalClose});
     }
 }
-export function handleIsSavedState () {
-    if(this.state.isSaved){
-      this.setState({isSaved:false})
+export function handleIsSavedState (isSaved) {
+    if(this.state.isSaved != isSaved){
+      this.setState({isSaved})
     }
 }
 
 export function unSavedChecker ()  {
-    const {isSaved} = this.state;
-    const {onClose,popUp} = this.props;
+    const {onClose,popUp,isSaved} = this.props;
     if(isSaved){
       onClose();
     }else{

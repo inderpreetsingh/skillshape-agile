@@ -8,7 +8,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import { withPopUp,confirmationDialog ,unSavedChecker,handleIsSavedState} from "/imports/util";
+import { withPopUp,confirmationDialog ,unSavedChecker} from "/imports/util";
 import {get} from 'lodash';
 
 const formId = "RoomForm";
@@ -39,9 +39,9 @@ class RoomForm extends React.Component {
   }
   
   initializeState = (props) =>{
+    this.props.handleIsSavedState(true)
     let state =  {
       isBusy: false,
-      isSaved:true,
       name: get(props,'data.name','Main Room'),
       capacity: get(props,'data.capacity',null)
     }
@@ -85,7 +85,8 @@ class RoomForm extends React.Component {
 
   handleSubmit = ({ methodName, data, locationId, nextTab }) => {
     Meteor.call(methodName, { locationId, data }, (error, result) => {
-      let stateObj = { isBusy: false,isSaved:true };
+      this.props.handleIsSavedState(true)
+      let stateObj = { isBusy: false};
       if (error) {
         stateObj.error = error.reason || error.message;
       }
@@ -100,10 +101,10 @@ class RoomForm extends React.Component {
     });
   };
   handleDataChange = name => event => {
+    this.props.handleIsSavedState(false)
     const value = event.target.value;
     this.setState({
       [name]:value,
-      isSaved:false
     })
   }
  

@@ -499,6 +499,8 @@ export default function () {
                             }
                             moveToNextTab={this.props.moveToNextTab}
                             locationData={this.props.locationData}
+                            isSaved={this.props.isSaved}
+                            handleIsSavedState={this.props.handleIsSavedState}
                           />
                         </Grid>
                       )}

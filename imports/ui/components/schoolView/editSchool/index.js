@@ -14,8 +14,21 @@ class SchoolEditView extends React.Component {
     super(props);
     this.state = {
       selecetdView: "school_details",
-      queryTabValue: null
+      queryTabValue: null,
+      isSaved:true
     };
+  }
+  componentDidMount() {
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
+  }
+  routerWillLeave = (nextLocation) => {
+    // return false to prevent a transition w/o prompting the user,
+    // or return a string to allow the user to decide:
+    // return `null` or nothing to let other hooks to be executed
+    //
+    // NOTE: if you return true, other hooks will not be executed!
+    if (!this.state.isSaved)
+      return 'Your work is not saved! Are you sure you want to leave?'
   }
   componentWillMount() {
     // Listen for `?classDetails=true` so that we can click on tab.
