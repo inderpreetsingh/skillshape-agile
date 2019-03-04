@@ -1,7 +1,7 @@
 import React from 'react';
 import SchoolDetailsRender from './schoolDetailsRender';
 import styles from "/imports/ui/components/schoolView/style";
-import { withStyles, toastrModal } from "/imports/util";
+import { withStyles, withPopUp } from "/imports/util";
 
 class SchoolDetails extends React.Component {
 
@@ -46,7 +46,6 @@ class SchoolDetails extends React.Component {
 
   updateSchool = () => {
     let imageFile = this.refs.schoolImage.files[0];
-    debugger;
     if(imageFile) {
       S3.upload({ files: { "0": imageFile}, path: "schools"}, (err, res) => {
         if(err) {
@@ -62,9 +61,8 @@ class SchoolDetails extends React.Component {
 
   editSchoolCall = (nextTab, event) => {
     // Start loading on when user press button to update school details.
-    debugger;
     this.setState({isLoading: true});
-    const { schoolId,toastr } = this.props;
+    const { schoolId,popUp } = this.props;
 
     let schoolObj = {...this.state}
     if(this.props.schoolData && this.props.schoolData.mainImage) {
@@ -73,10 +71,10 @@ class SchoolDetails extends React.Component {
     // This function is used to edit school details.
     Meteor.call("editSchool", schoolId, schoolObj, (error, result) => {
       if (error) {
-        toastr.error("Oops! something went wrong.",error.message);
+        popUp.appear("alert", { title: "Oops! something went wrong.", content: error.message })
       }
       if (result) {
-          toastr.success("School details editing successful.","Success");
+        popUp.appear("success", { title: "Success", content:  "School details editing successful." })
       }
       // Stop loading on completion of editing school details.
       this.setState({isLoading: false});
@@ -111,4 +109,4 @@ class SchoolDetails extends React.Component {
   }
 }
 
-export default withStyles(styles)(toastrModal(SchoolDetails))
+export default withStyles(styles)(withPopUp(SchoolDetails))

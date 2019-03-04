@@ -1,27 +1,21 @@
-import React from "react";
-import Button from 'material-ui/Button';
-import { browserHistory, Link } from 'react-router';
-import Grid from 'material-ui/Grid';
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
-import config from '/imports/config';
-import Typography from 'material-ui/Typography';
-import Edit from 'material-ui-icons/Edit';
-import TextField from 'material-ui/TextField';
-import Input, { InputLabel } from 'material-ui/Input';
-import Select from 'material-ui/Select';
+import Card from 'material-ui/Card';
 import { FormControl } from 'material-ui/Form';
+import Grid from 'material-ui/Grid';
+import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
-import { Loading } from '/imports/ui/loading';
-import CreateMedia from '/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia';
-import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
-import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-import MaterialRTE from "/imports/startup/client/material-rte"
-// Need to import this in order to show loading component.
-import { ContainerLoader } from '/imports/ui/loading/container.js';
+import Select from 'material-ui/Select';
+import TextField from 'material-ui/TextField';
+import Typography from 'material-ui/Typography';
+import React from "react";
+import ReactPhoneInput from 'react-phone-input-2';
 import styled from "styled-components";
+import config from '/imports/config';
+import MaterialRTE from "/imports/startup/client/material-rte";
+import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import ReactPhoneInput from 'react-phone-input-2';
+// Need to import this in order to show loading component.
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -46,7 +40,7 @@ export default function () {
     route,
     mediaFormData,
     currentUser,
-    toastr
+    popUp
   } = this.props;
   return (
     <div>
@@ -163,7 +157,7 @@ export default function () {
                   value={this.state.currency}
                   onChange={(event) => {
                     if (event.target.value != this.state.previousSelectedCurrency) {
-                      toastr.success('You are going to change your Preferred Currency.Please make changes in packages according to your currency. ', "success");
+                        popUp.appear("inform", { title: "Inform", content:  "You are going to change your Preferred Currency.Please make changes in packages according to your currency." })
                     }
                     this.setState({ currency: event.target.value })
                   }}
