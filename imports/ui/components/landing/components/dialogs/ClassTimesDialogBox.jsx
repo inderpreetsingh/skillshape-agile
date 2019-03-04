@@ -582,6 +582,7 @@ class ClassTimesDialogBox extends React.Component {
                         classInterestData={classInterestData}
                         onModalClose={onModalClose}
                         params={params}
+                        schoolData={this.props.schoolData}
                       />
                     </ClassTimesBoxesWrapper>
 

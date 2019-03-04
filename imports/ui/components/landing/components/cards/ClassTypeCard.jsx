@@ -174,6 +174,7 @@ class ClassTypeCard extends Component {
 						y={this.state.y}
 						{...this.props}
 						params={params}
+						schoolData={this.props.schoolData}
 					/>
 				)}
 				{this.state.manageRequestsDialog && (

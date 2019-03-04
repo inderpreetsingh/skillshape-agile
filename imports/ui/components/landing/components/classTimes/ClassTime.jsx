@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import { isEmpty,get } from "lodash";
 import Icon from "material-ui/Icon";
 import Paper from "material-ui/Paper";
 import { withStyles } from "material-ui/styles";
@@ -468,7 +468,9 @@ class ClassTime extends Component {
       params,
       classTypeId,
       popUp,
-      enrollmentIds
+      schoolData,
+      enrollmentIds,
+      schoolName
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
@@ -513,7 +515,7 @@ class ClassTime extends Component {
                   classTypeId = {classTypeId}
                   classTimeId = {classTimeId}
                   popUp={popUp}
-                  
+                  schoolName={schoolName ? schoolName : schoolData && get(schoolData[0],'name','School')}
                 />
               )}
             <div>

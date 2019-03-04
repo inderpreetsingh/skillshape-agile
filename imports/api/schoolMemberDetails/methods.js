@@ -138,7 +138,6 @@ Meteor.methods({
     check(memberData,Object);
     const {activeUserId,schoolId,classTypeIds,classTypeId} = memberData;
     memberData.addedOn = new Date();
-    memberData.emailAccess = false;
     // First time new member added.
     if(!classTypeId){
       let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};

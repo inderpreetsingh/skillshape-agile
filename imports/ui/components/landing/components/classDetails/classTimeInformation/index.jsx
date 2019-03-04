@@ -54,6 +54,7 @@ class ClassTimeInformation extends Component {
             classTypeId={classType._id}
             popUp = {popUp}
             classTimeId = {classTimeId}
+            schoolName= {schoolName}
           />)}
 
         <NameBar

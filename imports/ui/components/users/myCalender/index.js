@@ -492,6 +492,7 @@ export default class MyCalender extends React.Component {
             classTypeId={classTypeId}
             classTimeId = {classTimeId}
             popUp= {popUp}
+            schoolName={name}
           />)}
 
         {classDetailModal && (

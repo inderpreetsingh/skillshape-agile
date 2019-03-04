@@ -135,14 +135,15 @@ Meteor.methods({
       })
     }
     return classData;
-  },"classInterest.getClassInterest": function(filter) {
+  },"classInterest.getClassInterest": function(filter,schoolId) {
     try{
       if(!isEmpty(filter)){
-        const {classTypeId} = filter;
+        const {classTypeId,userId} = filter;
         let classInterestData = ClassInterest.findOne(filter) || {};
         let classTimesRequest = Meteor.call("classTimesRequest.getUserRecord",classTypeId) || {}
         let classTypeLocationRequest = Meteor.call("classTypeLocationRequest.getUserRecord",classTypeId) || {}
-        return {classInterestData:classInterestData,notification:{classTimesRequest,classTypeLocationRequest}}
+        let schoolMemberData = Meteor.call("schoolMemberDetails.getMemberData",{activeUserId:userId,schoolId}) || {};
+        return {classInterestData:classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData:schoolMemberData}
       }
       return {};
     }catch(error){

@@ -43,7 +43,8 @@ export function handleJoin() {
         activeUserId:userId,
         schoolId:schoolId,
         classTypeId:classTypeId,
-        from:'classes'
+        from:'classes',
+        emailAccess:checkBoxes[2]
     }   
        callMethod("schoolMemberDetails.addNewMember",memberData,popUp,onModalClose)
        callMethod("classTypeLocationRequest.updateRequest",data,popUp,onModalClose)

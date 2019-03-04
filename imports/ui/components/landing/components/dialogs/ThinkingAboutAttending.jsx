@@ -70,8 +70,7 @@ const ErrorWrapper = styled.span`
     color: red;
     float: right;
 `;
-const labelValue = ['Add this class to my calendar.', 'Sign me up for notifications regarding class time or Location changes.',
-  'Sign me up for emails from the school about this class.']
+
 class ThinkingAboutAttending extends React.Component {
   constructor(props) {
     super(props);
@@ -97,15 +96,18 @@ class ThinkingAboutAttending extends React.Component {
     !isEmpty(nextProps) && this.checkUserPurchases(nextProps);
   }
   getCheckBoxValues = () =>{
-    const {classTypeId,classTimeId} = this.props;
+    const {classTypeId,classTimeId,schoolId} = this.props;
     let filterForNotificationStatus = {classTypeId,userId:Meteor.userId()}
-      Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,(err,result)=>{
+      Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,schoolId,(err,result)=>{
         if(!isEmpty(result)){
-          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest}} = result;
+          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData} = result;
           // let calendar = !isEmpty(classInterestData),default always be true;
           let calendar = true;
           let notification = !isEmpty(classTimesRequest) && classTimesRequest.notification && !isEmpty(classTypeLocationRequest) && classTypeLocationRequest.notification;
-          let checkBoxes = [calendar,notification]
+          let checkBoxes = [calendar,notification];
+          if(isEmpty(schoolMemberData)){
+            checkBoxes.push(true);
+          }
           this.setState({checkBoxes,checkBoxesData:result});
         }
       })
@@ -239,12 +241,14 @@ class ThinkingAboutAttending extends React.Component {
   }
   render() {
     const { checkBoxes, classTypePackages, packagesRequired,loginUserPurchases ,alreadyPurchased,isLoading} = this.state;
-    const { open, onModalClose, name, schoolId, params, classTypeId,handleSignIn, } = this.props;
+    const { open, onModalClose, name, schoolId, params, classTypeId,handleSignIn,schoolName } = this.props;
     let packagesLength = 0;
     if(!isEmpty(loginUserPurchases)){
       const {purchased=[]} = loginUserPurchases;
       packagesLength = purchased.length;
     }
+    const labelValue = ['Add this class to my calendar.', 'Sign me up for notifications regarding class time or Location changes.',
+  `Would you like to allow ${schoolName} to have access to your email address for general contact, newsletters regarding classes you are signed up for, and other marketing purposes related to the school? You can revoke this any time in your Edit Memberships area.`]
       return (
       <MuiThemeProvider theme={muiTheme}>
         <Dialog

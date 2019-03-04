@@ -162,6 +162,7 @@ class ClassTypeList extends Component {
 							reviewsData={this.props.reviewsData || []}
 							hideClassTypeOptions={this.props.hideClassTypeOptions}
 							landingPage={this.props.landingPage}
+							schoolData={this.props.schoolData}
 						/>
 					);
 				}
@@ -291,6 +292,7 @@ class ClassTypeList extends Component {
 								landingPage={this.props.landingPage}
 								classTypeData={classTypeData}
 								params = {params}
+								schoolData={this.props.schoolData}
 							/>
 						)}
 
