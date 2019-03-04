@@ -19,7 +19,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { formatMoney, inputRestriction, withPopUp, withStyles,unSavedChecker,handleIsSavedState } from "/imports/util";
+import { formatMoney, inputRestriction, withPopUp, withStyles,unSavedChecker } from "/imports/util";
 const formId = "ClassPriceForm";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -61,8 +61,8 @@ class ClassPriceForm extends React.Component {
       currency: get(this.props, "data.currency", this.props.currency),
       cost: get(this.props,"data.cost",'0'),
       expDuration: get(this.props,"data.exDuration",false),
-      isSaved:true
     };
+    this.props.handleIsSavedState(true);
   }
 
   handleClassTypeInputChange = value => {
@@ -79,7 +79,8 @@ class ClassPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    this.setState({ selectedClassType: values,isSaved:false });
+    this.props.handleIsSavedState(false);
+    this.setState({ selectedClassType: values});
   };
 
   onSubmit = event => {
@@ -141,14 +142,15 @@ class ClassPriceForm extends React.Component {
     });
   };
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked,isSaved:false });
+    this.props.handleIsSavedState(false)
+    this.setState({ [name]: event.target.checked,});
   };
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
   
   render() {
-    const { fullScreen, data, classes,schoolData,currency } = this.props;
+    const { fullScreen, data, classes,schoolData,currency,handleIsSavedState } = this.props;
     const { classTypeData,cost} = this.state;
     let selectedCost,selectedCurrency;
     selectedCost = get(this.state,"cost",get(this.props,"data.cost",0));
@@ -189,7 +191,7 @@ class ClassPriceForm extends React.Component {
                 label="Class Package Name"
                 type="text"
                 fullWidth
-                onChange={()=>{handleIsSavedState.call(this)}}
+                onChange={()=>{handleIsSavedState(false)}}
               />
               <SelectArrayInput
                 disabled={false}
@@ -229,7 +231,7 @@ class ClassPriceForm extends React.Component {
                     label="Expiration Duration"
                     fullWidth
                     inputProps={{ min: "0"}}
-                    onChange={()=>{handleIsSavedState.call(this)}}
+                    onChange={()=>{handleIsSavedState(false)}}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -242,7 +244,10 @@ class ClassPriceForm extends React.Component {
                       input={<Input id="expiration-period" />}
                       value={this.state.expPeriod}
                       onChange={event =>
-                        this.setState({ expPeriod: event.target.value,isSaved:false })
+                        {
+                          handleIsSavedState(false);
+                          this.setState({ expPeriod: event.target.value })
+                        }
                       }
                       fullWidth
                       disabled={this.state.noExpiration}
@@ -277,7 +282,7 @@ class ClassPriceForm extends React.Component {
                 margin="dense"
                 fullWidth
                 inputProps={{ min: "0"}}
-                onChange={()=>{handleIsSavedState.call(this)}}
+                onChange={()=>{handleIsSavedState(false)}}
               />
 
               <FormControl required={true} fullWidth>
@@ -290,9 +295,10 @@ class ClassPriceForm extends React.Component {
                   defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
                   type="number"
                   onChange={(e)=>{
+                    handleIsSavedState(false);
                     let x = inputRestriction(e);
                     this.classPriceCost.value = x;
-                    this.setState({cost:x,isSaved:false});
+                    this.setState({cost:x});
                   }}
                   startAdornment={
                     <Select
@@ -300,7 +306,10 @@ class ClassPriceForm extends React.Component {
                     input={<Input id="currency" />}
                     value={this.state.currency}
                     onChange={event =>
-                      this.setState({ currency: event.target.value,isSaved:false })
+                      {
+                        handleIsSavedState(false);
+                        this.setState({ currency: event.target.value})
+                      }
                     }
                     >
                      {config.currency.map((data, index)=> {

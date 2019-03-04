@@ -13,39 +13,47 @@ export default function () {
 		schoolId,
 		classTypeData,
 		schoolData,
-		currency
+		currency,
+		isSaved,
+		handleIsSavedState
 	} = this.props
 
 	return (
 		<div>
-			<div style={{paddingTop: '20px'}}>
+			<div style={{ paddingTop: '20px' }}>
 				<ClassPrice
 					schoolId={schoolId}
 					classPricingData={classPricingData}
 					classTypeData={classTypeData}
 					schoolData={schoolData}
 					currency={currency}
+					isSaved={isSaved}
+					handleIsSavedState={handleIsSavedState}
 				/>
 			</div>
-			<div style={{paddingTop: '20px'}}>
+			<div style={{ paddingTop: '20px' }}>
 				<MonthlyPrice
 					schoolId={schoolId}
 					monthlyPricingData={monthlyPricingData}
 					classTypeData={classTypeData}
 					schoolData={schoolData}
 					currency={currency}
-					
+					isSaved={isSaved}
+					handleIsSavedState={handleIsSavedState}
+
 				/>
 			</div>
-			<div style={{paddingTop: '20px'}}>
+			<div style={{ paddingTop: '20px' }}>
 				<EnrollmentFee
 					schoolId={schoolId}
 					enrollmentFeeData={enrollmentFeeData}
 					classTypeData={classTypeData}
 					schoolData={schoolData}
 					currency={currency}
-					
-					/>
+					isSaved={isSaved}
+					handleIsSavedState={handleIsSavedState}
+
+				/>
 			</div>
 			{/*<div className="wizard-footer col-md-12">
         <div className="pull-right">
