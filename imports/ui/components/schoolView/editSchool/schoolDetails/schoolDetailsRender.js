@@ -157,7 +157,7 @@ export default function () {
                   value={this.state.currency}
                   onChange={(event) => {
                     if (event.target.value != this.state.previousSelectedCurrency) {
-                        popUp.appear("inform", { title: "Inform", content:  "You are going to change your Preferred Currency.Please make changes in packages according to your currency." })
+                        popUp.appear("success", { title: "Inform", content:  "You are going to change your Preferred Currency.Please make changes in packages according to your currency." })
                     }
                     this.setState({ currency: event.target.value })
                   }}
