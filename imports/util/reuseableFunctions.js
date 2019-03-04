@@ -45,3 +45,9 @@ export function unSavedChecker ()  {
     }
   }
 
+  export const handleOnBeforeUnload = e => {
+    console.log('TCL: e', e)
+    const message = 'Are you sure?';
+    e.returnValue = message;
+    return message;
+  };

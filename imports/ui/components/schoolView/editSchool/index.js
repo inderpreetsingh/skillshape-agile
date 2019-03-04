@@ -8,7 +8,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import config from "/imports/config";
 import {get,isEmpty,isEqual} from 'lodash';
 import { ContainerLoader } from "/imports/ui/loading/container";
-
+import {handleOnBeforeUnload} from '/imports/util';
 class SchoolEditView extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +17,16 @@ class SchoolEditView extends React.Component {
       queryTabValue: null,
       isSaved:true
     };
+  }
+  componentDidUpdate(){
+    window.onbeforeunload = null;
+    if(!this.state.isSaved){
+    window.onbeforeunload = handleOnBeforeUnload;
+    }
+  }
+  componentWillUnmount() {
+    // unregister onbeforeunload event handler
+    window.onbeforeunload = null;
   }
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)

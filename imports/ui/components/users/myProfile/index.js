@@ -1,7 +1,7 @@
 import get from "lodash/get";
 import React from "react";
 import MyProfileRender from "./myProfileRender";
-import { compressImage, confirmationDialog, withPopUp, withStyles } from "/imports/util";
+import { compressImage, confirmationDialog, withPopUp, withStyles ,handleOnBeforeUnload} from "/imports/util";
 
 const style = theme => {
   return {
@@ -65,7 +65,16 @@ class MyProfile extends React.Component {
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
     this.initialzeUserProfileForm(this.props.currentUser);
   }
-
+  componentDidUpdate(){
+    window.onbeforeunload = null;
+    if(!this.state.isSaved){
+    window.onbeforeunload = handleOnBeforeUnload;
+    }
+  }
+  componentWillUnmount() {
+    // unregister onbeforeunload event handler
+    window.onbeforeunload = null;
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.currentUser) {
       this.initialzeUserProfileForm(nextProps.currentUser);
