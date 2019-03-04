@@ -86,7 +86,7 @@ class SchoolEditView extends React.Component {
   };
 
   onTabChange = tabValue => {
-    this.setState({ tabValue });
+    this.setState({ tabValue,isSaved:true });
   };
   shouldComponentUpdate(nextProps,nextState){
     return !isEqual(nextProps,this.props) || !isEqual(nextState,this.state);
