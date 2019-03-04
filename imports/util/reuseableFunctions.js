@@ -25,8 +25,9 @@ export function handleIsSavedState (isSaved) {
 }
 
 export function unSavedChecker ()  {
-    const {onClose,popUp,isSaved} = this.props;
+    const {onClose,popUp,isSaved,handleIsSavedState} = this.props;
     if(isSaved){
+      handleIsSavedState(true);
       onClose();
     }else{
       let data = {};
@@ -35,7 +36,10 @@ export function unSavedChecker ()  {
         title: 'Oops',
         type: 'alert',
         content: 'You have still some unsaved changes. Please save first.',
-        buttons: [{ label: 'Close Anyway', onClick:onClose, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
+        buttons: [{ label: 'Close Anyway', onClick:()=>{
+            onClose();
+            handleIsSavedState(true);
+        }, greyColor: true },{ label: 'Ok', onClick:()=>{}}]
       }
       confirmationDialog(data);
     }
