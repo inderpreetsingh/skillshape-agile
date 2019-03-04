@@ -6,7 +6,7 @@ import { normalizeMonthlyPricingData } from "/imports/util";
 export default function () {
 
 
-    const { classes, schoolId, monthlyPricingData, schoolData, currency } = this.props;
+    const { classes, schoolId, monthlyPricingData, schoolData, currency,isSaved, handleIsSavedState } = this.props;
     const data = this.state.formData;
     return (
         <div className="class-price-details">
@@ -19,6 +19,8 @@ export default function () {
                     classTypeData={this.props.classTypeData}
                     schoolData={schoolData}
                     currency={currency}
+                    isSaved={isSaved}
+					handleIsSavedState={handleIsSavedState}
                 />
             }
             <PanelHeader btnText="Add Per Month Package" title="Per Month Packages" caption="Different Payment Packages can cover different payment methods, Class Types, or Durations" icon="assignment" onAddButtonClicked={() => { this.setState({ showForm: true, formData: null }) }} />

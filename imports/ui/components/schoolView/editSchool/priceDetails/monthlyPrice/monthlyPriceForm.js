@@ -18,7 +18,7 @@ import FormGhostButton from "/imports/ui/components/landing/components/buttons/F
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { withPopUp, withStyles ,confirmationDialog,unSavedChecker,handleIsSavedState} from "/imports/util";
+import { withPopUp, withStyles ,confirmationDialog,unSavedChecker} from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -58,6 +58,7 @@ class MonthlyPriceForm extends React.Component {
   }
 
   initalizeFormValues = () => {
+    this.props.handleIsSavedState(true);
     let pymtType = get(this.props, "data.pymtType", null);
     let pymtMethod = get(this.props, "data.pymtMethod", null);
     let state = {
@@ -73,7 +74,6 @@ class MonthlyPriceForm extends React.Component {
       pymtMethod: pymtMethod,
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
       duPeriod: get(this.props, "data.duPeriod", ""),
-      isSaved:true
     };
     
     if (pymtMethod && pymtMethod === "Pay Up Front") state.tabValue = 1;
@@ -164,11 +164,12 @@ class MonthlyPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    this.setState({ selectedClassType: values,isSaved:false });
+    this.props.handleIsSavedState(false);
+    this.setState({ selectedClassType: values });
   };
 
   handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
-    
+    this.props.handleIsSavedState(false);
     let oldPayment = this.state.pymtType || {};
     oldPayment[pymtType] = isInputChecked;
     oldPayment[disableKey] = !isInputChecked;
@@ -176,11 +177,11 @@ class MonthlyPriceForm extends React.Component {
       [key]: isInputChecked,
       pymtType: oldPayment,
       [disableKey]:!isInputChecked,
-      isSaved:false
     });
   };
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked,isSaved:false });
+    this.props.handleIsSavedState(false);
+    this.setState({ [name]: event.target.checked});
   };
 
   cancelConfirmationModal = () =>
@@ -188,7 +189,7 @@ class MonthlyPriceForm extends React.Component {
   
  
   render() {
-    const { fullScreen, data, classes, schoolData, currency } = this.props;
+    const { fullScreen, data, classes, schoolData, currency ,handleIsSavedState} = this.props;
     const { classTypeData, pymtMethod, pymtDetails } = this.state;
     const tabValue =
       this.state.tabValue == 0 ? "Pay Each Month" : "Pay Up Front";
@@ -229,7 +230,7 @@ class MonthlyPriceForm extends React.Component {
                   label="Package Name"
                   type="text"
                   fullWidth
-                  onChange={()=>{handleIsSavedState.call(this)}}
+                  onChange={()=>{handleIsSavedState(false)}}
                 />
                 <SelectArrayInput
                   disabled={false}
@@ -266,7 +267,7 @@ class MonthlyPriceForm extends React.Component {
                   type="number"
                   fullWidth
                   inputProps={{ min: "0"}}
-                  onChange={()=>{handleIsSavedState.call(this)}}
+                  onChange={()=>{handleIsSavedState(false)}}
                 />
    
                 
@@ -278,8 +279,10 @@ class MonthlyPriceForm extends React.Component {
                       required={true}
                       input={<Input id="duration-period" />}
                       value={this.state && this.state.duPeriod ? this.state.duPeriod : 'day'}
-                      onChange={event =>
-                        this.setState({ duPeriod: event.target.value ,isSaved:false})
+                      onChange={event =>{
+                        handleIsSavedState(false);
+                        this.setState({ duPeriod: event.target.value })
+                      }
                       }
                       fullWidth
                     >
@@ -377,7 +380,7 @@ class MonthlyPriceForm extends React.Component {
                     }
                     classes={classes}
                     currency={currency}
-                    handleIsSavedState={()=>{handleIsSavedState.call(this)}}
+                    handleIsSavedState={()=>{handleIsSavedState(false)}}
                   />
                 </div>
               </form>
