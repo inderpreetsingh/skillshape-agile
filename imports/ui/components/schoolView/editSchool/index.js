@@ -24,10 +24,7 @@ class SchoolEditView extends React.Component {
     window.onbeforeunload = handleOnBeforeUnload;
     }
   }
-  componentWillUnmount() {
-    // unregister onbeforeunload event handler
-    window.onbeforeunload = null;
-  }
+ 
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
   }
@@ -43,6 +40,8 @@ class SchoolEditView extends React.Component {
     }
   }
   componentWillMount() {
+    // unregister onbeforeunload event handler
+    window.onbeforeunload = null;
     // Listen for `?classDetails=true` so that we can click on tab.
     if (this.props.location.query.tabValue) {
       // We should set state for class details tab so that it opens automatically.
