@@ -1,7 +1,7 @@
 import React from 'react';
 import EmbedCodesRender from './embedCodesRender';
-
-export default class EmbedCodes extends React.Component {
+import {withPopUp} from '/imports/util';
+class EmbedCodes extends React.Component {
 
     constructor(props) {
         super(props);
@@ -12,3 +12,4 @@ export default class EmbedCodes extends React.Component {
         return EmbedCodesRender.call(this, this.props, this.state)
     }
 }
+export default withPopUp(EmbedCodes);

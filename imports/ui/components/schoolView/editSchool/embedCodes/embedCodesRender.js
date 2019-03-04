@@ -9,7 +9,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import embedCodeSettings from "./embedCodeSettings";
 
 export default function() {
-  const { schoolData, moveTab } = this.props;
+  const { schoolData, moveTab,popUp } = this.props;
   return (
     <div className="tab-pane active" id="tab_default_10">
       <PanelHeader
@@ -58,7 +58,7 @@ export default function() {
                       <CopyToClipboard
                         text={value}
                         onCopy={() => {
-                          toastr.success("Code Copied", "Success");
+                        popUp.appear("success", { title: "Inform", content:  "Code Copied." })
                         }}
                       >
                         <Button color="default" raised dense>
