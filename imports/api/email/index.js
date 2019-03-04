@@ -853,7 +853,7 @@ export const sendEmail = function(data) {
     subject,
     html: `Hello ${studentName} <br/>
           ${senderName} from ${schoolName} sent you the following message:<br/>
-              ${text}<br/>
+              ${text.replace(new RegExp('\r?\n','g'), '<br />')}<br/><br/>
               Thank you.<br/>
               The skillshape Team.<br/>
               ${EmailSignature}
