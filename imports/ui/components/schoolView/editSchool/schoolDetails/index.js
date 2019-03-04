@@ -7,21 +7,9 @@ class SchoolDetails extends React.Component {
 
   constructor(props) {
     super(props);
-    let { schoolData } = this.props;
-    let {
-      name,
-      website,
-      phone,
-      firstName,
-      lastName,
-      email,
-      backGroundVideoUrl,
-      mainImage,
-      aboutHtml,
-      studentNotesHtml,
-      currency,
-    } = schoolData;
-
+    let { schoolData,handleIsSavedState } = this.props;
+    let { name, website, phone, firstName, lastName, email, backGroundVideoUrl, mainImage, aboutHtml, studentNotesHtml, currency, } = schoolData;
+    handleIsSavedState(true);
     this.state = {
       aboutHtml: aboutHtml || "",
       studentNotesHtml: studentNotesHtml || "",
@@ -62,7 +50,7 @@ class SchoolDetails extends React.Component {
   editSchoolCall = (nextTab, event) => {
     // Start loading on when user press button to update school details.
     this.setState({isLoading: true});
-    const { schoolId,popUp } = this.props;
+    const { schoolId,popUp,handleIsSavedState } = this.props;
 
     let schoolObj = {...this.state}
     if(this.props.schoolData && this.props.schoolData.mainImage) {
@@ -78,6 +66,7 @@ class SchoolDetails extends React.Component {
       }
       // Stop loading on completion of editing school details.
       this.setState({isLoading: false});
+      handleIsSavedState(true);
       if(nextTab) {
         this.props.moveToNextTab(1);
       }
@@ -97,10 +86,12 @@ class SchoolDetails extends React.Component {
   }
   // This is used to set Content into `About School` editor.
   aboutSchoolTREOnChange = (value)=> {
+    this.props.handleIsSavedState(false);
     this.setState({ aboutHtml: value })
   }
   // This is used to set Content into `Notes for Students` editor.
   studentNotesTREOnChange = (value)=> {
+    this.props.handleIsSavedState(false);
     this.setState({ studentNotesHtml: value })
   }
 

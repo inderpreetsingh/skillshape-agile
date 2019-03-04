@@ -105,7 +105,6 @@ class ResponsiveTabs extends React.Component {
                 color={index == this.state.tabValue && this.props.color}
                 onClick={() => {
                   this.props.onTabChange(index);
-                  this.setState({ tabValue: index });
                 }}
               >
                 {tab}

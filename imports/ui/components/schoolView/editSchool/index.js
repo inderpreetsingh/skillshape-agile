@@ -8,7 +8,7 @@ import SLocation from "/imports/api/sLocation/fields";
 import config from "/imports/config";
 import {get,isEmpty,isEqual} from 'lodash';
 import { ContainerLoader } from "/imports/ui/loading/container";
-import {handleOnBeforeUnload} from '/imports/util';
+import {handleOnBeforeUnload,unSavedChecker,withPopUp} from '/imports/util';
 class SchoolEditView extends React.Component {
   constructor(props) {
     super(props);
@@ -97,7 +97,12 @@ class SchoolEditView extends React.Component {
   };
 
   onTabChange = tabValue => {
-    this.setState({ tabValue,isSaved:true });
+    if(!this.state.isSaved){
+      unSavedChecker.call(this);
+    }
+    else{
+      this.setState({ tabValue,isSaved:true });
+    }
   };
   shouldComponentUpdate(nextProps,nextState){
     return !isEqual(nextProps,this.props) || !isEqual(nextState,this.state);
@@ -156,4 +161,4 @@ export default createContainer(props => {
     currency,
     userId
   };
-}, SchoolEditView);
+},withPopUp(SchoolEditView));

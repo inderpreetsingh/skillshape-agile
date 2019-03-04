@@ -76,6 +76,8 @@ export default function (props) {
                   moveToNextTab={value => {
                     this.moveToNextTab(value);
                   }}
+                  isSaved= {isSaved}
+                  handleIsSavedState = {(isSaved)=>{handleIsSavedState.call(this,isSaved)}}
                 />
               )}
               {this.state.tabValue === 1 && (

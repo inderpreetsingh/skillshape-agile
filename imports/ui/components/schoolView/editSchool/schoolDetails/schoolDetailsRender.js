@@ -40,7 +40,9 @@ export default function () {
     route,
     mediaFormData,
     currentUser,
-    popUp
+    popUp,
+    isSaved,
+    handleIsSavedState
   } = this.props;
   return (
     <div>
@@ -66,7 +68,10 @@ export default function () {
                     label="School Name"
                     type="text"
                     fullWidth
-                    onChange={(event) => { this.setState({ name: event.target.value }) }}
+                    onChange={(event) => {
+                    this.setState({ name: event.target.value });
+                    handleIsSavedState(false);
+                  }}
                   />
                 </Grid>
 
@@ -78,7 +83,10 @@ export default function () {
                     label="Website"
                     type="text"
                     fullWidth
-                    onChange={(event) => { this.setState({ website: event.target.value }) }}
+                    onChange={(event) => { 
+                      this.setState({ website: event.target.value }); 
+                      handleIsSavedState(false);
+                    }}
                   />
                    <TextField
                 required={true}
@@ -87,13 +95,19 @@ export default function () {
                 label="Email"
                 type="email"
                 fullWidth
-                onChange={(event) => { this.setState({ email: event.target.value }) }}
+                onChange={(event) => {
+                  this.setState({ email: event.target.value }); 
+                  handleIsSavedState(false);
+                }}
               />
               <ReactPhoneInput
                 required={true}
                 defaultCountry={'us'}
                 value={phone ? phone.toString() : ''}
-                onChange={phone => this.setState({ phone })}
+                onChange={phone => {
+                this.setState({ phone })
+                handleIsSavedState(false);
+              }}
                 inputStyle={{width:'100%'}}
                 placeHolder={'Phone Number'}
                 containerStyle={{marginTop:'10px'}}
@@ -130,7 +144,10 @@ export default function () {
                 label="First Name"
                 type="text"
                 fullWidth
-                onChange={(event) => { this.setState({ firstName: event.target.value }) }}
+                onChange={(event) => { 
+                  this.setState({ firstName: event.target.value }) 
+                  handleIsSavedState(false);
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -141,7 +158,10 @@ export default function () {
                 label="Last Name"
                 type="text"
                 fullWidth
-                onChange={(event) => { this.setState({ lastName: event.target.value }) }}
+                onChange={(event) => { 
+                  this.setState({ lastName: event.target.value });
+                  handleIsSavedState(false);
+                }}
               />
             </Grid>
           </Grid>
@@ -159,6 +179,7 @@ export default function () {
                     if (event.target.value != this.state.previousSelectedCurrency) {
                         popUp.appear("success", { title: "Inform", content:  "You are going to change your Preferred Currency.Please make changes in packages according to your currency." })
                     }
+                    handleIsSavedState(false);
                     this.setState({ currency: event.target.value })
                   }}
                   fullWidth
