@@ -17,7 +17,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { confirmationDialog, withPopUp ,unSavedChecker,handleIsSavedState} from '/imports/util';
+import { confirmationDialog, withPopUp ,unSavedChecker} from '/imports/util';
 const formId = "classTypeForm";
 const customStyle = {
   marginTop: "10px",
@@ -68,7 +68,8 @@ class ClassTypeForm extends React.Component {
   }
 
   initializeFields = () => {
-    const { data, locationData } = this.props;
+    const { data, locationData,handleIsSavedState } = this.props;
+    handleIsSavedState(true);
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -81,7 +82,6 @@ class ClassTypeForm extends React.Component {
       searchSkillCategoryText: "",
       selectedOption: [],
       skillSubject: [],
-      isSaved:true
 
     };
     if (data && _.size(data) > 0) {
@@ -161,10 +161,11 @@ class ClassTypeForm extends React.Component {
 
 
   handleSkillSubjectInputChange = selectedOption => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState(false);
     this.setState(state => {
       return {
         selectedOption: selectedOption,
-        isSaved:false
       };
     });
   };
@@ -228,6 +229,7 @@ class ClassTypeForm extends React.Component {
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
     //this.props.enableParentPanelToDefaultOpen();
+    const {handleIsSavedState} = this.props;
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
 
       if (error) {
@@ -239,7 +241,8 @@ class ClassTypeForm extends React.Component {
           this.props.onClose(result, "add");
         }
       }
-      this.setState({ isBusy: false, error ,isSaved:true});
+      handleIsSavedState(true);
+      this.setState({ isBusy: false, error });
     });
   };
   //Set default location id if nothing selected 
@@ -249,7 +252,7 @@ class ClassTypeForm extends React.Component {
   }
   
   render() {
-    const { fullScreen, data, classes,  } = this.props;
+    const { fullScreen, data, classes, handleIsSavedState } = this.props;
     const {  skillSubjectData, selectedOption } = this.state;
     return (
       <div>
@@ -289,7 +292,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.classTypeName = ref)}
                     label="Class Type Name"
                     type="text"
-                    onChange={()=>{handleIsSavedState.call(this)}}
+                    onChange={()=>{handleIsSavedState(false)}}
                     fullWidth
                   />
                   <TextField
@@ -298,7 +301,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.desc = ref)}
                     label="Brief Description (200 Characters)"
                     type="text"
-                    onChange={()=>{handleIsSavedState.call(this)}}
+                    onChange={()=>{handleIsSavedState(false)}}
                     fullWidth
                     multiline
                     inputProps={{ maxLength: 200 }}
@@ -322,8 +325,10 @@ class ClassTypeForm extends React.Component {
                           required={true}
                           input={<Input id="gender" />}
                           value={this.state.gender}
-                          onChange={event =>
-                            this.setState({ gender: event.target.value,isSaved:false })
+                          onChange={event =>{
+                            this.setState({ gender: event.target.value})
+                            handleIsSavedState(false)
+                          }
                           }
                           fullWidth
                         >
@@ -352,7 +357,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
-                          onChange={()=>{handleIsSavedState.call(this)}}
+                          onChange={()=>{handleIsSavedState(false)}}
                         />
                         <TextField
                           defaultValue={data && data.ageMax}
@@ -367,7 +372,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
-                          onChange={()=>{handleIsSavedState.call(this)}}
+                          onChange={()=>{handleIsSavedState(false)}}
                         />
                       </div>
                     </Grid>
@@ -382,8 +387,10 @@ class ClassTypeForm extends React.Component {
                           required={true}
                           input={<Input id="experienceLevel" />}
                           value={this.state.experienceLevel}
-                          onChange={event =>
-                            this.setState({ experienceLevel: event.target.value,isSaved:false })
+                          onChange={event =>{
+                            this.setState({ experienceLevel: event.target.value})
+                            handleIsSavedState(false)
+                          }
                           }
                           fullWidth
                         >

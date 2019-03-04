@@ -26,7 +26,7 @@ import LocationForm from '/imports/ui/components/schoolView/editSchool/locationD
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { withPopUp ,confirmationDialog,unSavedChecker,handleIsSavedState} from '/imports/util';
+import { withPopUp ,confirmationDialog,unSavedChecker,} from '/imports/util';
 import ResponsiveTabs from "/imports/util/responsiveTabs";
 
 
@@ -124,7 +124,8 @@ class ClassTimeForm extends React.Component {
     this.state = this.initializeFields();
   }
   initializeFields = () => {
-    const { data, locationData, parentData, instructorsData } = this.props;
+    const { data, locationData, parentData, instructorsData,handleIsSavedState } = this.props;
+    handleIsSavedState(true);
     let state = {
       roomData: [],
       roomId: "",
@@ -141,7 +142,6 @@ class ClassTimeForm extends React.Component {
       locId: '',
       instructors: [],
       instructorsData: instructorsData,
-      isSaved:true
     };
 
 
@@ -199,11 +199,14 @@ class ClassTimeForm extends React.Component {
     this.setState({ noOfRow: this.state.noOfRow + data });
   }
   handleChangeDate = (fieldName, date) => {
-    this.setState({ [fieldName]: new Date(date) ,isSaved:false});
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState(false);
+    this.setState({ [fieldName]: new Date(date) });
   };
 
   handleLocAndRoom = (key, event) => {
-    handleIsSavedState.call(this)
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState(false);
     if (event.target.value === 'add_new_location') {
       this.handleAddNewLocation();
       return;
@@ -388,7 +391,7 @@ class ClassTimeForm extends React.Component {
   }
   
   render() {
-    const { fullScreen, data, classes, schoolId, parentKey, parentData, locationData, popUp, instructorsData } = this.props;
+    const { fullScreen, data, classes, schoolId, parentKey, parentData, locationData, popUp, instructorsData,handleIsSavedState } = this.props;
     const { roomId, locationId, roomData, addInstructorDialogBoxState } = this.state;
 
     // let styleForBox = this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2 ? { border: '2px solid', padding: '7px', marginBottom: "2px", backgroundColor: "lightgray" } : {};
@@ -461,7 +464,7 @@ class ClassTimeForm extends React.Component {
                       label="Class Time Name"
                       type="text"
                       fullWidth
-                      onChange={()=>{handleIsSavedState.call(this)}}
+                      onChange={()=>{handleIsSavedState(false)}}
                       className={classes.textField}
                     />
 
@@ -480,7 +483,7 @@ class ClassTimeForm extends React.Component {
                       fullWidth
                       multiline
                       className={classes.textField}
-                      onChange={()=>{handleIsSavedState.call(this)}}
+                      onChange={()=>{handleIsSavedState(false)}}
                       inputProps={{ maxLength: 200 }}
                     />
                     <FormControl className={classes.formControl} fullWidth margin="dense">
@@ -591,7 +594,7 @@ class ClassTimeForm extends React.Component {
                           saveClassTimes={this.saveClassTimes}
                           handleNoOfRow={this.handleNoOfRow}
                           locationData={locationData}
-                          handleIsSavedState={()=>{handleIsSavedState.call(this)}}
+                          handleIsSavedState={()=>{handleIsSavedState(false)}}
                         />
                       </div>
                     )}
@@ -603,7 +606,7 @@ class ClassTimeForm extends React.Component {
                           roomData={this.state.roomData}
                           saveClassTimes={this.saveClassTimes}
                           locationData={locationData}
-                          handleIsSavedState={()=>{handleIsSavedState.call(this)}}
+                          handleIsSavedState={()=>{handleIsSavedState(false)}}
                         />
                       </div>
                     )}
