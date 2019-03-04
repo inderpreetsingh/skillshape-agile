@@ -56,7 +56,10 @@ class MyProfile extends React.Component {
     //
     // NOTE: if you return true, other hooks will not be executed!
     if (!this.state.isSaved)
+    {
+      window.history.pushState(null, null, this.props.currentLocationPathName);
       return 'Your work is not saved! Are you sure you want to leave?'
+    }
   }
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
@@ -81,7 +84,8 @@ class MyProfile extends React.Component {
         address: currentUser.profile.address || "",
         currency: currentUser.profile.currency || "",
         about: currentUser.profile.about || "",
-        refresh_token: get(currentUser, 'refresh_token', null)
+        refresh_token: get(currentUser, 'refresh_token', null),
+        isSaved:true
       });
     }
   };

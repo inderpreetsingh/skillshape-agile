@@ -27,8 +27,10 @@ class SchoolEditView extends React.Component {
     // return `null` or nothing to let other hooks to be executed
     //
     // NOTE: if you return true, other hooks will not be executed!
-    if (!this.state.isSaved)
+    if (!this.state.isSaved){
+      window.history.pushState(null, null, this.props.currentLocationPathName);
       return 'Your work is not saved! Are you sure you want to leave?'
+    }
   }
   componentWillMount() {
     // Listen for `?classDetails=true` so that we can click on tab.
