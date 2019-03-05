@@ -345,7 +345,7 @@ class ThinkingAboutAttending extends React.Component {
              <ButtonWrapper>
               <FormGhostButton
                 onClick={()=>{handleJoin.call(this)}}
-                label={"Join and Pay Later"}
+                label={alreadyPurchased ? 'Join' : "Join and Pay Later"}
               />
             </ButtonWrapper>
             {!alreadyPurchased && <ButtonWrapper>
