@@ -15,7 +15,7 @@ import { flexCenter, maxContainerWidth, mobile, primaryColor, rhythmDiv, tablet 
 import { GridContainer, GridItem, GridMaxWidthWrapper, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { withImageExists } from '/imports/util';
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 
 
 const SPACING = rhythmDiv * 2;
@@ -231,7 +231,7 @@ const ClassTypeExpansionRender = (props) => {
 				</ToggleVisibility>
 			</Paper>
 			<ExpansionsWrapper>
-				<Suspense fallback={<center><MDSpinner size={50}/></center>}>
+				<Suspense fallback={<Loading/>}>
 				{classTypeData && classTypeData.map((ctData,index) => {
 					return (
 					< ExpansionPanel className={expansionPanelRoot} defaultExpanded={index == 0} >

@@ -19,7 +19,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import { CustomModal } from '/imports/ui/modal';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { getAverageNoOfRatings, normalizeMonthlyPricingData } from '/imports/util';
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 
 
 
@@ -288,7 +288,7 @@ export default function () {
             {/* Cards List Section*/}
             
             <ClassTypeListWrapper>
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
              {loadComplete &&  <ClassTypeList
                 containerPaddingTop="0px"
                 locationName={null}
@@ -305,7 +305,7 @@ export default function () {
             {/* Calendar Section*/}
             <MyCalendarWrapper ref={(el) => { this.schoolCalendar = el; }}>
               <Element name="schedule-section">
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
             {loadComplete && <ManageMyCalendar schoolCalendar={true} {...this.props} />}
                 </Suspense>
               </Element>
@@ -316,7 +316,7 @@ export default function () {
                 <StudentNotes noClassTypeData notes={schoolData.studentNotesHtml} />
               </NotesWrapper>}
               <MediaWrapper>
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
             {loadComplete && <MediaDetails
                   noMediaFound={<NoMediaFound
                     schoolName={schoolData.name}
@@ -344,7 +344,7 @@ export default function () {
                 <PackagesWrapper>
                   {(isEmpty(classPricing) && isEmpty(monthlyPricing)) ?
                     '' :
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
             {loadComplete && <PackagesList
                       schoolId={schoolId}
                       onAddToCartIconButtonClick={this.handlePurchasePackage}

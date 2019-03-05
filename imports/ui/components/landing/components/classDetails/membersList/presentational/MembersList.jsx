@@ -5,7 +5,7 @@ const MemberExpanded = lazy(() => import("./MemberExpanded.jsx"))
 import { mobile, rhythmDiv } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { Capitalize, SlantedHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { get, isEmpty } from 'lodash';
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 
 const ListHeadWrapper = styled.div`
   display: flex;
@@ -78,7 +78,7 @@ const MembersList = props => {
                     <Capitalize>{props.entityType}&nbsp;</Capitalize> in class
                 </Title>
             </ListHeadWrapper>) : ''}
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
 
                 <MembersGrid expanded={expanded}>
                     {joinClass && <MemberWrapper >

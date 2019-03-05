@@ -19,7 +19,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import MyCalender from "/imports/ui/components/users/myCalender";
 import { cutString, formStyles,withPopUp,confirmationDialog } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 
 const styles = formStyles();
 
@@ -532,7 +532,7 @@ class ManageMyCalendar extends React.Component {
     } = this.state;
     const {containerLoad} =this.props;
     if(isLoading || containerLoad){
-      return <center><MDSpinner size={50} /></center>
+      return <Loading/>
     }
     console.count('manageCalendarRenderCount 3')
     return (

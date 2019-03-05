@@ -16,7 +16,7 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
 import { capitalizeString, getUserFullName } from '/imports/util';
 import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 import moment from "moment";
 import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
 const Div = styled.div`
@@ -469,7 +469,7 @@ export default class MyCalender extends React.Component {
    let route = `/classDetails/${classId}`;
     return (
       <div>
-        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+        <Suspense fallback={<Loading/>}>
         <FullCalendarContainer
           subscriptionName="ClassSchedule"
           setDate={this.setDate}

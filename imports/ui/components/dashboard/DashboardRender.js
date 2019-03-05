@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 import styled from 'styled-components';
 import Header from './header';
 import SchoolsList from './schools/';
@@ -62,7 +62,7 @@ export default (props) => {
                 <SchoolsList schools={bodyProps.schools} />
                 {/*<AddSchool><MyLink onClick={onCreateNewSchoolClick}>click here</MyLink> to add a new school.</AddSchool>*/}
             </BodyWrapper>
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
             <MyTransaction
                   schoolView = {true}
                   schoolData = {bodyProps.schools}

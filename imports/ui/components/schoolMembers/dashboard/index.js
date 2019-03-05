@@ -48,7 +48,7 @@ const SchoolAdminsList = lazy(() => import('/imports/ui/components/schoolMembers
 const SchoolMembersList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
@@ -779,7 +779,7 @@ class DashBoardView extends React.Component {
             label={view == 'admin' ? "Add New Admin" : "Add New Student"}
           />
         )}
-        <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+        <Suspense fallback={<Loading/>}>
           {view == 'admin' && !_.isEmpty(adminsData) ?
             <SchoolAdminsList
               cardsView={isMemberSelected ? 'list' : 'grid'}
@@ -891,7 +891,7 @@ class DashBoardView extends React.Component {
           className={classes.rightPanel}
           style={{ overflow: "auto", overflowX: "hidden" }}
         >
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+          <Suspense fallback={<Loading/>}>
             {!isEmpty(memberInfo) && (
               <Fragment>
                 <SchoolMemberInfo
@@ -950,7 +950,7 @@ class DashBoardView extends React.Component {
               </Fragment>
             </Drawers>
 
-            <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+            <Suspense fallback={<Loading/>}>
               <SchoolMemberWrapper>
                 <Fragment>
                   <SchoolMemberInfo
@@ -986,7 +986,7 @@ class DashBoardView extends React.Component {
           classNames="fade"
           unmountOnExit
         >
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+          <Suspense fallback={<Loading/>}>
             <MembersScreenWrapper>
               <SchoolMemberFilter
                 stickyPosition={this.state.sticky}

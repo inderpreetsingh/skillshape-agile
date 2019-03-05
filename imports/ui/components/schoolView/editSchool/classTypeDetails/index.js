@@ -8,7 +8,7 @@ import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
 import ClassTimes from "/imports/api/classTimes/fields";
 import { formatClassTimesData, withPopUp } from "/imports/util";
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 
 
 class ClassTypeDetails extends React.Component {

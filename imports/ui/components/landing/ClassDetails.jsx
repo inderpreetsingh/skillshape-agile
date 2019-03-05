@@ -9,7 +9,7 @@ import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { withPopUp,redirectToHome } from '/imports/util';
 const ClassDetails = lazy(() => import("/imports/ui/components/landing/components/classDetails/index.jsx"))
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 import ClassInterest from '/imports/api/classInterest/fields';
 
 class ClassDetailsContainer extends Component {
@@ -69,7 +69,7 @@ class ClassDetailsContainer extends Component {
       currentView =  checkIsAdmin({user:currentUser,schoolData}) ? "instructorsView" : "studentsView";
     }
     return (
-      <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+      <Suspense fallback={<Loading/>}>
         <ClassDetails
       classTypeData = {classTypeData}
         topSearchBarProps={{

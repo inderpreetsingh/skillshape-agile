@@ -20,7 +20,7 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers.
 import MapView from '/imports/ui/components/landing/components/map/mapView.jsx';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 import SuggestionFormWrapper from '/imports/ui/components/landing/components/schoolSuggestions/SuggestionFormWrapper.jsx';
-import MDSpinner from "react-md-spinner";
+import { Loading } from '/imports/ui/loading';
 
 const MainContentWrapper = styled.div`
   // margin-top: ${(props) => (props.isAnyFilterApplied ? -56 : 0)}px;
@@ -226,7 +226,7 @@ class ClassTypeList extends Component {
 			params
 		} = this.props;
 		if(isLoading){
-			return <center><MDSpinner size={50} /></center>
+			return <Loading/>
 		}
 		return (
 			<MainContentWrapper>
