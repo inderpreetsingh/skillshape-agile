@@ -1,10 +1,8 @@
-import React, {Fragment} from 'react';
-import DocumentTitle from 'react-document-title';
 import get from 'lodash/get';
-import styled from 'styled-components';
 import Typography from 'material-ui/Typography';
-import { browserHistory } from "react-router";
-
+import React from 'react';
+import DocumentTitle from 'react-document-title';
+import styled from 'styled-components';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
 
 
@@ -16,6 +14,7 @@ class VerifyEmail extends React.Component {
 	state = {
 		isLoading: true,
 		error: null,
+		onBoardingDialogBox:true
 	}
 
 	componentWillMount() {
@@ -41,10 +40,12 @@ class VerifyEmail extends React.Component {
 
 		return (
 			<DocumentTitle title={this.props.route.name}>
+			
 				{
 					this.state.error ? (
 				        <Typography color='error' type="display2" gutterBottom align="center">
-				            {this.state.error}
+							{this.state.error}
+							
 				        </Typography>
 					) : (
 						<MessageWrapper>

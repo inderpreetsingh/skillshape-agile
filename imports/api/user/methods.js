@@ -106,9 +106,26 @@ Meteor.methods({
                 { _id: this.userId },
                 { $set: { "profile.passwordSetByUser": true } }
             );
-            return Accounts.setPassword(this.userId, password, {
+            Accounts.setPassword(this.userId, password, {
                 logout: userLogout
             });
+        let currentUser = Meteor.user();
+        if(!isEmpty(currentUser)){
+            const {roles=[] } = currentUser;
+            let isSchool = false;
+            roles.map((role)=>{
+                if(role == 'School'){
+                    isSchool = true;
+                }
+            })
+            let mySchools = Meteor.call("school.getMySchool");
+            if(isSchool && isEmpty(mySchools)){
+                return {onBoardingDialogBox:true};
+            }
+            else{
+                return {onBoardingDialogBox:false}
+            }
+        }
         } else {
             throw new Meteor.Error("User not found!!");
         }

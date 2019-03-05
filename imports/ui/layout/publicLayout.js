@@ -10,6 +10,7 @@ import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
 import { withStyles } from "/imports/util";
 import { panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+import {OnBoardingDialogBox} from '/imports/ui/components/landing/components/dialogs';
 
 const MainPanel = styled.div`
   position: relative;
@@ -80,12 +81,16 @@ class PublicLayout extends React.Component {
             if (err) {
               errorMessage = err.reason || err.message;
               this.setState({ isBusy: false });
-            } else {
+            } else if(res) {
               this.setState(
                 { showSetPasswordDialogBox: false, isBusy: false },
                 () => {
-                  if (currentUser) {
+                  const {onBoardingDialogBox} = res || {}
+                  if(!onBoardingDialogBox) {
                     browserHistory.push(`/profile/${get(currentUser, '_id', null)}`);
+                  }
+                  else{
+                    this.setState({onBoardingDialogBox});
                   }
                 }
               );
@@ -110,6 +115,7 @@ class PublicLayout extends React.Component {
       previousLocationPathName,
       currentLocationPathName
     } = this.props;
+    const {onBoardingDialogBox} = this.state;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
       contentClass: "content",
@@ -132,7 +138,11 @@ class PublicLayout extends React.Component {
           <div>
             <TopSearchBar {...this.props} />
           </div>
-
+          {onBoardingDialogBox && <OnBoardingDialogBox
+            userId={get(currentUser,'_id',Meteor.userId())}
+            open={onBoardingDialogBox}
+            onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
+          />}
           <SetPasswordDialogBox
             open={this.state.showSetPasswordDialogBox}
             onModalClose={() =>
