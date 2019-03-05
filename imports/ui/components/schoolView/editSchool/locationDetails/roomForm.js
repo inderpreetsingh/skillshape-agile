@@ -186,7 +186,10 @@ class RoomForm extends React.Component {
               <FormGhostButton
               type="button"
                 color="dark-grey"
-                onClick={this.props.onClose}
+                onClick={()=>{
+                  handleIsSavedState(true);
+                  this.props.onClose();
+                }}
                 label="Cancel"
               />
             </ButtonWrapper>

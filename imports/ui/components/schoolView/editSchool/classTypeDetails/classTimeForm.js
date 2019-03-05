@@ -652,7 +652,10 @@ class ClassTimeForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={this.props.onClose}
+                onClick={()=>{
+                  handleIsSavedState(true);
+                  this.props.onClose();
+                }}
                 label="Cancel"
                 className={classes.cancel}
               />
