@@ -132,6 +132,7 @@ class ClassTypeDetails extends React.Component {
 
   editClassType = ({ doc, doc_id }) => {
     const { popUp } = this.props;
+    this.props.handleIsSavedState(true);
     Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
       if (error) {
       }
@@ -369,10 +370,6 @@ class ClassTypeDetails extends React.Component {
     }
   }
   render() {
-    const {isLoading} = this.props;
-    if(isLoading){
-      return <center><MDSpinner size={50}/></center>
-    }
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
 }

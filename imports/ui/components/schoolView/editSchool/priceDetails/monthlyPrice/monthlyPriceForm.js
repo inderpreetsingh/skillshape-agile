@@ -140,6 +140,7 @@ class MonthlyPriceForm extends React.Component {
    
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
+    this.props.handleIsSavedState(true);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
      
       if (result) {

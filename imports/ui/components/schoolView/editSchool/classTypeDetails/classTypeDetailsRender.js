@@ -114,7 +114,7 @@ export default function () {
         />
       )}
 
-      {isBusy && <ContainerLoader />}
+      {isLoading && <ContainerLoader />}
 
       <ClassTypeExpansionRender
         handleNotifyForChange={this.handleNotifyForChange}
