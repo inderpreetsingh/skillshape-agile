@@ -297,7 +297,7 @@ export const userRegistrationAndVerifyEmail = function (
                 Please click on the button below to verify your email address and set your password.
             <br/><br/>
             <div>
-               <a href=${verificationToken} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Set Password</a>
+               <a href=${verificationToken} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Verify Email</a>
             </div>
             <br/><br/>
                 If the link doesn't work, copy and paste this address into your browser.
