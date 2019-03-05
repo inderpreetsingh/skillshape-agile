@@ -8,8 +8,8 @@ import Events from "/imports/util/events";
 export default class ClaimSchoolBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      filters: {},
+    let state = {
+      filters: { },
       sticky: false,
       filterPanelDialogBox: false,
       showConfirmationModal: false,
@@ -17,6 +17,10 @@ export default class ClaimSchoolBase extends React.Component {
       tempFilters: {},
       error: null
     };
+    if(this.props.params.schoolName){
+      state.filters.schoolName = this.props.params.schoolName;
+    }
+    this.state = state;
   }
 
   handleLoading = (state) => {
