@@ -34,6 +34,6 @@ export function checkForAddToCalender(data) {
 export const redirectToHome = () =>{
   browserHistory.push(`/`);
 }
-export const gotoClaimSchool = () =>{
-  browserHistory.push("/claimSchool")
+export const gotoClaimSchool = (schoolName) =>{
+  browserHistory.push(`/claimSchool${schoolName && '/'+schoolName}`)
 }

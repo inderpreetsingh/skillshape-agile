@@ -48,7 +48,7 @@ class OnBoardingDialogBox extends React.Component {
                 title: 'Confirmation',
                 type: 'inform',
                 content: <div>Search School Name <b>{schoolName}</b> in SkillShape.</div>,
-                buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true },{label:'Search',onClick:gotoClaimSchool}]
+                buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true },{label:'Search',onClick:()=>{gotoClaimSchool(schoolName)}}]
               };
               confirmationDialog(data);
         }
