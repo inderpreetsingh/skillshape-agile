@@ -850,10 +850,11 @@ export const sendEmail = function(data) {
     from: fromEmail,
     to,
     replyTo: fromEmail,
-    subject,
+    subject:`${senderName} from ${schoolName}`,
     html: `Hello ${studentName} <br/>
           ${senderName} from ${schoolName} sent you the following message:<br/>
-              ${text.replace(new RegExp('\r?\n','g'), '<br />')}<br/><br/>
+              Subject: ${subject} <br/>
+              Message: ${text.replace(new RegExp('\r?\n','g'), '<br />')}<br/><br/>
               Thank you.<br/>
               The skillshape Team.<br/>
               ${EmailSignature}
