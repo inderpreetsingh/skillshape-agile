@@ -522,8 +522,9 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
 
 
     if (schoolName) {
-        classTypeFilter["filters.schoolName"] = { $regex: "" + schoolName + "", $options: "-i" };
-        schoolFilter["name"] = { $regex: "" + schoolName + "", $options: "-i" };
+        let schoolNameRegEx = new RegExp(`.*${schoolName}.*`, 'i')
+        classTypeFilter["filters.schoolName"] = schoolNameRegEx;
+        schoolFilter["name"] = schoolNameRegEx;
 
         if (size(filterObj) == 2) {
             return School.find(schoolFilter, limit);
