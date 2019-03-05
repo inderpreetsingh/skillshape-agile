@@ -4,6 +4,7 @@ import React from 'react';
 import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import {OnBoardingDialogBox} from '/imports/ui/components/landing/components/dialogs';
 
 
 const MessageWrapper = styled.div`
@@ -45,7 +46,11 @@ class VerifyEmail extends React.Component {
 					this.state.error ? (
 				        <Typography color='error' type="display2" gutterBottom align="center">
 							{this.state.error}
-							
+							<OnBoardingDialogBox
+			userId={Meteor.userId()}
+			open={this.state.onBoardingDialogBox}
+			onModalClose={()=>{this.setState({onBoardingDialogBox:false})}}
+			/>
 				        </Typography>
 					) : (
 						<MessageWrapper>

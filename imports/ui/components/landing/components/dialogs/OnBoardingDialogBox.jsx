@@ -11,12 +11,16 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import {withPopUp} from '/imports/util';
 import TextField from "material-ui/TextField";
+import {confirmationDialog,gotoClaimSchool} from '/imports/util';
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
 `;
-
+const CenterAll = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 const styles = {
     dialogAction: {
         width: '100%'
@@ -32,7 +36,22 @@ class OnBoardingDialogBox extends React.Component {
         this.state = {};
     }
     handleSearch = () => {
-        console.log('this.schoolName',this.schoolName.value);
+        const {popUp} = this.props;
+        const schoolName = this.schoolName.value;
+        if(!schoolName){
+            popUp.appear('alert',{content:'Please enter school name!'});
+            return;
+        }
+        else{
+            let data = {
+                popUp,
+                title: 'Confirmation',
+                type: 'inform',
+                content: <div>Search School Name <b>{schoolName}</b> in SkillShape.</div>,
+                buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true },{label:'Search',onClick:gotoClaimSchool}]
+              };
+              confirmationDialog(data);
+        }
     }
     render() {
         const {classes} = this.props;
@@ -58,19 +77,21 @@ class OnBoardingDialogBox extends React.Component {
                         <TextField
                             margin="dense"
                             inputRef={ref => (this.schoolName = ref)}
-                            label="Enter School Name"
+                            label="School Name!"
                             type="text"
                             fullWidth
                             multiline
                             className={classes.textField}
                             inputProps={{ maxLength: 200 }}
                         />
+                        Please Enter Your School Name to find in existing records.
                     </DialogContent>
                         <DialogActions classes={{action: this.props.classes.dialogAction}}>
+                           <CenterAll>
                             <PrimaryButton  
                             onClick={this.handleSearch}
-                            fullWidth 
                             label="Search"/>
+                            </CenterAll>
                         </DialogActions>
                 </Dialog>
             </MuiThemeProvider>

@@ -53,7 +53,7 @@ export { material_ui_next_theme } from './theme';
 export { componentLoader } from './loading';
 export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';
-export { goToSchoolPage, goToClassTypePage, checkForAddToCalender,redirectToHome } from './handleRedirect.js';
+export { goToSchoolPage, goToClassTypePage, checkForAddToCalender,redirectToHome,gotoClaimSchool } from './handleRedirect.js';
 export { maximumClasses } from './maximumClasses.js';
 export { normalizeMonthlyPricingData, seperatePackagesPerClass } from './packageFormat.js';
 export { compressImage } from './compressImage.js';
