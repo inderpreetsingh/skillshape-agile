@@ -360,7 +360,7 @@ Meteor.methods({
     }
     return { inviteAccepted: true };
   },
-  "school.addNewSchool": function (doc) {
+  "school.addNewSchool": function (doc,schoolName) {
     check(doc, Object);
 
     const currentUser = doc || Meteor.users.findOne(this.userId);
@@ -374,7 +374,7 @@ Meteor.methods({
       admins: [currentUser._id],
       aboutHtml: "",
       descHtml: "",
-      name: "my-school"
+      name: schoolName ? schoolName : "my-school"
     };
     let schoolId = School.insert(schoolInsertDoc);
     // Needs to make current user admin of this School.

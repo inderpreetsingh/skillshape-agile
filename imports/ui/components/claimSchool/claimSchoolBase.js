@@ -71,10 +71,11 @@ export default class ClaimSchoolBase extends React.Component {
   // This is used to handle listing of a new school for a login user.
   handleListingOfNewSchool = () => {
     let currentUser = Meteor.user();
+    const {schoolName} = this.props.params;
     if (currentUser) {
       // Start Lodaing
       this.setState({ isLoading: true });
-      Meteor.call("school.addNewSchool", currentUser, (err, res) => {
+      Meteor.call("school.addNewSchool", currentUser,schoolName, (err, res) => {
         let state = {
           isLoading: false
         };
