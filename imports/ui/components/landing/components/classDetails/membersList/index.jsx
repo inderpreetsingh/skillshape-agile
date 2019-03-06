@@ -36,7 +36,6 @@ class MembersListContainer extends Component {
       teachersFilterWith: "",
       studentsFilterWith: "",
       addInstructorDialogBoxState: false,
-      notification: this.props.notification,
       packagesRequired: this.props.packagesRequired,
       limit: 40,
       skip: 0,
@@ -46,20 +45,20 @@ class MembersListContainer extends Component {
   }
 
   componentWillMount() {
-    this.studentsData();
+    this.studentsData(this.props);
   }
-
-  studentsData = () => {
+  
+  studentsData = (props) => {
     let studentsIds = [];
     let purchaseIds = [];
-    const { classData, schoolId,packagesRequired,notification } = this.props;
+    const { classData, schoolId,packagesRequired } = props;
     let { classTypeId } = classData && classData || {};
    
     if (classData) {
       get(classData, 'students', []).map((obj, index) => {
         studentsIds.push(obj.userId);
         purchaseIds.push(obj.purchaseId);
-      this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit),packagesRequired,notification })
+      this.setState({ pageCount: Math.ceil(studentsIds.length / this.state.limit),packagesRequired, })
       })
       if (!isEmpty(studentsIds)) {
         let { limit, skip } = this.state;
@@ -77,7 +76,7 @@ class MembersListContainer extends Component {
     }
   }
   changePageClick = (skip) => {
-    this.setState({ skip: skip.skip, isBusy: true }, () => { this.studentsData(); });
+    this.setState({ skip: skip.skip, isBusy: true }, () => { this.studentsData(this.props); });
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.notes && nextState.notes != this.state.notes) {
@@ -86,7 +85,7 @@ class MembersListContainer extends Component {
     return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
   }
   componentWillReceiveProps(nextProps, prevProps) {
-    this.studentsData();
+    this.studentsData(nextProps);
   }
 
   updateClass = (filter, status, purchaseData, popUp, packageConnected) => {
@@ -584,13 +583,16 @@ class MembersListContainer extends Component {
     this.setState({ isBusy: !this.state.isBusy });
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData, slug } = this.props;
-    const { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps, notification, isBusy } = this.state;
+    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData, slug,notification,packagesRequired:propsPR } = this.props;
+    let { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,  isBusy } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"
     //     : "instructorsView";
     let classTypeId;
+    if(!packagesRequired){
+      packagesRequired = propsPR;
+    }
     !isEmpty(classData) && classData.students && classData.students.map((obj) => {
       classTypeId = get(classData, "classTypeId", null);
     })
@@ -620,15 +622,15 @@ class MembersListContainer extends Component {
             text={text}
           />
         )}
-        {notification &&
-          currentView === "studentsView" && (
+						
+        {(notification  && currentView === 'studentsView') &&
             <Notification
               notificationContent={`You need to purchase ${packagesRequired == 'enrollment' ? "enrollment " : 'monthly/per class '}package first.`}
               bgColor={danger}
               buttonLabel="Purchase Package"
               onButtonClick={() => { this.setState({ classTypePackages: true }) }}
             />
-          )}
+          }
         {classTypePackages && <ClassTypePackages
           schoolId={schoolId}
           open={classTypePackages}

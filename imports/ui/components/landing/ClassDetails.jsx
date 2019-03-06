@@ -38,10 +38,10 @@ class ClassDetailsContainer extends Component {
             this.setState({ notification: false ,loginUserPurchases:res});
           }
           else if (!epStatus) {
-            this.setState({ packagesRequired: 'enrollment' })
+            this.setState({ packagesRequired: 'enrollment',notification: true })
           }
           else {
-            this.setState({ packagesRequired: 'perClassAndMonthly' })
+            this.setState({ packagesRequired: 'perClassAndMonthly',notification: true })
           }
         }
       })
