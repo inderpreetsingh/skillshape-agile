@@ -11,7 +11,7 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import {withPopUp} from '/imports/util';
 import TextField from "material-ui/TextField";
-import {confirmationDialog,gotoClaimSchool} from '/imports/util';
+import {gotoClaimSchool} from '/imports/util';
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -43,14 +43,7 @@ class OnBoardingDialogBox extends React.Component {
             return;
         }
         else{
-            let data = {
-                popUp,
-                title: 'Confirmation',
-                type: 'inform',
-                content: <div>Search School Name <b>{schoolName}</b> in SkillShape.</div>,
-                buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true },{label:'Search',onClick:()=>{gotoClaimSchool(schoolName)}}]
-              };
-              confirmationDialog(data);
+            gotoClaimSchool(schoolName);
         }
     }
     render() {
