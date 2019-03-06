@@ -39,6 +39,7 @@ class CompletePrompt extends React.Component {
                         label={item}
                         icon
                         iconName="check"
+                        disabled
                     />
                 })}
             </div>
