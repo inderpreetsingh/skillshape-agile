@@ -57,7 +57,7 @@ export default (props) => {
             currentUser={currentUser}
             isUserSubsReady={isUserSubsReady}
         />
-        <CompletePrompt/>
+       {Meteor.settings.public.platform == 'local' && <CompletePrompt/>} 
         <DashBoardContent>
             <Header {...headerProps} onCreateNewSchoolClick={onCreateNewSchoolClick} />
             <BodyWrapper>
