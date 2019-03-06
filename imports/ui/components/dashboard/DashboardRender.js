@@ -8,6 +8,7 @@ import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import { primaryColor, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 const MyTransaction = lazy(()=>import("/imports/ui/components/users/myTransaction"))
+import CompletePrompt from '/imports/ui/components/completePrompt/index.jsx';
 
 const Wrapper = styled.div`
     display: flex;
@@ -56,6 +57,7 @@ export default (props) => {
             currentUser={currentUser}
             isUserSubsReady={isUserSubsReady}
         />
+        <CompletePrompt/>
         <DashBoardContent>
             <Header {...headerProps} onCreateNewSchoolClick={onCreateNewSchoolClick} />
             <BodyWrapper>
