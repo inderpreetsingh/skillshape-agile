@@ -515,10 +515,10 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
     const schoolFilter = { isPublish: true };
     const classTypeFilter = { isPublish: true };
     limit = { limit: limit };
-
-    if (this.userId) {
-        schoolFilter["admins"] = { '$nin': [this.userId] };
-    }
+   /*  removed filter because we need to show all school */
+    // if (this.userId) {
+    //     schoolFilter["admins"] = { '$nin': [this.userId] };
+    // }
 
 
     if (schoolName) {

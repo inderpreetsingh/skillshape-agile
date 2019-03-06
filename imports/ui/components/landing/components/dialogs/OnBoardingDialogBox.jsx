@@ -12,7 +12,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import {withPopUp} from '/imports/util';
 import TextField from "material-ui/TextField";
 import {gotoClaimSchool} from '/imports/util';
-
+import { browserHistory } from "react-router";
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
@@ -33,7 +33,9 @@ const styles = {
 class OnBoardingDialogBox extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoading:false
+        };
     }
     handleSearch = () => {
         const {popUp} = this.props;
@@ -42,12 +44,53 @@ class OnBoardingDialogBox extends React.Component {
             popUp.appear('alert',{content:'Please enter school name!'});
             return;
         }
+        else if(schoolName.length < 3)
+        {
+            popUp.appear('alert',{content:'School name length is less then 3!'});
+            return;
+        }
         else{
-            gotoClaimSchool(schoolName);
+            this.checkSchoolNameExists(schoolName);
         }
     }
+
+    checkSchoolNameExists = (schoolName) =>{
+        this.setState({isLoading:true});
+        const {popUp} = this.props;
+        Meteor.call("school.findSchoolNameExistsOrNot",schoolName,(err,res)=>{
+            this.setState({isLoading:false});
+            if(!res){
+                this.handleListingOfNewSchool(schoolName);
+            }
+            else if(res){
+                gotoClaimSchool(schoolName);
+            }
+            else if(err){
+              popUp.appear('alert',{content:'Something Went Wrong!'});
+            }
+        })
+    }
+    handleListingOfNewSchool = (schoolName) => {
+        let currentUser = Meteor.user();
+        if (currentUser) {
+          this.setState({ isLoading: true });
+          Meteor.call("school.addNewSchool", currentUser,schoolName, (err, res) => {
+            let state = {
+              isLoading: false
+            };
+            if (res) {
+              browserHistory.push(res);
+            }
+            this.setState(state);
+          });
+        } else {
+          // Show Login popup
+          Events.trigger("loginAsUser");
+        }
+      };
     render() {
         const {classes} = this.props;
+        const {isLoading} = this.state;
         return (
             <MuiThemeProvider theme={muiTheme}>
                 <Dialog
@@ -57,7 +100,7 @@ class OnBoardingDialogBox extends React.Component {
                   onRequestClose={this.props.onModalClose}
                   aria-labelledby="Onboarding School"
                 >
-                    { this.props.isLoading && <ContainerLoader/>}
+                    { isLoading && <ContainerLoader/>}
                    <DialogTitle>
                         <DialogTitleWrapper>
                             Enter Your School Name

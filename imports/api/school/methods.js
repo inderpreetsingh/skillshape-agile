@@ -456,6 +456,24 @@ Meteor.methods({
       })
       return 1;
     }
+  },
+  "school.findSchoolNameExistsOrNot":function(schoolName){
+    try{
+      if(schoolName){
+        schoolName = schoolName.split(" ");
+            let schoolNameRegEx = [];
+            schoolName.map((str)=>{
+                schoolNameRegEx.push(new RegExp(`.*${str}.*`, 'i'))
+              })
+       let result =  School.find({name:{$in:schoolNameRegEx}}).count();
+       console.log('TCL: result', result)
+       return result
+      }
+      return [];
+    }catch(error){
+			console.log('error in school.findSchoolNameExistsOrNot', error)
+      throw new Meteor.Error(error);
+    }
   }
 });
 

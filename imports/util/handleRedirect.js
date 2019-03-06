@@ -37,3 +37,6 @@ export const redirectToHome = () =>{
 export const gotoClaimSchool = (schoolName) =>{
   browserHistory.push(`/claimSchool${schoolName && '/'+schoolName}`)
 }
+export const redirectToThisUrl = (url) =>{
+  browserHistory.push(url)
+}

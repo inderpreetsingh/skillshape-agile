@@ -108,11 +108,11 @@ class SchoolEditView extends React.Component {
     return !isEqual(nextProps,this.props) || !isEqual(nextState,this.state);
   }
   render() {
-    const {schoolData,isLoading} = this.props;
+    const {schoolData,isLoading,} = this.props;
     if(isLoading){
       return <ContainerLoader/>
     }
-    if(!isLoading  && !isEmpty(schoolData) && !Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData}) ){
+    if(!isLoading  && !isEmpty(schoolData) && !Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData})  || !isLoading && isEmpty(schoolData) ){
       browserHistory.push("/")
       return false;
     }
