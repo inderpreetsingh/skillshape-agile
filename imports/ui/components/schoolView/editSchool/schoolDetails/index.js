@@ -1,7 +1,7 @@
 import React from 'react';
 import SchoolDetailsRender from './schoolDetailsRender';
 import styles from "/imports/ui/components/schoolView/style";
-import { withStyles, withPopUp } from "/imports/util";
+import { withStyles, withPopUp,emailRegex } from "/imports/util";
 
 class SchoolDetails extends React.Component {
 
@@ -49,13 +49,21 @@ class SchoolDetails extends React.Component {
 
   editSchoolCall = (nextTab, event) => {
     // Start loading on when user press button to update school details.
-    this.setState({isLoading: true});
     const { schoolId,popUp,handleIsSavedState } = this.props;
-
+    
     let schoolObj = {...this.state}
     if(this.props.schoolData && this.props.schoolData.mainImage) {
       schoolObj['mainImage'] = this.props.schoolData && this.props.schoolData.mainImage;
     }
+    if(!schoolObj.email){
+      popUp.appear('alert',{content:'Email is Required'});
+      return
+    }
+    if(!emailRegex.email.test(schoolObj.email)){
+      popUp.appear('alert',{content:'Email is Invalid'});
+      return
+    }
+    this.setState({isLoading: true});
     // This function is used to edit school details.
     Meteor.call("editSchool", schoolId, schoolObj, (error, result) => {
       if (error) {
