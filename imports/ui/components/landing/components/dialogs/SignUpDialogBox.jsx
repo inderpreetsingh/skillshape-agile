@@ -149,7 +149,8 @@ const InputWrapper = styled.div`
 
 const ErrorWrapper = styled.span`
   color: red;
-  float: right;
+  font-size: 20px;
+  font-family: cursive;
 `;
 
 const LogoImg = styled.img`
@@ -332,9 +333,7 @@ class SignUpDialogBox extends Component {
                 onloadCallback={this.recaptchaCallback}
                 expiredCallback={this.recaptchaExpiredCallback}
               />
-              {this.props.errorText && (
-                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-              )}
+             
             </DialogContent>
             <DialogActions
               classes={{
@@ -348,6 +347,9 @@ class SignUpDialogBox extends Component {
                 onClick={onSubmit}
                 noMarginBottom
               />
+               {this.props.errorText && (
+                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+              )}
             </DialogActions>
             <DialogActions
               classes={{
