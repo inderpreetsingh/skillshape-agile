@@ -1,23 +1,24 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import { withStyles } from "material-ui/styles";
-import { browserHistory } from "react-router";
-import { get, isEmpty, size } from "lodash";
-
-import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
-import IconButton from "material-ui/IconButton";
-import Drawer from "material-ui/Drawer";
+import { isEmpty } from "lodash";
 import Divider from "material-ui/Divider";
+import Drawer from "material-ui/Drawer";
 import Icon from "material-ui/Icon";
+import IconButton from "material-ui/IconButton";
+import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Fragment } from "react";
+import { browserHistory } from "react-router";
+import styled from 'styled-components';
 import LoginButton from "./buttons/LoginButton.jsx";
-import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
-
-import { checkSuperAdmin, getUserSchool, logoutUser } from "/imports/util";
-import { specialFont, flexCenter } from "./jss/helpers.js";
+import { flexCenter, specialFont } from "./jss/helpers.js";
 import NestedNavItems from "./NestedNavItems";
 import SchoolSubMenu from "./schoolSubMenu";
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
+import { OnBoardingDialogBox } from '/imports/ui/components/landing/components/dialogs';
+import { checkSuperAdmin, logoutUser } from "/imports/util";
 import { getUserFullName } from "/imports/util/getUserData";
+
+
 
 const styles = theme => {
   return {
@@ -257,13 +258,11 @@ const LoginUserSideNav = props => {
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}
-        name="Add Schools"
+        name="Add or Claim a School"
         iconName="add_box"
         onClick={
           () =>
-            props.childItemOnClick(
-              "/claimSchool"
-            ) /*browserHistory.push('/claimSchool')*/
+          props.handleSetState({onBoardingDialogBox:true})
         }
       />
       {checkSuperAdmin(props.currentUser) && (
@@ -303,11 +302,13 @@ const LoginUserSideNav = props => {
 };
 
 class SideNavItems extends React.Component {
-  state = {
-    mySchool: [],
+  constructor(props) {
+    super(props);
+    this.state = {
+      mySchool: [],
     connectedSchool: []
-  };
-
+    };
+  }
   componentWillMount() {
     if (Meteor.userId()) {
       this.loadConnectedSchool();
@@ -377,8 +378,11 @@ class SideNavItems extends React.Component {
     browserHistory.push(link);
     this.props.handleDrawer();
   };
-
+  handleSetState = (obj) =>{
+    this.setState(obj);
+  }
   render() {
+    const {onBoardingDialogBox} = this.state;
     return (
       <Drawer
         open={this.props.open}
@@ -394,11 +398,16 @@ class SideNavItems extends React.Component {
             drawerHeader={this.props.classes.drawerHeader}
           />
           <Divider />
+          {onBoardingDialogBox && <OnBoardingDialogBox
+            open={onBoardingDialogBox}
+            onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
+          />}
           {this.props.currentUser ? (
             <LoginUserSideNav
               mySchool={this.state.mySchool}
               connectedSchool={this.state.connectedSchool}
               childItemOnClick={this.handleChildItemOnClick}
+              handleSetState={this.handleSetState}
               {...this.props}
             />
           ) : (
