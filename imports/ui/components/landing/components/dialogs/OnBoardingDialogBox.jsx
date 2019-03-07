@@ -101,6 +101,12 @@ class OnBoardingDialogBox extends React.Component {
           Events.trigger("loginAsUser");
         }
       };
+
+    keyPress = (e) => {
+        if (e.keyCode == 13) {
+            this.handleSearch();
+        }
+    }
     render() {
         const {classes} = this.props;
         const {isLoading} = this.state;
@@ -125,12 +131,14 @@ class OnBoardingDialogBox extends React.Component {
                     <DialogContent>
                         <TextField
                             margin="dense"
+                            autoFocus={true}
                             inputRef={ref => (this.schoolName = ref)}
                             label="School Name!"
                             type="text"
                             fullWidth
                             multiline
                             className={classes.textField}
+                            onKeyDown={this.keyPress}
                             inputProps={{ maxLength: 200 }}
                         />
                         Please Enter Your School Name to find in existing records.
