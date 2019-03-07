@@ -28,7 +28,16 @@ export default class ClaimSchoolBase extends React.Component {
         isLoading: state
       })
   }
-
+  componentWillReceiveProps(nextProps){
+    let schoolName = nextProps.params.schoolName;
+    if(schoolName){
+        this.setState((state)=>{
+          const {filters} = state;
+          filters.schoolName=schoolName;
+          this.setState({filters});
+        })
+    }
+  }
   handleFixedToggle = state => {
     // const stickyPosition = !defaultPosition;
     // if (this.state.sticky != stickyPosition) {
