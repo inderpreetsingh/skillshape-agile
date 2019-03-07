@@ -11,7 +11,7 @@ import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import {withPopUp} from '/imports/util';
 import TextField from "material-ui/TextField";
-import {gotoClaimSchool} from '/imports/util';
+import {gotoClaimSchool,confirmationDialog} from '/imports/util';
 import { browserHistory } from "react-router";
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -60,7 +60,17 @@ class OnBoardingDialogBox extends React.Component {
         Meteor.call("school.findSchoolNameExistsOrNot",schoolName,(err,res)=>{
             this.setState({isLoading:false});
             if(!res){
-                this.handleListingOfNewSchool(schoolName);
+                let data = {
+                  popUp,
+                  title: 'Confirmation',
+                  type: 'inform',
+                  content: `There are no schools with a similar name.`,
+                  buttons: [{ label: 'Search Again', onClick: () => {
+                    gotoClaimSchool(schoolName); 
+                    this.props.onModalClose();
+                }},{ label: 'Create New School', onClick: () => {this.handleListingOfNewSchool(schoolName)}}]
+                };
+                confirmationDialog(data);
             }
             else if(res){
                 this.props.onModalClose();
@@ -87,6 +97,7 @@ class OnBoardingDialogBox extends React.Component {
           });
         } else {
           // Show Login popup
+          this.props.onModalClose();
           Events.trigger("loginAsUser");
         }
       };
