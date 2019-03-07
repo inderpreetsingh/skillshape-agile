@@ -121,13 +121,6 @@ const LogOutUserSideNav = props => (
     <SideNavItem
       button
       menuListItemText={props.classes.menuListItemText}
-      name="Claim A School"
-      iconName="check_circle"
-      onClick={() => props.childItemOnClick("/claimSchool")}
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
       name="Contact Us"
       iconName="email"
       onClick={() => props.childItemOnClick("/contact-us")}
@@ -230,18 +223,6 @@ const LoginUserSideNav = props => {
         name="Find a School"
         iconName="find_in_page"
         onClick={() => props.childItemOnClick("/") /*browserHistory.push('/')*/}
-      />
-      <SideNavItem
-        button
-        menuListItemText={props.classes.menuListItemText}
-        name="Claim a School"
-        iconName="assignment"
-        onClick={
-          () =>
-            props.childItemOnClick(
-              "/claimSchool"
-            ) /*browserHistory.push('/claimSchool')*/
-        }
       />
       <SideNavItem
         button

@@ -63,6 +63,7 @@ class OnBoardingDialogBox extends React.Component {
                 this.handleListingOfNewSchool(schoolName);
             }
             else if(res){
+                this.props.onModalClose();
                 gotoClaimSchool(schoolName);
             }
             else if(err){
@@ -78,6 +79,7 @@ class OnBoardingDialogBox extends React.Component {
             let state = {
               isLoading: false
             };
+            this.props.onModalClose();
             if (res) {
               browserHistory.push(res);
             }
