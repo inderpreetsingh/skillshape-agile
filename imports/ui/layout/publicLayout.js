@@ -139,7 +139,6 @@ class PublicLayout extends React.Component {
             <TopSearchBar {...this.props} />
           </div>
           {onBoardingDialogBox && <OnBoardingDialogBox
-            userId={get(currentUser,'_id',Meteor.userId())}
             open={onBoardingDialogBox}
             onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
           />}
