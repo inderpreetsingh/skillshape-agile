@@ -452,7 +452,7 @@ class LocationForm extends React.Component {
   };
   
   render() {
-    const { fullScreen, data, classes, currentUser } = this.props;
+    const { fullScreen, data, classes, currentUser,handleIsSavedState } = this.props;
     return (
       <div>
         <Dialog

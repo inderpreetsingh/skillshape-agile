@@ -109,7 +109,7 @@ class RoomForm extends React.Component {
   }
  
   render() {
-    const { fullScreen, data, classes } = this.props;
+    const { fullScreen, data, classes,handleIsSavedState } = this.props;
     const {name,capacity} = this.state;
     return (
       <div>
