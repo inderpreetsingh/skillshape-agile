@@ -1,5 +1,6 @@
 import React, { Fragment, lazy, Suspense } from "react";
 import { CSSTransition } from 'react-transition-group';
+import ReactResizeDetector from 'react-resize-detector';
 
 import concat from 'lodash/concat';
 import find from "lodash/find";
@@ -56,15 +57,19 @@ const drawerWidth = 400;
 
 const Drawers = styled.div`
   max-width: ${drawerWidth}px;
+  height: ${props => props.height}px;
   width: 100%;
+  overflow: auto;
 
   @media screen and (max-width: ${helpers.tablet}px) {
+    height: auto;
     width: auto;
   }
 `;
 
 const FixedDrawer = styled.div`
   max-width: ${drawerWidth}px;
+  height: ${props => props.height}px;
   width: 100%;
   display: 'block';
   background: ${helpers.panelColor};
@@ -72,6 +77,7 @@ const FixedDrawer = styled.div`
   overflow: auto;
   padding: ${helpers.rhythmDiv}px;
   
+
   @media screen and (max-width: ${helpers.tablet}px) {
     width: auto;
   }
@@ -79,6 +85,9 @@ const FixedDrawer = styled.div`
 
 const SchoolMemberWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 0%;
 `;
 
 const Wrapper = styled.div`
@@ -184,6 +193,7 @@ class DashBoardView extends React.Component {
     startDate: new Date(),
     selectedClassTypes: null,
     memberInfo: {},
+    membersViewHeight: null,
     classTypesData: [],
     error: "",
     birthYear: new Date().getFullYear() - 28,
@@ -207,6 +217,16 @@ class DashBoardView extends React.Component {
     this.handleSlidingDrawerState();
     window.addEventListener('resize', this.handleSlidingDrawerState);
   }
+
+  // componentDidUpdate = () => {
+  //   const elem = this.schoolMemberWrapper;
+  //   debugger;
+  //   if (elem && elem.getBoundingClientRect) {
+  //     const height = this._getElementHeight(elem);
+  //     // console.log(height, elem.getBoundingClientRect().height, elem.offsetHeight, ".............");
+  //     this.setoffsetHeight
+  //   }
+  // }
 
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
     so that right panel gets removed from UI*/
@@ -251,6 +271,10 @@ class DashBoardView extends React.Component {
     }
   }
 
+  _getElementHeight = (elem) => {
+    return elem && elem.getBoundingClientRect && elem.offsetHeight;
+  }
+
   handleSlidingDrawerState = () => {
     if (window.innerWidth <= helpers.tablet) {
       if (!this.state.slidingDrawerState)
@@ -264,6 +288,20 @@ class DashBoardView extends React.Component {
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
+
+  setMembersViewDimensions = (height) => {
+    // debugger;
+    if (height && this.state.membersViewHeight !== height) {
+      this.setState(state => {
+        return {
+          ...state,
+          membersViewHeight: height
+        }
+      });
+    }
+
+    return;
+  }
 
   renderStudentAddModal = () => {
     const { isAdmin, view } = this.props;
@@ -731,6 +769,13 @@ class DashBoardView extends React.Component {
       }
     })
   }
+
+  handleElementResize = (width, height) => {
+    // debugger;
+    console.info(width, height, 'resize .......');
+    this.setMembersViewDimensions(height);
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return !nextProps.isLoading;
   }
@@ -779,7 +824,7 @@ class DashBoardView extends React.Component {
             label={view == 'admin' ? "Add New Admin" : "Add New Student"}
           />
         )}
-        <Suspense fallback={<Loading/>}>
+        <Suspense fallback={<Loading />}>
           {view == 'admin' && !_.isEmpty(adminsData) ?
             <SchoolAdminsList
               cardsView={isMemberSelected ? 'list' : 'grid'}
@@ -805,8 +850,6 @@ class DashBoardView extends React.Component {
         </Suspense>
       </div>
     );
-
-
 
     return (
       <Wrapper>
@@ -924,7 +967,7 @@ class DashBoardView extends React.Component {
           unmountOnExit
         >
           <SplitScreenWrapper>
-            <Drawers>
+            <Drawers height={this.state.membersViewHeight}>
               <Fragment>
                 <ToggleVisibilityTablet>
                   {slidingDrawerState && <Drawer
@@ -950,29 +993,37 @@ class DashBoardView extends React.Component {
               </Fragment>
             </Drawers>
 
-            <Suspense fallback={<Loading/>}>
-              <SchoolMemberWrapper>
-                <Fragment>
-                  <SchoolMemberInfo
-                    selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
-                    memberInfo={memberInfo}
-                    handleInput={this.handleInput}
-                    saveAdminNotesInMembers={this.saveAdminNotesInMembers}
-                    disabled={slug ? false : true}
-                    view={view}
-                    cardsView={isMemberSelected ? 'list' : 'grid'}
-                    classTypeData={get(this.props, "classTypeData", [])}
-                    handleMemberDetailsToRightPanel={
-                      this.handleMemberDetailsToRightPanel
-                    }
-                    handleDrawerToggle={this.handleDrawerToggle}
-                    isAdmin={isAdmin}
-                    notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
-                  />
-                  {this.renderSchoolMedia(schoolData, memberInfo, slug)}
-                </Fragment>
-              </SchoolMemberWrapper>
-            </Suspense>
+
+            <SchoolMemberWrapper
+              id="school-member-wrapper"
+            >
+              <Suspense fallback={<Loading />}>
+                <SchoolMemberInfo
+                  selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
+                  memberInfo={memberInfo}
+                  handleInput={this.handleInput}
+                  saveAdminNotesInMembers={this.saveAdminNotesInMembers}
+                  disabled={slug ? false : true}
+                  view={view}
+                  cardsView={isMemberSelected ? 'list' : 'grid'}
+                  classTypeData={get(this.props, "classTypeData", [])}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  handleDrawerToggle={this.handleDrawerToggle}
+                  isAdmin={isAdmin}
+                  notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
+                />
+                {this.renderSchoolMedia(schoolData, memberInfo, slug)}
+              </Suspense>
+
+              <ReactResizeDetector
+                handleWidth
+                handleHeight
+                querySelector={"#school-member-wrapper"}
+                onResize={this.handleElementResize} />
+            </SchoolMemberWrapper>
+
           </SplitScreenWrapper>
         </CSSTransition>
 
@@ -986,7 +1037,7 @@ class DashBoardView extends React.Component {
           classNames="fade"
           unmountOnExit
         >
-          <Suspense fallback={<Loading/>}>
+          <Suspense fallback={<Loading />}>
             <MembersScreenWrapper>
               <SchoolMemberFilter
                 stickyPosition={this.state.sticky}
