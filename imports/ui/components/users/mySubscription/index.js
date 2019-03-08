@@ -304,9 +304,11 @@ class MySubscription extends React.Component {
 			}
 		})
 	}
-	
+	onPrivacySettingsClick = (value) =>{
+		this.setState({privacySettings:value});
+	}
 	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,memberId } = this.state;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,memberId ,privacySettings} = this.state;
 		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -345,6 +347,8 @@ class MySubscription extends React.Component {
 						removeFromCalendar={this.removeFromCalendar}
 						emailAccess={emailAccess}
 						memberId = {memberId}
+						privacySettings={privacySettings}
+						onPrivacySettingsClick={this.onPrivacySettingsClick}
 					/>
 				</Wrapper>
 			</React.Suspense>

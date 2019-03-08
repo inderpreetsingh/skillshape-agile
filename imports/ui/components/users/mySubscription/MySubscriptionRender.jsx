@@ -9,7 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
-import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox,PrivacySettings } from '/imports/ui/components/landing/components/dialogs/';
 
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
@@ -67,7 +67,7 @@ const SchoolName = SubHeading.extend`
 `;
 
 const Wrapper = styled.div`
-	max-width: 800px;
+	max-width: 869px;
 	margin: 0 auto;
 	margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
@@ -100,7 +100,6 @@ const ActionButton = styled.div`
     display: flex;
     margin-right: ${helpers.rhythmDiv}px;
 	margin-bottom: ${helpers.rhythmDiv}px;
-
     @media screen and (max-width: ${helpers.tablet - 100}px) {
         width: 100%;
     }
@@ -158,21 +157,15 @@ const ContactIcons = styled.div`
 
 const ActionButtons = (props) => (
     <ActionButtonsWrapper>
+        <ActionButton onClick={props.onPrivacySettingsClick}>
+            <FormGhostButton fullWidth icon iconName="settings" label="Privacy Settings" />
+        </ActionButton>
         <ActionButton onClick={props.onEditMemberShip}>
             <FormGhostButton fullWidth icon iconName="remove_from_queue" label="Edit Membership" />
         </ActionButton>
         <ActionButton onClick={props.onSchoolVisit(props.schoolSlug)}>
             <FormGhostButton fullWidth icon iconName="school" label="Visit School" />
         </ActionButton>
-        {/*
-        {props.phone && props.phone.length && <ActionButton onClick={props.onCall(props.phone)}>
-            <FormGhostButton icon iconName="phone" label="Call" />
-        </ActionButton>}
-
-        {props.email && <ActionButton onClick={props.onEmail(props.email, props.data)}>
-            <FormGhostButton icon iconName="email" label="Email" noMarginBottom />
-        </ActionButton>}
-        */}
     </ActionButtonsWrapper>
 );
 
@@ -193,7 +186,6 @@ const MySubscriptionRender = (props) => {
     };
 
     const {
-        src,
         email,
         phone,
         classes,
@@ -208,7 +200,6 @@ const MySubscriptionRender = (props) => {
         selectedSchool,
         getContactNumbers,
         handleModelState,
-        handleSchoolVisit,
         manageMemberShipDialog,
         handleManageMemberShipDialogBox,
         removeAll,
@@ -218,7 +209,9 @@ const MySubscriptionRender = (props) => {
         isBusy,
         subscriptionsData,
         emailAccess,
-        memberId
+        memberId,
+        onPrivacySettingsClick,
+        privacySettings
     } = props;
 
     let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
@@ -226,6 +219,14 @@ const MySubscriptionRender = (props) => {
     let schoolName = get(schoolData[0], 'name', null);
     return (
         <Fragment>
+            { privacySettings &&
+                <PrivacySettings
+                open={privacySettings}
+                onModalClose={()=>{onPrivacySettingsClick(false)}}
+                schoolName={schoolName}
+                memberId={memberId}
+                />
+            }
             {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
                     subscriptionsData={subscriptionsData || []}
@@ -309,7 +310,7 @@ const MySubscriptionRender = (props) => {
                                         phone={getContactNumbers(school)}
                                         schoolSlug={school.slug}
                                         onEditMemberShip={handleManageMemberShipDialogBox(true, school)}
-
+                                        onPrivacySettingsClick = {()=>{onPrivacySettingsClick(true)}}
                                         onSchoolVisit={props.handleSchoolVisit}
                                     />
                                 </ExpansionPanelSummary>

@@ -13,4 +13,5 @@ export { default as EnrollmentPackagesDialogBox } from './EnrollmentPackagesDial
 export { default as ManageRequestsDialogBox } from './ManageRequestsDialogBox';
 export { default as NonUserDefaultDialogBox } from './EnrollmentPackagesDialogBox';
 export { default as GiveReviewDialogBox } from './GiveReviewDialogBox';
-export { default as OnBoardingDialogBox} from './OnBoardingDialogBox';
+export { default as OnBoardingDialogBox } from './OnBoardingDialogBox';
+export { default as PrivacySettings } from './privacySettings';
