@@ -45,7 +45,8 @@ const styles = {
 class PrivacySettingsDialogBox extends React.Component {
     constructor(props) {
         super(props);
-        this.initializeState(this.props)
+        this.state = {};
+        this.initializeState(this.props);
     }
     initializeState = (props) =>{
         const {phoneAccess='public',emailAccess='public',memberId} = props;
@@ -55,7 +56,28 @@ class PrivacySettingsDialogBox extends React.Component {
         this.initializeState(nextProps);
     }
     handleSave = () =>  {
-        console.log(this.props)
+        const {popUp,emailAccess:propsEmailAccess,phoneAccess:propsPhoneAccess,onModalClose} = this.props;
+        const {emailAccess,phoneAccess,memberId} = this.state; 
+        if(propsEmailAccess == emailAccess && phoneAccess == propsPhoneAccess){
+            popUp.appear('alert',{title:'Oops',content:'No Changes found!'});
+        }
+        else if(memberId){
+            let doc = {emailAccess,phoneAccess};
+            Meteor.call("schoolMemberDetails.emailAccessEdit",memberId,doc,(err,res)=>{
+                popUp.appear('success',{content:''});
+                let data = {
+                    popUp,
+                    title: 'Success',
+                    type: 'success',
+                    content: `Settings saved successfully!`,
+                    buttons: [{ label: 'Ok', onClick:onModalClose}]
+                  };
+                  confirmationDialog(data);
+            })
+        }
+        else{
+            popUp.appear('alert',{title:'Oops',content:'Student is not a member yet.'});
+        }
     }
     handleRadioButtons = (e, stateName) => {
         this.setState({ [stateName]: e.target.value });
@@ -138,7 +160,7 @@ class PrivacySettingsDialogBox extends React.Component {
                             <ButtonWrapper>
                                 <FormGhostButton
                                     fullWidth
-                                    onClick={() => { }}
+                                    onClick={this.handleSave}
                                     label={"Save"}
                                 />
                             </ButtonWrapper>

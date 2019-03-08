@@ -10,6 +10,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
 import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox,PrivacySettings } from '/imports/ui/components/landing/components/dialogs/';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
@@ -230,6 +231,7 @@ const MySubscriptionRender = (props) => {
                 phoneAccess = {phoneAccess}
                 />
             }
+            {isBusy && <ContainerLoader/>}
             {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
                     subscriptionsData={subscriptionsData || []}
@@ -312,7 +314,7 @@ const MySubscriptionRender = (props) => {
                                         phone={getContactNumbers(school)}
                                         schoolSlug={school.slug}
                                         onEditMemberShip={handleManageMemberShipDialogBox(true, school)}
-                                        onPrivacySettingsClick = {()=>{onPrivacySettingsClick(true)}}
+                                        onPrivacySettingsClick = {()=>{onPrivacySettingsClick(true,school)}}
                                         onSchoolVisit={props.handleSchoolVisit}
                                     />
                                 </ExpansionPanelSummary>

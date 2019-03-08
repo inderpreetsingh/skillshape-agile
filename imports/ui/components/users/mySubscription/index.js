@@ -46,23 +46,26 @@ class MySubscription extends React.Component {
 		return (data.phone && data.phone.split(/[\|\,\\]/));
 	};
 
-
 	classDataFinder = (schoolData) => {
 		let { currentUser } = this.props;
 		let schoolId = get(schoolData, '_id', null);
 		let userId = get(currentUser, '_id', null);
 		let filter = {schoolId,activeUserId:userId};
+		this.setState({isBusy:true});
 		Meteor.call("schoolMemberDetails.getMemberData",filter,(err,res)=>{
+			let state = {};
 			if(!isEmpty(res)){
 				const {emailAccess,phoneAccess,_id:memberId} = res;
-				this.setState({emailAccess,phoneAccess,memberId});
+				state = {emailAccess,phoneAccess,memberId};
 			}
-		})
-		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
-			if (res)
-				this.setState({ subscriptionsData: res })
-			else
-				this.setState({ subscriptionsData: [] })
+			Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
+				if (!isEmpty(res))
+				state.subscriptionsData = res;
+				else
+				state.subscriptionsData = [];
+
+				this.setState({...state,isBusy:false});
+			})
 		})
 	}
 	getOurEmail = (data) => {
@@ -304,8 +307,10 @@ class MySubscription extends React.Component {
 			}
 		})
 	}
-	onPrivacySettingsClick = (value) =>{
-		this.setState({privacySettings:value});
+	onPrivacySettingsClick = (value,selectedSchool) =>{
+		this.setState({privacySettings:value,selectedSchool},()=>{
+			this.okClick();
+		});
 	}
 	render() {
 		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,phoneAccess,memberId ,privacySettings} = this.state;
