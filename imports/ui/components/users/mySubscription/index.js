@@ -54,8 +54,8 @@ class MySubscription extends React.Component {
 		let filter = {schoolId,activeUserId:userId};
 		Meteor.call("schoolMemberDetails.getMemberData",filter,(err,res)=>{
 			if(!isEmpty(res)){
-				const {emailAccess,_id:memberId} = res;
-				this.setState({emailAccess:emailAccess ? emailAccess : false,memberId});
+				const {emailAccess,phoneAccess,_id:memberId} = res;
+				this.setState({emailAccess,phoneAccess,memberId});
 			}
 		})
 		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
@@ -308,7 +308,7 @@ class MySubscription extends React.Component {
 		this.setState({privacySettings:value});
 	}
 	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,memberId ,privacySettings} = this.state;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,phoneAccess,memberId ,privacySettings} = this.state;
 		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -346,6 +346,7 @@ class MySubscription extends React.Component {
 						leaveSchool={this.leaveSchool}
 						removeFromCalendar={this.removeFromCalendar}
 						emailAccess={emailAccess}
+						phoneAccess={phoneAccess}
 						memberId = {memberId}
 						privacySettings={privacySettings}
 						onPrivacySettingsClick={this.onPrivacySettingsClick}

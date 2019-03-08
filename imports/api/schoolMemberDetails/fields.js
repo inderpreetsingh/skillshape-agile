@@ -50,7 +50,11 @@ SchoolMemberDetails.attachSchema(
       optional: true
   },
     emailAccess: {
-      type: Boolean,
+      type: String,
+      optional: true
+    },
+    phoneAccess:{
+      type: String,
       optional: true
     } 
   })

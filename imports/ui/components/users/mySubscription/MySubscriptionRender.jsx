@@ -209,6 +209,7 @@ const MySubscriptionRender = (props) => {
         isBusy,
         subscriptionsData,
         emailAccess,
+        phoneAccess,
         memberId,
         onPrivacySettingsClick,
         privacySettings
@@ -225,6 +226,8 @@ const MySubscriptionRender = (props) => {
                 onModalClose={()=>{onPrivacySettingsClick(false)}}
                 schoolName={schoolName}
                 memberId={memberId}
+                emailAccess = {emailAccess}
+                phoneAccess = {phoneAccess}
                 />
             }
             {manageMemberShipDialog && (
@@ -240,7 +243,6 @@ const MySubscriptionRender = (props) => {
                     isBusy={isBusy}
                     userId={userId}
                     selectedSchoolData={selectedSchool}
-                    emailAccess = {emailAccess}
                     memberId = {memberId}
                 />
             )}
