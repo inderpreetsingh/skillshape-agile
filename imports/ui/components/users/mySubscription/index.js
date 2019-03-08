@@ -304,21 +304,7 @@ class MySubscription extends React.Component {
 			}
 		})
 	}
-	confirmationForAccessEmail = () =>{
-		const {emailAccess,memberId:_id,selectedSchool:{name}} = this.state;
-		let doc_id = {_id};
-		let doc = {emailAccess:!emailAccess};
-		const {popUp} = this.props;
-		let content = `By ${doc.emailAccess ? 'Allowing' : 'Disabling'} Email access, ${name} will be able to send you eMail Notifications regarding class Time and Location changes. However, the school will not have direct access to your eMail address for other purposes unless you give permission in your Edit Membership area.`;
-		let	data = {
-				popUp,
-				title: 'Confirmation',
-				type: 'inform',
-				content,
-		        buttons : [{ label: 'Cancel', onClick: () => {  }, alert: true }, { label: 'Ok', onClick: () => {this.handleEmailAccess(doc_id,doc) }, greyColor: true }]
-		}
-		confirmationDialog(data);
-	}
+	
 	render() {
 		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,memberId } = this.state;
 		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
@@ -359,7 +345,6 @@ class MySubscription extends React.Component {
 						removeFromCalendar={this.removeFromCalendar}
 						emailAccess={emailAccess}
 						memberId = {memberId}
-						confirmationForAccessEmail={this.confirmationForAccessEmail}
 					/>
 				</Wrapper>
 			</React.Suspense>

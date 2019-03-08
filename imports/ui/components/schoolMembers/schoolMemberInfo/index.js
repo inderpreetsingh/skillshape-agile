@@ -601,21 +601,7 @@ class SchoolMemberInfo extends Component {
 			}
 		})
 	}
-	confirmationForAccessEmail = () =>{
-		const {emailAccess,memberId:_id,schoolName:name} = this.props.memberInfo;
-		let doc_id = {_id};
-		let doc = {emailAccess:!emailAccess};
-		let content = `By ${doc.emailAccess ? 'Allowing' : 'Disabling'} Email access, ${name} will be able to send you eMail Notifications regarding class Time and Location changes. However, the school will not have direct access to your eMail address for other purposes unless you give permission in your Edit Membership area.`;
-		const {popUp} = this.props;
-		let	data = {
-				popUp,
-				title: 'Confirmation',
-				type: 'inform',
-				content ,
-		        buttons : [{ label: 'Cancel', onClick: () => {  }, alert: true }, { label: 'Ok', onClick: () => {this.handleEmailAccess(doc_id,doc) }, greyColor: true }]
-		}
-		confirmationDialog(data);
-	}
+	
 	render() {
 		const {
 			memberInfo,
@@ -676,7 +662,6 @@ class SchoolMemberInfo extends Component {
 						schoolImg={schoolImg}
 						emailAccess= {emailAccess}
 						memberId= {memberId}
-						confirmationForAccessEmail= {this.confirmationForAccessEmail}
 					/>
 				)}
 				{callMemberDialog && (

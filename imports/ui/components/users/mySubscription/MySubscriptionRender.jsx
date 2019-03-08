@@ -217,7 +217,6 @@ const MySubscriptionRender = (props) => {
         removeFromCalendar,
         isBusy,
         subscriptionsData,
-        confirmationForAccessEmail,
         emailAccess,
         memberId
     } = props;
@@ -242,7 +241,6 @@ const MySubscriptionRender = (props) => {
                     selectedSchoolData={selectedSchool}
                     emailAccess = {emailAccess}
                     memberId = {memberId}
-                    confirmationForAccessEmail = {confirmationForAccessEmail}
                 />
             )}
             {callUsDialog && (

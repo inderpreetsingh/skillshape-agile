@@ -1,27 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-
 import { get, isEmpty } from 'lodash';
-import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
 import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-
-import ProfileImage, { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
-import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { coverSrc } from '/imports/ui/components/landing/site-settings.js';
-
-import {
-    capitalizeString
-} from '/imports/util';
-
-import muiTheme from "../jss/muitheme.jsx";
+import Dialog, { DialogActions, DialogContent, withMobileDialog } from "material-ui/Dialog";
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import IconButton from "material-ui/IconButton";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
 import * as helpers from "../jss/helpers.js";
+import muiTheme from "../jss/muitheme.jsx";
+import { FormGhostButton, SecondaryButton, SkillShapeButton } from '/imports/ui/components/landing/components/buttons/';
+import ProfileImage, { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import { SubHeading, Text, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { coverSrc } from '/imports/ui/components/landing/site-settings.js';
+import { ContainerLoader } from "/imports/ui/loading/container";
+import { capitalizeString } from '/imports/util';
+
+
+
+
 
 const styles = theme => {
     return {
@@ -260,7 +258,6 @@ const ManageMemberShipDialogBox = props => {
         isBusy,
         userId,
         classes,
-        schoolImg,
         onModalClose,
         schoolName,
         studentName,
@@ -271,7 +268,6 @@ const ManageMemberShipDialogBox = props => {
         removeAll,
         leaveSchool,
         emailAccess,
-        confirmationForAccessEmail,
         memberId
     } = props;
     // console.log("​subscriptionsData", subscriptionsData)
@@ -396,11 +392,6 @@ const ManageMemberShipDialogBox = props => {
                     {(!isEmpty(subscriptionsData)) && (<ButtonWrapper>
                         <FormGhostButton alertColor label="Leave school" onClick={leaveSchool} />
                     </ButtonWrapper>)}
-                    {memberId &&  <ButtonWrapper>
-                        <FormGhostButton alertColor={emailAccess} darkGreyColor={!emailAccess} label={emailAccess ? 'Disallow Email' : 'Allow Email'} onClick={confirmationForAccessEmail} />
-                    </ButtonWrapper>
-                }
-                   
                     <ButtonWrapper>
                         <FormGhostButton darkGreyColor label="Close" onClick={onModalClose} />
                     </ButtonWrapper>
