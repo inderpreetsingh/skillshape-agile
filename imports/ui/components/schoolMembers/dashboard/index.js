@@ -1,7 +1,3 @@
-import React, { Fragment, lazy, Suspense } from "react";
-import { CSSTransition } from 'react-transition-group';
-import ReactResizeDetector from 'react-resize-detector';
-
 import concat from 'lodash/concat';
 import find from "lodash/find";
 import findIndex from 'lodash/findIndex';
@@ -10,28 +6,23 @@ import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from "lodash/isEmpty";
 import remove from 'lodash/remove';
-import MenuIcon from "material-ui-icons/Menu";
-import AppBar from "material-ui/AppBar";
-import Button from "material-ui/Button";
 import Checkbox from "material-ui/Checkbox";
 import Drawer from "material-ui/Drawer";
 import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
-import Hidden from "material-ui/Hidden";
-import IconButton from "material-ui/IconButton";
 import Input, { InputLabel } from "material-ui/Input";
-import List from "material-ui/List";
 import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
 import { withStyles } from "material-ui/styles";
 import TextField from "material-ui/TextField";
-import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
+import React, { Fragment, lazy, Suspense } from "react";
+import ReactResizeDetector from 'react-resize-detector';
+import { CSSTransition } from 'react-transition-group';
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
-import { packageCoverProvider } from '/imports/util';
 //const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
@@ -43,15 +34,17 @@ import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
+import { Loading } from '/imports/ui/loading';
+import { ContainerLoader } from "/imports/ui/loading/container.js";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { packageCoverProvider } from '/imports/util';
+
 const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
 const SchoolAdminsList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
 const SchoolMembersList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { Loading } from '/imports/ui/loading';
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
 const drawerWidth = 400;
 
@@ -631,7 +624,8 @@ class DashBoardView extends React.Component {
     const { isAdmin, schoolData, adminsData, purchaseByUserId, view } = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
-    let emailAccess = false;
+    let emailAccess = "public";
+    let phoneAccess = 'public';
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
     if (view == 'classmates') {
       memberInfo = SchoolMemberDetails.findOne(memberId);
@@ -639,6 +633,8 @@ class DashBoardView extends React.Component {
       email = memberInfo.profile.emails[0].address;
       _id = memberInfo.activeUserId;
       emailAccess = memberInfo.emailAccess;
+      phoneAccess = memberInfo.phoneAccess;
+
     }
     else {
       memberInfo = adminsData.find(ele => ele._id == memberId);
@@ -661,6 +657,7 @@ class DashBoardView extends React.Component {
         name: profile.name,
         phone: profile.phone,
         email: email,
+        phoneAccess,
         emailAccess,
         activeUserId: get(memberInfo, 'activeUserId', _id),
         schoolId: schoolId,

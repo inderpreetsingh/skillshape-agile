@@ -148,13 +148,13 @@ const MemberActions = styled.div`
 	flex-direction: column;
 `;
 
-const MemberName = SubHeading.extend`
-	font-size: ${helpers.baseFontSize * 2}px;
+const TextWrapper = SubHeading.extend`
+	font-size: ${helpers.baseFontSize }px;
 	word-break: break-all;
 
 	@media screen and (max-width: ${helpers.mobile}px) {
 		margin-bottom: ${helpers.rhythmDiv * 2}px;
-		font-size: ${helpers.baseFontSize * 2}px;
+		font-size: ${helpers.baseFontSize }px;
 		text-align: center;
 	}
 `;
@@ -234,21 +234,21 @@ const MenuIconWrapper = CornerBtnWrapper.extend`
 const ActionButtons = (props) => (
 	<ActionBtnsWrapper>
 		<ActionBtnsRow>
-			<ActionBtn
+		{props.showPhone &&	<ActionBtn
 				onClick={() => {
 					props.handleCall(props.memberInfo);
 				}}
 			>
 				<FormGhostButton icon iconName="phone" label="Call" />
-			</ActionBtn>
+			</ActionBtn>}
 
-			<ActionBtn
+		{props.showEmail && <ActionBtn
 				onClick={() => {
 					props.handleEmail(props.memberInfo);
 				}}
 			>
 				<FormGhostButton noMarginBottom label="Email" icon iconName="email" />
-			</ActionBtn>
+			</ActionBtn>}
 		</ActionBtnsRow>
 		{/*<ActionBtn>
 			<MemberActionButton
@@ -632,8 +632,9 @@ class SchoolMemberInfo extends Component {
 		let userId = get(memberInfo, 'activeUserId', null);
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
 		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', get(memberInfo, 'email', "Old Data"))));
-		const {emailAccess,memberId,email} = memberInfo;
-
+		const {emailAccess,memberId,email='',phone='',phoneAccess} = memberInfo;
+		let showEmail = emailAccess != 'private' ? emailAccess == 'school' ? isAdmin ? true : false : emailAccess == 'public'? true :false :false;
+		let showPhone = phoneAccess != 'private' ? phoneAccess == 'school' ? isAdmin ? true : false : phoneAccess == 'public'? true :false :false;
 		return (
 			<Wrapper>
 				{showConfirmation && (
@@ -717,7 +718,9 @@ class SchoolMemberInfo extends Component {
 								</Avatar>
 
 								<MemberActions>
-									<MemberName>{userName}</MemberName>
+									<TextWrapper>{userName}</TextWrapper>
+									{showEmail &&  email && <TextWrapper>{email}</TextWrapper>}
+									{showPhone && phone && <TextWrapper>{phone}</TextWrapper>}
 									{isAdmin && (
 										<ActionButtonsBar>
 											<ActionButtons
@@ -734,6 +737,8 @@ class SchoolMemberInfo extends Component {
 												}}
 												superAdmin={superAdmin}
 												view={view}
+												showEmail = {showEmail}
+												showPhone = {showPhone}
 											/>
 										</ActionButtonsBar>
 									)}

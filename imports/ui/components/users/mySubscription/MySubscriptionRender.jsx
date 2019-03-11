@@ -213,12 +213,12 @@ const MySubscriptionRender = (props) => {
         phoneAccess,
         memberId,
         onPrivacySettingsClick,
-        privacySettings
+        privacySettings,
     } = props;
 
     let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
     let userId = get(currentUser, '_id', null);
-    let schoolName = get(schoolData[0], 'name', null);
+    let schoolName = get(selectedSchool, 'name', 'School');
     return (
         <Fragment>
             { privacySettings &&
