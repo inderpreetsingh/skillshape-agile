@@ -58,7 +58,8 @@ class PrivacySettingsDialogBox extends React.Component {
         const {popUp,emailAccess:propsEmailAccess,phoneAccess:propsPhoneAccess,onModalClose} = this.props;
         const {emailAccess,phoneAccess,memberId} = this.state; 
         if(propsEmailAccess == emailAccess && phoneAccess == propsPhoneAccess){
-            popUp.appear('alert',{title:'Oops',content:'No Changes found!'});
+            onModalClose();
+            return;
         }
         else if(memberId){
             let doc = {emailAccess,phoneAccess};
