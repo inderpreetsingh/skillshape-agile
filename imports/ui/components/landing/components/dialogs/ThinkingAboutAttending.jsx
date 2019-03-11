@@ -243,6 +243,7 @@ class ThinkingAboutAttending extends React.Component {
     this.setState({ classTypePackages: false });
   }
   handlePrivacySettingDialog = (value=true) => {
+    this.getCheckBoxValues();
     this.setState({privacySettings:value});
   }
   render() {

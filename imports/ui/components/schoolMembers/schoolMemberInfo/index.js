@@ -545,6 +545,9 @@ class SchoolMemberInfo extends Component {
 	}
 	leaveSchoolHandler = () => {
 		let { subscriptionsData } = this.state;
+		const {schoolId,_id:activeUserId} = this.props.memberInfo;
+		let filter = {schoolId,activeUserId};
+		Meteor.call("schoolMemberDetails.removeStudentFromSchool",filter);
 		this.setState({ all: true });
 		if (!isEmpty(subscriptionsData)) {
 			subscriptionsData.map((obj, index) => {

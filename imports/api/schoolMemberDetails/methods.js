@@ -181,5 +181,10 @@ Meteor.methods({
 			console.log('error in schoolMemberDetails.emailAccessEdit', error)
       throw new Meteor.Error(error);
     }
+  },
+  "schoolMemberDetails.removeStudentFromSchool":function(filter){
+    if(filter){
+      SchoolMemberDetails.remove(filter);
+    }
   }
 });

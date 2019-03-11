@@ -193,7 +193,10 @@ class MySubscription extends React.Component {
 		);
 	}
 	leaveSchoolHandler = () => {
-		let { subscriptionsData } = this.state;
+		let { subscriptionsData ,selectedSchool:{_id:schoolId}} = this.state;
+		const {id:activeUserId} = this.props.params;
+		let filter = {schoolId,activeUserId};
+		Meteor.call("schoolMemberDetails.removeStudentFromSchool",filter);
 		this.setState({ all: true });
 		if (!isEmpty(subscriptionsData)) {
 			subscriptionsData.map((obj, index) => {
@@ -206,9 +209,8 @@ class MySubscription extends React.Component {
 	}
 
 	removeFromCalendar = (data) => {
-		let { schoolData } = this.props;
 		let { classTimeName, classTypeName } = data;
-		let schoolName = get(schoolData[0], 'name', 'Hidden Leaf');
+		const {name:schoolName} = this.state.selectedSchool;
 		this.setState({ isBusy: true });
 		Meteor.call(
 			"classInterest.removeClassInterestByClassTimeId",
