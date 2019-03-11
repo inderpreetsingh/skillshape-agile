@@ -15,6 +15,7 @@ import ClassTypePackages from './classTypePackages.jsx';
 import Button from 'material-ui/Button';
 import Events from "/imports/util/events";
 import {handleJoin} from "/imports/util";
+import { PrivacySettings } from '/imports/ui/components/landing/components/dialogs/';
 import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
 import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
 import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
@@ -100,7 +101,7 @@ class ThinkingAboutAttending extends React.Component {
     let filterForNotificationStatus = {classTypeId,userId:Meteor.userId()}
       Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,schoolId,(err,result)=>{
         if(!isEmpty(result)){
-          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData} = result;
+          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData,isFirstTime} = result;
           // let calendar = !isEmpty(classInterestData),default always be true;
           let calendar = true;
           let notification = !isEmpty(classTimesRequest) && classTimesRequest.notification && !isEmpty(classTypeLocationRequest) && classTypeLocationRequest.notification;
@@ -108,7 +109,9 @@ class ThinkingAboutAttending extends React.Component {
           if(isEmpty(schoolMemberData)){
             checkBoxes.push(true);
           }
-          this.setState({checkBoxes,checkBoxesData:result});
+          const {phoneAccess='public',emailAccess='public',_id:memberId} = schoolMemberData || {};
+          const memberData = {phoneAccess,emailAccess,memberId}
+          this.setState({checkBoxes,checkBoxesData:result,memberData,isFirstTime});
         }
       })
   }
@@ -239,8 +242,11 @@ class ThinkingAboutAttending extends React.Component {
   closeClassTypePackages = () => {
     this.setState({ classTypePackages: false });
   }
+  handlePrivacySettingDialog = (value=true) => {
+    this.setState({privacySettings:value});
+  }
   render() {
-    const { checkBoxes, classTypePackages, packagesRequired,loginUserPurchases ,alreadyPurchased,isLoading} = this.state;
+    const { checkBoxes, classTypePackages, packagesRequired,loginUserPurchases ,alreadyPurchased,isLoading,privacySettings,memberData} = this.state;
     const { open, onModalClose, name, schoolId, params, classTypeId,handleSignIn,schoolName } = this.props;
     let packagesLength = 0;
     if(!isEmpty(loginUserPurchases)){
@@ -258,6 +264,17 @@ class ThinkingAboutAttending extends React.Component {
           onRequestClose={onModalClose}
           aria-labelledby="Thinking About Attending"
         >
+        { privacySettings &&
+                <PrivacySettings
+                open={privacySettings}
+                onModalClose={()=>{
+                  this.handlePrivacySettingDialog(false);
+                  onModalClose();
+              }}
+                schoolName={schoolName}
+                {...memberData}
+                />
+            }
           {this.state.emailConfirmationDialogBox && (
             <EmailConfirmationDialogBox
               open={this.state.emailConfirmationDialogBox}

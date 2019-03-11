@@ -57,13 +57,15 @@ callMethod = (methodName,data,popUp,onModalClose,showDialog,self) => {
     Meteor.call(methodName,data,(err,res)=>{
         if(showDialog){
             self.setState({isLoading:false});
+            const {state:{isFirstTime},handlePrivacySettingDialog} = self;
+
             let data = {};
             data = {
               popUp,
               title: 'Success',
               type: 'success',
               content: 'Operation Completed Successfully.',
-              buttons: [{ label: 'Ok', onClick:onModalClose, greyColor: true }]
+              buttons: [{ label: 'Ok', onClick:!isFirstTime ? onModalClose : handlePrivacySettingDialog, greyColor: true }]
             }
             confirmationDialog(data);
         }

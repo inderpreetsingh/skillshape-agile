@@ -45,15 +45,14 @@ const styles = {
 class PrivacySettingsDialogBox extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
-        this.initializeState(this.props);
+        this.state = this.initializeState(props);
     }
     initializeState = (props) =>{
         const {phoneAccess='public',emailAccess='public',memberId} = props;
-        this.setState({phoneAccess,emailAccess,memberId});
+       return {phoneAccess,emailAccess,memberId};
     }
     componentWillReceiveProps(nextProps){
-        this.initializeState(nextProps);
+       this.setState(this.initializeState(nextProps));
     }
     handleSave = () =>  {
         const {popUp,emailAccess:propsEmailAccess,phoneAccess:propsPhoneAccess,onModalClose} = this.props;

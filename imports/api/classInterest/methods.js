@@ -143,7 +143,14 @@ Meteor.methods({
         let classTimesRequest = Meteor.call("classTimesRequest.getUserRecord",classTypeId) || {}
         let classTypeLocationRequest = Meteor.call("classTypeLocationRequest.getUserRecord",classTypeId) || {}
         let schoolMemberData = Meteor.call("schoolMemberDetails.getMemberData",{activeUserId:userId,schoolId}) || {};
-        return {classInterestData:classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData:schoolMemberData}
+        let isFirstTime = ClassInterest.findOne({schoolId,userId}) || {};
+        if(!isEmpty(isFirstTime)){
+          isFirstTime = false;
+        }
+        else{
+          isFirstTime = true;
+        }
+        return {classInterestData:classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData:schoolMemberData,isFirstTime}
       }
       return {};
     }catch(error){
