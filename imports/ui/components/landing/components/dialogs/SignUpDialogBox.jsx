@@ -149,8 +149,8 @@ const InputWrapper = styled.div`
 
 const ErrorWrapper = styled.span`
   color: red;
-  font-size: 20px;
-  font-family: cursive;
+  font-size: 17px;
+  font-family: ${helpers.specialFont};
 `;
 
 const LogoImg = styled.img`
@@ -305,6 +305,9 @@ class SignUpDialogBox extends Component {
                   onChange={this.handleTextChange.bind(this, "email")}
                   errorText={errorEmail && "Invalid Email Address"}
                 />
+                {this.props.errorText && (
+                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+              )}
               </InputWrapper>
 
               <FormControl
@@ -347,9 +350,7 @@ class SignUpDialogBox extends Component {
                 onClick={onSubmit}
                 noMarginBottom
               />
-               {this.props.errorText && (
-                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-              )}
+               
             </DialogActions>
             <DialogActions
               classes={{
