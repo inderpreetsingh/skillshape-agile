@@ -1,11 +1,9 @@
-import { get } from "lodash";
+import { get ,isEmpty} from "lodash";
 import { MuiThemeProvider } from "material-ui/styles";
 import React from "react";
 import styled from 'styled-components';
 import { browserHistory } from "react-router";
-import SetPasswordDialogBox from "/imports/ui/components/landing/components/dialogs/SetPasswordDialogBox";
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-// const theme = createMuiTheme({...material_ui_next_theme});
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
 import { withStyles } from "/imports/util";
@@ -43,18 +41,28 @@ class PublicLayout extends React.Component {
   getMainPanelRef() {
     return this.mainPanelRef;
   }
+  
+  componentWillMount() {
+    this.checkOnBoardingDialogBox(this.props);
+  }
 
-  componentWillReceiveProps(nextProps) {
-    //debugger;
-    // console.log("PublicLayout nextProps -->>",nextProps);
-    if (nextProps.currentUser) {
-      const passwordSetByUser = get(
-        nextProps,
-        "currentUser.profile.passwordSetByUser",
-        true
-      );
-      this.setState({
-        showSetPasswordDialogBox: !passwordSetByUser
+  checkOnBoardingDialogBox = (props) => {
+    const { currentUser } = props;
+    if (!isEmpty(currentUser)) {
+      const { roles = [] } = currentUser;
+      let isSchool = false;
+      roles.map((role) => {
+        if (role == 'School') {
+          isSchool = true;
+        }
+      })
+      Meteor.call("school.getMySchool", (err, res) => {
+        if (isSchool && isEmpty(res)) {
+          this.setState({ onBoardingDialogBox: true });
+        }
+        else {
+          this.setState({ onBoardingDialogBox: false });
+        }
       });
     }
   }
@@ -142,15 +150,6 @@ class PublicLayout extends React.Component {
             open={onBoardingDialogBox}
             onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
           />}
-          <SetPasswordDialogBox
-            open={this.state.showSetPasswordDialogBox}
-            onModalClose={() =>
-              this.setState({ showSetPasswordDialogBox: false })
-            }
-            onCompleteButtonClick={this.setPasswordDialogBoxSubmit}
-            errorText={this.state.errorMessage}
-            isLoading={this.state.isBusy}
-          />
           <MainPanel
             ref={ref => {
               this.mainPanelRef = ref;
