@@ -14,7 +14,7 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypePackages from './classTypePackages.jsx';
 import Button from 'material-ui/Button';
 import Events from "/imports/util/events";
-import {handleJoin} from "/imports/util";
+import {handleJoin,handleSignUpSubmit,handleLoginFacebook,handleLoginGoogle} from "/imports/util";
 import { PrivacySettings } from '/imports/ui/components/landing/components/dialogs/';
 import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
 import { get, isEmpty } from "lodash";
@@ -142,99 +142,6 @@ class ThinkingAboutAttending extends React.Component {
       errorText: null
     });
   };
-  handleSignUpSubmit = (payload, event) => {
-    event.preventDefault();
-    let obj = {};
-    if(!payload.name || !payload.email) {
-        obj.errorText = "* fields are mandatory";
-    }
-    else if(!payload.skillShapeTermsAndConditions){
-        obj.errorText = 'Please agree to Terms & Conditions.'
-    }
-    else if(!payload.captchaValue) {
-        obj.errorText = "You can't leave Captcha empty";
-    }
-    else {
-        obj.errorText = null;
-        obj.userData = {...this.state.userData, ...payload};
-     }
-     this.setState(obj);
-     if(obj.errorText == null){
-        this.setState({isBusy: true},()=>{
-            const { popUp } = this.props;
-        Meteor.call("user.createUser", {...obj.userData, signUpType: 'skillshape-signup'}, (err, res) => {
-            // console.log("user.createUser err res -->>",err,res)
-            let modalObj = {
-                open: false,
-                signUpDialogBox: false,
-                isBusy: false,
-            }
-            if(err) {
-                modalObj.errorText = err.reason || err.message;
-                modalObj.signUpDialogBox = true;
-                this.setState(modalObj)
-            }
-
-            if(res) {
-                this.setState(modalObj, ()=> {
-                    popUp.appear('success',{content:"Successfully registered, Please check your email."})
-                })
-            }
-        })
-        });
-        
-     }
-}
-handleLoginGoogle = () => {
-    let self = this;
-    Meteor.loginWithGoogle({}, function(err,result) {
-        let modalObj = {
-            open: false,
-            signUpDialogBox: false,
-            isBusy: false,
-        }
-        if(err) {
-            modalObj.errorText = err.reason || err.message;
-            modalObj.signUpDialogBox = true;
-        } else {
-            Meteor.call("user.onSocialSignUp", {...self.state.userData}, (err, res) => {
-                if(err) {
-                    modalObj.errorText = err.reason || err.message;
-                    modalObj.signUpDialogBox = true;
-                }
-            })
-        }
-        self.setState(modalObj)
-    });
-}
-handleLoginFacebook = () => {
-    let self = this;
-    Meteor.loginWithFacebook({
-        requestPermissions: ['user_friends', 'public_profile', 'email']
-    }, function(err, result) {
-
-        let modalObj = {
-            open: false,
-            signUpDialogBox: false,
-            isBusy: false,
-        }
-        if (err) {
-            modalObj.errorText = err.reason || err.message;
-            modalObj.signUpDialogBox = true;
-        } else {
-            Meteor.call("user.onSocialSignUp", { ...self.state.userData }, (err, res) => {
-                if (err) {
-                    modalObj.errorText = err.reason || err.message;
-                    modalObj.signUpDialogBox = true;
-                }
-            })
-        }
-        self.setState(modalObj)
-    });
-}
-
-
-
  
   unsetError = () => this.setState({ errorText: null });
 
@@ -275,19 +182,19 @@ handleLoginFacebook = () => {
                 {...memberData}
                 />
             }
-          {this.state.signUpDialogBox && (
-            <SignUpDialogBox
-              open={this.state.signUpDialogBox}
-              onModalClose={() => this.handleSignUpDialogBoxState(false)}
-              onSubmit={this.handleSignUpSubmit}
-              errorText={this.state.errorText}
-              unsetError={this.unsetError}
-              userName={this.state.userName}
-              userEmail={this.state.userEmail}
-              onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
-              onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
-              isBusy = {isBusy}
-            />
+            {this.state.signUpDialogBox && (
+              <SignUpDialogBox
+                open={this.state.signUpDialogBox}
+                onModalClose={() => this.handleSignUpDialogBoxState(false)}
+                onSubmit={(payload, event) => { handleSignUpSubmit.call(this, payload, event) }}
+                errorText={this.state.errorText}
+                unsetError={this.unsetError}
+                userName={this.state.userName}
+                userEmail={this.state.userEmail}
+                onSignUpWithGoogleButtonClick={() => { handleLoginGoogle.call(this) }}
+                onSignUpWithFacebookButtonClick={() => { handleLoginFacebook.call(this) }}
+                isBusy={isBusy}
+              />
           )}
           {isLoading && <ContainerLoader />}
           {classTypePackages && <ClassTypePackages

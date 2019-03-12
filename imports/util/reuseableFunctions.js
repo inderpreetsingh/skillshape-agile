@@ -51,3 +51,109 @@ export function unSavedChecker ()  {
     e.returnValue = message;
     return message;
   };
+
+  /* 
+  SignUp FLow Functions
+  */
+ export function handleSignUpSubmit (payload, event){
+    console.log('TCL: handleSignUpSubmit -> payload, event', payload, event)
+    event.preventDefault();
+    let obj = {};
+    const {password,confirmPassword} = payload;
+    if(!payload.name || !payload.email) {
+        obj.errorText = "* fields are mandatory";
+    }
+    else if(!password || !confirmPassword){
+        obj.errorText = 'Password is Required.';
+    }
+    else if(password.length < 6 || confirmPassword.length < 6){
+        obj.errorText = 'Password should be at least of length 6.';
+    }
+    else if(password != confirmPassword){
+        obj.errorText = 'Password not matched.';
+    }
+    else if(!payload.skillShapeTermsAndConditions){
+        obj.errorText = 'Please agree to Terms & Conditions.'
+    }
+    else if(!payload.captchaValue) {
+        obj.errorText = "You can't leave Captcha empty";
+    }
+    else {
+        obj.errorText = null;
+        obj.userData = {...this.state.userData, ...payload};
+     }
+     this.setState(obj);
+     if(obj.errorText == null){
+        this.setState({isBusy: true},()=>{
+            const { popUp } = this.props;
+        Meteor.call("user.createUser", {...obj.userData, signUpType: 'skillshape-signup'}, (err, res) => {
+            // console.log("user.createUser err res -->>",err,res)
+            let modalObj = {
+                open: false,
+                signUpDialogBox: false,
+                isBusy: false,
+            }
+            if(err) {
+                modalObj.errorText = err.reason || err.message;
+                modalObj.signUpDialogBox = true;
+                this.setState(modalObj)
+            }
+
+            if(res) {
+                this.setState(modalObj, ()=> {
+                    popUp.appear('success',{content:"Successfully registered, Please check your email."})
+                })
+            }
+        })
+        });
+        
+     }
+}
+
+export function handleLoginGoogle ()  {
+    let self = this;
+    Meteor.loginWithGoogle({}, function(err,result) {
+        let modalObj = {
+            open: false,
+            signUpDialogBox: false,
+            isBusy: false,
+        }
+        if(err) {
+            modalObj.errorText = err.reason || err.message;
+            modalObj.signUpDialogBox = true;
+        } else {
+            Meteor.call("user.onSocialSignUp", {...self.state.userData}, (err, res) => {
+                if(err) {
+                    modalObj.errorText = err.reason || err.message;
+                    modalObj.signUpDialogBox = true;
+                }
+            })
+        }
+        self.setState(modalObj)
+    });
+}
+export function handleLoginFacebook  ()  {
+    let self = this;
+    Meteor.loginWithFacebook({
+        requestPermissions: ['user_friends', 'public_profile', 'email']
+    }, function(err, result) {
+
+        let modalObj = {
+            open: false,
+            signUpDialogBox: false,
+            isBusy: false,
+        }
+        if (err) {
+            modalObj.errorText = err.reason || err.message;
+            modalObj.signUpDialogBox = true;
+        } else {
+            Meteor.call("user.onSocialSignUp", { ...self.state.userData }, (err, res) => {
+                if (err) {
+                    modalObj.errorText = err.reason || err.message;
+                    modalObj.signUpDialogBox = true;
+                }
+            })
+        }
+        self.setState(modalObj)
+    });
+}

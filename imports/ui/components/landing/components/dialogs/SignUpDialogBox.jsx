@@ -257,20 +257,7 @@ class SignUpDialogBox extends Component {
 
       />}
         <MuiThemeProvider theme={muiTheme}>
-          <form
-            onSubmit={
-              this.props.onSubmit &&
-              this.props.onSubmit.bind(this, {
-                name,
-                email,
-                captchaValue,
-                sendMeSkillShapeNotification,
-                skillShapeTermsAndConditions,
-                password,
-                confirmPassword
-              })
-            }
-          >
+          <form onSubmit={ (e)=>{onSubmit({ name, email, captchaValue, sendMeSkillShapeNotification, skillShapeTermsAndConditions, password, confirmPassword },e)} } >
             <DialogTitleContainer>
               <DialogTitleWrapper>
                 <LogoImg src={logoSrc} />
@@ -400,7 +387,6 @@ class SignUpDialogBox extends Component {
               <PrimaryButton
                 type="submit"
                 label="Sign Up"
-                onClick={onSubmit}
                 noMarginBottom
               />
                
