@@ -304,7 +304,7 @@ export const userRegistrationAndVerifyEmail = function (
             <br/>
                 ${verificationToken}
             <br/>
-                Your temporary password is  : ${passwd}
+                Your password is  : ${passwd}
             <br/>
             <br/><br/>Thanks, <br/><br/>${EmailSignature}`
   });
