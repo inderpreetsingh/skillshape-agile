@@ -55,8 +55,18 @@ class SideNav extends Component {
     handleSignUpSubmit = (payload, event) => {
         event.preventDefault();
         let obj = {};
+        const {password,confirmPassword} = payload;
         if(!payload.name || !payload.email) {
             obj.errorText = "* fields are mandatory";
+        }
+        else if(!password || !confirmPassword){
+            obj.errorText = 'Password is Required.';
+        }
+        else if(password.length < 6 || confirmPassword.length < 6){
+            obj.errorText = 'Password should be at least of length 6.';
+        }
+        else if(password != confirmPassword){
+            obj.errorText = 'Password not matched.';
         }
         else if(!payload.skillShapeTermsAndConditions){
             obj.errorText = 'Please agree to Terms & Conditions.'

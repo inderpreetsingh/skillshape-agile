@@ -225,8 +225,6 @@ class SignUpDialogBox extends Component {
       onSubmit,
       isBusy
     } = this.props;
-    console.log('TCL: SignUpDialogBox -> render -> isBusy', isBusy)
-
     const {
       emailOption,
       robotOption,
@@ -236,7 +234,11 @@ class SignUpDialogBox extends Component {
       captchaValue,
       sendMeSkillShapeNotification,
       skillShapeTermsAndConditions,
-      termsOfServiceDialogBox
+      termsOfServiceDialogBox,
+      password,
+      confirmPassword,
+      errorPassword,
+      errorConfirmPassword
     } = this.state;
 
     return (
@@ -263,7 +265,9 @@ class SignUpDialogBox extends Component {
                 email,
                 captchaValue,
                 sendMeSkillShapeNotification,
-                skillShapeTermsAndConditions
+                skillShapeTermsAndConditions,
+                password,
+                confirmPassword
               })
             }
           >
@@ -315,6 +319,24 @@ class SignUpDialogBox extends Component {
                   error={errorEmail}
                   onChange={this.handleTextChange.bind(this, "email")}
                   errorText={errorEmail && "Invalid Email Address"}
+                />
+                <IconInput
+                  type='password'
+                  labelText="Password *"
+                  value={password}
+                  iconName="lock_open"
+                  error={errorPassword}
+                  onChange={this.handleTextChange.bind(this, "password")}
+                  errorText={errorPassword && "Invalid Email Address"}
+                />
+                <IconInput
+                  type='password'
+                  labelText="Confirm Password *"
+                  value={confirmPassword}
+                  iconName="lock_open"
+                  error={errorConfirmPassword}
+                  onChange={this.handleTextChange.bind(this, "confirmPassword")}
+                  errorText={errorConfirmPassword && "Invalid Email Address"}
                 />
                 {this.props.errorText && (
                 <ErrorWrapper>{this.props.errorText}</ErrorWrapper>

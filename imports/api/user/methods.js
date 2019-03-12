@@ -15,14 +15,10 @@ Meteor.methods({
         sendMeSkillShapeNotification,
         signUpType,
         birthYear,
-        schoolName
+        schoolName,
+        password
     }) {
-		console.log('TCL: name, email, userType, sendMeSkillShapeNotification, signUpType, birthYear, schoolName', name, email, userType, sendMeSkillShapeNotification, signUpType, birthYear, schoolName)
         if (!isEmpty(name) && !isEmpty(email)) {
-            const password = generator.generate({
-                length: 10,
-                numbers: true
-            });
 /* 
 'Paul Steve Panakkal'.split(' ').slice(0, -1).join(' '); // returns "Paul Steve"
 'Paul Steve Panakkal'.split(' ').slice(-1).join(' '); // returns "Panakkal"
@@ -32,11 +28,11 @@ Meteor.methods({
             let finalName=name.split(' '); 
             const userObj = {
                 email: email,
-                password: password,
+                password,
                 profile: {
                     firstName: finalName[0],
                     lastName:finalName[1],
-                    passwordSetByUser: false,
+                    passwordSetByUser: true,
                     userType: accessType,
                     sendMeSkillShapeNotification: sendMeSkillShapeNotification
                 },
