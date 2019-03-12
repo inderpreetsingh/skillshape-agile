@@ -17,6 +17,7 @@ Meteor.methods({
         birthYear,
         schoolName
     }) {
+		console.log('TCL: name, email, userType, sendMeSkillShapeNotification, signUpType, birthYear, schoolName', name, email, userType, sendMeSkillShapeNotification, signUpType, birthYear, schoolName)
         if (!isEmpty(name) && !isEmpty(email)) {
             const password = generator.generate({
                 length: 10,

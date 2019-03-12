@@ -1,23 +1,16 @@
-import React, {Component, Fragment} from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import get from 'lodash/get';
-
-import SignUpDialogBox from './dialogs/SignUpDialogBox.jsx';
+import React, { Component, Fragment } from 'react';
 import MenuIconButton from './buttons/MenuIconButton.jsx';
+import SignUpDialogBox from './dialogs/SignUpDialogBox.jsx';
 import SideNavItems from './SideNavItems.jsx';
-import TermsOfServiceDialogBox from './dialogs/TermsOfServiceDialogBox.jsx';
-import EmailConfirmationDialogBox from './dialogs/EmailConfirmationDialogBox';
+import { withPopUp } from '/imports/util';
 import Events from '/imports/util/events';
-import { toastrModal } from '/imports/util';
+
 
 class SideNav extends Component {
 
     state = {
         open: false,
         signUpDialogBox: false,
-        termsOfServiceDialogBox: false,
-        emailConfirmationDialogBox: false,
         userData: {},
         userName: '',
         userEmail: '',
@@ -49,21 +42,12 @@ class SideNav extends Component {
         this.setState({signUpDialogBox: state, userData: { userType: userType}, userEmail: userEmail, userName: userName, errorText: null});
     }
     handleChangePasswordDialogBoxState = (state,message) => {
-        const { toastr } = this.props;
+        const { popUp } = this.props;
         if(message) {
-            toastr.success(`${message}`,"success")
+            popUp.appear('success',{content:`${message}`});
         }
         this.setState({changePasswordDialogBox: state});
     }
-
-    handleTermsOfServiceDialogBoxState = (state) => {
-        this.setState({termsOfServiceDialogBox: state});
-    }
-
-    handleEmailConfirmationDialogBoxState = (state) => {
-        this.setState({emailConfirmationDialogBox: state});
-    }
-
     toggleDrawerState = () => {
         this.setState({open: !this.state.open});
     }
@@ -73,44 +57,43 @@ class SideNav extends Component {
         let obj = {};
         if(!payload.name || !payload.email) {
             obj.errorText = "* fields are mandatory";
-        } else if(!payload.captchaValue) {
-            obj.errorText = "You can't leave Captcha empty";
-        } else {
-            obj.errorText = null;
-            obj.termsOfServiceDialogBox = true;
-            obj.userData = {...this.state.userData, ...payload};
         }
-        this.setState(obj);
-    }
-
-    handleServiceAgreementSubmit = () => {
-        this.setState({emailConfirmationDialogBox: true});
-    }
-
-    handleEmailConfirmationSubmit = () => {
-        this.setState({isBusy: true});
-        const { toastr } = this.props;
-        Meteor.call("user.createUser", {...this.state.userData, signUpType: 'skillshape-signup'}, (err, res) => {
-            // console.log("user.createUser err res -->>",err,res)
-            let modalObj = {
-                open: false,
-                signUpDialogBox: false,
-                termsOfServiceDialogBox: false,
-                emailConfirmationDialogBox: false,
-                isBusy: false,
-            }
-            if(err) {
-                modalObj.errorText = err.reason || err.message;
-                modalObj.signUpDialogBox = true;
-                this.setState(modalObj)
-            }
-
-            if(res) {
-                this.setState(modalObj, ()=> {
-                    toastr.success("Successfully registered, Please check your email.","success");
-                })
-            }
-        })
+        else if(!payload.skillShapeTermsAndConditions){
+            obj.errorText = 'Please agree to Terms & Conditions.'
+        }
+        else if(!payload.captchaValue) {
+            obj.errorText = "You can't leave Captcha empty";
+        }
+        else {
+            obj.errorText = null;
+            obj.userData = {...this.state.userData, ...payload};
+         }
+         this.setState(obj);
+         if(obj.errorText == null){
+            this.setState({isBusy: true},()=>{
+                const { popUp } = this.props;
+            Meteor.call("user.createUser", {...obj.userData, signUpType: 'skillshape-signup'}, (err, res) => {
+                // console.log("user.createUser err res -->>",err,res)
+                let modalObj = {
+                    open: false,
+                    signUpDialogBox: false,
+                    isBusy: false,
+                }
+                if(err) {
+                    modalObj.errorText = err.reason || err.message;
+                    modalObj.signUpDialogBox = true;
+                    this.setState(modalObj)
+                }
+    
+                if(res) {
+                    this.setState(modalObj, ()=> {
+                        popUp.appear('success',{content:"Successfully registered, Please check your email."})
+                    })
+                }
+            })
+            });
+            
+         }
     }
     handleLoginGoogle = () => {
         let self = this;
@@ -118,8 +101,6 @@ class SideNav extends Component {
             let modalObj = {
                 open: false,
                 signUpDialogBox: false,
-                termsOfServiceDialogBox: false,
-                emailConfirmationDialogBox: false,
                 isBusy: false,
             }
             if(err) {
@@ -145,8 +126,6 @@ class SideNav extends Component {
             let modalObj = {
                 open: false,
                 signUpDialogBox: false,
-                termsOfServiceDialogBox: false,
-                emailConfirmationDialogBox: false,
                 isBusy: false,
             }
             if (err) {
@@ -165,7 +144,7 @@ class SideNav extends Component {
     }
     render() {
         const { currentUser, classes, ...otherProps } = this.props;
-        // console.log("SideNav state -->>>",this.state);
+        const {isBusy} = this.state;
         return (
             <Fragment>
                 {!currentUser && this.state.signUpDialogBox &&
@@ -179,26 +158,7 @@ class SideNav extends Component {
                         userEmail={this.state.userEmail}
                         onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
                         onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
-
-                    />
-                }
-                {
-                    this.state.termsOfServiceDialogBox &&
-                    <TermsOfServiceDialogBox
-                        open={this.state.termsOfServiceDialogBox}
-                        onModalClose={() => this.handleTermsOfServiceDialogBoxState(false)}
-                        onAgreeButtonClick={this.handleServiceAgreementSubmit}
-                    />
-                }
-                {
-                    this.state.emailConfirmationDialogBox &&
-                    <EmailConfirmationDialogBox
-                        open={this.state.emailConfirmationDialogBox}
-                        schoolEmail={get(this.state, "userData.email")}
-                        onModalClose={() => this.handleEmailConfirmationDialogBoxState(false)}
-                        onDisAgreeButtonClick={() => this.handleEmailConfirmationDialogBoxState(false)}
-                        onAgreeButtonClick={this.handleEmailConfirmationSubmit}
-                        isLoading={this.state.isBusy}
+                        isBusy = {isBusy}
                     />
                 }
                 <MenuIconButton handleClick={this.toggleDrawerState} smallSize={this.props.smallSize}/>
@@ -216,4 +176,4 @@ class SideNav extends Component {
     }
 }
 
-export default toastrModal(SideNav);
+export default withPopUp(SideNav);

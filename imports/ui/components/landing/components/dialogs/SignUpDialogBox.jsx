@@ -19,11 +19,8 @@ import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 import config from "/imports/config";
 import { emailRegex } from "/imports/util";
-
-
-
-
-
+import { ContainerLoader } from '/imports/ui/loading/container';
+import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDetailDialogBox.jsx";
 
 const styles = {
   dialogPaper: {
@@ -86,7 +83,9 @@ const DialogTitleContainer = styled.div`
   margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
-
+const BlueColorText = styled.span`
+  color: blue;
+`;
 const DialogTitleWrapper = styled.h1`
   ${helpers.flexCenter};
   font-family: ${helpers.specialFont};
@@ -170,6 +169,7 @@ class SignUpDialogBox extends Component {
     name: this.props.userName,
     email: this.props.userEmail,
     sendMeSkillShapeNotification: true,
+    skillShapeTermsAndConditions:true,
     robotOption: false,
     errorEmail: false,
     captchaValue: null
@@ -222,8 +222,10 @@ class SignUpDialogBox extends Component {
       onSignUpButtonClick,
       onSignUpWithGoogleButtonClick,
       onSignUpWithFacebookButtonClick,
-      onSubmit
+      onSubmit,
+      isBusy
     } = this.props;
+    console.log('TCL: SignUpDialogBox -> render -> isBusy', isBusy)
 
     const {
       emailOption,
@@ -232,7 +234,9 @@ class SignUpDialogBox extends Component {
       email,
       errorEmail,
       captchaValue,
-      sendMeSkillShapeNotification
+      sendMeSkillShapeNotification,
+      skillShapeTermsAndConditions,
+      termsOfServiceDialogBox
     } = this.state;
 
     return (
@@ -244,6 +248,12 @@ class SignUpDialogBox extends Component {
         aria-labelledby="sign-up"
         classes={{ paper: classes.dialogPaper }}
       >
+      {isBusy && <ContainerLoader/>}
+      {termsOfServiceDialogBox && <TermsOfServiceDialogBox
+      open={termsOfServiceDialogBox}
+      onModalClose={()=>{this.setState({termsOfServiceDialogBox:false})}}
+
+      />}
         <MuiThemeProvider theme={muiTheme}>
           <form
             onSubmit={
@@ -252,7 +262,8 @@ class SignUpDialogBox extends Component {
                 name,
                 email,
                 captchaValue,
-                sendMeSkillShapeNotification
+                sendMeSkillShapeNotification,
+                skillShapeTermsAndConditions
               })
             }
           >
@@ -326,6 +337,26 @@ class SignUpDialogBox extends Component {
                       "sendMeSkillShapeNotification"
                     )}
                     label="I would like to recieve new, surveys, and updates via email about SkillShape and it's participating schools"
+                  />
+                </FormGroup>
+              </FormControl>
+
+               <FormControl
+                component="fieldset"
+                classes={{ root: classes.formControlRoot }}
+              >
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={skillShapeTermsAndConditions}
+                        value="skillShapeTermsAndConditions"
+                      />
+                    }
+                    onChange={this.handleCheckBoxChange(
+                      "skillShapeTermsAndConditions"
+                    )}
+                    label={<div>I agree to skillshape <BlueColorText onClick={()=>{this.setState({termsOfServiceDialogBox:true})}}>Terms & Conditions</BlueColorText>.</div>}
                   />
                 </FormGroup>
               </FormControl>

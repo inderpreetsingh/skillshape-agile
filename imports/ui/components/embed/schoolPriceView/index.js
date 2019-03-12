@@ -14,8 +14,6 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 import Events from "/imports/util/events";
 import LoginDialogBox from "/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx";
 import SignUpDialogBox from "/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx";
-import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDialogBox.jsx";
-import EmailConfirmationDialogBox from "/imports/ui/components/landing/components/dialogs/EmailConfirmationDialogBox";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
 import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 
@@ -201,46 +199,96 @@ class SchoolPriceView extends React.Component {
     }
   };
 
-  handleLoginGoogle = () => {
-    let self = this;
-    this.setState({ loading: true });
-    Meteor.loginWithGoogle({}, function (err, result) {
-      let modalObj = {
-        loginModal: false,
-        loading: false,
-        error: {}
-      };
-      if (err) {
-        modalObj.error.message = err.reason || err.message;
-        modalObj.loginModal = true;
-      }
-      self.setState(modalObj);
-    });
-  };
+  handleSignUpSubmit = (payload, event) => {
+    event.preventDefault();
+    let obj = {};
+    if(!payload.name || !payload.email) {
+        obj.errorText = "* fields are mandatory";
+    }
+    else if(!payload.skillShapeTermsAndConditions){
+        obj.errorText = 'Please agree to Terms & Conditions.'
+    }
+    else if(!payload.captchaValue) {
+        obj.errorText = "You can't leave Captcha empty";
+    }
+    else {
+        obj.errorText = null;
+        obj.userData = {...this.state.userData, ...payload};
+     }
+     this.setState(obj);
+     if(obj.errorText == null){
+        this.setState({isBusy: true},()=>{
+            const { popUp } = this.props;
+        Meteor.call("user.createUser", {...obj.userData, signUpType: 'skillshape-signup'}, (err, res) => {
+            // console.log("user.createUser err res -->>",err,res)
+            let modalObj = {
+                open: false,
+                signUpDialogBox: false,
+                isBusy: false,
+            }
+            if(err) {
+                modalObj.errorText = err.reason || err.message;
+                modalObj.signUpDialogBox = true;
+                this.setState(modalObj)
+            }
 
-  handleLoginFacebook = () => {
+            if(res) {
+                this.setState(modalObj, ()=> {
+                    popUp.appear('success',{content:"Successfully registered, Please check your email."})
+                })
+            }
+        })
+        });
+        
+     }
+}
+handleLoginGoogle = () => {
     let self = this;
-    this.setState({ loading: true });
-    Meteor.loginWithFacebook(
-      {
-        requestPermissions: ["user_friends", "public_profile", "email"]
-      },
-      function (err, result) {
+    Meteor.loginWithGoogle({}, function(err,result) {
         let modalObj = {
-          loginModal: false,
-          loading: false,
-          error: {}
-        };
-        if (err) {
-          modalObj.error.message = err.reason || err.message;
-          modalObj.loginModal = true;
+            open: false,
+            signUpDialogBox: false,
+            isBusy: false,
         }
-        self.setState(modalObj);
-      }
-    );
-  };
+        if(err) {
+            modalObj.errorText = err.reason || err.message;
+            modalObj.signUpDialogBox = true;
+        } else {
+            Meteor.call("user.onSocialSignUp", {...self.state.userData}, (err, res) => {
+                if(err) {
+                    modalObj.errorText = err.reason || err.message;
+                    modalObj.signUpDialogBox = true;
+                }
+            })
+        }
+        self.setState(modalObj)
+    });
+}
+handleLoginFacebook = () => {
+    let self = this;
+    Meteor.loginWithFacebook({
+        requestPermissions: ['user_friends', 'public_profile', 'email']
+    }, function(err, result) {
 
-  handleSignUpModal = () => { };
+        let modalObj = {
+            open: false,
+            signUpDialogBox: false,
+            isBusy: false,
+        }
+        if (err) {
+            modalObj.errorText = err.reason || err.message;
+            modalObj.signUpDialogBox = true;
+        } else {
+            Meteor.call("user.onSocialSignUp", { ...self.state.userData }, (err, res) => {
+                if (err) {
+                    modalObj.errorText = err.reason || err.message;
+                    modalObj.signUpDialogBox = true;
+                }
+            })
+        }
+        self.setState(modalObj)
+    });
+}
 
   reSendEmailVerificationLink = () => {
     this.setState({ loading: true });
@@ -278,63 +326,8 @@ class SchoolPriceView extends React.Component {
   };
   unsetError = () => this.setState({ errorText: null });
 
-  handleSignUpSubmit = (payload, event) => {
-    event.preventDefault();
-    let obj = {};
-    if (!payload.name || !payload.email) {
-      obj.errorText = "* fields are mandatory";
-    } else if (!payload.captchaValue) {
-      obj.errorText = "You can't leave Captcha empty";
-    } else {
-      obj.errorText = null;
-      obj.termsOfServiceDialogBox = true;
-      obj.userData = { ...this.state.userData, ...payload };
-    }
-    this.setState(obj);
-  };
 
-  handleServiceAgreementSubmit = () => {
-    this.setState({ emailConfirmationDialogBox: true });
-  };
 
-  handleEmailConfirmationSubmit = () => {
-    this.setState({ isBusy: true });
-    const { popUp } = this.props;
-    Meteor.call(
-      "user.createUser",
-      { ...this.state.userData, signUpType: "skillshape-signup" },
-      (err, res) => {
-        let modalObj = {
-          open: false,
-          signUpDialogBox: false,
-          termsOfServiceDialogBox: false,
-          emailConfirmationDialogBox: false,
-          isBusy: false
-        };
-        if (err) {
-          modalObj.errorText = err.reason || err.message;
-          modalObj.signUpDialogBox = true;
-          this.setState(modalObj);
-        }
-
-        if (res) {
-          this.setState(modalObj, () => {
-            popUp.appear("success", {
-              content: "Successfully registered, Please check your email."
-            });
-          });
-        }
-      }
-    );
-  };
-
-  handleTermsOfServiceDialogBoxState = state => {
-    this.setState({ termsOfServiceDialogBox: state });
-  };
-
-  handleEmailConfirmationDialogBoxState = state => {
-    this.setState({ emailConfirmationDialogBox: state });
-  };
 
   render() {
     const {
@@ -344,7 +337,7 @@ class SchoolPriceView extends React.Component {
       schoolId,
       currency
     } = this.props;
-
+    const { isBusy} = this.state;
     return (
       <div className="wrapper">
         {this.state && this.state.isLoading && <ContainerLoader />}
@@ -397,29 +390,7 @@ class SchoolPriceView extends React.Component {
             userEmail={this.state.userEmail}
             onSignUpWithGoogleButtonClick={this.handleLoginGoogle}
             onSignUpWithFacebookButtonClick={this.handleLoginFacebook}
-          />
-        )}
-
-        {this.state.emailConfirmationDialogBox && (
-          <EmailConfirmationDialogBox
-            open={this.state.emailConfirmationDialogBox}
-            schoolEmail={get(this.state, "userData.email")}
-            onModalClose={() =>
-              this.handleEmailConfirmationDialogBoxState(false)
-            }
-            onDisAgreeButtonClick={() =>
-              this.handleEmailConfirmationDialogBoxState(false)
-            }
-            onAgreeButtonClick={this.handleEmailConfirmationSubmit}
-            isLoading={this.state.isBusy}
-          />
-        )}
-
-        {this.state.termsOfServiceDialogBox && (
-          <TermsOfServiceDialogBox
-            open={this.state.termsOfServiceDialogBox}
-            onModalClose={() => this.handleTermsOfServiceDialogBoxState(false)}
-            onAgreeButtonClick={this.handleServiceAgreementSubmit}
+            isBusy = {isBusy}
           />
         )}
 
