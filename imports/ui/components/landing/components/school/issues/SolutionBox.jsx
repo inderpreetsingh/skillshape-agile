@@ -192,7 +192,6 @@ class SolutionBox extends Component {
 
 	render() {
 		const { props } = this;
-		console.log(props, 'SOLUTION BOX');
 		return (
 			<BoxWrapper firstBox={props.firstBox}>
 				{this.state.contactDialog && (

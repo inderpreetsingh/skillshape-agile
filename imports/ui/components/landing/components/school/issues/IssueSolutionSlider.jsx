@@ -124,7 +124,6 @@ class IssueSolutionSlider extends React.Component {
   render() {
     const { totalElements, selectedIndex } = this.state;
     const { data, cardBgColor } = this.props;
-    console.log(selectedIndex, 'SOLUTION SLIDER');
     return (<Wrapper>
       {totalElements > 0 && <SliderLeftArrow onClick={this.handleMoveLeft}> {"<"} </SliderLeftArrow>}
       <Container totalElements={totalElements} selectedIndex={selectedIndex}>
