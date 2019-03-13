@@ -6,7 +6,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { check } from 'meteor/check';
-import {isEmpty} from 'lodash';
+import {isEmpty,uniq} from 'lodash';
 import ClassTimesRequest from '/imports/api/classTimesRequest/fields.js';
 import ClassTypeLocationRequest from '/imports/api/classTypeLocationRequest/fields.js';
 import { dataURLToBlob } from "blob-util";
@@ -155,6 +155,23 @@ Meteor.methods({
       return {};
     }catch(error){
 			console.log('error in classInterest.getClassInterest', error)
+      throw new Meteor.Error(error);
+    }
+  },
+  "classInterest.getSchoolsIAttend":function(filter) {
+    try{
+      let schoolIds = [];
+     let results = ClassInterest.find(filter).fetch();
+     if(!isEmpty(results)){
+        schoolIds = results.map((obj)=>obj.schoolId);
+        schoolIds = uniq(schoolIds);
+        return School.find({_id:{$in:schoolIds}}).fetch();
+     }
+     else {
+       return [];
+     }
+    }catch(error){
+      console.log('error in classInterest.getSchoolsIAttend', error);
       throw new Meteor.Error(error);
     }
   }

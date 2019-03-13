@@ -13,6 +13,7 @@ import LoginButton from "./buttons/LoginButton.jsx";
 import { flexCenter, specialFont } from "./jss/helpers.js";
 import NestedNavItems from "./NestedNavItems";
 import SchoolSubMenu from "./schoolSubMenu";
+import SchoolsIAttend from './schoolsIAttend';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
 import { OnBoardingDialogBox } from '/imports/ui/components/landing/components/dialogs';
 import { checkSuperAdmin, logoutUser } from "/imports/util";
@@ -193,6 +194,14 @@ const LoginUserSideNav = props => {
         iconName="find_in_page"
         onClick={() => props.childItemOnClick("/classmates")}
       />
+      {!isEmpty(props.schoolsIAttend) && (
+        <SchoolsIAttend
+          data={props.schoolsIAttend}
+          classes={props.classes}
+          onClick={props.childItemOnClick}
+          currentUser={props.currentUser}
+        />
+      )}
       {!isEmpty(props.mySchool) && (
         <SchoolSubMenu
           data={props.mySchool}
@@ -202,14 +211,6 @@ const LoginUserSideNav = props => {
         />
       )}
 
-      <NestedNavItems
-        button
-        name="Classes Attending"
-        classes={props.classes}
-        iconName="account_balance"
-        childData={props.connectedSchool}
-        onClick={props.childItemOnClick}
-      />
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}
@@ -330,14 +331,12 @@ class SideNavItems extends React.Component {
   };
 
   loadMySchool = () => {
-    if (Meteor.userId()) {
+    const userId = Meteor.userId();
+    if (userId) {
       Meteor.call("school.getMySchool", null, false, (error, result) => {
-        if (error) {
-          // console.log("error", error);
-        }
-        if (result) {
-          {
-            const mySchool = result.map((school, index) => {
+        Meteor.call("classInterest.getSchoolsIAttend", { userId }, (err, res) => {
+          if (!err) {
+            const mySchool = result && result.map((school, index) => {
               return {
                 name: school.name,
                 link: `/schools/${school.slug}`,
@@ -347,9 +346,16 @@ class SideNavItems extends React.Component {
                 admins: school.admins
               };
             });
-            this.setState({ mySchool: mySchool });
+            const schoolsIAttend = res && res.map((school, index) => {
+              return {
+                name: school.name,
+                link: `/schools/${school.slug}`,
+                iconName: "school",
+              };
+            });
+            this.setState({ mySchool, schoolsIAttend });
           }
-        }
+        })
       });
     }
   };
@@ -386,6 +392,7 @@ class SideNavItems extends React.Component {
           {this.props.currentUser ? (
             <LoginUserSideNav
               mySchool={this.state.mySchool}
+              schoolsIAttend={this.state.schoolsIAttend}
               connectedSchool={this.state.connectedSchool}
               childItemOnClick={this.handleChildItemOnClick}
               handleSetState={this.handleSetState}
