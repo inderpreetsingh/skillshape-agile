@@ -62,7 +62,7 @@ Meteor.methods({
                 email,
                 schoolName
             );
-            return { user: user, password: password };
+            return { user: user, password: password,email };
         } else {
             throw new Meteor.Error("Cannot process due to lack of information");
         }

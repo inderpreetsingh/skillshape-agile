@@ -97,18 +97,22 @@ export function unSavedChecker ()  {
                 modalObj.errorText = err.reason || err.message;
                 modalObj.signUpDialogBox = true;
                 this.setState(modalObj)
-            }
+                 }
 
-            if(res) {
-                this.setState(modalObj, ()=> {
-                    popUp.appear('success',{content:"Successfully registered, Please check your email."})
-                })
-            }
-        })
-        });
-        
+                 if (res) {
+                     this.setState(modalObj, () => {
+                         popUp.appear('success', { content: "Successfully registered, Please check your email." })
+                     })
+                     const { email, password } = res;
+                     Meteor.loginWithPassword(email, password, (err, res) => {
+                     console.log('TCL: handleSignUpSubmit -> err, res', err, res)
+                     });
+                 }
+             })
+         });
+
      }
-}
+ }
 
 export function handleLoginGoogle ()  {
     let self = this;
