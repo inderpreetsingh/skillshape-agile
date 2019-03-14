@@ -3,21 +3,27 @@
     
   .body {
     background:#eee;
+    padding-bottom: 20px;
   }
+    
+    h1,h2,h3 {
+      font-weight: light;
+    }
+    
+    .wrapper {
+    font-family: 'Zilla Slab', serif;
+    color: #524444;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.5;
+    }
   
   .content {
     max-width: 300px;
     margin: auto;
+    font-style: italic;
   }
   
-  h3, h2, p{
-    font-family: 'Zilla Slab', serif;
-    color: #524444;
-    font-style: italic;
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 1.5;
-  }
   
   h2, h3 {
     text-align: center;
@@ -26,6 +32,7 @@
   .mini{
     font-size: 14px;
     font-style: italic;
+    margin-bottom: 0px;
   }
     
   a{
@@ -68,47 +75,65 @@
     background: #ccc;
     text-align: center;
   }
+    .links {
+      margin: 0;
+    }
   .links a{
     line-height: 30px;
     color: #666;
     text-decoration: underline;
   }
-  .header{
-    display:flex;
-    max-width:400px;
-    margin: auto;
-    height: 60px;
-  }
-  img {
-    width:20%;
-    margin-left: 40%
-  }
-  .heading {
-    font-family: 'Zilla Slab', serif; width: 300px; margin-left: -25%;
-    margin-top: -2.5%;
-  }
+  
+    .header {
+      width: 100%;
+    }
+    
+    .header-content {
+      width: 200px;
+      margin:auto;
+    }
+    
+    .logo-container {
+      width: 50px;
+      display: inline-block;
+    }
+    
+    .heading {
+      display: inline-block;
+      padding: 20px 0;
+    }
+    
+    .heading h1, .heading .two {
+      margin: 0;
+      line-height: 1;
+    }
+    
+    .logo-container img {
+      width: 100%;
+      vertical-align: bottom;
+    }
+  
   h1{
-    font-size: 20px;
+    font-size: 24px;
     color: #AC1616;
   }
   
     .two {
       font-size: 16px;
     }
-    
-  .heading p{
-    font-size: 16px;
-  }
+  
   
   </style>
   <div class="wrapper">
   <div class="header">
-    <div>
-      <img src="https://cdn.discordapp.com/attachments/544533857035223040/555277466629832724/logo.png" />
-    </div>
-    <div class="heading">
-      <h1>Skillshape</h1>
-      <p class="two">your path revealed</p>
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="https://cdn.discordapp.com/attachments/544533857035223040/555277466629832724/logo.png" />
+      </div>
+      <div class="heading">
+        <h1>Skillshape</h1>
+        <p class="two">your path revealed</p>
+      </div>
     </div>
   </div>
     <div class="body">
