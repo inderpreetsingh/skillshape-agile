@@ -3,16 +3,30 @@ import { get } from 'lodash';
 import styled from "styled-components";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 
-
+const H2 = styled.h2`
+  word-break: break-word;
+`;
+const H3 = styled.h3`
+  max-height: 267px;
+  overflow: scroll;
+  overflow-x: hidden;
+  @media screen and (max-width: 600px) {
+    max-height: 190px;
+  }
+`;
 const BackGround = styled.div`
-  background-image: url('https://s3-us-west-1.amazonaws.com/skillshape/schools/e537fa24-3624-4cf8-9765-59e4aed9d7e0.jpg');
+  background-color: dimgrey;
+  background-image: url("https://s3-us-west-1.amazonaws.com/skillshape/schools/e537fa24-3624-4cf8-9765-59e4aed9d7e0.jpg");
   height: -webkit-fill-available;
   padding: 10px;
   font-family: monospace;
-	font-size: large;
-	background-size: cover;
+  font-size: large;
+  background-size: cover;
 `;
-
+const Details = styled.details`
+  margin-top: 14px;
+  white-space: pre-line;
+`;
 export default class ErrorBoundary extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,18 +50,18 @@ export default class ErrorBoundary extends React.Component {
 			return (
 				<BackGround>
 					<center>
-						<h2>Oops Something Went Wrong at {url}</h2><br />
+						<H2>Oops Something Went Wrong at {url}</H2><br />
 						<h4>An Email is sent about this bug to technical team.</h4>
 							<PrimaryButton
 								onClick={() => document.location.reload(true)}
 								label="Refresh"
 								noMarginBottom
 							/>
-						<details style={{ whiteSpace: 'pre-wrap' }}>
-							<h3>	{error}
+						<Details>
+							<H3>	{error}
 								<br />
-								{errorInfo}</h3>
-						</details>
+								{errorInfo}</H3>
+						</Details>
 					</center>
 				</BackGround>);
 
