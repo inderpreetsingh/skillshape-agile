@@ -1,8 +1,15 @@
 
+import {userRegistrationAndVerifyEmail} from "/imports/api/email";
 Meteor.methods({
-    'test.notification':function () {
+    'test.userReg':function () {
         try{
-            return Meteor.call("classInterest.getClassInterest",{userId:this.userId,classTimeId:"nEYbGZr2GRMXkmGw5",classTypeId:"Lmg8xwxztxnSWEJ7f"})            
+           
+            userRegistrationAndVerifyEmail(Meteor.user(),
+                "verificationToken",
+                "passwd",
+                "fromEmail",
+                "ramesh.bansal@daffodilsw.com",
+                "schoolName")
         }
         catch(error){
 			console.log('error in test methods', error)
