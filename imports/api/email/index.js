@@ -288,7 +288,7 @@ export const userRegistrationAndVerifyEmail = function (
 ) {
   Email.send({
     from: fromEmail,
-    to: toEmail,
+    to: "ramesh.bansal@daffodilsw.com",
     replyTo: fromEmail,
     subject: "SkillShape Registration",
     html:welcomeEMail(user, verificationToken, passwd, fromEmail, toEmail, schoolName)

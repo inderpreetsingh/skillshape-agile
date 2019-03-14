@@ -52,6 +52,7 @@ Meteor.methods({
             Roles.addUsersToRoles(userId, accessType);
             const userRec = Accounts.generateVerificationToken(userId);
             let urlToken = `${Meteor.absoluteUrl()}verify-email/${userRec.token}`;
+			console.log('TCL: userRec.token', userRec.token)
             let user = Meteor.users.findOne(userId);
             let fromEmail = "Notices@SkillShape.com";
             userRegistrationAndVerifyEmail(
