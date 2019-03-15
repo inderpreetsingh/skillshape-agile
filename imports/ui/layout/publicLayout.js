@@ -8,7 +8,6 @@ import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
 import { withStyles } from "/imports/util";
 import { panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
-import {OnBoardingDialogBox} from '/imports/ui/components/landing/components/dialogs';
 
 const MainPanel = styled.div`
   position: relative;
@@ -40,31 +39,6 @@ class PublicLayout extends React.Component {
 
   getMainPanelRef() {
     return this.mainPanelRef;
-  }
-  
-  componentWillMount() {
-    this.checkOnBoardingDialogBox(this.props);
-  }
-
-  checkOnBoardingDialogBox = (props) => {
-    const { currentUser } = props;
-    if (!isEmpty(currentUser)) {
-      const { roles = [] } = currentUser;
-      let isSchool = false;
-      roles.map((role) => {
-        if (role == 'School') {
-          isSchool = true;
-        }
-      })
-      Meteor.call("school.getMySchool", (err, res) => {
-        if (isSchool && isEmpty(res)) {
-          this.setState({ onBoardingDialogBox: true });
-        }
-        else {
-          this.setState({ onBoardingDialogBox: false });
-        }
-      });
-    }
   }
 
   setPasswordDialogBoxSubmit = (payload, event) => {
@@ -123,7 +97,6 @@ class PublicLayout extends React.Component {
       previousLocationPathName,
       currentLocationPathName
     } = this.props;
-    const {onBoardingDialogBox} = this.state;
     let className = {
       mainClass: "wrapper perfectScroll main_wrapper",
       contentClass: "content",
@@ -146,10 +119,7 @@ class PublicLayout extends React.Component {
           <div>
             <TopSearchBar {...this.props} />
           </div>
-          {onBoardingDialogBox && <OnBoardingDialogBox
-            open={onBoardingDialogBox}
-            onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
-          />}
+         
           <MainPanel
             ref={ref => {
               this.mainPanelRef = ref;

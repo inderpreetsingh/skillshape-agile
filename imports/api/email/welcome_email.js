@@ -1,7 +1,6 @@
 import { getUserFullName } from "/imports/util/getUserData";
 
 export const welcomeEMail = (user, verificationToken, passwd, fromEmail, toEmail, schoolName) => {
-	console.log('TCL: welcomeEMail -> verificationToken', verificationToken)
   const userName = getUserFullName(user);
 
   return `<div class="wrapper" style="font-family: 'Zilla Slab', serif;color: #524444;font-weight: 300;font-size: 16px;line-height: 1.5;">
