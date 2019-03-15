@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import React,{Fragment} from 'react';
 import styled from 'styled-components';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { ContainerLoader } from '/imports/ui/loading/container';
 import {withPopUp} from '/imports/util';
+import { createContainer } from "meteor/react-meteor-data";
 import {confirmationDialog} from '/imports/util';
 import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import {isEmpty} from 'lodash';
-
+import { ContainerLoader } from '/imports/ui/loading/container';
+import School from "/imports/api/school/fields.js";
 class CompletePrompt extends React.Component {
     constructor(props) {
         super(props);
@@ -19,7 +20,6 @@ class CompletePrompt extends React.Component {
     GenerateNotificationContent = () =>{
         const {currentUser} = this.state;
         let itemLists = ['My Profile'];
-        console.log('TCL: CompletePrompt -> GenerateNotificationContent -> currentUser', currentUser)
         if(!isEmpty(currentUser)){
             const {roles=[] } = currentUser;
             let isSchool = false;
@@ -66,4 +66,18 @@ class CompletePrompt extends React.Component {
 CompletePrompt.propTypes = {
  
 }
-export default ((withPopUp(CompletePrompt)));
+
+export default createContainer(props => {
+    let completePromptSub = Meteor.subscribe("school.getUserCompletePromptData");
+    let usersData, schoolData;
+    if (completePromptSub && completePromptSub.ready()) {
+        usersData = Meteor.users.find();
+        schoolData = School.find();
+    }
+
+    return {
+        schoolData,
+        usersData
+    };
+}, (withPopUp(CompletePrompt)));
+

@@ -737,3 +737,19 @@ Meteor.publish("school.findSchoolByIds",function(schoolIds){
     check(schoolIds,Array);
     return School.find({_id:{$in:schoolIds}});
 })
+
+Meteor.publish("school.getUserCompletePromptData",function(slug,schoolId){
+    /* 
+    need to check school length and if length is one then get schools class types,times etc data
+    */
+    let userData,schoolData,classType,classTime,schoolLocation,pricesData;
+        userData = Meteor.users.find({_id:this.userId});
+        if(schoolId)
+        schoolData = School.find({_id:schoolId});
+        else
+        schoolData = School.find({ $or: [{ admins: { $in: [this.userId] } }, { superAdmin: this.userId }] });
+        if(schoolData.length == 1) {
+
+        }
+        return [userData,schoolData];
+})
