@@ -63,9 +63,16 @@ class SchoolView extends SchoolViewBase {
         this.setState({loadComplete:true})
       }
   };
- 
+  shouldComponentUpdate(nextProps){
+    if(this.props.schoolId != nextProps.schoolId){
+      return true;
+    }
+    return !nextProps.showLoading;
+  }
   render() {
-    
+    if(this.props.showLoading){
+      return <ContainerLoader />
+    }
     // if(this.props.route.name === 'SchoolViewDeveloping') {
     return SchoolViewNewRender.call(this, this.props, this.state);
     // }

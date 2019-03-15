@@ -254,10 +254,7 @@ export default class SchoolViewBase extends React.Component {
 		return true;
 	};
 
-	getPublishStatus = (isPublish) => {
-		if (isPublish) return true;
-		return false;
-	};
+	
 
 	handlePublishStatus = (schoolId, event) => {
 		const { popUp } = this.props;

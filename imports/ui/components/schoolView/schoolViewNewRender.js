@@ -173,17 +173,13 @@ export default function () {
     loadComplete
   } = this.state;
 
-  if (showLoading) {
-  }
+ 
 
-  if (isEmpty(schoolData)) {
+  if (isEmpty(schoolData) && !showLoading ) {
     return <Typography type="display2" gutterBottom align="center">
       School not found!!!
         </Typography>
   } else {
-    let isPublish = this.getPublishStatus(schoolData.isPublish)
-
-
     return (
       <DocumentTitle title={this.props.routeParams.slug}>
         <Wrapper className="content">
@@ -250,7 +246,7 @@ export default function () {
             <SchoolViewNewBanner
               schoolData={schoolData}
               schoolId={schoolId}
-              isPublish={isPublish}
+              isPublish={schoolData.isPublish}
               currentUser={currentUser}
               schoolLocation={schoolLocation}
               isEdit={false}
