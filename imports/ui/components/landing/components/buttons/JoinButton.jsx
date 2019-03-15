@@ -3,14 +3,12 @@ import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
 
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton.jsx';
-import SignUpTypeDialogBox from '/imports/ui/components/landing/components/dialogs/SignUpTypeDialogBox.jsx';
 
 class JoinButton extends Component {
 
 	constructor(props){
         super(props);
         this.state = {
-            joinModal: false,
         }
     }
 
@@ -21,7 +19,6 @@ class JoinButton extends Component {
     }
 
     render() {
-        const { joinModal } = this.state;
         const { fullWidth, currentUser,iconName } = this.props;
 
     	return(
@@ -34,15 +31,7 @@ class JoinButton extends Component {
                     label={this.props.label}
                     icon={currentUser ? false : true}
                     iconName={'assignment_ind'}
-                    onClick={()=> this.setState({joinModal: true})}
-                />
-            }
-            {
-                joinModal &&
-                <SignUpTypeDialogBox
-                    open={joinModal}
-                    onModalClose={() => this.setState({joinModal: false})}
-                    openSignUpModal={this.openSignUpModal}
+                    onClick={()=> this.openSignUpModal('Student')}
                 />
             }
             </Fragment>

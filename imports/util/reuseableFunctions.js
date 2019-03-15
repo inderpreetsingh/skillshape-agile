@@ -56,7 +56,6 @@ export function unSavedChecker ()  {
   SignUp FLow Functions
   */
  export function handleSignUpSubmit (payload, event){
-    console.log('TCL: handleSignUpSubmit -> payload, event', payload, event)
     event.preventDefault();
     let obj = {};
     const {password,confirmPassword} = payload;
