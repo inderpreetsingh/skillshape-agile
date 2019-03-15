@@ -17,10 +17,10 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassType from "/imports/api/classType/fields";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import MyCalender from "/imports/ui/components/users/myCalender";
-import { cutString, formStyles,withPopUp,confirmationDialog } from "/imports/util";
+import { cutString, formStyles, withPopUp, confirmationDialog } from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { Loading } from '/imports/ui/loading';
-
+import { get, isEmpty, uniq } from 'lodash';
 const styles = formStyles();
 
 const inputStyle = {
@@ -59,7 +59,7 @@ class ManageMyCalendar extends React.Component {
       manageAll: true,
       attendAll: true,
       schollAll: true,
-      isLoading:false,
+      isLoading: false,
       schoolClassTime: true,
       managedClassTimes: [],
       schoolClassTimes: [],
@@ -120,7 +120,7 @@ class ManageMyCalendar extends React.Component {
         manageClassTimeIds,
         schoolClassTimeId
       } = this.state.filter;
-      this.setState({isLoading:true})
+      this.setState({ isLoading: true })
       let myClassTimes = [];
       let managedClassTime = [];
       let myClassTimesIds = classInterestData.map(data => data.classTimeId);
@@ -169,7 +169,7 @@ class ManageMyCalendar extends React.Component {
       }
       classTimesIds = _.union(classTimesIds, myClassTimesIds);
       this.setState({
-        isLoading:false,
+        isLoading: false,
         classTimesData,
         myClassTimes,
         managedClassTimes: managedClassTime,
@@ -509,11 +509,11 @@ class ManageMyCalendar extends React.Component {
     });
     return value[0] + ": " + Time;
   };
- shouldComponentUpdate(nextProps,nextState){
-   if(nextState.isLoading || nextProps.containerLoad)
-     return false
-     return true;;
- }
+  //  shouldComponentUpdate(nextProps,nextState){
+  //    if(nextState.isLoading || nextProps.containerLoad)
+  //      return false
+  //      return true;;
+  //  }
   render() {
     // const { schoolClassTimes } = this.props;
     const { classes, classInterestData } = this.props;
@@ -530,9 +530,9 @@ class ManageMyCalendar extends React.Component {
       classTypeForInterests,
       isLoading
     } = this.state;
-    const {containerLoad} =this.props;
-    if(isLoading || containerLoad){
-      return <Loading/>
+    const { containerLoad } = this.props;
+    if (isLoading || containerLoad) {
+      return <Loading />
     }
     console.count('manageCalendarRenderCount 3')
     return (
@@ -968,55 +968,30 @@ class ManageMyCalendar extends React.Component {
 }
 
 export default createContainer(props => {
-  let classTimesData = [];
-  const { classCalendar, schoolCalendar } = props;
-  const currentClassTypeData = props.classTypeData;
-  let schoolId = props.schoolId || (props.schoolData && props.schoolData._id);
+  const { currentUser = Meteor.user(), schoolId = null } = props;
+  let classInterestSub, classInterestData = [], classTimesData = [], classTypeData = [], managedClassTimes = [];
+  let schoolClassTimes = [], schoolClassTypesData = [], managedClassTypeData = [], classTypeForInterests = [];
   let containerLoad = true;
-  if (classCalendar && currentClassTypeData) {
-    classTimesData = ClassTimes.find({ classTypeId: currentClassTypeData._id }).fetch();
-  } else if (schoolCalendar && schoolId) {
-    classTimesData = ClassTimes.find({ schoolId }).fetch();
-  }
-  else {
-    classTimesData = ClassTimes.find({}).fetch();
-  }
-  let classTypeIds = classTimesData.map(item => item.classTypeId);
-  let classTimeSub = Meteor.subscribe("classTime.getclassType", {
-    classTypeIds
-  });
-  if(classTimeSub && classTimeSub.ready()){
-    containerLoad = false;
-  }
-  let classTypeData = ClassType.find({ _id: { $in: classTypeIds } }).fetch();
-
-  let managedClassTimes = [];
-  let managedClassTypeData = [];
-  // Class Times that are managed by current user.
-  if (props.currentUser) {
-    let currentUser = props.currentUser;
-    let adminUserSchoolIds =
-      currentUser && currentUser.profile && currentUser.profile.schoolId;
-    if (adminUserSchoolIds) {
-      let mangedClassJson = { schoolId: { $in: adminUserSchoolIds } };
+  classInterestSub = Meteor.subscribe("classInterest.getClassInterest");
+  if (classInterestSub && classInterestSub.ready()) {
+    classInterestData = ClassInterest.find({}).fetch();
+    let classInterestClassTypeIds = classInterestData.map((obj) => obj.classTypeId);
+    let schoolsIManage = get(currentUser, 'profile.schoolId', []);
+    let filter = { $or: [{ schoolId: { $in: schoolsIManage } }, { _id: { $in: classInterestClassTypeIds } }] };
+    let classTypesSub = Meteor.subscribe("classType.getClassTypesByFilter", filter);
+    let classTimesSub = Meteor.subscribe("classTime.getClassTimesTypeByFilter", filter);
+    if (classTypesSub && classTimesSub && classTypesSub.ready() && classTimesSub.ready()) {
+      classTypeData = ClassType.find().fetch();
+      classTimesData = ClassTimes.find().fetch();
+      let mangedClassJson = { schoolId: { $in: schoolsIManage } };
       managedClassTimes = ClassTimes.find(mangedClassJson).fetch();
       managedClassTypeData = ClassType.find(mangedClassJson).fetch();
+      schoolClassTimes = ClassTimes.find({ schoolId }).fetch();
+      schoolClassTypesData = ClassType.find({ schoolId }).fetch();
+      classTypeForInterests = ClassType.find({ _id: { $in: classInterestClassTypeIds } }).fetch();
+      containerLoad = false;
     }
   }
-  // Class Times of current School.
-  let schoolClassTimes = [];
-  let schoolClassTypesData = [];
-  if (schoolId) {
-    schoolClassTimes = ClassTimes.find({ schoolId: schoolId }).fetch();
-    schoolClassTypesData = ClassType.find({ schoolId: schoolId }).fetch();
-  }
-  const classInterestData = ClassInterest.find({}).fetch();
-  let classInterestClassIds = classInterestData.map(item => {
-    return item.classTypeId;
-  });
-  let classTypeForInterests = ClassType.find({
-    _id: { $in: classInterestClassIds }
-  }).fetch();
   return {
     ...props,
     classTimesData,

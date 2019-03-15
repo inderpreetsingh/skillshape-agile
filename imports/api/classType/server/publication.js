@@ -18,6 +18,11 @@ Meteor.publish("classType.getclassType", function ({ schoolId }) {
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
+Meteor.publish("classType.getClassTypesByFilter", function (filter) {
+  let cursor = ClassType.find(filter);
+  return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
+});
+
 Meteor.publish('classType.getClassTypeWithIds', function ({ classTypeIds }) {
   const cursor = ClassType.find({ _id: { $in: classTypeIds } });
   // let data = ClassType.publishJoinedCursors(cursor,{ reactive: true }, this);
