@@ -160,3 +160,30 @@ export function handleLoginFacebook  ()  {
         self.setState(modalObj)
     });
 }
+/* 
+listenOnUrlChange going to listen on url change and 
+whenever url going to change it will call callback
+*/
+export const listenOnUrlChange = (callBack) => {
+    /* These are the modifications: */
+    history.pushState = (f => function pushState() {
+        var ret = f.apply(this, arguments);
+        window.dispatchEvent(new Event('pushState'));
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+    })(history.pushState);
+
+    history.replaceState = (f => function replaceState() {
+        var ret = f.apply(this, arguments);
+        window.dispatchEvent(new Event('replaceState'));
+        window.dispatchEvent(new Event('locationchange'));
+        return ret;
+    })(history.replaceState);
+
+    window.addEventListener('popstate', () => {
+        window.dispatchEvent(new Event('locationchange'))
+    });
+    window.addEventListener('locationchange', function () {
+        callBack();
+    })
+}

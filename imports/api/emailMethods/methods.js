@@ -1,7 +1,6 @@
 
 import { check } from 'meteor/check';
-import { get, isEmpty,cloneDeep,isArray,compact } from 'lodash';
-import { sendEmail } from "/imports/api/email";
+import { errorBoundaryEmail, sendEmail } from "/imports/api/email";
 
 Meteor.methods({
   "emailMethods.sendEmail": function (data) {
@@ -13,5 +12,8 @@ Meteor.methods({
       console.log('​error in emailMethods.sendEmail', error)
       throw new Meteor.Error(error);
     }
-  }
+  },
+  'emailMethods.errorBoundary':({error,errorInfo,url})=>{
+    errorBoundaryEmail({error,errorInfo,url});
+}
 });
