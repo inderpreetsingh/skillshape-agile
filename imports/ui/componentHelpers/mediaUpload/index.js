@@ -1,27 +1,24 @@
-import React from "react";
 import { filter, isEmpty } from "lodash";
-import FileUpload from "material-ui-icons/FileUpload";
-import CloseIcon from 'material-ui-icons/Close';
-import Link from "material-ui-icons/Link";
 import EditIcon from "material-ui-icons/Edit";
+import FileUpload from "material-ui-icons/FileUpload";
+import Link from "material-ui-icons/Link";
 import Videocam from "material-ui-icons/Videocam";
-import BottomNavigation, { BottomNavigationButton } from "material-ui/BottomNavigation";
 import Button from "material-ui/Button";
-import Card, { CardActions, CardContent } from "material-ui/Card";
+import Card, { CardContent } from "material-ui/Card";
 import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
+import IconButton from "material-ui/IconButton";
 import Input, { InputAdornment } from "material-ui/Input";
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { withStyles } from "material-ui/styles";
 import PropTypes from "prop-types";
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import SkillshapePopover from '/imports/ui/components/landing/components/popovers/SkillshapePopover.jsx';
-import IconButton from "material-ui/IconButton";
+import React from "react";
 import { findDOMNode } from "react-dom";
 import ProgressiveImage from "react-progressive-image";
 import styled from "styled-components";
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import SkillshapePopover from '/imports/ui/components/landing/components/popovers/SkillshapePopover.jsx';
 
 const ProfilePic = styled.div`
-  transition: background-image 1s linear !important;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -31,11 +28,6 @@ const ProfilePic = styled.div`
   width: 100%;
 `;
 
-const ProfileWrapper = styled.div`
-  width: 100%;
-  position: relative;
-  margin-right: ${helpers.rhythmDiv}px;
-`;
 
 const Wrapper = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
@@ -76,7 +68,6 @@ const styles = theme => {
       minHeight: 195,
       justifyContent: "center",
       backgroundSize: "auto",
-      transition: "all 1s linear !important",
     },
     button: {
       position: "absolute",
@@ -86,7 +77,6 @@ const styles = theme => {
       // color: '#fff'
     },
     image: {
-      transition: "all 1s linear !important",
       verticalAlign: "middle",
       width: "100%"
     },
