@@ -63,7 +63,21 @@ class MyProfile extends React.Component {
   }
   componentDidMount() {
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
-    this.initialzeUserProfileForm(this.props.currentUser);
+    this.getCurrentUserDataFromServer(this.props);
+  }
+  getCurrentUserDataFromServer = (props) =>{
+    const {currentUser,params:{id}} = props;
+    this.setState({isLoading:true});
+    if (currentUser && id) {
+      Meteor.call("user.getUserDataFromId",id,(err,res)=>{
+        if(res){
+          this.initializeUserProfileForm(res);
+        }
+        else{
+          this.setState({isLoading:false});
+        }
+      })
+    }
   }
   componentDidUpdate(){
     window.onbeforeunload = null;
@@ -76,12 +90,10 @@ class MyProfile extends React.Component {
     window.onbeforeunload = null;
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.currentUser) {
-      this.initialzeUserProfileForm(nextProps.currentUser);
-    }
+    this.getCurrentUserDataFromServer(nextProps);
   }
 
-  initialzeUserProfileForm = currentUser => {
+  initializeUserProfileForm = currentUser => {
     if (currentUser) {
       this.setState({
         firstName: currentUser.profile.firstName || currentUser.profile.name || "",
@@ -94,15 +106,23 @@ class MyProfile extends React.Component {
         currency: currentUser.profile.currency || "",
         about: currentUser.profile.about || "",
         refresh_token: get(currentUser, 'refresh_token', null),
-        isSaved:true
+        isSaved:true,
+        isLoading:false,
+        currentUser
       });
     }
   };
 
   validateUser = () => {
-    const { currentUser } = this.props;
+    const { currentUser:{_id,roles=[]} } = this.props;
+    let isAccessAllowed = false;
+    roles.map((role)=>{
+      if(role == 'School' || role == 'Superadmin'){
+        isAccessAllowed = true;
+      }
+    })
     const paramId = get(this.props, "params.id", null);
-    if (currentUser && currentUser._id === paramId) return true;
+    if (_id === paramId || isAccessAllowed ) return true;
     return false;
   };
 
@@ -129,7 +149,7 @@ class MyProfile extends React.Component {
   };
   clearAllEvents = () => {
     this.setState({ isBusy: true }, () => {
-      let docId = get(this.props.currentUser, '_id', Meteor.userId());
+      let docId = get(this.state.currentUser, '_id', Meteor.userId());
       let doc = { refresh_token: null, googleCalendarId: null };
       Meteor.call("calendar.clearAllEvents", { doc, docId }, (err, res) => {
         if (err) {
@@ -161,7 +181,7 @@ class MyProfile extends React.Component {
     confirmationDialog(data);
   }
   removeGoogleSync = () => {
-    let docId = get(this.props.currentUser, '_id', Meteor.userId());
+    let docId = get(this.state.currentUser, '_id', Meteor.userId());
     let doc = { refresh_token: null, googleCalendarId: null };
     this.setState({ isBusy: true }, () => {
       Meteor.call("user.editUser", { doc, docId }, (err, res) => {
@@ -305,12 +325,15 @@ class MyProfile extends React.Component {
   };
 
   editUserCall = userData => {
-    const { currentUser, popUp } = this.props;
+    const {  popUp } = this.props;
+    const {currentUser} = this.state;
     Meteor.call(
       "user.editUser",
       { doc: userData, docId: currentUser._id },
       (error, result) => {
+				console.log('TCL: result', result)
         let state = { isBusy: false ,isSaved:true};
+        console.log('TCL: error', error)
         if (error) {
           state.errorText = error.reason || error.message;
           const data = {

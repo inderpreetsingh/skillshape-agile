@@ -5,7 +5,7 @@ import { get, isEmpty, remove } from 'lodash';
 import styled from "styled-components";
 import { withStyles } from 'material-ui/styles';
 
-import { cutString } from '/imports/util';
+import { cutString,redirectToThisUrl } from '/imports/util';
 import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { Capitalize, SubHeading, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
@@ -16,6 +16,10 @@ import { addInstructorImgSrc } from "/imports/ui/components/landing/site-setting
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
 const menuOptions = [
+  {
+    name: "Teacher Profile",
+    value: "teacher_profile"
+  },
   {
     name: "Remove Teacher",
     value: "remove_teacher"
@@ -254,7 +258,7 @@ const Member = props => {
 
   }
   handleMenuItemClick = (option) => {
-    let { popUp } = props;
+    let { popUp ,_id} = props;
     let operation = get(option, 'value', null);
     if (operation == 'remove_teacher') {
       popUp.appear("inform", {
@@ -274,6 +278,10 @@ const Member = props => {
         )
       }, true);
       ;
+    }
+    else if(operation == 'teacher_profile' && _id){
+      const url = `/profile/${_id}`;
+      redirectToThisUrl(url);
     }
   }
 

@@ -117,7 +117,7 @@ Meteor.methods({
         if (this.userId === docId) {
             return Meteor.users.update({ _id: docId }, { $set: doc });
         } else {
-            return new Meteor.Error("Permission Denied!!");
+            throw new Meteor.Error("Permission Denied!!");
         }
     },
     "user.sendVerificationEmailLink": function(email) {
@@ -201,6 +201,9 @@ Meteor.methods({
         })
         let studentsData = studentsListMaker(usersData,classData,purchaseData)
         return studentsData
+       },
+       'user.getUserDataFromId':function(_id){
+           return Meteor.users.findOne({_id})
        }
 });
 studentsListMaker = (studentsData, classData, purchaseData) => {

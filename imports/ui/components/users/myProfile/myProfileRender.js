@@ -55,7 +55,7 @@ const GridWrapper = styled.div`
 `;
 
 export default function () {
-  let { currentUser, classes, isUserSubsReady } = this.props;
+  let {  classes, isUserSubsReady } = this.props;
   let {
     firstName,
     nickame,
@@ -66,15 +66,17 @@ export default function () {
     email,
     about,
     refresh_token,
-    changePasswordDialogBox
+    changePasswordDialogBox,
+    currentUser,
+    isLoading
   } = this.state;
   let userType = Meteor.user();
-  if (!isUserSubsReady) return <Loading />;
+  if (isLoading) return <Loading />;
 
-  if (!currentUser) {
+  if (!currentUser && !isLoading) {
     return (
       <Typography type="display2" gutterBottom align="center">
-        User not found!!!
+        User Not Found!!!
       </Typography>
     );
   }
