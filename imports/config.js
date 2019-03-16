@@ -3,7 +3,7 @@ export default (config = Object.freeze({
   defaultSchoolImage: "/images/new-logo.png",
   defaultSchoolLogo: "/images/new-logo.png",
   defaultProfilePic: '/images/Avatar-Unisex.png',
-  defaultProfilePicOptimized:'/images/Avatar-Unisex-optimized.png',
+  defaultProfilePicOptimized:'/images/defaultProfile.png',
   blurImage: '/images/blur.jpg',
   fromEmailForPurchasePackage: "Notices@SkillShape.com",
   fromEmailForJoiningClass: "Notices@SkillShape.com",

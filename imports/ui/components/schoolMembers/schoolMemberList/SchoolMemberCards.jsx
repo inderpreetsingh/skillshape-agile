@@ -99,7 +99,7 @@ const getNormalizedMembersData = (props) => {
                     // }
                     verifyImageURL(pic, res => {
                         if (!res) {
-                            pic = config.defaultProfilePic;
+                            pic = config.defaultProfilePicOptimized;
                         }
                     });
 

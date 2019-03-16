@@ -63,7 +63,7 @@ export default function (props) {
 												}
 												verifyImageURL(pic, (res) => {
 													if (!res) {
-														pic = config.defaultProfilePic;
+														pic = config.defaultProfilePicOptimized;
 													}
 												});
 												return (

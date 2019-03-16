@@ -79,7 +79,7 @@ export default function () {
     );
   }
   const pic = currentUser.profile && currentUser.profile.medium ? currentUser.profile.medium :
-    currentUser.profile && currentUser.profile.pic ? currentUser.profile.pic : config.defaultProfilePic;
+    currentUser.profile && currentUser.profile.pic ? currentUser.profile.pic : config.defaultProfilePicOptimized;
   if (this.validateUser()) {
     return (
       <DocumentTitle title={this.props.route.name}>

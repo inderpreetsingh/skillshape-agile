@@ -411,7 +411,7 @@ class SchoolMemberInfo extends Component {
 			if (res) {
 				this.setState({ bgImg: memberInfo.pic });
 			} else {
-				this.setState({ bgImg: config.defaultProfilePic });
+				this.setState({ bgImg: config.defaultProfilePicOptimized });
 			}
 		});
 	};
@@ -422,7 +422,7 @@ class SchoolMemberInfo extends Component {
 			if (res) {
 				this.setState({ bgImg: memberInfo.pic });
 			} else {
-				this.setState({ bgImg: config.defaultProfilePic });
+				this.setState({ bgImg: config.defaultProfilePicOptimized });
 			}
 		});
 	};
