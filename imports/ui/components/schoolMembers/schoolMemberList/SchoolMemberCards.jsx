@@ -114,7 +114,7 @@ const getNormalizedMembersData = (props) => {
                                             borderRadius: '50%',
                                             bgSize: 'cover',
                                             width: 75,
-                                            height: 75,
+                                            height: 72,
                                             noMarginRight: true,
                                             noMarginBottom: true
                                         }}

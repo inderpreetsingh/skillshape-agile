@@ -23,9 +23,10 @@ const imageExistsConfig = {
 const ImageContainer = styled.div`
   ${helpers.coverBg};
   flex-shrink: 0;
+  background-color: rgba(0, 0, 0, 0.12);
   position: ${props => props.position || 'static'};  
   width: ${props => props.width || 100}px;
-  height: ${props => props.height || 100}px;
+  height: ${props => props.height || 96}px;
   margin-right: ${props => props.marginRight || helpers.rhythmDiv * 2}px;
   margin-bottom: ${ helpers.rhythmDiv}px;
   background-position: ${props => props.bgPosition || '50% 50%'};

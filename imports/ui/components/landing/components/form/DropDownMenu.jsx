@@ -16,7 +16,6 @@ const styles = {
     fontSize: helpers.baseFontSize,
     color: "rgb(0, 0, 0) !important",
     backgroundColor:'rgb(255, 255, 255) !important',
-    border: "1px solid #4caf50"
   },
   icon: {
     height: 24,
