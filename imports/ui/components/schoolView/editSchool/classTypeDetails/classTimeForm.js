@@ -1,52 +1,37 @@
-/* 
-1.ADD LOCATION Field in the class time form.
-2.Get list of location for location fiedls.
-3.Show list of rooms according to the selected location in the lfield.
-4.Change in the database of class time.
-5. Related changes in the class time popup in the calendar.
-*/
-import React, { Fragment } from "react";
-import { get, isEmpty, remove, flatten, includes } from 'lodash';
-import { createContainer } from 'meteor/react-meteor-data';
-import styled from "styled-components";
-import { withStyles } from "material-ui/styles";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
-import Button from "material-ui/Button";
-
-import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
-import Select from "material-ui/Select";
+import { flatten, get, includes, isEmpty, remove } from 'lodash';
 import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
 import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import ResponsiveTabs from "/imports/util/responsiveTabs";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import config from "/imports/config";
-// import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
-import { WeekDaysRow } from "./weekDaysRow";
+import Select from "material-ui/Select";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
+import { createContainer } from 'meteor/react-meteor-data';
+import React, { Fragment } from "react";
+import styled from "styled-components";
 import { OneTimeRow } from "./oneTimeRow";
+import { WeekDaysRow } from "./weekDaysRow";
 import "/imports/api/sLocation/methods";
-
-import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx'
+import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
-import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
-import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
 import InstructorList from '/imports/ui/components/landing/components/classDetails/membersList/presentational/MembersList.jsx';
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
-
-import { withPopUp } from '/imports/util';
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents";
+import PackageAttachment from '/imports/ui/components/landing/components/dialogs/PackageAttachement.jsx';
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents";
+import LocationForm from '/imports/ui/components/schoolView/editSchool/locationDetails/locationForm';
+import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { withPopUp ,confirmationDialog,unSavedChecker,} from '/imports/util';
+import ResponsiveTabs from "/imports/util/responsiveTabs";
+
+
+
+
 
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -132,36 +117,15 @@ const styles = theme => {
     }
   };
 };
-/*
-1.closed field in the collection.(Done)
-2.Default value of closed checkbox.(Done)
-3.Only shown in case of series.(Done)
-4.storing in the state and then in collection.(Done)
-5.Retrieving the default value.(Done)
-6.Join class button will be set to closed class if class started.
-7.Popup with some text.
-*/
 const formId = "classTimeForm";
 class ClassTimeForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initializeFields();
   }
-
-  componentDidMount = () => {
-    console.info("MOUNTED");
-  }
-
-  componentDidUpdate = () => {
-    console.info("RE RENDERED....");
-  }
-
-  componentWillUnmount = () => {
-    console.info("COMPONENT WILL UNMOUNT....");
-  }
-
   initializeFields = () => {
-    const { data, locationData, parentData, instructorsData } = this.props;
+    const { data, locationData, parentData, instructorsData,handleIsSavedState } = this.props;
+    handleIsSavedState(true);
     let state = {
       roomData: [],
       roomId: "",
@@ -177,7 +141,7 @@ class ClassTimeForm extends React.Component {
       showRoomForm: false,
       locId: '',
       instructors: [],
-      instructorsData: instructorsData
+      instructorsData: instructorsData,
     };
 
 
@@ -194,7 +158,6 @@ class ClassTimeForm extends React.Component {
       } else if (data.scheduleType === "OnGoing") {
         state.tabValue = 2;
       }
-
       state.startDate = data.startDate;
       state.startTime = data.startTime;
       state.endDate = data.endDate;
@@ -203,7 +166,6 @@ class ClassTimeForm extends React.Component {
       state.locationId = data.locationId || '';
       state.closed = data.closed;
       state.instructors = get(data, 'instructors', []);
-
     }
 
     if (!state.locationId && !state.roomId) {
@@ -237,11 +199,14 @@ class ClassTimeForm extends React.Component {
     this.setState({ noOfRow: this.state.noOfRow + data });
   }
   handleChangeDate = (fieldName, date) => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState(false);
     this.setState({ [fieldName]: new Date(date) });
   };
 
   handleLocAndRoom = (key, event) => {
-
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState(false);
     if (event.target.value === 'add_new_location') {
       this.handleAddNewLocation();
       return;
@@ -424,8 +389,9 @@ class ClassTimeForm extends React.Component {
     }
     this.setState({ instructors, addInstructorDialogBoxState: false });
   }
+  
   render() {
-    const { fullScreen, data, classes, schoolId, parentKey, parentData, locationData, popUp, instructorsData } = this.props;
+    const { fullScreen, data, classes, schoolId, parentKey, parentData, locationData, popUp, instructorsData,handleIsSavedState } = this.props;
     const { roomId, locationId, roomData, addInstructorDialogBoxState } = this.state;
 
     // let styleForBox = this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2 ? { border: '2px solid', padding: '7px', marginBottom: "2px", backgroundColor: "lightgray" } : {};
@@ -435,7 +401,8 @@ class ClassTimeForm extends React.Component {
         <Dialog
           open={this.props.open}
           aria-labelledby="form-dialog-title"
-          fullScreen={fullScreen}
+          fullScreen={false}
+          onClose={()=>{unSavedChecker.call(this)}}
         >
           <DialogTitle id="form-dialog-title">Add Class Times</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
@@ -498,6 +465,7 @@ class ClassTimeForm extends React.Component {
                       label="Class Time Name"
                       type="text"
                       fullWidth
+                      onChange={()=>{handleIsSavedState(false)}}
                       className={classes.textField}
                     />
 
@@ -516,6 +484,7 @@ class ClassTimeForm extends React.Component {
                       fullWidth
                       multiline
                       className={classes.textField}
+                      onChange={()=>{handleIsSavedState(false)}}
                       inputProps={{ maxLength: 200 }}
                     />
                     <FormControl className={classes.formControl} fullWidth margin="dense">
@@ -626,6 +595,7 @@ class ClassTimeForm extends React.Component {
                           saveClassTimes={this.saveClassTimes}
                           handleNoOfRow={this.handleNoOfRow}
                           locationData={locationData}
+                          handleIsSavedState={()=>{handleIsSavedState(false)}}
                         />
                       </div>
                     )}
@@ -637,6 +607,7 @@ class ClassTimeForm extends React.Component {
                           roomData={this.state.roomData}
                           saveClassTimes={this.saveClassTimes}
                           locationData={locationData}
+                          handleIsSavedState={()=>{handleIsSavedState(false)}}
                         />
                       </div>
                     )}
@@ -681,7 +652,10 @@ class ClassTimeForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={() => this.props.onClose()}
+                onClick={()=>{
+                  handleIsSavedState(true);
+                  this.props.onClose();
+                }}
                 label="Cancel"
                 className={classes.cancel}
               />

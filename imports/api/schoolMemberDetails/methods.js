@@ -1,5 +1,5 @@
 import SchoolMemberDetails from "./fields";
-import {get,isArray,isEmpty} from "lodash";
+import {get,isArray,isEmpty,uniq,flattenDeep} from "lodash";
 import { sendEmailToStudentForClaimAsMember } from "/imports/api/email";
 import School from "/imports/api/school/fields.js";
 import { check } from 'meteor/check';
@@ -136,42 +136,55 @@ Meteor.methods({
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
     check(memberData,Object);
-    let filter = {
-      schoolId: memberData.schoolId,
-      activeUserId: memberData.activeUserId
-    }
-    if(memberData.from=="classes"){
-      filter.classTypeId= memberData.classTypeId;
-      let record = SchoolMemberDetails.findOne(filter);
-      if(!record) SchoolMemberDetails.insert(memberData) ;
-      return;
-    }
-    let userData = SchoolMemberDetails.findOne(filter);
-    if (userData) {
-      if (memberData && memberData.packageDetails) {
-        let packageDetails = userData.packageDetails || {};
-        memberData.packageDetails = {
-          ...packageDetails,
-          ...memberData.packageDetails
-        };
-        SchoolMemberDetails.update(
-          {
-            schoolId: memberData.schoolId,
-            activeUserId: memberData.activeUserId
-          },
-          { $set: { ...memberData } }
-        );
-        return userData._id;
+    const {activeUserId,schoolId,classTypeIds,classTypeId} = memberData;
+    memberData.addedOn = new Date();
+    // First time new member added.
+    if(!classTypeId){
+      let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};
+      if(!isEmpty(data)){
+        const {_id} = data;
+        data.classTypeIds.push(memberData.classTypeIds) 
+        data.classTypeIds = uniq(flattenDeep(data.classTypeIds))
+        return SchoolMemberDetails.update({_id},{$set:data});
       }
-    } else {
-      return SchoolMemberDetails.insert(memberData);
+      else{
+        return SchoolMemberDetails.insert(memberData);
+      }
     }
+    // member going to in the future need to add class type ids in existing records
+    else if(classTypeId){
+      let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};
+      if(!isEmpty(data)){
+        data.classTypeIds.push(classTypeId);
+        data.classTypeIds = uniq(data.classTypeIds);
+        const {_id} = data;
+        return SchoolMemberDetails.update({_id},{$set:data});
+      }
+      else {
+        memberData.classTypeIds = [classTypeId];
+        return SchoolMemberDetails.insert(memberData);
+      }
+    }
+    
   },
   "schoolMemberDetails.getNotes":function(filter){
     let result  = SchoolMemberDetails.findOne(filter);
-     return {notes:get(result,'adminNotes',''),smdId:result._id};
+     return {notes:get(result,'adminNotes',''),smdId:get(result,"_id","")};
   },
   "schoolMemberDetails.getMemberData":function(filter){
     return SchoolMemberDetails.findOne(filter);
+  },
+  "schoolMemberDetails.emailAccessEdit":function(doc_id,doc){
+    try{
+      return SchoolMemberDetails.update(doc_id,{$set:doc});
+    }catch(error){
+			console.log('error in schoolMemberDetails.emailAccessEdit', error)
+      throw new Meteor.Error(error);
+    }
+  },
+  "schoolMemberDetails.removeStudentFromSchool":function(filter){
+    if(filter){
+      SchoolMemberDetails.remove(filter);
+    }
   }
 });

@@ -140,12 +140,12 @@ const ClaimSchoolRender = function (props) {
 		<NonListingWrapper>
 			<TextWrapper>
 				Check to see if any of these are your school. The filters can help you search! If you find your school,
-				press the <b>claim</b> button. To create a new listing, click the New Listing button!
+				press the <b>claim</b> button. To create a new school, click the Add New School button!
 			</TextWrapper>
 
 			<ListingButton
 				onClick={props.onStartNewListingButtonClick}
-				label={'New Listing'}
+				label={'Add New School'}
 				iconName={'add_circle_outline'}
 			/>
 		</NonListingWrapper>

@@ -6,31 +6,24 @@ import groupBy from 'lodash/groupBy';
 import includes from 'lodash/includes';
 import isEmpty from "lodash/isEmpty";
 import remove from 'lodash/remove';
-import MenuIcon from "material-ui-icons/Menu";
-import AppBar from "material-ui/AppBar";
-import Button from "material-ui/Button";
 import Checkbox from "material-ui/Checkbox";
 import Drawer from "material-ui/Drawer";
 import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
-import Hidden from "material-ui/Hidden";
-import IconButton from "material-ui/IconButton";
 import Input, { InputLabel } from "material-ui/Input";
-import List from "material-ui/List";
 import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
 import { withStyles } from "material-ui/styles";
 import TextField from "material-ui/TextField";
-import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import { createContainer } from "meteor/react-meteor-data";
 import React, { Fragment, lazy, Suspense } from "react";
+import ReactResizeDetector from 'react-resize-detector';
+import { CSSTransition } from 'react-transition-group';
 import Multiselect from "react-widgets/lib/Multiselect";
 import styled from "styled-components";
 import SchoolMemberFilter from "../filter";
-import { packageCoverProvider } from '/imports/util';
-const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
-//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo/SchoolMemberInfoRender"));
+//const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
 import ClassPricing from "/imports/api/classPricing/fields";
 import ClassSubscription from "/imports/api/classSubscription/fields";
 import ClassType from "/imports/api/classType/fields";
@@ -42,24 +35,68 @@ import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import MemberDialogBox from "/imports/ui/components/landing/components/dialogs/MemberDetails.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ToggleVisibilityTablet } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import SchoolMemberMedia from "/imports/ui/components/schoolMembers/mediaDetails";
-const SchoolMemberListItems = lazy(() => import("/imports/ui/components/schoolMembers/schoolMemberList/index.js"));
-const SchoolAdminListItems = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/schoolMemberListRender.js'));
+import { Loading } from '/imports/ui/loading';
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import MDSpinner from "react-md-spinner";
+import { packageCoverProvider } from '/imports/util';
+
+const SchoolMemberInfo = lazy(() => import("../schoolMemberInfo"));
+const SchoolAdminsList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/SchoolMemberCards.jsx'));
+const SchoolMembersList = lazy(() => import('/imports/ui/components/schoolMembers/schoolMemberList/'));
 
 const drawerWidth = 400;
 
-const DrawerWrapper = styled.div`
+const Drawers = styled.div`
   max-width: ${drawerWidth}px;
+  height: ${props => props.height}px;
   width: 100%;
+  overflow: auto;
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    height: auto;
+    width: auto;
+  }
+`;
+
+const FixedDrawer = styled.div`
+  max-width: ${drawerWidth}px;
+  height: ${props => props.height}px;
+  width: 100%;
+  display: 'block';
+  background: ${helpers.panelColor};
+  boxShadow: none;
+  overflow: auto;
+  padding: ${helpers.rhythmDiv}px;
+  
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    width: auto;
+  }
 `;
 
 const SchoolMemberWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 0%;
 `;
 
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+  background-color: ${helpers.panelColor};
+`;
+
+const SplitScreenWrapper = styled.div`
+  display: flex;
+  transition: all .5s linear;
+`;
+
+const MembersScreenWrapper = SplitScreenWrapper.extend`
+  flex-direction: column;
+`;
 
 const style = {
   w211: {
@@ -82,31 +119,28 @@ const styles = theme => ({
     display: "flex",
     width: "100%"
   },
-  appBar: {
-    position: "absolute",
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
-  navIconHide: {
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  },
+  // appBar: {
+  //   position: "absolute",
+  //   marginLeft: drawerWidth,
+  //   [theme.breakpoints.up("md")]: {
+  //     display: "none"
+  //   }
+  // },
   toolbar: theme.mixins.toolbar,
+  drawerRoot: {
+    position: 'absolute',
+  },
   drawerPaper: {
-    [theme.breakpoints.up("md")]: {
-      position: "relative"
+    maxWidth: `${drawerWidth}px`,
+    display: 'block',
+    [`@media screen and ($max-width: ${helpers.tablet}px)`]: {
+      position: "relative",
     },
-    [theme.breakpoints.down("sm")]: {
-      width: `${drawerWidth}px !important`
-    },
+    background: helpers.panelColor,
     boxShadow: "none !important",
     // height: "100vh",
     overflow: "auto",
-    padding: "0px !important",
-    paddingLeft: "16px !important",
+    padding: helpers.rhythmDiv,
     overflowX: "hidden !important"
   },
   content: {
@@ -139,9 +173,6 @@ const styles = theme => ({
     border: "solid 3px #dddd",
     paddingTop: "0px !important"
   },
-  btnBackGround: {
-    background: `${helpers.action}`
-  }
 });
 
 const ErrorWrapper = styled.span`
@@ -155,6 +186,7 @@ class DashBoardView extends React.Component {
     startDate: new Date(),
     selectedClassTypes: null,
     memberInfo: {},
+    membersViewHeight: null,
     classTypesData: [],
     error: "",
     birthYear: new Date().getFullYear() - 28,
@@ -162,12 +194,32 @@ class DashBoardView extends React.Component {
       classTypeIds: [],
       memberName: ""
     },
+    slidingDrawerState: false,
     studentWithoutEmail: false,
     mobileOpen: true,
     joinSkillShape: false,
     to: null,
     userName: null
   };
+
+  componentWillUnmount = () => {
+    window.removeEventListener('resize', this.handleSlidingDrawerState);
+  }
+
+  componentDidMount = (nextProps, nextState) => {
+    this.handleSlidingDrawerState();
+    window.addEventListener('resize', this.handleSlidingDrawerState);
+  }
+
+  // componentDidUpdate = () => {
+  //   const elem = this.schoolMemberWrapper;
+  //   debugger;
+  //   if (elem && elem.getBoundingClientRect) {
+  //     const height = this._getElementHeight(elem);
+  //     // console.log(height, elem.getBoundingClientRect().height, elem.offsetHeight, ".............");
+  //     this.setoffsetHeight
+  //   }
+  // }
 
   /*Just empty `memberInfo` from state when another `members` submenu is clicked from `School` menu.
     so that right panel gets removed from UI*/
@@ -212,9 +264,37 @@ class DashBoardView extends React.Component {
     }
   }
 
+  _getElementHeight = (elem) => {
+    return elem && elem.getBoundingClientRect && elem.offsetHeight;
+  }
+
+  handleSlidingDrawerState = () => {
+    if (window.innerWidth <= helpers.tablet) {
+      if (!this.state.slidingDrawerState)
+        this.setState(state => ({ ...state, slidingDrawerState: true }));
+    } else {
+      if (this.state.slidingDrawerState)
+        this.setState(state => ({ ...state, slidingDrawerState: false }));
+    }
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
+
+  setMembersViewDimensions = (height) => {
+    // debugger;
+    if (height && this.state.membersViewHeight !== height) {
+      this.setState(state => {
+        return {
+          ...state,
+          membersViewHeight: height
+        }
+      });
+    }
+
+    return;
+  }
 
   renderStudentAddModal = () => {
     const { isAdmin, view } = this.props;
@@ -407,7 +487,7 @@ class DashBoardView extends React.Component {
     payload.signUpType = "member-signup"
     payload.sendMeSkillShapeNotification = true;
     payload.schoolName = schoolName;
-    console.log("​isAdmin", isAdmin)
+    // console.log("​isAdmin", isAdmin)
     if (!isAdmin) {
 
       let state = {
@@ -544,21 +624,29 @@ class DashBoardView extends React.Component {
     const { isAdmin, schoolData, adminsData, purchaseByUserId, view } = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
+    let emailAccess = "public";
+    let phoneAccess = 'public';
     let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
     if (view == 'classmates') {
       memberInfo = SchoolMemberDetails.findOne(memberId);
       profile = memberInfo.profile.profile;
       email = memberInfo.profile.emails[0].address;
       _id = memberInfo.activeUserId;
+      emailAccess = memberInfo.emailAccess;
+      phoneAccess = memberInfo.phoneAccess;
+
     }
     else {
       memberInfo = adminsData.find(ele => ele._id == memberId);
-      profile = memberInfo.profile;
-      email = memberInfo.emails[0].address;
-      _id = memberInfo._id;
+      if (memberInfo) {
+        profile = memberInfo.profile;
+        email = memberInfo.emails[0].address;
+        _id = memberInfo._id;
+
+      }
     }
     superAdmin = superAdminId == _id ? true : false;
-    pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePic;
+    pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePicOptimized;
     // memberInfo = this.state.memberInfo
     let subscriptionList = packageCoverProvider(get(purchaseByUserId, _id, []));
     this.handleDrawerToggle();
@@ -569,6 +657,8 @@ class DashBoardView extends React.Component {
         name: profile.name,
         phone: profile.phone,
         email: email,
+        phoneAccess,
+        emailAccess,
         activeUserId: get(memberInfo, 'activeUserId', _id),
         schoolId: schoolId,
         adminNotes: memberInfo.adminNotes,
@@ -654,8 +744,13 @@ class DashBoardView extends React.Component {
   //     this.refs.SchoolMemberFilter.setClassTypeData(data);
   // }
 
-  handleDrawerToggle = () => {
+  handleDrawerToggle = (e) => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
+    // if (window.innerWidth <= helpers.tablet) {
+    // } else {
+    //   e.preventDefault();
+    //   return;
+    // }
   };
   // Return Dash view from here
   joinSkillShape = () => {
@@ -671,12 +766,19 @@ class DashBoardView extends React.Component {
       }
     })
   }
+
+  handleElementResize = (width, height) => {
+    // debugger;
+    console.info(width, height, 'resize .......');
+    this.setMembersViewDimensions(height);
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     return !nextProps.isLoading;
   }
   render() {
     const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, isAdmin, adminsData, superAdminId, isLoading, view } = this.props;
-    const { renderStudentModal, memberInfo, joinSkillShape } = this.state;
+    const { renderStudentModal, memberInfo, joinSkillShape, slidingDrawerState } = this.state;
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
       schoolMemberListFilters.schoolId =
@@ -697,70 +799,57 @@ class DashBoardView extends React.Component {
         </Typography>
       );
     }
+    const isMemberSelected = !isEmpty(this.state.memberInfo);
 
     const drawer = (
       <div>
-        <List>
-          <SchoolMemberFilter
-            stickyPosition={this.state.sticky}
-            ref="SchoolMemberFilter"
-            handleClassTypeDataChange={this.handleClassTypeDataChange}
-            handleMemberNameChange={this.handleMemberNameChange}
-            classTypeData={classTypeData}
-            filters={filters}
-            isAdmin={isAdmin}
-            view={view}
+        <SchoolMemberFilter
+          stickyPosition={this.state.sticky}
+          ref="SchoolMemberFilter"
+          handleClassTypeDataChange={this.handleClassTypeDataChange}
+          handleMemberNameChange={this.handleMemberNameChange}
+          classTypeData={classTypeData}
+          filters={filters}
+          isAdmin={isAdmin}
+          cardsView={isMemberSelected ? 'list' : 'grid'}
+          view={view}
+        />
+        {slug && (
+          <PrimaryButton
+            className={classes.btnBackGround}
+            onClick={() => this.setState({ renderStudentModal: true })}
+            label={view == 'admin' ? "Add New Admin" : "Add New Student"}
           />
-          {slug && (
-            <Grid
-              item
-              sm={12}
-              xs={12}
-              md={12}
-              style={{
-                display: "flex",
-                flexDirection: "row-reverse",
-                padding: "16px"
-              }}
-            >
-              <Button
-                raised
-                className={classes.btnBackGround}
-                color="primary"
-                onClick={() => this.setState({ renderStudentModal: true })}
-              >
-                {view == 'admin' ? "Add New Admin" : "Add New Student"}
-              </Button>
-            </Grid>
-          )}
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-            {view == 'admin' && !_.isEmpty(adminsData) ?
-              <SchoolAdminListItems
-                collectionData={adminsData}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                isAdmin={isAdmin}
-                superAdminId={superAdminId}
-                view={view}
-              /> :
-              <SchoolMemberListItems
-                filters={schoolMemberListFilters}
-                handleMemberDetailsToRightPanel={
-                  this.handleMemberDetailsToRightPanel
-                }
-                view={view}
-                isAdmin={isAdmin}
-              />}
-          </Suspense>
-        </List>
+        )}
+        <Suspense fallback={<Loading />}>
+          {view == 'admin' && !_.isEmpty(adminsData) ?
+            <SchoolAdminsList
+              cardsView={isMemberSelected ? 'list' : 'grid'}
+              listView
+              collectionData={adminsData}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              isAdmin={isAdmin}
+              superAdminId={superAdminId}
+              view={view}
+            /> :
+            <SchoolMembersList
+              cardsView={isMemberSelected ? 'list' : 'grid'}
+              listView
+              filters={schoolMemberListFilters}
+              handleMemberDetailsToRightPanel={
+                this.handleMemberDetailsToRightPanel
+              }
+              view={view}
+              isAdmin={isAdmin}
+            />}
+        </Suspense>
       </div>
     );
 
-
-
     return (
-      <Grid container className={classes.root}>
+      <Wrapper>
         {joinSkillShape && (
           <ConfirmationModal
             open={joinSkillShape}
@@ -781,21 +870,14 @@ class DashBoardView extends React.Component {
             onClose={() => this.setState({ showConfirmationModal: false })}
           />
         )}
-        <AppBar className={classes.appBar}>
+        {/*<AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
+            
             <Typography variant="title" color="inherit" noWrap>
 
             </Typography>
           </Toolbar>
-        </AppBar>
+        </AppBar>*/}
         {!isEmpty(schoolData) && (
           <div>
             <form noValidate autoComplete="off">
@@ -814,7 +896,7 @@ class DashBoardView extends React.Component {
             </form>
           </div>
         )}
-        <Grid
+        {/*<Grid
           item
           md={4}
           style={{ paddingRight: "0px" }}
@@ -849,7 +931,7 @@ class DashBoardView extends React.Component {
           className={classes.rightPanel}
           style={{ overflow: "auto", overflowX: "hidden" }}
         >
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
+          <Suspense fallback={<Loading/>}>
             {!isEmpty(memberInfo) && (
               <Fragment>
                 <SchoolMemberInfo
@@ -870,36 +952,49 @@ class DashBoardView extends React.Component {
               </Fragment>
             )}
           </Suspense>
-        </Grid>
+        </Grid> */}
 
-        {/*<DrawerWrapper>
-          <Fragment>
-          <Hidden mdUp>
-            <Drawer
-              variant="temporary"
-              anchor={theme.direction === "rtl" ? "right" : "left"}
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-              style={{ position: "absolute" }}
-              classes={{
-                paper: classes.drawerPaper
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          <Hidden smDown>
-            <div variant="permanent" open className={classes.drawerPaper}>
-              {drawer}
-            </div>
-          </Hidden>
-          </Fragment>    
-          </DrawerWrapper>
-        
-          <SchoolMemberWrapper>    
-          <Suspense fallback={<center><MDSpinner size={50} /></center>}>
-            {!isEmpty(memberInfo) && (
+        <CSSTransition
+          in={isMemberSelected}
+          timeout={{
+            enter: 600,
+            exit: 400
+          }}
+          classNames="fade"
+          unmountOnExit
+        >
+          <SplitScreenWrapper>
+            <Drawers height={this.state.membersViewHeight}>
               <Fragment>
+                <ToggleVisibilityTablet>
+                  {slidingDrawerState && <Drawer
+                    variant="temporary"
+                    anchor={theme.direction === "rtl" ? "right" : "left"}
+                    open={this.state.mobileOpen}
+
+                    onClose={this.handleDrawerToggle}
+                    className={classes.drawerRoot}
+                    classes={{
+                      paper: classes.drawerPaper
+                    }}
+                  >
+                    {drawer}
+                  </Drawer>}
+                </ToggleVisibilityTablet>
+
+                <ToggleVisibilityTablet show>
+                  <FixedDrawer variant="permanent">
+                    {drawer}
+                  </FixedDrawer>
+                </ToggleVisibilityTablet>
+              </Fragment>
+            </Drawers>
+
+
+            <SchoolMemberWrapper
+              id="school-member-wrapper"
+            >
+              <Suspense fallback={<Loading />}>
                 <SchoolMemberInfo
                   selectedSchoolData={find(schoolData, { _id: memberInfo.schoolId })}
                   memberInfo={memberInfo}
@@ -907,19 +1002,73 @@ class DashBoardView extends React.Component {
                   saveAdminNotesInMembers={this.saveAdminNotesInMembers}
                   disabled={slug ? false : true}
                   view={view}
+                  cardsView={isMemberSelected ? 'list' : 'grid'}
                   classTypeData={get(this.props, "classTypeData", [])}
                   handleMemberDetailsToRightPanel={
                     this.handleMemberDetailsToRightPanel
                   }
+                  handleDrawerToggle={this.handleDrawerToggle}
                   isAdmin={isAdmin}
                   notClassmatePage={get(this.props.location, 'pathname', null) != "/classmates" ? true : false}
                 />
                 {this.renderSchoolMedia(schoolData, memberInfo, slug)}
-              </Fragment>
-            )}
+              </Suspense>
+
+              <ReactResizeDetector
+                handleWidth
+                handleHeight
+                querySelector={"#school-member-wrapper"}
+                onResize={this.handleElementResize} />
+            </SchoolMemberWrapper>
+
+          </SplitScreenWrapper>
+        </CSSTransition>
+
+
+        <CSSTransition
+          in={!isMemberSelected}
+          timeout={{
+            enter: 600,
+            exit: 400
+          }}
+          classNames="fade"
+          unmountOnExit
+        >
+          <Suspense fallback={<Loading />}>
+            <MembersScreenWrapper>
+              <SchoolMemberFilter
+                stickyPosition={this.state.sticky}
+                ref="SchoolMemberFilter"
+                handleClassTypeDataChange={this.handleClassTypeDataChange}
+                handleMemberNameChange={this.handleMemberNameChange}
+                classTypeData={classTypeData}
+                filters={filters}
+                isAdmin={isAdmin}
+                cardsView={isMemberSelected ? 'list' : 'grid'}
+                view={view}
+              />
+              {view == 'admin' && !_.isEmpty(adminsData) ?
+                <SchoolAdminsList
+                  collectionData={adminsData}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  isAdmin={isAdmin}
+                  superAdminId={superAdminId}
+                  view={view}
+                /> :
+                <SchoolMembersList
+                  filters={schoolMemberListFilters}
+                  handleMemberDetailsToRightPanel={
+                    this.handleMemberDetailsToRightPanel
+                  }
+                  view={view}
+                  isAdmin={isAdmin}
+                />}
+            </MembersScreenWrapper>
           </Suspense>
-                </SchoolMemberWrapper> */}
-      </Grid >
+        </CSSTransition>
+      </Wrapper>
     );
   }
 }

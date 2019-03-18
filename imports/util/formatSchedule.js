@@ -1,10 +1,13 @@
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
-
-export const formatTime = (startTime) => {
-	if (startTime) {
-		return moment(startTime.props || startTime).format('hh:mm');
+import tz from 'moment-timezone';
+export const formatTime = (startTime,timeZone) => {
+	if (startTime && timeZone) {
+		return moment(startTime.props || startTime).tz(timeZone).format('hh:mm A z');
+	}
+	else{
+		return moment(startTime.props || startTime).format('hh:mm A');
 	}
 };
 

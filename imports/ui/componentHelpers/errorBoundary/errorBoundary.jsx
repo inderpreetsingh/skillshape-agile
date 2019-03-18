@@ -1,23 +1,46 @@
-import React from 'react';
-import { get } from 'lodash';
+import React,{Fragment} from 'react';
+import { get,isEmpty } from 'lodash';
 import styled from "styled-components";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
+import {listenOnUrlChange} from '/imports/util';
 
-
+const H2 = styled.h2`
+  word-break: break-word;
+`;
+const H3 = styled.h3`
+  max-height: 267px;
+  overflow: scroll;
+  overflow-x: hidden;
+  @media screen and (max-width: 600px) {
+    max-height: 190px;
+  }
+`;
 const BackGround = styled.div`
-  background-image: url('https://s3-us-west-1.amazonaws.com/skillshape/schools/e537fa24-3624-4cf8-9765-59e4aed9d7e0.jpg');
+  display: table;
+  background-color: #424242;
   height: -webkit-fill-available;
   padding: 10px;
-  font-family: monospace;
-	font-size: large;
-	background-size: cover;
+	font-family: 'Zilla Slab',serif;
+	width: 100%;
+  font-size: large;
+  background-size: cover;
 `;
-
-export default class ErrorBoundary extends React.Component {
+const Details = styled.details`
+  margin-top: 12px;
+  white-space: pre-line;
+`;
+ export default class ErrorBoundary extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-		};
+		this.state = { };
+		listenOnUrlChange(this.resetHasErrorState);
+
+	}
+	resetHasErrorState = () =>{
+		if(this.state.hasError)
+				this.setState({hasError:false});
 	}
 	componentDidCatch(error, errorInfo) {
 		this.setState({
@@ -32,24 +55,34 @@ export default class ErrorBoundary extends React.Component {
 			let error = get(this.state, 'error', 'error name').toString();
 			let errorInfo = get(this.state, "errorInfo.componentStack", 'error stack info');
 			let url = document.URL;
-			Meteor.call("urlToBase64.errorBoundary", { error, errorInfo, url });
+			Meteor.call("emailMethods.errorBoundary", { error, errorInfo, url });
+			const currentUser = Meteor.user();
 			return (
+				<Fragment>
+				<BrandBar
+					positionStatic
+					currentUser={currentUser}
+					isUserSubsReady={!isEmpty(currentUser)}
+			/>
 				<BackGround>
 					<center>
-						<h2>Oops Something Went Wrong at {url}</h2><br />
+						<H2>Oops Something Went Wrong.</H2><br />
 						<h4>An Email is sent about this bug to technical team.</h4>
 							<PrimaryButton
 								onClick={() => document.location.reload(true)}
 								label="Refresh"
 								noMarginBottom
 							/>
-						<details style={{ whiteSpace: 'pre-wrap' }}>
-							<h3>	{error}
+						<Details>
+							<H3>	{error}
 								<br />
-								{errorInfo}</h3>
-						</details>
+								{errorInfo}</H3>
+						</Details>
 					</center>
-				</BackGround>);
+				</BackGround>
+					<Footer />
+				</Fragment>
+				);
 
 		}
 		return this.props.children;

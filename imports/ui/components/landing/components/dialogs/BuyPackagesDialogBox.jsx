@@ -435,7 +435,7 @@ export default withStyles(styles)(createContainer(props => {
     let isLoading = true;
     let currency = config.defaultCurrency;
     if(packagesRequired == 'perClassAndMonthly' && classTypeId){
-        monthlyPricingSubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricingWithClassId', { classTypeId: [classTypeId] });
+        monthlyPricingSubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricingWithClassId', { classTypeId});
         classPricingSubscription = Meteor.subscribe('classPricing.getClassPricingWithClassId', { classTypeId });
         const sub1Ready = monthlyPricingSubscription && monthlyPricingSubscription.ready();
         const sub2Ready = classPricingSubscription && classPricingSubscription.ready();
@@ -444,7 +444,7 @@ export default withStyles(styles)(createContainer(props => {
         }
     }
     else if(packagesRequired == 'enrollment'){
-        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getClassTypeEnrollMentFree', { classTypeId })
+        enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFeeByClassTypeId', { classTypeId })
         const sub3Ready = enrollmentSubscription && enrollmentSubscription.ready();
         if (sub3Ready) {
             isLoading = false;

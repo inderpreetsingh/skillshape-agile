@@ -13,7 +13,9 @@ const styles = {
     cursor: "pointer",
     width: 8,
     height: 24,
-    fontSize: helpers.baseFontSize
+    fontSize: helpers.baseFontSize,
+    color: "rgb(0, 0, 0) !important",
+    backgroundColor:'rgb(255, 255, 255) !important',
   },
   icon: {
     height: 24,

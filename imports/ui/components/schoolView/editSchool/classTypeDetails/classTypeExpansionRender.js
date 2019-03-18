@@ -1,40 +1,22 @@
-import React, { Fragment } from 'react';
-import { withStyles } from 'material-ui/styles';
-import styled from 'styled-components';
+import React ,{lazy,Suspense} from 'react';
 import { get } from 'lodash';
-import Typography from 'material-ui/Typography';
-import Icon from 'material-ui/Icon';
+const ExpansionPanel = lazy(()=>import("material-ui/ExpansionPanel"));
+import  { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import styled from 'styled-components';
+import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
-import ProgressiveImage from 'react-progressive-image';
-
-import ExpansionPanel, {
-	ExpansionPanelDetails,
-	ExpansionPanelSummary,
-	ExpansionPanelActions
-} from 'material-ui/ExpansionPanel';
-
-import {
-	Text,
-	GridMaxWidthWrapper,
-	GridContainer,
-	GridItem
-} from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import ClassTypeCard from '/imports/ui/components/landing/components/cards/ClassTypeCard.jsx';
-import ClassTimeCard from '/imports/ui/components/landing/components/classTimes/ClassTime.jsx';
-import OutLinedCard from '/imports/ui/components/landing/components/cards/OutlinedCard.jsx';
-
-import Notification from '/imports/ui/components/landing/components/helpers/Notification.jsx';
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import Icon from 'material-ui/Icon';
+const ProgressiveImage = lazy(()=>import( 'react-progressive-image'))
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-
-import { getContainerMaxWidth, withImageExists } from '/imports/util';
-import {
-	rhythmDiv,
-	flexCenter,
-	primaryColor,
-	mobile, maxContainerWidth, tablet
-} from '/imports/ui/components/landing/components/jss/helpers.js';
+const ClassTypeCard = lazy(()=>import( '/imports/ui/components/landing/components/cards/ClassTypeCard.jsx'))
+const OutLinedCard = lazy(()=>import( '/imports/ui/components/landing/components/cards/OutlinedCard.jsx'))
+const ClassTimeCard = lazy(()=>import( '/imports/ui/components/landing/components/classTimes/ClassTime.jsx'))
+import { flexCenter, maxContainerWidth, mobile, primaryColor, rhythmDiv, tablet } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { GridContainer, GridItem, GridMaxWidthWrapper, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings.js';
+import { withImageExists } from '/imports/util';
+import { Loading } from '/imports/ui/loading';
+
 
 const SPACING = rhythmDiv * 2;
 const CARD_WIDTH = 280;
@@ -249,8 +231,10 @@ const ClassTypeExpansionRender = (props) => {
 				</ToggleVisibility>
 			</Paper>
 			<ExpansionsWrapper>
-				{classTypeData && classTypeData.map(ctData => {
-					return (< ExpansionPanel className={expansionPanelRoot} >
+				<Suspense fallback={<Loading/>}>
+				{classTypeData && classTypeData.map((ctData,index) => {
+					return (
+					< ExpansionPanel className={expansionPanelRoot} defaultExpanded={index == 0} >
 						<ExpansionPanelSummary
 							classes={{ content: props.classes.expansionPanelSummaryContent }}
 							expandIcon={<Icon>{'expand_more'}</Icon>}>
@@ -358,8 +342,10 @@ const ClassTypeExpansionRender = (props) => {
 								</GridMaxWidthWrapper>
 							</CardsWrapper>
 						</ExpansionPanelDetails>
-					</ExpansionPanel>)
+					</ExpansionPanel>
+					)
 				})}
+				</Suspense>
 			</ExpansionsWrapper>
 		</Wrapper>)
 }

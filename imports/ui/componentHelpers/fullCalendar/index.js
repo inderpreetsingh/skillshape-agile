@@ -4,9 +4,12 @@ import FullCalendarRender from "./fullCalendarRender";
 import ClassTimes from "/imports/api/classTimes/fields";
 import ClassInterest from "/imports/api/classInterest/fields";
 import moment from "moment";
+import tz from 'moment-timezone';
 import ClassType from "/imports/api/classType/fields";
 import { uniq } from "lodash";
 import fullCalendarRender from "./fullCalendarRender";
+import {get} from 'lodash';
+import {  formatTime } from "/imports/util";
 
 class FullCalendar extends React.Component {
   constructor(props) {
@@ -114,7 +117,7 @@ class FullCalendar extends React.Component {
     }
   };
 
-  _createSEventForSeriesClasses = (sevent, scheduleDetailsObj) => {
+  _createSEventForSeriesClasses = (sevent, scheduleDetailsObj,timeZone) => {
     let temp = { ...sevent };
     // console.group("object for svent");
     // console.log(dateObj.value, "----");
@@ -124,10 +127,12 @@ class FullCalendar extends React.Component {
 
     // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
     temp.start = moment(scheduleDetailsObj.startTime).format("HH:mm");
+    temp.startTime = scheduleDetailsObj.startTime;
     temp.end = moment(new Date(scheduleDetailsObj.startTime))
       .add(scheduleDetailsObj.duration, "minutes")
       .format("hh:mm");
-    temp.eventStartTime = moment(scheduleDetailsObj.startTime).format("hh:mm A");
+      
+    temp.eventStartTime = formatTime(scheduleDetailsObj.startTime,timeZone);
     temp.eventEndTime = moment(new Date(scheduleDetailsObj.startTime))
       .add(
         scheduleDetailsObj.duration,
@@ -199,7 +204,7 @@ class FullCalendar extends React.Component {
       let classTime = classTimesData[i];
       try {
         let sevent;
-
+        let timeZone = get(classTime,'selectedLocation.timeZone',null)
         sevent = {
           classTimeId: classTime._id,
           classTypeId: classTime.classTypeId,
@@ -211,7 +216,8 @@ class FullCalendar extends React.Component {
           desc: classTime.desc,
           endDate: classTime.endDate,
           allDay: false, // This property affects whether an event's time is shown.
-          deletedEvents: classTime.deletedEvents
+          deletedEvents: classTime.deletedEvents,
+          timeZone
         };
         let checkedClassTimes = false;
         // Three type of class times seperated into different colors.
@@ -234,8 +240,9 @@ class FullCalendar extends React.Component {
           sevent.scheduleDetails = classTime.scheduleDetails;
           scheduleData.map((obj, index) => {
             sevent.start = obj.startTime;
+            sevent.startTime = obj.startTime;
             sevent.roomId = obj.roomId;
-            sevent.eventStartTime = moment(obj.startTime).format("hh:mm A");
+            sevent.eventStartTime =formatTime(obj.startTime,timeZone); 
             sevent.eventEndTime = moment(new Date(obj.startTime))
               .add(
                 obj.duration,
@@ -243,6 +250,7 @@ class FullCalendar extends React.Component {
               )
               .format("hh:mm");
             sevent.title = classTime.classTypeName.name + ": " + classTime.name;
+            sevent.classTypeName  = classTime.classTypeName.name;
             sevent.durationAndTimeunits = `${obj.duration} ${
               obj.timeUnits ? obj.timeUnits : "Minutes"
               }`;
@@ -295,9 +303,10 @@ class FullCalendar extends React.Component {
 
               const newCalendarEvent = this._createSEventForSeriesClasses(
                 sevent,
-                scheduleDetailsObject
+                scheduleDetailsObject,
+                timeZone
               );
-
+              newCalendarEvent.classTypeName = classTime.classTypeName.name;
               sevents.push(newCalendarEvent);
             });
           } else {
@@ -310,9 +319,10 @@ class FullCalendar extends React.Component {
                 };
                 const newCalendarEvent = this._createSEventForSeriesClasses(
                   sevent,
-                  scheduleDetailsObject
+                  scheduleDetailsObject,
+                  timeZone
                 );
-
+              newCalendarEvent.classTypeName = classTime.classTypeName.name;
                 sevents.push(newCalendarEvent);
               });
             });

@@ -1,16 +1,14 @@
-import React, { Fragment } from 'react';
 import { get } from 'lodash';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
-import Radio, { RadioGroup } from 'material-ui/Radio';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
-import Select from 'material-ui/Select';
+import Grid from 'material-ui/Grid';
+import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
-import {inputRestriction,formatMoney} from '/imports/util';
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import Select from 'material-ui/Select';
+import TextField from 'material-ui/TextField';
 import Tooltip from 'rc-tooltip';
+import React from 'react';
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import { formatMoney, inputRestriction } from '/imports/util';
 export default class AddRow extends React.Component {
 
 	constructor(props) {
@@ -34,6 +32,8 @@ export default class AddRow extends React.Component {
 	}
 
 	onChangeInput = (key, index, event) => {
+		const {handleIsSavedState} = this.props;
+    	handleIsSavedState();
 		const oldRow = [...this.state.row];
 		if(key=='cost'){
 			let x = inputRestriction(event);
@@ -57,8 +57,8 @@ export default class AddRow extends React.Component {
 	}
 
 	render() {
-		const { classes, tabValue, currency } = this.props;
-
+		const { classes, tabValue, currency,handleIsSavedState } = this.props;
+    	
 		return (
 			<div style={{ border: '1px solid black', margin: 2, padding: 5, backgroundColor: 'antiquewhite' }}>
 				{
@@ -77,13 +77,6 @@ export default class AddRow extends React.Component {
 										inputProps={{ min: "0"}}
 									/>
 								</Grid>
-								{/* 1.Currency selection will align with the cost field.(Done)
-                                    2.School Default currency will be selected as default. (Done)
-                                    or in case of edit package already selected currency will be become default currency.(Done)
-                                    3.New field currency need to be created  in the classPricing collection. (Done)
-                                    4.User selected currency name and symbol store in the state.(Done)
-                                    5.On Save store in the collection.(Done)
-                                */}
 								<Grid item xs={12} sm={4}>
 									<FormControl
 										margin="dense"
@@ -104,7 +97,7 @@ export default class AddRow extends React.Component {
 													const oldRow = [...this.state.row];
 													oldRow[index]['currency'] = event.target.value;
 													this.setState({ row: oldRow });
-
+													handleIsSavedState()
 												}
 												}
 											>

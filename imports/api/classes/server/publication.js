@@ -4,7 +4,7 @@ Meteor.publish("classes.getClassesData", function(filter) {
 try{
 	let record;
 	record = Classes.findOne(filter);
-	if(isEmpty(record)){
+	if(isEmpty(record) && filter.scheduled_date){
 		Classes.insert(filter);
 	}
 	return Classes.find(filter);

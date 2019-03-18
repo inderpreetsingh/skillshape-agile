@@ -99,10 +99,11 @@ const FormGhostButton = (props) => {
 			}}
 			onClick={props.onClick}
 			form={props.form}
+			disabled={props.disabled}
 		>
-			{getIconForButton(props)}
-
+			{!props.back && getIconForButton(props)}
 			{props.label ? props.label : 'Submit'}
+			{props.back && getIconForButton(props)}
 		</Button>
 	);
 };

@@ -363,7 +363,8 @@ SkillShapeDialogBox.propTypes = {
 
 SkillShapeDialogBox.defaultProps = {
 	onAffirmationButtonClick: () => { },
-	defaultButtons: false
+	defaultButtons: false,
+	type:'inform'
 };
 
 export default withStyles(styles)(SkillShapeDialogBox);

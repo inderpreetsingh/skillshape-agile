@@ -1,13 +1,11 @@
-import config from "/imports/config";
-import get from "lodash/get";
-import ClassType from "/imports/api/classType/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
-import School from "/imports/api/school/fields";
-import EmailSignature from "./signature.js";
-import { getUserFullName } from "/imports/util/getUserData";
 import moment from 'moment';
+import EmailSignature from "./signature.js";
+import School from "/imports/api/school/fields";
+import config from "/imports/config";
+import { getUserFullName } from "/imports/util/getUserData";
+import {welcomeEMail} from './welcome_email';
 let platform = Meteor.settings.platform;
+let styleForLinks = "display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;"
 export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
   if (platform == 'local') {
@@ -75,17 +73,16 @@ export const sendJoinClassEmail = function ({
     Email.send({
       to: to, // Replace value of `to` with Admin email if Admin exists.
       from: config.fromEmailForJoiningClass,
-      subject: "Join Class Request Recieved",
+      subject: "Join Class Request Received",
       html: `Hi ${schoolAdminName}, <br/><b>${currentUserName}</b> has showed interest in joining your class: <b>${classTypeName}</b> , <b>${classTimeName}</b>.
                 <br/>You can visit the following link OR links to know more about this request:
                 ${
-        classLink
-          ? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Class</a><br/>`
+        classLink? `<a href=${classLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">View Class</a><br/>`
           : ""
         }
                 ${
         memberLink
-          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Link to Member</a><br/>`
+          ? `<a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">View Member</a><br/>`
           : ""
         }
                 <br/><br/>
@@ -135,7 +132,7 @@ export const sendClaimASchoolEmail = function (
                    <div>
                        <a href=${
         modifyUsersRoles.keepMeSuperAdmin
-        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>
+        } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them an Admin, and keep me as SuperAdministrator.</a><br/>
                        <a href=${
         modifyUsersRoles.makeRequesterSuperAdmin
         } style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">Yes, make them SuperAdministrator and keep me as an Administrator.</a><br/>
@@ -294,23 +291,7 @@ export const userRegistrationAndVerifyEmail = function (
     to: toEmail,
     replyTo: fromEmail,
     subject: "SkillShape Registration",
-    html: `Hi ${user.profile.firstName || user.profile.name},
-            <br/><br/>
-                Your Email: ${user.emails[0].address} has been registered ${schoolName ? `with ${schoolName}` : ''}.
-            <br/>
-                Please click on the button below to verify your email address and set your password.
-            <br/><br/>
-            <div>
-               <a href=${verificationToken} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">Set Password</a>
-            </div>
-            <br/><br/>
-                If the link doesn't work, copy and paste this address into your browser.
-            <br/>
-                ${verificationToken}
-            <br/>
-                Your temporary password is  : ${passwd}
-            <br/>
-            <br/><br/>Thanks, <br/><br/>${EmailSignature}`
+    html:welcomeEMail(user, verificationToken, passwd, fromEmail, toEmail, schoolName)
   });
 };
 
@@ -355,8 +336,18 @@ export const sendEmailForSubscription = function ({
   joinSkillShapeLink
 }) {
   if (Meteor.isServer) {
+    let to;
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else if(platform == 'dev'){
+      to = config.skillshapeAdminEmail;
+    }
+    else{
+      to = toEmail;
+    }
     Email.send({
-      to: toEmail, //emailObj.to
+      to, //emailObj.to
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
       subject: subject,
@@ -426,7 +417,7 @@ export const sendEmailToStudentForClaimAsMember = function (
               <br/>
                ${ rejectionUrl
           ? `<center> 
-                        <a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50;color: white; text-decoration: none;">
+                        <a href=${rejectionUrl} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">
                           If this is a mistake, click here to reject the invitation
                         </a>
                       </center><br/>`
@@ -455,19 +446,28 @@ export const sendRequestReceivedEmail = function ({
   currentUserName
 }) {
   if (Meteor.isServer) {
+    let to;
+    if (platform == 'local') {
+      to = 'ramesh.bansal@daffodilsw.com';
+    }
+    else if (platform == 'dev') {
+      to = config.skillshapeAdminEmail;
+    }
+    else {
+      to = toEmail;
+    }
     Email.send({
-      to: toEmail, //emailObj.to
+      to, //emailObj.to
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
-      subject: `${requestFor} request received`,
-      html: `Dear ${ownerName}, <br />${currentUserName} ${memberLink || ""}
-            saw your listing on SkillShape.com ${classTypeName &&
-        `for ${classTypeName} `}
-            at <br />${schoolPageLink} <br /> and would you like to update your ${requestFor} <br />${updateLink}
+      subject: `I'm interested in your class!`,
+      html: `Hi ${ownerName ? ownerName : ''}, <br />
+      I saw your listing on SkillShape.com <br />
+      <a href=${updateLink}  style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;"> ${classTypeName ? classTypeName : 'School' } </a> <br/>
+      and would like to attend. Can you update your ${requestFor} ? <br/>
             <br />
-            <br />
-            Thanks,
-            <br />
+            Thanks,<br />
+            <a href=${memberLink} style="display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;">${currentUserName ? currentUserName : ''}</a>
             <br />
             ${EmailSignature}`
     });
@@ -789,5 +789,60 @@ export const newSchoolJoinNotification = function ({
               <a href=${schoolEditViewLink}>Click here</a> to view that school.<br/>     
               ${EmailSignature}
       `
+  });
+};
+
+export const userFeedBack = function(user, email, message, request, subject) {
+  let fromEmail = "Notices@SkillShape.com";
+  let to = "Notices@SkillShape.com";
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
+  }
+  else {
+    to = config.skillshapeAdminEmail;
+  }
+  Email.send({
+    from: fromEmail,
+    to,
+    replyTo: fromEmail,
+    subject: "skillshape feedback",
+    text: `Hi,
+              We have feedback from : ${user} (${email})
+              His feedback request is ${request}
+              ${subject ? `Subject: ${subject}` : ""}
+              Message : ${message}
+              Thank you.
+              The skillshape Team.
+              ${Meteor.absoluteUrl()}`
+    // + "http://www.graphical.io/assets/img/Graphical-IO.png"
+  });
+};
+
+export const sendEmail = function(data) {
+  const {To,subject,text,studentName='Guest',schoolName='School',senderName='School Admin'} = data;
+  let fromEmail = "Notices@SkillShape.com";
+  let to = "Notices@SkillShape.com";
+  if (platform == 'local') {
+    to = 'ramesh.bansal@daffodilsw.com';
+  }
+  else if(platform == 'dev') {
+    to = config.skillshapeAdminEmail;
+  }
+  else{
+    to = To;
+  }
+  Email.send({
+    from: fromEmail,
+    to,
+    replyTo: fromEmail,
+    subject:`${senderName} from ${schoolName}`,
+    html: `Hello ${studentName} <br/>
+          ${senderName} from ${schoolName} sent you the following message:<br/>
+              Subject: ${subject} <br/>
+              Message: ${text.replace(new RegExp('\r?\n','g'), '<br />')}<br/><br/>
+              Thank you.<br/>
+              The skillshape Team.<br/>
+              ${EmailSignature}
+              `
   });
 };

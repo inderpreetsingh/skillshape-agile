@@ -190,6 +190,7 @@ class CardsList extends Component {
 										classInterestData={classInterestData}
 										hideClassTypeOptions={this.props.hideClassTypeOptions}
 										params = {params}
+										schoolData = {this.props.schoolData}
 									/>
 								</GridItem>
 							);

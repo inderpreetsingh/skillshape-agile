@@ -1,11 +1,9 @@
-import { get } from "lodash";
+import { get ,isEmpty} from "lodash";
 import { MuiThemeProvider } from "material-ui/styles";
 import React from "react";
 import styled from 'styled-components';
 import { browserHistory } from "react-router";
-import SetPasswordDialogBox from "/imports/ui/components/landing/components/dialogs/SetPasswordDialogBox";
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-// const theme = createMuiTheme({...material_ui_next_theme});
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
 import { withStyles } from "/imports/util";
@@ -43,21 +41,6 @@ class PublicLayout extends React.Component {
     return this.mainPanelRef;
   }
 
-  componentWillReceiveProps(nextProps) {
-    //debugger;
-    // console.log("PublicLayout nextProps -->>",nextProps);
-    if (nextProps.currentUser) {
-      const passwordSetByUser = get(
-        nextProps,
-        "currentUser.profile.passwordSetByUser",
-        true
-      );
-      this.setState({
-        showSetPasswordDialogBox: !passwordSetByUser
-      });
-    }
-  }
-
   setPasswordDialogBoxSubmit = (payload, event) => {
     event.preventDefault();
     let errorMessage;
@@ -80,12 +63,16 @@ class PublicLayout extends React.Component {
             if (err) {
               errorMessage = err.reason || err.message;
               this.setState({ isBusy: false });
-            } else {
+            } else if(res) {
               this.setState(
                 { showSetPasswordDialogBox: false, isBusy: false },
                 () => {
-                  if (currentUser) {
+                  const {onBoardingDialogBox} = res || {}
+                  if(!onBoardingDialogBox) {
                     browserHistory.push(`/profile/${get(currentUser, '_id', null)}`);
+                  }
+                  else{
+                    this.setState({onBoardingDialogBox});
                   }
                 }
               );
@@ -132,16 +119,7 @@ class PublicLayout extends React.Component {
           <div>
             <TopSearchBar {...this.props} />
           </div>
-
-          <SetPasswordDialogBox
-            open={this.state.showSetPasswordDialogBox}
-            onModalClose={() =>
-              this.setState({ showSetPasswordDialogBox: false })
-            }
-            onCompleteButtonClick={this.setPasswordDialogBoxSubmit}
-            errorText={this.state.errorMessage}
-            isLoading={this.state.isBusy}
-          />
+         
           <MainPanel
             ref={ref => {
               this.mainPanelRef = ref;

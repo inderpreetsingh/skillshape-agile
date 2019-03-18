@@ -16,13 +16,18 @@ class NestedNavItems extends Component {
   	}
 
   	render() {
-  		const { classes, childData } = this.props;
+  		const { classes, childData ,link,onClick} = this.props;
   		return (
   			<Fragment>
-  				{
-  					!isEmpty(childData) &&
+  			
+  					
   					<Fragment>
-		  				<ListItem onClick={this.handleClick}>
+		  				<ListItem onClick={()=>{
+							  if(!isEmpty(childData))
+								this.handleClick();
+							  else
+								onClick(link);
+						  }}>
 					        {
 						       this.props.children ? this.props.children :
 						       <Fragment>
@@ -31,10 +36,10 @@ class NestedNavItems extends Component {
 						            </ListItemIcon>
 						            <ListItemText classes={{text: classes.menuListItemText}} primary={this.props.nameLimit ? cutString(this.props.name, this.props.nameLimit): this.props.name } title={this.props.name}/>
 						        </Fragment>
-					        }
-					        { this.state.open ? <ExpandLess /> : <ExpandMore /> }
+							}
+							{ !isEmpty(childData) ?this.state.open ? <ExpandLess /> : <ExpandMore /> :'' }
 					    </ListItem>
-				        <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
+						{!isEmpty(childData) && <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
 				            <List disablePadding>
 					    		{
 					    			childData.map((data, index) => {
@@ -59,9 +64,10 @@ class NestedNavItems extends Component {
 						    		})
 					    		}
 				            </List>
-				        </Collapse>
+				        </Collapse>}
+				    
   					</Fragment>
-  				}
+  				
   			</Fragment>
   		)
   	}

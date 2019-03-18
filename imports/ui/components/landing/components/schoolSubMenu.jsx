@@ -70,7 +70,7 @@ class SchoolSubMenu extends React.Component {
                   </ListItemIcon>
                   <ListItemText
                     classes={{ text: classes.menuListItemText }}
-                    primary={"School You Manage"}
+                    primary={"Schools I Manage"}
                   />
                   {this.state.open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>

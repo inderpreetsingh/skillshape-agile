@@ -23,6 +23,8 @@ export default function () {
     schoolId,
     locationData,
     isLoading,
+    isSaved,
+    handleIsSavedState
   } = this.props;
 
   const {
@@ -37,7 +39,6 @@ export default function () {
     selectedClassTimeData,
     selectedClassTypeData,
     selectedClassTypeId,
-    selectedSchoolData,
   } = this.state;
 
   const classTimeParentData = selectedClassTypeId ? this.getClassTypeData(selectedClassTypeId) : selectedClassTypeData;
@@ -96,6 +97,8 @@ export default function () {
           onClose={this.handleClassTimeFormClose}
           moveToNextTab={this.moveToNextTab}
           locationData={locationData}
+          isSaved={isSaved}
+          handleIsSavedState={handleIsSavedState}
         />}
 
       {classTypeForm && (
@@ -106,10 +109,12 @@ export default function () {
           onClose={this.handleClassTypeFormClose}
           locationData={locationData}
           moveToNextTab={this.moveToNextTab}
+          isSaved={isSaved}
+          handleIsSavedState={handleIsSavedState}
         />
       )}
 
-      {isBusy && <ContainerLoader />}
+      {isLoading && <ContainerLoader />}
 
       <ClassTypeExpansionRender
         handleNotifyForChange={this.handleNotifyForChange}

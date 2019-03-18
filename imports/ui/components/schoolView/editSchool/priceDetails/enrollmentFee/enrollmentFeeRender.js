@@ -6,7 +6,7 @@ import PackageList from '/imports/ui/components/landing/components/class/package
 
 export default function () {
 
-	const { classes, schoolId, enrollmentFeeData, schoolData, currency } = this.props;
+	const { classes, schoolId, enrollmentFeeData, schoolData, currency,isSaved, handleIsSavedState } = this.props;
 
 	return (
 		<div className="class-price-details">
@@ -19,6 +19,8 @@ export default function () {
 					classTypeData={this.props.classTypeData}
 					schoolData={schoolData}
 					currency={currency}
+					isSaved={isSaved}
+					handleIsSavedState={handleIsSavedState}
 				/>
 			}
 			<PanelHeader btnText="Add Enrollment Fee" title="Enrollment Fee Cost" caption=" If you add a Class Type to an enrollment fee, students will need to purchase the Enrollment Fee before they can purchase Per Class or Monthly packages for that Class Type, or sign in to that class." icon="assignment" onAddButtonClicked={() => { this.setState({ showForm: true, formData: null }) }} />

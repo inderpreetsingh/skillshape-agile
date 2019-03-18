@@ -1,23 +1,25 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from 'styled-components';
-import { withStyles } from "material-ui/styles";
-import { browserHistory } from "react-router";
-import { get, isEmpty, size } from "lodash";
-
-import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
-import IconButton from "material-ui/IconButton";
-import Drawer from "material-ui/Drawer";
+import { isEmpty } from "lodash";
 import Divider from "material-ui/Divider";
+import Drawer from "material-ui/Drawer";
 import Icon from "material-ui/Icon";
+import IconButton from "material-ui/IconButton";
+import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Fragment } from "react";
+import { browserHistory } from "react-router";
+import styled from 'styled-components';
 import LoginButton from "./buttons/LoginButton.jsx";
-import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
-
-import { checkSuperAdmin, getUserSchool, logoutUser } from "/imports/util";
-import { specialFont, flexCenter } from "./jss/helpers.js";
+import { flexCenter, specialFont } from "./jss/helpers.js";
 import NestedNavItems from "./NestedNavItems";
 import SchoolSubMenu from "./schoolSubMenu";
+import SchoolsIAttend from './schoolsIAttend';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
+import { OnBoardingDialogBox } from '/imports/ui/components/landing/components/dialogs';
+import { checkSuperAdmin, logoutUser } from "/imports/util";
 import { getUserFullName } from "/imports/util/getUserData";
+
+
 
 const styles = theme => {
   return {
@@ -120,13 +122,6 @@ const LogOutUserSideNav = props => (
     <SideNavItem
       button
       menuListItemText={props.classes.menuListItemText}
-      name="Claim A School"
-      iconName="check_circle"
-      onClick={() => props.childItemOnClick("/claimSchool")}
-    />
-    <SideNavItem
-      button
-      menuListItemText={props.classes.menuListItemText}
       name="Contact Us"
       iconName="email"
       onClick={() => props.childItemOnClick("/contact-us")}
@@ -150,11 +145,6 @@ const LoginUserSideNav = props => {
       name: "My Media",
       link: `/media/${Meteor.userId()}`,
       iconName: "collections"
-    },
-    {
-      name: "Change Password",
-      iconName: "lock_open",
-      onClick: props.showChangePassword
     }
   ];
   if (Meteor.settings.public.paymentEnabled) {
@@ -204,6 +194,14 @@ const LoginUserSideNav = props => {
         iconName="find_in_page"
         onClick={() => props.childItemOnClick("/classmates")}
       />
+      {!isEmpty(props.schoolsIAttend) && (
+        <SchoolsIAttend
+          data={props.schoolsIAttend}
+          classes={props.classes}
+          onClick={props.childItemOnClick}
+          currentUser={props.currentUser}
+        />
+      )}
       {!isEmpty(props.mySchool) && (
         <SchoolSubMenu
           data={props.mySchool}
@@ -213,14 +211,6 @@ const LoginUserSideNav = props => {
         />
       )}
 
-      <NestedNavItems
-        button
-        name="Classes Attending"
-        classes={props.classes}
-        iconName="account_balance"
-        childData={props.connectedSchool}
-        onClick={props.childItemOnClick}
-      />
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}
@@ -238,18 +228,6 @@ const LoginUserSideNav = props => {
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}
-        name="Claim a School"
-        iconName="assignment"
-        onClick={
-          () =>
-            props.childItemOnClick(
-              "/claimSchool"
-            ) /*browserHistory.push('/claimSchool')*/
-        }
-      />
-      <SideNavItem
-        button
-        menuListItemText={props.classes.menuListItemText}
         name="Send us feedback"
         iconName="message"
         onClick={
@@ -262,13 +240,11 @@ const LoginUserSideNav = props => {
       <SideNavItem
         button
         menuListItemText={props.classes.menuListItemText}
-        name="Add Schools"
+        name="Add or Claim a School"
         iconName="add_box"
         onClick={
           () =>
-            props.childItemOnClick(
-              "/claimSchool"
-            ) /*browserHistory.push('/claimSchool')*/
+          props.handleSetState({onBoardingDialogBox:true})
         }
       />
       {checkSuperAdmin(props.currentUser) && (
@@ -308,11 +284,13 @@ const LoginUserSideNav = props => {
 };
 
 class SideNavItems extends React.Component {
-  state = {
-    mySchool: [],
+  constructor(props) {
+    super(props);
+    this.state = {
+      mySchool: [],
     connectedSchool: []
-  };
-
+    };
+  }
   componentWillMount() {
     if (Meteor.userId()) {
       this.loadConnectedSchool();
@@ -353,14 +331,12 @@ class SideNavItems extends React.Component {
   };
 
   loadMySchool = () => {
-    if (Meteor.userId()) {
+    const userId = Meteor.userId();
+    if (userId) {
       Meteor.call("school.getMySchool", null, false, (error, result) => {
-        if (error) {
-          // console.log("error", error);
-        }
-        if (result) {
-          {
-            const mySchool = result.map((school, index) => {
+        Meteor.call("classInterest.getSchoolsIAttend", { userId }, (err, res) => {
+          if (!err) {
+            const mySchool = result && result.map((school, index) => {
               return {
                 name: school.name,
                 link: `/schools/${school.slug}`,
@@ -370,9 +346,16 @@ class SideNavItems extends React.Component {
                 admins: school.admins
               };
             });
-            this.setState({ mySchool: mySchool });
+            const schoolsIAttend = res && res.map((school, index) => {
+              return {
+                name: school.name,
+                link: `/schools/${school.slug}`,
+                iconName: "school",
+              };
+            });
+            this.setState({ mySchool, schoolsIAttend });
           }
-        }
+        })
       });
     }
   };
@@ -382,8 +365,11 @@ class SideNavItems extends React.Component {
     browserHistory.push(link);
     this.props.handleDrawer();
   };
-
+  handleSetState = (obj) =>{
+    this.setState(obj);
+  }
   render() {
+    const {onBoardingDialogBox} = this.state;
     return (
       <Drawer
         open={this.props.open}
@@ -399,11 +385,17 @@ class SideNavItems extends React.Component {
             drawerHeader={this.props.classes.drawerHeader}
           />
           <Divider />
+          {onBoardingDialogBox && <OnBoardingDialogBox
+            open={onBoardingDialogBox}
+            onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
+          />}
           {this.props.currentUser ? (
             <LoginUserSideNav
               mySchool={this.state.mySchool}
+              schoolsIAttend={this.state.schoolsIAttend}
               connectedSchool={this.state.connectedSchool}
               childItemOnClick={this.handleChildItemOnClick}
+              handleSetState={this.handleSetState}
               {...this.props}
             />
           ) : (

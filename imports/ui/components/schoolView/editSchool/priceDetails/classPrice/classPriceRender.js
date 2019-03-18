@@ -6,8 +6,7 @@ import ClassPriceForm from './classPriceForm';
 import PackageList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
 
 export default function () {
-
-	const { classes, schoolId, classPricingData, schoolData, currency } = this.props;
+const { classes, schoolId, classPricingData, schoolData, currency,isSaved, handleIsSavedState } = this.props;
 	return (
 		<div className="class-price-details">
 			{
@@ -19,6 +18,8 @@ export default function () {
 					classTypeData={this.props.classTypeData}
 					schoolData={schoolData}
 					currency={currency}
+					isSaved={isSaved}
+					handleIsSavedState={handleIsSavedState}
 				/>
 			}
 			<div className={classes.notifyExplanation}>

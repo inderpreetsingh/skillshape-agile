@@ -53,7 +53,7 @@ export { material_ui_next_theme } from './theme';
 export { componentLoader } from './loading';
 export { dateFriendly } from './dateFriendly';
 export { openMailToInNewTab } from './openInNewTabHelpers';
-export { goToSchoolPage, goToClassTypePage, checkForAddToCalender } from './handleRedirect.js';
+export { goToSchoolPage, goToClassTypePage, checkForAddToCalender,redirectToHome,gotoClaimSchool ,redirectToThisUrl} from './handleRedirect.js';
 export { maximumClasses } from './maximumClasses.js';
 export { normalizeMonthlyPricingData, seperatePackagesPerClass } from './packageFormat.js';
 export { compressImage } from './compressImage.js';
@@ -61,3 +61,8 @@ export { inputRestriction, formatMoney } from './inputRestriction.js';
 export { stripePaymentHelper } from './stripePaymentHelper.js';
 export { packageCoverProvider } from "./packageHelper";
 export { confirmationDialog } from './confirmationDialog';
+export {generateGraphData} from "./generateGraphData";
+export {handleJoin} from "./handleJoin";
+export {sendEmail,handleIsSavedState,unSavedChecker,handleOnBeforeUnload,handleSignUpSubmit
+	,handleLoginGoogle,handleLoginFacebook,listenOnUrlChange
+} from './reuseableFunctions';

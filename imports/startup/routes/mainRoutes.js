@@ -7,15 +7,11 @@ import ClaimSchool from "/imports/ui/components/claimSchool";
 import ClassTypeView from "/imports/ui/components/classTypeView";
 import DashBoard from '/imports/ui/components/dashboard';
 import ClassDetails from "/imports/ui/components/landing/ClassDetails.jsx";
-import ClassType from "/imports/ui/components/landing/ClassType.jsx";
 import NoPageFound from "/imports/ui/components/landing/components/NoPageFound";
 import NoResults from "/imports/ui/components/landing/components/NoResults";
 import SchoolSuggestionsView from "/imports/ui/components/landing/components/schoolSuggestions/index.jsx";
 import Landing from "/imports/ui/components/landing/index.jsx";
 import School from "/imports/ui/components/landing/School.jsx";
-import SkillShapeButtonsCollection from '/imports/ui/components/landing/SkillShapeButtonsCollection';
-import TestPopover from "/imports/ui/components/landing/TestPopover.jsx";
-import TestPopUps from "/imports/ui/components/landing/TestPopUps.jsx";
 import ManageUsers from "/imports/ui/components/manage-users";
 import Optimization from '/imports/ui/components/optimization';
 import PurchasePackage from '/imports/ui/components/purchasePackage';
@@ -34,10 +30,8 @@ import AdminLayout from "/imports/ui/layout/adminLayout";
 import EmbedLayout from "/imports/ui/layout/embedLayout";
 import MainLayout from "/imports/ui/layout/mainLayout";
 import PublicLayout from "/imports/ui/layout/publicLayout";
-//pages
 import AboutUs from "/imports/ui/pages/aboutUs";
-import ContactUs from "/imports/ui/pages/contactUs";
-import ContactUsPage from "/imports/ui/pages/ContactUsPage";
+//pages
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import { componentLoader } from "/imports/util";
 
@@ -50,28 +44,19 @@ export default (Routes = componentLoader(props => (
   <Router history={browserHistory}>
     <Route name="SkillShape" path="/" component={MainLayout}>
       <IndexRoute name="SkillShape" component={Landing} />
-      <Route path="/classType-dev" name="classtype-dev" component={ClassType} />
       <Route
         path="/classType/:classTypeName/:classTypeId"
         name="classtype"
         component={ClassTypeView}
       />
-      <Route path="/skillshape-buttons-dev" component={SkillShapeButtonsCollection} />
       <Route
         path="/skillshape-for-school"
         name="Skillshape-for-school"
         component={School}
       />
-      <Route path="/popover-dev" name="popover-testing" component={TestPopover} />
-      <Route path="/popups-dev" name="popups-testing" component={TestPopUps} />
       <Route
-        path="/classdetails-student"
-        name="classdetails-student-development"
-        component={ClassDetails}
-      />
-      <Route
-        path="/classdetails-instructor"
-        name="classdetails-instructor-development"
+        path="/classDetails/:classId"
+        name="Class Details"
         component={ClassDetails}
       />
       <Route
@@ -94,12 +79,10 @@ export default (Routes = componentLoader(props => (
         name="Dashboard"
         component={DashBoard}
       />
-      <Route path="/contact-us" name="contact-us" component={ContactUsPage} />
       <Route path="/no-results" name="NoResults" component={NoResults} />
 
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
-        <Route path="/Contactus" name="Contactus" component={ContactUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
         <Route path="/media/:id" name="MyMedia" component={MyMedia} />
         <Route path="/purchasePackage/:packageRequestId" name="Purchase Package" component={PurchasePackage} />
@@ -115,7 +98,7 @@ export default (Routes = componentLoader(props => (
         />
         
         <Route
-          path="/schoolAdmin/:schoolId/edit"
+          path="/schoolAdmin/:schoolId/edit(/:tabValue)"
           name="SchoolAdmin-Edit"
           getComponent={(nextState, cb) => {
             //set loading:true
@@ -140,7 +123,7 @@ export default (Routes = componentLoader(props => (
           name="ResetPassword"
           component={ResetPassword}
         />
-        <Route path="/claimSchool" name="ClaimSchool" component={ClaimSchool} />
+        <Route path="/claimSchool(/:schoolName)" name="ClaimSchool" component={ClaimSchool} />
         <Route
           path="/verify-email/:token"
           name="VerifyEmail"

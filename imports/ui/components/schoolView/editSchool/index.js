@@ -8,27 +8,54 @@ import SLocation from "/imports/api/sLocation/fields";
 import config from "/imports/config";
 import {get,isEmpty,isEqual} from 'lodash';
 import { ContainerLoader } from "/imports/ui/loading/container";
-
+import {handleOnBeforeUnload,unSavedChecker,withPopUp} from '/imports/util';
 class SchoolEditView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selecetdView: "school_details",
-      queryTabValue: null
+      queryTabValue: null,
+      isSaved:true
     };
   }
+  componentDidUpdate(){
+    window.onbeforeunload = null;
+    if(!this.state.isSaved){
+    window.onbeforeunload = handleOnBeforeUnload;
+    }
+  }
+ 
+  componentDidMount() {
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
+  }
+  routerWillLeave = (nextLocation) => {
+    // return false to prevent a transition w/o prompting the user,
+    // or return a string to allow the user to decide:
+    // return `null` or nothing to let other hooks to be executed
+    //
+    // NOTE: if you return true, other hooks will not be executed!
+    if (!this.state.isSaved){
+      window.history.pushState(null, null, this.props.currentLocationPathName);
+      return 'Your work is not saved! Are you sure you want to leave?'
+    }
+  }
   componentWillMount() {
+    // unregister onbeforeunload event handler
+    window.onbeforeunload = null;
     // Listen for `?classDetails=true` so that we can click on tab.
-    console.log('cwm run')
-    if (this.props.location.query.tabValue) {
-      // We should set state for class details tab so that it opens automatically.
-      this.setState({ queryTabValue: this.props.location.query.tabValue });
-    }
-     if (get(this.props.route,'name',0) == "SchoolMemberView"){
-      this.setState({ tabValue: 6 });
-    }
-     if (get(this.props.route,'name',0) == "Financials" && !this.state.tabValue){
-      this.setState({ tabValue: 8 });
+    // if (this.props.location.query.tabValue) {
+    //   // We should set state for class details tab so that it opens automatically.
+    //   this.setState({ queryTabValue: this.props.location.query.tabValue });
+    // }
+    //  if (get(this.props.route,'name',0) == "SchoolMemberView"){
+    //   this.setState({ tabValue: 6 });
+    // }
+    //  if (get(this.props.route,'name',0) == "Financials" && !this.state.tabValue){
+    //   this.setState({ tabValue: 8 });
+    // }
+    const {params:{tabValue}} = this.props;
+    if(tabValue){
+      this.setState({tabValue:Number(tabValue)});
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -74,18 +101,22 @@ class SchoolEditView extends React.Component {
   };
 
   onTabChange = tabValue => {
-    this.setState({ tabValue });
+    if(!this.state.isSaved){
+      unSavedChecker.call(this);
+    }
+    else{
+      this.setState({ tabValue,isSaved:true });
+    }
   };
   shouldComponentUpdate(nextProps,nextState){
     return !isEqual(nextProps,this.props) || !isEqual(nextState,this.state);
   }
   render() {
-    const {schoolData,isLoading} = this.props;
-		console.log('TCL: SchoolEditView -> render -> this.props', this.props)
+    const {schoolData,isLoading,} = this.props;
     if(isLoading){
       return <ContainerLoader/>
     }
-    if(!isLoading  && !isEmpty(schoolData) && !Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData}) ){
+    if(!isLoading  && !isEmpty(schoolData) && !Meteor.userId() || !checkIsAdmin({user:Meteor.user(),schoolData})  || !isLoading && isEmpty(schoolData) ){
       browserHistory.push("/")
       return false;
     }
@@ -134,4 +165,4 @@ export default createContainer(props => {
     currency,
     userId
   };
-}, SchoolEditView);
+},withPopUp(SchoolEditView));

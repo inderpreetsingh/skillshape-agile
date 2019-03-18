@@ -17,18 +17,28 @@ import config from "/imports/config";
 import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
 import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
+import ChangePasswordDialogBox from "/imports/ui/components/landing/components/dialogs/ChangePasswordDialogBox.jsx";
 import IconInput from "/imports/ui/components/landing/components/form/IconInput";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { Loading } from "/imports/ui/loading";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 
-
-const SaveBtnWrapper = styled.div`
+const ButtonsWrapper = styled.div`
   margin: 10px;
-  float: right;
+  display: flex;
+  @media screen and (max-width: 400px) {
+    min-width: 185px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
-
+const ButtonWrapper = styled.div`
+   margin: 10px 5px 10px 5px;
+   width: fit-content;
+   @media screen and (max-width: 400px) {
+    min-width: 185px;
+  }
+`;
 const ErrorWrapper = styled.span`
   color: red;
   float: right;
@@ -45,7 +55,7 @@ const GridWrapper = styled.div`
 `;
 
 export default function () {
-  let { currentUser, classes, isUserSubsReady } = this.props;
+  let {  classes, isUserSubsReady } = this.props;
   let {
     firstName,
     nickame,
@@ -55,24 +65,34 @@ export default function () {
     address,
     email,
     about,
-    refresh_token
+    refresh_token,
+    changePasswordDialogBox,
+    currentUser,
+    isLoading
   } = this.state;
   let userType = Meteor.user();
-  if (!isUserSubsReady) return <Loading />;
+  if (isLoading) return <Loading />;
 
-  if (!currentUser) {
+  if (!currentUser && !isLoading) {
     return (
       <Typography type="display2" gutterBottom align="center">
-        User not found!!!
+        User Not Found!!!
       </Typography>
     );
   }
   const pic = currentUser.profile && currentUser.profile.medium ? currentUser.profile.medium :
-    currentUser.profile && currentUser.profile.pic ? currentUser.profile.pic : config.defaultProfilePic;
+    currentUser.profile && currentUser.profile.pic ? currentUser.profile.pic : config.defaultProfilePicOptimized;
   if (this.validateUser()) {
     return (
       <DocumentTitle title={this.props.route.name}>
         <GridWrapper>
+        {currentUser && changePasswordDialogBox &&
+          <ChangePasswordDialogBox
+            open={changePasswordDialogBox}
+            onModalClose={() => this.setState({ changePasswordDialogBox: false })}
+            hideChangePassword={this.passwordChangeMsg}
+          />
+        }
           <Grid container>
             {this.state.isBusy && <ContainerLoader />}
             <Grid item xs={12} sm={12}>
@@ -144,7 +164,7 @@ export default function () {
                               input={<Input id="gender" />}
                               value={this.state.gender}
                               onChange={event =>
-                                this.setState({ gender: event.target.value })
+                                this.setState({ gender: event.target.value ,isSaved:false})
                               }
                               fullWidth
                               style={{ fontWeight: 600 }}
@@ -214,7 +234,7 @@ export default function () {
                           <ReactPhoneInput
                             defaultCountry={'us'}
                             value={phone ? phone.toString() : ''}
-                            onChange={phone => this.setState({ phone })}
+                            onChange={phone => this.setState({ phone,isSaved:false })}
                             inputStyle={{ width: '100%' }}
                             placeHolder={'Phone Number'}
                             containerStyle={{ marginTop: '10px' }}
@@ -235,7 +255,7 @@ export default function () {
                               input={<Input id="currency" />}
                               value={this.state.currency}
                               onChange={event =>
-                                this.setState({ currency: event.target.value })
+                                this.setState({ currency: event.target.value,isSaved:false })
                               }
                               fullWidth
                               style={{ fontWeight: 600 }}
@@ -269,23 +289,35 @@ export default function () {
                             value={about}
                             onChange={this.handleTextChange.bind(this, "about")}
                           />
-                          {!refresh_token ? <PrimaryButton
-                            label={`Sync Google`}
+                            <ButtonsWrapper>
+                            <ButtonWrapper>
+                          {!refresh_token ? <FormGhostButton
+                            label={`Sync Google Calendar`}
                             onClick={this.calendarConformation}
+                            fullWidth
                           />
-                            : <PrimaryButton
-                              label={`Cancel Sync Google`}
+                            : <FormGhostButton
+                              alertColor
+                              label={`Cancel Google Sync`}
                               onClick={this.confirmationRemoveGoogleSync}
+                              fullWidth
                             />}
-                          <SaveBtnWrapper>
-                            {/* <Button type="submit" color="accent" raised dense>
-                            Save
-                          </Button> */}
+                            </ButtonWrapper>
+                            <ButtonWrapper>
+                            <FormGhostButton
+                              label={`Change Password`}
+                              onClick={()=>{this.setState({changePasswordDialogBox:true})}}
+                              fullWidth
+                            />
+                            </ButtonWrapper>
+                            <ButtonWrapper>
                             <FormGhostButton
                               type="submit"
                               label='Save'
+                              fullWidth
                             />
-                          </SaveBtnWrapper>
+                            </ButtonWrapper>
+                          </ButtonsWrapper>
                           {this.state.errorText && (
                             <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
                           )}

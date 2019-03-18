@@ -1,43 +1,28 @@
-import React from "react";
 import { get } from "lodash";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import { withStyles } from "/imports/util";
+import isEmpty from 'lodash/isEmpty';
 import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
+import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
 import Select from "material-ui/Select";
-import Grid from "material-ui/Grid";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-import Checkbox from "material-ui/Checkbox";
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import AddRow from "./addRow";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import "/imports/api/sLocation/methods";
-import { Card } from "material-ui";
-import Input, { InputLabel} from "material-ui/Input";
+import TextField from "material-ui/TextField";
+import React from "react";
 import styled from "styled-components";
+import AddRow from "./addRow";
+import "/imports/api/sLocation/methods";
+import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { withPopUp } from "/imports/util";
-import isEmpty from 'lodash/isEmpty';
+import { ContainerLoader } from "/imports/ui/loading/container";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { withPopUp, withStyles ,confirmationDialog,unSavedChecker} from "/imports/util";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
-// 1.perTime field in the collection monthyPricing.(Done)
-// 2.dropDown for selecting the perTime classes.(Done)
-// 3.saving in the collection.(Done)
-// 4.on edit retrieving the value.(Done)
-// 5.show perTime no of classes in the monthly pricing Card.
-// 6. displaying the perTime no of classes in the package listing also.
-// 7.maxmium classes only in monthly package.
+
 const formId = "LocationForm";
 const styles = theme => {
   return {
@@ -73,6 +58,7 @@ class MonthlyPriceForm extends React.Component {
   }
 
   initalizeFormValues = () => {
+    this.props.handleIsSavedState(true);
     let pymtType = get(this.props, "data.pymtType", null);
     let pymtMethod = get(this.props, "data.pymtMethod", null);
     let state = {
@@ -87,7 +73,7 @@ class MonthlyPriceForm extends React.Component {
       ]),
       pymtMethod: pymtMethod,
       includeAllClassTypes: get(this.props, "data.includeAllClassTypes", ""),
-      duPeriod: get(this.props, "data.duPeriod", "")
+      duPeriod: get(this.props, "data.duPeriod", ""),
     };
     
     if (pymtMethod && pymtMethod === "Pay Up Front") state.tabValue = 1;
@@ -154,6 +140,7 @@ class MonthlyPriceForm extends React.Component {
    
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
+    this.props.handleIsSavedState(true);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
      
       if (result) {
@@ -178,29 +165,32 @@ class MonthlyPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
+    this.props.handleIsSavedState(false);
     this.setState({ selectedClassType: values });
   };
 
   handleCheckBox = (key, disableKey, pymtType, event, isInputChecked) => {
-    
+    this.props.handleIsSavedState(false);
     let oldPayment = this.state.pymtType || {};
     oldPayment[pymtType] = isInputChecked;
     oldPayment[disableKey] = !isInputChecked;
     this.setState({
       [key]: isInputChecked,
       pymtType: oldPayment,
-      [disableKey]:!isInputChecked
+      [disableKey]:!isInputChecked,
     });
   };
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
+    this.props.handleIsSavedState(false);
+    this.setState({ [name]: event.target.checked});
   };
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
-
+  
+ 
   render() {
-    const { fullScreen, data, classes, schoolData, currency } = this.props;
+    const { fullScreen, data, classes, schoolData, currency ,handleIsSavedState} = this.props;
     const { classTypeData, pymtMethod, pymtDetails } = this.state;
     const tabValue =
       this.state.tabValue == 0 ? "Pay Each Month" : "Pay Up Front";
@@ -209,7 +199,8 @@ class MonthlyPriceForm extends React.Component {
         <Dialog
           open={this.props.open}
           aria-labelledby="form-dialog-title"
-          fullScreen={fullScreen}
+          fullScreen={false}
+          onClose={()=>{unSavedChecker.call(this)}}
         >
           <DialogTitle id="form-dialog-title">Add Monthly Pricing</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
@@ -241,6 +232,7 @@ class MonthlyPriceForm extends React.Component {
                   label="Package Name"
                   type="text"
                   fullWidth
+                  onChange={()=>{handleIsSavedState(false)}}
                 />
                 <SelectArrayInput
                   disabled={false}
@@ -277,6 +269,7 @@ class MonthlyPriceForm extends React.Component {
                   type="number"
                   fullWidth
                   inputProps={{ min: "0"}}
+                  onChange={()=>{handleIsSavedState(false)}}
                 />
    
                 
@@ -288,8 +281,10 @@ class MonthlyPriceForm extends React.Component {
                       required={true}
                       input={<Input id="duration-period" />}
                       value={this.state && this.state.duPeriod ? this.state.duPeriod : 'day'}
-                      onChange={event =>
+                      onChange={event =>{
+                        handleIsSavedState(false);
                         this.setState({ duPeriod: event.target.value })
+                      }
                       }
                       fullWidth
                     >
@@ -387,6 +382,7 @@ class MonthlyPriceForm extends React.Component {
                     }
                     classes={classes}
                     currency={currency}
+                    handleIsSavedState={()=>{handleIsSavedState(false)}}
                   />
                 </div>
               </form>
@@ -394,20 +390,6 @@ class MonthlyPriceForm extends React.Component {
           )}
           <DialogActions>
             {data && !data.from && (
-            //   <Button
-            //     onClick={() => this.setState({ showConfirmationModal: true })}
-            //     color="accent"
-            //     className={classes.delete}
-            //   >
-            //     Delete
-            //   </Button>
-            // )}
-            // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-            //   Cancel
-            // </Button>
-            // <Button type="submit" form={formId} color="primary" className={classes.save}>
-            //   {data ? "Save" : "Submit"}
-            // </Button>
             <ButtonWrapper>
             <FormGhostButton
               alertColor
@@ -420,7 +402,10 @@ class MonthlyPriceForm extends React.Component {
         <ButtonWrapper>
           <FormGhostButton
             darkGreyColor
-            onClick={() => this.props.onClose()}
+            onClick={()=>{
+              handleIsSavedState(true);
+              this.props.onClose();
+            }}
             label="Cancel"
             className={classes.cancel}
           />
@@ -441,6 +426,4 @@ class MonthlyPriceForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  withMobileDialog()(withPopUp(MonthlyPriceForm))
-);
+export default withStyles(styles)( withMobileDialog()(withPopUp(MonthlyPriceForm)) );

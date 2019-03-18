@@ -582,6 +582,7 @@ class ClassTimesDialogBox extends React.Component {
                         classInterestData={classInterestData}
                         onModalClose={onModalClose}
                         params={params}
+                        schoolData={this.props.schoolData}
                       />
                     </ClassTimesBoxesWrapper>
 
@@ -630,7 +631,7 @@ class ClassTimesDialogBox extends React.Component {
                     <FormGhostButton
                       onClick={e => {
                         onModalClose(e);
-                        this.goToClassTypePage(classTypeName, _id);
+                        classTypeName && this.goToClassTypePage(classTypeName, _id);
                       }}
                       label="View Class"
                     />

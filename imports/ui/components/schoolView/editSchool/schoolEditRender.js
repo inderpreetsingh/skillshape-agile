@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { browserHistory } from "react-router";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { FormBuilderModal } from "/imports/ui/modal";
+import {handleIsSavedState} from '/imports/util';
 const DocumentTitle = lazy(() => import("react-document-title"));
 const ClassTypeDetails = lazy(() => import("./classTypeDetails"));
 const EmbedCodes = lazy(() => import("./embedCodes"));
@@ -15,7 +16,7 @@ const MyTransaction = lazy(()=>import("/imports/ui/components/users/myTransactio
 const SchoolMemberView = lazy(() => import("/imports/ui/components/schoolMembers"));
 const ResponsiveTabs = lazy(() => import("/imports/util/responsiveTabs"));
 export default function (props) {
-  const { formBuilderModal } = this.state;
+  const { formBuilderModal,isSaved } = this.state;
   
   let {
     schoolId,
@@ -75,6 +76,8 @@ export default function (props) {
                   moveToNextTab={value => {
                     this.moveToNextTab(value);
                   }}
+                  isSaved= {isSaved}
+                  handleIsSavedState = {(isSaved)=>{handleIsSavedState.call(this,isSaved)}}
                 />
               )}
               {this.state.tabValue === 1 && (
@@ -89,6 +92,8 @@ export default function (props) {
                     this.moveToNextTab(value);
                   }}
                   schoolData={schoolData}
+                  isSaved= {isSaved}
+                  handleIsSavedState = {(isSaved)=>{handleIsSavedState.call(this,isSaved)}}
                 />
               )}
               {this.state.tabValue === 2 && (
@@ -102,6 +107,8 @@ export default function (props) {
                     this.moveToNextTab(value);
                   }}
                   schoolData={schoolData}
+                  isSaved= {isSaved}
+                  handleIsSavedState = {(isSaved)=>{handleIsSavedState.call(this,isSaved)}}
                 />
               )}
               {this.state.tabValue === 3 && (
@@ -112,6 +119,8 @@ export default function (props) {
                   moveTab={this.moveTab}
                   classTypeData={this.props.classTypeData}
                   schoolData={schoolData}
+                  isSaved= {isSaved}
+                  handleIsSavedState = {(isSaved)=>{handleIsSavedState.call(this,isSaved)}}
                 />
               )}
               {this.state.tabValue === 4 && (

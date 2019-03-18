@@ -6,7 +6,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import School from "/imports/api/school/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import { check } from 'meteor/check';
-import {isEmpty} from 'lodash';
+import {isEmpty,uniq} from 'lodash';
 import ClassTimesRequest from '/imports/api/classTimesRequest/fields.js';
 import ClassTypeLocationRequest from '/imports/api/classTypeLocationRequest/fields.js';
 import { dataURLToBlob } from "blob-util";
@@ -22,6 +22,7 @@ Meteor.methods({
       return ClassInterest.insert(doc, () => {
         Meteor.call("calendar.handleGoogleCalendar",this.userId,'insert');
         let currentUserRec = Meteor.users.findOne(this.userId);
+        let {_id:userId} = currentUserRec;
         let classTypeData = ClassType.findOne(doc.classTypeId);
         let classTimes = ClassTimes.findOne(doc.classTimeId);
         let schoolData = School.findOne(classTypeData.schoolId);
@@ -42,7 +43,7 @@ Meteor.methods({
         if (schoolMemberData) {
           memberLink = `${Meteor.absoluteUrl()}schools/${
             schoolData.slug
-          }/members`;
+          }/members?userId=${userId}`;
         }
         if (from != 'signHandler'){
           sendJoinClassEmail({
@@ -114,7 +115,7 @@ Meteor.methods({
            indexLoc = index1
          }
        })
-       if(indexLoc != -1){
+       if(indexLoc != -1 && !isEmpty(classData)){
         classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
         if(classTimeRecord)
         classData[indexLoc].classTimes.push(classTimeRecord);
@@ -122,15 +123,56 @@ Meteor.methods({
        }
        else{
         current = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1,classTypeImg:1,medium:1}});
-        current.classTimes = [];
-        classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
-        if(classTimeRecord)
-        current.classTimes.push(classTimeRecord);
-        current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
-        classData.push(current);                   
-      }
+        if(!isEmpty(current)){
+          current.classTimes = [];
+          classTimeRecord = ClassTimes.findOne({_id:obj.classTimeId},{fields:{name:1}})
+          if(classTimeRecord)
+          current.classTimes.push(classTimeRecord);
+          current.notification = ClassTimesRequest.findOne({classTypeId:obj.classTypeId},{fields:{notification:1,userId:1,classTypeId:1}});
+          classData.push(current);                   
+        }
+        }
       })
     }
     return classData;
+  },"classInterest.getClassInterest": function(filter,schoolId) {
+    try{
+      if(!isEmpty(filter)){
+        const {classTypeId,userId} = filter;
+        let classInterestData = ClassInterest.findOne(filter) || {};
+        let classTimesRequest = Meteor.call("classTimesRequest.getUserRecord",classTypeId) || {}
+        let classTypeLocationRequest = Meteor.call("classTypeLocationRequest.getUserRecord",classTypeId) || {}
+        let schoolMemberData = Meteor.call("schoolMemberDetails.getMemberData",{activeUserId:userId,schoolId}) || {};
+        let isFirstTime = ClassInterest.findOne({schoolId,userId}) || {};
+        if(!isEmpty(isFirstTime)){
+          isFirstTime = false;
+        }
+        else{
+          isFirstTime = true;
+        }
+        return {classInterestData:classInterestData,notification:{classTimesRequest,classTypeLocationRequest},schoolMemberData:schoolMemberData,isFirstTime}
+      }
+      return {};
+    }catch(error){
+			console.log('error in classInterest.getClassInterest', error)
+      throw new Meteor.Error(error);
+    }
+  },
+  "classInterest.getSchoolsIAttend":function(filter) {
+    try{
+      let schoolIds = [];
+     let results = ClassInterest.find(filter).fetch();
+     if(!isEmpty(results)){
+        schoolIds = results.map((obj)=>obj.schoolId);
+        schoolIds = uniq(schoolIds);
+        return School.find({_id:{$in:schoolIds}}).fetch();
+     }
+     else {
+       return [];
+     }
+    }catch(error){
+      console.log('error in classInterest.getSchoolsIAttend', error);
+      throw new Meteor.Error(error);
+    }
   }
 });

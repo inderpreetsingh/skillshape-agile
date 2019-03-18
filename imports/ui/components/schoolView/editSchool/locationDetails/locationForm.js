@@ -1,26 +1,17 @@
+import Button from "material-ui/Button";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
 import React from "react";
 import styled from "styled-components";
-import { withStyles } from "material-ui/styles";
-
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
-
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import { ContainerLoader } from "/imports/ui/loading/container";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-
-import "/imports/api/sLocation/methods";
+import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import {isEmpty,get} from "lodash";
+import {confirmationDialog,withPopUp,unSavedChecker} from "/imports/util";
+
 
 const formId = "LocationForm";
 
@@ -113,7 +104,7 @@ class LocationForm extends React.Component {
     this.state = {
       isBusy: false,
       myLocation: this._getMyLocation(),
-      completeAddress: this._getMyCompleteAddress()
+      completeAddress: this._getMyCompleteAddress(),
     };
   }
 
@@ -128,11 +119,12 @@ class LocationForm extends React.Component {
   _getMyCompleteAddress = (nextProps = {}) => {
     const data = nextProps.data || this.props.data || {};
     return {
-      street: data.address || "",
+      address: data.address || "",
       city: data.city || "",
       state: data.state || "",
       zip: data.zip || "",
-      country: data.country || ""
+      country: data.country || "",
+      title:data.title || ''
     };
   };
 
@@ -152,18 +144,16 @@ class LocationForm extends React.Component {
 
   componentDidMount = () => {
     const myLocation = this._getMyLocation();
-
+    this.props.handleIsSavedState(true)
     if (!myLocation.lat || !myLocation.lng) {
       const defaultLocation = this.getMyDefaultLocation();
-      this.getAddressFromLocation({
-        lat: defaultLocation[0],
-        lng: defaultLocation[1]
-      });
+      if(!isEmpty(defaultLocation))
+      this.getAddressFromLocation({ lat: defaultLocation[0], lng: defaultLocation[1] });
     }
   };
 
   _compareCompleteAddress = (address1, address2) => {
-    const propertiesToCompare = ["street", "zip", "city", "state", "country"];
+    const propertiesToCompare = ["address", "zip", "city", "state", "country"];
     for (let i = 0; i < propertiesToCompare.length; ++i) {
       const currentProperty = propertiesToCompare[i];
       if (address1[currentProperty] !== address2[currentProperty]) {
@@ -251,7 +241,7 @@ class LocationForm extends React.Component {
                 "administrative_area_level_2",
                 addressComponents
               ),
-              street:
+              address:
                 this._getComponentFromCompleteAddress(
                   "route",
                   addressComponents
@@ -298,6 +288,7 @@ class LocationForm extends React.Component {
   handleAddressChange = name => event => {
     // event.preventDefault();
     const value = event.target.value;
+    this.props.handleIsSavedState(false);
     this.setState(state => {
       return {
         ...state,
@@ -312,15 +303,22 @@ class LocationForm extends React.Component {
   onSubmit = (event, submit = true) => {
     event.preventDefault();
     // debugger;
+    const {title,address,city,state,zip,country} = this.state.completeAddress;
+    if(!title){
+      const {popUp} =this.props;
+      const content = 'Location Name is required.';
+      confirmationDialog({popUp,errDialog:true,content});
+      return;
+    }
     const payload = {
       createdBy: Meteor.userId(),
       schoolId: this.props.schoolId,
-      title: this.locationName.value,
-      address: this.streetAddress.value,
-      city: this.city.value,
-      state: this.locState.value,
-      zip: this.zipCode.value,
-      country: this.country.value
+      title,
+      address,
+      city,
+      state,
+      zip,
+      country,
     };
     const sLocationDetail =
       payload.address +
@@ -347,7 +345,7 @@ class LocationForm extends React.Component {
             ...state,
             isBusy: false,
             completeAddress: {
-              street: payload.address,
+              address: payload.address,
               zip: payload.zip,
               country: payload.country,
               city: payload.city,
@@ -376,7 +374,7 @@ class LocationForm extends React.Component {
                 ...state,
                 isBusy: false,
                 completeAddress: {
-                  street: payload.address,
+                  address: payload.address,
                   zip: payload.zip,
                   country: payload.country,
                   city: payload.city,
@@ -397,7 +395,6 @@ class LocationForm extends React.Component {
   };
 
   handleSubmit = (payload, deleteObj) => {
-  console.log('TCL: handleSubmit -> handleSubmit');
   this.setState({ isBusy: true });
     
     const { data } = this.props;
@@ -415,6 +412,7 @@ class LocationForm extends React.Component {
       methodName = "location.addLocation";
       docObj.doc = payload;
     }
+    this.props.handleIsSavedState(true);
     this.props && this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, docObj, (error, result) => {
       if (error) {
@@ -422,6 +420,7 @@ class LocationForm extends React.Component {
       if (result) {
         this.props.onClose(result);
       }
+      this.props.handleIsSavedState(true);
       this.setState({ isBusy: false, error });
     });
   };
@@ -451,14 +450,14 @@ class LocationForm extends React.Component {
       );
     }
   };
-
+  
   render() {
-    const { fullScreen, data, classes, currentUser } = this.props;
+    const { fullScreen, data, classes, currentUser,handleIsSavedState } = this.props;
     return (
       <div>
         <Dialog
           open={this.props.open}
-          onClose={this.props.onClose}
+          onClose={()=>{unSavedChecker.call(this)}}
           aria-labelledby="form-dialog-title"
           fullScreen={false}
           classes={{ paper: classes.dialogRootPaper }}
@@ -500,25 +499,25 @@ class LocationForm extends React.Component {
                 />
               </MapContainer>
 
-              <MyForm id={formId} onSubmit={this.onSubmit}>
+              <MyForm >
                 <TextField
                   required={true}
-                  defaultValue={data && data.title}
+                  value={this.state.completeAddress.title}
+                  inputRef={ref => (this.title = ref)}
                   margin="dense"
-                  inputRef={ref => (this.locationName = ref)}
+                  onChange={this.handleAddressChange('title')}
                   label="Location Name"
                   type="text"
                   fullWidth
                 />
                 <TextField
-                  value={this.state.completeAddress.street}
+                  value={this.state.completeAddress.address}
                   margin="dense"
                   inputRef={ref => (this.streetAddress = ref)}
                   label="Street Address"
                   type="text"
                   fullWidth
-                  onChange={this.handleAddressChange("street")}
-                  onBlur={this.handleBlur}
+                  onChange={this.handleAddressChange("address")}
                 />
                 <TextField
                   required={true}
@@ -528,7 +527,6 @@ class LocationForm extends React.Component {
                   label="City"
                   type="text"
                   onChange={this.handleAddressChange("city")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
                 {/* state ==> for the state in a country*/}
@@ -539,7 +537,6 @@ class LocationForm extends React.Component {
                   label="State"
                   type="text"
                   onChange={this.handleAddressChange("state")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
                 <TextField
@@ -550,7 +547,6 @@ class LocationForm extends React.Component {
                   label="Zip Code"
                   type="text"
                   onChange={this.handleAddressChange("zip")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
                 <TextField
@@ -561,7 +557,6 @@ class LocationForm extends React.Component {
                   label="Country"
                   type="text"
                   onChange={this.handleAddressChange("country")}
-                  onBlur={this.handleBlur}
                   fullWidth
                 />
               </MyForm>
@@ -581,15 +576,16 @@ class LocationForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={() => this.props.onClose()}
+                onClick={()=>{
+                  handleIsSavedState(true);
+                  this.props.onClose();
+                }}
                 label="Cancel"
                 className={classes.cancel}
               />
             </ButtonWrapper>
             <ButtonWrapper>
               <FormGhostButton
-                type="submit"
-                form={formId}
                 onClick={this.onSubmit}
                 label={data ? "Save" : "Submit"}
                 className={classes.save}
@@ -602,4 +598,4 @@ class LocationForm extends React.Component {
   }
 }
 
-export default withStyles(styles)(withMobileDialog()(LocationForm));
+export default withStyles(styles)(withMobileDialog()(withPopUp(LocationForm)));

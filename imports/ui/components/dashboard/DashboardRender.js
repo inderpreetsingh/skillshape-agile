@@ -1,15 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { lazy, Suspense } from 'react';
+import { Loading } from '/imports/ui/loading';
 import styled from 'styled-components';
-import { browserHistory } from 'react-router';
-
-import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import Header from './header';
 import SchoolsList from './schools/';
-
-import { getUserFullName } from '/imports/util';
+import BrandBar from '/imports/ui/components/landing/components/BrandBar.jsx';
+import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
+import { primaryColor, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { rhythmDiv, primaryColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+const MyTransaction = lazy(()=>import("/imports/ui/components/users/myTransaction"))
+import CompletePrompt from '/imports/ui/components/completePrompt/index.jsx';
 
 const Wrapper = styled.div`
     display: flex;
@@ -58,12 +57,19 @@ export default (props) => {
             currentUser={currentUser}
             isUserSubsReady={isUserSubsReady}
         />
+        <CompletePrompt/>
         <DashBoardContent>
             <Header {...headerProps} onCreateNewSchoolClick={onCreateNewSchoolClick} />
             <BodyWrapper>
                 <SchoolsList schools={bodyProps.schools} />
                 {/*<AddSchool><MyLink onClick={onCreateNewSchoolClick}>click here</MyLink> to add a new school.</AddSchool>*/}
             </BodyWrapper>
+            <Suspense fallback={<Loading/>}>
+            <MyTransaction
+                  schoolView = {true}
+                  schoolData = {bodyProps.schools}
+                  />
+            </Suspense>
             <Footer />
         </DashBoardContent>
     </Wrapper>)

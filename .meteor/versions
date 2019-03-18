@@ -68,6 +68,8 @@ mdg:validation-error@0.2.0
 meteor@1.7.2
 meteor-base@1.1.0
 meteor-platform@1.2.6
+meteorhacks:aggregate@1.3.0
+meteorhacks:collection-utils@1.2.0
 meteorhacks:picker@1.0.3
 meteortoys:toykit@4.0.1
 minifier-css@1.2.16
@@ -82,7 +84,7 @@ mongo-id@1.0.6
 mongo-livedata@1.0.12
 msavin:mongol@4.0.1
 npm-bcrypt@0.9.3
-npm-mongo@2.2.30
+npm-mongo@2.2.34
 oauth@1.1.13
 oauth2@1.1.11
 observe-sequence@1.0.16

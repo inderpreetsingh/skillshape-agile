@@ -43,3 +43,4 @@ percolate:synced-cron
 force-ssl
 abernix:standard-minifier-js
 meteorhacks:picker
+meteorhacks:aggregate

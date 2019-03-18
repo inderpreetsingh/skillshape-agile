@@ -8,8 +8,8 @@ import Events from "/imports/util/events";
 export default class ClaimSchoolBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      filters: {},
+    let state = {
+      filters: { },
       sticky: false,
       filterPanelDialogBox: false,
       showConfirmationModal: false,
@@ -17,6 +17,10 @@ export default class ClaimSchoolBase extends React.Component {
       tempFilters: {},
       error: null
     };
+    if(this.props.params.schoolName){
+      state.filters.schoolName = this.props.params.schoolName;
+    }
+    this.state = state;
   }
 
   handleLoading = (state) => {
@@ -24,7 +28,16 @@ export default class ClaimSchoolBase extends React.Component {
         isLoading: state
       })
   }
-
+  componentWillReceiveProps(nextProps){
+    let schoolName = nextProps.params.schoolName;
+    if(schoolName){
+        this.setState((state)=>{
+          const {filters} = state;
+          filters.schoolName=schoolName;
+          this.setState({filters});
+        })
+    }
+  }
   handleFixedToggle = state => {
     // const stickyPosition = !defaultPosition;
     // if (this.state.sticky != stickyPosition) {
@@ -67,10 +80,11 @@ export default class ClaimSchoolBase extends React.Component {
   // This is used to handle listing of a new school for a login user.
   handleListingOfNewSchool = () => {
     let currentUser = Meteor.user();
+    const {schoolName} = this.props.params;
     if (currentUser) {
       // Start Lodaing
       this.setState({ isLoading: true });
-      Meteor.call("school.addNewSchool", currentUser, (err, res) => {
+      Meteor.call("school.addNewSchool", currentUser,schoolName, (err, res) => {
         let state = {
           isLoading: false
         };

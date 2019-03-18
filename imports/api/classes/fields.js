@@ -27,6 +27,11 @@ Classes.attachSchema(new SimpleSchema({
         type: [Object],
         optional: true,
         blackbox: true
+    },
+    eventData:{
+        type:Object,
+        optional: true,
+        blackbox: true
     }
 }));
 

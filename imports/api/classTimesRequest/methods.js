@@ -50,11 +50,11 @@ Meteor.methods({
         const fromEmail = 'Notices@SkillShape.com';
         const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
-        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members?userId=${this.userId}` : '';
         const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
         const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
         const currentUserName = data.name;
-        const requestFor = "Schedule";
+        const requestFor = "Class time";
 
         let ownerName = '';
         let classTimesRequestId = '';
@@ -165,12 +165,6 @@ Meteor.methods({
       }
    },
     'classTimesRequest.getUserRecord':function(classTypeId){
-      let result = ClassTimesRequest.findOne({userId:this.userId,classTypeId});
-      if(result){
-        return result.notification;
-      }
-      else {
-        return false;
-      }
+      return ClassTimesRequest.findOne({userId:this.userId,classTypeId});
     }
 })

@@ -1,22 +1,56 @@
 import React from "react";
+import styled from 'styled-components';
 import Grid from 'material-ui/Grid';
 import FileUpload from 'material-ui-icons/FileUpload';
 import Button from 'material-ui/Button';
-
-import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
 import Card from 'material-ui/Card';
+
+import { EmailUsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import CreateMedia from "/imports/ui/components/schoolView/editSchool/mediaDetails/createMedia.js";
+import NoMediaFound from '/imports/ui/components/landing/components/helpers/NoMediaFound.jsx';
 import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList';
 
+import { rhythmDiv, lightShadow } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { SectionTitle } from '../sharedStyledComponents.js';
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    padding: ${rhythmDiv}px;
+    padding-bottom: ${rhythmDiv * 4}px;
+`;
+
+const MediaWrapper = styled.div`
+    width: 100%;
+    background-color: white;
+    box-shadow: ${lightShadow};
+`;
+
+const ButtonWrapper = styled.div`
+    padding: ${rhythmDiv}px; 
+    float: right; 
+`;
+
+const MediaListWrapper = styled.div`
+
+`;
+
 export default function () {
-    const { showCreateMediaModal, mediaFormData, filterStatus, limit, memberInfo, _id, openEditTaggedModal } = this.state;
-    const { mediaListfilters, showUploadImageBtn } = this.props;
+    const { showCreateMediaModal, mediaFormData, emailUsDialog, filterStatus, limit, memberInfo, _id, openEditTaggedModal } = this.state;
+    const { mediaListfilters, showUploadImageBtn, schoolData } = this.props;
 
     return (
-        <Grid container style={{ display: 'flex', padding: '12px', marginBottom: '16px' }}>
-            <Grid item md={12} sm={12} xs={12}>
-                {this.props.schoolData && <b>Media at {this.props.schoolData.name}</b>}
-            </Grid>
-            <Grid item md={12} sm={12} xs={12} style={{ background: '#fff', width: '100%', boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)' }}>
+        <Wrapper>
+            {emailUsDialog && <EmailUsDialogBox
+                ourEmail={schoolData.email}
+                schoolData={schoolData}
+                open={emailUsDialog}
+                onModalClose={this.handleDialogState('emailUsDialog', false)} />
+            }
+            {this.props.schoolData && <SectionTitle bgColor="white">Media at {this.props.schoolData.name}</SectionTitle>}
+            <MediaWrapper>
                 {
                     showUploadImageBtn && (
                         <CreateMedia
@@ -38,7 +72,7 @@ export default function () {
                         />
                     )
                 }
-                <Grid item md={4} sm={4} xs={4} style={{ padding: '8px', float: 'right' }}>
+                <ButtonWrapper>
                     {
                         showUploadImageBtn && (
                             <Button raised color="accent" onClick={() => this.setState({ showCreateMediaModal: true, mediaFormData: null, filterStatus: false })}>
@@ -46,8 +80,8 @@ export default function () {
                             </Button>
                         )
                     }
-                </Grid>
-                <Grid item xs={12}>
+                </ButtonWrapper>
+                <MediaListWrapper>
                     <MediaList
                         changeLimit={() => { }}
                         limit={limit || 0}
@@ -60,6 +94,10 @@ export default function () {
                         handleTaggingMembers={this.props.handleTaggingMembers}
                         schoolData={this.props.schoolData}
                         memberInfo={memberInfo}
+                        noMediaFound={<NoMediaFound
+                            schoolName={schoolData.name}
+                            siteLink={schoolData.website}
+                            onEmailButtonClick={this.handleDialogState('emailUsDialog', true)} />}
                     />
                     {
                         /*collectionData.length && (
@@ -79,8 +117,8 @@ export default function () {
                                 </Grid>
                             </Grid>)*/
                     }
-                </Grid>
-            </Grid>
-        </Grid>
+                </MediaListWrapper>
+            </MediaWrapper>
+        </Wrapper>
     )
 }

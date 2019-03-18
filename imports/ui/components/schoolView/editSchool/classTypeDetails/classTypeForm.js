@@ -1,31 +1,24 @@
-import React from "react";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { withStyles } from "material-ui/styles";
 import { findIndex } from "lodash";
-import Button from "material-ui/Button";
-import config from "/imports/config";
-import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
-import Select from "material-ui/Select";
-import SkillSubject from "react-select";
-import Grid from "material-ui/Grid";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import "/imports/api/sLocation/methods";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
 import { FormControl } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-const formId = "classTypeForm";
+import Select from "material-ui/Select";
+import { withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
+import React from "react";
+import SkillSubject from "react-select";
 import styled from "styled-components";
+import "/imports/api/sLocation/methods";
+import config from "/imports/config";
 import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { withPopUp ,confirmationDialog} from '/imports/util';
 import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { confirmationDialog, withPopUp ,unSavedChecker} from '/imports/util';
+const formId = "classTypeForm";
 const customStyle = {
   marginTop: "10px",
   marginBottom: '10px',
@@ -75,7 +68,8 @@ class ClassTypeForm extends React.Component {
   }
 
   initializeFields = () => {
-    const { data, locationData } = this.props;
+    const { data, locationData,handleIsSavedState } = this.props;
+    handleIsSavedState(true);
     let state = {
       gender: "Any",
       experienceLevel: "All",
@@ -87,7 +81,7 @@ class ClassTypeForm extends React.Component {
       selectedLocation: null,
       searchSkillCategoryText: "",
       selectedOption: [],
-      skillSubject: []
+      skillSubject: [],
 
     };
     if (data && _.size(data) > 0) {
@@ -167,9 +161,11 @@ class ClassTypeForm extends React.Component {
 
 
   handleSkillSubjectInputChange = selectedOption => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState(false);
     this.setState(state => {
       return {
-        selectedOption: selectedOption
+        selectedOption: selectedOption,
       };
     });
   };
@@ -233,6 +229,7 @@ class ClassTypeForm extends React.Component {
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
     //this.props.enableParentPanelToDefaultOpen();
+    const {handleIsSavedState} = this.props;
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
 
       if (error) {
@@ -244,6 +241,7 @@ class ClassTypeForm extends React.Component {
           this.props.onClose(result, "add");
         }
       }
+      handleIsSavedState(true);
       this.setState({ isBusy: false, error });
     });
   };
@@ -252,16 +250,17 @@ class ClassTypeForm extends React.Component {
     this.setState({ location: defaultLocId })
     return defaultLocId;
   }
+  
   render() {
-    const { fullScreen, data, classes, locationData } = this.props;
-    const { skillCategoryData, skillSubjectData, selectedOption } = this.state;
+    const { fullScreen, data, classes, handleIsSavedState } = this.props;
+    const {  skillSubjectData, selectedOption } = this.state;
     return (
       <div>
         <Dialog
           open={this.props.open}
-          onClose={this.props.onClose}
+          onClose={()=>{unSavedChecker.call(this)}}
           aria-labelledby="form-dialog-title"
-          fullScreen={fullScreen}
+          fullScreen={false}
         >
           <DialogTitle id="form-dialog-title">Add Class Type</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
@@ -286,7 +285,6 @@ class ClassTypeForm extends React.Component {
             <div style={{ color: "red" }}>{this.state.error}</div>
           ) : (
               <DialogContent>
-                <form id={formId} onSubmit={this.onSubmit}>
                   <TextField
                     required={true}
                     defaultValue={data && data.name}
@@ -294,6 +292,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.classTypeName = ref)}
                     label="Class Type Name"
                     type="text"
+                    onChange={()=>{handleIsSavedState(false)}}
                     fullWidth
                   />
                   <TextField
@@ -302,6 +301,7 @@ class ClassTypeForm extends React.Component {
                     inputRef={ref => (this.desc = ref)}
                     label="Brief Description (200 Characters)"
                     type="text"
+                    onChange={()=>{handleIsSavedState(false)}}
                     fullWidth
                     multiline
                     inputProps={{ maxLength: 200 }}
@@ -325,8 +325,10 @@ class ClassTypeForm extends React.Component {
                           required={true}
                           input={<Input id="gender" />}
                           value={this.state.gender}
-                          onChange={event =>
-                            this.setState({ gender: event.target.value })
+                          onChange={event =>{
+                            this.setState({ gender: event.target.value})
+                            handleIsSavedState(false)
+                          }
                           }
                           fullWidth
                         >
@@ -355,6 +357,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
+                          onChange={()=>{handleIsSavedState(false)}}
                         />
                         <TextField
                           defaultValue={data && data.ageMax}
@@ -369,6 +372,7 @@ class ClassTypeForm extends React.Component {
                             backgroundColor: "#fff"
                           }}
                           inputProps={{ min: "0" }}
+                          onChange={()=>{handleIsSavedState(false)}}
                         />
                       </div>
                     </Grid>
@@ -383,8 +387,10 @@ class ClassTypeForm extends React.Component {
                           required={true}
                           input={<Input id="experienceLevel" />}
                           value={this.state.experienceLevel}
-                          onChange={event =>
-                            this.setState({ experienceLevel: event.target.value })
+                          onChange={event =>{
+                            this.setState({ experienceLevel: event.target.value})
+                            handleIsSavedState(false)
+                          }
                           }
                           fullWidth
                         >
@@ -400,7 +406,6 @@ class ClassTypeForm extends React.Component {
                     </Grid>
 
                   </Grid>
-                </form>
               </DialogContent>
             )}
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
@@ -418,7 +423,10 @@ class ClassTypeForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={() => this.props.onClose()}
+                onClick={()=>{
+                  handleIsSavedState(true);
+                  this.props.onClose();
+                }}
                 label="Cancel"
                 className={classes.cancel}
               />
@@ -426,8 +434,6 @@ class ClassTypeForm extends React.Component {
 
             <ButtonWrapper>
               <FormGhostButton
-                type="submit"
-                form={formId}
                 onClick={this.onSubmit}
                 label={data ? "Save" : "Submit"}
                 className={classes.save}

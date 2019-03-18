@@ -360,37 +360,43 @@ Meteor.methods({
     }
     return { inviteAccepted: true };
   },
-  "school.addNewSchool": function (doc) {
-    check(doc, Object);
+  "school.addNewSchool": function (doc,schoolName) {
+    try{
+      check(doc, Object);
 
-    const currentUser = doc || Meteor.users.findOne(this.userId);
-    if (!this.userId) {
-      throw new Meteor.Error("Access denied", "Error while adding new school");
-    }
-    const schoolInsertDoc = {
-      email: currentUser.emails.address,
-      isPublish: true,
-      superAdmin: currentUser._id,
-      admins: [currentUser._id],
-      aboutHtml: "",
-      descHtml: "",
-      name: "my-school"
-    };
-    let schoolId = School.insert(schoolInsertDoc);
-    // Needs to make current user admin of this School.
-    Meteor.users.update(
-      { _id: this.userId },
-      {
-        $addToSet: {
-          "profile.schoolId": schoolId
-        }
+      const currentUser = doc || Meteor.users.findOne(this.userId);
+      if (!this.userId) {
+        throw new Meteor.Error("Access denied", "Error while adding new school");
       }
-    );
-    let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
-    let name = getUserFullName(currentUser);
-    let userData = { name, schoolEditViewLink };
-    newSchoolJoinNotification(userData);
-    return schoolEditViewLink;
+      const schoolInsertDoc = {
+        email: currentUser.emails.address,
+        isPublish: true,
+        superAdmin: currentUser._id,
+        admins: [currentUser._id],
+        aboutHtml: "",
+        descHtml: "",
+        name: schoolName ? schoolName : "my-school"
+      };
+      let schoolId = School.insert(schoolInsertDoc);
+      // Needs to make current user admin of this School.
+      Meteor.users.update(
+        { _id: this.userId },
+        {
+          $push: {
+            "profile.schoolId": schoolId
+          }
+        }
+      );
+      let schoolEditViewLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+      let name = getUserFullName(currentUser);
+      let userData = { name, schoolEditViewLink };
+      newSchoolJoinNotification(userData);
+      return schoolEditViewLink;
+    }catch(error){
+      console.log('error in school.addNewSchool', error);
+      throw new Meteor.Error(error);
+    }
+   
   },
   "school.addNewMemberWithoutEmail": function (doc) {
     check(doc, Object);
@@ -455,6 +461,24 @@ Meteor.methods({
         }
       })
       return 1;
+    }
+  },
+  "school.findSchoolNameExistsOrNot":function(schoolName){
+    try{
+      if(schoolName){
+        schoolName = schoolName.split(" ");
+            let schoolNameRegEx = [];
+            schoolName.map((str)=>{
+                schoolNameRegEx.push(new RegExp(`.*${str}.*`, 'i'))
+              })
+       let result =  School.find({name:{$in:schoolNameRegEx}}).count();
+       console.log('TCL: result', result)
+       return result
+      }
+      return [];
+    }catch(error){
+			console.log('error in school.findSchoolNameExistsOrNot', error)
+      throw new Meteor.Error(error);
     }
   }
 });

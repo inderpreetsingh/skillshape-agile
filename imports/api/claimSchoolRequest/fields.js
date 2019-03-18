@@ -15,6 +15,7 @@ ClaimSchoolRequest.attachSchema(new SimpleSchema({
     },
     schoolEmail: {
         type: String,
+        optional:true
     },
     userId: {
         type: String,

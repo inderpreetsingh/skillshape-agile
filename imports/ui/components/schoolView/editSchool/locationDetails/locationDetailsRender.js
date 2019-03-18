@@ -4,7 +4,7 @@ import locationSettings from "./locationSettings";
 import isEmpty from "lodash/isEmpty";
 
 export default function() {
-  let { locationData, showFormBuilderModal, moveTab, schoolId } = this.props;
+  let { locationData, showFormBuilderModal, moveTab, schoolId ,isSaved,handleIsSavedState} = this.props;
 
   // console.log("SchoolEditDetails locationData 222-->>", locationData)
   return (
@@ -19,6 +19,8 @@ export default function() {
           showFormBuilderModal={showFormBuilderModal}
           showLocationDialog={isEmpty(locationData)}
           moveToNextTab={this.moveToNextTab}
+          handleIsSavedState={handleIsSavedState}
+          isSaved={isSaved}
         />
       </div>
       {/*<div className="wizard-footer col-md-12">

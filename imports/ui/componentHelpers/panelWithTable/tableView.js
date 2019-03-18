@@ -124,7 +124,7 @@ export default function (props) {
 														    			<td className="td-actions ">
 														    				{
 														    					settings.childTable.actions.edit && (
-														    						<button type="button" onClick={()=>{showFormBuilderModal({type:"Edit", tableData: settings.childTable, formFieldsValues: roomData, parentData: dataItem})}} rel="tooltip" className="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id={roomData._id} data-location={dataItem._id} data-name={roomData.name} data-capicity={roomData.capicity}>
+														    						<button type="button" onClick={()=>{showFormBuilderModal({type:"Edit", tableData: settings.childTable, formFieldsValues: roomData, parentData: dataItem})}} rel="tooltip" className="btn btn-warning editRoomLocat" data-original-title="" title="" id="editRoomLocat" data-id={roomData._id} data-location={dataItem._id} data-name={roomData.name} data-capicity={roomData.capacity}>
 	                                            <i className="material-icons">edit</i>
 	                                        	</button>
 														    					)

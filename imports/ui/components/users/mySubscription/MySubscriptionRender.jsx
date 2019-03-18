@@ -9,7 +9,8 @@ import IconButton from 'material-ui/IconButton';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import { FormGhostButton } from '/imports/ui/components/landing/components/buttons/';
-import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
+import { CallUsDialogBox, EmailUsDialogBox, ManageMemberShipDialogBox,PrivacySettings } from '/imports/ui/components/landing/components/dialogs/';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 import SubscriptionsList from '/imports/ui/componentHelpers/subscriptions/SubscriptionsList.jsx';
 import ProfileImage from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
@@ -17,34 +18,6 @@ import ProfileImage from '/imports/ui/components/landing/components/helpers/Prof
 import { Heading, SubHeading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { schoolLogo } from '/imports/ui/components/landing/site-settings.js';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-stopNotification = (payload) => {
-    this.setState({ isBusy: true });
-    let data = {};
-    data.classTypeId = payload.classTypeId;
-    data.userId = payload.userId;
-    data.notification = !payload.notification;
-    Meteor.call("classTypeLocationRequest.updateRequest", data, (err, res) => {
-        const { popUp } = this.props;
-        if (res) {
-            Meteor.call("classTimesRequest.updateRequest", data, (err1, res1) => {
-                if (res1) {
-                    this.setState({ isBusy: false });
-                    popUp.appear("success", {
-                        content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-                    });
-                }
-            });
-        }
-        else {
-            this.setState({ isBusy: false });
-            popUp.appear("success", {
-                content: `Notification ${data.notification ? 'enabled' : 'disabled'} successfully.`
-            });
-        }
-    });
-}
-
 const styles = {
     contactIconButton: {
         background: 'white',
@@ -95,7 +68,7 @@ const SchoolName = SubHeading.extend`
 `;
 
 const Wrapper = styled.div`
-	max-width: 800px;
+	max-width: 869px;
 	margin: 0 auto;
 	margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
@@ -128,7 +101,6 @@ const ActionButton = styled.div`
     display: flex;
     margin-right: ${helpers.rhythmDiv}px;
 	margin-bottom: ${helpers.rhythmDiv}px;
-
     @media screen and (max-width: ${helpers.tablet - 100}px) {
         width: 100%;
     }
@@ -186,21 +158,15 @@ const ContactIcons = styled.div`
 
 const ActionButtons = (props) => (
     <ActionButtonsWrapper>
+        <ActionButton onClick={props.onPrivacySettingsClick}>
+            <FormGhostButton fullWidth icon iconName="settings" label="Privacy Settings" />
+        </ActionButton>
         <ActionButton onClick={props.onEditMemberShip}>
             <FormGhostButton fullWidth icon iconName="remove_from_queue" label="Edit Membership" />
         </ActionButton>
         <ActionButton onClick={props.onSchoolVisit(props.schoolSlug)}>
             <FormGhostButton fullWidth icon iconName="school" label="Visit School" />
         </ActionButton>
-        {/*
-        {props.phone && props.phone.length && <ActionButton onClick={props.onCall(props.phone)}>
-            <FormGhostButton icon iconName="phone" label="Call" />
-        </ActionButton>}
-
-        {props.email && <ActionButton onClick={props.onEmail(props.email, props.data)}>
-            <FormGhostButton icon iconName="email" label="Email" noMarginBottom />
-        </ActionButton>}
-        */}
     </ActionButtonsWrapper>
 );
 
@@ -221,7 +187,6 @@ const MySubscriptionRender = (props) => {
     };
 
     const {
-        src,
         email,
         phone,
         classes,
@@ -236,7 +201,6 @@ const MySubscriptionRender = (props) => {
         selectedSchool,
         getContactNumbers,
         handleModelState,
-        handleSchoolVisit,
         manageMemberShipDialog,
         handleManageMemberShipDialogBox,
         removeAll,
@@ -244,14 +208,30 @@ const MySubscriptionRender = (props) => {
         leaveSchool,
         removeFromCalendar,
         isBusy,
-        subscriptionsData
+        subscriptionsData,
+        emailAccess,
+        phoneAccess,
+        memberId,
+        onPrivacySettingsClick,
+        privacySettings,
     } = props;
 
     let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
     let userId = get(currentUser, '_id', null);
-    let schoolName = get(schoolData[0], 'name', null);
+    let schoolName = get(selectedSchool, 'name', 'School');
     return (
         <Fragment>
+            { privacySettings &&
+                <PrivacySettings
+                open={privacySettings}
+                onModalClose={()=>{onPrivacySettingsClick(false)}}
+                schoolName={schoolName}
+                memberId={memberId}
+                emailAccess = {emailAccess}
+                phoneAccess = {phoneAccess}
+                />
+            }
+            {isBusy && <ContainerLoader/>}
             {manageMemberShipDialog && (
                 <ManageMemberShipDialogBox
                     subscriptionsData={subscriptionsData || []}
@@ -265,6 +245,7 @@ const MySubscriptionRender = (props) => {
                     isBusy={isBusy}
                     userId={userId}
                     selectedSchoolData={selectedSchool}
+                    memberId = {memberId}
                 />
             )}
             {callUsDialog && (
@@ -285,21 +266,18 @@ const MySubscriptionRender = (props) => {
             <PageTitle>My Subscriptions</PageTitle>
             <Wrapper>
                 {!isEmpty(schoolData) &&
-                    schoolData.map((school) => {
+                    schoolData.map((school,index) => {
                         const EXPIRED = 'expired';
                         const subscriptionsData = getSubsDataBasedOnSchool(school._id, purchaseData);
                         const activeSubsData = subscriptionsData.filter(subs => subs.packageStatus != EXPIRED);
                         const expiredSubsData = subscriptionsData.filter(subs => subs.packageStatus == EXPIRED || subs.status == EXPIRED);
-
-                        // console.group(' MY SUBSCRIPTION');
-                        // console.log(activeSubsData, expiredSubsData, '===============');
-                        // console.group();
 
                         return (
                             <ExpansionPanel
                                 classes={{
                                     root: classes.expansionPanelRoot
                                 }}
+                                defaultExpanded={index == 0}
                             >
                                 <ExpansionPanelSummary
                                     classes={{
@@ -336,7 +314,7 @@ const MySubscriptionRender = (props) => {
                                         phone={getContactNumbers(school)}
                                         schoolSlug={school.slug}
                                         onEditMemberShip={handleManageMemberShipDialogBox(true, school)}
-
+                                        onPrivacySettingsClick = {()=>{onPrivacySettingsClick(true,school)}}
                                         onSchoolVisit={props.handleSchoolVisit}
                                     />
                                 </ExpansionPanelSummary>

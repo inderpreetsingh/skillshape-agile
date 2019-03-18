@@ -127,6 +127,7 @@ class ChangePasswordDialogBox extends Component {
           this.props.hideChangePassword(
             "Your password has been changed successfully"
           );
+          this.props.onModalClose();
         }
         stateObj.isBusy = false;
         this.setState(stateObj);

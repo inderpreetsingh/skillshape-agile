@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import styled from 'styled-components';
-import { get, isEmpty } from "lodash";
+import { get, isEmpty ,isArray} from "lodash";
 import Paper from 'material-ui/Paper';
 import { withStyles } from "material-ui/styles";
 import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
@@ -20,6 +20,7 @@ import {
   goToSchoolPage,
   withPopUp, confirmationDialog
 } from "/imports/util";
+import {ChartComponent} from './chart.jsx'
 
 import config from "../../../../config";
 const packageTypes = [{ label: 'Package Type All', value: 1 }, { label: "Per Class", value: "CP" }, { label: "Monthly Package", value: 'MP' }, { label: "Enrollment Package", value: 'EP' }];
@@ -83,7 +84,13 @@ class MyTransaction extends React.Component {
   }
 
   componentWillMount() {
-    const {schoolView,schoolData} = this.props;
+   this.setInitialFilters(this.props);
+  }
+  componentWillReceiveProps(nextProps){
+    this.setInitialFilters(nextProps);
+  }
+  setInitialFilters = (props) => {
+    const {schoolView,schoolData} = props;
     let state = {
       transactionData: [],
       perPage: 10,
@@ -102,18 +109,36 @@ class MyTransaction extends React.Component {
       limit: 10,
       skip: 0,
       isLoading: true,
-      stripeIDealDialog:false
+      stripeIDealDialog:false,
     };
-    if(schoolView){
-      const {_id:schoolId} = schoolData;
-      state.filter = {
-        schoolId
+    let isDashboard = false;
+    let schoolOptions = [{label:'All',value:1}];
+    let schoolId=[];
+    if(schoolView && !isEmpty(schoolData)){
+      if(isArray(schoolData) ){
+        isDashboard = true;
+        schoolData.map((obj)=>{
+          const {_id:value,name:label} = obj;
+          schoolId.push(value);
+          schoolOptions.push({label,value});
+        });
       }
-    }else{
+      else{
+        const {_id} = schoolData;
+        schoolId = [_id];
+      }
       state.filter = {
-        userId: get(this.props.params, 'id', Meteor.userId())
+        schoolId,
+        }
+    }else{
+      isDashboard = false;
+      state.filter = {
+        userId: get(props.params, 'id', Meteor.userId()),
       }
     }
+    state.isDashboard = isDashboard;
+    state.schoolOptions = schoolOptions;
+    state.allSchoolIds = schoolId;
     this.setState({...state},()=>{this.getPurchaseData()});
   }
   // get transaction data from db on page load and page number click.
@@ -125,7 +150,7 @@ class MyTransaction extends React.Component {
     Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
       let state = {};
       if (res) {
-        state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records }
+        state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records ,graphData:res.graphData}
       }
       state.isLoading = false;
       this.setState(state);
@@ -154,25 +179,7 @@ class MyTransaction extends React.Component {
       textFieldValue: e.target.value
     });
   }
-  // handleFilter = (value, filterName, stateName) => {
-  //   let stringValue = get(value.target, "value", null)
-  //   if (filterName == 'packageName') {
-  //     value = stringValue ? stringValue : "";
-  //   }
-  //   this.setState(state => {
-  //     let { filter } = state;
-  //     if (value.value && filterName || typeof value == 'string' && value)
-  //       filter[filterName] = value.value ? value.value : new RegExp(`^${value}`, 'i');
-  //     else
-  //       delete filter[filterName];
-  //     return {
-  //       [stateName]: value,
-  //       filter,
-  //       isLoading: true,
-  //       skip: 0,
-  //     };
-  //   }, () => { this.getPurchaseData(); });
-  // };
+
 
   handleFilter = (event, filterName, stateName) => {
     let filterValue = filterValueOriginal = get(event.target, 'value', null);
@@ -181,9 +188,18 @@ class MyTransaction extends React.Component {
       reg = true;
     }
     this.setState(state => {
-      const { filter } = state;
-      if (filterValue && typeof filterValue === 'number') filterValue = 0;
-      if (filterValue && filterName || typeof filterValue == 'string') {
+      const { filter ,allSchoolIds} = state;
+      if (filterValue && typeof filterValue === 'number' && filterName!='schoolId') filterValue = 0;
+      if (filterValue && filterName ) {
+        if(filterName == 'schoolId' && filterValue)
+        {
+          if(filterValue == 1){
+           filter[filterName] = allSchoolIds;
+          }
+          else
+          filter[filterName] = [filterValue]
+        }
+        else
         filter[filterName] = !reg ? filterValue : new RegExp(`.*${filterValue}.*`, 'i');;
       } else {
         delete filter[filterName];
@@ -233,7 +249,7 @@ class MyTransaction extends React.Component {
     confirmationDialog(data);
   }
   render() {
-    const { transactionData, isLoading, selectedFilter, sddb, index, contractDialog } = this.state;
+    const { transactionData, isLoading, isDashboard, sddb, index, contractDialog ,graphData} = this.state;
     const { classes, popUp,schoolView } = this.props;
     let columnData = getTableProps(schoolView)
     const { tableHeaderColumns } = columnData;
@@ -262,6 +278,7 @@ class MyTransaction extends React.Component {
               handleResult={this.handleIDealResult}
             />}
           {filterForTransaction.call(this)}
+         {isDashboard &&  <ChartComponent graphData={graphData}/>} 
         </Paper>
         {sddb &&
           <SubscriptionsDetailsDialogBox

@@ -97,6 +97,8 @@ export class WeekDaysRow extends React.Component {
   };
 
   handleChangeDate = (index, fieldName, date) => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState();
     const oldRow = [...this.state.row];
     oldRow[index][fieldName] = new Date(date);
     this.setState({ row: oldRow });
@@ -121,6 +123,8 @@ export class WeekDaysRow extends React.Component {
   };
 
   handleSelectInputChange = (index, fieldName, event) => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState();
     const oldRow = [...this.state.row];
     const { locationData } = this.props;
     oldRow[index][fieldName] = event.target.value;
@@ -149,6 +153,8 @@ export class WeekDaysRow extends React.Component {
     return this.state.row;
   };
   handleWeekDay = (key, index) => {
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState();
     let oldRow = this.state.row;
     oldRow[index][`key`] = key;
     this.setState({ row: oldRow });

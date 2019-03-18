@@ -7,6 +7,7 @@
  */
 
 export const addDelimiter = (str,delimiter = '_') => {
+  if(str)
   return str.split(' ').join(delimiter);
 }
 

@@ -79,10 +79,10 @@ class ClassTypeCard extends Component {
 				schoolId: schoolId
 			};
 
-			Meteor.call('classTimesRequest.addRequest', data, (err, res) => {
+			Meteor.call('classTimesRequest.addRequest', data,'save', (err, res) => {
 				this.setState({ isBusy: false }, () => {
 					if (err) {
-						popUp.appear('error', { content: err.reason || err.message }, false);
+						popUp.appear('alert', { content: err.reason || err.message }, true);
 					} else {
 						popUp.appear('success', {
 							content: 'Your request has been processed'
@@ -174,6 +174,7 @@ class ClassTypeCard extends Component {
 						y={this.state.y}
 						{...this.props}
 						params={params}
+						schoolData={this.props.schoolData}
 					/>
 				)}
 				{this.state.manageRequestsDialog && (

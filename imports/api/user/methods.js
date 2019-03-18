@@ -15,13 +15,10 @@ Meteor.methods({
         sendMeSkillShapeNotification,
         signUpType,
         birthYear,
-        schoolName
+        schoolName,
+        password
     }) {
         if (!isEmpty(name) && !isEmpty(email)) {
-            const password = generator.generate({
-                length: 10,
-                numbers: true
-            });
 /* 
 'Paul Steve Panakkal'.split(' ').slice(0, -1).join(' '); // returns "Paul Steve"
 'Paul Steve Panakkal'.split(' ').slice(-1).join(' '); // returns "Panakkal"
@@ -31,11 +28,11 @@ Meteor.methods({
             let finalName=name.split(' '); 
             const userObj = {
                 email: email,
-                password: password,
+                password,
                 profile: {
                     firstName: finalName[0],
                     lastName:finalName[1],
-                    passwordSetByUser: false,
+                    passwordSetByUser: true,
                     userType: accessType,
                     sendMeSkillShapeNotification: sendMeSkillShapeNotification
                 },
@@ -65,7 +62,7 @@ Meteor.methods({
                 email,
                 schoolName
             );
-            return { user: user, password: password };
+            return { user: user, password: password,email };
         } else {
             throw new Meteor.Error("Cannot process due to lack of information");
         }
@@ -106,9 +103,10 @@ Meteor.methods({
                 { _id: this.userId },
                 { $set: { "profile.passwordSetByUser": true } }
             );
-            return Accounts.setPassword(this.userId, password, {
+            Accounts.setPassword(this.userId, password, {
                 logout: userLogout
             });
+        
         } else {
             throw new Meteor.Error("User not found!!");
         }
@@ -119,7 +117,7 @@ Meteor.methods({
         if (this.userId === docId) {
             return Meteor.users.update({ _id: docId }, { $set: doc });
         } else {
-            return new Meteor.Error("Permission Denied!!");
+            throw new Meteor.Error("Permission Denied!!");
         }
     },
     "user.sendVerificationEmailLink": function(email) {
@@ -203,10 +201,13 @@ Meteor.methods({
         })
         let studentsData = studentsListMaker(usersData,classData,purchaseData)
         return studentsData
+       },
+       'user.getUserDataFromId':function(_id){
+           return Meteor.users.findOne({_id})
        }
 });
 studentsListMaker = (studentsData, classData, purchaseData) => {
-    let studentStatus = classData && classData[0] ? classData[0].students : [];
+    let studentStatus = classData && classData ? classData.students : [];
     studentsData && studentsData.map((obj, index) => {
       studentStatus.map((obj1, index2) => {
         if (obj1.userId == obj._id) {

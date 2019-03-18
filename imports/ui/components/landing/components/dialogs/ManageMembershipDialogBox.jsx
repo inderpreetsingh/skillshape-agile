@@ -1,27 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-
 import { get, isEmpty } from 'lodash';
-import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
-import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
-import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
 import ClearIcon from 'material-ui-icons/Clear';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-
-import ProfileImage, { SSImage } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
-import { FormGhostButton, SkillShapeButton, PrimaryButton, SecondaryButton } from '/imports/ui/components/landing/components/buttons/';
-import { Text, SubHeading, Heading, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { coverSrc } from '/imports/ui/components/landing/site-settings.js';
-
-import {
-    capitalizeString
-} from '/imports/util';
-
-import muiTheme from "../jss/muitheme.jsx";
+import Dialog, { DialogActions, DialogContent, withMobileDialog } from "material-ui/Dialog";
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import IconButton from "material-ui/IconButton";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React from "react";
+import styled from "styled-components";
 import * as helpers from "../jss/helpers.js";
+import muiTheme from "../jss/muitheme.jsx";
+import { FormGhostButton, SecondaryButton, SkillShapeButton } from '/imports/ui/components/landing/components/buttons/';
+import ProfileImage, { SSAvatar } from '/imports/ui/components/landing/components/helpers/ProfileImage.jsx';
+import { SubHeading, Text, ToggleVisibility } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { coverSrc } from '/imports/ui/components/landing/site-settings.js';
+import { ContainerLoader } from "/imports/ui/loading/container";
+import { capitalizeString } from '/imports/util';
+
+
+
+
 
 const styles = theme => {
     return {
@@ -212,7 +210,7 @@ const imageExistsConfig = {
     defaultImage: coverSrc
 };
 
-const ClassImage = withImageExists(SSImage, imageExistsConfig);
+const ClassImage = withImageExists(SSAvatar, imageExistsConfig);
 
 const ClassDataButtons = (props) => (
     <CDButtonsWrapper>
@@ -256,20 +254,21 @@ const ManageMemberShipDialogBox = props => {
     //     return null;
     // }
     const {
+        open,
+        isBusy,
+        userId,
         classes,
         onModalClose,
         schoolName,
         studentName,
         selectedSchoolData,
         subscriptionsData,
-        open,
         stopNotification,
-        isBusy,
         removeFromCalendar,
-        userId,
         removeAll,
         leaveSchool,
-        schoolImg
+        emailAccess,
+        memberId
     } = props;
     // console.log("​subscriptionsData", subscriptionsData)
     return (
@@ -286,7 +285,7 @@ const ManageMemberShipDialogBox = props => {
                     <ProfileImage
                         src={get(selectedSchoolData, 'logoImg', get(selectedSchoolData, 'logoImgMedium', ""))} />
                     <DialogTitleWrapper>
-                        <SchoolName>{capitalizeString(get(selectedSchoolData, 'name', 'schoolName'))}</SchoolName>
+                        <SchoolName>{capitalizeString(schoolName || get(selectedSchoolData, 'name', 'schoolName'))}</SchoolName>
                         <DialogTitleText>Edit membership for {capitalizeString(studentName)}</DialogTitleText>
                     </DialogTitleWrapper>
                     <IconButton
@@ -294,7 +293,7 @@ const ManageMemberShipDialogBox = props => {
                         onClick={props.onModalClose}
                         classes={{ root: props.classes.iconButton }}>
                         <ClearIcon />
-                    </IconButton >
+                    </IconButton>
                 </DialogTitleContainer>
 
                 <DialogContent classes={{ root: classes.dialogContent }}>
@@ -393,7 +392,6 @@ const ManageMemberShipDialogBox = props => {
                     {(!isEmpty(subscriptionsData)) && (<ButtonWrapper>
                         <FormGhostButton alertColor label="Leave school" onClick={leaveSchool} />
                     </ButtonWrapper>)}
-
                     <ButtonWrapper>
                         <FormGhostButton darkGreyColor label="Close" onClick={onModalClose} />
                     </ButtonWrapper>

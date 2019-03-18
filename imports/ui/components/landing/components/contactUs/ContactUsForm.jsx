@@ -7,7 +7,7 @@ import { withStyles } from "material-ui/styles";
 import Radio, { RadioGroup } from "material-ui/Radio";
 import { FormLabel, FormControl, FormControlLabel } from "material-ui/Form";
 
-import { withPopUp } from "/imports/util";
+import { withPopUp ,confirmationDialog} from "/imports/util";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
@@ -55,7 +55,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
       justifyContent: "flex-start"
     },
@@ -255,14 +255,15 @@ class ContactUsForm extends Component {
           (error, result) => {
             if (error) {
             } else {
-              popUp.appear("success", {
-                content: "Thanks for providing your feedback"
-              });
-              if (!this.props.dialogBox) {
-                setTimeout(() => {
-                  browserHistory.push(`/`);
-                }, 200);
+              let data = {};
+              data = {
+                popUp,
+                title: 'Success',
+                type: 'success',
+                content:"Thanks for providing your feedback" ,
+                buttons: [{ label: 'Ok', onClick: () => {this.props.onModalClose() }, greyColor: true }]
               }
+              confirmationDialog(data);
             }
             this.setState({ isLoading: false });
           }

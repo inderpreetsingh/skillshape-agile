@@ -1,36 +1,26 @@
-import React from "react";
 import { get } from "lodash";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import { withStyles } from "/imports/util";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
-import Grid from "material-ui/Grid";
-import Select from "material-ui/Select";
-import Input, { InputLabel, InputAdornment } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import config from '/imports/config';
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  withMobileDialog
-} from "material-ui/Dialog";
-import { FormControl, FormControlLabel } from "material-ui/Form";
-import Icon from "material-ui/Icon";
-import "/imports/api/classPricing/methods";
+import isEmpty from 'lodash/isEmpty';
 import Checkbox from "material-ui/Checkbox";
-const formId = "ClassPriceForm";
-import styled from "styled-components";
-import {inputRestriction,formatMoney} from '/imports/util';
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
+import Select from "material-ui/Select";
+import TextField from "material-ui/TextField";
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
-import { withPopUp } from "/imports/util";
-import isEmpty from 'lodash/isEmpty';
+import React from "react";
+import styled from "styled-components";
+import "/imports/api/classPricing/methods";
+import config from '/imports/config';
+import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { ContainerLoader } from "/imports/ui/loading/container";
+import ConfirmationModal from "/imports/ui/modal/confirmationModal";
+import { formatMoney, inputRestriction, withPopUp, withStyles,unSavedChecker } from "/imports/util";
+const formId = "ClassPriceForm";
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -70,8 +60,9 @@ class ClassPriceForm extends React.Component {
       noExpiration: get(this.props, "data.noExpiration", ""),
       currency: get(this.props, "data.currency", this.props.currency),
       cost: get(this.props,"data.cost",'0'),
-      expDuration: get(this.props,"data.exDuration",false)
+      expDuration: get(this.props,"data.exDuration",false),
     };
+    this.props.handleIsSavedState(true);
   }
 
   handleClassTypeInputChange = value => {
@@ -88,7 +79,8 @@ class ClassPriceForm extends React.Component {
   };
 
   onClassTypeChange = values => {
-    this.setState({ selectedClassType: values });
+    this.props.handleIsSavedState(false);
+    this.setState({ selectedClassType: values});
   };
 
   onSubmit = event => {
@@ -140,6 +132,7 @@ class ClassPriceForm extends React.Component {
   };
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
+    this.props.handleIsSavedState(true);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
       if (error) {
       }
@@ -150,13 +143,15 @@ class ClassPriceForm extends React.Component {
     });
   };
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
+    this.props.handleIsSavedState(false)
+    this.setState({ [name]: event.target.checked,});
   };
 
   cancelConfirmationModal = () =>
     this.setState({ showConfirmationModal: false });
+  
   render() {
-    const { fullScreen, data, classes,schoolData,currency } = this.props;
+    const { fullScreen, data, classes,schoolData,currency,handleIsSavedState } = this.props;
     const { classTypeData,cost} = this.state;
     let selectedCost,selectedCurrency;
     selectedCost = get(this.state,"cost",get(this.props,"data.cost",0));
@@ -165,7 +160,8 @@ class ClassPriceForm extends React.Component {
       <Dialog
         open={this.props.open}
         aria-labelledby="form-dialog-title"
-        fullScreen={fullScreen}
+        fullScreen={false}
+        onClose={()=>{unSavedChecker.call(this)}}
       >
         <DialogTitle id="form-dialog-title">Add Class Package</DialogTitle>
         {this.state.showConfirmationModal && (
@@ -197,6 +193,7 @@ class ClassPriceForm extends React.Component {
                 label="Class Package Name"
                 type="text"
                 fullWidth
+                onChange={()=>{handleIsSavedState(false)}}
               />
               <SelectArrayInput
                 disabled={false}
@@ -236,6 +233,7 @@ class ClassPriceForm extends React.Component {
                     label="Expiration Duration"
                     fullWidth
                     inputProps={{ min: "0"}}
+                    onChange={()=>{handleIsSavedState(false)}}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -248,7 +246,10 @@ class ClassPriceForm extends React.Component {
                       input={<Input id="expiration-period" />}
                       value={this.state.expPeriod}
                       onChange={event =>
-                        this.setState({ expPeriod: event.target.value })
+                        {
+                          handleIsSavedState(false);
+                          this.setState({ expPeriod: event.target.value })
+                        }
                       }
                       fullWidth
                       disabled={this.state.noExpiration}
@@ -283,14 +284,8 @@ class ClassPriceForm extends React.Component {
                 margin="dense"
                 fullWidth
                 inputProps={{ min: "0"}}
+                onChange={()=>{handleIsSavedState(false)}}
               />
-              {/* 1.Currency selection will align with the cost field.(Done)
-                  2.School Default currency will be selected as default. (Done)
-                  or in case of edit package already selected currency will be become default currency.(Done)
-                  3.New field currency need to be created  in the classPricing collection. (Done)
-                  4.User selected currency name and symbol store in the state.(Done)
-                  5.On Save store in the collection.(Done)
-              */}
 
               <FormControl required={true} fullWidth>
                 <InputLabel htmlFor="amount">Cost</InputLabel>
@@ -302,6 +297,7 @@ class ClassPriceForm extends React.Component {
                   defaultValue={data && Number.parseFloat(data.cost).toFixed(2)}
                   type="number"
                   onChange={(e)=>{
+                    handleIsSavedState(false);
                     let x = inputRestriction(e);
                     this.classPriceCost.value = x;
                     this.setState({cost:x});
@@ -312,7 +308,10 @@ class ClassPriceForm extends React.Component {
                     input={<Input id="currency" />}
                     value={this.state.currency}
                     onChange={event =>
-                      this.setState({ currency: event.target.value })
+                      {
+                        handleIsSavedState(false);
+                        this.setState({ currency: event.target.value})
+                      }
                     }
                     >
                      {config.currency.map((data, index)=> {
@@ -334,20 +333,6 @@ class ClassPriceForm extends React.Component {
         )}
         <DialogActions>
           {data && !data.from && (
-          //   <Button
-          //     onClick={() => this.setState({ showConfirmationModal: true })}
-          //     color="accent"
-          //     className={classes.delete}
-          //   >
-          //     Delete
-          //   </Button>
-          // )}
-          // <Button onClick={() => this.props.onClose()} color="primary" className={classes.cancel}>
-          //   Cancel
-          // </Button>
-          // <Button type="submit" form={formId} color="primary" className={classes.save}>
-          //   {data ? "Save" : "Submit"}
-          // </Button>
           <ButtonWrapper>
           <FormGhostButton
             alertColor
@@ -360,7 +345,10 @@ class ClassPriceForm extends React.Component {
       <ButtonWrapper>
         <FormGhostButton
           darkGreyColor
-          onClick={() => this.props.onClose()}
+          onClick={()=>{
+            handleIsSavedState(true);
+            this.props.onClose();
+          }}
           label="Cancel"
           className={classes.cancel}
         />

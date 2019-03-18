@@ -1,7 +1,7 @@
 import get from "lodash/get";
 import React from "react";
 import MyProfileRender from "./myProfileRender";
-import { compressImage, confirmationDialog, withPopUp, withStyles } from "/imports/util";
+import { compressImage, confirmationDialog, withPopUp, withStyles ,handleOnBeforeUnload} from "/imports/util";
 
 const style = theme => {
   return {
@@ -45,21 +45,55 @@ class MyProfile extends React.Component {
       about: "",
       profileExpanded: true,
       mediaExpanded: true,
-      isBusy: false
+      isBusy: false,
+      isSaved:true
     };
   }
-
-  componentDidMount() {
-    this.initialzeUserProfileForm(this.props.currentUser);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.currentUser) {
-      this.initialzeUserProfileForm(nextProps.currentUser);
+  routerWillLeave = (nextLocation) => {
+    // return false to prevent a transition w/o prompting the user,
+    // or return a string to allow the user to decide:
+    // return `null` or nothing to let other hooks to be executed
+    //
+    // NOTE: if you return true, other hooks will not be executed!
+    if (!this.state.isSaved)
+    {
+      window.history.pushState(null, null, this.props.currentLocationPathName);
+      return 'Your work is not saved! Are you sure you want to leave?'
     }
   }
+  componentDidMount() {
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave)
+    this.getCurrentUserDataFromServer(this.props);
+  }
+  getCurrentUserDataFromServer = (props) =>{
+    const {currentUser,params:{id}} = props;
+    this.setState({isLoading:true});
+    if (currentUser && id) {
+      Meteor.call("user.getUserDataFromId",id,(err,res)=>{
+        if(res){
+          this.initializeUserProfileForm(res);
+        }
+        else{
+          this.setState({isLoading:false});
+        }
+      })
+    }
+  }
+  componentDidUpdate(){
+    window.onbeforeunload = null;
+    if(!this.state.isSaved){
+    window.onbeforeunload = handleOnBeforeUnload;
+    }
+  }
+  componentWillUnmount() {
+    // unregister onbeforeunload event handler
+    window.onbeforeunload = null;
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getCurrentUserDataFromServer(nextProps);
+  }
 
-  initialzeUserProfileForm = currentUser => {
+  initializeUserProfileForm = currentUser => {
     if (currentUser) {
       this.setState({
         firstName: currentUser.profile.firstName || currentUser.profile.name || "",
@@ -71,15 +105,24 @@ class MyProfile extends React.Component {
         address: currentUser.profile.address || "",
         currency: currentUser.profile.currency || "",
         about: currentUser.profile.about || "",
-        refresh_token: get(currentUser, 'refresh_token', null)
+        refresh_token: get(currentUser, 'refresh_token', null),
+        isSaved:true,
+        isLoading:false,
+        currentUser
       });
     }
   };
 
   validateUser = () => {
-    const { currentUser } = this.props;
+    const { currentUser:{_id,roles=[]} } = this.props;
+    let isAccessAllowed = false;
+    roles.map((role)=>{
+      if(role == 'School' || role == 'Superadmin'){
+        isAccessAllowed = true;
+      }
+    })
     const paramId = get(this.props, "params.id", null);
-    if (currentUser && currentUser._id === paramId) return true;
+    if (_id === paramId || isAccessAllowed ) return true;
     return false;
   };
 
@@ -90,13 +133,23 @@ class MyProfile extends React.Component {
   handleUserImageChange = file => {
     this.setState({ file });
   };
-
+  passwordChangeMsg = () =>{
+    const {popUp} = this.props;
+    const data = {
+      popUp,
+      title: 'Success',
+      type: 'success',
+      content: 'Your Password Change Successful.',
+      buttons: [{ label: 'Ok', onClick: () => { this.setState({changePasswordDialogBox:false})}, greyColor: true }]
+    };
+    confirmationDialog(data);
+  }
   handleTextChange = (fieldName, event) => {
-    this.setState({ [fieldName]: event.target.value });
+    this.setState({ [fieldName]: event.target.value,isSaved:false });
   };
   clearAllEvents = () => {
     this.setState({ isBusy: true }, () => {
-      let docId = get(this.props.currentUser, '_id', Meteor.userId());
+      let docId = get(this.state.currentUser, '_id', Meteor.userId());
       let doc = { refresh_token: null, googleCalendarId: null };
       Meteor.call("calendar.clearAllEvents", { doc, docId }, (err, res) => {
         if (err) {
@@ -128,7 +181,7 @@ class MyProfile extends React.Component {
     confirmationDialog(data);
   }
   removeGoogleSync = () => {
-    let docId = get(this.props.currentUser, '_id', Meteor.userId());
+    let docId = get(this.state.currentUser, '_id', Meteor.userId());
     let doc = { refresh_token: null, googleCalendarId: null };
     this.setState({ isBusy: true }, () => {
       Meteor.call("user.editUser", { doc, docId }, (err, res) => {
@@ -146,20 +199,22 @@ class MyProfile extends React.Component {
     })
   }
   handleDobChange = date => {
-    this.setState({ dob: date })
+    this.setState({ dob: date ,isSaved:false})
   }
 
   onLocationChange = location => {
     this.setState({
       loc: location.coords,
-      address: location.fullAddress
+      address: location.fullAddress,
+      isSaved:false
     });
   };
 
   locationInputChanged = event => {
     // Need to update address otherwise we can not edit location.
     this.setState({
-      address: event.target.value
+      address: event.target.value,
+      isSaved:false
     });
     if (!event.target.value) {
       this.setState({
@@ -184,7 +239,8 @@ class MyProfile extends React.Component {
         "profile.currency": this.state.currency,
         "profile.about": this.state.about,
         "profile.coords": this.state.loc,
-        refresh_token: this.state.refresh_token
+        refresh_token: this.state.refresh_token,
+        savedByUser:true
       };
       const { file } = this.state;
       try {
@@ -270,12 +326,15 @@ class MyProfile extends React.Component {
   };
 
   editUserCall = userData => {
-    const { currentUser, popUp } = this.props;
+    const {  popUp } = this.props;
+    const {currentUser} = this.state;
     Meteor.call(
       "user.editUser",
       { doc: userData, docId: currentUser._id },
       (error, result) => {
-        let state = { isBusy: false };
+				console.log('TCL: result', result)
+        let state = { isBusy: false ,isSaved:true};
+        console.log('TCL: error', error)
         if (error) {
           state.errorText = error.reason || error.message;
           const data = {

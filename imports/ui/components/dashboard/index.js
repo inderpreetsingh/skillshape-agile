@@ -1,10 +1,10 @@
 import React, { Component,lazy,Suspense } from 'react';
 import { browserHistory } from 'react-router';
 import { get } from 'lodash';
-
+import { Loading } from '/imports/ui/loading';
 import { withPopUp, getUserFullName } from '/imports/util';
-import { ContainerLoader } from "/imports/ui/loading/container";
 const DashBoardRender = lazy(()=>import('./DashboardRender'));
+import {OnBoardingDialogBox} from '/imports/ui/components/landing/components/dialogs';
 
 class MyDashBoard extends Component {
     constructor(props) {
@@ -14,49 +14,16 @@ class MyDashBoard extends Component {
         }
     }
 
-    _createNewSchool = () => {
-        const { currentUser } = this.props;
-        if (currentUser) {
-            // Start Lodaing
-            this.setState({ isLoading: true });
-            Meteor.call("school.addNewSchool", currentUser, (err, res) => {
-                let state = {
-                    isLoading: false
-                };
-
-                if (err) {
-                    state.error = err.reason || err.message;
-                }
-                // Redirect to school Edit view
-                if (res) {
-                    browserHistory.push(res);
-                }
-
-                this.setState(state);
-            });
-        } else {
-            // Show Login popup
-            Events.trigger("loginAsUser");
-        }
-    }
+   
 
     handleEditProfileClick = (e) => {
         e.preventDefault();
         const currentUserId = Meteor.user()._id;
         browserHistory.push(`/profile/${currentUserId}`);
     }
-
-
     handleCreateNewSchoolClick = () => {
-        const { popUp } = this.props;
-        popUp.appear('inform', {
-            title: 'Confirm',
-            content: 'This will create a new school listing. Do you wanna continue ?',
-            defaultButtons: true,
-            onAffirmationButtonClick: this._createNewSchool,
-        }, true)
-    };
-
+        this.setState({onBoardingDialogBox:true})
+    }
     componentDidMount() {
         if (Meteor.userId()) {
             Meteor.call("school.getMySchool", null, false, (error, result) => {
@@ -87,13 +54,17 @@ class MyDashBoard extends Component {
 
 
     render() {
-        const { mySchools, isBusy } = this.state;
+        const { mySchools, isBusy ,onBoardingDialogBox} = this.state;
         const {
             currentUser,
             isUserSubsReady
         } = this.props;
         return (
-            <Suspense fallback={<ContainerLoader/>}>
+            <Suspense fallback={<Loading/>}>
+            {onBoardingDialogBox && <OnBoardingDialogBox
+            open={onBoardingDialogBox}
+            onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
+          />}
             <DashBoardRender
                 headerProps={{
                     currentUser: currentUser,

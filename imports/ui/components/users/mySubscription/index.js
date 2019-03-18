@@ -46,16 +46,26 @@ class MySubscription extends React.Component {
 		return (data.phone && data.phone.split(/[\|\,\\]/));
 	};
 
-
 	classDataFinder = (schoolData) => {
 		let { currentUser } = this.props;
 		let schoolId = get(schoolData, '_id', null);
 		let userId = get(currentUser, '_id', null);
-		Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
-			if (res)
-				this.setState({ subscriptionsData: res })
-			else
-				this.setState({ subscriptionsData: [] })
+		let filter = {schoolId,activeUserId:userId};
+		this.setState({isBusy:true});
+		Meteor.call("schoolMemberDetails.getMemberData",filter,(err,res)=>{
+			let state = {};
+			if(!isEmpty(res)){
+				const {emailAccess,phoneAccess,_id:memberId} = res;
+				state = {emailAccess,phoneAccess,memberId};
+			}
+			Meteor.call('classInterest.findClassTypes', schoolId, userId, (err, res) => {
+				if (!isEmpty(res))
+				state.subscriptionsData = res;
+				else
+				state.subscriptionsData = [];
+
+				this.setState({...state,isBusy:false});
+			})
 		})
 	}
 	getOurEmail = (data) => {
@@ -149,14 +159,22 @@ class MySubscription extends React.Component {
 		})
 	}
 	leaveSchool = () => {
-		let { popUp, currentUser, schoolData } = this.props;
-		let { _id: schoolId } = schoolData[0];
+		let { popUp, currentUser, userId} = this.props;
+		let {selectedSchool:schoolData} = this.state;
+		let { _id: schoolId ,name:schoolName} = schoolData;
 		let studentName = get(currentUser, 'profile.firstName', get(currentUser, 'profile.name', 'Old Data'));
+		let content = '';
+		if(checkIsAdmin({user:currentUser,schoolData}) && userId != Meteor.userId()){
+			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
+		}
+		else {
+			content = `You are about to leave from all class types at ${schoolName}. The classes will no longer appear in your calendar and you will no longer receive notifications. Are you sure?`
+		}
 		popUp.appear(
 			'inform',
 			{
 				title: 'Confirmation',
-				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				content,
 				RenderActions: (
 					<ButtonWrapper>
 						<FormGhostButton
@@ -175,7 +193,10 @@ class MySubscription extends React.Component {
 		);
 	}
 	leaveSchoolHandler = () => {
-		let { subscriptionsData } = this.state;
+		let { subscriptionsData ,selectedSchool:{_id:schoolId}} = this.state;
+		const {id:activeUserId} = this.props.params;
+		let filter = {schoolId,activeUserId};
+		Meteor.call("schoolMemberDetails.removeStudentFromSchool",filter);
 		this.setState({ all: true });
 		if (!isEmpty(subscriptionsData)) {
 			subscriptionsData.map((obj, index) => {
@@ -188,9 +209,8 @@ class MySubscription extends React.Component {
 	}
 
 	removeFromCalendar = (data) => {
-		let { schoolData } = this.props;
 		let { classTimeName, classTypeName } = data;
-		let schoolName = get(schoolData[0], 'name', 'Hidden Leaf');
+		const {name:schoolName} = this.state.selectedSchool;
 		this.setState({ isBusy: true });
 		Meteor.call(
 			"classInterest.removeClassInterestByClassTimeId",
@@ -277,8 +297,25 @@ class MySubscription extends React.Component {
 			}
 		});
 	}
+	handleEmailAccess = (doc_id,doc) => {
+		Meteor.call("schoolMemberDetails.emailAccessEdit",doc_id,doc,(err,res)=>{
+			const {popUp} = this.props;
+			this.okClick()
+			if(res){
+				confirmationDialog({popUp,defaultDialog:true});
+			}
+			else if(err){
+				confirmationDialog({popUp,errDialog:true});
+			}
+		})
+	}
+	onPrivacySettingsClick = (value,selectedSchool) =>{
+		this.setState({privacySettings:value,selectedSchool},()=>{
+			this.okClick();
+		});
+	}
 	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData } = this.state;
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,phoneAccess,memberId ,privacySettings} = this.state;
 		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
 		// console.group('My Subscriptions');
 		// console.log(schoolData, purchaseData, isLoading);
@@ -315,6 +352,11 @@ class MySubscription extends React.Component {
 						stopNotification={this.stopNotification}
 						leaveSchool={this.leaveSchool}
 						removeFromCalendar={this.removeFromCalendar}
+						emailAccess={emailAccess}
+						phoneAccess={phoneAccess}
+						memberId = {memberId}
+						privacySettings={privacySettings}
+						onPrivacySettingsClick={this.onPrivacySettingsClick}
 					/>
 				</Wrapper>
 			</React.Suspense>
@@ -394,6 +436,7 @@ export default createContainer((props) => {
 		currentUser,
 		isLoading,
 		schoolData,
-		purchaseData
+		purchaseData,
+		userId
 	};
 }, withPopUp(MySubscription));

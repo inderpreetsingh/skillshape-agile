@@ -4,8 +4,6 @@ import FileUpload from 'material-ui-icons/FileUpload';
 import Grid from 'material-ui/Grid';
 import Input from 'material-ui/Input';
 import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import MobileDetect from 'mobile-detect';
 import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
 import styled from 'styled-components';
@@ -14,10 +12,10 @@ import { FormGhostButton, MemberActionButton } from '/imports/ui/components/land
 import { CallMemberDialogBox, EditMemberDialogBox, EmailMemberDialogBox, ManageMemberShipDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/UploadAvatar.js';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
-import { verifyImageURL, withPopUp, confirmationDialog } from '/imports/util';
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { confirmationDialog, verifyImageURL, withPopUp } from '/imports/util';
 
 const AVATAR_SIZE = 165;
 
@@ -44,10 +42,8 @@ const styles = (theme) => ({
 });
 
 const Wrapper = styled.div`
-	max-width: 800px;
 	width: 100%;
-	background-color: white;
-	position: relative;
+	background: white;
 `;
 
 const UserInfoPanel = styled.div`
@@ -159,11 +155,12 @@ const ProfilePic = styled.div`
 	background-position: center;
 	background-repeat: no-repeat;
 	background-image: url(${(props) => props.img});
-	height: 100px;
-	width: 100px;
-	border-radius: 50%;
+	height: 150px;
+	width: ${AVATAR_SIZE}px;
+	border-radius: 15px;
 	border: 2px solid black;
-	s
+	border-radius: 15px;
+
 	@media screen and (max-width: ${helpers.mobile - 50}px) {
 		width: 100%;
 	}
@@ -196,12 +193,7 @@ const UploadDiv = styled.div`
 	@media screen and (max-width: ${helpers.mobile - 50}px) {
 		width: 100%;
 	}
-`;
 
-const CornerBtnWrapper = styled.div`
-	position: absolute;
-	top: -16px;
-	right: 0;
 `;
 
 const ActionButtons = (props) => (
@@ -211,7 +203,7 @@ const ActionButtons = (props) => (
 				props.handleCall(props.memberInfo);
 			}}
 		>
-			<FormGhostButton icon iconName="phone" label="Call" />
+			<MemberActionButton icon iconName="phone" label="Call" />
 		</ActionButton>
 
 		<ActionButton
@@ -219,23 +211,23 @@ const ActionButtons = (props) => (
 				props.handleEmail(props.memberInfo);
 			}}
 		>
-			<FormGhostButton noMarginBottom label="Email" icon iconName="email" />
+			<MemberActionButton secondary noMarginBottom label="Email" icon iconName="email" />
 		</ActionButton>
 
-		{/*<ActionButton>
-			<MemberActionButton
+		<ActionButton>
+			{/*<MemberActionButton
 				noMarginBottom
 				label="Edit"
 				icon
 				iconName="edit"
-			onClick={props.openEditMemberModal} /> 
+			onClick={props.openEditMemberModal} /> */}
 			<MemberActionButton
 				noMarginBottom
 				label="Edit Membership"
 				icon
 				iconName="edit"
 				onClick={props.onEditMemberClick} />
-		</ActionButton>*/}
+		</ActionButton>
 		{props.isAdmin &&
 			!props.superAdmin && props.view == "admin" && (
 				<ActionButton>
@@ -379,7 +371,7 @@ class SchoolMemberInfo extends Component {
 			if (res) {
 				this.setState({ bgImg: memberInfo.pic });
 			} else {
-				this.setState({ bgImg: config.defaultProfilePic });
+				this.setState({ bgImg: config.defaultProfilePicOptimized });
 			}
 		});
 	};
@@ -390,7 +382,7 @@ class SchoolMemberInfo extends Component {
 			if (res) {
 				this.setState({ bgImg: memberInfo.pic });
 			} else {
-				this.setState({ bgImg: config.defaultProfilePic });
+				this.setState({ bgImg: config.defaultProfilePicOptimized });
 			}
 		});
 	};
@@ -476,14 +468,24 @@ class SchoolMemberInfo extends Component {
 		});
 	}
 	leaveSchool = () => {
-		let { popUp, memberInfo } = this.props;
+		let { popUp, memberInfo, isAdmin } = this.props;
 		let studentName = get(memberInfo, 'firstName', get(memberInfo, 'name', 'No Name'));
 		let schoolId = get(memberInfo, 'schoolId', null);
+		let superAdmin = get(memberInfo, 'superAdmin', false);
+		let schoolName = get(memberInfo, 'schoolName', 'Hidden Leaf');
+		let isThisMyMemberShip = get(memberInfo, '_id', 0) == Meteor.userId();
+		let content = '';
+		if (!isThisMyMemberShip && (superAdmin || isAdmin)) {
+			content = `You are about to remove ${studentName} from all class types at ${schoolName}. The classes will no longer appear in their calendar and they will no longer receive notifications. Are you sure?`
+		}
+		else {
+			content = `You are about to leave from all class types at ${schoolName}. The classes will no longer appear in your calendar and you will no longer receive notifications. Are you sure?`
+		}
 		popUp.appear(
 			'inform',
 			{
 				title: 'Confirmation',
-				content: `You are about to remove ${studentName} from all class types at your school. The classes will no longer appear in their calendar. Are you sure?`,
+				content,
 				RenderActions: (
 					<ButtonWrapper>
 						<FormGhostButton
@@ -577,7 +579,7 @@ class SchoolMemberInfo extends Component {
 		let schoolImg = (get(memberInfo, 'schoolImg', null));
 		let userName = get(memberInfo, 'name', get(memberInfo, 'firstName', get(memberInfo, 'lastName', get(memberInfo, 'email', "Old Data"))));
 		return (
-			<Wrapper>
+			<Wrapper container>
 				{showConfirmation && (
 					<ConfirmationModal
 						open={showConfirmation}
@@ -664,7 +666,7 @@ class SchoolMemberInfo extends Component {
 							/>
 						</AvatarContainer>
 
-						{/* <MemberDetails>
+						<MemberDetails>
 							<Text>{userName}</Text>
 							{isAdmin && (
 								<React.Fragment>
@@ -674,11 +676,11 @@ class SchoolMemberInfo extends Component {
 							)}
 							{/* {(userId === Meteor.userId() || isAdmin) &&
 								<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
-							} 
+							} */}
 							{/* &&
 								<FormGhostButton icon iconName="remove_from_queue" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)} />
-							
-						</MemberDetails> */}
+							*/}
+						</MemberDetails>
 					</UserProfile>
 
 					{notClassmatePage && <AdminNotes>
@@ -723,9 +725,7 @@ class SchoolMemberInfo extends Component {
 							subsType="adminSubscriptions"
 							subsData={subscriptionList} />
 					)}
-				<CornerBtnWrapper>
-					<FormGhostButton icon iconName="edit" label="Edit Membership" onClick={() => this.handleDialogState('manageMemberShipDialog', true)}/> 		
-				</CornerBtnWrapper>	
+
 			</Wrapper>
 		);
 	}

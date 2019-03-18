@@ -110,7 +110,7 @@ const IconWithStyles = props => (
 const MyIcon = withStyles(styles)(IconWithStyles);
 
 const ClassTimesList = props => {
-  const { classes } = props;
+  const { classes ,timeZone} = props;
 
   const ScheduleDisplay = props => (
     <Time>
@@ -147,7 +147,7 @@ const ClassTimesList = props => {
     const { day, eventDate, eventStartTime, time, timePeriod, duration } = data;
 
     if (scheduleType === "recurring" || scheduleType === "ongoing") {
-      eventTime = `${formatTime(eventStartTime)} ${formatAmPm(eventStartTime)}`;
+      eventTime = `${formatTime(eventStartTime,timeZone)} `;
     } else {
       eventTime = `${time} ${timePeriod}`;
     }

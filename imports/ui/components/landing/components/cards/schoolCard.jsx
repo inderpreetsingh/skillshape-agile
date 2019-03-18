@@ -15,7 +15,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers"
 import { cardImgSrc } from "/imports/ui/components/landing/site-settings.js";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { handleOutBoundLink, verifyImageURL, withPopUp } from "/imports/util";
+import { handleOutBoundLink, verifyImageURL, withPopUp ,confirmationDialog} from "/imports/util";
 
 
 
@@ -230,20 +230,22 @@ class SchoolCard extends Component {
 
   showConfirmationModal = () => {
     const user = Meteor.user();
-    const { popUp } = this.props;
+    const { popUp,handleClaimASchool,schoolCardData } = this.props;
     if (!user) {
-      // Need to show error in toaster
       popUp.appear("error" , {content: "You must be signed in to claim a school. [Sign In] or [Sign Up]"});
     } else {
-      // Show confirmation Modal before claiming a school.
-      this.setState({
-        showConfirmationModal: true
-      });
+      let data = {
+        popUp,
+        title: 'Confirm',
+        type: 'inform',
+        content: `Do you really want to claim this school ?`,
+        buttons: [{ label: 'No', onClick: () => { }, greyColor: true },{label:'Yes',onClick:()=>{handleClaimASchool(schoolCardData)}}]
+      };
+      confirmationDialog(data);
     }
   };
 
-  cancelConfirmationModal = () =>
-    this.setState({ showConfirmationModal: false });
+
 
   render() {
     const { classes, schoolCardData, toastr } = this.props;
@@ -257,20 +259,6 @@ class SchoolCard extends Component {
         itemType="http://schema.org/Service"
       >
         {this.state.isLoading && <ContainerLoader />}
-        {this.state.showConfirmationModal && (
-          <ConfirmationModal
-            open={this.state.showConfirmationModal}
-            submitBtnLabel="Yes"
-            cancelBtnLabel="Cancel"
-            message="Do you really want to claim this school ?"
-            onSubmit={() => {
-              this.props.handleClaimASchool(schoolCardData, this);
-            }}
-            onClose={this.cancelConfirmationModal}
-            toastr={toastr}
-            schoolCardData={schoolCardData}
-          />
-        )}
         {this.state.callUsDialog && (
           <CallUsDialogBox
             contactNumbers={this.getContactNumbers()}

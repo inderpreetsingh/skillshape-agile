@@ -7,6 +7,10 @@ Meteor.publish("classTimes.getclassTimes", function({ schoolId, classTypeId }) {
   let cursor = ClassTimes.find({ schoolId, classTypeId });
   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
+Meteor.publish("classTime.getClassTimesTypeByFilter", function (filter) {
+  let cursor = ClassTimes.find(filter);
+  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+});
 
 Meteor.publish("classTimes.getclassTimesForCalendar", function({
   schoolId,
@@ -126,3 +130,7 @@ Meteor.publish("classTime.getclassType", function({ classTypeIds }) {
   let cursor = ClassType.find({ _id: { $in: classTypeIds } });
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
+Meteor.publish("classTime.getClassTimeById",function(_id){
+  let cursor = ClassTimes.find({_id });
+  return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
+})

@@ -11,11 +11,12 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { isEmpty, get, isEqual } from 'lodash';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { browserHistory, Link } from "react-router";
+import ProgressiveImage from "react-progressive-image";
+
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 const styles = {
   iconButton: {
     color: "white",
-    paddingLeft: rhythmDiv
   }
 };
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
@@ -29,7 +30,7 @@ const menuOptions = [
 
 const Wrapper = styled.div`
   display: flex;
-  width: 100%;
+  width: 450px;
   height: 250px;
   background: ${helpers.panelColor};
   padding: ${helpers.rhythmDiv * 2}px;
@@ -207,6 +208,19 @@ PaymentAndStatus = (props) => {
   if (epStatus && isEmpty(purchased)) {
     packageRequired = 'perClassAndMonthly';
   }
+  let pos = -1;
+  let show = true;
+  if(purchased.length == 1){
+    show = false;
+  }
+  else{
+    purchased.map((obj, index) => {
+      if (obj.noClasses == null && obj.packageType == 'MP') {
+        show = false;
+      }
+    })
+  }
+  
   if (props.purchaseData) {
     let { endDate, packageType, noClasses } = props.purchaseData;
     let text = packageType == 'MP' ? 'Monthly expires' : `${noClasses} ${noClasses > 1 ? 'Classes' : 'Class'} Remaining`
@@ -219,7 +233,7 @@ PaymentAndStatus = (props) => {
     </PaymentAndStatusDetails>
     )
   }
-  if (epStatus && !isEmpty(purchased)) {
+  if (epStatus && !isEmpty(purchased) && show ) {
     return (<PaymentAndStatusDetails>
       <PaymentDetails>
         <SkillShapeButton
@@ -233,6 +247,12 @@ PaymentAndStatus = (props) => {
       <StatusOptions {...props} />
     </PaymentAndStatusDetails>
     )
+  }
+  if(!show){
+    return <PaymentAndStatusDetails>
+      <Text color={helpers.primaryColor}>{`${purchased.length} Packages Found` }</Text>
+    <StatusOptions {...props} />
+  </PaymentAndStatusDetails>;
   }
   return (<PaymentAndStatusDetails>
     <PaymentDetails>
@@ -291,6 +311,7 @@ class MemberExpanded extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(nextProps, this.props);
   }
+
   render() {
     const { props } = this;
     const profile = props.profile;
@@ -298,43 +319,47 @@ class MemberExpanded extends Component {
     const name = `${get(profile, 'firstName', get(profile, 'name', 'Old Data'))} ${get(profile, 'lastName', "")}`
     const slug = get(props, "slug", null);
     const { _id: userId } = props;
-    let classTypeId = get(props.classData[0], 'classTypeId', null);
-    let buyPackagesBoxState = props.buyPackagesBoxState;
-    console.count('memberExpand 160');
     return (
-      <Wrapper key={name}>
-        <InnerWrapper>
-          <MemberDetails>
-            <MemberDetailsInner>
-              <MemberPic url={profileSrc} />
-              <MemberStatus>
-                <Name>{name}</Name>
-                <Text color={getStatusColor(props.status)}>
-                  {getStatusInfo(props.status)}
-                </Text>
-              </MemberStatus>
-            </MemberDetailsInner>
+     
+        <Wrapper key={name}>
+          <InnerWrapper>
+            <MemberDetails>
+              <MemberDetailsInner>
+                <ProgressiveImage
+                  src={profileSrc}
+                  placeholder={config.blurImage}>
+                  {(profileSrc) => <MemberPic url={profileSrc} />}
+                </ProgressiveImage>
 
-            <DropDownMenu
-              onMenuItemClick={(value) => { onMenuItemClick(value, slug, userId) }}
-              menuButtonClass={props.classes.iconButton}
-              menuOptions={menuOptions}
-            />
-          </MemberDetails>
+                <MemberStatus>
+                  <Name>{name}</Name>
+                  <Text color={getStatusColor(props.status)}>
+                    {getStatusInfo(props.status)}
+                  </Text>
+                </MemberStatus>
+              </MemberDetailsInner>
 
-          <ShowOnSmallScreen>
+              <DropDownMenu
+                onMenuItemClick={(value) => { onMenuItemClick(value, slug, userId) }}
+                menuButtonClass={props.classes.iconButton}
+                menuOptions={menuOptions}
+              />
+            </MemberDetails>
+
+            <ShowOnSmallScreen>
+              <PaymentAndStatus {...props} />
+            </ShowOnSmallScreen>
+
+            <StudentNotes>
+              <StudentNotesContent onChange={(e) => { props.setNotes(e.target.value) }}>{props.notes}</StudentNotesContent>
+            </StudentNotes>
+          </InnerWrapper>
+
+          <HideOnSmall>
             <PaymentAndStatus {...props} />
-          </ShowOnSmallScreen>
+          </HideOnSmall>
+        </Wrapper>
 
-          <StudentNotes>
-            <StudentNotesContent onChange={(e) => { props.setNotes(e.target.value) }}>{props.notes}</StudentNotesContent>
-          </StudentNotes>
-        </InnerWrapper>
-
-        <HideOnSmall>
-          <PaymentAndStatus {...props} />
-        </HideOnSmall>
-      </Wrapper>
     );
   }
 };

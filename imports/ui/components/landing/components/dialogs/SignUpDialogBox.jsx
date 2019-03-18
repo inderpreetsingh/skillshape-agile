@@ -19,11 +19,8 @@ import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
 import config from "/imports/config";
 import { emailRegex } from "/imports/util";
-
-
-
-
-
+import { ContainerLoader } from '/imports/ui/loading/container';
+import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDetailDialogBox.jsx";
 
 const styles = {
   dialogPaper: {
@@ -86,7 +83,9 @@ const DialogTitleContainer = styled.div`
   margin: 0 0 ${helpers.rhythmDiv * 2}px 0;
   padding: 0 ${helpers.rhythmDiv * 3}px;
 `;
-
+const BlueColorText = styled.span`
+  color: blue;
+`;
 const DialogTitleWrapper = styled.h1`
   ${helpers.flexCenter};
   font-family: ${helpers.specialFont};
@@ -149,7 +148,8 @@ const InputWrapper = styled.div`
 
 const ErrorWrapper = styled.span`
   color: red;
-  float: right;
+  font-size: 17px;
+  font-family: ${helpers.specialFont};
 `;
 
 const LogoImg = styled.img`
@@ -169,6 +169,7 @@ class SignUpDialogBox extends Component {
     name: this.props.userName,
     email: this.props.userEmail,
     sendMeSkillShapeNotification: true,
+    skillShapeTermsAndConditions:true,
     robotOption: false,
     errorEmail: false,
     captchaValue: null
@@ -221,9 +222,9 @@ class SignUpDialogBox extends Component {
       onSignUpButtonClick,
       onSignUpWithGoogleButtonClick,
       onSignUpWithFacebookButtonClick,
-      onSubmit
+      onSubmit,
+      isBusy
     } = this.props;
-
     const {
       emailOption,
       robotOption,
@@ -231,7 +232,13 @@ class SignUpDialogBox extends Component {
       email,
       errorEmail,
       captchaValue,
-      sendMeSkillShapeNotification
+      sendMeSkillShapeNotification,
+      skillShapeTermsAndConditions,
+      termsOfServiceDialogBox,
+      password,
+      confirmPassword,
+      errorPassword,
+      errorConfirmPassword
     } = this.state;
 
     return (
@@ -243,18 +250,14 @@ class SignUpDialogBox extends Component {
         aria-labelledby="sign-up"
         classes={{ paper: classes.dialogPaper }}
       >
+      {isBusy && <ContainerLoader/>}
+      {termsOfServiceDialogBox && <TermsOfServiceDialogBox
+      open={termsOfServiceDialogBox}
+      onModalClose={()=>{this.setState({termsOfServiceDialogBox:false})}}
+
+      />}
         <MuiThemeProvider theme={muiTheme}>
-          <form
-            onSubmit={
-              this.props.onSubmit &&
-              this.props.onSubmit.bind(this, {
-                name,
-                email,
-                captchaValue,
-                sendMeSkillShapeNotification
-              })
-            }
-          >
+          <form onSubmit={ (e)=>{onSubmit({ name, email, captchaValue, sendMeSkillShapeNotification, skillShapeTermsAndConditions, password, confirmPassword },e)} } >
             <DialogTitleContainer>
               <DialogTitleWrapper>
                 <LogoImg src={logoSrc} />
@@ -304,6 +307,27 @@ class SignUpDialogBox extends Component {
                   onChange={this.handleTextChange.bind(this, "email")}
                   errorText={errorEmail && "Invalid Email Address"}
                 />
+                <IconInput
+                  type='password'
+                  labelText="Password *"
+                  value={password}
+                  iconName="lock_open"
+                  error={errorPassword}
+                  onChange={this.handleTextChange.bind(this, "password")}
+                  errorText={errorPassword && "Invalid Email Address"}
+                />
+                <IconInput
+                  type='password'
+                  labelText="Confirm Password *"
+                  value={confirmPassword}
+                  iconName="lock_open"
+                  error={errorConfirmPassword}
+                  onChange={this.handleTextChange.bind(this, "confirmPassword")}
+                  errorText={errorConfirmPassword && "Invalid Email Address"}
+                />
+                {this.props.errorText && (
+                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
+              )}
               </InputWrapper>
 
               <FormControl
@@ -325,6 +349,26 @@ class SignUpDialogBox extends Component {
                   />
                 </FormGroup>
               </FormControl>
+
+               <FormControl
+                component="fieldset"
+                classes={{ root: classes.formControlRoot }}
+              >
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={skillShapeTermsAndConditions}
+                        value="skillShapeTermsAndConditions"
+                      />
+                    }
+                    onChange={this.handleCheckBoxChange(
+                      "skillShapeTermsAndConditions"
+                    )}
+                    label={<div>I agree to skillshape <BlueColorText onClick={()=>{this.setState({termsOfServiceDialogBox:true})}}>Terms & Conditions</BlueColorText>.</div>}
+                  />
+                </FormGroup>
+              </FormControl>
               <Recaptcha
                 ref={e => (this.recaptchaInstance = e)}
                 sitekey={config.CAPTCHA_SITE_KEY}
@@ -332,9 +376,7 @@ class SignUpDialogBox extends Component {
                 onloadCallback={this.recaptchaCallback}
                 expiredCallback={this.recaptchaExpiredCallback}
               />
-              {this.props.errorText && (
-                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-              )}
+             
             </DialogContent>
             <DialogActions
               classes={{
@@ -345,9 +387,9 @@ class SignUpDialogBox extends Component {
               <PrimaryButton
                 type="submit"
                 label="Sign Up"
-                onClick={onSubmit}
                 noMarginBottom
               />
+               
             </DialogActions>
             <DialogActions
               classes={{

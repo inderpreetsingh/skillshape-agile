@@ -45,7 +45,7 @@ class IconInput extends React.Component {
         //Google's API
         autocomplete = new google.maps.places.Autocomplete(inputRef, options);
         // This runs when user changes location.
-        autocomplete.addListener("place_changed", function() {
+        autocomplete.addListener("place_changed", function () {
           const coords = [];
           const place = this.getPlace();
           coords[0] = place.geometry["location"] && place.geometry["location"].lat();
@@ -105,55 +105,59 @@ class IconInput extends React.Component {
             )}
           </FormControl>
         ) : (
-          <FormControl
-            error={props.error}
-            fullWidth
-            aria-describedby="error-text"
-          >
-            <div
-              className={
-                this.state.inputFocused
-                  ? "rw-multiselect rw-widget rw-state-focus"
-                  : "rw-multiselect rw-widget"
-              }
+            <FormControl
+              error={props.error}
+              fullWidth
+              aria-describedby="error-text"
             >
               <div
-                tabindex="0"
-                className="rw-widget-input rw-widget-picker rw-widget-container"
+                className={
+                  this.state.inputFocused
+                    ? `rw-multiselect rw-widget rw-state-focus ${props.classes.widgetRoot}` : `rw-multiselect rw-widget ${props.classes.widgetRoot}`
+                }
               >
                 <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    paddingRight: 10
-                  }}
+                  tabindex="0"
+                  className={`rw-widget-input rw-widget-picker rw-widget-container ${props.classes.widgetInput}`}
                 >
-                  <input
-                    ref={props.onRef || setInputRef}
-                    value={props.value}
-                    disabled={props.disabled}
-                    multiline={props.multiline}
-                    rows={props.rows}
-                    type={props.type}
-                    defaultValue={props.defaultValue}
-                    id={props.inputId}
-                    onChange={props.onChange}
-                    placeholder={props.placeholder}
-                    className={"rw-input-reset" + " " + classes.root}
-                    style={{ width: "100%" }}
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    inputProps={{
-                      min: props.min,
-                      max: props.max
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      paddingRight: 10
                     }}
-                  />
-                  <InputIcon iconName={props.iconName} />
+                  >
+                    <input
+                      ref={props.onRef || setInputRef}
+                      value={props.value}
+                      disabled={props.disabled}
+                      multiline={props.multiline}
+                      rows={props.rows}
+                      type={props.type}
+                      defaultValue={props.defaultValue}
+                      id={props.inputId}
+                      onChange={props.onChange}
+                      placeholder={props.placeholder}
+                      className={"rw-input-reset" + " " + classes.root}
+                      style={{ width: "100%" }}
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <InputIcon iconName={props.iconName} />
+                        </InputAdornment>
+                      }
+                      inputProps={{
+                        min: props.min,
+                        max: props.max
+                      }}
+                    />
+                    <InputIcon iconName={props.iconName} />
+                  </div>
                 </div>
               </div>
-            </div>
-          </FormControl>
-        )}
+            </FormControl>
+          )}
       </Fragment>
     );
   }

@@ -195,6 +195,7 @@ export default function () {
                 className={classes.expansionPanel}
                 key={index}
                 defaultExpanded={
+                  index == 0 || 
                   this.state.expansionPanelDefaultOpen ||
                   (this.state.showClassTimeFormModal &&
                     this.state.showClassTimeFormModal[tableData._id])
@@ -498,6 +499,8 @@ export default function () {
                             }
                             moveToNextTab={this.props.moveToNextTab}
                             locationData={this.props.locationData}
+                            isSaved={this.props.isSaved}
+                            handleIsSavedState={this.props.handleIsSavedState}
                           />
                         </Grid>
                       )}

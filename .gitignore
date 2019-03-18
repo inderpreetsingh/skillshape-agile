@@ -4,3 +4,4 @@ node_modules/
 meteor.sh
 config/settings/production.json
 config/settings/commands.js
+ss2.sh

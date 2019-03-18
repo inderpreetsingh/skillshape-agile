@@ -68,67 +68,70 @@ const ClassTimeWrapper = styled.div`
 `;
 
 const ClassDetails = props => {
-  const { location,
+  const { 
     headerProps,
     classData,
     instructorsData,
     popUp,
     instructorsIds,
     bgImg,
-    currentClassTypeData
+    classTypeData,
+    schoolData,
+    currentView,
+    topSearchBarProps,
+    params,
+    classTimeInformationProps,
+    notification,
+    loginUserPurchases,
+    packagesRequired,
+    classInterestData
   } = props;
-  const { state } = props.location.state || {};
-  const dataProps = props.location.state.props;
-  const { school,eventData } = state;
-  const currentView =
-  location.pathname === "/classdetails-student" ? "studentsView" : "instructorsView";
-
   return (
     <Wrapper>
-      {window.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'auto'
-      })}
       <PageContent>
-        <TopSearchBar {...props.topSearchBarProps} />
-        
+        <TopSearchBar {...topSearchBarProps} />
         <InnerWrapper>
           <ClassTimeWrapper bgImg={bgImg}>
             <ClassTimeCover
               bgImg={bgImg}
               logoImg={headerProps.logoImg}
-              classTypeName={get(currentClassTypeData, 'name', null)}
-              classTypeId={get(currentClassTypeData, '_id', null)}
-              slug={get(school, 'slug', '')}
+              classTypeName={get(classTypeData, 'name', null)}
+              classTypeId={get(classTypeData, '_id', null)}
+              slug={get(schoolData, 'slug', '')}
             />
 
             <ClassTimeInformation
-              {...eventData}
-              schoolName={school.name}
+              schoolName={schoolData.name}
               schoolCoverSrc={bgImg}
-              locationData={state.location}
-              website={school.website}
-              classType={currentClassTypeData}
-              schoolId={school._id}
-              popUp={props.popUp}
-              params={{ slug: school.slug }}
-              classData={classData && classData[0]}
+              website={schoolData.website}
+              classType={classTypeData}
+              schoolId={schoolData._id}
+              popUp={popUp}
+              params={params}
+              classData={classData }
+              notification={notification}
+              loginUserPurchases={loginUserPurchases}
+              packagesRequired={packagesRequired}
+              classInterestData = {classInterestData}
+              {...classTimeInformationProps}
             />
           </ClassTimeWrapper>
           {/* <TimeLine {...dataProps.eventData} /> */}
           <MembersList
-            schoolId={school._id}
-            schoolName={school.name}
-            classTypeName={get(currentClassTypeData, 'name', null)}
+            schoolId={schoolData._id}
+            schoolName={schoolData.name}
+            classTypeName={get(classTypeData, 'name', null)}
             currentView={currentView}
             classData={classData}
             instructorsData={instructorsData}
             popUp={popUp}
             instructorsIds={instructorsIds}
-            params={dataProps.params}
-            schoolData={school}
-            slug={school.slug}
+            params={params}
+            schoolData={schoolData}
+            slug={schoolData.slug}
+            notification={notification}
+            loginUserPurchases={loginUserPurchases}
+            packagesRequired={packagesRequired}
           />
         </InnerWrapper>
       </PageContent>

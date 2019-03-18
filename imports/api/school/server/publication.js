@@ -1,18 +1,18 @@
 import School from "../fields";
-import ClassType from "/imports/api/classType/fields";
-import SLocation from "/imports/api/sLocation/fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
 import Media from "/imports/api/media/fields.js"
 import config from "/imports/config";
 import { size, uniq, isEmpty, isArray } from 'lodash';
 import { check } from 'meteor/check';
+import SLocation from "/imports/api/sLocation/fields";
+import ClassType from "/imports/api/classType/fields";
+import ClassPricing from "/imports/api/classPricing/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import ClassTimes from "/imports/api/classTimes/fields";
 
-// import { checkSuperAdmin } from '/imports/util';
-// import { buildAggregator } from 'meteor/lamoglia:publish-aggregation';
-// import ClientReports from '/imports/startup/client';
 
 Meteor.publish("UserSchool", function (schoolId) {
     
@@ -515,15 +515,21 @@ Meteor.publish("ClaimSchoolFilter", function (tempFilter) {
     const schoolFilter = { isPublish: true };
     const classTypeFilter = { isPublish: true };
     limit = { limit: limit };
-
-    if (this.userId) {
-        schoolFilter["admins"] = { '$nin': [this.userId] };
-    }
+   /*  removed filter because we need to show all school */
+    // if (this.userId) {
+    //     schoolFilter["admins"] = { '$nin': [this.userId] };
+    // }
 
 
     if (schoolName) {
-        classTypeFilter["filters.schoolName"] = { $regex: "" + schoolName + "", $options: "-i" };
-        schoolFilter["name"] = { $regex: "" + schoolName + "", $options: "-i" };
+        schoolName = schoolName.split(" ");
+        let schoolNameRegEx = [];
+        schoolName.map((str)=>{
+            schoolNameRegEx.push(new RegExp(`.*${str}.*`, 'i'))
+        })
+         
+        classTypeFilter["filters.schoolName"] = {$in:schoolNameRegEx};
+        schoolFilter["name"] = {$in:schoolNameRegEx};
 
         if (size(filterObj) == 2) {
             return School.find(schoolFilter, limit);
@@ -730,4 +736,30 @@ function categorizeClassTypeData({
 Meteor.publish("school.findSchoolByIds",function(schoolIds){
     check(schoolIds,Array);
     return School.find({_id:{$in:schoolIds}});
+})
+
+Meteor.publish("school.getUserCompletePromptData",function(slug,schoolId){
+    try{
+        let userData=[],schoolData=[],classTypeData=[],classTimeData=[],schoolLocationData=[],classPriceData=[],monthlyPriceData=[],enrollmentPriceData=[];
+            userData = Meteor.users.find({_id:this.userId});
+            if(schoolId)
+            schoolData = School.find({_id:schoolId});
+            else
+            schoolData = School.find({ $or: [{ admins: { $in: [this.userId] } }, { superAdmin: this.userId }] });
+            if(schoolData.fetch().length == 1) {
+                const {_id:schoolId} = schoolData.fetch()[0];
+                const filter = {schoolId};
+                classTypeData = ClassType.find(filter);
+                classTimeData = ClassTimes.find(filter);
+                schoolLocationData = SLocation.find(filter);
+                classPriceData = ClassPricing.find(filter);
+                monthlyPriceData = MonthlyPricing.find(filter)
+                enrollmentPriceData =EnrollmentFees.find(filter);
+                return [userData,schoolData,classTypeData,classTimeData,schoolLocationData,classPriceData,monthlyPriceData,enrollmentPriceData];
+            }
+            return [userData,schoolData];
+    }catch(error){
+		console.log('error in school.getUserCompletePromptData', error)
+        
+    }
 })

@@ -311,5 +311,53 @@ export default (_skillCategoryObj = {
     "Piano",
     "Other / Various Music Activity"
   ],
+  Mathematics:[
+    "Geometry",
+    "Trigonometry",
+    "General Math",
+    "Calculus",
+    "Algebra",
+    "Statistics",
+    "Logic",
+    "Number Theory",
+    "Differential Equations"
+  ],
+  Science: [
+    "General Science",
+    "Engineering",
+    "Astronomy",
+    "Biology",
+    "Chemistry",
+    "Cognitive Science",
+    "Computer Science",
+    "Ecology",
+    "Geography",
+    "Geology",
+    "Linguistics",
+    "Physics",
+    "Psychology",
+    "Sociology",
+    "Zoology",
+    "Political"
+  ],
+  Literacy: [
+    "Early Reading",
+    "Alphabetical order",
+    "Capital letters",
+    "Conjunctions",
+    "Consonant Clusters",
+    "Full stops",
+    "Grammar",
+    "Language structure",
+    "Long Vowel Sounds",
+    "Phonics",
+    "Punctuation",
+    "Pronouns",
+    "Rhyming words",
+    "Sentences",
+    "Spelling",
+    "Synonyms",
+    "Writing"
+  ],
   Other: ["Other"]
 });

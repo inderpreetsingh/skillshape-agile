@@ -38,7 +38,8 @@ export default class SchoolViewBase extends React.Component {
 			createMarkersOnMap('schoolLocationMap', this.props.schoolLocation);
 		}
 	}
-
+	
+	
 	validateString = (value) => {
 		if (value) return value;
 		return '';
@@ -253,10 +254,7 @@ export default class SchoolViewBase extends React.Component {
 		return true;
 	};
 
-	getPublishStatus = (isPublish) => {
-		if (isPublish) return true;
-		return false;
-	};
+	
 
 	handlePublishStatus = (schoolId, event) => {
 		const { popUp } = this.props;
@@ -406,7 +404,7 @@ export default class SchoolViewBase extends React.Component {
 					} else if (res.message) {
 						popUp.appear('alert',{content:res.message,title:'Error'});
 					} else if (res) {
-						popUp.appear('success',{content:'Your request has been processed',title:'Error'});
+						popUp.appear('success',{content:'Your request has been processed',title:'Success'});
 						this.handleRequest('pricing');
 					}
 				});
