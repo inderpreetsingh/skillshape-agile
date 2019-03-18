@@ -22,10 +22,10 @@
   },
   "paymentEnabled": false,
 
-  "AWSAccessKeyId": "AKIAIUDOMFJ4ZGYKIO6Q",
-  "AWSSecretAccessKey": "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",
-  "AWSBucket": "skillshape",
-  "AWSRegion": "us-west-1",
+  "AWSAccessKeyId": "AKIAIA5VPBH3QGIZKVKQ",
+  "AWSSecretAccessKey": "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",
+  "AWSBucket": "skillshapedev",
+  "AWSRegion": "eu-central-1",
   "SMTPUsername": "notices@trueabundancehealth.com",
   "SMTPPassword": "w4dcVGuwEdiFwcHsmznGNYbs",
   "facebook": {
