@@ -113,10 +113,10 @@ export default createContainer(props => {
         itemListsData = {
             myProfile,
             school: !isEmpty(schoolData),
-            sLocation: !isEmpty(schoolLocationData),
-            classType: !isEmpty(classTypeData),
-            classTime: !isEmpty(classTimeData),
-            prices: !isEmpty(classPriceData) || !isEmpty(monthlyPriceData) || !isEmpty(enrollmentPriceData)
+            sLocation: !isEmpty(schoolLocationData) || schoolData.length > 1,
+            classType: !isEmpty(classTypeData) || schoolData.length > 1,
+            classTime: !isEmpty(classTimeData) || schoolData.length > 1,
+            prices: !isEmpty(classPriceData) || !isEmpty(monthlyPriceData) || !isEmpty(enrollmentPriceData) || schoolData.length > 1
         }
         if(schoolData.length == 1){
             schoolId = schoolData[0]._id;
