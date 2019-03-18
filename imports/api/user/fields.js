@@ -217,6 +217,10 @@ Schema.User = new SimpleSchema({
   googleCalendarId:{
     type:String,
     optional:true
+  },
+  savedByUser:{
+    type: Boolean,
+    optional: true
   }
 });
 

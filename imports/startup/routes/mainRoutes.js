@@ -98,7 +98,7 @@ export default (Routes = componentLoader(props => (
         />
         
         <Route
-          path="/schoolAdmin/:schoolId/edit"
+          path="/schoolAdmin/:schoolId/edit(/:tabValue)"
           name="SchoolAdmin-Edit"
           getComponent={(nextState, cb) => {
             //set loading:true

@@ -239,7 +239,8 @@ class MyProfile extends React.Component {
         "profile.currency": this.state.currency,
         "profile.about": this.state.about,
         "profile.coords": this.state.loc,
-        refresh_token: this.state.refresh_token
+        refresh_token: this.state.refresh_token,
+        savedByUser:true
       };
       const { file } = this.state;
       try {

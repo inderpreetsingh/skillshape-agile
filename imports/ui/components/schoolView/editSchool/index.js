@@ -43,15 +43,19 @@ class SchoolEditView extends React.Component {
     // unregister onbeforeunload event handler
     window.onbeforeunload = null;
     // Listen for `?classDetails=true` so that we can click on tab.
-    if (this.props.location.query.tabValue) {
-      // We should set state for class details tab so that it opens automatically.
-      this.setState({ queryTabValue: this.props.location.query.tabValue });
-    }
-     if (get(this.props.route,'name',0) == "SchoolMemberView"){
-      this.setState({ tabValue: 6 });
-    }
-     if (get(this.props.route,'name',0) == "Financials" && !this.state.tabValue){
-      this.setState({ tabValue: 8 });
+    // if (this.props.location.query.tabValue) {
+    //   // We should set state for class details tab so that it opens automatically.
+    //   this.setState({ queryTabValue: this.props.location.query.tabValue });
+    // }
+    //  if (get(this.props.route,'name',0) == "SchoolMemberView"){
+    //   this.setState({ tabValue: 6 });
+    // }
+    //  if (get(this.props.route,'name',0) == "Financials" && !this.state.tabValue){
+    //   this.setState({ tabValue: 8 });
+    // }
+    const {params:{tabValue}} = this.props;
+    if(tabValue){
+      this.setState({tabValue:Number(tabValue)});
     }
   }
   componentWillReceiveProps(nextProps) {

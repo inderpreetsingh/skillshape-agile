@@ -17,7 +17,6 @@ import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers
 const styles = {
   iconButton: {
     color: "white",
-    paddingLeft: rhythmDiv
   }
 };
 const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
