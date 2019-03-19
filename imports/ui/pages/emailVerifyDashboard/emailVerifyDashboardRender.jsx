@@ -135,7 +135,7 @@ const CustomButton = styled.button`
   box-sizing: border-box;
   border: 2px;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer' };
 `;
 export function EmailVerifyDashboardRender () {
   const {state:{email,isLoading,disabled,emailSend},reSendEmailVerificationLink} = this;

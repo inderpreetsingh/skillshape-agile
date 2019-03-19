@@ -36,7 +36,6 @@ class EmailVerifyDashboard extends Component {
         }
         if (res) {
           this.countdown();
-          popUp.appear("success", {content: "We send a email verification link, Please check your inbox!!"});
         }
       }
     );
@@ -47,7 +46,7 @@ class EmailVerifyDashboard extends Component {
      tick =() => {
         let counter = document.getElementById("counter");
         seconds--;
-        counter.innerHTML = "00:" + (seconds < 10 ? "0" : "") + String(seconds);
+        counter.innerHTML = "Wait 00:" + (seconds < 10 ? "0" : "") + String(seconds);
         if( seconds > 0 ) {
             setTimeout(tick, 1000);
         } else {
