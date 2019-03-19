@@ -1,5 +1,5 @@
 import { isEmpty, cloneDeep } from 'lodash';
-import {confirmationDialog} from "/imports/util";
+import {confirmationDialog,redirectToThisUrl} from "/imports/util";
 export const sendEmail = (data) => {
     const {popUp,onModalClose} = data;
     if(!isEmpty(data)){
@@ -99,12 +99,10 @@ export function unSavedChecker ()  {
                  }
 
                  if (res) {
-                     this.setState(modalObj, () => {
-                         popUp.appear('success', { content: "Successfully registered, Please check your email." })
-                     })
+                     this.setState(modalObj)
                      const { email, password } = res;
                      Meteor.loginWithPassword(email, password, (err, res) => {
-                     console.log('TCL: handleSignUpSubmit -> err, res', err, res)
+                        redirectToThisUrl('/emailVerifyDashboard')
                      });
                  }
              })

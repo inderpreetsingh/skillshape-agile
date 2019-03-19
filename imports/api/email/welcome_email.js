@@ -1,6 +1,6 @@
 import { getUserFullName } from "/imports/util/getUserData";
 
-export const welcomeEMail = (user, verificationToken, passwd, fromEmail, toEmail, schoolName) => {
+export const welcomeEMail = (user, verificationToken, passwd=null) => {
   const userName = getUserFullName(user);
 
   return `<div class="wrapper" style="font-family: 'Zilla Slab', serif;color: #524444;font-weight: 300;font-size: 16px;line-height: 1.5;">
@@ -22,7 +22,7 @@ export const welcomeEMail = (user, verificationToken, passwd, fromEmail, toEmail
         <p>Welcome to skillshape. You are just one step away from adding your school.Just click on button below</p>
         <a href=${verificationToken} style="width: 100%;height: 25px;background-color: green;border: none;color: white;padding: 15px 0px;text-align: center;display: inline-block;font-size: 19px;cursor: pointer;font-family: 'Zilla Slab', serif;font-style: italic;border-radius: 5px;">Confirm your email</a>
         <p>or open this link in your browser. ${verificationToken} </p>
-        <p>Your password is <b> ${passwd}<b/> </p>
+        ${passwd  ? `<p>Your password is <b> ${passwd}<b/> </p>` : ''}
         <p>I am sam, founder of Skillshape.com. If you have any questions, comments or suggestions, just hit reply.</p>
         <p class="mini" style="font-size: 14px;font-style: italic;margin-bottom: 0px;">If you do not remember signing up for this,<a href="#" style="text-decoration: none;">click here to unsubscribe.</a></p>
   

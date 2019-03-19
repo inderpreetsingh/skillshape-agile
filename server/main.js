@@ -5,6 +5,7 @@ import "../imports/startup/server";
 import SkillCategory from "../imports/api/skillCategory/fields";
 import SkillSubject from "../imports/api/skillSubject/fields";
 import {userFeedBack} from "../imports/api/email";
+import {welcomeEMail} from '/imports/api/email/welcome_email.js'
 Meteor.startup(() => {
   // Accounts.config({
   //   sendVerificationEmail: true
@@ -18,9 +19,9 @@ Meteor.startup(() => {
   };
   // A Function that takes a user object and a url, and returns the body text for the email.
   // Note: if you need to return HTML instead, use Accounts.emailTemplates.verifyEmail.html
-  Accounts.emailTemplates.verifyEmail.text = function(user, url) {
+  Accounts.emailTemplates.verifyEmail.html = function(user, url) {
     url = url.replace("#/", "");
-    return "click on the following link to verify your email address: " + url;
+    return welcomeEMail(Meteor.user(),url);
   };
   Accounts.urls.resetPassword = function(token) {
     return Meteor.absoluteUrl("reset-password/" + token);

@@ -34,7 +34,7 @@ import AboutUs from "/imports/ui/pages/aboutUs";
 //pages
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import { componentLoader } from "/imports/util";
-
+import EmailVerifyDashboard from "/imports/ui/pages/emailVerifyDashboard";
 
 
 
@@ -129,6 +129,12 @@ export default (Routes = componentLoader(props => (
           name="VerifyEmail"
           component={VerifyEmail}
         />
+        <Route
+          path="/emailVerifyDashboard"
+          name="Email Dashboard"
+          component={EmailVerifyDashboard}
+        />
+        
         <Route
           path="/skillShape-school"
           name="SkillShapeSchool"

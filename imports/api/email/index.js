@@ -291,7 +291,7 @@ export const userRegistrationAndVerifyEmail = function (
     to: toEmail,
     replyTo: fromEmail,
     subject: "SkillShape Registration",
-    html:welcomeEMail(user, verificationToken, passwd, fromEmail, toEmail, schoolName)
+    html:welcomeEMail(user, verificationToken, passwd)
   });
 };
 
