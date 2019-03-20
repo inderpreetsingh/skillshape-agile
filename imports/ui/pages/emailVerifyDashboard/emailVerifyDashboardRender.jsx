@@ -5,13 +5,23 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 
 
 const emailSvgAnim = keyframes`
-   0% {
-     transform : rotate(0deg);
-   }
-   100% {
-     transform: rotate(360deg);
-   }
+0%   {
+      right: 104%;
+      top: 83%;
+    }
+100% {
+    right: -18%;
+    top: -19%;
 }`;
+
+const groupSvgAnim = keyframes`
+0% {
+  transform : rotate(0deg);
+}
+100% {
+  transform: rotate(360deg);
+}`;
+
 const Head = styled.div`
   justify-content: center;
   display: flex;
@@ -68,15 +78,11 @@ const EmailStatus = styled.div`
 `;
 const GroupSvg = styled.div`
   background-image: url(${config.groupSvg});
-  background-size: 119px;
-  background-position: 100% calc(100% - 14px);
   background-repeat: no-repeat;
-  height: 138px;
-  max-height: 600px;
+  height: 122px;
   width: 121px;
-  @media screen and (max-width: ${helpers.mobile}px) {
-    margin-right:38%;
-  }
+  transition: all 0.3s ease-out;
+  ${props=> props.emailSend ? `animation: ${groupSvgAnim} 1s` : ''}
   `;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
@@ -89,7 +95,7 @@ const EmailSvg = styled.div`
   height: 59px;
   top: 27%;
   right: 34%;
-  ${props=> props.emailSend ? `animation: ${emailSvgAnim} 0.5s` : ''}
+  ${props=> props.emailSend ? `animation: ${emailSvgAnim} 1s` : ''}
 `;
 const Text = styled.div`
   margin: auto;
@@ -127,9 +133,10 @@ const Container = styled.div`
 background-color: #f2f2f2;
 `;
 const ImagesContainer = styled.div`
-position: relative;
-width: fit-content;
-margin-bottom: 24px;
+  position: relative;
+  width: fit-content;
+  margin-bottom: 24px;
+  margin-top: 41px;
 `;
 const CustomButton = styled.button`
   background-color: #333;
@@ -161,7 +168,11 @@ export function EmailVerifyDashboardRender () {
         <EmailStatus emailSend={emailSend}>
           An email send again!
         </EmailStatus>
-        <center> <ImagesContainer><GroupSvg /><EmailSvg emailSend={emailSend}/></ImagesContainer></center>
+        <center> 
+          <ImagesContainer>
+          <GroupSvg emailSend={emailSend}/>
+        {/* <EmailSvg emailSend={emailSend}/> */}
+        </ImagesContainer></center>
         <Text> Please check your inbox!.</Text>
         <Summary> We just send a confirmation link to {email}. Click the link in the email to sign in to your dashboard.</Summary>
         <center>
