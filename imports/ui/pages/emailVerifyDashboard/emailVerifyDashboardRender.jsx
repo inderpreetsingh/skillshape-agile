@@ -6,13 +6,24 @@ import { ContainerLoader } from "/imports/ui/loading/container";
 
 const emailSvgAnim = keyframes`
 0%   {
-      right: 104%;
-      top: 83%;
+      opacity: 1;
     }
-100% {
-    right: -18%;
-    top: -19%;
-}`;
+50%   {
+      right: -18%;
+      top: -19%;
+      opacity: 0;
+}    
+51% {
+  right: 104%;
+  top: 83%;
+  opacity: 0;
+}
+100 %{
+  right: 34%;
+  top: 27%;
+  opacity: 1;
+}
+`;
 
 const groupSvgAnim = keyframes`
 0% {
@@ -171,7 +182,7 @@ export function EmailVerifyDashboardRender () {
         <center> 
           <ImagesContainer>
           <GroupSvg emailSend={emailSend}/>
-        {/* <EmailSvg emailSend={emailSend}/> */}
+        <EmailSvg emailSend={emailSend}/>
         </ImagesContainer></center>
         <Text> Please check your inbox!.</Text>
         <Summary> We just send a confirmation link to {email}. Click the link in the email to sign in to your dashboard.</Summary>
