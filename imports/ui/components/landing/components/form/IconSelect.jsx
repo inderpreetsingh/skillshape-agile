@@ -1,13 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-import { withStyles } from 'material-ui/styles';
+import { FormControl } from 'material-ui/Form';
 import Icon from 'material-ui/Icon';
-import Select from 'material-ui/Select';
+import Input, { InputAdornment, InputLabel } from 'material-ui/Input';
 import { MenuItem } from "material-ui/Menu";
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-
+import Select from 'material-ui/Select';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
 import * as helpers from '../jss/helpers';
 
 const styles = {
@@ -16,15 +14,22 @@ const styles = {
   }
 }
 
-
 const IconSelect = (props) => (
-  <div>
     <FormControl fullWidth>
       <InputLabel htmlFor={props.inputId} classes={{ root: props.classes.label }}>{props.labelText}</InputLabel>
       <Select
         autoWidth
         value={props.value || ''}
         onChange={props.onChange}
+        MenuProps={{
+          onEnter: () => {
+            setTimeout(() => {
+              if (document.activeElement) {
+                document.activeElement.blur();
+              }
+            }, 500);
+          }   
+        }}
         input={<Input
           name={props.inputId || props.inputProps.name}
           id={props.inputId || props.inputProps.id}
@@ -33,7 +38,7 @@ const IconSelect = (props) => (
               <Icon color="disabled">{props.iconName}</Icon>
             </InputAdornment>
           } />
-
+      
         }>
         {props.children ||
           props.options.map(selectOption => (
@@ -42,7 +47,6 @@ const IconSelect = (props) => (
             </MenuItem>))}
       </Select>
     </FormControl>
-  </div>
 );
 
 IconSelect.propTypes = {
