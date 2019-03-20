@@ -2,16 +2,15 @@ import React, { Fragment } from "react";
 import styled,{keyframes} from "styled-components";
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 import { ContainerLoader } from "/imports/ui/loading/container";
+import { specialFont } from "/imports/ui/components/landing/components/jss/helpers.js";
 
 
 const emailSvgAnim = keyframes`
-0%   {
-      opacity: 1;
-    }
+
 50%   {
       right: -18%;
       top: -19%;
-      opacity: 0;
+      opacity: 1;
 }    
 51% {
   right: 104%;
@@ -36,7 +35,7 @@ const groupSvgAnim = keyframes`
 const Head = styled.div`
   justify-content: center;
   display: flex;
-  height: 64px;
+  height: 48px;
   background-color: white;
 `;
 const Logo = styled.div`
@@ -54,7 +53,6 @@ const TextWrapper = styled.div`
   display: inline-block;
   padding: 20px 0;
   display: flex;
- 
 `;
 const H1 = styled.h1`
   font-weight: light;
@@ -62,15 +60,17 @@ const H1 = styled.h1`
   color: #ac1616;
   margin: 0;
   line-height: 1;
+  font-family: ${specialFont};
 `;
 const ButtonsWrapper = styled.div`
   width: 100%;
   padding: 20px 0px 100px 0px;
 `;
 const P = styled.p`
-  font-size: 16px;
+  font-size: 20px;
   margin: 1px 0px 0px 5px;
-  font-weight: 400;
+  font-weight: 100;
+  font-family: ${specialFont};
 `;
 const EmailStatus = styled.div`
     width: fit-content;
@@ -80,7 +80,7 @@ const EmailStatus = styled.div`
     background-color:${helpers.primaryColor};
     border-radius: 25px;
     color: white;
-    font-family: 'Zilla Slab',serif;
+    font-family: ${specialFont};
     box-shadow: 4px 11px 2px -4px #888888;
     transition: all 0.3s ease-out;
     visibility: ${props => props.emailSend ? "visible" : "hidden"};
@@ -112,18 +112,17 @@ const Text = styled.div`
   margin: auto;
   text-align: center;
   width: fit-content;
-  font-family: "Zilla Slab", serif;
+  font-family: ${specialFont};
   font-size: 48px;
   color: #333;
   line-height: 1.5;
-  margin-bottom: 24px;
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: 24px;
   }
 `;
 const Summary = styled.div`
-  margin: 10px auto auto auto;
-  font-family: "Zilla Slab", serif;
+  margin: auto;
+  font-family: ${specialFont};
   font-size: 24px;
   font-weight: lighter;
   color: #555;
@@ -137,7 +136,7 @@ const Summary = styled.div`
   }
 `;
 const Counter = styled.div`
-  font-family: monospace;
+  font-family: ${specialFont};
   margin:5px auto 5px auto;
 `;
 const Container = styled.div`
@@ -154,7 +153,7 @@ const CustomButton = styled.button`
   color: #f2f2f2;
   height: 48px;
   min-width: 200px;
-  font-family: "Zilla Slab", serif;
+  font-family: ${specialFont};
   font-size: 24px;
   padding: 8px 16px;
   box-sizing: border-box;
@@ -173,7 +172,7 @@ export function EmailVerifyDashboardRender () {
             <Img src={config.skillShapeLogo} />
           </Logo>
           <TextWrapper>
-            <H1>Skillshape,</H1><P>your path revealed</P>
+            <H1>Skillshape,</H1><P>your path revealed.</P>
           </TextWrapper>
         </Head>
         <EmailStatus emailSend={emailSend}>
