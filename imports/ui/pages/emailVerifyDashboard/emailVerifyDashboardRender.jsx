@@ -116,6 +116,7 @@ const Summary = styled.div`
   text-align: center;
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: 16px;
+    padding: 30px;
   }
 `;
 const Counter = styled.div`
