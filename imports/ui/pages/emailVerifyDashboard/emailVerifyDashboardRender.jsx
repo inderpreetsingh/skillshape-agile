@@ -44,7 +44,7 @@ const H1 = styled.h1`
 `;
 const ButtonsWrapper = styled.div`
   width: 100%;
-  margin: 20px 0px 10px 0px;
+  padding: 20px 0px 100px 0px;
 `;
 const P = styled.p`
   font-size: 16px;
@@ -93,6 +93,7 @@ const EmailSvg = styled.div`
 `;
 const Text = styled.div`
   margin: auto;
+  text-align: center;
   width: fit-content;
   font-family: "Zilla Slab", serif;
   font-size: 48px;
@@ -100,17 +101,22 @@ const Text = styled.div`
   line-height: 1.5;
   margin-bottom: 24px;
   @media screen and (max-width: ${helpers.mobile}px) {
-    font-size: 36px;
+    font-size: 24px;
   }
 `;
 const Summary = styled.div`
   margin: 10px auto auto auto;
-  width: 355px;
   font-family: "Zilla Slab", serif;
   font-size: 24px;
   font-weight: lighter;
   color: #555;
   margin-bottom: 24px;
+  word-break: break-word;
+  max-width: 405px;
+  text-align: center;
+  @media screen and (max-width: ${helpers.mobile}px) {
+    font-size: 16px;
+  }
 `;
 const Counter = styled.div`
   font-family: monospace;
@@ -156,7 +162,7 @@ export function EmailVerifyDashboardRender () {
         </EmailStatus>
         <center> <ImagesContainer><GroupSvg /><EmailSvg emailSend={emailSend}/></ImagesContainer></center>
         <Text> Please check your inbox!.</Text>
-        <Summary> We just send a confirmation link to {email}.Click the link to sign in to your dashboard.</Summary>
+        <Summary> We just send a confirmation link to {email}. Click the link in the email to sign in to your dashboard.</Summary>
         <center>
           <ButtonsWrapper>
           <CustomButton
