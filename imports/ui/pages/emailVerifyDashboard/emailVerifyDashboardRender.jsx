@@ -37,6 +37,7 @@ const Head = styled.div`
   display: flex;
   height: 48px;
   background-color: white;
+  padding: 0px 15px 0px 15px;
 `;
 const Logo = styled.div`
   width: 24px;
@@ -69,7 +70,6 @@ const ButtonsWrapper = styled.div`
 const P = styled.p`
   font-size: 20px;
   margin: 1px 0px 0px 5px;
-  font-weight: 100;
   font-family: ${specialFont};
 `;
 const EmailStatus = styled.div`
@@ -80,11 +80,12 @@ const EmailStatus = styled.div`
     background-color:${helpers.primaryColor};
     border-radius: 25px;
     color: white;
+    font-style: italic;
     font-family: ${specialFont};
     box-shadow: 4px 11px 2px -4px #888888;
     transition: all 0.3s ease-out;
     visibility: ${props => props.emailSend ? "visible" : "hidden"};
-    padding: ${props => props.emailSend ? "5px 4% 5px 4%" : "0px"};
+    padding: ${props => props.emailSend ? "4px 50px 4px 50px" : "0px"};
     height: ${props => props.emailSend ? "35px" : "0px"};
 `;
 const GroupSvg = styled.div`
@@ -100,12 +101,12 @@ const EmailSvg = styled.div`
   background-position: 100% calc(100% - 14px);
   background-repeat: no-repeat;
   max-height: 422px;
-  width: 36px;
+  width: 55px;
   position: absolute;
   transition: all 0.3s ease-out;
-  height: 59px;
-  top: 27%;
-  right: 34%;
+  height: 71px;
+  top: 25%;
+  right: 27%;
   ${props=> props.emailSend ? `animation: ${emailSvgAnim} 1s` : ''}
 `;
 const Text = styled.div`
@@ -116,6 +117,7 @@ const Text = styled.div`
   font-size: 48px;
   color: #333;
   line-height: 1.5;
+  font-style: italic;
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: 24px;
   }
@@ -130,9 +132,10 @@ const Summary = styled.div`
   word-break: break-word;
   max-width: 405px;
   text-align: center;
+  font-style: italic;
   @media screen and (max-width: ${helpers.mobile}px) {
     font-size: 16px;
-    padding: 30px;
+    padding: 5px 30px 5px 30px;
   }
 `;
 const Counter = styled.div`
@@ -159,6 +162,7 @@ const CustomButton = styled.button`
   box-sizing: border-box;
   border: 2px;
   border-radius: 5px;
+  font-style: italic;
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer' };
 `;
 export function EmailVerifyDashboardRender () {
