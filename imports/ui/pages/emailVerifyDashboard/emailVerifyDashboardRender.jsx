@@ -35,7 +35,7 @@ const groupSvgAnim = keyframes`
 const Head = styled.div`
   justify-content: center;
   display: flex;
-  height: 48px;
+  height: 51px;
   background-color: white;
   padding: 0px 15px 0px 15px;
 `;
