@@ -56,7 +56,7 @@ const TextWrapper = styled.div`
   display: flex;
 `;
 const H1 = styled.h1`
-  font-weight: light;
+  font-weight: lighter;
   font-size: 24px;
   color: #ac1616;
   margin: 0;
@@ -68,6 +68,7 @@ const ButtonsWrapper = styled.div`
   padding: 20px 0px 100px 0px;
 `;
 const P = styled.p`
+  font-weight: lighter;
   font-size: 20px;
   margin: 1px 0px 0px 5px;
   font-family: ${specialFont};
@@ -163,6 +164,7 @@ const CustomButton = styled.button`
   border: 2px;
   border-radius: 5px;
   font-style: italic;
+  font-weight: lighter;
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer' };
 `;
 export function EmailVerifyDashboardRender () {
