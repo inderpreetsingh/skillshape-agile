@@ -80,7 +80,11 @@ export default (Routes = componentLoader(props => (
         component={DashBoard}
       />
       <Route path="/no-results" name="NoResults" component={NoResults} />
-
+      <Route
+          path="/emailVerifyDashboard"
+          name="Email Dashboard"
+          component={EmailVerifyDashboard}
+        />
       <Route path="/" component={PublicLayout}>
         <Route path="/Aboutus" name="Aboutus" component={AboutUs} />
         <Route path="/profile/:id" name="MyProfile" component={MyProfile} />
@@ -129,11 +133,7 @@ export default (Routes = componentLoader(props => (
           name="VerifyEmail"
           component={VerifyEmail}
         />
-        <Route
-          path="/emailVerifyDashboard"
-          name="Email Dashboard"
-          component={EmailVerifyDashboard}
-        />
+       
         
         <Route
           path="/skillShape-school"
