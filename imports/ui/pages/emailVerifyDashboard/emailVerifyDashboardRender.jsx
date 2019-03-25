@@ -25,12 +25,34 @@ const emailSvgAnim = keyframes`
   opacity: 1;
 }
 `;
+const initialEmailAnim = keyframes`
+1% {
+  right: 104%;
+  top: 83%;
+  opacity: 0;
+}
+100 %{
+  right: 34%;
+  top: 27%;
+  opacity: 1;
+}
+`;
 const changeContentAnim = keyframes`
 0% {
   opacity:0;
 }
 100% {
   opacity:1;
+}
+`;
+const initialChangeContentAnim = keyframes`
+0% {
+  top:58px;
+  position:relative;
+}
+100% {
+  top:0px;
+  position:relative;
 }
 `;
 const groupSvgAnim = keyframes`
@@ -40,7 +62,13 @@ const groupSvgAnim = keyframes`
 100% {
   transform: rotate(360deg);
 }`;
-
+const initialGroupSvgAnim = keyframes`
+0% {
+  transform : rotate(360deg);
+}
+100% {
+  transform: rotate(0deg);
+}`;
 
 const ButtonsWrapper = styled.div`
   width: 100%;
@@ -68,8 +96,7 @@ const GroupSvg = styled.div`
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  transition: all 1s ease-out;
-  ${props => (props.emailSend ? `animation: ${groupSvgAnim} 1s` : "")}
+  ${props => ( `animation: ${props.initialLoad ? initialGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
 `;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
@@ -78,11 +105,10 @@ const EmailSvg = styled.div`
   max-height: 422px;
   width: 55px;
   position: absolute;
-  transition: all 1s ease-out;
   height: 71px;
   top: 25%;
   right: 27%;
-  ${props => (props.emailSend ? `animation: ${emailSvgAnim} 1s` : "")}
+  ${props => (`animation: ${props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.3s" :''};`)}
 `;
 const Text = styled.div`
   margin: auto;
@@ -149,12 +175,11 @@ const Footer = styled.div`
   position: fixed;
 `;
 const Content = styled.div`
-transition: all 1s ease-out;
-${props => (props.changeEmail ? `animation: ${changeContentAnim} 1s` : `animation: ${changeContentAnim} 1s`)}
+${props => `animation: ${props.initialLoad ? initialChangeContentAnim : !props.changeEmail ? changeContentAnim :'' } 1s ease-in ${props.initialLoad ? "0.3s" :''};`}
 `;
 export function EmailVerifyDashboardRender() {
   const {
-    state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage},
+    state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage,initialLoad},
     reSendEmailVerificationLink,handleState,onSubmit
   } = this;
   return (
@@ -165,13 +190,13 @@ export function EmailVerifyDashboardRender() {
         <EmailStatus emailSend={emailSend}>An email send again!</EmailStatus>
         <center>
           <ImagesContainer>
-            <GroupSvg emailSend={emailSend} />
-            <EmailSvg emailSend={emailSend} />
+            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}/>
+            <EmailSvg emailSend={emailSend} initialLoad={initialLoad} />
           </ImagesContainer>
         </center>
       
         {!changeEmail ?
-           <Content changeEmail={changeEmail}> <Text> Please check your inbox!.</Text>
+           <Content changeEmail={changeEmail} initialLoad={initialLoad}> <Text> Please check your inbox!.</Text>
          <Summary>
            {" "}
            We just send a confirmation link to {email}. Click the link in the

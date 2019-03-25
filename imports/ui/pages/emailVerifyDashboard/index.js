@@ -5,9 +5,12 @@ import {redirectToThisUrl,withPopUp,confirmationDialog} from '/imports/util';
 class EmailVerifyDashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { emailSend:false};
+    this.state = { 
+      emailSend:false,
+      initialLoad:true
+    };
   }
-  
+
   componentWillMount() {
     this.setEmail(this.props);
   }
@@ -29,7 +32,7 @@ class EmailVerifyDashboard extends Component {
     }
   }
   reSendEmailVerificationLink = (newEmail) => {
-    this.setState({ isLoading: true ,disabled:true,errorMessage:'',changeEmail:false});
+    this.setState({ isLoading: true ,disabled:true,errorMessage:'',changeEmail:false,initialLoad:false});
     const{popUp}= this.props;
     Meteor.call(
       "user.sendVerificationEmailLink",
@@ -47,7 +50,7 @@ class EmailVerifyDashboard extends Component {
     );
   };
   handleState = (key,value)=>{
-    this.setState({[key]:value});
+    this.setState({[key]:value,initialLoad:false});
   }
   onSubmit = (e) =>{
     e.preventDefault();
