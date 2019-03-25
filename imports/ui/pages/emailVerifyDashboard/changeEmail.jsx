@@ -7,6 +7,14 @@ import { NewFooter } from "./NewFooter";
 import React from "react";
 import {CustomButton} from '/imports/ui/components/landing/components/buttons';
 
+const changeContentAnim = keyframes`
+0% {
+  opacity:0;
+}
+100% {
+  opacity:1;
+}
+`;
 const Input = styled.input.attrs({
   type: "email"
 })`
@@ -43,10 +51,16 @@ const Error = styled.div`
   margin-bottom: 12px;
   font-size: 15px;
 `;
+
+const Content = styled.div`
+transition: all 1s ease-out;
+${props => (props.changeEmail ? `animation: ${changeContentAnim} 1s` : `animation: ${changeContentAnim} 1s`)}
+`;
 export function ChangeEmailComponent(props) {
  
   return (
     <Fragment>
+      <Content changeEmail={props.changeEmail}> 
       <Center>
       <form onSubmit={props.onSubmit}>
       <Input placeholder="Please Enter Email" id={'emailField'} required />
@@ -57,6 +71,7 @@ export function ChangeEmailComponent(props) {
       />
       </form>
       </Center>
+      </Content> 
     </Fragment>
   );
 }

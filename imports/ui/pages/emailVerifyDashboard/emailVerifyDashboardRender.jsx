@@ -7,8 +7,8 @@ import { NewFooter } from "./NewFooter";
 import {CustomButton} from '/imports/ui/components/landing/components/buttons';
 import React from "react";
 import {ChangeEmailComponent} from './changeEmail';
-const emailSvgAnim = keyframes`
 
+const emailSvgAnim = keyframes`
 50%   {
       right: -18%;
       top: -19%;
@@ -25,7 +25,14 @@ const emailSvgAnim = keyframes`
   opacity: 1;
 }
 `;
-
+const changeContentAnim = keyframes`
+0% {
+  opacity:0;
+}
+100% {
+  opacity:1;
+}
+`;
 const groupSvgAnim = keyframes`
 0% {
   transform : rotate(0deg);
@@ -61,7 +68,7 @@ const GroupSvg = styled.div`
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  transition: all 0.3s ease-out;
+  transition: all 1s ease-out;
   ${props => (props.emailSend ? `animation: ${groupSvgAnim} 1s` : "")}
 `;
 const EmailSvg = styled.div`
@@ -71,7 +78,7 @@ const EmailSvg = styled.div`
   max-height: 422px;
   width: 55px;
   position: absolute;
-  transition: all 0.3s ease-out;
+  transition: all 1s ease-out;
   height: 71px;
   top: 25%;
   right: 27%;
@@ -137,7 +144,10 @@ const Footer = styled.div`
   bottom: 0;
   width: 100%;
 `;
-
+const Content = styled.div`
+transition: all 1s ease-out;
+${props => (props.changeEmail ? `animation: ${changeContentAnim} 1s` : `animation: ${changeContentAnim} 1s`)}
+`;
 export function EmailVerifyDashboardRender() {
   const {
     state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage},
@@ -155,8 +165,9 @@ export function EmailVerifyDashboardRender() {
             <EmailSvg emailSend={emailSend} />
           </ImagesContainer>
         </center>
+      
         {!changeEmail ?
-         <div> <Text> Please check your inbox!.</Text>
+           <Content changeEmail={changeEmail}> <Text> Please check your inbox!.</Text>
          <Summary>
            {" "}
            We just send a confirmation link to {email}. Click the link in the
@@ -172,7 +183,12 @@ export function EmailVerifyDashboardRender() {
              <Counter id="counter" />
              <ChangeEmailButton onClick={()=>{handleState('changeEmail',true)}}>or Change Email</ChangeEmailButton>
            </ButtonsWrapper>
-         </center></div>  : <ChangeEmailComponent onSubmit={onSubmit} errorMessage={errorMessage}/>}
+         </center> </Content>  
+         : <ChangeEmailComponent 
+         changeEmail={changeEmail}
+         onSubmit={onSubmit} 
+         errorMessage={errorMessage}/>}
+         
       </Container>
       <Footer/>
     </Fragment>
