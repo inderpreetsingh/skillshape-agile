@@ -204,6 +204,15 @@ Meteor.methods({
        },
        'user.getUserDataFromId':function(_id){
            return Meteor.users.findOne({_id})
+       },
+       'user.changeEmailAddress':function(newEmail){
+           let results = Meteor.users.find({"emails.address":newEmail}).fetch()
+            if(results.length > 0){
+                throw new Meteor.Error('already exist','User Already Exists with this email.')
+            }
+            else{
+                return Meteor.users.update({_id:this.userId},{$set:{"emails.0.address":newEmail}});
+            }
        }
 });
 studentsListMaker = (studentsData, classData, purchaseData) => {

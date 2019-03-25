@@ -129,6 +129,7 @@ const ChangeEmailButton = styled.div`
   position: relative;
   top: 10px;
   cursor: pointer;
+  text-decoration: underline;
 `;
 const Footer = styled.div`
   height: 48px;
@@ -139,7 +140,7 @@ const Footer = styled.div`
 
 export function EmailVerifyDashboardRender() {
   const {
-    state: { email, isLoading, disabled, emailSend,changeEmail },
+    state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage},
     reSendEmailVerificationLink,handleState,onSubmit
   } = this;
   return (
@@ -171,7 +172,7 @@ export function EmailVerifyDashboardRender() {
              <Counter id="counter" />
              <ChangeEmailButton onClick={()=>{handleState('changeEmail',true)}}>or Change Email</ChangeEmailButton>
            </ButtonsWrapper>
-         </center></div>  : <ChangeEmailComponent onSubmit={onSubmit}/>}
+         </center></div>  : <ChangeEmailComponent onSubmit={onSubmit} errorMessage={errorMessage}/>}
       </Container>
       <Footer/>
     </Fragment>

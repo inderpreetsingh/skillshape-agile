@@ -36,6 +36,13 @@ const Center =  styled.div`
     height:224px;
     text-align: center;
 `;
+const Error = styled.div`
+  font-family: ${specialFont};
+  font-style: italic;
+  color: red;
+  margin-bottom: 12px;
+  font-size: 15px;
+`;
 export function ChangeEmailComponent(props) {
  
   return (
@@ -43,6 +50,7 @@ export function ChangeEmailComponent(props) {
       <Center>
       <form onSubmit={props.onSubmit}>
       <Input placeholder="Please Enter Email" id={'emailField'} required />
+      <Error> {props.errorMessage}</Error>
       <CustomButton 
       label={'Send'}
       type={'Submit'}

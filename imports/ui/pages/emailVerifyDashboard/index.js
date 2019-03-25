@@ -1,7 +1,7 @@
 import { get, isEmpty } from 'lodash';
 import { Component } from "react";
 import {EmailVerifyDashboardRender} from './emailVerifyDashboardRender';
-import {redirectToThisUrl,withPopUp} from '/imports/util';
+import {redirectToThisUrl,withPopUp,confirmationDialog} from '/imports/util';
 class EmailVerifyDashboard extends Component {
   constructor(props) {
     super(props);
@@ -9,7 +9,13 @@ class EmailVerifyDashboard extends Component {
   }
   
   componentWillMount() {
-    const {currentUser} = this.props;
+    this.setEmail(this.props);
+  }
+  componentWillReceiveProps(nextProps){
+    this.setEmail(nextProps);
+  }
+  setEmail = (props) =>{
+    const {currentUser} = props;
     if(!isEmpty(currentUser)){
       const {emails} = currentUser;
       if(get(emails[0],'verified',false)){
@@ -22,17 +28,18 @@ class EmailVerifyDashboard extends Component {
       redirectToThisUrl("");
     }
   }
-  reSendEmailVerificationLink = () => {
-    this.setState({ isLoading: true ,disabled:true,});
+  reSendEmailVerificationLink = (newEmail) => {
+    this.setState({ isLoading: true ,disabled:true,errorMessage:'',changeEmail:false});
     const{popUp}= this.props;
     Meteor.call(
       "user.sendVerificationEmailLink",
-      this.state.email,
+      newEmail || this.state.email,
       (err, res) => {
+				console.log("TCL: EmailVerifyDashboard -> reSendEmailVerificationLink -> err", err)
         this.setState({ isLoading: false, emailSend:true});
         if (err) {
-          let errText = err.reason || err.message;
-          popUp.appear("error",{content: errText});
+          let content = err.reason || err.message;
+          confirmationDialog({popUp,errDialog:true,content});
         }
         if (res) {
           this.countdown();
@@ -44,8 +51,24 @@ class EmailVerifyDashboard extends Component {
     this.setState({[key]:value});
   }
   onSubmit = (e) =>{
-		document.getElementById('emailField').value
     e.preventDefault();
+    let newEmail = document.getElementById('emailField').value;
+    if(newEmail){
+      Meteor.call("user.changeEmailAddress",newEmail,(err,res)=>{
+				if(err){
+          const {reason:errorMessage} = err;
+          this.setState({errorMessage});
+        }
+        else {
+          this.reSendEmailVerificationLink(newEmail);
+        }
+        
+      })
+    }
+    /* 
+    1. Is already exist.
+    2. Chang email in db.
+    */
 
   }
  countdown =() => {
