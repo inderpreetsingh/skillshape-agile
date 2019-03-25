@@ -44,7 +44,7 @@ const groupSvgAnim = keyframes`
 
 const ButtonsWrapper = styled.div`
   width: 100%;
-  padding: 20px 0px 100px 0px;
+  margin-bottom: 90px;
 `;
 
 const EmailStatus = styled.div`
@@ -115,10 +115,13 @@ const Summary = styled.div`
 `;
 const Counter = styled.div`
   font-family: ${specialFont};
+  font-style: italic;
+  font-weight: lighter;
   margin: 5px auto 5px auto;
 `;
 const Container = styled.div`
   background-color: #f2f2f2;
+  height: max-content;
 `;
 const ImagesContainer = styled.div`
   position: relative;
@@ -143,6 +146,7 @@ const Footer = styled.div`
   background: #ddd;
   bottom: 0;
   width: 100%;
+  position: fixed;
 `;
 const Content = styled.div`
 transition: all 1s ease-out;
@@ -187,10 +191,12 @@ export function EmailVerifyDashboardRender() {
          : <ChangeEmailComponent 
          changeEmail={changeEmail}
          onSubmit={onSubmit} 
-         errorMessage={errorMessage}/>}
+         errorMessage={errorMessage}
+         back={()=>{handleState('changeEmail',false)}}
+         />}
          
-      </Container>
       <Footer/>
+      </Container>
     </Fragment>
   );
 }

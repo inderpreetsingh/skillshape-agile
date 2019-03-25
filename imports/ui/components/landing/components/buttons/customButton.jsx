@@ -15,6 +15,7 @@ border: 2px;
 border-radius: 5px;
 font-style: italic;
 font-weight: lighter;
+margin-top:10px;
 cursor: ${props => (props.disabled ? "not-allowed" : "pointer")};
 `;
 

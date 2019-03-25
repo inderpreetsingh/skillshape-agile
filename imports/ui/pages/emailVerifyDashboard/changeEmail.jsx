@@ -53,6 +53,7 @@ const Error = styled.div`
 `;
 
 const Content = styled.div`
+min-height:331px;
 transition: all 1s ease-out;
 ${props => (props.changeEmail ? `animation: ${changeContentAnim} 1s` : `animation: ${changeContentAnim} 1s`)}
 `;
@@ -68,6 +69,11 @@ export function ChangeEmailComponent(props) {
       <CustomButton 
       label={'Send'}
       type={'Submit'}
+      />
+      <br/>
+      <CustomButton 
+      label={'Back'}
+      onClick={props.back}
       />
       </form>
       </Center>
