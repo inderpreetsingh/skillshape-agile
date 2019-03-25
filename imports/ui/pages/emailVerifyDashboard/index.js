@@ -29,13 +29,15 @@ class EmailVerifyDashboard extends Component {
     }
   }
   reSendEmailVerificationLink = (newEmail) => {
+    console.log('1')
     this.setState({ isLoading: true ,disabled:true,errorMessage:'',changeEmail:false});
     const{popUp}= this.props;
+    console.log('2')
     Meteor.call(
       "user.sendVerificationEmailLink",
       newEmail || this.state.email,
       (err, res) => {
-				console.log("TCL: EmailVerifyDashboard -> reSendEmailVerificationLink -> err", err)
+        console.log('3')
         this.setState({ isLoading: false, emailSend:true});
         if (err) {
           let content = err.reason || err.message;
