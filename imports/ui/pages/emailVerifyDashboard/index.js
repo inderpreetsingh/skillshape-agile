@@ -65,11 +65,6 @@ class EmailVerifyDashboard extends Component {
         
       })
     }
-    /* 
-    1. Is already exist.
-    2. Chang email in db.
-    */
-
   }
  countdown =() => {
     let seconds = 10;
