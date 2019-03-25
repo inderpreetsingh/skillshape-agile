@@ -4,8 +4,9 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { specialFont } from "/imports/ui/components/landing/components/jss/helpers.js";
 import { NewFooter } from "./NewFooter";
+import {CustomButton} from '/imports/ui/components/landing/components/buttons';
 import React from "react";
-
+import {ChangeEmailComponent} from './changeEmail';
 const emailSvgAnim = keyframes`
 
 50%   {
@@ -118,26 +119,28 @@ const ImagesContainer = styled.div`
   margin-bottom: 24px;
   margin-top: 41px;
 `;
-const CustomButton = styled.button`
-  background-color: #333;
-  color: #f2f2f2;
-  height: 48px;
-  min-width: 200px;
+
+const ChangeEmailButton = styled.div`
+  color: blue;
   font-family: ${specialFont};
-  font-size: 24px;
-  padding: 8px 16px;
-  box-sizing: border-box;
-  border: 2px;
-  border-radius: 5px;
+  font-size: 19px;
   font-style: italic;
   font-weight: lighter;
-  cursor: ${props => (props.disabled ? "not-allowed" : "pointer")};
+  position: relative;
+  top: 10px;
+  cursor: pointer;
+`;
+const Footer = styled.div`
+  height: 48px;
+  background: #ddd;
+  bottom: 0;
+  width: 100%;
 `;
 
 export function EmailVerifyDashboardRender() {
   const {
-    state: { email, isLoading, disabled, emailSend },
-    reSendEmailVerificationLink
+    state: { email, isLoading, disabled, emailSend,changeEmail },
+    reSendEmailVerificationLink,handleState,onSubmit
   } = this;
   return (
     <Fragment>
@@ -151,24 +154,26 @@ export function EmailVerifyDashboardRender() {
             <EmailSvg emailSend={emailSend} />
           </ImagesContainer>
         </center>
-        <Text> Please check your inbox!.</Text>
-        <Summary>
-          {" "}
-          We just send a confirmation link to {email}. Click the link in the
-          email to sign in to your dashboard.
-        </Summary>
-        <center>
-          <ButtonsWrapper>
-            <CustomButton
-              disabled={disabled}
-              onClick={reSendEmailVerificationLink}
-            >
-              Resend Email
-            </CustomButton>
-            <Counter id="counter" />
-          </ButtonsWrapper>
-        </center>
+        {!changeEmail ?
+         <div> <Text> Please check your inbox!.</Text>
+         <Summary>
+           {" "}
+           We just send a confirmation link to {email}. Click the link in the
+           email to sign in to your dashboard.
+         </Summary>
+         <center>
+           <ButtonsWrapper>
+             <CustomButton
+               disabled={disabled}
+               onClick={reSendEmailVerificationLink}
+               label={"Resend Email"}
+             />
+             <Counter id="counter" />
+             <ChangeEmailButton onClick={()=>{handleState('changeEmail',true)}}>or Change Email</ChangeEmailButton>
+           </ButtonsWrapper>
+         </center></div>  : <ChangeEmailComponent onSubmit={onSubmit}/>}
       </Container>
+      <Footer/>
     </Fragment>
   );
 }

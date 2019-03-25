@@ -40,7 +40,14 @@ class EmailVerifyDashboard extends Component {
       }
     );
   };
+  handleState = (key,value)=>{
+    this.setState({[key]:value});
+  }
+  onSubmit = (e) =>{
+		document.getElementById('emailField').value
+    e.preventDefault();
 
+  }
  countdown =() => {
     let seconds = 10;
      tick =() => {
