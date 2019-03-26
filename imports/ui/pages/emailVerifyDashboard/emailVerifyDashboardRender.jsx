@@ -37,6 +37,18 @@ const initialEmailAnim = keyframes`
   opacity: 1;
 }
 `;
+const changeEmailAnim = keyframes`
+1% {
+  right: 103%;
+  top: 82%;
+  opacity: 0;
+}
+100 %{
+  right: 34%;
+  top: 27%;
+  opacity: 1;
+}
+`;
 const changeContentAnim = keyframes`
 0% {
   opacity:0;
@@ -61,6 +73,13 @@ const groupSvgAnim = keyframes`
 }
 100% {
   transform: rotate(360deg);
+}`;
+const changeGroupSvgAnim = keyframes`
+0% {
+  transform : rotate(0deg);
+}
+100% {
+  transform: rotate(359deg);
 }`;
 const initialGroupSvgAnim = keyframes`
 0% {
@@ -96,7 +115,7 @@ const GroupSvg = styled.div`
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  ${props => ( `animation: ${props.initialLoad ? initialGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
+  ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim : props.emailSend ? groupSvgAnim : !props.changeEmail ? changeGroupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
 `;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
@@ -108,7 +127,7 @@ const EmailSvg = styled.div`
   height: 71px;
   top: 25%;
   right: 27%;
-  ${props => (`animation: ${props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.3s" :''};`)}
+  ${props => (`animation: ${ props.changeEmail  ? changeEmailAnim :props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.3s" :''};`)}
 `;
 const Text = styled.div`
   margin: auto;
@@ -190,8 +209,8 @@ export function EmailVerifyDashboardRender() {
         <EmailStatus emailSend={emailSend}>An email send again!</EmailStatus>
         <center>
           <ImagesContainer>
-            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}/>
-            <EmailSvg emailSend={emailSend} initialLoad={initialLoad} />
+            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail}/>
+            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} />
           </ImagesContainer>
         </center>
       

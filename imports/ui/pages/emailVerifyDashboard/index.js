@@ -56,15 +56,17 @@ class EmailVerifyDashboard extends Component {
     e.preventDefault();
     let newEmail = document.getElementById('emailField').value;
     if(newEmail){
-      Meteor.call("user.changeEmailAddress",newEmail,(err,res)=>{
-				if(err){
-          const {reason:errorMessage} = err;
-          this.setState({errorMessage});
-        }
-        else {
-          this.reSendEmailVerificationLink(newEmail);
-        }
-        
+      this.setState({changeEmail:false},()=>{
+        Meteor.call("user.changeEmailAddress",newEmail,(err,res)=>{
+          if(err){
+            const {reason:errorMessage} = err;
+            this.setState({errorMessage});
+          }
+          else {
+            this.reSendEmailVerificationLink(newEmail);
+          }
+          
+        })
       })
     }
   }
@@ -85,7 +87,6 @@ class EmailVerifyDashboard extends Component {
 }
 
   render() {
-  
     return (
       EmailVerifyDashboardRender.call(this)
     );
