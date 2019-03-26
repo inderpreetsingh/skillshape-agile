@@ -96,7 +96,7 @@ const ButtonsWrapper = styled.div`
   display:flex;
   justify-content:center;
   flex-wrap: wrap;
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     display: block;
   }
 `;
@@ -110,8 +110,9 @@ const EmailStatus = styled.div`
   border-radius: 25px;
   color: white;
   font-style: italic;
+  text-align: center;
+  min-width: 276px;
   font-family: ${specialFont};
-  box-shadow: 4px 11px 2px -4px #888888;
   transition: all 0.3s ease-out;
   visibility: ${props => (props.emailSend || props.isLoading ? "visible" : "hidden")};
   padding: ${props => (props.emailSend || props.isLoading  ? "4px 50px 4px 50px" : "0px")};
@@ -147,7 +148,7 @@ const Text = styled.div`
   color: #333;
   line-height: 1.5;
   font-style: italic;
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     font-size: 24px;
   }
 `;
@@ -162,7 +163,7 @@ const Summary = styled.div`
   max-width: 405px;
   text-align: center;
   font-style: italic;
-  @media screen and (max-width: ${helpers.mobile}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     font-size: 16px;
     padding: 5px 30px 5px 30px;
   }
@@ -200,7 +201,7 @@ const ChangeEmailButton = styled.div`
     margin: 10px auto 10px auto;
     cursor: pointer;
 
-@media screen and (max-width: ${helpers.mobile}px) {
+@media screen and (max-width: ${helpers.tablet}px) {
   color: blue;
   border: 0px;
   font-size: 19px;
@@ -223,13 +224,13 @@ ${props => `animation: ${props.initialLoad ? initialChangeContentAnim : !props.c
 `;
 
 const Center = styled.div`
-position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    @media screen and (max-width: ${helpers.mobile}px) {
-      position: relative;
-    }
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  @media screen and (max-width: ${helpers.tablet}px) {
+    position: relative;
+  }
 `;
 export function EmailVerifyDashboardRender() {
   const {
@@ -260,8 +261,8 @@ export function EmailVerifyDashboardRender() {
                label={"Resend Email"}
              />
              <ChangeEmailButton  onClick={()=>{handleState('changeEmail',true)}}>Change Email</ChangeEmailButton>
-           </ButtonsWrapper>
             <Counter id="counter" />
+           </ButtonsWrapper>
           </Content>  
          : <ChangeEmailComponent 
          changeEmail={changeEmail}
