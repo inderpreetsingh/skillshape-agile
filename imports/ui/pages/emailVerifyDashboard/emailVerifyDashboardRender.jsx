@@ -96,6 +96,9 @@ const ButtonsWrapper = styled.div`
   display:flex;
   justify-content:center;
   flex-wrap: wrap;
+  @media screen and (max-width: ${helpers.mobile}px) {
+    display: block;
+  }
 `;
 
 const EmailStatus = styled.div`
@@ -224,6 +227,9 @@ position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    @media screen and (max-width: ${helpers.mobile}px) {
+      position: relative;
+    }
 `;
 export function EmailVerifyDashboardRender() {
   const {

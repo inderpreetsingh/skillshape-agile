@@ -11,7 +11,7 @@ export const Head = styled.div`
 `;
 export const P = styled.p`
   font-weight: lighter;
-  font-size: 20px;
+  font-size: 19px;
   margin: 1px 0px 0px 5px;
   font-family: ${specialFont};
 `;
