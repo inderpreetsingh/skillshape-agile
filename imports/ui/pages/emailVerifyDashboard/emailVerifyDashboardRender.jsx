@@ -115,7 +115,7 @@ const GroupSvg = styled.div`
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim : props.emailSend ? groupSvgAnim : !props.changeEmail ? changeGroupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
+  ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim :!props.changeEmail ? changeGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
 `;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
