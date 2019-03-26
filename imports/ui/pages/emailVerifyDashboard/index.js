@@ -56,11 +56,11 @@ class EmailVerifyDashboard extends Component {
     e.preventDefault();
     let newEmail = document.getElementById('emailField').value;
     if(newEmail){
-      this.setState({changeEmail:false},()=>{
+      this.setState({isLoading:true},()=>{
         Meteor.call("user.changeEmailAddress",newEmail,(err,res)=>{
           if(err){
             const {reason:errorMessage} = err;
-            this.setState({errorMessage});
+            this.setState({errorMessage,isLoading:false});
           }
           else {
             this.reSendEmailVerificationLink(newEmail);

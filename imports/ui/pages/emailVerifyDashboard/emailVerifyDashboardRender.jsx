@@ -93,6 +93,9 @@ const ButtonsWrapper = styled.div`
   width: 100%;
   margin-bottom: 90px;
   text-align: center;
+  display:flex;
+  justify-content:center;
+  flex-wrap: wrap;
 `;
 
 const EmailStatus = styled.div`
@@ -107,9 +110,9 @@ const EmailStatus = styled.div`
   font-family: ${specialFont};
   box-shadow: 4px 11px 2px -4px #888888;
   transition: all 0.3s ease-out;
-  visibility: ${props => (props.emailSend ? "visible" : "hidden")};
-  padding: ${props => (props.emailSend ? "4px 50px 4px 50px" : "0px")};
-  height: ${props => (props.emailSend ? "35px" : "0px")};
+  visibility: ${props => (props.emailSend || props.isLoading ? "visible" : "hidden")};
+  padding: ${props => (props.emailSend || props.isLoading  ? "4px 50px 4px 50px" : "0px")};
+  height: ${props => (props.emailSend || props.isLoading ? "35px" : "0px")};
 `;
 const GroupSvg = styled.div`
   background-image: url(${config.groupSvg});
@@ -117,7 +120,8 @@ const GroupSvg = styled.div`
   height: 122px;
   width: 121px;
   ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim :!props.changeEmail ? changeGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
-`;
+  ${props => (props.isLoading ? `animation: ${changeGroupSvgAnim} 0.5s linear infinite;` :'')}
+  `;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
   background-position: 100% calc(100% - 14px);
@@ -178,15 +182,31 @@ const ImagesContainer = styled.div`
 `;
 
 const ChangeEmailButton = styled.div`
+    color: #333;
+    height: 48px;
+    font-family: ${specialFont};
+    font-size: 24px;
+    padding: 8px 30px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-style: italic;
+    font-weight: lighter;
+    margin-top: 10px;
+    border: 1px solid;
+    max-width: 200px;
+    margin: 10px auto 10px auto;
+    cursor: pointer;
+
+@media screen and (max-width: ${helpers.mobile}px) {
   color: blue;
-  font-family: ${specialFont};
+  border: 0px;
   font-size: 19px;
   font-style: italic;
   font-weight: lighter;
   position: relative;
-  top: 10px;
   cursor: pointer;
   text-decoration: underline;
+}
 `;
 const Footer = styled.div`
   height: 48px;
@@ -215,10 +235,10 @@ export function EmailVerifyDashboardRender() {
         <NewFooter />
       <Container>
         <Center>
-        <EmailStatus emailSend={emailSend}>An email send again!</EmailStatus>
+        <EmailStatus emailSend={emailSend} isLoading={isLoading}>{isLoading ? 'Please wait!' : emailSend ?"An email send again!" : "" }</EmailStatus>
           <ImagesContainer>
-            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail}/>
-            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading />
+            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading}/>
+            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading} />
           </ImagesContainer>
         {!changeEmail ?
            <Content changeEmail={changeEmail} initialLoad={initialLoad}> <Text> Please check your inbox!.</Text>
@@ -233,9 +253,9 @@ export function EmailVerifyDashboardRender() {
                onClick={()=>{reSendEmailVerificationLink()}}
                label={"Resend Email"}
              />
-             <Counter id="counter" />
-             <ChangeEmailButton  onClick={()=>{handleState('changeEmail',true)}}>or Change Email</ChangeEmailButton>
+             <ChangeEmailButton  onClick={()=>{handleState('changeEmail',true)}}>Change Email</ChangeEmailButton>
            </ButtonsWrapper>
+            <Counter id="counter" />
           </Content>  
          : <ChangeEmailComponent 
          changeEmail={changeEmail}
