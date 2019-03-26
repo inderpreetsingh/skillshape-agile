@@ -92,6 +92,7 @@ const initialGroupSvgAnim = keyframes`
 const ButtonsWrapper = styled.div`
   width: 100%;
   margin-bottom: 90px;
+  text-align: center;
 `;
 
 const EmailStatus = styled.div`
@@ -128,7 +129,8 @@ const EmailSvg = styled.div`
   top: 25%;
   right: 27%;
   ${props => (`animation: ${ props.changeEmail  ? changeEmailAnim :props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.3s" :''};`)}
-`;
+  ${props => (``)}
+  `;
 const Text = styled.div`
   margin: auto;
   text-align: center;
@@ -166,13 +168,13 @@ const Counter = styled.div`
 `;
 const Container = styled.div`
   background-color: #f2f2f2;
-  height: max-content;
+  height: -webkit-fill-available;
+  position: relative;
 `;
 const ImagesContainer = styled.div`
   position: relative;
   width: fit-content;
-  margin-bottom: 24px;
-  margin-top: 41px;
+  margin:41px auto 24px auto;
 `;
 
 const ChangeEmailButton = styled.div`
@@ -196,6 +198,13 @@ const Footer = styled.div`
 const Content = styled.div`
 ${props => `animation: ${props.initialLoad ? initialChangeContentAnim : !props.changeEmail ? changeContentAnim :'' } 1s ease-in ${props.initialLoad ? "0.3s" :''};`}
 `;
+
+const Center = styled.div`
+position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+`;
 export function EmailVerifyDashboardRender() {
   const {
     state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage,initialLoad},
@@ -203,17 +212,14 @@ export function EmailVerifyDashboardRender() {
   } = this;
   return (
     <Fragment>
-      <Container>
-        {isLoading && <ContainerLoader />}
         <NewFooter />
+      <Container>
+        <Center>
         <EmailStatus emailSend={emailSend}>An email send again!</EmailStatus>
-        <center>
           <ImagesContainer>
             <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail}/>
-            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} />
+            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading />
           </ImagesContainer>
-        </center>
-      
         {!changeEmail ?
            <Content changeEmail={changeEmail} initialLoad={initialLoad}> <Text> Please check your inbox!.</Text>
          <Summary>
@@ -221,7 +227,6 @@ export function EmailVerifyDashboardRender() {
            We just send a confirmation link to {email}. Click the link in the
            email to sign in to your dashboard.
          </Summary>
-         <center>
            <ButtonsWrapper>
              <CustomButton
                disabled={disabled}
@@ -231,16 +236,16 @@ export function EmailVerifyDashboardRender() {
              <Counter id="counter" />
              <ChangeEmailButton  onClick={()=>{handleState('changeEmail',true)}}>or Change Email</ChangeEmailButton>
            </ButtonsWrapper>
-         </center> </Content>  
+          </Content>  
          : <ChangeEmailComponent 
          changeEmail={changeEmail}
          onSubmit={onSubmit} 
          errorMessage={errorMessage}
          back={()=>{handleState('changeEmail',false)}}
          />}
-         
-      <Footer/>
+         </Center>
       </Container>
+      <Footer/>
     </Fragment>
   );
 }
