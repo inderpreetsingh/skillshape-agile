@@ -23,8 +23,8 @@ export const Logo = styled.div`
   position: relative;
 `;
 export const Img = styled.img`
-  width: 100%;
-  vertical-align: bottom;
+  width: 24px;
+  height: 24px;
 `;
 export const TextWrapper = styled.div`
   display: inline-block;
@@ -39,14 +39,22 @@ export const H1 = styled.h1`
   line-height: 1;
   font-family: ${specialFont};
 `;
-export const NewFooter = () =>{
-    return(   <Head>
-        <Logo>
-          <Img src={config.skillShapeLogo} />
-        </Logo>
-        <TextWrapper>
-          <H1>Skillshape,</H1>
-          <P>your path revealed.</P>
-        </TextWrapper>
-      </Head>)
+export const Container = styled.div`
+  height: 48px;
+  background-color: white;
+`;
+export const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  top: 12px;
+  position: relative;
+`;
+export const NewFooter = () => {
+  return (<Container>
+    <Wrapper>
+      <Img src={config.skillShapeLogo} />
+      <H1>Skillshape,</H1>
+      <P>your path revealed.</P>
+    </Wrapper>
+  </Container>)
 }

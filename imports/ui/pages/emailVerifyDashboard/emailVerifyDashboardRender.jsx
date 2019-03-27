@@ -228,9 +228,6 @@ const Center = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  @media screen and (max-width: ${helpers.tablet}px) {
-    position: relative;
-  }
 `;
 export function EmailVerifyDashboardRender() {
   const {
