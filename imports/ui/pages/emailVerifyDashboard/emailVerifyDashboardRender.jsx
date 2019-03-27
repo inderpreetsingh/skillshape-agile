@@ -123,7 +123,7 @@ const GroupSvg = styled.div`
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim :!props.changeEmail ? changeGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.3s" :''};` )}
+  ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim :!props.changeEmail ? changeGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.2s" :''};` )}
   ${props => (props.isLoading ? `animation: ${changeGroupSvgAnim} 0.5s linear infinite;` :'')}
   `;
 const EmailSvg = styled.div`
@@ -136,7 +136,7 @@ const EmailSvg = styled.div`
   height: 71px;
   top: 25%;
   right: 27%;
-  ${props => (`animation: ${ props.changeEmail  ? changeEmailAnim :props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.3s" :''};`)}
+  ${props => (`animation: ${ props.changeEmail  ? changeEmailAnim :props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.2s" :''};`)}
   ${props => (``)}
   `;
 const Text = styled.div`
@@ -220,7 +220,7 @@ const Footer = styled.div`
   position: fixed;
 `;
 const Content = styled.div`
-${props => `animation: ${props.initialLoad ? initialChangeContentAnim : !props.changeEmail ? changeContentAnim :'' } 1s ease-in ${props.initialLoad ? "0.3s" :''};`}
+${props => `animation: ${props.initialLoad ? initialChangeContentAnim : !props.changeEmail ? changeContentAnim :'' } 1s ease-in ${props.initialLoad ? "0.2s" :''};`}
 `;
 
 const Center = styled.div`

@@ -19,8 +19,6 @@ const Input = styled.input.attrs({
   type: "email"
 })`
   margin: auto;
-  bottom: 27px;
-  margin-top: 48px;
   position: relative;
   1px solid #ddd;
   outline: none;
@@ -53,9 +51,12 @@ const Error = styled.div`
 `;
 
 const Content = styled.div`
-min-height:331px;
-transition: all 1s ease-out;
-${props => (props.changeEmail ? `animation: ${changeContentAnim} 1s` : `animation: ${changeContentAnim} 1s`)}
+  min-height: 337px;
+  transition: all 1s ease-out;
+  ${props =>
+    props.changeEmail
+      ? `animation: ${changeContentAnim} 1s`
+      : `animation: ${changeContentAnim} 1s`}
 `;
 export function ChangeEmailComponent(props) {
  
