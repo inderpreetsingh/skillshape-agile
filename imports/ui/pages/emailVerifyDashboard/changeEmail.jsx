@@ -39,8 +39,8 @@ const Input = styled.input.attrs({
   `;
 
 const Center =  styled.div`
-    height:224px;
     text-align: center;
+    margin-top: 28px;
 `;
 const Error = styled.div`
   font-family: ${specialFont};

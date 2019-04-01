@@ -229,6 +229,9 @@ const Center = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
 `;
+const EmailStatusContainer = styled.div`
+  height: 35px;
+`;
 export function EmailVerifyDashboardRender() {
   const {
     state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage,initialLoad},
@@ -239,7 +242,9 @@ export function EmailVerifyDashboardRender() {
         <NewFooter />
       <Container>
         <Center>
+        <EmailStatusContainer>
         <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad} >{isLoading ? 'Please wait!' : emailSend ?"An email send again!" : initialLoad ? "Email is send": "" }</EmailStatus>
+        </EmailStatusContainer>
           <ImagesContainer>
             <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading}/>
             <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading} />
