@@ -111,7 +111,7 @@ const EmailStatus = styled.div`
   color: white;
   font-style: italic;
   text-align: center;
-  min-width: 276px;
+  min-width: 280px;
   font-family: ${specialFont};
   transition: all 0.3s ease-out;
   visibility: ${props => (props.emailSend || props.isLoading ? "visible" : "hidden")};
