@@ -85,7 +85,8 @@ class LoginButton extends Component {
           );
 
           if (!emailVerificationStatus) {
-            // Meteor.logout();
+            browserHistory.push("/emailVerifyDashboard");
+            return;
             stateObj.showVerficationLink = true;
             stateObj.error.message = "Please verify email first. ";
           } else {
