@@ -256,9 +256,9 @@ export function EmailVerifyDashboardRender() {
                disabled={disabled}
                onClick={()=>{reSendEmailVerificationLink()}}
                label={"Resend Email"}
+               id="counter"
              />
              <ChangeEmailButton  onClick={()=>{handleState('changeEmail',true)}}>Change Email</ChangeEmailButton>
-            <Counter id="counter" />
            </ButtonsWrapper>
           </Content>  
          : <ChangeEmailComponent 

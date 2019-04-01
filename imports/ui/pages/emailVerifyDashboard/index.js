@@ -79,7 +79,7 @@ class EmailVerifyDashboard extends Component {
         if( seconds > 0 ) {
             setTimeout(tick, 1000);
         } else {
-            counter.innerHTML = ``;
+            counter.innerHTML = `Resend Email`;
             this.setState({disabled:false,emailSend:false});
         }
     }
