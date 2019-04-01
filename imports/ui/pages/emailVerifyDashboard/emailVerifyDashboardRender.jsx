@@ -114,9 +114,9 @@ const EmailStatus = styled.div`
   min-width: 280px;
   font-family: ${specialFont};
   transition: all 0.3s ease-out;
-  visibility: ${props => (props.emailSend || props.isLoading ? "visible" : "hidden")};
-  padding: ${props => (props.emailSend || props.isLoading  ? "4px 50px 4px 50px" : "0px")};
-  height: ${props => (props.emailSend || props.isLoading ? "35px" : "0px")};
+  visibility: ${props => (props.emailSend || props.isLoading || props.initialLoad ? "visible" : "hidden")};
+  padding: ${props => (props.emailSend || props.isLoading || props.initialLoad  ? "4px 50px 4px 50px" : "0px")};
+  height: ${props => (props.emailSend || props.isLoading || props.initialLoad ? "35px" : "0px")};
 `;
 const GroupSvg = styled.div`
   background-image: url(${config.groupSvg});
@@ -239,7 +239,7 @@ export function EmailVerifyDashboardRender() {
         <NewFooter />
       <Container>
         <Center>
-        <EmailStatus emailSend={emailSend} isLoading={isLoading}>{isLoading ? 'Please wait!' : emailSend ?"An email send again!" : "" }</EmailStatus>
+        <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad} >{isLoading ? 'Please wait!' : emailSend ?"An email send again!" : initialLoad ? "Email is send": "" }</EmailStatus>
           <ImagesContainer>
             <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading}/>
             <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading} />
