@@ -230,6 +230,7 @@ const Center = styled.div`
   transform: translate(-50%, -50%);
 `;
 const EmailStatusContainer = styled.div`
+  margin-top: 33px;
   height: 35px;
 `;
 export function EmailVerifyDashboardRender() {
