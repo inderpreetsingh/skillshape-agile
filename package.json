@@ -8,7 +8,7 @@
     "@babel/runtime": "7.0.0-beta.54",
     "axios": "0.18.0",
     "babel-runtime": "6.26.0",
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^3.0.5",
     "blob-util": "2.0.2",
     "body-parser": "1.18.3",
     "browser-image-compression": "0.0.3",

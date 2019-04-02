@@ -25,7 +25,7 @@ caching-compiler@1.1.9
 caching-html-compiler@1.1.2
 callback-hook@1.0.10
 cfs:base-package@0.0.30
-cfs:gridfs@0.0.33
+cfs:gridfs@0.0.34
 cfs:storage-adapter@0.2.3
 check@1.2.5
 coffeescript@1.0.17
