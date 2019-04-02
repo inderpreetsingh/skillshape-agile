@@ -68,3 +68,7 @@ import "/imports/api/classes/server/publication";
 import "/imports/api/attendance/server/publication";
 import '/imports/api/packagesRequest/server/publication';
 import '/imports/api/contracts/server/publication';
+
+// All RestApis are imported here
+import "/imports/api/school/server/restApis";
+import "/imports/api/user/server/restApis"

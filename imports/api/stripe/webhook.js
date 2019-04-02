@@ -129,11 +129,7 @@ import  bodyParser from "body-parser";
 
 
 
-  Picker.route("/restApiTest",(params, request, response, next  )=>{
-    let result = School.findOne({});
-    response.end(JSON.stringify(result));
-  })
-
+ 
 
 
 
