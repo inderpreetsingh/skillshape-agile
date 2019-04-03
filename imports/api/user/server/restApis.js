@@ -27,6 +27,8 @@ Picker.route("/api/v1/users/", (params, req, res, next) => {
     }
     res.end(JSON.stringify(payload));
   } catch (error) {
-    res.end(JSON.stringify({ error: error }));
+		console.log("Error in /api/v1/users/", error);
+    payload = {error : 'Something Went Wrong'};
+    res.end(JSON.stringify(payload));
   }
 });
