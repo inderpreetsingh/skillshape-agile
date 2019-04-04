@@ -17,7 +17,7 @@ Picker.route("/api/v1/users/", (params, req, res, next) => {
           payload = user;
         } else if (error) {
           const { reason } = error;
-          payload = { error:reason };
+          payload = { error: reason };
         }
       } else {
         payload = { error: "User Not Exists" };
@@ -27,8 +27,8 @@ Picker.route("/api/v1/users/", (params, req, res, next) => {
     }
     res.end(JSON.stringify(payload));
   } catch (error) {
-		console.log("Error in /api/v1/users/", error);
-    payload = {error : 'Something Went Wrong'};
+    console.log("Error in /api/v1/users/", error);
+    payload = { error: "Something Went Wrong" };
     res.end(JSON.stringify(payload));
   }
 });

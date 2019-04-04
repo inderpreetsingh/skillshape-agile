@@ -71,4 +71,5 @@ import '/imports/api/contracts/server/publication';
 
 // All RestApis are imported here
 import "/imports/api/school/server/restApis";
-import "/imports/api/user/server/restApis"
+import "/imports/api/user/server/restApis";
+import "/imports/api/classType/server/restApis";
