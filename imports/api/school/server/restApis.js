@@ -7,7 +7,6 @@ import SkillSubject from "/imports/api/skillSubject/fields";
 import {uniq,isEmpty} from "lodash";
 
 import  bodyParser from "body-parser";
-import { request } from "http";
 Picker.middleware(bodyParser.json());
 Picker.middleware(bodyParser.urlencoded({ extended: false }));
 
@@ -32,8 +31,18 @@ Picker.route("/api/v1/schools",(params, req, res, next  )=>{
       if (gender) {
         classTypeFilter["gender"] = gender;
       }
+
+      // Add Age Filter for class type
+      if (age) {
+        age = Number(age);
+        classTypeFilter["ageMin"] = { $lte: age };
+        classTypeFilter["ageMax"]  = { $gte: age };
+      }
+      
+      console.log("TCL: classTypeFilter", classTypeFilter)
       if(!isEmpty(classTypeFilter)){
        let classTypeData =  ClassType.find(classTypeFilter).fetch();
+       console.log("TCL: classTypeData", classTypeData.length)
        if(!isEmpty(classTypeData)){
          let schoolIds = [];
          classTypeData.map((obj)=>{
@@ -47,6 +56,7 @@ Picker.route("/api/v1/schools",(params, req, res, next  )=>{
        }
       }
       let result = [];
+			console.log("TCL: filter", filter)
       if(!isEmpty(filter))
       result = School.find(filter,{fields:{name:1}}).fetch();
       payload = {result:result};
