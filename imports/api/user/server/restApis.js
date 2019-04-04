@@ -49,15 +49,29 @@ Picker.route("/api/v1/users/signUp", (params, req, res, next) => {
     // If email is not provided.
     if(!email){
       payload = {error:'Email is Required.'};
+      res.end(JSON.stringify(payload));
+      return;
     }
     // Check is the email is exists;
     else{
       const userRecExist = Meteor.users.findOne({ "emails.address": email });
       if(!isEmpty(userRecExist)){
         payload = {error:'User Already Exists with this email.'};
+        res.end(JSON.stringify(payload));
+        return;
       }
     }
-    res.end(JSON.stringify(payload));
+    let userData = { name, email, userType, sendMeSkillShapeNotification:JSON.parse(sendMeSkillShapeNotification), signUpType, birthYear, schoolName, password };
+    // Create the new user
+    Meteor.call("user.createUser",userData,(error,result)=>{
+      if(error){
+        payload = {error:error.error || 'Something Went Wrong!'};
+      }
+      else if (result){
+        payload = {result:'User Created Successfully'}; 
+      }
+      res.end(JSON.stringify(payload));
+    });
   } catch (error) {
     console.log("Error in /api/v1/users/signUp", error);
     payload = { error: "Something Went Wrong" };
