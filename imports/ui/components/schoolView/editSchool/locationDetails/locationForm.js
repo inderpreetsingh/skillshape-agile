@@ -144,7 +144,8 @@ class LocationForm extends React.Component {
 
   componentDidMount = () => {
     const myLocation = this._getMyLocation();
-    this.props.handleIsSavedState(true)
+    const {handleIsSavedState} = this.props;
+    handleIsSavedState && handleIsSavedState(true);
     if (!myLocation.lat || !myLocation.lng) {
       const defaultLocation = this.getMyDefaultLocation();
       if(!isEmpty(defaultLocation))
