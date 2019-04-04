@@ -3,7 +3,7 @@ import { isEmpty } from "lodash";
 Picker.middleware(bodyParser.json());
 Picker.middleware(bodyParser.urlencoded({ extended: false }));
 
-Picker.route("/api/v1/users/", (params, req, res, next) => {
+Picker.route("/api/v1/users/login", (params, req, res, next) => {
   try {
     const { email, password } = req.body;
     let payload = {};
@@ -28,6 +28,38 @@ Picker.route("/api/v1/users/", (params, req, res, next) => {
     res.end(JSON.stringify(payload));
   } catch (error) {
     console.log("Error in /api/v1/users/", error);
+    payload = { error: "Something Went Wrong" };
+    res.end(JSON.stringify(payload));
+  }
+});
+
+Picker.route("/api/v1/users/signUp", (params, req, res, next) => {
+  try {
+    const {
+      name,
+      email,
+      userType,
+      sendMeSkillShapeNotification,
+      signUpType,
+      birthYear,
+      schoolName,
+      password
+    } = req.body;
+    let payload = {};
+    // If email is not provided.
+    if(!email){
+      payload = {error:'Email is Required.'};
+    }
+    // Check is the email is exists;
+    else{
+      const userRecExist = Meteor.users.findOne({ "emails.address": email });
+      if(!isEmpty(userRecExist)){
+        payload = {error:'User Already Exists with this email.'};
+      }
+    }
+    res.end(JSON.stringify(payload));
+  } catch (error) {
+    console.log("Error in /api/v1/users/signUp", error);
     payload = { error: "Something Went Wrong" };
     res.end(JSON.stringify(payload));
   }
