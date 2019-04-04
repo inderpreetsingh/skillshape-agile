@@ -1,8 +1,16 @@
 {
   "name": "my_cool_app",
   "private": true,
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "pretty-quick --staged",
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.54",
