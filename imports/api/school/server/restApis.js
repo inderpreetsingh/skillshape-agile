@@ -14,7 +14,7 @@ Picker.middleware(bodyParser.urlencoded({ extended: false }));
 Picker.route("/api/v1/schools",(params, req, res, next  )=>{
     try{
       let payload = {};
-      let {schoolName,location,skillCategoryIds,skillSubject,experienceLevel,gender,age} = req.body;
+      let {schoolName,location,skillCategoryIds,skillSubjectIds,experienceLevel,gender,age} = req.body;
       let filter = {},classTypeFilter = {};
       
       // Add schoolName Filter if schoolName Available
@@ -46,11 +46,17 @@ Picker.route("/api/v1/schools",(params, req, res, next  )=>{
       }
 
       //  Add skillCategory Filter for class type;
-      if(skillCategoryIds){
+      if(skillCategoryIds && !isEmpty(JSON.parse(skillCategoryIds))){
         skillCategoryIds = JSON.parse(skillCategoryIds);
         classTypeFilter["skillCategoryId"] = { $in: skillCategoryIds };
       }
-      
+
+      // Add SkillSubjects Filter for class type;
+        if (skillSubjectIds && !isEmpty(JSON.parse(skillSubjectIds)) ) {
+          skillSubjectIds = JSON.parse(skillSubjectIds);
+          classTypeFilter["skillSubject"] = { $in: skillSubjectIds };
+      }
+       
       console.log("TCL: classTypeFilter", classTypeFilter)
       if(!isEmpty(classTypeFilter)){
        let classTypeData =  ClassType.find(classTypeFilter).fetch();
