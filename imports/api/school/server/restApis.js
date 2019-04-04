@@ -14,7 +14,7 @@ Picker.middleware(bodyParser.urlencoded({ extended: false }));
 Picker.route("/api/v1/schools",(params, req, res, next  )=>{
     try{
       let payload = {};
-      let {schoolName,location,skillCategoryIds,skillSubjectIds,experienceLevel,gender,age} = req.body;
+      let {schoolName,location,skillCategoryIds,skillSubjectIds,experienceLevel,gender,age,locationName} = req.body;
       let filter = {},classTypeFilter = {};
       
       // Add schoolName Filter if schoolName Available
@@ -57,6 +57,10 @@ Picker.route("/api/v1/schools",(params, req, res, next  )=>{
           classTypeFilter["skillSubject"] = { $in: skillSubjectIds };
       }
        
+      // Add Location Name Filter for class type;
+      if (locationName ) {
+        classTypeFilter["$or"] = [{ ["$text"]: { $search: locationName } }];
+    }
       console.log("TCL: classTypeFilter", classTypeFilter)
       if(!isEmpty(classTypeFilter)){
        let classTypeData =  ClassType.find(classTypeFilter).fetch();
