@@ -441,6 +441,7 @@ class ClassTimeForm extends React.Component {
               if (result) this.setState({ showLocationForm: false, showRoomForm: true, locId: result })
               else this.setState({ showLocationForm: false })
             }}
+            handleIsSavedState={handleIsSavedState}
           />}
           {this.state.showRoomForm && this.state.locId &&
             <RoomForm

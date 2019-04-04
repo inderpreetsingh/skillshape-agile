@@ -222,7 +222,7 @@ Meteor.publish("school.getClassTypesByCategory", function ({
             maxDistance /= 63;
             classfilter["$or"].push({
                 ["filters.location.loc"]: {
-                    $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
+                    $geoWithin: { $center: [[coords[0],coords[1]], maxDistance] }
                 }
             });
 
