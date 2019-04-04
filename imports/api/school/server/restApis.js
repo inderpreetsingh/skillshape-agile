@@ -4,7 +4,7 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import School from "../fields";
 import SkillCategory from "/imports/api/skillCategory/fields";
 import SkillSubject from "/imports/api/skillSubject/fields";
-import {uniq,isEmpty} from "lodash";
+import {uniq,isEmpty,isArray} from "lodash";
 
 import  bodyParser from "body-parser";
 Picker.middleware(bodyParser.json());
@@ -14,7 +14,7 @@ Picker.middleware(bodyParser.urlencoded({ extended: false }));
 Picker.route("/api/v1/schools",(params, req, res, next  )=>{
     try{
       let payload = {};
-      let {schoolName,location,skillCategoryIds,skillSubjectIds,experienceLevel,gender,age,locationName} = req.body;
+      let {schoolName,coords,skillCategoryIds,skillSubjectIds,experienceLevel,gender,age,locationName} = req.body;
       let filter = {},classTypeFilter = {};
       
       // Add schoolName Filter if schoolName Available
@@ -60,8 +60,30 @@ Picker.route("/api/v1/schools",(params, req, res, next  )=>{
       // Add Location Name Filter for class type;
       if (locationName ) {
         classTypeFilter["$or"] = [{ ["$text"]: { $search: locationName } }];
-    }
-      console.log("TCL: classTypeFilter", classTypeFilter)
+      }
+
+      // Add Coords Filter for class type;
+      if(coords){
+        coords = JSON.parse(coords);
+        let maxDistance = 50;
+        maxDistance /= 63;
+        if(isArray(classTypeFilter["$or"]) && isArray(coords)){
+          classTypeFilter["$or"].push({
+              ["filters.location.loc"]: {
+                  $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
+              }
+          });
+        }
+        else if(isArray(coords)){
+          classTypeFilter["$or"] = [{
+            ["filters.location.loc"]: {
+                $geoWithin: { $center: [[coords[1],coords[0]], maxDistance] }
+            }
+        }];
+        }
+      }
+
+      console.log("TCL: classTypeFilter", JSON.stringify(classTypeFilter))
       if(!isEmpty(classTypeFilter)){
        let classTypeData =  ClassType.find(classTypeFilter).fetch();
        console.log("TCL: classTypeData", classTypeData.length)
