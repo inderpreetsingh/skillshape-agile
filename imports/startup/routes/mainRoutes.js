@@ -35,7 +35,8 @@ import AboutUs from "/imports/ui/pages/aboutUs";
 import UnsubscribeUser from "/imports/ui/pages/UnsubscribeUser";
 import { componentLoader } from "/imports/util";
 import EmailVerifyDashboard from "/imports/ui/pages/emailVerifyDashboard";
-
+// OAuth 
+import OAuth from "/imports/ui/components/oauth"
 
 
 
@@ -132,8 +133,13 @@ export default (Routes = componentLoader(props => (
           path="/verify-email/:token"
           name="VerifyEmail"
           component={VerifyEmail}
+        /> 
+        
+        <Route
+          path="/oAuth(/:serviceName)"
+          name="OAuth"
+          component={OAuth}
         />
-       
         
         <Route
           path="/skillShape-school"

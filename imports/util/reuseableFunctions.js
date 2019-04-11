@@ -114,6 +114,7 @@ export function unSavedChecker ()  {
 export function handleLoginGoogle ()  {
     let self = this;
     Meteor.loginWithGoogle({}, function(err,result) {
+		console.log("TCL: handleLoginGoogle -> err", err)
         let modalObj = {
             open: false,
             signUpDialogBox: false,
