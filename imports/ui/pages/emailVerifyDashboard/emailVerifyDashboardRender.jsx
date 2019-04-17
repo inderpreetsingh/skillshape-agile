@@ -244,7 +244,7 @@ export function EmailVerifyDashboardRender() {
       <Container>
         <Center>
         <EmailStatusContainer>
-        <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad} >{isLoading ? 'Please wait!' : emailSend ?"An email send again!" : initialLoad ? "Email is send": "" }</EmailStatus>
+        <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad} >{isLoading ? 'Please wait!' : emailSend ?"An email sent again!" : initialLoad ? "Email is sent": "" }</EmailStatus>
         </EmailStatusContainer>
           <ImagesContainer>
             <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading}/>
