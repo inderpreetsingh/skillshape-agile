@@ -123,8 +123,7 @@ const GroupSvg = styled.div`
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  ${props => ( `animation: ${props.initialLoad  ? initialGroupSvgAnim :!props.changeEmail ? changeGroupSvgAnim : props.emailSend ? groupSvgAnim : ""} 1s ease-in ${props.initialLoad ? "0.2s" :''};` )}
-  ${props => (props.isLoading ? `animation: ${changeGroupSvgAnim} 0.5s linear infinite;` :'')}
+  ${props => ( `animation: ${props.changeEmail ? changeGroupSvgAnim : props.initialLoad  ? initialGroupSvgAnim : props.emailSend ? groupSvgAnim :  ''} 1s ease-in ${props.initialLoad ? "0.2s" :''};` )}
   `;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
@@ -137,7 +136,6 @@ const EmailSvg = styled.div`
   top: 25%;
   right: 27%;
   ${props => (`animation: ${ props.changeEmail  ? changeEmailAnim :props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.2s" :''};`)}
-  ${props => (``)}
   `;
 const Text = styled.div`
   margin: auto;
@@ -247,8 +245,8 @@ export function EmailVerifyDashboardRender() {
         <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad} >{isLoading ? 'Please wait!' : emailSend ?"An email sent again!" : initialLoad ? "Email is sent": "" }</EmailStatus>
         </EmailStatusContainer>
           <ImagesContainer>
-            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading}/>
-            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} isLoading={isLoading} />
+            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} />
+            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail}  />
           </ImagesContainer>
         {!changeEmail ?
            <Content changeEmail={changeEmail} initialLoad={initialLoad}> <Text> Please check your inbox!.</Text>
