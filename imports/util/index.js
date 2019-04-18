@@ -64,5 +64,5 @@ export { confirmationDialog } from './confirmationDialog';
 export {generateGraphData} from "./generateGraphData";
 export {handleJoin} from "./handleJoin";
 export {sendEmail,handleIsSavedState,unSavedChecker,handleOnBeforeUnload,handleSignUpSubmit
-	,handleLoginGoogle,handleLoginFacebook,listenOnUrlChange
+	,handleLoginGoogle,handleLoginFacebook,listenOnUrlChange,checkIsEmailVerified
 } from './reuseableFunctions';

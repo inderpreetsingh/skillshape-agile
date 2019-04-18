@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import DashBoardView from './dashboard';
 import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import { checkIsEmailVerified } from "/imports/util";
 
 class SchoolMemberView extends Component {
 
@@ -15,7 +16,9 @@ class SchoolMemberView extends Component {
             filters: {},
         }
     }
-
+    componentWillMount() {
+        checkIsEmailVerified.call(this,true);
+      }
     render() {
         let { currentUser, isUserSubsReady, admin } = this.props;
         let slug = get(this.props.params, 'slug', this.props.slug);
@@ -26,7 +29,6 @@ class SchoolMemberView extends Component {
         if (!isUserSubsReady)
             return <Preloader />
 
-        console.log(isUserSubsReady, isEmpty(currentUser));
         if (isUserSubsReady && isEmpty(currentUser)) {
             return <Typography type="display2" gutterBottom align="center">
                 To access this page you need to signin to skillshape.

@@ -6,7 +6,7 @@ import { browserHistory } from "react-router";
 import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
-import { withStyles } from "/imports/util";
+import { withStyles,checkIsEmailVerified } from "/imports/util";
 import { panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const MainPanel = styled.div`
@@ -40,6 +40,11 @@ class PublicLayout extends React.Component {
   getMainPanelRef() {
     return this.mainPanelRef;
   }
+  
+  componentWillMount() {
+    checkIsEmailVerified.call(this,true);
+  }
+  
 
   setPasswordDialogBoxSubmit = (payload, event) => {
     event.preventDefault();

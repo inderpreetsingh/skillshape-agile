@@ -186,3 +186,20 @@ export const listenOnUrlChange = (callBack) => {
         callBack();
     })
 }
+
+// redirect the user to email verify page in case email is not verified yet.
+export function checkIsEmailVerified(redirect){
+	console.log("TCL: checkIsEmailVerified -> redirect", redirect)
+    const {currentUser} = this.props;
+    if(!isEmpty(currentUser)){
+        const {emails}=currentUser;
+        const isVerified = emails[0].verified;
+        if(!isVerified && redirect){
+          redirectToThisUrl('/emailVerifyDashboard')
+        } 
+        else{
+            return isVerified;
+        }
+      }
+
+}
