@@ -28,8 +28,7 @@ class SchoolDetails extends React.Component {
   }
 
   componentDidMount() {
-    // $('#summernote1').summernote();
-    // $('#summernote2').summernote();
+   window.scroll(0,0)
   }
 
   updateSchool = () => {
@@ -94,6 +93,7 @@ class SchoolDetails extends React.Component {
   }
   // This is used to set Content into `About School` editor.
   aboutSchoolTREOnChange = (value)=> {
+		console.log("TCL: aboutSchoolTREOnChange -> value", value)
     this.props.handleIsSavedState(false);
     this.setState({ aboutHtml: value })
   }
