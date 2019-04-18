@@ -18,6 +18,7 @@ import SecondaryButton from '/imports/ui/components/landing/components/buttons/S
 import { OnBoardingDialogBox } from '/imports/ui/components/landing/components/dialogs';
 import { checkSuperAdmin, logoutUser } from "/imports/util";
 import { getUserFullName } from "/imports/util/getUserData";
+import ContactUsPage from "/imports/ui/pages/ContactUsPage";
 
 
 
@@ -232,9 +233,7 @@ const LoginUserSideNav = props => {
         iconName="message"
         onClick={
           () =>
-            props.childItemOnClick(
-              "/contact-us"
-            ) /*browserHistory.push('/contact-us')*/
+          props.handleSetState({contactUsPage:true})
         }
       />
       <SideNavItem
@@ -369,7 +368,7 @@ class SideNavItems extends React.Component {
     this.setState(obj);
   }
   render() {
-    const {onBoardingDialogBox} = this.state;
+    const {onBoardingDialogBox,contactUsPage} = this.state;
     return (
       <Drawer
         open={this.props.open}
@@ -389,6 +388,12 @@ class SideNavItems extends React.Component {
             open={onBoardingDialogBox}
             onModalClose={() => { this.setState({ onBoardingDialogBox: false }) }}
           />}
+          {contactUsPage && (
+            <ContactUsPage
+              open={contactUsPage}
+              onModalClose={() => { this.setState({contactUsPage:false}) }}
+            />
+          )}
           {this.props.currentUser ? (
             <LoginUserSideNav
               mySchool={this.state.mySchool}
