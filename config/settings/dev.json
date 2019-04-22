@@ -13,7 +13,8 @@
     "DevelopmentSiteCaptchKey": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
     "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL",
     "paymentEnabled": true,
-    "platform": "local"
+    "platform": "local",
+    "disableIdeal":true
   },
 
   "productId": "SKILLSHAPE_DOMFJ4ZGYKIO6Q",

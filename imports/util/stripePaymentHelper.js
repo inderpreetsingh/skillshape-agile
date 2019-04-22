@@ -986,7 +986,7 @@ const {
         popUp,
         title:'Choose Payment Method',
         content:'Please Choose Payment Method from options given below.',
-        buttons:[{ label: 'Card', onClick: () => {handleCardPaymentMethod(data) } },{ label: 'IDeal', onClick: () => {handleIDealPaymentMethod(data) } }]
+        buttons:[{ label: 'Card', onClick: () => {handleCardPaymentMethod(data) } },{ label: 'IDeal', onClick: () => {handleIDealPaymentMethod(data) },disabled:Meteor.settings.public.disableIdeal }]
     }
     confirmationDialog(popUpData);
 }
