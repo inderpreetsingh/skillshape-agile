@@ -267,10 +267,10 @@ class MyTransaction extends React.Component {
         {isLoading && <ContainerLoader />}
         <PageHeading>{schoolView ? "Transactions": "My Transactions"}</PageHeading>
         <Paper className={classes.root}>
-          {/* <PrimaryButton
+          <PrimaryButton
             label={`IDeal Test`}
             onClick={()=>{this.setState({stripeIDealDialog:!this.state.stripeIDealDialog})}}
-          /> */}
+          />
           {this.state.stripeIDealDialog &&
             <StripeIDealDialog
               open = {this.state.stripeIDealDialog}

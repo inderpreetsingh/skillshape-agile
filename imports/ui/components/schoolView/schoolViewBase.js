@@ -137,7 +137,10 @@ export default class SchoolViewBase extends React.Component {
 			return 'btn-success';
 		}
 	};
-
+	handleIDealResult = (source ) =>{
+		console.log('TCL: handleIDealResult -> source', source)
+		document.location.href = source.redirect.url;
+		}
 	getClassImageUrl = (classType, classImagePath) => {
 		let image = ClassType.findOne({ _id: classType }).classTypeImg;
 		if (image && image.length) {

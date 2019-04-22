@@ -8,7 +8,7 @@ import JoinButton from '/imports/ui/components/landing/components/buttons/JoinBu
 import LoginButton from "/imports/ui/components/landing/components/buttons/LoginButton.jsx";
 import { flexCenter, mobile, primaryColor, rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { Italic, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { formatMoney } from '/imports/util';
+import { formatMoney,confirmationDialog } from '/imports/util';
 
 
 const ButtonsWrapper = styled.div`
@@ -960,7 +960,59 @@ handleChargeAndSubscription = (
     self,
     contract
 ) => {
-    self.setState({ closed: false });
+    let data = {  packageType,
+        packageId,
+        schoolId,
+        packageName,
+        amount,
+        monthlyPymtDetails,
+        expDuration,
+        expPeriod,
+        noClasses,
+        planId,
+        currency,
+        pymtType,
+        self,
+        contract};
+        checkPaymentMethod(data);
+ 
+};
+checkPaymentMethod = (data={}) =>{
+const {
+    self,
+    } = data;
+    const {popUp} = self.props;
+    const popUpData={
+        popUp,
+        title:'Choose Payment Method',
+        content:'Please Choose Payment Method from options given below.',
+        buttons:[{ label: 'Card', onClick: () => {handleCardPaymentMethod(data) } },{ label: 'IDeal', onClick: () => {handleIDealPaymentMethod(data) } }]
+    }
+    confirmationDialog(popUpData);
+}
+handleIDealPaymentMethod = (data) => {
+    const {
+        self,
+        } = data;
+        self.setState({ stripeIDealDialog: true }) ;
+
+}
+handleCardPaymentMethod = (data) => {
+    const {packageType,
+        packageId,
+        schoolId,
+        packageName,
+        amount,
+        monthlyPymtDetails,
+        expDuration,
+        expPeriod,
+        noClasses,
+        planId,
+        currency,
+        pymtType,
+        self,
+        contract} = data;
+           self.setState({ closed: false });
     const { popUp, schoolData } = self.props;
     let { payUpFront, payAsYouGo } = self.state;
     popUp.appear('success', {
@@ -1051,4 +1103,4 @@ handleChargeAndSubscription = (
             }
         }
     });
-};
+}

@@ -20,6 +20,7 @@ import { CustomModal } from '/imports/ui/modal';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { getAverageNoOfRatings, normalizeMonthlyPricingData } from '/imports/util';
 import { Loading } from '/imports/ui/loading';
+import StripeIDealDialog from '/imports/ui/components/landing/components/dialogs/StripeIDealDialog.jsx';
 
 
 
@@ -170,7 +171,8 @@ export default function () {
     claimSchoolModal,
     claimRequestModal,
     successModal,
-    loadComplete
+    loadComplete,
+    stripeIDealDialog
   } = this.state;
 
  
@@ -186,6 +188,12 @@ export default function () {
           {
             this.state.isLoading && <ContainerLoader />
           }
+          {stripeIDealDialog &&
+            <StripeIDealDialog
+              open = {stripeIDealDialog}
+              onModalClose={() => { this.setState({ stripeIDealDialog: false }) }}
+              handleResult={this.handleIDealResult}
+            />}
           {this.state.emailUsDialog && <EmailUsDialogBox
             ourEmail={schoolData.email}
             schoolData={schoolData}
