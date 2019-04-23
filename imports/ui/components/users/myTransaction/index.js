@@ -12,7 +12,6 @@ import Pagination from "/imports/ui/componentHelpers/pagination";
 import { SubscriptionsDetailsDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import { SSTableCell, SSTableRow } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
 import { ContainerLoader } from "/imports/ui/loading/container";
-import StripeIDealDialog from '/imports/ui/components/landing/components/dialogs/StripeIDealDialog.jsx';
 import {
   capitalizeString,
   dateFriendly,
@@ -232,10 +231,6 @@ class MyTransaction extends React.Component {
     covers = covers.join(', ');
     return covers;
   }
-  handleIDealResult = (source ) =>{
-  console.log('TCL: handleIDealResult -> source', source)
-  document.location.href = source.redirect.url;
-  }
   handleError = (error) => {
     console.log('TCL: handleError -> error', error)
     const {popUp} = this.props;
@@ -267,16 +262,6 @@ class MyTransaction extends React.Component {
         {isLoading && <ContainerLoader />}
         <PageHeading>{schoolView ? "Transactions": "My Transactions"}</PageHeading>
         <Paper className={classes.root}>
-          <PrimaryButton
-            label={`IDeal Test`}
-            onClick={()=>{this.setState({stripeIDealDialog:!this.state.stripeIDealDialog})}}
-          />
-          {this.state.stripeIDealDialog &&
-            <StripeIDealDialog
-              open = {this.state.stripeIDealDialog}
-              onModalClose={() => { this.setState({ stripeIDealDialog: false }) }}
-              handleResult={this.handleIDealResult}
-            />}
           {filterForTransaction.call(this)}
          {isDashboard &&  <ChartComponent graphData={graphData}/>} 
         </Paper>
