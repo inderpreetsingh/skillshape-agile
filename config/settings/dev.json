@@ -4,14 +4,14 @@
   "public": {
     "googleAppId":"696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com",
     "stripe": {
-      "PUBLIC_KEY": "pk_test_keeDSx92i51AJKtdBuzx5H0y"
+      "PUBLIC_KEY": "pk_test_H4lPRQDWnD4bsNESjJ6oTnIF"
     },
     "analyticsSettings": {
       "Google Analytics": { "trackingId": "UA-115755152-1" },
       "Amplitude": { "apiKey": "92093780eecbbd214c300694e1910214" }
     },
     "DevelopmentSiteCaptchKey": "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
-    "stripeClientId": "ca_ChCRiYcffQXD6VnZonJ91zaljBbQRQQL",
+    "stripeClientId": "ca_EQMcovZeDx3Ezn54BA806Cm1N3Nwn0qb",
     "paymentEnabled": true,
     "platform": "local",
     "disableIdeal":true
@@ -19,7 +19,7 @@
 
   "productId": "SKILLSHAPE_DOMFJ4ZGYKIO6Q",
   "stripe": {
-    "PRIVATE_KEY": "sk_test_GI9ZJ9DjWz23AoqjlOusnSIO"
+    "PRIVATE_KEY": "sk_test_hEcw4JApnvBa0p0s14mbu07Q"
   },
   "paymentEnabled": false,
   "AWSAccessKeyId": "AKIAIA5VPBH3QGIZKVKQ",
