@@ -25,7 +25,7 @@ import { sendClaimASchoolEmail,sendEmailToRequester } from "/imports/api/email";
                     requestObj.emailCount+=1;
                     // This needs to be replaced with School Admin.
                     if(process.env["NODE_ENV"] == "development") {
-                        toField = "ramesh.bansal@daffodilsw.com";
+                        toField = "naruto@ryaz.io";
                     }
                     // Update count in `ClaimSchoolRequest`.
                     ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
@@ -36,7 +36,7 @@ import { sendClaimASchoolEmail,sendEmailToRequester } from "/imports/api/email";
                     requestObj.emailCount+=1;
                     toField = "help@skillshape.com";
                     if(process.env["NODE_ENV"] == "development") {
-                        toField = "ramesh.bansal@daffodilsw.com";
+                        toField = "naruto@ryaz.io";
                     }
                     ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
                     emailSuccess = sendClaimSchoolEmail(requestObj,requestObj._id, toField);
@@ -45,7 +45,7 @@ import { sendClaimASchoolEmail,sendEmailToRequester } from "/imports/api/email";
                     requestObj.emailCount+=1;
                     toField = "help@skillshape.com";
                     if(process.env["NODE_ENV"] == "development") {
-                        toField = "ramesh.bansal@daffodilsw.com";
+                        toField = "naruto@ryaz.io";
                     }
                     ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj })
                     sendEmailToRequester(requestObj.userEmail,requestObj.userName,requestObj.schoolName)

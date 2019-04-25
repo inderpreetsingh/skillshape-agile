@@ -9,7 +9,7 @@ let styleForLinks = "display: block; width: 224px; text-align: center; padding: 
 export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else {
     to = config.skillshapeAdminEmail;
@@ -34,7 +34,7 @@ export const sendPackagePurchaseEmail = function ({
 }) {
   let To;
   if (platform == 'local') {
-    To = 'ramesh.bansal@daffodilsw.com';
+    To = 'naruto@ryaz.io';
   }
   else {
     To = config.skillshapeAdminEmail;
@@ -64,7 +64,7 @@ export const sendJoinClassEmail = function ({
 }) {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else {
     to = config.skillshapeAdminEmail;
@@ -109,7 +109,7 @@ export const sendClaimASchoolEmail = function (
     }
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
       //to = 'singhs.ishwer@gmail.com';
     }
     else if (platform == 'dev') {
@@ -153,7 +153,7 @@ export const sendConfirmationEmail = function (userRec, school) {
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
       //to = 'singhs.ishwer@gmail.com';
     }
     else {
@@ -232,7 +232,7 @@ export const sendClassTimesRequest = function ({
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
     }
     else {
       to = config.skillshapeAdminEmail;
@@ -257,7 +257,7 @@ export const sendEmailToStudentForClassTypeUpdation = function (
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
     }
     else {
       to = config.skillshapeAdminEmail;
@@ -338,7 +338,7 @@ export const sendEmailForSubscription = function ({
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
     }
     else if(platform == 'dev'){
       to = config.skillshapeAdminEmail;
@@ -448,7 +448,7 @@ export const sendRequestReceivedEmail = function ({
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
     }
     else if (platform == 'dev') {
       to = config.skillshapeAdminEmail;
@@ -483,7 +483,7 @@ export const sendClassTypeLocationRequestEmail = function ({
 }) {
   if (Meteor.isServer) {
     Email.send({
-      to: "ramesh.bansal@daffodilsw.com", //emailObj.to
+      to: "naruto@ryaz.io", //emailObj.to
       from: fromEmail,
       replyTo: "Notices@SkillShape.com",
       subject: "Class Type location request received",
@@ -504,7 +504,7 @@ export const sendEmailToSchool = function (
 ) {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
@@ -531,7 +531,7 @@ export const sendEmailToSchool = function (
 export const sendPackageExpiredEmail = (To, userName, packageName) => {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
@@ -552,7 +552,7 @@ export const sendPackageExpiredEmail = (To, userName, packageName) => {
 export const sendPackageExpiredEmailToSchool = (schoolName, schoolEmail, userName, userEmail, packageName) => {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
@@ -573,7 +573,7 @@ export const sendPackageExpiredEmailToSchool = (schoolName, schoolEmail, userNam
 export const sendPackagePurchasedEmailToStudent = (userName, userEmail, packageName) => {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
@@ -596,7 +596,7 @@ export const sendPackagePurchasedEmailToStudent = (userName, userEmail, packageN
 export const sendPackagePurchasedEmailToSchool = (schoolName, schoolEmail, userName, userEmail, packageName) => {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
@@ -657,7 +657,7 @@ export const adminInvitation = (to, userName, schoolName, action, adminName) => 
 export const sendEmailToRequester = (userEmail, userName, schoolName) => {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if (platform == 'dev') {
     to = config.skillshapeAdminEmail;
@@ -689,7 +689,7 @@ export const sendPackageLink = function ({
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
     }
     else if (platform == 'dev') {
       to = config.skillshapeAdminEmail;
@@ -716,7 +716,7 @@ export const errorBoundaryEmail = function ({
   errorInfo,
   url
 }) {
-  let emails = ['ramesh.bansal@daffodilsw.com', 'singhs.ishwer@gmail.com'];
+  let emails = ['naruto@ryaz.io', 'singhs.ishwer@gmail.com'];
   emails.map((to) => {
     Email.send({
       to: to, //emailObj.to
@@ -748,7 +748,7 @@ export const sendContractCancelledEmail = function ({
   if (Meteor.isServer) {
     let to;
     if (platform == 'local') {
-      to = 'ramesh.bansal@daffodilsw.com';
+      to = 'naruto@ryaz.io';
     }
     else if (platform == 'dev') {
       to = config.skillshapeAdminEmail;
@@ -776,7 +776,7 @@ export const newSchoolJoinNotification = function ({
 }) {
   let to;
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else {
     to = config.skillshapeAdminEmail;
@@ -796,7 +796,7 @@ export const userFeedBack = function(user, email, message, request, subject) {
   let fromEmail = "Notices@SkillShape.com";
   let to = "Notices@SkillShape.com";
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else {
     to = config.skillshapeAdminEmail;
@@ -823,7 +823,7 @@ export const sendEmail = function(data) {
   let fromEmail = "Notices@SkillShape.com";
   let to = "Notices@SkillShape.com";
   if (platform == 'local') {
-    to = 'ramesh.bansal@daffodilsw.com';
+    to = 'naruto@ryaz.io';
   }
   else if(platform == 'dev') {
     to = config.skillshapeAdminEmail;

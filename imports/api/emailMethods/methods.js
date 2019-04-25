@@ -18,7 +18,7 @@ Meteor.methods({
     "verificationToken",
     "passwd",
     "fromEmail",
-    "ramesh.bansal@daffodilsw.com",
+    "naruto@ryaz.io",
     "schoolName")
   },
   'emailMethods.errorBoundary':({error,errorInfo,url})=>{

@@ -15,13 +15,14 @@ import {sendPackagePurchasedEmailToStudent,sendPackagePurchasedEmailToSchool} fr
 let stripe = require("stripe")(Meteor.settings.stripe.PRIVATE_KEY);
 import { getExpiryDateForPackages } from "/imports/util/expiraryDateCalculate";
 Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packageId, packageType, schoolId, expDuration, expPeriod, noOfClasses ,planId,contract) {
-    try {
+    let recordId;  
+  try {
     check(stripeToken,String);
     check(desc,String);
     check(packageId,String);
     check(packageType,String);
     check(schoolId,String);
-    let recordId, amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,monthlyAttendance={},classTypeIds=[];
+    let  amount, currency,userName, userEmail, packageName,schoolName, schoolEmail,status,contractLength = 0,payAsYouGo = false,payUpFront = false,monthlyAttendance={},classTypeIds=[];
     packageName=desc;
     //Get amount and currency from database using package ids
     if (packageType == "EP") {
@@ -117,7 +118,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
           amount: destinationAmount,
           account: stripeAccountId
         },
-       // receipt_email: 'ramesh.bansal@daffodilsw.com'
+       // receipt_email: 'naruto@ryaz.io'
       };
       
       startDate = new Date();
@@ -236,7 +237,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     UserStripeData.remove({ userId: superAdminId});
     return "Successfully Disconnected";
   },
-  "stripe.findAdminStripeAccount": function (superAdminId) {
+  "stripe.findAdminStripeAccount": function (superAdminId=this.userId) {
     if(superAdminId){
       let result = UserStripeData.findOne({ userId: superAdminId ,stripe_user_id:{$exists:true}});
       if (result) {

@@ -142,8 +142,8 @@ Meteor.methods({
     if(!classTypeId){
       let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};
       if(!isEmpty(data)){
-        const {_id} = data;
-        data.classTypeIds.push(memberData.classTypeIds) 
+        let {_id,classTypeIds=[]} = data;
+        classTypeIds.push(memberData.classTypeIds) 
         data.classTypeIds = uniq(flattenDeep(data.classTypeIds))
         return SchoolMemberDetails.update({_id},{$set:data});
       }
@@ -155,7 +155,8 @@ Meteor.methods({
     else if(classTypeId){
       let data = SchoolMemberDetails.findOne({activeUserId,schoolId}) || {};
       if(!isEmpty(data)){
-        data.classTypeIds.push(classTypeId);
+        let {classTypeIds=[]} = data;
+        classTypeIds.push(classTypeId);
         data.classTypeIds = uniq(data.classTypeIds);
         const {_id} = data;
         return SchoolMemberDetails.update({_id},{$set:data});

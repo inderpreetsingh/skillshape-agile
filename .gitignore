@@ -2,6 +2,5 @@
 .deployment/
 node_modules/
 meteor.sh
-config/settings/production.json
-config/settings/commands.js
+config/
 ss2.sh
