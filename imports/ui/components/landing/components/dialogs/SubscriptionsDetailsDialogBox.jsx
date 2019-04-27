@@ -121,7 +121,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
 
     const getDatesBasedOnSubscriptions = (props) => {
         let stringToPrint = '';
-        let fee = get(props, 'amount', 0).toFixed(2);
+        let fee = Number(get(props, 'amount', 0)).toFixed(2);
         let currency = get(props, 'currency', '$');
 
         if (props.packageType == 'EP') {

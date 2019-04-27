@@ -283,7 +283,7 @@ class Package extends React.Component {
 
 	getDateForSubscriptions = (props) => {
 		let stringToPrint = '';
-		let fee = get(props, 'amount', 0).toFixed(2);
+		let fee = Number(get(props, 'amount', 0)).toFixed(2);
 		let currency = get(props, 'currency', '$')
 		if (get(props, 'payUpFront', false)) {
 			stringToPrint += `<b>Paid until:</b> `;
