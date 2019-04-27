@@ -26,29 +26,14 @@ perClassPackageMaker = purchaseData =>{
     return filter(purchaseData,(o)=>{ return get(o,'packageStatus','inActive')=='active'});
 }
 export const  packageCoverProvider = (purchaseData,from) => {
-	purchaseData = compact(purchaseData);
-    let packageType,packageId,covers=[],methodName;
-    if(!isEmpty(purchaseData)){
-        purchaseData.map((obj,index)=>{
-            packageType = get(obj,'packageType','MP');
-            packageId = get(obj,'packageId','');
-            if(packageType == "MP"){
-                methodName = 'monthlyPricing.getCover';
-                      }
-            else if(packageType == "CP"){
-                methodName = 'classPricing.getCover';
-            }else{
-                methodName = "enrollmentFee.getCover";
-            }
-            Meteor.call(methodName,packageId,(err,res)=>{
-                if(res){
-                    res.map((obj1,index1)=>{
-                        covers.push(obj1.name);
-                    })
-                    obj.covers = uniq(covers);
-                }
-            })
-        })
-    }
-    return from?purchaseData:perClassPackageMaker(purchaseData);
+    return new Promise((resolve,reject)=>{
+        try{
+            purchaseData = compact(purchaseData);
+            Meteor.call("classPricing.getCoverForPurchases",purchaseData,(err,res)=>{
+                resolve(res)
+            });
+        }catch(error){
+            reject()
+        }
+    })
   };

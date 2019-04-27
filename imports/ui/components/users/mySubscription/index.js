@@ -40,7 +40,14 @@ class MySubscription extends React.Component {
 			subscriptionsData: []
 		};
 	}
-
+	componentWillReceiveProps (nextProps){
+		const {purchaseData=[]} = nextProps;
+		updatePurchases = async (purchaseData)=>{
+			const purchaseDataWithCover = await packageCoverProvider(purchaseData)
+			this.setState({purchaseDataWithCover})
+		}
+		updatePurchases(purchaseData)
+	}
 	getContactNumbers = (data) => {
 		// console.info('data for phones', data);
 		return (data.phone && data.phone.split(/[\|\,\\]/));
@@ -314,13 +321,11 @@ class MySubscription extends React.Component {
 			this.okClick();
 		});
 	}
-	render() {
-		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,phoneAccess,memberId ,privacySettings} = this.state;
-		let { isLoading, schoolData, purchaseData, currentUser } = this.props;
-		// console.group('My Subscriptions');
-		// console.log(schoolData, purchaseData, isLoading);
-		// console.groupEnd();
-
+	
+	 render  () {
+		const { callUsDialog, phone, emailUsDialog, manageMemberShipDialog, email, selectedSchool, isBusy, subscriptionsData, emailAccess,phoneAccess,memberId ,privacySettings,purchaseDataWithCover=[]} = this.state;
+		let { isLoading, schoolData, currentUser } = this.props;
+		
 		if (isLoading) {
 			return <ContainerLoader />;
 		}
@@ -337,7 +342,7 @@ class MySubscription extends React.Component {
 						currentUser={currentUser}
 						selectedSchool={selectedSchool}
 						schoolData={schoolData}
-						purchaseData={packageCoverProvider(purchaseData)}
+						purchaseData={purchaseDataWithCover}
 						callUsDialog={callUsDialog}
 						emailUsDialog={emailUsDialog}
 						manageMemberShipDialog={manageMemberShipDialog}
@@ -409,6 +414,7 @@ export default createContainer((props) => {
 
 			if (!isEmpty(classSubscriptionData)) {
 				classSubscriptionData.map((current) => {
+					current.autoWithdraw= true;
 					schoolIds.push(current.schoolId);
 				});
 			}

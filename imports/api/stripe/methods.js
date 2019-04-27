@@ -365,7 +365,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         currency,
         contractLength,
         monthlyAttendance,
-        amount
+        amount,
+        autoWithdraw:true
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);

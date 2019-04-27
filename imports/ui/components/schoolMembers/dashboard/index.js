@@ -230,10 +230,10 @@ class DashBoardView extends React.Component {
     let schoolName = get(schoolData[0], 'name', 'School Name')
     if (!isLoading && schoolId && activeUserId && isEmpty(memberInfo)) {
       let data = { schoolId, activeUserId }
-      Meteor.call("schoolMemberDetails.getMemberData", data, (err, memberInfo) => {
+      Meteor.call("schoolMemberDetails.getMemberData", data, async(err, memberInfo) => {
         if (!isEmpty(memberInfo)) {
           let { studentWithoutEmail, classTypeIds, classmatesNotes, adminNotes, _id: memberId, profile: { profile: { name, pic, firstName, lastName, phone }, emails } } = memberInfo;
-          let subscriptionList = packageCoverProvider(get(purchaseByUserId, activeUserId, []));
+          let subscriptionList = await packageCoverProvider(get(purchaseByUserId, activeUserId, []));
           let email = get(emails[0], 'address', null);
           let schoolImg = get(schoolData[0], 'mainImageMedium', get(schoolData[0], 'mainImage', config.defaultSchoolImage));
           let superAdmin = superAdminId == activeUserId ? true : false;
@@ -620,7 +620,7 @@ class DashBoardView extends React.Component {
     this.setState({ selectedClassTypes: classTypeIds });
   };
 
-  handleMemberDetailsToRightPanel = (memberId, superAdminId) => {
+  handleMemberDetailsToRightPanel = async (memberId, superAdminId) => {
     const { isAdmin, schoolData, adminsData, purchaseByUserId, view } = this.props;
     let memberInfo, profile, pic, schoolId = get(schoolData[0], "_id", ''), email, _id, superAdmin;
     let schoolName = get(schoolData[0], "name", '');
@@ -648,7 +648,7 @@ class DashBoardView extends React.Component {
     superAdmin = superAdminId == _id ? true : false;
     pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePicOptimized;
     // memberInfo = this.state.memberInfo
-    let subscriptionList = packageCoverProvider(get(purchaseByUserId, _id, []));
+    let subscriptionList = await packageCoverProvider(get(purchaseByUserId, _id, []));
     this.handleDrawerToggle();
     this.setState({
       memberInfo: {
