@@ -863,10 +863,16 @@ handleSubscription = (token, planId, schoolId, packageName, packageId, monthlyPy
                     true
                 );
             } else {
-                popUp.appear('warning', {
-                    title: 'Error',
-                    content: (err && err.message) || 'something went wrong'
-                });
+                const {error,message} = err;
+                const popUpData={
+                    popUp,
+                    errDialog:true,
+                    title:'Oops!!!',
+                    content:error || message ,
+                    buttons:[{ label: 'Ok', onClick: () => { }}]
+                }
+                confirmationDialog(popUpData);
+               
             }
         }
     );
@@ -899,7 +905,7 @@ handleCharge = (
         noClasses,
         planId,
         contract,
-        (error, result) => {
+        (err, result) => {
             if (result) {
                 if (result == 'Payment Successfully Done') {
                     popUp.appear(
@@ -938,7 +944,15 @@ handleCharge = (
                     popUp.appear('success', { title: 'Success', content: result.message });
                 }
             } else {
-                popUp.appear('success', { title: 'Error', content: error.message });
+                const {error,message} = err;
+                const popUpData={
+                    popUp,
+                    errDialog:true,
+                    title:'Oops!!!',
+                    content:error || message ,
+                    buttons:[{ label: 'Ok', onClick: () => { }}]
+                }
+                confirmationDialog(popUpData);
             }
         }
     );
