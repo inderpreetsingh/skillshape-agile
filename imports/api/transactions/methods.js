@@ -34,7 +34,7 @@ Meteor.methods({
                 transactionData = compact(transactionData);
                 transactionData.map((obj, index) => {
                     let wholePurchaseData = Purchases.findOne({ _id: obj.purchaseId });
-                    let { packageId } = wholePurchaseData;
+                    let { packageId } = wholePurchaseData = {};
                     packageType = get(obj,'packageType','MP');
                   if(packageType == "MP"){
                       methodName = 'monthlyPricing.getCover';
@@ -44,13 +44,16 @@ Meteor.methods({
                   }else{
                       methodName = "enrollmentFee.getCover";
                   }
-                res =  Meteor.call(methodName,packageId)
-                      if(res){
-                          res.map((obj1,index1)=>{
-                              covers.push(obj1.name);
-                          })
-                          obj.covers = uniq(covers);
-                      }
+                  if(packageId){
+                      res =  Meteor.call(methodName,packageId)
+                            if(res){
+                                res.map((obj1,index1)=>{
+                                    covers.push(obj1.name);
+                                })
+                                obj.covers = uniq(covers);
+                            }
+
+                  }
                 data = {...obj,...wholePurchaseData};
                 finalData.push(data);
               })

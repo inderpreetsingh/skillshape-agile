@@ -385,14 +385,15 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         Meteor.call( "schoolMemberDetails.addNewMember", memberData);
         }
         return true;
-    } catch (error) {
-      payload = { status: "error" };
+    } catch (err) {
+      const {message} = err;
+      payload = { status: "error",errorMessage:  message };
       let resultOfErrorUpdate = ClassSubscription.update(
         { _id: subscriptionDbId },
         { $set: payload }
       );
       throw new Meteor.Error(
-        (error && error.message) || "Something went wrong"
+         message || "Something went wrong"
       );
     }
   },

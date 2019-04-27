@@ -18,7 +18,7 @@ export default (withUserSchoolInfo = WrappedComponent => {
 
       if (!userInfoStored) {
         if (currentUser && currentUser.profile.userType === "School") {
-          Meteor.call("school.getMySchool", (err, res) => {
+          Meteor.call("school.getMySchool", (err, res=[]) => {
             localStorage.setItem("userInfoStored", true);
             if (err) {
               localStorage.setItem("multipleSchools", true);
