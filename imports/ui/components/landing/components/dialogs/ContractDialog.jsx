@@ -11,6 +11,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
 import { withPopUp ,confirmationDialog} from '/imports/util';
 import { ContainerLoader } from "/imports/ui/loading/container.js";
+import ErrorIcon from 'material-ui-icons/ErrorOutline';
 const StudentNotesContent = styled.textarea`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize}px;
@@ -18,6 +19,13 @@ const StudentNotesContent = styled.textarea`
   width: 100%;
   height: 100px;
   border-radius: 5px;
+`;
+const ErrorArea = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    visibility:${props => props.validation ? 'hidden' : 'visible'}
 `;
 const customStyles = {
   input: (provided, state) => ({
@@ -98,8 +106,7 @@ class ContractDialog extends Component {
     this.state = this.initializeStates();
   }
   initializeStates = () => {
-    this.textInput = React.createRef();
-   return {};
+   return {validation:false};
   }
   handleRequest = (doc,popUp) =>{
     Meteor.call("Contracts.handleRecords",doc,(err,res)=>{
@@ -147,28 +154,14 @@ class ContractDialog extends Component {
     e.preventDefault();
     const { _id: purchaseId, userName, schoolId, popUp, packageName,userId,payAsYouGo,autoWithdraw} = this.props;
     const {reason} = this.state;
-    if(reason.length < 10){
-      let data = {};
-      data = {
-        popUp,
-        title: 'Caution',
-        type: 'alert',
-        content: 'Reason Length is less then 10.',
-        buttons: [{ label: 'Ok', onClick: () => { }, greyColor: true }]
-      }
-      confirmationDialog(data);
-      return ;
-    }
     let doc = { purchaseId, userName, schoolId, packageName, action: 'find',userId ,reason,status:'pending',payAsYouGo,autoWithdraw};
     this.setState({isLoading:true},this.checkIsRequestExist(doc,popUp));
     
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextState.isLoading != this.state.isLoading;
-  }
+
   render() {
     const { props } = this;
-    const {isLoading} = this.state;
+    const {isLoading,validation,reason} = this.state;
     return (
       <Dialog
         open={props.open}
@@ -194,11 +187,19 @@ class ContractDialog extends Component {
           <DialogContent classes={{ root: props.classes.dialogContent }}>
             <form id="addUser" onSubmit={this.onSubmit}>
             <StudentNotesContent 
-            onChange = {(e)=>{this.setState({reason:e.target.value})}} 
+            onChange = {(e)=>{
+              if(e.target.value.length >= 10 && !validation){this.setState({validation:true,reason:e.target.value})}
+              else if(e.target.value.length < 10) {this.setState({validation:false})}
+            }} 
             />
+            <ErrorArea validation={validation}>
+            <ErrorIcon/>
+            Minimum 10 Characters
+            </ErrorArea>
                 <ActionButtons>
                 <PrimaryButton
                   formId="addUser"
+                  disabled={!validation}
                   type="submit"
                   label={`Submit`} />
               </ActionButtons>
