@@ -742,22 +742,22 @@ export const errorBoundaryEmail = function ({
 export const sendContractCancelledEmail = function ({
   userName,
   packageName,
-  to,
+  to="naruto@ryaz.io",
   schoolName
 }) {
   if (Meteor.isServer) {
-    let to;
+    let To;
     if (platform == 'local') {
-      to = 'naruto@ryaz.io';
+      To = 'naruto@ryaz.io';
     }
     else if (platform == 'dev') {
-      to = config.skillshapeAdminEmail;
+      To = config.skillshapeAdminEmail;
     }
     else {
-      to = to;
+      To = to;
     }
     Email.send({
-      to: to, //emailObj.to
+      to:To, 
       from: "Notices@SkillShape.com",
       subject: "Contract Cancel Request",
       html: `Hi ${schoolName}<br/>
