@@ -313,7 +313,9 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     let startDate, expiryDate,classTypeIds, subscriptionRequest, subscriptionDbId, payload, subscriptionResponse, stripeCusId,stripeCusIds=[],fee,currency,contractLength,monthlyAttendance={};
     try {
       let userId = this.userId;
-      let emailId=Meteor.user().emails[0].address;
+      let userObject = Meteor.user();
+      let emailId=userObject.emails[0].address;
+      let userName = userObject.profile.firstName || userObject.profile.name;
       if(token){
         let currentUserProfile = Meteor.users.findOne({ _id: userId, stripeCusIds: { $exists: true } });
         //find stripeCusId from users ond create a new one and store in the users collection
@@ -366,7 +368,8 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         contractLength,
         monthlyAttendance,
         amount,
-        autoWithdraw:true
+        autoWithdraw:true,
+        userName
       };
       // insert subscription  progress in classSubscription
       subscriptionDbId = ClassSubscription.insert(payload);

@@ -8,6 +8,10 @@ export const ClassSubscriptionSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  userName:{
+    type: String,
+    optional: true
+  },
   autoWithdraw:{
     type:Boolean,
     optional:true
