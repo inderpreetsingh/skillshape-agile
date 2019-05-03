@@ -121,9 +121,9 @@ class ClassTypeList extends Component {
 
 	makeCategorization = ({ classTypeData = [], skillCategoryData }) => {
 		let data = {};
-		for (skillCategoryObj of skillCategoryData) {
+		for (let skillCategoryObj of skillCategoryData) {
 			data[skillCategoryObj.name] = [];
-			for (classTypeObj of classTypeData) {
+			for (let classTypeObj of classTypeData) {
 				if (!isEmpty(classTypeObj.selectedSkillCategory)) {
 					let index = findIndex(classTypeObj.selectedSkillCategory, {
 						_id: skillCategoryObj._id

@@ -42,7 +42,7 @@ class MySubscription extends React.Component {
 	}
 	componentWillReceiveProps (nextProps){
 		const {purchaseData=[]} = nextProps;
-		updatePurchases = async (purchaseData)=>{
+		let updatePurchases = async (purchaseData)=>{
 			const purchaseDataWithCover = await packageCoverProvider(purchaseData)
 			this.setState({purchaseDataWithCover})
 		}

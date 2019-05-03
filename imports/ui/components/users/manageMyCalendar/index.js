@@ -499,7 +499,7 @@ class ManageMyCalendar extends React.Component {
     oldFilter.schoolClassTimeId = schoolClassTimeId;
   };
   idmatching = (classTypeId, Time, classTypedata) => {
-    value = classTypedata.map(index => {
+    let value = classTypedata.map(index => {
       if (index._id === classTypeId) {
         return index.name;
       }

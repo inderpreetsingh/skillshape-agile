@@ -43,7 +43,7 @@ class IconInput extends React.Component {
         const that = this;
         let options = { strictBounds: true, types: ["geocode"] };
         //Google's API
-        autocomplete = new google.maps.places.Autocomplete(inputRef, options);
+       let autocomplete = new google.maps.places.Autocomplete(inputRef, options);
         // This runs when user changes location.
         autocomplete.addListener("place_changed", function () {
           const coords = [];

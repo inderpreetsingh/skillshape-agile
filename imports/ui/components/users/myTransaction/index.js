@@ -145,7 +145,7 @@ class MyTransaction extends React.Component {
     let { filter } = this.state;
     let { limit, skip } = this.state;
     let limitAndSkip = { limit, skip };
-
+    
     Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
       let state = {};
       if (res) {

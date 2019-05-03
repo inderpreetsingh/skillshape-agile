@@ -28,7 +28,7 @@ export default function (props) {
     moduleData,
     isLoading,
     userId,
-    ...editSchoolProps,
+    ...editSchoolProps
   } = this.props;
   let slug;
   if(schoolData){
