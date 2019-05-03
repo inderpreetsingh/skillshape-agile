@@ -3,90 +3,88 @@
   text-align: center;
 }
 
-.pagination {
-  ul {
-    margin: 8px;
-    display: inline-block;
-  }
-  
-  li {
-    display: inline-block;
-    padding-right: 15px;
-  }
+.pagination  ul {
+  margin: 8px;
+  display: inline-block;
+}
 
-  li a {
-    cursor: pointer;
-    outline: none;
-    font-weight: bold;
-    color: darkgray;
-  }
+.pagination li {
+  display: inline-block;
+  padding-right: 15px;
+}
 
-  li:not(:first-child):before, li:not(:last-child):before {
-    content: "/";
-    color: darkgray;
-    padding-right: 15px;
-    font-weight: bold;
-  }
+.pagination li a {
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+  color: darkgray;
+}
 
-  li:nth-child(1):before {
-    content: " " !important;
-  }
+.pagination li:not(:first-child):before, li:not(:last-child):before {
+  content: "/";
+  color: darkgray;
+  padding-right: 15px;
+  font-weight: bold;
+}
 
-  li:nth-child(1):after {
-    content: " " !important;
-    border: solid 1px darkgray;
-    width: 22px;
-    height: 0px;
-    padding: 0;
-    transform: rotate(180deg);
-    display: inline-block;
-    margin: 6px;
-  }
+.pagination  li:nth-child(1):before {
+  content: " " !important;
+}
 
-  li:nth-child(2):before {
-    content: " " !important;
-  }
+.pagination  li:nth-child(1):after {
+  content: " " !important;
+  border: solid 1px darkgray;
+  width: 22px;
+  height: 0px;
+  padding: 0;
+  transform: rotate(180deg);
+  display: inline-block;
+  margin: 6px;
+}
 
-  li:last-child:before {
-    content: " " !important;
-    border: solid 1px darkgray;
-    width: 22px;
-    height: 0px;
-    padding: 0;
-    transform: rotate(180deg);
-    display: inline-block;
-    margin: 6px;
-  }
+.pagination li:nth-child(2):before {
+  content: " " !important;
+}
 
-  .active a {
-    color: #18dcff;
-  }
+.pagination li:last-child:before {
+  content: " " !important;
+  border: solid 1px darkgray;
+  width: 22px;
+  height: 0px;
+  padding: 0;
+  transform: rotate(180deg);
+  display: inline-block;
+  margin: 6px;
+}
 
-  .previous a {
-    font-size: 25px;
-    color: darkgray;
-    font-weight: 500;
-  }
+.active a {
+  color: #18dcff;
+}
 
-  .next a {
-    font-size: 25px;
-    color: #18dcff;
-    font-weight: 500;
-  }
+.previous a {
+  font-size: 25px;
+  color: darkgray;
+  font-weight: 500;
+}
 
-  .disabled {
+.next a {
+  font-size: 25px;
+  color: #18dcff;
+  font-weight: 500;
+}
 
-  }
+.disabled {
 
-  .break-me {
+}
 
-  }
+.break-me {
 
-  .next-link {
+}
 
-  }
+.next-link {
 
-  .back-link {
+}
 
-  }
+.back-link {
+
 }
