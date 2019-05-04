@@ -41,7 +41,6 @@ accounts-facebook@1.3.2
 okgrow:analytics
 percolate:synced-cron
 force-ssl@1.1.0
-abernix:standard-minifier-js
 meteorhacks:picker
 meteorhacks:aggregate
 underscore
