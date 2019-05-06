@@ -496,7 +496,7 @@ class ClassTypeContent extends Component {
           : submitBtnLabel;
       requestFor = manageRequestTitle != "Pricing" ? "class times" : requestFor;
     }
-    purchasedSuccessfully = () => {
+    const purchasedSuccessfully = () => {
       this.setState({ enrollmentPackagesDialog: false });
     }
     return (
