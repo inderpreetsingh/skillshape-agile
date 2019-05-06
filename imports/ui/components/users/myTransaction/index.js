@@ -107,7 +107,7 @@ class MyTransaction extends React.Component {
       transactionTypeOptions: transactionType,
       limit: 10,
       skip: 0,
-      isLoading: true,
+      isLoading: false,
       stripeIDealDialog:false,
     };
     let isDashboard = false;
@@ -145,7 +145,7 @@ class MyTransaction extends React.Component {
     let { filter } = this.state;
     let { limit, skip } = this.state;
     let limitAndSkip = { limit, skip };
-    
+    this.setState({isLoading:true})
     Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
       let state = {};
       if (res) {
