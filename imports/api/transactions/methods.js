@@ -15,7 +15,6 @@ Meteor.methods({
         }
     },
     "transactions.getFilteredPurchases":function (filter,limitAndSkip){
-		console.log(": filter,limitAndSkip", filter,limitAndSkip)
         try{
             let count, transactionData,graphData;
             let { schoolId } = filter;
@@ -24,17 +23,14 @@ Meteor.methods({
                 count = Transactions.find({ schoolId: { $in: schoolId }, ...filter }).count();
                 transactionData = Transactions.find({ schoolId: { $in: schoolId }, ...filter }, limitAndSkip).fetch();
                 graphData = Meteor.call("transactions.getDataForGraph",{schoolId})
-				console.log(": graphData1")
             }
             else
             {
                 count = Transactions.find(filter ).count();
                 transactionData = Transactions.find(filter , limitAndSkip).fetch();
-				console.log(": transactionData", transactionData)
             }
             let packageType, covers = [], methodName, newPurchaseData = [], data, finalData = [];
             if (!isEmpty(transactionData)) {
-				console.log(": graphData2")
 
                 transactionData = compact(transactionData);
                 transactionData.map((obj, index) => {
@@ -51,7 +47,6 @@ Meteor.methods({
                   }
                   if(packageId){
                       res =  Meteor.call(methodName,packageId)
-                      console.log(": res", res)
                             if(res){
                                 res.map((obj1,index1)=>{
                                     covers.push(obj1.name);
@@ -63,12 +58,10 @@ Meteor.methods({
                 data = {...obj,...wholePurchaseData};
                 finalData.push(data);
               })
-				console.log(": graphData3")
 
           }
-				console.log(": graphData4")
-
-          return {count,records:finalData,graphData}
+          let response = {count,records:finalData,graphData};
+          return response;
         }catch(error){
                 console.log("​ error in transactions.getFilteredPurchases", error)
           
@@ -89,7 +82,7 @@ Meteor.methods({
                       }
                  ]
                  , {cursor:{}}
-            );
+            ).toArray();;
            let Attendance = Transactions.aggregate(
             [ { $match : { schoolId :{$in: schoolId}} },
                 { $match : { transactionType:'attendance' }},
@@ -101,7 +94,7 @@ Meteor.methods({
                   }
              ]
              , {cursor:{}}
-        );
+        ).toArray();;
         let Expired = Transactions.aggregate(
             [ { $match : { schoolId :{$in: schoolId}} },
                 { $match : { transactionType:'expired' }},
@@ -113,7 +106,7 @@ Meteor.methods({
                   }
              ]
              , {cursor:{}}
-        );
+        ).toArray();;
         let Cancelled = Transactions.aggregate(
             [ { $match : { schoolId :{$in: schoolId}} },
                 { $match : { transactionType:'contractCancelled' }},
@@ -125,7 +118,7 @@ Meteor.methods({
                   }
              ]
              , {cursor:{}}
-        );
+        ).toArray();;
         let Members = SchoolMemberDetails.aggregate(
             [ { $match : { schoolId :{$in: schoolId}} },
                 {
@@ -136,7 +129,7 @@ Meteor.methods({
                   }
              ]
              , {cursor:{}}
-        )
+        ).toArray();
         return {Purchases,Attendance,Expired,Cancelled,Members}
           }catch(error){
               console.log('error in transactions.getDataForGraph', error)

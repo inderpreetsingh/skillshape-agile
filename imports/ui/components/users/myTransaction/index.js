@@ -147,6 +147,7 @@ class MyTransaction extends React.Component {
     let limitAndSkip = { limit, skip };
     this.setState({isLoading:true})
     Meteor.call('transactions.getFilteredPurchases', filter, limitAndSkip, (err, res) => {
+			console.log(": getPurchaseData -> err, res", err, res)
       let state = {};
       if (res) {
         state = { pageCount: Math.ceil(res.count / 10), transactionData: res.records ,graphData:res.graphData}
