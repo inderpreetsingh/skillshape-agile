@@ -9,10 +9,11 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
     Meteor:true,
     Mongo:true,
-    SimpleSchema:true
+    SimpleSchema:true,
+    SyncedCron:true
   },
-  "parser": "babel-eslint",
   parserOptions: {
+    parser: "babel-eslint",
     ecmaFeatures: {
       jsx: true,
     },
@@ -26,7 +27,8 @@ module.exports = {
   rules: {
     "import/no-unresolved":0,
     "import/no-absolute-path":0,
-    "no-underscore-dangle":0
+    "no-underscore-dangle":0,
+    "camelcase":0
   },
   
 };
