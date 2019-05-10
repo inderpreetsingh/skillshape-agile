@@ -106,6 +106,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-meteor": "^5.1.0",
     "eslint-plugin-react": "^7.13.0",
-    "eslint-plugin-react-hooks": "^1.0.1"
+    "eslint-plugin-react-hooks": "^1.0.1",
+    "lebab": "^3.0.5",
+    "prettier": "^1.17.0"
   }
 }

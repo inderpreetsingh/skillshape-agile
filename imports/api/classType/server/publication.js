@@ -1,16 +1,16 @@
 import isEmpty from 'lodash/isEmpty';
 import { check } from 'meteor/check';
 
-import ClassType from "../fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import School from "/imports/api/school/fields";
-import ClassPricing from "/imports/api/classPricing/fields";
-import MonthlyPricing from "/imports/api/monthlyPricing/fields";
-import Media from "/imports/api/media/fields";
+import ClassType from '../fields';
+import ClassTimes from '/imports/api/classTimes/fields';
+import School from '/imports/api/school/fields';
+import ClassPricing from '/imports/api/classPricing/fields';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
+import Media from '/imports/api/media/fields';
 
-Meteor.publish("classType.getclassType", function ({ schoolId }) {
+Meteor.publish('classType.getclassType', function ({ schoolId }) {
   // console.log("classType.getclassType pub -->>",schoolId)
-  let cursor = ClassType.find({ schoolId });
+  const cursor = ClassType.find({ schoolId });
   // let data = ClassType.publishJoinedCursors(cursor,{ reactive: true }, this);
   // data.map((cursorData)=>{
   // 	console.log("testing---->",cursorData.fetch());
@@ -18,8 +18,8 @@ Meteor.publish("classType.getclassType", function ({ schoolId }) {
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish("classType.getClassTypesByFilter", function (filter) {
-  let cursor = ClassType.find(filter);
+Meteor.publish('classType.getClassTypesByFilter', function (filter) {
+  const cursor = ClassType.find(filter);
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
@@ -32,20 +32,20 @@ Meteor.publish('classType.getClassTypeWithIds', function ({ classTypeIds }) {
   return ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish("classType.getClassTimesWithIds", function ({ classTypeId }) {
+Meteor.publish('classType.getClassTimesWithIds', function ({ classTypeId }) {
   if (!classTypeId) {
     // this.ready();
     return null;
   }
-  let cursor = ClassTimes.find({ classTypeId });
+  const cursor = ClassTimes.find({ classTypeId });
   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish("classType.getClassTypeWithClassTimes", function ({
-  classTypeId
+Meteor.publish('classType.getClassTypeWithClassTimes', function ({
+  classTypeId,
 }) {
-  let cursor = ClassType.find({ _id: classTypeId });
-  let classTypeData = cursor.fetch();
+  const cursor = ClassType.find({ _id: classTypeId });
+  const classTypeData = cursor.fetch();
 
   if (isEmpty(classTypeData)) {
     return [];
@@ -53,23 +53,23 @@ Meteor.publish("classType.getClassTypeWithClassTimes", function ({
 
   // const classTimesCursor = ClassTimes.find({ classTypeId: classTypeId });
 
-  let publishJoinedCursors = ClassType.publishJoinedCursors(
+  const publishJoinedCursors = ClassType.publishJoinedCursors(
     cursor,
     { reactive: true },
-    this
+    this,
   );
 
   // console.log(publishJoinedCursors, "===============");
-  publishJoinedCursors.push(ClassTimes.find({ classTypeId: classTypeId }));
+  publishJoinedCursors.push(ClassTimes.find({ classTypeId }));
   publishJoinedCursors.push(School.find({ _id: classTypeData[0].schoolId }));
   publishJoinedCursors.push(
-    ClassPricing.find({ classTypeId: { $in: [classTypeId] } })
+    ClassPricing.find({ classTypeId: { $in: [classTypeId] } }),
   );
   publishJoinedCursors.push(
-    MonthlyPricing.find({ classTypeId: { $in: [classTypeId] } })
+    MonthlyPricing.find({ classTypeId: { $in: [classTypeId] } }),
   );
   publishJoinedCursors.push(
-    Media.find({ schoolId: classTypeData[0].schoolId })
+    Media.find({ schoolId: classTypeData[0].schoolId }),
   );
 
   return publishJoinedCursors;

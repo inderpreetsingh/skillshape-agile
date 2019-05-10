@@ -1,6 +1,6 @@
-import config from "/imports/config";
-import SLocation from "/imports/api/sLocation/fields";
-import ClassType from "/imports/api/classType/fields";
+import config from '/imports/config';
+import SLocation from '/imports/api/sLocation/fields';
+import ClassType from '/imports/api/classType/fields';
 
 const ClassTimes = new Mongo.Collection(config.collections.classTimes);
 /**
@@ -11,103 +11,103 @@ const ClassTimes = new Mongo.Collection(config.collections.classTimes);
 ClassTimes.attachSchema(
   new SimpleSchema({
     name: {
-      type: String
+      type: String,
     },
     desc: {
       type: String,
-      optional: true
+      optional: true,
     },
     schoolId: {
-      type: String
+      type: String,
     },
     classTypeId: {
-      type: String
+      type: String,
     },
     scheduleType: {
       type: String,
-      optional: true
+      optional: true,
     },
     startDate: {
       type: Date,
-      optional: true
+      optional: true,
     },
     endDate: {
       type: Date,
-      optional: true
+      optional: true,
     },
     startTime: {
       type: Date,
-      optional: true
+      optional: true,
     },
     duration: {
       type: Number,
-      optional: true
+      optional: true,
     },
     roomId: {
       type: String,
-      optional: true
+      optional: true,
     },
     locationId: {
       type: String,
-      optional: true
+      optional: true,
     },
     scheduleDetails: {
       type: [Object],
       optional: true,
-      blackbox: true
+      blackbox: true,
     },
     createdAt: {
       type: Date,
-      optional: true
+      optional: true,
     },
     gender: {
       type: String,
-      optional: true
+      optional: true,
     },
     ageMin: {
       type: String,
-      optional: true
+      optional: true,
     },
     ageMax: {
       type: String,
-      optional: true
+      optional: true,
     },
     experienceLevel: {
       type: String,
-      optional: true
+      optional: true,
     },
     deletedEvents: {
       type: Array,
-      optional: true
+      optional: true,
     },
-    "deletedEvents.$": {
+    'deletedEvents.$': {
       type: String,
-      blackbox: true
+      blackbox: true,
     },
     closed: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
-    instructors:{
+    instructors: {
       type: [String],
-      optional: true
-  }
-  })
+      optional: true,
+    },
+  }),
 );
 
-ClassTimes.join(SLocation, "locationId", "selectedLocation", [
-  "title",
-  "address",
-  "city",
-  "state",
-  "country",
-  "rooms",
-  "loc",
-  "timeZone"
+ClassTimes.join(SLocation, 'locationId', 'selectedLocation', [
+  'title',
+  'address',
+  'city',
+  'state',
+  'country',
+  'rooms',
+  'loc',
+  'timeZone',
 ]);
-ClassTimes.join(ClassType, "classTypeId", "classTypeName", ["name"]);
+ClassTimes.join(ClassType, 'classTypeId', 'classTypeName', ['name']);
 
-Meteor.startup(function() {
+Meteor.startup(() => {
   if (Meteor.isServer) {
     // Modules._ensureIndex({ "name": 1, "schoolId": 1 });
   }

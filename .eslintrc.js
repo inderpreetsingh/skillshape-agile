@@ -11,7 +11,9 @@ module.exports = {
     Mongo:true,
     SimpleSchema:true,
     SyncedCron:true,
-    checkMyAccess:true
+    checkMyAccess:true,
+    Package:true,
+    _ReactiveJoins:true
   },
   parserOptions: {
     parser: "babel-eslint",
@@ -29,7 +31,8 @@ module.exports = {
     "import/no-unresolved":0,
     "import/no-absolute-path":0,
     "no-underscore-dangle":0,
-    "camelcase":0
+    "camelcase":0,
+    'no-plusplus': [2, { allowForLoopAfterthoughts: true }]
   },
   
 };

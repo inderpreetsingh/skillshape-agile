@@ -1,11 +1,10 @@
-import { isEmpty } from 'lodash';
-import { check } from 'meteor/check';
+import { get, isEmpty } from 'lodash';
 import Classes from '../fields';
 
 Meteor.publish('classes.getClassesData', (filter) => {
-  check(filter, Object);
   try {
-    const record = Classes.findOne(filter);
+    let record;
+    record = Classes.findOne(filter);
     if (isEmpty(record) && filter.scheduled_date) {
       Classes.insert(filter);
     }
@@ -13,5 +12,4 @@ Meteor.publish('classes.getClassesData', (filter) => {
   } catch (error) {
     console.log('​ error in classes.getClassesData ', error);
   }
-  return null;
 });

@@ -1,32 +1,38 @@
-import isEmpty from "lodash/isEmpty";
-import get from "lodash/get";
-import ClassType from "./fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
-import SLocation from "/imports/api/sLocation/fields";
-import School from "/imports/api/school/fields";
-import ClassTimesRequest from "/imports/api/classTimesRequest/fields";
-import ClassTypeLocationRequest from "/imports/api/classTypeLocationRequest/fields";
+import isEmpty from 'lodash/isEmpty';
+import ClassTimes from '/imports/api/classTimes/fields';
+import ClassInterest from '/imports/api/classInterest/fields';
+import SLocation from '/imports/api/sLocation/fields';
+import School from '/imports/api/school/fields';
+import ClassTimesRequest from '/imports/api/classTimesRequest/fields';
+import ClassTypeLocationRequest from '/imports/api/classTypeLocationRequest/fields';
 import {
   sendEmailToStudentForClassTypeUpdation,
-  sendClassTypeLocationRequestEmail
-} from "/imports/api/email";
-import { sendEmailToSchool } from "/imports/api/email";
-import { getUserFullName } from "/imports/util/getUserData";
-import { check } from 'meteor/check';
-import { darkBaseTheme } from "material-ui/styles";
+  sendClassTypeLocationRequestEmail,
+  sendEmailToSchool,
+} from '/imports/api/email';
 
-// Need to update Class Times so that we can show ageMin,gender,experienceLevel on class details modal.
-function updateHookForClassTimes({ classTimesIds, classTypeData, doc }) {
-  let classTimeUpdateObj = {};
+import {
+  getUserFullName,
+} from '/imports/util/getUserData';
+import {
+  check,
+} from 'meteor/check';
+import ClassType from './fields';
+
+function updateHookForClassTimes({
+  classTimesIds,
+  classTypeData,
+  doc,
+}) {
+  const classTimeUpdateObj = {};
   // Need to edit changes in ClassTimes like edit `gender`,`experienceLevel`,`ageMin`.
   if (classTypeData && doc.ageMin && classTypeData.ageMin !== doc.ageMin) {
     classTimeUpdateObj.ageMin = doc.ageMin;
   }
   if (
-    classTypeData &&
-    doc.experienceLevel &&
-    classTypeData.experienceLevel !== doc.experienceLevel
+    classTypeData
+    && doc.experienceLevel
+    && classTypeData.experienceLevel !== doc.experienceLevel
   ) {
     classTimeUpdateObj.experienceLevel = doc.experienceLevel;
   }
@@ -34,40 +40,67 @@ function updateHookForClassTimes({ classTimesIds, classTypeData, doc }) {
     classTimeUpdateObj.gender = doc.gender;
   }
   if (!isEmpty(classTimeUpdateObj) && !isEmpty(classTimesIds)) {
-    ClassTimes.update(
-      { _id: { $in: classTimesIds } },
-      { $set: classTimeUpdateObj },
-      { multi: true }
-    );
+    ClassTimes.update({
+      _id: {
+        $in: classTimesIds,
+      },
+    }, {
+      $set: classTimeUpdateObj,
+    }, {
+      multi: true,
+    });
   }
 }
 
 Meteor.methods({
-  "classType.getClassType": function({ schoolId }) {
-    check(schoolId,String);
+  'classType.getClassType': ({
+    schoolId,
+  }) => {
+    check(schoolId, String);
 
-    return ClassType.find({ schoolId }).fetch();
+    return ClassType.find({
+      schoolId,
+    }).fetch();
   },
-  "classType.getClassTypeByTextSearch": function({ schoolId, textSearch }) {
-    return ClassType.find(
-      { schoolId: schoolId, name: { $regex: new RegExp(textSearch, "mi") } },
-      { limit: 10, fields: { name: 1 } }
-    ).fetch();
-  },
-  "classType.addClassType": function({ doc }) {
-    check(doc,Object);
+  'classType.getClassTypeByTextSearch': ({
+    schoolId,
+    textSearch,
+  }) => ClassType.find({
+    schoolId,
+    name: {
+      $regex: new RegExp(textSearch, 'mi'),
+    },
+  }, {
+    limit: 10,
+    fields: {
+      name: 1,
+    },
+  }).fetch(),
+  'classType.addClassType': ({
+    doc,
+  }) => {
+    check(doc, Object);
 
     const user = Meteor.users.findOne(this.userId);
     if (
-      checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
+      checkMyAccess({
+        user,
+        schoolId: doc.schoolId,
+        viewName: 'classType_CUD',
+      })
     ) {
-      const schoolData = School.findOne({ _id: doc.schoolId });
+      const schoolData = School.findOne({
+        _id: doc.schoolId,
+      });
       // doc.remoteIP = this.connection.clientAddress;
-      const temp = { ...doc, isPublish: true };
+      const temp = {
+        ...doc,
+        isPublish: true,
+      };
       temp.filters = temp.filters ? temp.filters : {};
 
       if (schoolData.name) {
-        temp.filters["schoolName"] = schoolData.name;
+        temp.filters.schoolName = schoolData.name;
       }
 
       // if (temp.locationId) {
@@ -82,20 +115,31 @@ Meteor.methods({
       temp.createdAt = new Date();
 
       return ClassType.insert(temp);
-    } else {
-      throw new Meteor.Error("Permission denied!!");
     }
+    throw new Meteor.Error('Permission denied!!');
   },
-  "classType.editClassType": function({ doc_id, doc }) {
-    check(doc,Object);
-    check(doc_id,String);
+  'classType.editClassType': ({
+    doc_id,
+    doc,
+  }) => {
+    check(doc, Object);
+    check(doc_id, String);
 
     const user = Meteor.users.findOne(this.userId);
     if (
-      checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
+      checkMyAccess({
+        user,
+        schoolId: doc.schoolId,
+        viewName: 'classType_CUD',
+      })
     ) {
-      let classTypeData = ClassType.findOne({ _id: doc_id });
-      const temp = { ...doc, filters: classTypeData && classTypeData.filters || {} };
+      const classTypeData = ClassType.findOne({
+        _id: doc_id,
+      });
+      const temp = {
+        ...doc,
+        filters: (classTypeData && classTypeData.filters) || {},
+      };
 
       // if (temp.locationId) {
       //   console.log('TCL: temp.locationId', temp.locationId);
@@ -107,90 +151,116 @@ Meteor.methods({
       //     location.country
       //   }`;
       // }
-      let classTimesIds = ClassTimes.find({ classTypeId: doc_id }).map(
-        data => data._id
+      const classTimesIds = ClassTimes.find({
+        classTypeId: doc_id,
+      }).map(
+        data => data._id,
       );
       if (!isEmpty(classTimesIds)) {
-        updateHookForClassTimes({ classTimesIds, classTypeData, doc });
+        updateHookForClassTimes({
+          classTimesIds,
+          classTypeData,
+          doc,
+        });
       }
-      return ClassType.update({ _id: doc_id }, { $set: temp });
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+      return ClassType.update({
+        _id: doc_id,
+      }, {
+        $set: temp,
+      });
     }
+    throw new Meteor.Error('Permission denied!!');
   },
-  "classType.removeClassType": function({ doc }) {
-    check(doc,Object);
+  'classType.removeClassType': ({
+    doc,
+  }) => {
+    check(doc, Object);
 
     const user = Meteor.users.findOne(this.userId);
     if (
-      checkMyAccess({ user, schoolId: doc.schoolId, viewName: "classType_CUD" })
+      checkMyAccess({
+        user,
+        schoolId: doc.schoolId,
+        viewName: 'classType_CUD',
+      })
     ) {
-      ClassTimes.remove({ classTypeId: doc._id });
-      ClassInterest.remove({ classTypeId: doc._id });
-      return ClassType.remove({ _id: doc._id });
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+      ClassTimes.remove({
+        classTypeId: doc._id,
+      });
+      ClassInterest.remove({
+        classTypeId: doc._id,
+      });
+      return ClassType.remove({
+        _id: doc._id,
+      });
     }
+    throw new Meteor.Error('Permission denied!!');
   },
-  "classType.notifyToStudentForClassTimes": function({
+  'classType.notifyToStudentForClassTimes': ({
     schoolId,
     classTypeId,
-    classTypeName
-  }) {
-    check(schoolId,String);
-    check(classTypeId,String);
-    check(classTypeName,String);
+    classTypeName,
+  }) => {
+    check(schoolId, String);
+    check(classTypeId, String);
+    check(classTypeName, String);
 
     if (this.userId) {
       const classTimesRequestData = ClassTimesRequest.find({
         schoolId,
         classTypeId,
-        notification: true
+        notification: true,
       }).fetch();
       if (!isEmpty(classTimesRequestData)) {
-        for (let obj of classTimesRequestData) {
-          const userData = Meteor.users.findOne({ _id: obj.userId });
-          const schoolData = School.findOne({ _id: obj.schoolId });
+        classTimesRequestData.forEach((obj) => {
+          const userData = Meteor.users.findOne({
+            _id: obj.userId,
+          });
+          const schoolData = School.findOne({
+            _id: obj.schoolId,
+          });
 
           if (userData && schoolData) {
-          //   ClassTimesRequest.update(
-          //     { _id: obj._id },
-          //     { $set: { notification: false } }
-          //   );
+            //   ClassTimesRequest.update(
+            //     { _id: obj._id },
+            //     { $set: { notification: false } }
+            //   );
             sendEmailToStudentForClassTypeUpdation(
               userData,
               schoolData,
               classTypeName,
-              'Class Time Updated'
+              'Class Time Updated',
             );
           }
-        }
-        return { message: "We successfully notify to student" };
-      } else {
-        return { message: "Their is no student to notify!!!" };
+        });
+        return {
+          message: 'We successfully notify to student',
+        };
       }
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+      return {
+        message: 'Their is no student to notify!!!',
+      };
     }
+    throw new Meteor.Error('Permission denied!!');
   },
-  "classType.requestClassTypeLocation": function({
+  'classType.requestClassTypeLocation': ({
     schoolId,
     classTypeId,
-    classTypeName
-  }) {
-    check(schoolId,String);
-    check(classTypeId,String);
-    check(classTypeName,String);
+    classTypeName,
+  }) => {
+    check(schoolId, String);
+    check(classTypeId, String);
+    check(classTypeName, String);
     if (this.userId && schoolId) {
       const classTypeLocationRequest = ClassTypeLocationRequest.findOne({
         schoolId,
         classTypeId,
-        userId: this.userId
+        userId: this.userId,
       });
       // Request Pending
       if (classTypeLocationRequest) {
         throw new Meteor.Error(
-          "Your Class Type request has already been created!!!"
+          'Your Class Type request has already been created!!!',
         );
       } else {
         const requestObj = {
@@ -198,57 +268,62 @@ Meteor.methods({
           createdAt: new Date(),
           notification: true,
           userId: this.userId,
-          classTypeId: classTypeId,
-          classTypeName: classTypeName
+          classTypeId,
+          classTypeName,
         };
         ClassTypeLocationRequest.insert(requestObj);
       }
-      let schoolData = School.findOne(schoolId);
+      const schoolData = School.findOne(schoolId);
       let ownerName;
       if (schoolData && schoolData.superAdmin) {
         // Get Admin of School As school Owner
-        let adminUser = Meteor.users.findOne(schoolData.superAdmin);
+        const adminUser = Meteor.users.findOne(schoolData.superAdmin);
         ownerName = getUserFullName(adminUser);
       }
       // Optional if Owner name not found then owner name will be `Sam`
       if (!ownerName) {
         // Owner Name will be Sam
-        ownerName = "Sam";
+        ownerName = 'Sam';
       }
       // Send Email to Admin of School if admin available
-      const toEmail = "sam@skillshape.com"; // Needs to replace by Admin of School
-      const fromEmail = "Notices@SkillShape.com";
-      let currentUser = Meteor.users.findOne(this.userId);
-      let currentUserName = getUserFullName(currentUser);
+      const toEmail = 'sam@skillshape.com'; // Needs to replace by Admin of School
+      const fromEmail = 'Notices@SkillShape.com';
+      const currentUser = Meteor.users.findOne(this.userId);
+      const currentUserName = getUserFullName(currentUser);
       sendClassTypeLocationRequestEmail({
         toEmail,
         fromEmail,
         currentUserName,
-        ownerName
+        ownerName,
       });
-      return { emailSent: true };
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+      return {
+        emailSent: true,
+      };
     }
+    throw new Meteor.Error('Permission denied!!');
   },
-  "classType.notifyToStudentForLocation": function({
+  'classType.notifyToStudentForLocation': ({
     schoolId,
     classTypeId,
-    classTypeName
-  }) {
-    check(schoolId,String);
-    check(classTypeId,String);
-    check(classTypeName,String);
+    classTypeName,
+  }) => {
+    check(schoolId, String);
+    check(classTypeId, String);
+    check(classTypeName, String);
     if (this.userId) {
       const classTimesRequestData = ClassTypeLocationRequest.find({
         schoolId,
         classTypeId,
-        notification: true
+        notification: true,
       }).fetch();
       if (!isEmpty(classTimesRequestData)) {
-        for (let obj of classTimesRequestData) {
-          const userData = Meteor.users.findOne({ _id: obj.userId });
-          const schoolData = School.findOne({ _id: obj.schoolId });
+        classTimesRequestData.forEach((obj) => {
+          const userData = Meteor.users.findOne({
+            _id: obj.userId,
+          });
+          const schoolData = School.findOne({
+            _id: obj.schoolId,
+          });
 
           if (userData && schoolData) {
             // ClassTypeLocationRequest.update(
@@ -259,47 +334,52 @@ Meteor.methods({
               userData,
               schoolData,
               classTypeName,
-              'Location Updated'
+              'Location Updated',
             );
           }
-        }
-        return { message: "We successfully notify to student" };
-      } else {
-        return { message: "Their is no student to notify!!!" };
+        });
+
+        return {
+          message: 'We successfully notify to student',
+        };
       }
-    } else {
-      throw new Meteor.Error("Permission denied!!");
+      return {
+        message: 'Their is no student to notify!!!',
+      };
     }
+    throw new Meteor.Error('Permission denied!!');
   },
-  "classType.handleEmailUsForSchool": function(
+  'classType.handleEmailUsForSchool': (
     subject,
     message,
     schoolData,
     yourEmail,
-    yourName
-  ) {
-    check(subject,String);
-    check(message,String);
-    check(schoolData,Object);
-    check(yourEmail,String);
-    check(yourName,String);
+    yourName,
+  ) => {
+    check(subject, String);
+    check(message, String);
+    check(schoolData, Object);
+    check(yourEmail, String);
+    check(yourName, String);
     let contactName;
     if (Meteor.isServer) {
-      let schoolAdmin = Meteor.users.findOne({
-        _id: { $in: schoolData.admins }
+      const schoolAdmin = Meteor.users.findOne({
+        _id: {
+          $in: schoolData.admins,
+        },
       });
       if (schoolAdmin) {
         contactName = getUserFullName(schoolAdmin);
       } else {
-        throw new Meteor.Error("No admin found for School");
+        throw new Meteor.Error('No admin found for School');
       }
       let studentName;
       if (this.userId) {
-        let currentUser = Meteor.users.findOne(this.userId);
+        const currentUser = Meteor.users.findOne(this.userId);
         studentName = getUserFullName(currentUser);
       }
       if (!studentName) {
-        studentName = "I";
+        studentName = 'I';
       }
       sendEmailToSchool(
         message,
@@ -308,77 +388,104 @@ Meteor.methods({
         schoolData,
         subject,
         yourEmail,
-        yourName
+        yourName,
       );
-      return { message: "Email Sent successfully!!!" };
+      return {
+        message: 'Email Sent successfully!!!',
+      };
     }
+    return {};
   },
-  'classType.addLocationFilter':function(_id,locationId,classTimeId,type){
-    try{
-
-    let filters ,currentLocation={};
-    const location = SLocation.findOne(locationId);
-    let classTypeData = ClassType.findOne(_id);
-    filters = classTypeData.filters;
-    // new object for the the location when new class time is added
-    if(type == 'newTime'){
-      currentLocation = {
-        loc: {
-          type: "Point",
-          coordinates: location.loc,
-          title: `${location.state}, ${location.city}, ${location.country}`,
-          locationId: locationId || '',
-          classTimeId: classTimeId || ''
-        }
-      }
-      if(filters && filters['location']){
-        filters['location'].push(currentLocation);
-      }
-      else if(filters){
-        filters['location']=[currentLocation];
-      }else{
+  'classType.addLocationFilter': (_id = '', locationId = '', classTimeId = '', type = '') => {
+    try {
+      let currentLocation = {};
+      const location = SLocation.findOne(locationId);
+      const classTypeData = ClassType.findOne(_id);
+      let { filters } = classTypeData;
+      // new object for the the location when new class time is added
+      if (type === 'newTime') {
+        currentLocation = {
+          loc: {
+            type: 'Point',
+            coordinates: location.loc,
+            title: `${location.state}, ${location.city}, ${location.country}`,
+            locationId: locationId || '',
+            classTimeId: classTimeId || '',
+          },
+        };
+        if (filters && filters.location) {
+          filters.location.push(currentLocation);
+        } else if (filters) {
+          filters.location = [currentLocation];
+        } else {
           filters = {};
-          filters['location'] = [currentLocation];
+          filters.location = [currentLocation];
         }
-    }
-    else if(type =="editTime"){
-      filters["location"].map((current)=>{
-        if(current['loc']['classTimeId']==classTimeId){
-          current['loc']['coordinates']=location.loc;
-          current['loc']['locationId'] =locationId;
-          current['loc']['title']=`${location.state}, ${location.city}, ${location.country}`;
-        }
-
-      })
-    }
-    else if(type == 'deleteTime'){
-      let pos;
-      filters["location"].map((current,index)=>{
-        if(current['loc']['classTimeId']==classTimeId){
-          pos =index;
-        }
-      })
-      filters['location'].splice(pos,1);
-    }
-    ClassType.update({_id:_id},{$set:{filters:filters}});
-    }catch(error){
-
+      } else if (type === 'editTime') {
+        filters.location = filters.location.map((obj) => {
+          const current = Object.assign(obj);
+          if (current.loc.classTimeId === classTimeId) {
+            current.loc.coordinates = location.loc;
+            current.loc.locationId = locationId;
+            current.loc.title = `${location.state}, ${location.city}, ${location.country}`;
+          }
+          return current;
+        });
+      } else if (type === 'deleteTime') {
+        let pos;
+        filters.location.forEach((current, index) => {
+          if (current.loc.classTimeId === classTimeId) {
+            pos = index;
+          }
+        });
+        filters.location.splice(pos, 1);
+      }
+      ClassType.update({
+        _id,
+      }, {
+        $set: {
+          filters,
+        },
+      });
+    } catch (error) {
+      console.log(' error in classType.addLocationFilter', error);
     }
   },
-  'classType.optimizationFinder':function(){
-    return ClassType.find({medium:{$exists:false},low:{$exists:false},classTypeImg:{$exists:true}}).fetch();
+  'classType.optimizationFinder': () => ClassType.find({
+    medium: {
+      $exists: false,
+    },
+    low: {
+      $exists: false,
+    },
+    classTypeImg: {
+      $exists: true,
+    },
+  }).fetch(),
+  'classType.handleEnrollmentIds': (id = '', classTypeIds = [], operation = '') => {
+    classTypeIds.forEach((_id) => {
+      if (operation === 'add') {
+        ClassType.update({
+          _id,
+        }, {
+          $addToSet: {
+            enrollmentIds: id,
+          },
+        });
+      } else if (operation === 'remove') {
+        ClassType.update({
+          _id,
+        }, {
+          $pull: {
+            enrollmentIds: id,
+          },
+        });
+      }
+    });
   },
-  "classType.handleEnrollmentIds":function(id,classTypeIds,operation){
-      classTypeIds.map((_id)=>{
-        if(operation=='add'){
-        ClassType.update({_id},{$addToSet:{enrollmentIds:id}});
-        }else if(operation=='remove'){
-          ClassType.update({_id},{$pull:{enrollmentIds:id}});
-        }
-      })
-  },
-  "classType.getClassTypesFromIds":function(_ids){
-    return ClassType.find({_id:{$in:_ids}}).fetch();
-  }
+  'classType.getClassTypesFromIds': (_ids = []) => ClassType.find({
+    _id: {
+      $in: _ids,
+    },
+  }).fetch(),
 });
- 
