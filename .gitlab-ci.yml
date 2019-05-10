@@ -25,7 +25,7 @@ run_tests:
 deploy_staging:
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/text-giving-staging.git
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/skillshape2.git
     - git push heroku master
     - echo "Deployed to staging server"
   environment:
@@ -37,12 +37,12 @@ deploy_staging:
 deploy_production:
   stage: deploy
   script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/text-giving.git
+    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/skillshape2.git
     - git push heroku master
     - echo "Deployed to production server"
   environment:
   name: production
-  url: https://text-giving.herokuapp.com/
+  url: https://skillshape2.herokuapp.com/
   when: manual
   only:
     - master
