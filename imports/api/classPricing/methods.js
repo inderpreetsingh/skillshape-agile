@@ -1,18 +1,19 @@
 import { check } from 'meteor/check';
-import { get, isEmpty, concat,uniq } from 'lodash';
+import {
+  get, isEmpty, concat, uniq, difference, isArray,
+} from 'lodash';
 import ClassPricing from './fields';
 import ClassType from '/imports/api/classType/fields';
-import PriceInfoRequest from '/imports/api/priceInfoRequest/fields';
 import PricingRequest from '/imports/api/pricingRequest/fields';
 import School from '/imports/api/school/fields';
 import { sendEmailToStudentForPriceInfoUpdate } from '/imports/api/email';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 
 Meteor.methods({
-  'classPricing.addClassPricing': function ({ doc }) {
+  'classPricing.addClassPricing': ({ doc }) => {
     const user = Meteor.users.findOne(this.userId);
     if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: 'classPricing_CUD' })) {
-      if (doc.classTypeId && _.isArray(doc.classTypeId)) {
+      if (doc.classTypeId && isArray(doc.classTypeId)) {
         ClassType.update(
           { _id: { $in: doc.classTypeId } },
           { $set: { 'filters.classPriceCost': doc.cost } },
@@ -24,12 +25,12 @@ Meteor.methods({
     }
     throw new Meteor.Error('Permission denied!!');
   },
-  'classPricing.editclassPricing': function ({ doc_id, doc }) {
+  'classPricing.editclassPricing': ({ doc_id, doc }) => {
     const user = Meteor.users.findOne(this.userId);
 
     if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: 'classPricing_CUD' })) {
       const classPriceData = ClassPricing.findOne({ _id: doc_id });
-      const diff = _.difference(classPriceData.classTypeId, doc.classTypeId);
+      const diff = difference(classPriceData.classTypeId, doc.classTypeId);
 
       if (classPriceData.cost !== doc.cost || (diff && diff.length > 0)) {
         if (diff && diff.length > 0) {
@@ -40,7 +41,7 @@ Meteor.methods({
           );
         }
 
-        if (doc.classTypeId && _.isArray(doc.classTypeId) && doc.classTypeId.length > 0) {
+        if (doc.classTypeId && isArray(doc.classTypeId) && doc.classTypeId.length > 0) {
           ClassType.update(
             { _id: { $in: doc.classTypeId } },
             { $set: { 'filters.classPriceCost': doc.cost } },
@@ -53,13 +54,13 @@ Meteor.methods({
     }
     throw new Meteor.Error('Permission denied!!');
   },
-  'classPricing.removeClassPricing': function ({ doc }) {
+  'classPricing.removeClassPricing': ({ doc }) => {
     check(doc, Object);
 
     const user = Meteor.users.findOne(this.userId);
 
     if (checkMyAccess({ user, schoolId: doc.schoolId, viewName: 'classPricing_CUD' })) {
-      if (doc.classTypeId && _.isArray(doc.classTypeId)) {
+      if (doc.classTypeId && isArray(doc.classTypeId)) {
         ClassType.update(
           { _id: { $in: doc.classTypeId } },
           { $set: { 'filters.classPriceCost': null } },
@@ -71,42 +72,41 @@ Meteor.methods({
     }
     throw new Meteor.Error('Permission denied!!');
   },
-  'classPricing.notifyStudentForPricingUpdate': function ({ schoolId }) {
+  'classPricing.notifyStudentForPricingUpdate': ({ schoolId }) => {
     check(schoolId, String);
 
     if (this.userId) {
       const PricingRequestData = PricingRequest.find({ schoolId, notification: true }).fetch();
       if (!isEmpty(PricingRequestData)) {
-        for (const obj of PricingRequestData) {
+        PricingRequestData.forEach((obj) => {
           const userData = Meteor.users.findOne({ _id: obj.userId });
           const schoolData = School.findOne({ _id: obj.schoolId });
           if (userData && schoolData) {
             PricingRequest.update({ _id: obj._id }, { $set: { notification: false } });
             sendEmailToStudentForPriceInfoUpdate(userData, schoolData);
           }
-        }
-
+        });
         return { emailSent: true };
       }
       return { emailSent: false };
     }
     throw new Meteor.Error('Permission denied!!');
   },
-  'classPricing.handleClassTypes': function ({ classTypeId, selectedIds, diselectedIds }) {
+  'classPricing.handleClassTypes': ({ classTypeId, selectedIds, diselectedIds }) => {
     check(classTypeId, String);
     check(selectedIds, [String]);
     check(diselectedIds, [String]);
     ClassPricing.update({ classTypeId: null }, { $set: { classTypeId: [] } });
     try {
       if (!isEmpty(diselectedIds)) {
-        const result = ClassPricing.update(
+        ClassPricing.update(
           { _id: { $in: diselectedIds } },
           { $pull: { classTypeId } },
           { multi: true },
         );
       }
       if (!isEmpty(selectedIds)) {
-        const result = ClassPricing.update(
+        ClassPricing.update(
           { _id: { $in: selectedIds } },
           { $push: { classTypeId } },
           { multi: true },
@@ -117,11 +117,13 @@ Meteor.methods({
       throw new Meteor.Error(error);
     }
   },
-  'classPricing.getCover': function (_id) {
+  'classPricing.getCover': (_id) => {
+    check(_id, String);
     const record = ClassPricing.findOne({ _id });
     return get(record, 'selectedClassType', []);
   },
-  'classPricing.signInHandler': function (filter) {
+  'classPricing.signInHandler': (filter = {}) => {
+    check(filter, Object);
     try {
       let records = [];
       let packageIds = [];
@@ -150,7 +152,7 @@ Meteor.methods({
       records = MonthlyPricing.find({ classTypeId: filter.classTypeId }).fetch();
       packageIds = concat(records.map(obj => obj._id), packageIds);
       records = Meteor.call('purchases.getPackagesFromIds', packageIds, filter.userId);
-      noPackageRequired = isEmpty(packageIds);
+      const noPackageRequired = isEmpty(packageIds);
       return {
         epStatus, purchased: records, purchasedEP, noPackageRequired,
       };
@@ -159,46 +161,40 @@ Meteor.methods({
       throw new Meteor.Error(error);
     }
   },
-  'classPricing.getCoverForPurchases': purchaseData => new Promise((resolve, reject) => {
-    try {
-      let packageType;
-      let purchaseDataWithCovers = [];
-      if (!isEmpty(purchaseData)) {
-        purchaseDataWithCovers = purchaseData.map((obj, index) => {
-            let packageId;
+  'classPricing.getCoverForPurchases': (purchaseData) => {
+    check(purchaseData, Array);
+    Promise((resolve, reject) => {
+      try {
+        let packageType;
+        let purchaseDataWithCovers = [];
+        if (!isEmpty(purchaseData)) {
+          purchaseDataWithCovers = purchaseData.map((objCopy) => {
+            const obj = Object.assign(objCopy);
             let methodName;
-            let covers = [];
+            const covers = [];
             packageType = get(obj, 'packageType', 'MP');
-            packageId = get(obj, 'packageId', '');
-            if (packageType == 'MP') {
-                methodName = 'monthlyPricing.getCover';
-            } else if (packageType == 'CP') {
-                methodName = 'classPricing.getCover';
+            const packageId = get(obj, 'packageId', '');
+            if (packageType === 'MP') {
+              methodName = 'monthlyPricing.getCover';
+            } else if (packageType === 'CP') {
+              methodName = 'classPricing.getCover';
             } else {
-                methodName = 'enrollmentFee.getCover';
+              methodName = 'enrollmentFee.getCover';
             }
-            let res = Meteor.call(methodName, packageId);
+            const res = Meteor.call(methodName, packageId);
             if (res) {
-                res.map((obj1, index1) => {
-                  covers.push(obj1.name);
-                });
-                obj.covers = uniq(covers);
-              }
-              return obj
-        });
+              res.forEach((obj1) => {
+                covers.push(obj1.name);
+              });
+              obj.covers = uniq(covers);
+            }
+            return obj;
+          });
+        }
+        resolve(purchaseDataWithCovers);
+      } catch (error) {
+        reject();
       }
-      resolve(purchaseDataWithCovers);
-    } catch (error) {
-      reject();
-    }
-  }),
+    });
+  },
 });
-/*
-1. On send link entry in packageRequest Collection with info {userId,PackageId,classDetails_id,valid:true};
-2. Send Email to that userEmailId.
-3. Link in the email.
-3. Click on link packagePurchase/packageRequest_id.
-4. UI of package on the that page.
-5. Update the class detail page purchase id field of that user.
-6. Update packageRequest record with valid:false.
-*/

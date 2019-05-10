@@ -10,7 +10,8 @@ module.exports = {
     Meteor:true,
     Mongo:true,
     SimpleSchema:true,
-    SyncedCron:true
+    SyncedCron:true,
+    checkMyAccess:true
   },
   parserOptions: {
     parser: "babel-eslint",

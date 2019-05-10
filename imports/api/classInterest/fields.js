@@ -1,4 +1,4 @@
-import config from "/imports/config";
+import config from '/imports/config';
 
 const ClassInterest = new Mongo.Collection(config.collections.classInterest);
 /**
@@ -9,35 +9,35 @@ const ClassInterest = new Mongo.Collection(config.collections.classInterest);
 ClassInterest.attachSchema(
   new SimpleSchema({
     classTimeId: {
-      type: String
+      type: String,
     },
     classTypeId: {
-      type: String
+      type: String,
     },
     schoolId: {
-      type: String
+      type: String,
     },
     userId: {
-      type: String
+      type: String,
     },
     createdAt: {
       type: Date,
-      optional: true
+      optional: true,
     },
     deletedEvents: {
       type: Array,
-      optional: true
+      optional: true,
     },
-    "deletedEvents.$": {
-      type: String,
-      blackbox: true
-    },
-    eventId:{
+    'deletedEvents.$': {
       type: String,
       blackbox: true,
-      optional:true
-    }
-  })
+    },
+    eventId: {
+      type: String,
+      blackbox: true,
+      optional: true,
+    },
+  }),
 );
 
 export default ClassInterest;
