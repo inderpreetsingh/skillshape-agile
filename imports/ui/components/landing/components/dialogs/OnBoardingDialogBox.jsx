@@ -72,11 +72,11 @@ class OnBoardingDialogBox extends React.Component {
                 };
                 confirmationDialog(data);
             }
-            else if(res){
+            else {
                 this.props.onModalClose();
                 gotoClaimSchool(schoolName);
             }
-            else if(err){
+            if(err){
               popUp.appear('alert',{content:'Something Went Wrong!'});
             }
         })
