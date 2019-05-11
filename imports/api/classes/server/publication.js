@@ -1,4 +1,4 @@
-import { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import Classes from '../fields';
 
 Meteor.publish('classes.getClassesData', (filter) => {
