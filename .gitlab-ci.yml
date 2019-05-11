@@ -1,48 +1,9 @@
-image: node:9.0.0
-
-stages:
-  - ver
-  - init
-  - tests
-  - deploy
-
-ver:
-  stage: ver
+staging:
+  type: deploy
   script:
-    - node --version
-    - whoami
-init:
-  stage: init
-  script:
-    - npm cache clean
-    - rm -rf node-modules
-    - npm install
-run_tests:
-  stage: tests
-  script:
-    - npm test
-
-deploy_staging:
-  stage: deploy
-  script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/skillshape2.git
-    - git push heroku master
-    - echo "Deployed to staging server"
-  environment:
-  name: staging
-  url: https://text-giving-staging.herokuapp.com/
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=skillshape2 --api-key=$HEROKU_API_KEY
   only:
-    - master
-
-deploy_production:
-  stage: deploy
-  script:
-    - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/skillshape2.git
-    - git push heroku master
-    - echo "Deployed to production server"
-  environment:
-  name: production
-  url: https://skillshape2.herokuapp.com/
-  when: manual
-  only:
-    - master
+  - master
