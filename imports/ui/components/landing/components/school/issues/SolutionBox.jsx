@@ -222,7 +222,7 @@ class SolutionBox extends Component {
 						<SolutionCards totalCards={props.cardsData.length}>
 							{props.cardsData &&
 								props.cardsData.map((card, i) => (
-									<CardWrapper>
+									<CardWrapper key={i.toString()}>
 										<SchoolSolutionCard
 											key={i}
 											{...card}

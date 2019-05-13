@@ -1,4 +1,4 @@
-import React, { Fragment, Component} from 'react';
+import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Collapse from 'material-ui/transitions/Collapse';
@@ -16,76 +16,79 @@ class NestedNavItems extends Component {
   	}
 
   	render() {
-  		const { classes, childData ,link,onClick} = this.props;
+  		const {
+  	    classes, childData, link, onClick,
+  	  } = this.props;
   		return (
-  			<Fragment>
-  			
-  					
-  					<Fragment>
-		  				<ListItem onClick={()=>{
-							  if(!isEmpty(childData))
-								this.handleClick();
-							  else
-								onClick(link);
-						  }}>
-					        {
-						       this.props.children ? this.props.children :
-						       <Fragment>
-						            <ListItemIcon>
-						                <Icon>{this.props.iconName}</Icon>
-						            </ListItemIcon>
-						            <ListItemText classes={{text: classes.menuListItemText}} primary={this.props.nameLimit ? cutString(this.props.name, this.props.nameLimit): this.props.name } title={this.props.name}/>
-						        </Fragment>
+    <Fragment>
+
+
+      <Fragment>
+        <ListItem onClick={() => {
+							  if (!isEmpty(childData)) { this.handleClick(); } else { onClick(link); }
+						  }}
+        >
+          {
+						       this.props.children ? this.props.children
+						       : (
+  <Fragment>
+    <ListItemIcon>
+      <Icon>{this.props.iconName}</Icon>
+    </ListItemIcon>
+    <ListItemText classes={{ text: classes.menuListItemText }} primary={this.props.nameLimit ? cutString(this.props.name, this.props.nameLimit) : this.props.name} title={this.props.name} />
+  </Fragment>
+						         )
 							}
-							{ !isEmpty(childData) ?this.state.open ? <ExpandLess /> : <ExpandMore /> :'' }
-					    </ListItem>
-						{!isEmpty(childData) && <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
-				            <List disablePadding>
-					    		{
-					    			childData.map((data, index) => {
-						    			return (
-								            <ListItem
-                                            className={classes.nested}
-                                            button={this.props.button ? this.props.button : false}
-                                            onClick={(e) => {
-                                                if(data.onClick) {
-                                                    data.onClick(e)
-                                                } else if(this.props.onClick) {
-                                                    this.props.onClick(data.link)
-                                                }
-                                            }}
-                                            >
-								                <ListItemIcon>
-								                	<Icon>{data.iconName}</Icon>
-								              	</ListItemIcon>
-								                <ListItemText classes={{text: classes.menuListItemText}} primary={data.nameLimit ?  cutString(data.name, data.nameLimit): data.name} title={data.name}/>
-								            </ListItem>
-									    )
-						    		})
+          { !isEmpty(childData) ? this.state.open ? <ExpandLess /> : <ExpandMore /> : '' }
+        </ListItem>
+        {!isEmpty(childData) && (
+        <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
+          <List disablePadding>
+            {
+					    			childData.map((data, index) => (
+  <ListItem
+    key={index.toString()}
+    className={classes.nested}
+    button={this.props.button ? this.props.button : false}
+    onClick={(e) => {
+      if (data.onClick) {
+        data.onClick(e);
+      } else if (this.props.onClick) {
+        this.props.onClick(data.link);
+      }
+    }}
+  >
+    <ListItemIcon>
+      <Icon>{data.iconName}</Icon>
+    </ListItemIcon>
+    <ListItemText classes={{ text: classes.menuListItemText }} primary={data.nameLimit ? cutString(data.name, data.nameLimit) : data.name} title={data.name} />
+  </ListItem>
+									    ))
 					    		}
-				            </List>
-				        </Collapse>}
-				    
-  					</Fragment>
-  				
-  			</Fragment>
-  		)
+          </List>
+        </Collapse>
+        )}
+
+      </Fragment>
+
+    </Fragment>
+  		);
   	}
 }
 
 const nestedItemStructure = PropTypes.shape({
-    name: PropTypes.string,
-    iconName: PropTypes.string,
-    link: PropTypes.string,
+  name: PropTypes.string,
+  iconName: PropTypes.string,
+  link: PropTypes.string,
 });
 
 NestedNavItems.propTypes = {
-    button: PropTypes.bool,
-    name: PropTypes.string,
-    iconName: PropTypes.string,
-    childData: PropTypes.arrayOf(nestedItemStructure),
-    onClick: PropTypes.func,
-    classes: PropTypes.object,
-}
+  button: PropTypes.bool,
+  name: PropTypes.string,
+  iconName: PropTypes.string,
+  childData: PropTypes.arrayOf(nestedItemStructure),
+  onClick: PropTypes.func,
+  classes: PropTypes.object,
+};
 
-export default NestedNavItems
+export default NestedNavItems;

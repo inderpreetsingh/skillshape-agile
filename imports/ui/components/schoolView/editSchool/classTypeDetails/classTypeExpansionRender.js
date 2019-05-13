@@ -234,7 +234,7 @@ const ClassTypeExpansionRender = (props) => {
 				<Suspense fallback={<Loading/>}>
 				{classTypeData && classTypeData.map((ctData,index) => {
 					return (
-					< ExpansionPanel className={expansionPanelRoot} defaultExpanded={index == 0} >
+					< ExpansionPanel className={expansionPanelRoot} defaultExpanded={index == 0} key={index.toString()}>
 						<ExpansionPanelSummary
 							classes={{ content: props.classes.expansionPanelSummaryContent }}
 							expandIcon={<Icon>{'expand_more'}</Icon>}>

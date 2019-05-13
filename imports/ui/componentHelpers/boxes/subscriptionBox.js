@@ -87,7 +87,7 @@ class SubscriptionBox extends React.Component {
                     status = 'In Progress'
                 }
                 let backgroundColor = status=='active' || status=='succeeded'?'#4caf50':status=='In Progress' ? 'yellow' : status == 'inActive' ? 'blue' : 'red' ;
-                return <div>
+                return <div key={index.toString()}>
                 <Paper className={classes.singleSubscription}>
                  <SubscriptionName>
                  {get(current,'packageName','No Name Found')}

@@ -225,8 +225,8 @@ const SubscriptionsDetailsDialogBox = (props) => {
                                 This Covers:
                             </ContentHead>
                             <ClassesList>
-                                {classesCovered.map(classCovered => (
-                                    <ClassListItem>
+                                {classesCovered.map((classCovered,index) => (
+                                    <ClassListItem key={index.toString()}>
                                         {capitalizeString(classCovered)}
                                     </ClassListItem>
                                 ))}

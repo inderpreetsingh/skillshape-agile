@@ -439,7 +439,7 @@ class ClassTypeCoverContent extends React.Component {
                       <MyLocationList>
                         {this.getAddress().map((location, index) => {
                           return (
-                            <MyLocation>
+                            <MyLocation key={index.toString()}>
                               <Icon className={props.classes.myLocationIcon}>
                                 location_on
                             </Icon>

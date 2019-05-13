@@ -224,8 +224,9 @@ export default class MyCalender extends React.Component {
             title: `Confirmation`,
             content: `You have the followings packages. Please select one from which you are going to use.`,
             RenderActions: (<ButtonWrapper>
-              {purchased.map((obj) =>
+              {purchased.map((obj,index) =>
                 <FormGhostButton
+                key={index.toString()}
                   label={capitalizeString(`Sign in with ${obj.packageName}`)}
                   onClick={() => { this.updateClass(filter, status, obj, popUp) }}
                   applyClose

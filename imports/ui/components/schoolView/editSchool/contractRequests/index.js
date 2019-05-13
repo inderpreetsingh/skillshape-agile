@@ -91,8 +91,8 @@ class ContractRequests extends React.Component {
                 {isLoading && <ContainerLoader />}
                 <center>
                     <Div>
-                        {!isEmpty(contractsData) ? contractsData.map((obj) => {
-                            return <Request>
+                        {!isEmpty(contractsData) ? contractsData.map((obj,index) => {
+                            return <Request key={index.toString()}>
                                 <b>User Name:</b> {obj.userName || 'Missing'}<br/>
                                 <b>Package Name:</b>  {obj.packageName} <br/>
                                 <b>Reason:</b> {obj.reason} <br/>

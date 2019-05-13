@@ -298,11 +298,13 @@ const ManageMemberShipDialogBox = props => {
 
                 <DialogContent classes={{ root: classes.dialogContent }}>
                     <ContentWrapper>
-                        {subscriptionsData.map(classData =>
+                        {subscriptionsData.map((classData,index) =>
                             <ExpansionPanel
                                 classes={{
                                     root: classes.expansionPanelRoot
                                 }}
+                                key={index.toString()}
+
                             >
                                 <ExpansionPanelSummary
                                     classes={{
@@ -358,11 +360,11 @@ const ManageMemberShipDialogBox = props => {
                                         />
                                     </ToggleVisibility>
                                     <ClassTimesList>
-                                        {classData.classTimes.map(classTimeData => {
+                                        {classData.classTimes.map((classTimeData,index) => {
                                             if (classTimeData == null) {
                                                 return;
                                             }
-                                            return (<ClassTimesListItem>
+                                            return (<ClassTimesListItem key={index.toString()}>
                                                 <Text fontSize="18">{get(classTimeData, "name", 'Class Time Name')}</Text>
                                                 <ActionButtons>
                                                     <ButtonWrapper noMarginBottom>

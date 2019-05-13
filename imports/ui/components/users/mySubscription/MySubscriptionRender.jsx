@@ -278,6 +278,7 @@ const MySubscriptionRender = (props) => {
                                     root: classes.expansionPanelRoot
                                 }}
                                 defaultExpanded={index == 0}
+                                key={index.toString()}
                             >
                                 <ExpansionPanelSummary
                                     classes={{

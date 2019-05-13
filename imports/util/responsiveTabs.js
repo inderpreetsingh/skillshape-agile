@@ -97,6 +97,7 @@ class ResponsiveTabs extends React.Component {
           {this.props.tabs.map((tab, index) => {
             return (
               <Button
+              key={index.toString()}
                 classes={{ label: classes.muiLabel }}
                 className={
                   index == this.state.tabValue ? btnActive : btn

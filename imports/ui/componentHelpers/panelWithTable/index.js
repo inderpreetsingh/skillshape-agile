@@ -138,7 +138,7 @@ class PanelWithTable extends React.Component {
   displayFieldValue = (field, tableData) => {
     if (field.childKeys) {
       let str = "";
-      for (key of field.childKeys) {
+      for (let key of field.childKeys) {
         if (tableData[field.key][key]) {
           str = str + tableData[field.key][key] + " ";
         }

@@ -295,14 +295,13 @@ class BuyPackagesDialogBox extends Component {
                                 applyClose
                             />*/}
                         </ButtonWrapper>
-                        {!isEmpty(packageList) && packageList.map((obj) => {
+                        {!isEmpty(packageList) && packageList.map((obj,index) => {
                             return (
-                                <PackagesListWrapper>
+                                <PackagesListWrapper key={index.toString()}>
                                     <Title>{obj.title}</Title>
-                                    {!isEmpty(obj.packageData) && obj.packageData.map((packageData, i) => (
-                                        <PackageWrapper>
+                                    {!isEmpty(obj.packageData) && obj.packageData.map((packageData, index) => (
+                                        <PackageWrapper key={index.toString()}>
                                             <Package
-                                                key={i}
                                                 {...packageData}
                                                 packageSelected={i === selectedPackageIndex && obj.title == selectedPackageType}
                                                 onPackageClick={this.handlePackageClick(i, obj.title)}

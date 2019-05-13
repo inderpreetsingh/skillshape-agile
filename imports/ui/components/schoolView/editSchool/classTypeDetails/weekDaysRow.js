@@ -1,29 +1,19 @@
-import React from "react";
-import styled from "styled-components";
-import { withStyles } from 'material-ui/styles';
-import Grid from "material-ui/Grid";
-import Select from "material-ui/Select";
-import MultiSelect from "react-select";
-import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
 import { FormControl } from "material-ui/Form";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-import Typography from "material-ui/Typography";
-
-
+import Select from "material-ui/Select";
+import TextField from "material-ui/TextField";
+import React from "react";
+import MultiSelect from "react-select";
+import styled from "styled-components";
+import { CTFormControlHW, CTFormRow, CTFormWrapper, LinkedTime } from './sharedStyledComponents';
 import config from "/imports/config";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 
-import {
-  DeleteClassTime,
-  styles,
-  LinkedTime,
-  CTFormWrapper,
-  CTFormRow,
-  CTFormControlHW
-} from './sharedStyledComponents';
+
+
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -165,7 +155,7 @@ export class WeekDaysRow extends React.Component {
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<CTFormWrapper>
+          return (<CTFormWrapper key={index.toString()}>
             {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
             <CTFormRow
               marginBottom={helpers.rhythmDiv * 2}>

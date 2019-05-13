@@ -1,4 +1,4 @@
-import React,{Fragment} from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import DocumentTitle from 'react-document-title';
 import { browserHistory, Link } from 'react-router';
@@ -19,7 +19,7 @@ import { checkSuperAdmin, cutString } from '/imports/util';
 import { CustomModal } from '/imports/ui/modal';
 import MyCalender from '/imports/ui/components/users/myCalender';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
-import SkillShapeCard from "/imports/ui/componentHelpers/skillShapeCard"
+import SkillShapeCard from '/imports/ui/componentHelpers/skillShapeCard';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList.jsx';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
@@ -29,239 +29,285 @@ import SchoolViewBanner from '/imports/ui/componentHelpers/schoolViewBanner';
 import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index.js';
 
-export default function() {
+export default function () {
+  const defaultSchoolImage = 'http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg';
+  const {
+    schoolData,
+    classPricing,
+    monthlyPricing,
+    schoolLocation,
+    classType,
+    currentUser,
+    schoolId,
+    classes,
+    enrollmentFee,
+    showLoading,
+  } = this.props;
 
-    const defaultSchoolImage = "http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg";
-    const {
-        schoolData,
-        classPricing,
-        monthlyPricing,
-        schoolLocation,
-        classType,
-        currentUser,
-        schoolId,
-        classes,
-        enrollmentFee,
-        showLoading,
-    } = this.props;
+  const {
+    claimSchoolModal,
+    claimRequestModal,
+    successModal,
+  } = this.state;
 
-    const {
-        claimSchoolModal,
-        claimRequestModal,
-        successModal,
-    } = this.state;
+  if (showLoading) {
+    return <Preloader />;
+  }
 
-    if(showLoading) {
-        return <Preloader/>
-    }
-
-    if(isEmpty(schoolData)) {
-        return <Typography type="display2" gutterBottom align="center">
+  if (isEmpty(schoolData)) {
+    return (
+      <Typography type="display2" gutterBottom align="center">
             School not found!!!
-        </Typography>
-    } else {
+</Typography>
+    );
+  }
 
-        const checkUserAccess = checkMyAccess({user: currentUser,schoolId});
-        const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
-        const imageMediaList = this.getImageMediaList(schoolData.mediaList, "Image");
-        const otherMediaList = this.getImageMediaList(schoolData.mediaList, "Other");
-        let isPublish = this.getPublishStatus(schoolData.isPublish)
+  const checkUserAccess = checkMyAccess({ user: currentUser, schoolId });
+  const claimBtnCSS = this.claimBtnCSS(currentUser, schoolData.claimed);
+  const imageMediaList = this.getImageMediaList(schoolData.mediaList, 'Image');
+  const otherMediaList = this.getImageMediaList(schoolData.mediaList, 'Other');
+  const isPublish = this.getPublishStatus(schoolData.isPublish);
 
 
-        return (
-            <DocumentTitle title={this.props.route.name}>
+  return (
+    <DocumentTitle title={this.props.route.name}>
             <div className="content">
-          {
+                {
             this.state.isLoading && <ContainerLoader />
           }
 
-          {
-            this.state.showConfirmationModal && <ConfirmationModal
-                open={this.state.showConfirmationModal}
-                submitBtnLabel="REQUEST PRICING"
-                cancelBtnLabel="Cancel"
-                message="No prices have been added by the school. Please click this button to request the school complete their pricing info?"
-                onSubmit={()=>{this.requestPricingInfo(schoolData)}}
-                onClose={this.cancelConfirmationModal}
-            />
+                {
+            this.state.showConfirmationModal && (
+            <ConfirmationModal
+  open={this.state.showConfirmationModal}
+  submitBtnLabel="REQUEST PRICING"
+  cancelBtnLabel="Cancel"
+  message="No prices have been added by the school. Please click this button to request the school complete their pricing info?"
+  onSubmit={() => { this.requestPricingInfo(schoolData); }}
+  onClose={this.cancelConfirmationModal}
+/>
+            )
           }
-                { (claimSchoolModal || claimRequestModal || successModal) && <CustomModal
-              className={successModal ? "success-modal" : "info-modal" }
-              title={this.getClaimSchoolModalTitle()}
-              message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
-              onClose={this.modalClose}
-              onSubmit={this.modalSubmit}
-              closeBtnLabel={successModal ? "Continue" : "No"}
-              submitBtnLabel={"Yes"}
-            />
+                { (claimSchoolModal || claimRequestModal || successModal) && (
+              <CustomModal
+  className={successModal ? 'success-modal' : 'info-modal'}
+  title={this.getClaimSchoolModalTitle()}
+  message={successModal && `You are now owner of ${schoolData.name} Would you like to edit ?`}
+  onClose={this.modalClose}
+  onSubmit={this.modalSubmit}
+  closeBtnLabel={successModal ? 'Continue' : 'No'}
+  submitBtnLabel="Yes"
+/>
+              )
           }
-          <div>
-            <Grid container className={classes.schoolHeaderContainer}>
+                <div>
+                <Grid container className={classes.schoolHeaderContainer}>
               <Grid item xs={12}>
-               {/* <div className={classes.imageContainer}>
+                {/* <div className={classes.imageContainer}>
                   <img className={classes.image} src={ schoolData.mainImage || defaultSchoolImage }/>
-                </div>*/}
+                </div> */}
 
                 <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={false} />
 
-                <Grid container className={classes.schoolInfo} >
-                    <Grid item xs={12} sm={8} md={6} > {/* Old Grid item */}
-                        <Card className={`${classes.card} ${classes.schoolInfo}`}>
-                            <Grid item xs={12}>
-                                {
+                <Grid container className={classes.schoolInfo}>
+                  <Grid item xs={12} sm={8} md={6}>
+                    {' '}
+                    {/* Old Grid item */}
+                    <Card className={`${classes.card} ${classes.schoolInfo}`}>
+                        <Grid item xs={12}>
+                            {
                                    checkUserAccess && (
-                                    <div>Publish / Unpublish <Switch
-                                        checked={isPublish}
-                                        onChange={this.handlePublishStatus.bind(this, schoolId)}
-                                        aria-label={schoolId}
-                                      /></div>
-                                  )
+                                   <div>
+Publish / Unpublish
+                                     {' '}
+                                     <Switch
+  checked={isPublish}
+  onChange={this.handlePublishStatus.bind(this, schoolId)}
+  aria-label={schoolId}
+/>
+
+                                   </div>
+                                   )
                                 }
-                                {
+                            {
                                   this.checkForHtmlCode(schoolData.aboutHtml) && (
                                     <Fragment>
-                                        <Typography type="title"> About {schoolData.name} </Typography>
-                                        <Typography type="caption"> {ReactHtmlParser(schoolData.aboutHtml)} </Typography>
+                                      <Typography type="title">
+                                        {' '}
+About
+                                        {' '}
+                                        {schoolData.name}
+                                        {' '}
+                                      </Typography>
+                                      <Typography type="caption">
+                                        {' '}
+                                        {ReactHtmlParser(schoolData.aboutHtml)}
+                                        {' '}
+                                      </Typography>
                                     </Fragment>
                                   )
                                 }
-                            </Grid>
-                            {
+                          </Grid>
+                        {
                                 this.checkForHtmlCode(schoolData.studentNotesHtml) && (
-                                    <Grid item xs={12}>
-                                      <Typography type="title">Notes for student of {schoolData.name} <br/> </Typography>
-                                      <Typography type="caption"> {ReactHtmlParser(schoolData.studentNotesHtml)} </Typography>
-                                    </Grid>
+                                <Grid item xs={12}>
+                                  <Typography type="title">
+Notes for student of
+                                        {' '}
+                                        {schoolData.name}
+                                        {' '}
+                                        <br />
+                                        {' '}
+                                      </Typography>
+                                  <Typography type="caption">
+                                        {' '}
+                                        {ReactHtmlParser(schoolData.studentNotesHtml)}
+                                        {' '}
+                                      </Typography>
+                                </Grid>
                                 )
                             }
-                        </Card>
-                    </Grid>
+                      </Card>
+                  </Grid>
 
-                    <Grid item xs={12} sm={4} md={3}>
-                        <div className="card-content" id="schoolLocationMap" style={{height: '100%', minHeight: 250}}>
-                        </div>
-                    </Grid>
+                  <Grid item xs={12} sm={4} md={3}>
+                    <div className="card-content" id="schoolLocationMap" style={{ height: '100%', minHeight: 250 }} />
+                  </Grid>
 
-                    <Grid item xs={12} sm={12} md={3}>
-                      <Grid container style={{textAlign: "center"}}>
-                        <Grid item xs={12} sm={6} md={12} >
+                  <Grid item xs={12} sm={12} md={3}>
+                    <Grid container style={{ textAlign: 'center' }}>
+                        <Grid item xs={12} sm={6} md={12}>
                           <Card className={classes.card}>
-                              <Fragment>
-                                <CardContent className={classes.content}>
+                            <Fragment>
+                              <CardContent className={classes.content}>
                                   {
                                     this.state.bestPriceDetails && (
                                       <Grid>
-                                            {
+                                        {
                                               this.state.bestPriceDetails.bestMonthlyPrice && (
                                                 <Typography component="p">
-                                                  Monthly Packages from {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}$ per Month
-                                                </Typography>
+                                                  Monthly Packages from
+                                                  {' '}
+                                                  {floor(this.state.bestPriceDetails.bestMonthlyPrice.avgRate)}
+$ per Month
+                                                                                                </Typography>
                                               )
                                             }
-                                            {
+                                        {
                                               this.state.bestPriceDetails.bestClassPrice && (
                                                 <Typography component="p">
-                                                  Class Packages from {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}$ per Class
-                                                </Typography>
+                                                  Class Packages from
+                                                  {' '}
+                                                  {floor(this.state.bestPriceDetails.bestClassPrice.avgRate)}
+$ per Class
+                                                                                                </Typography>
                                               )
                                             }
                                       </Grid>
-                                  )}
+                                    )}
                                 </CardContent>
 
-                                <CardActions style={{height: "auto"}}>
+                              <CardActions style={{ height: 'auto' }}>
                                   <Grid container>
                                     <Grid item xs={12} sm={6}>
-                                      <Button onClick={this.scrollToTop.bind(this, this.schoolCalendar)} color="primary" style={{width: '100%'}} dense raised>
+                                      <Button onClick={this.scrollToTop.bind(this, this.schoolCalendar)} color="primary" style={{ width: '100%' }} dense raised>
                                         Schedule
                                       </Button>
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                      <Button onClick={this.scrollToTop.bind(this, this.schoolPrice)} style={{width: '100%',backgroundColor:'#4caf50'}} dense raised>
+                                      <Button onClick={this.scrollToTop.bind(this, this.schoolPrice)} style={{ width: '100%', backgroundColor: '#4caf50' }} dense raised>
                                         Pricing
                                       </Button>
                                     </Grid>
                                   </Grid>
                                 </CardActions>
-                              </Fragment>
+                            </Fragment>
                           </Card>
                         </Grid>
                       </Grid>
-                    </Grid>
+                  </Grid>
 
-                </Grid> {/* container, school-info ends*/}
+                </Grid>
+                {' '}
+                {/* container, school-info ends */}
 
               </Grid>
-            </Grid> {/* container, school-header ends */}
+            </Grid>
+                {' '}
+                {/* container, school-header ends */}
 
-            <Grid container className={classes.content}>
+                <Grid container className={classes.content}>
               <Grid item xs={12}>
                 <ClassTypeList
                   locationName={null}
                   mapView={false}
-                  filters={{schoolId: schoolId,limit:this.state.seeMoreCount}}
+                  filters={{ schoolId, limit: this.state.seeMoreCount }}
                   splitByCategory={false}
-                  classTypeBySchool='classTypeBySchool'
+                  classTypeBySchool="classTypeBySchool"
                   handleSeeMore={this.handleSeeMore}
                   classTimesData={this.props.classTimesData}
-                  schoolView={true}
+                  schoolView
                 />
+              </Grid>
             </Grid>
-            </Grid>
-            <Grid container className={classes.content}>
+                <Grid container className={classes.content}>
               <Grid ref={(el) => { this.schoolCalendar = el; }} item xs={12}>
                 <Card className={classes.content}>
-                  {/*<MyCalender {...this.props}/>*/
-                    <ManageMyCalendar schoolCalendar={true} {...this.props}/>
+                  {/* <MyCalender {...this.props}/> */
+                    <ManageMyCalendar schoolCalendar {...this.props} />
                   }
                 </Card>
               </Grid>
             </Grid>
-            <Grid container className={classes.content}>
+                <Grid container className={classes.content}>
               <Grid item xs={12}>
                 <Card className={classes.content}>
                   <div className="content-list-heading ">
-                    <h2 style={{textAlign: 'center'}}>Media
+                    <h2 style={{ textAlign: 'center' }}>
+Media
                       <figure>
-                        <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
-                      </figure>
+  <img style={{ maxWidth: '100%' }} src="/images/heading-line.png" />
+</figure>
                     </h2>
                   </div>
                   <MediaDetails
-                      schoolId={schoolId}
-                      schoolView= {true}
+                    schoolId={schoolId}
+                    schoolView
                   />
                 </Card>
               </Grid>
             </Grid>
-            <div ref={(el) => { this.schoolPrice = el; }}>
-                  <Grid container className={classes.content}>
-                    <Grid item xs={12} sm={12}>
+                <div ref={(el) => { this.schoolPrice = el; }}>
+              <Grid container className={classes.content}>
+                <Grid item xs={12} sm={12}>
                       <Card className={classes.content}>
                         <div className="content-list-heading ">
-                          <h2 style={{textAlign: 'center',paddingTop: 8}}>Prices
+                          <h2 style={{ textAlign: 'center', paddingTop: 8 }}>
+Prices
                             <figure>
-                              <img style={{maxWidth: "100%"}} src="/images/heading-line.png"/>
-                            </figure>
+  <img style={{ maxWidth: '100%' }} src="/images/heading-line.png" />
+</figure>
                           </h2>
                         </div>
-                        {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length ==0) ?
-                          <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-                            <Button onClick={this.handlePricingInfoRequestModal} color="primary"  dense raised>
+                        {(enrollmentFee && enrollmentFee.length == 0) && (classPricing && classPricing.length == 0) && (monthlyPricing && monthlyPricing.length == 0)
+                          ? (
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Button onClick={this.handlePricingInfoRequestModal} color="primary" dense raised>
                                 Request Pricing Info
                             </Button>
-                          </div> : ''
+                          </div>
+) : ''
                         }
                         <Grid container className={classes.themeSpacing}>
-                          {enrollmentFee && enrollmentFee.length > 0 ?
-                          <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#dddd'}}>
-                              <Typography align="center" type="headline" className={classes.themeSpacing}>
+                          {enrollmentFee && enrollmentFee.length > 0
+                            ? (
+<Grid item xs={12} sm={6} md={6} lg={4} style={{ backgroundColor: '#dddd' }}>
+                            <Typography align="center" type="headline" className={classes.themeSpacing}>
                                 Enrollment Fee
                               </Typography>
-                              <Grid container style={{display: 'inline-table'}}>
+                            <Grid container style={{ display: 'inline-table' }}>
                                 {
-                                  enrollmentFee && enrollmentFee.map((enrollmentFee, index)=> {
-                                    return (
+                                  enrollmentFee && enrollmentFee.map((enrollmentFee, index) => (
                                         <Grid key={index} item xs={12} md={8} sm={12}  style= {{height:'100%', maxWidth: '100%', boxShadow: 'none'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                           <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                           <Grid item xs={6} sm={6} className={classes.content}>
@@ -271,8 +317,8 @@ export default function() {
                                             <Typography component="p" style={{color: '#7f7f7f'}}>
                                               <b>Covers:</b> {
                                                 isArray(enrollmentFee.selectedClassType) ?
-                                                  enrollmentFee.selectedClassType.map((classType) => {
-                                                    return <span>{classType.name} </span>
+                                                  enrollmentFee.selectedClassType.map((classType,index) => {
+                                                    return <span key={index.toString()}>{classType.name} </span>
                                                   }) : "None"
                                               }
                                             </Typography>
@@ -292,21 +338,21 @@ export default function() {
                                           </Grid>
                                         </Card>
                                         </Grid>
-                                    )
-                                  })
+                                    ))
                                 }
                               </Grid>
-                          </Grid> : ''}
+                          </Grid>
+) : ''}
 
-                          {classPricing && classPricing.length > 0 ?
-                            <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: 'aliceblue'}}>
-                              <Typography align="center" type="headline" style={{color: '#7f7f7f'}} className={classes.themeSpacing}>
+                          {classPricing && classPricing.length > 0
+                            ? (
+<Grid item xs={12} sm={6} md={6} lg={4} style={{ backgroundColor: 'aliceblue' }}>
+                              <Typography align="center" type="headline" style={{ color: '#7f7f7f' }} className={classes.themeSpacing}>
                                 Class Packages
                               </Typography>
-                              <Grid container style={{display: 'inline-table'}}>
+                              <Grid container style={{ display: 'inline-table' }}>
                                 {
-                                  classPricing && classPricing.map((classPrice, index)=> {
-                                    return (
+                                  classPricing && classPricing.map((classPrice, index) => (
                                       <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
                                         <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} ${classes.roundPapers} price-card-container`}>
                                           <Grid item xs={6} sm={6} className={classes.content}>
@@ -319,8 +365,8 @@ export default function() {
                                             <Typography component="p" style={{color: '#7f7f7f'}}>
                                               <b>Covers:</b> {
                                                 isArray(classPrice.selectedClassType) ?
-                                                  classPrice.selectedClassType.map((classType) => {
-                                                    return <span>{classType.name} </span>
+                                                  classPrice.selectedClassType.map((classType,index) => {
+                                                    return <span key={index.toString()}>{classType.name} </span>
                                                   }) : "None"
                                               }
                                             </Typography>
@@ -338,70 +384,74 @@ export default function() {
                                           </Grid>
                                         </Card>
                                       </Grid>
-                                    )
-                                  })
+                                    ))
                                 }
 
                               </Grid>
-                            </Grid> :
-                            ''
+                            </Grid>
+)
+                            : ''
                           }
 
-                          {monthlyPricing && monthlyPricing.length > 0 ?
-                            <Grid item xs={12} sm={6} md={6} lg={4} style={{backgroundColor: '#fafafa'}} >
-                              <Typography align='justify' type="headline" className={classes.themeSpacing}>
+                          {monthlyPricing && monthlyPricing.length > 0
+                            ? (
+<Grid item xs={12} sm={6} md={6} lg={4} style={{ backgroundColor: '#fafafa' }}>
+                              <Typography align="justify" type="headline" className={classes.themeSpacing}>
                                 Monthly Packages
                               </Typography>
-                              <Grid container style={{display: 'inline-table'}}>
+                              <Grid container style={{ display: 'inline-table' }}>
                                 {
-                                  monthlyPricing && monthlyPricing.map((monthPrice, index)=> {
+                                  monthlyPricing && monthlyPricing.map((monthPrice, index) => {
                                     let paymentType = '';
-                                    if(monthPrice.pymtType) {
-                                      if(monthPrice.pymtType['autoWithDraw'] && monthPrice.pymtType['payAsYouGo']) {
+                                    if (monthPrice.pymtType) {
+                                      if (monthPrice.pymtType.autoWithDraw && monthPrice.pymtType.payAsYouGo) {
                                         paymentType += 'Automatic Withdrawal and Pay As You Go';
-                                      } else if(monthPrice.pymtType['autoWithDraw']) {
+                                      } else if (monthPrice.pymtType.autoWithDraw) {
                                         paymentType += 'Automatic Withdrawal';
-
-                                      } else if(monthPrice.pymtType['payAsYouGo']) {
+                                      } else if (monthPrice.pymtType.payAsYouGo) {
                                         paymentType += 'Pay As You Go';
-
-                                      } else if(monthPrice.pymtType['payUpFront']) {
+                                      } else if (monthPrice.pymtType.payUpFront) {
                                         paymentType += 'Pay Up Front';
                                       }
                                     }
                                     return (
-                                      <Grid key={index} item xs={12} md={8} sm={12} style={{maxWidth: '100%'}}>
-                                        <Card style= {{height:'100%',boxShadow: 'none',border: '1px solid rgb(217, 205, 205)'}} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
-                                            <Grid item xs={5} sm={5} className={classes.content}>
-                                                <Typography align='justify' type="title">
+                                      <Grid key={index} item xs={12} md={8} sm={12} style={{ maxWidth: '100%' }}>
+                                        <Card style={{ height: '100%', boxShadow: 'none', border: '1px solid rgb(217, 205, 205)' }} className={`${classes.card} price-card-container ${classes.roundPapers}`}>
+                                          <Grid item xs={5} sm={5} className={classes.content}>
+                                              <Typography align="justify" type="title">
                                                   {monthPrice.packageName}
                                                 </Typography>
-                                                <Typography component="p" style={{color: '#7f7f7f'}}>
-                                                  <b>Payment Method:</b> {monthPrice.pymtMethod}
+                                              <Typography component="p" style={{ color: '#7f7f7f' }}>
+                                                  <b>Payment Method:</b> 
+{' '}
+{monthPrice.pymtMethod}
                                                 </Typography>
-                                                {
+                                              {
                                                   monthPrice.pymtType && (
                                                     <Fragment>
-                                                      <Typography component="p" style={{color: '#7f7f7f'}}>
-                                                        <b>Payment Type:</b> {paymentType}
+                                                      <Typography component="p" style={{ color: '#7f7f7f' }}>
+                                                        <b>Payment Type:</b> 
+{' '}
+{paymentType}
                                                       </Typography>
                                                     </Fragment>
                                                   )
                                                 }
-                                                <Typography component="p" style={{color: '#7f7f7f'}}>
-                                                  <b>Covers:</b> {
+                                              <Typography component="p" style={{ color: '#7f7f7f' }}>
+                                                  <b>Covers:</b> 
+{' '}
+{
                                                     isArray(monthPrice.selectedClassType) ?
-                                                      monthPrice.selectedClassType.map((classType) => {
-                                                        return <span>{classType.name} </span>
+                                                      monthPrice.selectedClassType.map((classType,index) => {
+                                                        return <span key={index.toString()}>{classType.name} </span>
                                                       }) : "None"
                                                   }
                                                 </Typography>
                                             </Grid>
-                                            {
-                                              _.isEmpty(monthPrice.pymtDetails) ? "None" :
-                                              monthPrice.pymtDetails.map((payment) => {
-                                                return (
-                                                  <Grid item xs={4} sm={4}>
+                                          {
+                                              _.isEmpty(monthPrice.pymtDetails) ? 'None'
+                                              : monthPrice.pymtDetails.map((payment) => (
+                                                  <Grid item xs={4} sm={4} key={index.toString()}>
                                                     <Typography>
                                                       <Typography className={classes.dollarStyles}>
                                                       ${payment.cost}
@@ -410,30 +460,30 @@ export default function() {
                                                       </Typography>
                                                     </Typography>
                                                   </Grid>
-                                                )
-                                              })
+                                                ))
                                             }
-                                            <Grid item xs={3} sm={3} style={{textAlign: 'end',margin:'auto'}}>
-                                              <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, "MP", monthPrice._id, schoolId)} color="accent" style={{boxShadow: 'none'}} dense raised>
-                                                <i class="material-icons">add_shopping_cart</i>
+                                          <Grid item xs={3} sm={3} style={{ textAlign: 'end', margin: 'auto' }}>
+                                              <Button className={classes.purchaseBtn} onClick={this.handlePurcasePackage.bind(this, 'MP', monthPrice._id, schoolId)} color="accent" style={{ boxShadow: 'none' }} dense raised>
+                                                <i className="material-icons">add_shopping_cart</i>
                                               </Button>
                                             </Grid>
                                         </Card>
                                       </Grid>
-                                    )
+                                    );
                                   })
                                 }
                               </Grid>
-                            </Grid> :
-                            ''
+                            </Grid>
+)
+                            : ''
                           }
                         </Grid>
                       </Card>
                     </Grid>
-                  </Grid>
+              </Grid>
             </div>
 
-            {/*<div className="card">
+                {/* <div className="card">
               <div className="col-md-12 media-heading-box">
                 <div className="content-list-heading ">
                   <h2 className="tagline  text-center">Media
@@ -527,20 +577,10 @@ export default function() {
                   </div>
                 </div>
               </div>
-            </div>*/}
+            </div> */}
 
 
-
-
-
-
-
-
-
-
-
-
-            {/*<div className="row">
+                {/* <div className="row">
               <div className="card">
                   {
                     false && classPricing && classPricing.length > 0 && (
@@ -595,37 +635,30 @@ export default function() {
                                     )
                                 }
                             </div>
-                    </div>*/}
+                    </div> */}
 
-                    <div className="row">
-                <div className="col-sm-12">
+                <div className="row">
+              <div className="col-sm-12">
                         <div className="card">
-                        <div className="card-content">
-                        <div className="">
-                        <div className="thumb about-school-top">
-                                    <figure className="about-head-image">
-                          <div className="overlay-box"></div>
-                          {/*<img src={ schoolData.mainImage || defaultSchoolImage }/>*/}
-                        </figure>
-                        <div className="col-md-12">
+                    <div className="card-content">
+                            <div className="">
+                            <div className="thumb about-school-top">
+                            <figure className="about-head-image">
+                            <div className="overlay-box" />
+                            {/* <img src={ schoolData.mainImage || defaultSchoolImage }/> */}
+                          </figure>
+                            <div className="col-md-12" />
+                            <div className="col-md-12" />
 
-                         </div>
-                         <div className="col-md-12">
-
-
-
-                        </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card-footer">
-                        <div className="col-sm-12">
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                {/*<div className="col-sm-12">
+                          </div>
+                          </div>
+                          </div>
+                    <div className="card-footer">
+                            <div className="col-sm-12" />
+                          </div>
+                  </div>
+                      </div>
+              {/* <div className="col-sm-12">
                           <div className="clearfix card" >
                              <div className="col-sm-9">
                                <div className="">
@@ -665,8 +698,8 @@ export default function() {
                                </div>
                              </div>
                           </div>
-                        </div>*/}
-                {/*
+                        </div> */}
+              {/*
                     schoolData.descHtml && (
                         <div className="row  card">
                         <div className="col-md-12">
@@ -685,7 +718,7 @@ export default function() {
                     )
                 */
                 }
-                {/*<div className="row  card">
+              {/* <div className="row  card">
                           <div className="col-sm-12 text-left">
                             <div className="content-list-heading ">
                                <h2 className="text-center">{schoolData.name} offers the following class types
@@ -774,9 +807,9 @@ export default function() {
                             })
                           }
                           </div>
-                        </div>*/}
+                        </div> */}
 
-              {/*<div className="card col-sm-12">
+              {/* <div className="card col-sm-12">
                          {
                             monthlyPricing && monthlyPricing.length > 0 && (
                               <div className="col-md-12">
@@ -911,8 +944,8 @@ export default function() {
                               )
                             }
                           </div>
-                        </div>*/}
-              {/*<div className="card">
+                        </div> */}
+              {/* <div className="card">
                           <div className="col-md-12 media-heading-box">
                             <div className="content-list-heading ">
                               <h2 className="tagline  text-center">Media
@@ -1006,11 +1039,10 @@ export default function() {
                               </div>
                             </div>
                           </div>
-                        </div>*/}
-                    </div>
-                </div>
+                        </div> */}
             </div>
-            </DocumentTitle>
-        )
-    }
+              </div>
+              </div>
+          </DocumentTitle>
+  );
 }

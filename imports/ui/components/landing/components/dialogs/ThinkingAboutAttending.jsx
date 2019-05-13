@@ -219,7 +219,7 @@ class ThinkingAboutAttending extends React.Component {
           <DialogContent style={{ fontSize: '18px' }}>
           <TextWrapper> {!alreadyPurchased ? 'To attend you must purchase a class package.' : `Congratulations! You have ${packagesLength} subscription that will allow you to attend ${name} classes. `}</TextWrapper>
           {checkBoxes.map((i, index) => {
-              return (<FormControl fullWidth margin="dense">
+              return (<FormControl fullWidth margin="dense" key={index.toString()}>
                 <FormControlLabel
                   control={
                     <Checkbox

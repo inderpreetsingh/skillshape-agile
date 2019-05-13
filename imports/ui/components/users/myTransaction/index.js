@@ -299,7 +299,7 @@ class MyTransaction extends React.Component {
                     buttons: [{ label: 'Cancel', onClick: () => { }, greyColor: true }, { label: 'Go', onClick: () => { goToSchoolPage(schoolId, schoolSlug) } }]
                   }
                   return (
-                    <Fragment>
+                    <Fragment key={index.toString()}>
                       <SSTableRow key={index} selectable={false}>
                         <SSTableCell className="pd-normal" data-th={columnValues[0].columnName}>
                           {this.getColumnValue(transaction, 'userName') || "..."}

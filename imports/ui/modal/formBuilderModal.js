@@ -144,7 +144,7 @@ export class FormBuilderModal extends React.Component {
       let payload = {};
       let formFields = this.getFormFields()
       
-      for(formField of formFields) {
+      for(let formField of formFields) {
         
         switch(formField.type) {
 
@@ -245,7 +245,7 @@ export class FormBuilderModal extends React.Component {
           ref={field.key}
         >
           { 
-            field.defaultOption && <option disabled selected>{field.defaultOption}</option>
+            field.defaultOption && <option disabled defaultValue={field.options[0].value}>{field.defaultOption}</option>
           }
           { 
             field.options.map((option, i) => {

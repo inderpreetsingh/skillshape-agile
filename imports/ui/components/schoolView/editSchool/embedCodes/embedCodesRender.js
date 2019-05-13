@@ -29,7 +29,7 @@ export default function() {
             setting.id
           } src=${code} seamless="seamless" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;min-height:400px;"></iframe>`;
           return (
-            <Grid container>
+            <Grid container key={index.toString()}>
               <Grid item xs={12}>
                 <Card>
                   <CardContent>

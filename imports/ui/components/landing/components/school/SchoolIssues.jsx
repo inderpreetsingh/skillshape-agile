@@ -154,7 +154,7 @@ class SchoolIssues extends Component {
 
 				{this.props.issues &&
 					this.props.issues.map((issue, i) => (
-						<Element name={`solution-container-${i}`}>
+						<Element name={`solution-container-${i}`} key={i.toString()}>
 							<Wrapper
 								bgImage={issue.bgImage}
 								bgColor={issue.bgColor}

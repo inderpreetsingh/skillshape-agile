@@ -1,32 +1,20 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { browserHistory } from 'react-router';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
-
-import Icon from 'material-ui/Icon';
-import { withStyles } from 'material-ui/styles';
-import IconButton from 'material-ui/IconButton';
-
-import MyMultiSelect from '/imports/ui/components/landing/components/form/multiSelect/MyMultiSelect.jsx';
-import ListMultiSelect from '/imports/ui/components/landing/components/form/listMultiSelect/ListMultiSelect.jsx';
-import Grade from 'material-ui-icons/Grade';
-import Location from 'material-ui-icons/LocationOn';
 import MyLocation from 'material-ui-icons/MyLocation';
-import SearchIcon from 'material-ui-icons/Search';
 import { grey } from 'material-ui/colors';
-import SearchBarStyled from './SearchBarStyled.jsx';
-import IconInput from './form/IconInput.jsx';
-import MySearchBar from './MySearchBar.jsx';
-
-import NearByClassesButton from './buttons/NearByClassesButton';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import styled from 'styled-components';
 import PrimaryButton from './buttons/PrimaryButton';
-import FormGhostButton from './buttons/FormGhostButton';
 import SecondaryButton from './buttons/SecondaryButton';
+import * as helpers from './jss/helpers';
+import MySearchBar from './MySearchBar';
+import ListMultiSelect from '/imports/ui/components/landing/components/form/listMultiSelect/ListMultiSelect';
 
 
-import * as helpers from './jss/helpers.js';
 // import IconInput from './form/IconInput.jsx';
 
 const styles = {

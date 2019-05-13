@@ -133,10 +133,10 @@ class SchoolBox extends React.Component {
         <div>
             {callUsDialog && <CallUsDialogBox contactNumbers={[phone]} open={callUsDialog} onModalClose={() => this.setState({callUsDialog:false})} />}
             {emailUsDialog && <EmailUsDialogBox ourEmail={email} schoolData={schoolData} open={emailUsDialog} onModalClose={() => this.setState({emailUsDialog:false})} />}
-            {!isEmpty(schoolData) && schoolData.map((current)=>{
+            {!isEmpty(schoolData) && schoolData.map((current,index)=>{
             let src = get(current,'mainImageMedium',get(current,'mainImage',cardImgSrc))
             let subscriptionList = purchaseBySchoolId[current._id];
-            return   <div><Paper className={classes.root}>
+            return   <div key={index.toString()}><Paper className={classes.root}>
                 <Paper className={classes.schoolArea}>
                 <SchoolArea>
                 <ProgressiveImage 
