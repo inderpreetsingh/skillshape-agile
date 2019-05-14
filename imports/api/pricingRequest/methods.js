@@ -17,14 +17,12 @@ Meteor.methods({
       if(userData) {
         throw new Meteor.Error("user exists","user data already exists with this email account");
       }
-    }else if(this.userId) {
+    }else {
       const currentUser = Meteor.users.findOne({_id : this.userId});
       data.name = getUserFullName(currentUser);
       data.email = currentUser.emails[0].address;
       data.existingUser = true;
       data.userId = this.userId;
-    }else {
-      data.existingUser = false;
     }
 
     // Now we gonna validate the data..

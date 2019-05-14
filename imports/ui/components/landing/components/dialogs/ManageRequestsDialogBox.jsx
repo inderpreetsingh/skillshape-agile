@@ -214,7 +214,7 @@ class ManageRequestsDialogBox extends Component {
           });
         });
       }
-    } else if (this.state.readyToSubmit) {
+    } else  {
       this.handleRequest(text);
     }
   };

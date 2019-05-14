@@ -187,9 +187,9 @@ class LoginButton extends Component {
   };
 
   render() {
-    const { loginModal, error, isBusy } = this.state;
+    const { loginModal } = this.state;
     const {
-      icon, fullWidth, iconName, currentUser,
+      fullWidth, iconName, currentUser,
     } = this.props;
     return (
       <Fragment>

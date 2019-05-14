@@ -1,19 +1,17 @@
+import { isEmpty, size, uniq } from 'lodash';
+import { check } from 'meteor/check';
 import School from '../fields';
+import ClassPricing from '/imports/api/classPricing/fields';
+import ClassTimes from '/imports/api/classTimes/fields';
+import ClassType from '/imports/api/classType/fields';
+import EnrollmentFees from '/imports/api/enrollmentFee/fields';
+import Media from '/imports/api/media/fields.js';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
+import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields';
 import SkillCategory from '/imports/api/skillCategory/fields';
 import SkillSubject from '/imports/api/skillSubject/fields';
-import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields';
-import Media from '/imports/api/media/fields.js';
-import config from '/imports/config';
-import {
-  size, uniq, isEmpty, isArray,
-} from 'lodash';
-import { check } from 'meteor/check';
 import SLocation from '/imports/api/sLocation/fields';
-import ClassType from '/imports/api/classType/fields';
-import ClassPricing from '/imports/api/classPricing/fields';
-import MonthlyPricing from '/imports/api/monthlyPricing/fields';
-import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import ClassTimes from '/imports/api/classTimes/fields';
+import config from '/imports/config';
 
 
 Meteor.publish('UserSchool', function (schoolId) {

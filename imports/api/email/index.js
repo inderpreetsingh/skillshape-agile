@@ -717,7 +717,7 @@ export const errorBoundaryEmail = function ({
   url
 }) {
   let emails = ['naruto@ryaz.io', 'singhs.ishwer@gmail.com'];
-  emails.map((to) => {
+  emails.forEach((to) => {
     Email.send({
       to: to, //emailObj.to
       from: "Notices@SkillShape.com",

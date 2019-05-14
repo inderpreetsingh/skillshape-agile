@@ -116,7 +116,7 @@ class MyTransaction extends React.Component {
     if(schoolView && !isEmpty(schoolData)){
       if(isArray(schoolData) ){
         isDashboard = true;
-        schoolData.map((obj)=>{
+        schoolData.forEach((obj)=>{
           const {_id:value,name:label} = obj;
           schoolId.push(value);
           schoolOptions.push({label,value});

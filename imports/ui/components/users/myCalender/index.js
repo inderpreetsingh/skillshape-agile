@@ -5,20 +5,20 @@ import CloseIcon from 'material-ui-icons/Close';
 import UpdateClassTimeIcon from 'material-ui-icons/Update';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
-import React ,{lazy,Suspense}from "react";
-import { browserHistory, Link } from "react-router";
+import moment from "moment";
+import React, { lazy, Suspense } from "react";
+import { browserHistory } from "react-router";
 import styled from "styled-components";
-const  FullCalendarContainer  = lazy(()=>import("/imports/ui/componentHelpers/fullCalendar"));
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
+import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import SkillshapePopover from "/imports/ui/components/landing/components/popovers/SkillshapePopover";
+import { Loading } from '/imports/ui/loading';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ClassDetailModal from "/imports/ui/modal/classDetailModal";
-import { capitalizeString, getUserFullName } from '/imports/util';
-import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
-import { Loading } from '/imports/ui/loading';
-import moment from "moment";
-import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
+import { capitalizeString } from '/imports/util';
+const  FullCalendarContainer  = lazy(()=>import("/imports/ui/componentHelpers/fullCalendar"));
 const Div = styled.div`
     display: flex;
     width: 100%;
@@ -255,7 +255,7 @@ export default class MyCalender extends React.Component {
       if (condition <= 0) {
         condition = res;
       }
-      if (condition > 0 || res == undefined && !condition < 0 || !purchaseData) {
+      if (condition > 0 || res == undefined && !(condition < 0) || !purchaseData) {
         this.setState({ isLoading: true });
         Meteor.call("classes.updateClassData", filter, status, _id, packageType, (err, res) => {
           if (res) {

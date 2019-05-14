@@ -1,22 +1,18 @@
-import PropTypes from 'prop-types';
-import React, { Fragment } from 'react';
-import styled from 'styled-components';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { withPopUp, confirmationDialog, redirectToThisUrl } from '/imports/util';
+import { findKey, get, isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
-
-import Notification from '/imports/ui/components/landing/components/helpers/Notification.jsx';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import { isEmpty, findKey, get } from 'lodash';
-import { ContainerLoader } from '/imports/ui/loading/container';
+import React, { Fragment } from 'react';
+import ClassPricing from '/imports/api/classPricing/fields';
+import ClassTimes from '/imports/api/classTimes/fields';
+import ClassType from '/imports/api/classType/fields';
+import EnrollmentFees from '/imports/api/enrollmentFee/fields';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import School from '/imports/api/school/fields.js';
 import SLocation from '/imports/api/sLocation/fields';
-import ClassType from '/imports/api/classType/fields';
-import ClassPricing from '/imports/api/classPricing/fields';
-import MonthlyPricing from '/imports/api/monthlyPricing/fields';
-import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import ClassTimes from '/imports/api/classTimes/fields';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import { OnBoardingDialogBox } from '/imports/ui/components/landing/components/dialogs';
+import Notification from '/imports/ui/components/landing/components/helpers/Notification.jsx';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import { redirectToThisUrl, withPopUp } from '/imports/util';
 
 
 class CompletePrompt extends React.Component {
@@ -137,7 +133,7 @@ export default createContainer((props) => {
       }
     });
     if (isSchool) {
-      Object.values(itemListsData).map((item) => {
+      Object.values(itemListsData).forEach((item) => {
         if (!item) {
           hide = false;
         }

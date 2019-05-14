@@ -85,7 +85,7 @@ class SchoolViewBanner extends React.Component {
 	  <Grid item xs={12}  style={{paddingTop: 0}}>
 	  	{this.state.callUsDialog && <CallUsDialogBox contactNumbers={this.getContactNumbers()} open={this.state.callUsDialog} onModalClose={() => this.handleDialogState('callUsDialog',false)}/>}
 	    <CardMedia  className={classes.cardMedia} >
-	        {schoolData.mainImage && <div className={classes.imageContainer} style={{backgroundImage: `url(${ schoolData.mainImage || config.defaultSchoolImage })`}}> </div>}
+	         <div className={classes.imageContainer} style={{backgroundImage: `url(${ schoolData.mainImage || config.defaultSchoolImage })`}}> </div>
 	        <div className={classes.imageHeader}>
 	          {isEdit ?
 	            <Button raised dense color="accent" className={classes.bgEditButton1}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "mainImage"})}>
@@ -109,7 +109,7 @@ class SchoolViewBanner extends React.Component {
 	                <Grid item xs={12} sm={4} md={3}>
 	                    <div style={{height: '100%',textAlign: 'left'}}>
 	                      <div className={classes.imageLogoContainer}>
-	                          {schoolData.logoImg && <img className={classes.logo} src={ schoolData.logoImg || config.defaultSchoolLogo }/>}
+	                           <img className={classes.logo} src={ schoolData.logoImg || config.defaultSchoolLogo }/>
 	                      </div>
 	                      { isEdit &&
 	                        <Button raised dense color="accent" className={classes.logoEditButton}  onClick={() => this.setState({ showBackgroundUpload: true, imageType: "logoImg"})}>
