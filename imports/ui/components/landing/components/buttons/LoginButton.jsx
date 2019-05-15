@@ -222,13 +222,11 @@ class LoginButton extends Component {
 }
 
 LoginButton.propTypes = {
-  icon: PropTypes.bool,
   fullWidth: PropTypes.bool,
   iconName: PropTypes.string,
 };
 
 LoginButton.defaultProps = {
-  icon: false,
   fullWidth: false,
   iconName: 'fingerprint',
 };

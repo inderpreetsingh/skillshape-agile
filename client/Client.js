@@ -67,7 +67,7 @@ if (Meteor.isClient) {
     return '';
   };
   cutstring = function (name, len) {
-    if (!name || name === undefined) return name;
+    if (!name) return name;
 
     if (!len) len = 200;
 

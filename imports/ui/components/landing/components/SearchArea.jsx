@@ -295,7 +295,6 @@ const SearchInputsSection = props => (
             iconName="grid_on"
             label="List View"
             boxShadow
-            noMarginBottom
             onClick={props.onMapViewButtonClick}
           />
         ) : (
@@ -307,7 +306,6 @@ const SearchInputsSection = props => (
             iconName="map"
             label="Map View"
             boxShadow
-            noMarginBottom
             onClick={props.onMapViewButtonClick}
           />
         )}

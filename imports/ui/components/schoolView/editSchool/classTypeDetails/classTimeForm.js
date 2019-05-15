@@ -264,7 +264,6 @@ class ClassTimeForm extends React.Component {
       desc: this.desc.value,
       locationId: locationId,
       closed: this.state.closed,
-      locationId: this.state.locationId,
       roomId: this.state.roomId,
       instructors: this.state.instructors,
     };
@@ -622,7 +621,6 @@ class ClassTimeForm extends React.Component {
                       onSearchChange={this.handleSearchChange("teachersFilterWith")}
                       data={instructorsData}
                       entityType={"teachers"}
-                      searchedValue={this.state.teachersFilterWith}
                       onAddIconClick={this.handleAddInstructorDialogBoxState(true)}
                       popUp={popUp}
                       classTimeForm

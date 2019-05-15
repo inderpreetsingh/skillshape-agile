@@ -343,7 +343,6 @@ handleChange=(e)=>{
               </Grid>
               <Grid
                 item
-                item
                 sm={12}
                 xs={12}
                 md={12}

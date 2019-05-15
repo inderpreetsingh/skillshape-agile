@@ -269,7 +269,6 @@ const PackagesList = (props) => {
               packageType: 'EP',
               onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
               schoolId: props.schoolId,
-              usedFor: props.usedFor,
             }}
             packageListName="Enrollment Packages"
             packagesData={props.enrollMentPackagesData}

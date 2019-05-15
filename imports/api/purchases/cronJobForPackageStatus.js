@@ -72,7 +72,6 @@ SyncedCron.add({
       // make expired subscription in classSubscription collection
       // if the end date in past and cancel the subscription from stripe
       if (!isEmpty(activeSubscriptionData)) {
-        const canceledSubscriptionsIds = [];
         activeSubscriptionData.map((current, index) => {
           subscriptionId = current.subscriptionId;
           stripe.subscriptions.del(

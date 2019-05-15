@@ -27,9 +27,7 @@ import * as helpers from "/imports/ui/components/landing/components/jss/helpers.
 
 const styles = theme => {
   return {
-    dialogRoot: {
-      minHeight: 100
-    },
+   
     dialogTitleRoot: {
       padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
         3}px 0 ${helpers.rhythmDiv * 3}px`,
@@ -56,7 +54,9 @@ const styles = theme => {
       width: "100%",
     },
     dialogRoot: {
-      width: "100%"
+      width: "100%",
+      minHeight: 100
+
     },
     iconButton: {
       height: "auto",

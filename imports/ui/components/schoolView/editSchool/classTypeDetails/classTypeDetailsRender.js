@@ -1,13 +1,12 @@
-import React from "react";
+import React from 'react';
 import styled from 'styled-components';
 import ClassTypeExpansionRender from './classTypeExpansionRender';
 import UploadMedia from '/imports/ui/componentHelpers/schoolViewBanner/uploadMedia.js';
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx';
 import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-import ClassTimeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm.js";
-import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm.js";
-import { ContainerLoader } from "/imports/ui/loading/container";
-
+import ClassTimeForm from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm.js';
+import ClassTypeForm from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm.js';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 
 const Wrapper = styled.div`
@@ -24,7 +23,7 @@ export default function () {
     locationData,
     isLoading,
     isSaved,
-    handleIsSavedState
+    handleIsSavedState,
   } = this.props;
 
   const {
@@ -48,7 +47,8 @@ export default function () {
 
   return (
     <Wrapper>
-      {showBackgroundUpload && <UploadMedia
+      {showBackgroundUpload && (
+      <UploadMedia
         forClassType
         fullScreen={false}
         schoolId={schoolId}
@@ -57,8 +57,9 @@ export default function () {
         showCreateMediaModal={showBackgroundUpload}
         onChange={this.handleImageChange}
         onClose={this.handleImageUploadClose}
-        imageType={"mainImg"}
-      />}
+        imageType="mainImg"
+      />
+      )}
 
       {showConfirmationModal && (
         <SkillShapeDialogBox
@@ -80,14 +81,15 @@ export default function () {
           type="alert"
           defaultButtons
           title="Are you sure?"
-          content={"This will delete your data, are you sure?"}
+          content="This will delete your data, are you sure?"
           cancelBtnText="Cancel"
           onAffirmationButtonClick={this.handleDeleteData}
           onModalClose={this.closeDeleteConfirmationModal}
           onCloseButtonClick={this.closeDeleteConfirmationModal}
         />
       )}
-      {classTimeForm &&
+      {classTimeForm
+        && (
         <ClassTimeForm
           schoolId={schoolId}
           parentKey={selectedClassTypeId || (selectedClassTypeData && selectedClassTypeData._id)}
@@ -99,7 +101,8 @@ export default function () {
           locationData={locationData}
           isSaved={isSaved}
           handleIsSavedState={handleIsSavedState}
-        />}
+        />
+        )}
 
       {classTypeForm && (
         <ClassTypeForm
@@ -129,14 +132,13 @@ export default function () {
         onEditClassTimesClick={this.handleEditClassTimesClick}
         onEditClassTypeImageClick={this.handleEditImageClick}
         onImageSave={this.handleImageSave}
-        getClassTimesData={this.getClassTimesData}
         moveToNextTab={this.moveToNextTab}
         moveToPreviousTab={this.moveToPreviousTab}
-        /*completeClassTimesData={classTimesData}*/
+        /* completeClassTimesData={classTimesData} */
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
       />
 
-      {/*<PanelWithTable
+      {/* <PanelWithTable
         schoolId={schoolId}
         className="class-type-details"
         settings={classTypeSettings}
@@ -149,7 +151,7 @@ export default function () {
         showClassTypeModal={isEmpty(classTypeData)}
         moveToNextTab={this.moveToNextTab}
         moveToPreviousTab={this.moveToPreviousTab}
-      />*/}
+      /> */}
     </Wrapper>
   );
 }

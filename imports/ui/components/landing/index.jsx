@@ -463,15 +463,6 @@ class Landing extends Component {
       if (navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            const geolocate = new google.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude,
-            );
-            const latlng = new google.maps.LatLng(
-              position.coords.latitude,
-              position.coords.longitude,
-            );
-            const geocoder = new google.maps.Geocoder();
             positionCoords.push(
               position.coords.latitude || config.defaultLocation[0],
             );
@@ -547,10 +538,6 @@ class Landing extends Component {
     if (navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const geolocate = new google.maps.LatLng(
-            position.coords.latitude,
-            position.coords.longitude,
-          );
           const latlng = new google.maps.LatLng(
             position.coords.latitude,
             position.coords.longitude,
@@ -560,11 +547,9 @@ class Landing extends Component {
           coords[0] = position.coords.latitude || config.defaultLocation[0];
           coords[1] = position.coords.longitude || config.defaultLocation[1];
           geocoder.geocode({ latLng: latlng }, (results, status) => {
-            let sLocation = 'near by me';
             const oldFilters = { ...this.state.filters };
             if (status == google.maps.GeocoderStatus.OK) {
               if (results[0]) {
-                const place = results[0];
                 // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
                 // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
                 sLocation = results[0].formatted_address;
@@ -933,6 +918,8 @@ class Landing extends Component {
       // size without buttons..
       return 72;
     }
+
+
     return 0; // if no filter is applied
   };
 

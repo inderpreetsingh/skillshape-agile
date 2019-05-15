@@ -203,7 +203,6 @@ PrimaryButton.propTypes = {
   itemScope: PropTypes.bool,
   boxShadow: PropTypes.bool,
   itemType: PropTypes.string,
-  disabled: PropTypes.bool
 };
 
 PrimaryButton.defaultProps = {
