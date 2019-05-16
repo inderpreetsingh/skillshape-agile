@@ -56,18 +56,8 @@ class SchoolPriceView extends React.Component {
 
   componentDidUpdate() {
     // Get height of document
-    function getDocHeight(doc) {
-      doc = doc || document;
-      // from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
-      const { body } = doc;
-      const html = doc.documentElement;
-      const height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight,
-      );
+    function getDocHeight(data) {
+      const doc = data || document;
       return doc.getElementById('UserMainPanel').offsetHeight;
     }
     // send docHeight onload

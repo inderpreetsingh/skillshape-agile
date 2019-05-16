@@ -129,7 +129,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         emailId: user.emails[0].address,
         userName: user.profile.firstName || user.profile.name,
         packageName: desc,
-        stripeRequest: stripeRequest,
         createdOn: new Date(),
         packageId: packageId,
         packageType: packageType,

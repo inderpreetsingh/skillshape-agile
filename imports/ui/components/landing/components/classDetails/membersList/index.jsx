@@ -667,7 +667,6 @@ class MembersListContainer extends Component {
               onSearchChange={this.handleSearchChange("studentsFilterWith")}
               data={studentsData}
               entityType={"students"}
-              searchedValue={this.state.studentsFilterWith}
               classData={classData}
               popUp={popUp}
               instructorsIds={instructorsIds}

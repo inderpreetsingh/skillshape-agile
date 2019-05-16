@@ -1,21 +1,17 @@
-import React, { Fragment } from "react";
-import ReactDOM from "react-dom";
-import ImageGallery from "react-image-gallery";
-import Button from "material-ui/Button";
-import ModeEditIcon from "material-ui-icons/ModeEdit";
-import DeleteIcon from "material-ui-icons/Delete";
-import Multiselect from "react-widgets/lib/Multiselect";
-import Icon from "material-ui/Icon";
+import DeleteIcon from 'material-ui-icons/Delete';
+import ModeEditIcon from 'material-ui-icons/ModeEdit';
+import Button from 'material-ui/Button';
+import React from 'react';
+import ImageGallery from 'react-image-gallery';
+import 'react-image-gallery/styles/css/image-gallery.css';
+import './gallery.css';
+import EditTaggedMemberDialogBox from '/imports/ui/components/landing/components/dialogs/EditTaggedMemberDialogBox.js';
+import TaggedMemberDialogBox from '/imports/ui/components/landing/components/dialogs/TaggedMemberDialogBox.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
+import ConfirmationModal from '/imports/ui/modal/confirmationModal';
+import { withStyles } from '/imports/util';
 
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import TaggedMemberDialogBox from "/imports/ui/components/landing/components/dialogs/TaggedMemberDialogBox.js";
-import EditTaggedMemberDialogBox from "/imports/ui/components/landing/components/dialogs/EditTaggedMemberDialogBox.js";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { withStyles } from "/imports/util";
-import "./gallery.css";
-const PREFIX_URL =
-  "https://raw.githubusercontent.com/xiaolin/react-image-gallery/master/static/";
-import "react-image-gallery/styles/css/image-gallery.css";
+
 class ImageGalleryView extends React.Component {
   constructor() {
     super();
@@ -32,8 +28,8 @@ class ImageGalleryView extends React.Component {
       showNav: true,
       slideDuration: 450,
       slideInterval: 2000,
-      thumbnailPosition: "bottom",
-      showVideo: {}
+      thumbnailPosition: 'bottom',
+      showVideo: {},
     };
 
     // this.images = [
@@ -56,30 +52,31 @@ class ImageGalleryView extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      this.state.slideInterval !== prevState.slideInterval ||
-      this.state.slideDuration !== prevState.slideDuration
+      this.state.slideInterval !== prevState.slideInterval
+      || this.state.slideDuration !== prevState.slideDuration
     ) {
       // refresh setInterval
       this._imageGallery.pause();
       this._imageGallery.play();
     }
   }
-  _renderCustomControls = events => {
+
+  _renderCustomControls = (events) => {
     if (this.props.showEditButton) {
       return (
         <div
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 5,
-            top: "3%",
-            left: "3%",
-            display: "flex"
+            top: '3%',
+            left: '3%',
+            display: 'flex',
           }}
         >
           <Button
-            onClick={e => {
+            onClick={(e) => {
               this.props.openEditMediaForm(
-                this.props.images[this._imageGallery.getCurrentIndex()]["media"]
+                this.props.images[this._imageGallery.getCurrentIndex()].media,
               );
             }}
             fab
@@ -106,28 +103,27 @@ class ImageGalleryView extends React.Component {
       return (
         <div
           style={{
-            position: "absolute",
+            position: 'absolute',
             zIndex: 5,
-            top: "3%",
-            left: "3%",
-            display: "flex"
+            top: '3%',
+            left: '3%',
+            display: 'flex',
           }}
         >
           <i
             onClick={this.showTaggedMemberInfo}
-            style={{ display: this.state.showListOfMembers ? "none" : "block" }}
+            style={{ display: this.state.showListOfMembers ? 'none' : 'block' }}
             className="material-icons"
-            style={{ display: "block" }}
           >
             info
           </i>
         </div>
       );
     }
-    return;
   };
+
   _onImageClick(event) {
-    
+
   }
 
   _onImageLoad(event) {
@@ -187,9 +183,9 @@ class ImageGalleryView extends React.Component {
   }
 
   _toggleShowVideo(url) {
-    this.state.showVideo[url] = !Boolean(this.state.showVideo[url]);
+    this.state.showVideo[url] = !this.state.showVideo[url];
     this.setState({
-      showVideo: this.state.showVideo
+      showVideo: this.state.showVideo,
     });
 
     if (this.state.showVideo[url]) {
@@ -212,14 +208,14 @@ class ImageGalleryView extends React.Component {
               className="close-video"
               onClick={this._toggleShowVideo.bind(this, item.embedUrl)}
             />
-            {/*<iframe
+            {/* <iframe
                   width='560'
                   height='315'
                   src={item.embedUrl}
                   frameBorder='0'
                   allowFullScreen
                 >
-                </iframe>*/}
+                </iframe> */}
           </div>
         ) : (
           <a onClick={this._toggleShowVideo.bind(this, item.embedUrl)}>
@@ -228,7 +224,7 @@ class ImageGalleryView extends React.Component {
             {item.description && (
               <span
                 className="image-gallery-description"
-                style={{ right: "0", left: "initial" }}
+                style={{ right: '0', left: 'initial' }}
               >
                 {item.description}
               </span>
@@ -238,27 +234,31 @@ class ImageGalleryView extends React.Component {
       </div>
     );
   }
+
   showConfirmationModal = () => this.setState({ showConfirmationModal: true });
-  cancelConfirmationModal = () =>
-    this.setState({ showConfirmationModal: false });
+
+  cancelConfirmationModal = () => this.setState({ showConfirmationModal: false });
+
   showTaggedMemberInfo = () => {
     // const taggedMemberDetails = this.props.images[this._imageGallery.getCurrentIndex()]['media'];
     this.setState({
       showListOfMembers: true,
-      schoolData: this.props.schoolData
+      schoolData: this.props.schoolData,
     });
   };
+
   handleTagPhoto = () => {};
 
   openEditTaggedModal = () => {
     this.setState({
       openEditTaggedModal: true,
-      showListOfMembers: false
+      showListOfMembers: false,
     });
   };
+
   render() {
     return (
-      <div style={{ position: "relative" }}>
+      <div style={{ position: 'relative' }}>
         {this.state.showConfirmationModal && (
           <ConfirmationModal
             open={this.state.showConfirmationModal}
@@ -267,7 +267,7 @@ class ImageGalleryView extends React.Component {
             message="This will permanently delete this media. Are you sure? "
             onSubmit={() => {
               this.props.onDelete(
-                this.props.images[this._imageGallery.getCurrentIndex()]["media"]
+                this.props.images[this._imageGallery.getCurrentIndex()].media,
               );
               this.setState({ showConfirmationModal: false });
             }}
@@ -279,7 +279,7 @@ class ImageGalleryView extends React.Component {
             open={this.state.showListOfMembers}
             onModalClose={() => this.setState({ showListOfMembers: false })}
             currentMediaData={
-             this.props.images? this.props.images[this._imageGallery.getCurrentIndex()]["media"] :''
+             this.props.images ? this.props.images[this._imageGallery.getCurrentIndex()].media : ''
             }
             openEditTaggedModal={this.openEditTaggedModal}
             schoolData={this.state.schoolData}
@@ -292,7 +292,7 @@ class ImageGalleryView extends React.Component {
             onModalClose={() => this.setState({ openEditTaggedModal: false })}
             openEditTaggedModal={this.openEditTaggedModal}
             currentMediaData={
-              this.props.images? this.props.images[this._imageGallery.getCurrentIndex()]["media"] :''
+              this.props.images ? this.props.images[this._imageGallery.getCurrentIndex()].media : ''
             }
             memberInfo={this.props.memberInfo}
           />
@@ -312,8 +312,8 @@ class ImageGalleryView extends React.Component {
           infinite={this.state.infinite}
           showBullets={this.state.showBullets}
           showFullscreenButton={
-            this.state.showFullscreenButton &&
-            this.state.showGalleryFullscreenButton
+            this.state.showFullscreenButton
+            && this.state.showGalleryFullscreenButton
           }
           showPlayButton={
             this.state.showPlayButton && this.state.showGalleryPlayButton
@@ -333,17 +333,17 @@ class ImageGalleryView extends React.Component {
 }
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
   },
   infoButton: {
-    display: "block",
-    padding: "0",
-    minWidth: "47px",
+    display: 'block',
+    padding: '0',
+    minWidth: '47px',
     boxShadow:
-      "0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)",
-    borderRadius: "50%",
+      '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)',
+    borderRadius: '50%',
     margin: theme.spacing.unit,
-    background: "#03a9f4"
-  }
+    background: '#03a9f4',
+  },
 });
 export default withStyles(styles)(ImageGalleryView);

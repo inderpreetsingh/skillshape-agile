@@ -1,50 +1,21 @@
-import React, { Fragment } from "react";
-import styled from "styled-components";
-import SelectArrayInput from "/imports/startup/client/material-ui-chip-input/selectArrayInput";
-import methods from "/imports/ui/modal/formBuilderMethods";
-import ChildTable from "./childTable";
-import { cutString } from "/imports/util";
-import Collapse from "material-ui/transitions/Collapse";
-import Icon from "material-ui/Icon";
-import Avatar from "material-ui/Avatar";
-import IconButton from "material-ui/IconButton";
-import red from "material-ui/colors/red";
-import ShareIcon from "material-ui-icons/Share";
-import ExpandMoreIcon from "material-ui-icons/ExpandMore";
-import MoreVertIcon from "material-ui-icons/MoreVert";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import Typography from "material-ui/Typography";
-import Paper from "material-ui/Paper";
-import Grid from "material-ui/Grid";
-import Add from "material-ui-icons/Add";
-import Edit from "material-ui-icons/Edit";
-import Delete from "material-ui-icons/Delete";
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  ExpansionPanelActions
-} from "material-ui/ExpansionPanel";
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import Button from 'material-ui/Button';
 // import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import Chip from "material-ui/Chip";
-import Divider from "material-ui/Divider";
-import Button from "material-ui/Button";
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
-} from "material-ui/Dialog";
-import MapComponent from "./mapComponent";
-import MediaUpload from "/imports/ui/componentHelpers/mediaUpload";
-import Card, { CardActions, CardContent } from "material-ui/Card";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import {
-  rhythmDiv,
-  mobile,
-  tablet
-} from "/imports/ui/components/landing/components/jss/helpers.js";
+import Chip from 'material-ui/Chip';
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
+import Grid from 'material-ui/Grid';
+import Icon from 'material-ui/Icon';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
+import ChildTable from './childTable';
+import MapComponent from './mapComponent';
+import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx';
+import { rhythmDiv, tablet } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { ContainerLoader } from '/imports/ui/loading/container.js';
 
 const ButtonsWrapper = styled.div`
   display: flex;
@@ -59,7 +30,7 @@ const ButtonsWrapper = styled.div`
 const ButtonWrapper = styled.div`
   margin-top: ${rhythmDiv * 2}px;
   margin-right: ${rhythmDiv * 2}px;
-  // ${props => (props.left ? `margin-right: ${rhythmDiv * 2}px;` : "")};
+  // ${props => (props.left ? `margin-right: ${rhythmDiv * 2}px;` : '')};
 `;
 
 export default function () {
@@ -69,7 +40,7 @@ export default function () {
     settings,
     mainTableData,
     schoolId,
-    fullScreen
+    fullScreen,
   } = this.props;
   const FormComponent = settings.mainPanelHeader.actions.component;
   // const EditForm = settings.mainTable.actions.edit.component;
@@ -80,7 +51,7 @@ export default function () {
   return (
     <div className={`${className} panel-table`}>
       {this.state.isBusy && <ContainerLoader />}
-      {/*this.state.showConfirmationModal && (
+      {/* this.state.showConfirmationModal && (
         <ConfirmationModal
           open={this.state.showConfirmationModal}
           submitBtnLabel="Yes"
@@ -91,7 +62,7 @@ export default function () {
           }}
           onClose={this.cancelConfirmationModal}
         />
-      )*/}
+      ) */}
       {this.state.showConfirmationModal && (
         <SkillShapeDialogBox
           open={this.state.showConfirmationModal}
@@ -114,8 +85,8 @@ export default function () {
           defaultButtons
           title="Are you sure?"
           content={
-            settings.mainTable.actions.del.dialogBoxContent ||
-            "This will delete your data, are you sure?"
+            settings.mainTable.actions.del.dialogBoxContent
+            || 'This will delete your data, are you sure?'
           }
           cancelBtnText="Cancel"
           onAffirmationButtonClick={this.handleDeleteData}
@@ -138,34 +109,34 @@ export default function () {
       <Paper elevation={1}>
         <Grid container className={classes.classtypeHeader}>
           <Grid
-            style={{ display: "inline-flex", alignItems: "center", padding: 0 }}
+            style={{ display: 'inline-flex', alignItems: 'center', padding: 0 }}
             item
             md={2}
             sm={3}
             xs={12}
           >
-            <div style={{ display: "inline-flex" }}>
+            <div style={{ display: 'inline-flex' }}>
               <Icon
                 className="material-icons"
-                style={{ marginRight: 5, lineHeight: "45px" }}
+                style={{ marginRight: 5, lineHeight: '45px' }}
               >
                 {settings.mainPanelHeader.leftIcon}
               </Icon>
               <Typography
-                style={{ lineHeight: "45px" }}
+                style={{ lineHeight: '45px' }}
                 className={classes.headerText}
               >
-                {settings.mainPanelHeader.title || "teeeeeee"}
+                {settings.mainPanelHeader.title || 'teeeeeee'}
               </Typography>
             </div>
           </Grid>
-          <Grid style={{ margin: "10px 0" }} item sm={6} md={8} xs={12}>
+          <Grid style={{ margin: '10px 0' }} item sm={6} md={8} xs={12}>
             <Typography className={classes.headerText} type="caption">
-              {settings.mainPanelHeader.notes || ""}
+              {settings.mainPanelHeader.notes || ''}
             </Typography>
           </Grid>
           <Grid
-            style={{ display: "inline-flex", alignItems: "center" }}
+            style={{ display: 'inline-flex', alignItems: 'center' }}
             item
             sm={3}
             md={2}
@@ -182,34 +153,32 @@ export default function () {
         </Grid>
       </Paper>
       <div className={classes.expansionPanelContainer}>
-        {_.isArray(mainTableData) &&
-          mainTableData.map((tableData, index) => {
+        {_.isArray(mainTableData)
+          && mainTableData.map((tableData, index) => {
             // console.log("tableData -->>",tableData);
-            let childTableData =
-              this.props.getChildTableData &&
-              this.props.getChildTableData(tableData);
+            const childTableData = this.props.getChildTableData
+              && this.props.getChildTableData(tableData);
             // console.log("childTableData -->>",childTableData);
             return (
               <ExpansionPanel
-                key={tableData._id}
                 className={classes.expansionPanel}
                 key={index}
                 defaultExpanded={
-                  index == 0 || 
-                  this.state.expansionPanelDefaultOpen ||
-                  (this.state.showClassTimeFormModal &&
-                    this.state.showClassTimeFormModal[tableData._id])
+                  index == 0
+                  || this.state.expansionPanelDefaultOpen
+                  || (this.state.showClassTimeFormModal
+                    && this.state.showClassTimeFormModal[tableData._id])
                 }
               >
                 <ExpansionPanelSummary
-                  style={{ boxShadow: "0 1px 0 rgba(0,0,0,.1)" }}
+                  style={{ boxShadow: '0 1px 0 rgba(0,0,0,.1)' }}
                   expandIcon={<ExpandMoreIcon />}
                 >
                   <div style={{ marginLeft: 15 }}>
                     <Typography className={classes.secondaryHeading}>
                       {this.getExpansionPanelTitle(
                         tableData,
-                        settings.mainPanelHeader.titleKey
+                        settings.mainPanelHeader.titleKey,
                       )}
                     </Typography>
                   </div>
@@ -223,11 +192,10 @@ export default function () {
                         changes. Please do not abuse this button.
                       </Typography>
                       <Button
-                        onClick={() =>
-                          this.handleNotifyClassTypeUpdate(
-                            tableData,
-                            "classType.notifyToStudentForClassTimes"
-                          )
+                        onClick={() => this.handleNotifyClassTypeUpdate(
+                          tableData,
+                          'classType.notifyToStudentForClassTimes',
+                        )
                         }
                         color="accent"
                         raised
@@ -243,11 +211,10 @@ export default function () {
                         changes. Please do not abuse this button.
                       </Typography>
                       <Button
-                        onClick={() =>
-                          this.handleNotifyClassTypeUpdate(
-                            tableData,
-                            "classType.notifyToStudentForLocation"
-                          )
+                        onClick={() => this.handleNotifyClassTypeUpdate(
+                          tableData,
+                          'classType.notifyToStudentForLocation',
+                        )
                         }
                         color="accent"
                         raised
@@ -264,14 +231,14 @@ export default function () {
                     <Grid
                       item
                       md={
-                        settings.mainPanelHeader.showImageUpload ||
-                          settings.mainPanelHeader.showAddressOnMap
+                        settings.mainPanelHeader.showImageUpload
+                          || settings.mainPanelHeader.showAddressOnMap
                           ? 8
                           : 12
                       }
                       sm={
-                        settings.mainPanelHeader.showImageUpload ||
-                          settings.mainPanelHeader.showAddressOnMap
+                        settings.mainPanelHeader.showImageUpload
+                          || settings.mainPanelHeader.showAddressOnMap
                           ? 6
                           : 12
                       }
@@ -282,11 +249,11 @@ export default function () {
                           container
                           className={classes.classtypeInputContainer}
                         >
-                          {settings.mainTable &&
-                            settings.mainTable.tableFields.map(
-                              (field, index) => {
+                          {settings.mainTable
+                            && settings.mainTable.tableFields.map(
+                              (field, index) =>
                                 // console.log("test1 Name -->>",test1);
-                                return (
+                                (
                                   <Fragment key={index}>
                                     <Grid
                                       item
@@ -294,7 +261,11 @@ export default function () {
                                       sm={field.labelSm ? field.labelSm : 12}
                                       md={field.lableMd ? field.lableMd : 3}
                                     >
-                                      <div> {field.label} </div>
+                                      <div>
+                                        {' '}
+                                        {field.label}
+                                        {' '}
+                                      </div>
                                     </Grid>
                                     <Grid
                                       item
@@ -305,46 +276,44 @@ export default function () {
                                       <div
                                         style={{
                                           minHeight: 31,
-                                          marginTop: 5
+                                          marginTop: 5,
                                         }}
                                         className={classes.inputDisableBox}
                                       >
                                         {field.chipInput ? (
                                           <div
                                             style={{
-                                              display: "inline-flex",
-                                              flexWrap: "wrap"
+                                              display: 'inline-flex',
+                                              flexWrap: 'wrap',
                                             }}
                                           >
-                                            {tableData[field.key] &&
-                                              tableData[field.key].map(
-                                                (chipData, index) => {
-                                                  return (
-                                                    <Chip
-                                                      key={index}
-                                                      style={{ marginRight: 5 }}
-                                                      label={
+                                            {tableData[field.key]
+                                              && tableData[field.key].map(
+                                                (chipData, index) => (
+                                                  <Chip
+                                                    key={index}
+                                                    style={{ marginRight: 5 }}
+                                                    label={
                                                         chipData[field.childKey]
                                                       }
-                                                      className={classes.chip}
-                                                    />
-                                                  );
-                                                }
+                                                    className={classes.chip}
+                                                  />
+                                                ),
                                               )}
                                           </div>
                                         ) : (
-                                            <span>
-                                              {this.displayFieldValue(
-                                                field,
-                                                tableData
-                                              )}
-                                            </span>
-                                          )}
+                                          <span>
+                                            {this.displayFieldValue(
+                                              field,
+                                              tableData,
+                                            )}
+                                          </span>
+                                        )}
                                       </div>
                                     </Grid>
                                   </Fragment>
-                                );
-                              }
+                                )
+                              ,
                             )}
                         </Grid>
                         <ButtonsWrapper>
@@ -370,12 +339,10 @@ export default function () {
                               <FormGhostButton
                                 alertColor
                                 onClick={() => {
-                                  this.setState(state => {
-                                    return {
-                                      ...state,
-                                      formData: tableData
-                                    };
-                                  });
+                                  this.setState(state => ({
+                                    ...state,
+                                    formData: tableData,
+                                  }));
                                   this.showDeleteConfirmationModal();
                                 }}
                                 label={settings.mainTable.actions.del.title}
@@ -399,11 +366,10 @@ export default function () {
                               {settings.mainTable.actions.edit.title}
                             </Button> */}
                             <FormGhostButton
-                              onClick={() =>
-                                this.setState({
-                                  showForm: true,
-                                  formData: tableData
-                                })
+                              onClick={() => this.setState({
+                                showForm: true,
+                                formData: tableData,
+                              })
                               }
                               label={settings.mainTable.actions.edit.title}
 
@@ -438,7 +404,7 @@ export default function () {
                           data={
                             tableData && {
                               file: tableData.classTypeImg,
-                              isUrl: true
+                              isUrl: true,
                             }
                           }
                           showVideoOption={false}
@@ -458,22 +424,20 @@ export default function () {
                         >
                           Save
                         </Button> */}
-                        <div style={{marginLeft:'28%'}}>
-                        <FormGhostButton
-                          onClick={() =>
-                            this.props.handleImageSave(
+                        <div style={{ marginLeft: '28%' }}>
+                          <FormGhostButton
+                            onClick={() => this.props.handleImageSave(
                               tableData.schoolId,
-                              tableData._id
+                              tableData._id,
                             )
                           }
-                          label="Save"
-                          
-                        />
+                            label="Save"
+                          />
                         </div>
                       </Grid>
                     )}
-                    {(settings.childTable ||
-                      this.state.MainTableHandleSubmit) && (
+                    {(settings.childTable
+                      || this.state.MainTableHandleSubmit) && (
                         <Grid
                           className={classes.classtypeInputContainer}
                           item
@@ -488,8 +452,8 @@ export default function () {
                             childTableData={childTableData}
                             parentKey={tableData._id}
                             showClassTimeFormModal={
-                              this.state.showClassTimeFormModal &&
-                              this.state.showClassTimeFormModal[tableData._id]
+                              this.state.showClassTimeFormModal
+                              && this.state.showClassTimeFormModal[tableData._id]
                             }
                             parentData={tableData}
                             updateParentProps={this.updateParentProps}
@@ -503,15 +467,15 @@ export default function () {
                             handleIsSavedState={this.props.handleIsSavedState}
                           />
                         </Grid>
-                      )}
+                    )}
                   </Grid>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             );
           })}
 
-        {settings.childTable.title == "Class Times" && (
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {settings.childTable.title == 'Class Times' && (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
               onClick={() => {
                 this.props.moveToPreviousTab();

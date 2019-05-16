@@ -53,7 +53,6 @@ const textFieldStyles = {
     },
     cssFocused: {
         transform: `translate(0, -12.5px)`,
-        transform: `scale(0.75)`
     }
 }
 

@@ -565,7 +565,7 @@ class ClassDetailModal extends React.Component {
                 </Grid> */}
                 <Grid item xs={6} classes={{ typeItem: classes.gridItem }}>
                   <div className={classes.iconWithDetailContainer}>
-                    <div className="circle-icon" className={classes.iconStyle}>
+                    <div  className={classes.iconStyle}>
                       <Icon className="material-icons" color="primary">
                         date_range
                       </Icon>
@@ -580,7 +580,7 @@ class ClassDetailModal extends React.Component {
                 </Grid>
                 <Grid item xs={6}>
                   <div className={classes.iconWithDetailContainer}>
-                    <div className="circle-icon" className={classes.iconStyle}>
+                    <div  className={classes.iconStyle}>
                       <Icon className="material-icons" color="primary">
                         av_timer
                       </Icon>
@@ -716,7 +716,6 @@ class ClassDetailModal extends React.Component {
                         }
                       >
                         <div
-                          className="circle-icon"
                           className={classes.iconStyle}
                         >
                           <Icon className="material-icons" color="primary">
@@ -758,7 +757,6 @@ class ClassDetailModal extends React.Component {
                       location.address && (
                         <div className={classes.iconWithDetailContainer}>
                           <div
-                            className="circle-icon"
                             className={classes.iconStyle}
                           >
                             <Icon className="material-icons" color="primary">

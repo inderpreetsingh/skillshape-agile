@@ -1,9 +1,8 @@
 import React from 'react';
 import Slider from 'react-slick';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+
 
 const OuterWrapper = styled.div`
   padding-right: ${props => props.padding}px;
@@ -57,67 +56,68 @@ const SliderRightArrow = Arrow.extend`
 `;
 
 
-const SliderNextArrow = (props) => <SliderRightArrow {...props} onClick={props.onClick} className={props.className} > {">"} </SliderRightArrow>
-const SliderPreviousArrow = (props) => (<SliderLeftArrow {...props} onClick={props.onClick} className={props.className}>{"<"}</SliderLeftArrow>)
+const SliderNextArrow = props => (
+  <SliderRightArrow {...props} onClick={props.onClick} className={props.className}>
+    {' '}
+    {'>'}
+    {' '}
+  </SliderRightArrow>
+);
+const SliderPreviousArrow = props => (<SliderLeftArrow {...props} onClick={props.onClick} className={props.className}>{'<'}</SliderLeftArrow>);
 
-const defaultPaging = (i) => <button>{i + 1}</button>
+const defaultPaging = i => <button>{i + 1}</button>;
 
-const withSlider = (WrappedComponent,sliderConfig,sliderBreakPoints) => (props) => {
+const withSlider = (WrappedComponent, sliderConfig, sliderBreakPoints) => (props) => {
   // debugger;
   const breakPoints = {
     mobile: (sliderBreakPoints && sliderBreakPoints.mobile) || helpers.mobile,
-    tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet
-  }
+    tablet: (sliderBreakPoints && sliderBreakPoints.tablet) || helpers.tablet,
+  };
   let autoplay = true;
 
-  if(sliderConfig.autoplay !== 'undefined') {
+  if (sliderConfig.autoplay !== 'undefined') {
     autoplay = sliderConfig.autoplay;
   }
 
   const settings = {
     dots: sliderConfig.dots || true,
     dotsClass: sliderConfig.dotsClass || 'slick-dots',
-    customPaging: sliderConfig.customPaging ?  sliderConfig.customPaging : defaultPaging,
+    customPaging: sliderConfig.customPaging ? sliderConfig.customPaging : defaultPaging,
     variableWidth: sliderConfig.variableWidth || false,
     infinite: true,
     speed: sliderConfig.speed || 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: sliderConfig.arrows || false,
-    autoplay: autoplay,
-    infinite: true,
+    autoplay,
     nextArrow: <SliderNextArrow />,
     prevArrow: <SliderPreviousArrow />,
     beforeChange: (current, next) => {
-      const {sliderProps} = props;
-      if(sliderProps&& sliderProps.onBeforeSlideChange)
-        sliderProps.onBeforeSlideChange(next);
+      const { sliderProps } = props;
+      if (sliderProps && sliderProps.onBeforeSlideChange) { sliderProps.onBeforeSlideChange(next); }
     },
     afterChange: (index) => {
-      const {sliderProps} = props;
-      if(sliderProps && sliderProps.onAfterSlideChange)
-        sliderProps.onAfterSlideChange(index);
+      const { sliderProps } = props;
+      if (sliderProps && sliderProps.onAfterSlideChange) { sliderProps.onAfterSlideChange(index); }
     },
     slidesToShow: sliderConfig.desktop,
-    responsive: [{ breakpoint: breakPoints.mobile, settings: { slidesToShow: sliderConfig.mobile } }, { breakpoint: breakPoints.tablet, settings: { slidesToShow: sliderConfig.tablet }}]
+    responsive: [{ breakpoint: breakPoints.mobile, settings: { slidesToShow: sliderConfig.mobile } }, { breakpoint: breakPoints.tablet, settings: { slidesToShow: sliderConfig.tablet } }],
   };
 
   const { componentProps } = props;
   return (
     <Container>
       <Slider {...settings}>
-      {props.data && props.data.map((obj,i) => {
-        return (
+        {props.data && props.data.map((obj, i) => (
           <OuterWrapper padding={props.padding} paddingLeft={props.paddingLeft} key={obj._id || i}>
-            <Wrapper >
-              <WrappedComponent {...obj} {...componentProps}/>
+            <Wrapper>
+              <WrappedComponent {...obj} {...componentProps} />
             </Wrapper>
           </OuterWrapper>
-        );
-      })}
+        ))}
       </Slider>
     </Container>
-  )
-}
+  );
+};
 
 export default withSlider;

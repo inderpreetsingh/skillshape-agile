@@ -1,34 +1,27 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
 import get from "lodash/get";
-import styled from "styled-components";
-import Grid from "material-ui/Grid";
+import Dialog, { withMobileDialog } from "material-ui/Dialog";
 import { FormControl } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
+import Select from "material-ui/Select";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
 // import Button from 'material-ui/Button';
 import TextField from "material-ui/TextField";
 import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
-import Input, { InputLabel } from "material-ui/Input";
-import Select from "material-ui/Select";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 import Multiselect from "react-widgets/lib/Multiselect";
-import { MenuItem } from "material-ui/Menu";
-
+import styled from "styled-components";
+import PrimaryButton from "../buttons/PrimaryButton.jsx";
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
-import PrimaryButton from "../buttons/PrimaryButton.jsx";
 import ClassType from "/imports/api/classType/fields";
+import { ContainerLoader } from "/imports/ui/loading/container";
 import { toastrModal } from "/imports/util";
 
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
 
-import { ContainerLoader } from "/imports/ui/loading/container";
+
 
 const styles = {
   dialogPaper: {
@@ -45,7 +38,6 @@ class EditMemberDialogBox extends Component {
     super(props);
     const { memberInfo } = this.props;
     this.state = {
-      birthYear: memberInfo.birthYear || 1990, // default value....
       firstName: memberInfo.firstName,
       lastName: memberInfo.lastName || "",
       email: memberInfo.email || null,

@@ -102,8 +102,6 @@ class ClassTypeCard extends Component {
 	    let emailBody = '';
 	    const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
 	    const subject = '';
-	    const message = '';
-	    const currentUserName = getUserFullName(Meteor.user());
 	    emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you please update your class times%3F %0D%0A%0D%0A Thanks`;
 	    const mailTo = `mailto:${schoolData && schoolData.email}?subject=${subject}&body=${emailBody}`;
 	    const mailToNormalized = /* encodeURI( */ mailTo;
