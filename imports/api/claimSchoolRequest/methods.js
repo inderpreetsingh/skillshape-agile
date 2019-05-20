@@ -24,7 +24,7 @@ Meteor.methods({
     // Claim request status is pending OR rejected.
     if (pendingClaimRequest) {
       return { pendingRequest: true };
-    } if (rejectedClaimRequest) {
+    } else if (rejectedClaimRequest) {
       return { alreadyRejected: true };
     }
     // No school email exists then just Make the user Admin of that school by System.

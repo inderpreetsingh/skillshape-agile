@@ -220,7 +220,7 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         {/* Depending upon the type of payment method */}
                         {getDatesBasedOnSubscriptions(props)}
 
-                        {classesCovered.length && <ClassesCovers>
+                        {(classesCovered.length > 0 )&& <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>

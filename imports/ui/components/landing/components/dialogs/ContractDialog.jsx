@@ -27,12 +27,7 @@ const ErrorArea = styled.div`
     color: red;
     visibility:${props => props.validation ? 'hidden' : 'visible'}
 `;
-const customStyles = {
-  input: (provided, state) => ({
-    ...provided,
-    fontSize: 16
-  })
-}
+
 
 const styles = theme => {
   return {
@@ -78,21 +73,13 @@ const ActionButtons = styled.div`
   margin-top: ${helpers.rhythmDiv * 2}px;
 `;
 
-const ActionButton = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
 
-const ErrorWrapper = styled.span`
-  color: red;
-  margin: ${helpers.rhythmDiv * 2}px;
-`;
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   font-family: ${helpers.specialFont};
   width: 100%;
 `;
 
-const ContentWrapper = styled.div``;
 
 const Title = styled.span`
   display: inline-block;
@@ -155,7 +142,7 @@ class ContractDialog extends Component {
     const { _id: purchaseId, userName, schoolId, popUp, packageName,userId,payAsYouGo,autoWithdraw} = this.props;
     const {reason} = this.state;
     let doc = { purchaseId, userName, schoolId, packageName, action: 'find',userId ,reason,status:'pending',payAsYouGo,autoWithdraw};
-    this.setState({isLoading:true},this.checkIsRequestExist(doc,popUp));
+    this.setState({isLoading:true},()=>{this.checkIsRequestExist(doc,popUp)});
     
   }
 

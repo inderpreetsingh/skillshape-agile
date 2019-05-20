@@ -74,13 +74,13 @@ class ContactUs extends React.Component {
       const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
       if (!email) {
           popUp.appear("alert",{content: 'Please enter your email.'});
-          return false;
+          event.stopPropagation();
       } else if (!emailReg.test(email)) {
           popUp.appear("alert",{content: "Please enter valid email address"});
-          return false;
+          event.stopPropagation();
       } else if (!message) {
           popUp.appear("alert",{content: "Please enter a message."});
-          return false;
+          event.stopPropagation();
       } else {
           // Start loading
           this.setState({ isLoading: true });

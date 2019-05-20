@@ -1,34 +1,29 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
 import { isEmpty } from "lodash";
-
-import { withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import Button from "material-ui/Button";
-import Icon from "material-ui/Icon";
-
-import { createMarkersOnMap, toastrModal } from "/imports/util";
 import get from "lodash/get";
 import uniq from "lodash/uniq";
-import ClassMap from "/imports/ui/components/landing/components/map/ClassMap";
-import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
-import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
-import ActionButtons from "/imports/ui/components/landing/components/class/ActionButtons.jsx";
-import BestPrices from "/imports/ui/components/landing/components/class/BestPrices.jsx";
-import ClassTypeLogo from "/imports/ui/components/landing/components/class/ClassTypeLogo.jsx";
-
+import Icon from "material-ui/Icon";
+import { withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Fragment } from "react";
+import ProgressiveImage from "react-progressive-image";
+import styled from "styled-components";
 import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-import ProgressiveImage from "react-progressive-image";
-import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
+import ActionButtons from "/imports/ui/components/landing/components/class/ActionButtons.jsx";
+import BestPrices from "/imports/ui/components/landing/components/class/BestPrices.jsx";
+import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
+import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
+import ClassTypeLogo from "/imports/ui/components/landing/components/class/ClassTypeLogo.jsx";
 import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
+import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { schoolLogo } from "/imports/ui/components/landing/site-settings.js";
-import Events from "/imports/util/events";
+import { createMarkersOnMap, toastrModal } from "/imports/util";
 import { getUserFullName } from "/imports/util/getUserData";
 import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
+
+
+
 
 const styles = {
   myLocationIcon: {

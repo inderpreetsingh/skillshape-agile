@@ -151,9 +151,9 @@ class ClassPriceForm extends React.Component {
 
   render() {
     const {
-      fullScreen, data, classes, schoolData, currency, handleIsSavedState,
+      data, classes, handleIsSavedState,
     } = this.props;
-    const { classTypeData, cost } = this.state;
+    const { classTypeData } = this.state;
     let selectedCost; let
       selectedCurrency;
     selectedCost = get(this.state, 'cost', get(this.props, 'data.cost', 0));

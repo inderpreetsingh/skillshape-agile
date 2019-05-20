@@ -5,88 +5,24 @@ import React, {
 import { browserHistory, withRouter } from 'react-router';
 import { Element, scroller } from 'react-scroll';
 import styled from 'styled-components';
-import * as helpers from './components/jss/helpers.js';
-import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import * as helpers from './components/jss/helpers';
+import Preloader from '/imports/ui/components/landing/components/Preloader';
 import { withPopUp } from '/imports/util';
 
 const DocumentTitle = lazy(() => import('react-document-title'));
 const Sticky = lazy(() => import('react-stickynode'));
-const BrandBar = lazy(() => import('./components/BrandBar.jsx'));
-const FloatingChangeViewButton = lazy(() => import('./components/buttons/FloatingChangeViewButton.jsx'));
-const FormGhostButton = lazy(() => import('./components/buttons/FormGhostButton.jsx'));
-const ClassTypeList = lazy(() => import('./components/classType/classTypeList.jsx'));
-const Cover = lazy(() => import('./components/Cover.jsx'));
-const FiltersDialogBox = lazy(() => import('./components/dialogs/FiltersDialogBox.jsx'));
-const FilterPanel = lazy(() => import('./components/FilterPanel.jsx'));
-const Footer = lazy(() => import('./components/footer/index.jsx'));
-const SearchArea = lazy(() => import('./components/SearchArea.jsx'));
+const BrandBar = lazy(() => import('./components/BrandBar'));
+const FloatingChangeViewButton = lazy(() => import('./components/buttons/FloatingChangeViewButton'));
+const FormGhostButton = lazy(() => import('./components/buttons/FormGhostButton'));
+const ClassTypeList = lazy(() => import('./components/classType/classTypeList'));
+const Cover = lazy(() => import('./components/Cover'));
+const FiltersDialogBox = lazy(() => import('./components/dialogs/FiltersDialogBox'));
+const FilterPanel = lazy(() => import('./components/FilterPanel'));
+const Footer = lazy(() => import('./components/footer/index'));
+const SearchArea = lazy(() => import('./components/SearchArea'));
 const config = lazy(() => import('/imports/config'));
 const Events = lazy(() => import('/imports/util/events'));
 
-const MainContentWrapper = styled.div`
-  display: flex;
-  position: relative;
-`;
-
-const FilterBarWrapper = styled.div`
-  width: calc(20% - 20px);
-  margin: ${helpers.rhythmDiv}px;
-`;
-
-const MapOuterContainer = styled.div`
-  width: 40%;
-  display: block;
-  position: relative;
-  @media screen and (max-width: ${helpers.tablet + 100}px) {
-    width: 100%;
-  }
-`;
-
-const MapContainer = styled.div`
-  transform: translateY(75px);
-  height: calc(100vh - 80px);
-`;
-
-const WithMapCardsContainer = styled.div`
-  width: 60%;
-  padding-top: 0;
-
-  ${helpers.flexDirectionColumn} justify-content: space-between;
-  transform: translateY(80px);
-
-  @media screen and (max-width: ${helpers.tablet + 100}px) {
-    display: none;
-    width: 0;
-    height: 0;
-  }
-`;
-
-const CardsContainer = styled.div`
-  width: 100%;
-`;
-
-const SwitchViewWrapper = styled.div`
-  padding: ${helpers.rhythmDiv}px;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-
-  @media screen and (max-width: ${helpers.tablet + 100}px) {
-    display: ${props => (props.mapView ? 'none' : 'block')};
-  }
-`;
-
-const MapViewText = styled.p`
-  margin: 0;
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize * 2}px;
-  margin-right: ${helpers.rhythmDiv}px;
-  color: ${helpers.primaryColor};
-  font-weight: 300;
-`;
 
 const FloatingMapButtonWrapper = styled.div`
   padding: ${helpers.rhythmDiv}px;
@@ -103,21 +39,6 @@ const FloatingMapButtonWrapper = styled.div`
   }
 `;
 
-const FooterOuterWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-
-  @media screen and (max-width: ${helpers.tablet + 100}px) {
-    display: none;
-    width: 0;
-    height: 0;
-  }
-`;
-
-const FooterWrapper = styled.div`
-  width: 100%;
-`;
 
 const CoverWrapper = styled.div`
   position: relative;
@@ -132,22 +53,6 @@ const CoverWrapper = styled.div`
   }
 `;
 
-const CenterCapsule = styled.div`
-  font-size: 12px;
-  line-height: ${helpers.baseFontSize}px;
-  background: white;
-  border-radius: 400px;
-  max-width: 200px;
-  color: ${helpers.textColor};
-  background: ${helpers.panelColor};
-  margin: auto;
-  transform: translateY(-50%);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  padding: 4px;
-`;
 
 const FilterPanelWrapper = styled.div`
   position: relative;
@@ -164,12 +69,6 @@ const FilterBarDisplayWrapper = styled.div`
   width: 100%;
 `;
 
-const ContactUsWrapper = styled.div`
-  position: fixed;
-  right: 10px;
-  bottom: 10%;
-  z-index: 1500;
-`;
 const FilterApplied = styled.div`
   ${helpers.flexCenter} font-weight: 500;
   font-size: ${helpers.baseFontSize}px;
@@ -918,7 +817,6 @@ class Landing extends Component {
       // size without buttons..
       return 72;
     }
-
 
     return 0; // if no filter is applied
   };

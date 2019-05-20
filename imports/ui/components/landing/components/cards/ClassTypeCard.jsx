@@ -12,7 +12,6 @@ import ManageRequestsDialogBox from '/imports/ui/components/landing/components/d
 import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
 import { ContainerLoader } from '/imports/ui/loading/container.js';
 import { formatClassTimesData, withPopUp } from '/imports/util';
-import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
 const CardsRevealWrapper = styled.div`width: 100%;`;

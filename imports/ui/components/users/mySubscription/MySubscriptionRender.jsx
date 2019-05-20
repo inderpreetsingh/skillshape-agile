@@ -172,7 +172,7 @@ const ActionButtons = (props) => (
 
 const ContactSchool = (props) => (
     <ContactIcons>
-        {props.phone && props.phone.length && <IconButton classes={{ root: props.classes.contactIconButton }}>
+        {(props.phone && props.phone.length > 0) && <IconButton classes={{ root: props.classes.contactIconButton }}>
             <Call onClick={props.onCallClick(props.phone)} />
         </IconButton>}
         {props.email && <IconButton classes={{ root: props.classes.contactIconButton }}>

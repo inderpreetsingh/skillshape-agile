@@ -171,13 +171,13 @@ class ManageRequestsDialogBox extends Component {
     if (this.state.readyToSubmit) {
       if (!data.email) {
         popUp.appear("alert",{title: 'No Email', content: "Please enter your email."},false);
-        return false;
+        e.stopPropagation();
       } else if (!emailReg.test(data.email)) {
         popUp.appear("alert",{title: 'Invalid Email', content: "Please enter valid email address"},false);
-        return false;
+        e.stopPropagation();
       } else if (!data.name) {
         popUp.appear("alert",{title: "Error" , content: "Please enter a name"}, false);
-        return false;
+        e.stopPropagation();
       } else {
         const userExistsError = "user exists";
         this.setState({ isBusy: true });
