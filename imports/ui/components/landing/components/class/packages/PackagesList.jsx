@@ -298,7 +298,6 @@ const PackagesList = (props) => {
             packageType: 'CP',
             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
             schoolId: props.schoolId,
-            usedFor: props.usedFor,
           }}
           onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
           fullScreen={monthlyPackagesEmpty}
@@ -328,7 +327,6 @@ const PackagesList = (props) => {
             packageType: 'MP',
             onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
             schoolId: props.schoolId,
-            usedFor: props.usedFor,
           }}
           monthlyPackagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
           packageListName="Monthly Packages"

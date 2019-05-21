@@ -42,7 +42,6 @@ class SchoolView extends SchoolViewBase {
       myClassTimes: [],
       manageAll: true,
       attendAll: true,
-      currency: null,
       filter: {
         classTimesIds: [],
         classTimesIdsForCI: [],

@@ -473,7 +473,8 @@ class ClassDetailModal extends React.Component {
       clickedDate,
       classInterestData,
       params,
-      schoolName
+      schoolName,
+      type
     } = this.props;
     let enrollmentIds = get(this.state.classType, 'enrollmentIds', []);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
@@ -637,8 +638,7 @@ class ClassDetailModal extends React.Component {
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid> */}
-                    {this.props &&
-                      this.props.type == "attending" && (
+                    {type == "attending" && (
                         <Grid item xs={6} style={{ margin: "auto" }}>
                           <ClassTimeButton
                             fullWidth

@@ -778,7 +778,7 @@ class DashBoardView extends React.Component {
   }
   render() {
     const { classes, theme, schoolData, classTypeData, slug, schoolAdmin, isAdmin, adminsData, superAdminId, isLoading, view } = this.props;
-    const { renderStudentModal, memberInfo, joinSkillShape, slidingDrawerState } = this.state;
+    const { renderStudentModal, memberInfo, joinSkillShape, slidingDrawerState ,message:{userInfo}={}} = this.state;
     let schoolMemberListFilters = { ...this.state.filters };
     if (slug) {
       schoolMemberListFilters.schoolId =
@@ -865,7 +865,7 @@ class DashBoardView extends React.Component {
             open={this.state.showConfirmationModal}
             submitBtnLabel="Yes"
             cancelBtnLabel="No, I will try with different Email"
-            message={this.state && this.state.message.userInfo}
+            message={userInfo}
             onSubmit={this.allowAddNewMemberWithThisEmail}
             onClose={() => this.setState({ showConfirmationModal: false })}
           />

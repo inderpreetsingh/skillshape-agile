@@ -496,7 +496,6 @@ class ClassTimesDialogBox extends React.Component {
                             }
                           >
                             <div
-                              className="circle-icon"
                               className={classes.iconStyle}
                             >
                               <Icon className="material-icons" color="primary">
@@ -524,7 +523,6 @@ class ClassTimesDialogBox extends React.Component {
                           filters.locationTitle && (
                             <div className={classes.iconWithDetailContainer}>
                               <div
-                                className="circle-icon"
                                 className={classes.iconStyle}
                               >
                                 <Icon className="material-icons" color="primary">

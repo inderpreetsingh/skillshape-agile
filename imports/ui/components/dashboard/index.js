@@ -35,7 +35,7 @@ class MyDashBoard extends Component {
                                 link: `/schools/${school.slug}`,
                                 iconName: "school",
                                 schoolEditLink: `/SchoolAdmin/${school._id}/edit`,
-                                superAdmin: school && school.superAdmin,
+                                superAdmin: get(school,"superAdmin",''),
                                 admins: school.admins
                             };
                         });
