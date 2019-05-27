@@ -190,7 +190,7 @@ class FullCalendar extends React.Component {
     classInterestData.map((current1) => {
       classTimesData.map((current2) => {
         if (current1.classTimeId == current2._id) {
-          if(current2 && current2.deletedEvents){
+          if(current2.deletedEvents){
             current2.deletedEvents = uniq(
               current2.deletedEvents.concat(current1.deletedEvents))
           }

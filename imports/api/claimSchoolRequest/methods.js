@@ -99,7 +99,8 @@ Meteor.methods({
     }
     const claimRequestRec = ClaimSchoolRequest.findOne(claimRequestId);
     const schoolData = School.findOne(claimRequestRec.schoolId);
-    if (schoolData.superAdmin !== this.userId) {
+    const {superAdmin} = schoolData; 
+    if (superAdmin !== this.userId) {
       throw new Meteor.Error(
         'You need to login as a super admin of this school to approve the request',
       );

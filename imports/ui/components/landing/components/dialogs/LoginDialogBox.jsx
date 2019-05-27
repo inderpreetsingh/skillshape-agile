@@ -177,7 +177,7 @@ const LoginDialog = (props) => {
             id="password"
             label="Password"
             type="password"
-            value={props && password}
+            value={password}
             onChange={handleInputChange && handleInputChange.bind(this, "password")}
             fullWidth
           />

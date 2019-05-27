@@ -526,13 +526,13 @@ class ManageMyCalendar extends React.Component {
       classTypeForInterests,
       isLoading
     } = this.state;
-    const { containerLoad } = this.props;
+    const { containerLoad ,route={}} = this.props;
     if (isLoading || containerLoad) {
       return <Loading />
     }
     console.count('manageCalendarRenderCount 3')
     return (
-      <DocumentTitle title={this.props.route && this.props.route.name}>
+      <DocumentTitle title={route.name}>
         <div>
           {/*<Card style={{padding: 10, margin: 15}}> */}
           <Card style={{ padding: 8 }}>

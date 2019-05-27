@@ -639,9 +639,10 @@ class DashBoardView extends React.Component {
     else {
       memberInfo = adminsData.find(ele => ele._id == memberId);
       if (memberInfo) {
-        profile = memberInfo.profile;
-        email = memberInfo.emails[0].address;
-        _id = memberInfo._id;
+        const {profile:p,emails,_id:id} = memberInfo;
+        profile = p;
+        email = emails[0].address;
+        _id = id;
 
       }
     }

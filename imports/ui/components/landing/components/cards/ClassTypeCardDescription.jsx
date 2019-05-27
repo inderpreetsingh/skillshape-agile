@@ -114,7 +114,7 @@ const styles = {
 };
 
 const ClassTypeCardDescription = (props) => {
-	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick } = props;
+	const { cardRevealInfo, schoolData, editMode, selectedSkillSubject, onEditClassTypeClick,hideClassTypeOptions } = props;
 	let BB = { backgroundColor: '#dddddd' };
 	return (
 		<MuiThemeProvider theme={MuiTheme}>
@@ -205,8 +205,7 @@ const ClassTypeCardDescription = (props) => {
 
 					{!editMode ? (
 						<ButtonsWrapper>
-							{props &&
-								!props.hideClassTypeOptions && (
+							{!hideClassTypeOptions && (
 									<Buttons>
 										<ButtonWrapper>
 											<SecondaryButton

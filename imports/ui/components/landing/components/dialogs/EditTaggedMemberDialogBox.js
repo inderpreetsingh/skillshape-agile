@@ -1,37 +1,24 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
 import get from "lodash/get";
-import styled from "styled-components";
-import Grid from "material-ui/Grid";
 import isEmpty from "lodash/isEmpty";
-import Input, { InputLabel, InputAdornment } from "material-ui/Input";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import {
-  FormLabel,
-  FormControl,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
-import Multiselect from "react-widgets/lib/Multiselect";
-import Checkbox from "material-ui/Checkbox";
 import Button from "material-ui/Button";
+import Checkbox from "material-ui/Checkbox";
+import Dialog, { DialogActions, DialogTitle, withMobileDialog } from "material-ui/Dialog";
+import { FormControl, FormControlLabel } from "material-ui/Form";
+import Grid from "material-ui/Grid";
+import Input from "material-ui/Input";
+import Radio, { RadioGroup } from "material-ui/Radio";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 import Select from "react-select";
+import styled from "styled-components";
 import * as helpers from "../jss/helpers.js";
 import muiTheme from "../jss/muitheme.jsx";
-
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container";
+
+
 
 const styles = {
   dialogPaper: {
@@ -125,7 +112,7 @@ class EditTaggedMemberDialogBox extends Component {
           }
           if (!_.isEmpty(res)) {
             res.map((current, index) => {
-              state.schoolMembers.push({ value: current._id, label: `${current && current.firstName ? current.firstName : ""} ${current && current.lastName ? current.lastName : ""}` })
+              state.schoolMembers.push({ value: current._id, label: `${get( current,"firstName",'' )} ${get( current,"lastName",'' )}` })
               taggedMemberIds.map((current1,index1)=>{
                 if(current1 == current._id){
                   state.selectedOption.push(state.schoolMembers[index]);

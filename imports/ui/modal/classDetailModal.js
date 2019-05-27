@@ -262,10 +262,11 @@ class ClassDetailModal extends React.Component {
   }
 
   componentWillMount() {
+    const {eventData} = this.props;
     Meteor.call(
       "school.findSuperAdmin",
       null,
-      this.props.eventData.schoolId,
+      eventData.schoolId,
       (err, res) => {
         if (res)
           if (get(res, 'superAdmin', null) == Meteor.userId() || includes(get(res, 'admins', []), Meteor.userId())) {
@@ -273,13 +274,13 @@ class ClassDetailModal extends React.Component {
           }
       }
     );
-    if (this.props.eventData) {
+    if (eventData) {
       const {
         schoolId,
         classTypeId,
         classTimeId,
         locationId
-      } = this.props.eventData;
+      } = eventData;
       this.setState({
         isLoading: true,
         removeFromCalendarPopUp: false,

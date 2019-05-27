@@ -65,9 +65,10 @@ Meteor.methods({
         const classTypeName = data.classTypeId ? ClassType.findOne({
           _id: data.classTypeId,
         }).name : '';
-        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members?userId=${this.userId}` : '';
-        const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
-        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+        const {slug,_id:schoolId,admins,superAdmin} = schoolData;
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${slug}/members?userId=${this.userId}` : '';
+        const updateClassTimesLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${slug}`;
         const currentUserName = data.name;
         const requestFor = 'Class time';
 
@@ -78,7 +79,7 @@ Meteor.methods({
         // 1. sending mail to the school owner.
         if (schoolData) {
           // Get Admin of School As school Owner
-          const adminUser = Meteor.users.findOne(schoolData.admins[0] || schoolData.superAdmin);
+          const adminUser = Meteor.users.findOne(admins[0] || superAdmin);
           ownerName = getUserFullName(adminUser);
           toEmail = adminUser && adminUser.emails[0].address;
         } else {

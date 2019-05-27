@@ -818,6 +818,7 @@ class Landing extends Component {
       return 72;
     }
 
+
     return 0; // if no filter is applied
   };
 
