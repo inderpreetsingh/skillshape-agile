@@ -16,7 +16,7 @@ import ResetPasswordButton from '../buttons/ResetPasswordButton.jsx';
 import * as helpers from '../jss/helpers.js';
 import muiTheme from '../jss/muitheme.jsx';
 import { ContainerLoader } from '/imports/ui/loading/container';
-
+import {get} from 'lodash';
 
 
 
@@ -122,24 +122,25 @@ const ActionWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const LoginDialog = (props) => (
-  <Dialog
-    fullScreen={props.fullScreen}
-    open={props.open}
-    onClose={props.onModalClose}
-    onRequestClose={props.onModalClose}
+const LoginDialog = (props) => {
+  const {fullScreen,reSendEmailVerificationLink,showVerficationLink,email,password,handleInputChange,error,onSignInButtonClick,open,onModalClose,classes,loading,title,onSignUpWithGoogleButtonClick,onSignUpWithFacebookButtonClick} = props;
+  return ( <Dialog
+    fullScreen={fullScreen}
+    open={open}
+    onClose={onModalClose}
+    onRequestClose={onModalClose}
     aria-labelledby="login"
     itemScope
     itemType="http://schema.org/CheckInAction"
-    classes={{ root: props.classes.dialogRoot }}
+    classes={{ root: classes.dialogRoot }}
   >
-    {props.loading && <ContainerLoader />}
+    {loading && <ContainerLoader />}
     < MuiThemeProvider theme={muiTheme} >
-      <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
+      <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
         <DialogTitleWrapper>
-          <span itemProp="name">{props.title || 'Log In to SkillShape'}</span>
+          <span itemProp="name">{title || 'Log In to SkillShape'}</span>
 
-          <IconButton color="primary" onClick={props.onModalClose} classes={{ root: props.classes.iconButton }}>
+          <IconButton color="primary" onClick={onModalClose} classes={{ root: classes.iconButton }}>
             <ClearIcon />
           </IconButton>
         </DialogTitleWrapper>
@@ -147,28 +148,28 @@ const LoginDialog = (props) => (
 
       <DialogActionWrapper>
         <ButtonWrapper>
-          <GoogleIconButton onClick={props.onSignUpWithGoogleButtonClick} label="Login With Google" classes={props.classes.googleButton} textCenter />
+          <GoogleIconButton onClick={onSignUpWithGoogleButtonClick} label="Login With Google" classes={classes.googleButton} textCenter />
         </ButtonWrapper>
         <ButtonWrapper facebook>
-          <FacebookIconButton onClick={props.onSignUpWithFacebookButtonClick} label="Login With Facebook" classes={props.classes.facebookButton} textCenter />
+          <FacebookIconButton onClick={onSignUpWithFacebookButtonClick} label="Login With Facebook" classes={classes.facebookButton} textCenter />
         </ButtonWrapper>
 
       </DialogActionWrapper>
 
-      <DialogContent classes={{ root: props.classes.dialogContent }}>
-        <form onSubmit={props.onSignInButtonClick}>
-          <FormControl error={props && props.error && props.error.email} margin="dense" fullWidth aria-describedby="email-error-text">
+      <DialogContent classes={{ root: classes.dialogContent }}>
+        <form onSubmit={onSignInButtonClick}>
+          <FormControl error={get(props,"error.email",'')} margin="dense" fullWidth aria-describedby="email-error-text">
             <InputLabel htmlFor="email">Email Address</InputLabel>
             <Input
               autoFocus
               id="email"
               type="email"
-              value={props.email}
-              onChange={props.handleInputChange && props.handleInputChange.bind(this, "email")}
+              value={email}
+              onChange={handleInputChange && handleInputChange.bind(this, "email")}
               fullWidth
             />
             {
-              props && props.error && props.error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
+              error && error.email && <FormHelperText id="email-error-text">Invalid email address</FormHelperText>
             }
           </FormControl>
           <TextField
@@ -176,20 +177,20 @@ const LoginDialog = (props) => (
             id="password"
             label="Password"
             type="password"
-            value={props && props.password}
-            onChange={props.handleInputChange && props.handleInputChange.bind(this, "password")}
+            value={props && password}
+            onChange={handleInputChange && handleInputChange.bind(this, "password")}
             fullWidth
           />
           {
-            props.error && props.error.message && <ErrorWrapper>
-              {props.error.message}
-              {props.showVerficationLink && <a onClick={props.reSendEmailVerificationLink} style={{ color: 'blue', cursor: 'pointer' }}> resend e-mail verifcation link </a>}
+            error && error.message && <ErrorWrapper>
+              {error.message}
+              {showVerficationLink && <a onClick={reSendEmailVerificationLink} style={{ color: 'blue', cursor: 'pointer' }}> resend e-mail verifcation link </a>}
             </ErrorWrapper>
           }
           <LoginButtonWrapper>
             <PrimaryButton
               type="submit"
-              disabled={props.error && props.error.email}
+              disabled={error && error.email}
               label="Login"
               noMarginBottom
             />
@@ -197,7 +198,7 @@ const LoginDialog = (props) => (
         </form>
       </DialogContent>
 
-      <DialogActions classes={{ root: props.classes.dialogActionsRoot, action: props.classes.dialogActions }}>
+      <DialogActions classes={{ root: classes.dialogActionsRoot, action: classes.dialogActions }}>
         <ActionWrapper>
           <DialogActionText>
             Lost your password?
@@ -212,8 +213,8 @@ const LoginDialog = (props) => (
         </ActionWrapper>
       </DialogActions>
     </MuiThemeProvider >
-  </Dialog >
-);
+  </Dialog >)
+}
 
 LoginDialog.propTypes = {
   onRecoverPasswordButtonClick: PropTypes.func,

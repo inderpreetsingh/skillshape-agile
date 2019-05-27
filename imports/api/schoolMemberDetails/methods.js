@@ -52,7 +52,8 @@ Meteor.methods({
     const user = Meteor.users.findOne(this.userId);
     const memberData = SchoolMemberDetails.findOne({ _id: doc_id });
     // We are editing a school member without email here so need to check if entered email already exist OR not.
-    if (doc && doc.studentWithoutEmail && doc.email) {
+    const {studentWithoutEmail,email}  = doc;
+    if (studentWithoutEmail && email) {
       // Check if user OR member is already exist or not.
       const userRecExist = Meteor.users.findOne({
         "emails.address": doc.email

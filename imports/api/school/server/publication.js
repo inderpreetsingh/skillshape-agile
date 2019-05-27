@@ -13,7 +13,6 @@ import SkillSubject from '/imports/api/skillSubject/fields';
 import SLocation from '/imports/api/sLocation/fields';
 import config from '/imports/config';
 
-
 Meteor.publish('UserSchool', function (schoolId) {
   const schoolCursor = School.find({ _id: schoolId });
   const schoolData = schoolCursor.fetch();

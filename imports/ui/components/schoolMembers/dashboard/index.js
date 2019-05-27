@@ -646,7 +646,7 @@ class DashBoardView extends React.Component {
       }
     }
     superAdmin = superAdminId == _id ? true : false;
-    pic = profile && profile.medium ? profile.medium : profile && profile.pic ? profile.pic : config.defaultProfilePicOptimized;
+    pic =get(profile,'medium',get(profile,'pic', get(config,"defaultProfilePicOptimized",'')))
     // memberInfo = this.state.memberInfo
     let subscriptionList = await packageCoverProvider(get(purchaseByUserId, _id, []));
     this.handleDrawerToggle();

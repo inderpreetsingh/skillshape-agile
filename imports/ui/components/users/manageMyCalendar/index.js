@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import ExpandMoreIcon from "material-ui-icons/ExpandMore";
 import Card from "material-ui/Card";
 import Checkbox from "material-ui/Checkbox";
@@ -17,20 +18,15 @@ import ClassTimes from "/imports/api/classTimes/fields";
 import ClassType from "/imports/api/classType/fields";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import MyCalender from "/imports/ui/components/users/myCalender";
-import { cutString, formStyles, withPopUp, confirmationDialog } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container";
 import { Loading } from '/imports/ui/loading';
-import { get, isEmpty, uniq } from 'lodash';
+import { cutString, formStyles, withPopUp } from "/imports/util";
 const styles = formStyles();
 
 const inputStyle = {
   minWidth: 150,
   display: "flex"
 };
-const Div = styled.div`
-float: right;
-margin: 13px;
-`;
+
 const expansionPanelStyle = {
   display: "flex",
   flexDirection: "column"
@@ -954,7 +950,7 @@ class ManageMyCalendar extends React.Component {
             <MyCalender
               routeName={this.props.route.name}
               manageMyCalendar={
-                this.props.route && this.props.route.name == "MyCalendar"
+               get(this,"props.route.name",'') === "MyCalendar"
               }
               manageMyCalendarFilter={filter}
               {...this.props}

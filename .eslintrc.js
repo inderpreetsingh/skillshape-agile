@@ -13,7 +13,8 @@ module.exports = {
     SyncedCron:true,
     checkMyAccess:true,
     Package:true,
-    _ReactiveJoins:true
+    _ReactiveJoins:true,
+    checkIsAdmin:true
   },
   parser: "babel-eslint",
   parserOptions: {

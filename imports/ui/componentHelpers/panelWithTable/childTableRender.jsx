@@ -1,34 +1,15 @@
-import React, { Fragment } from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
-import Button from 'material-ui/Button';
-import Dialog, {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-} from 'material-ui/Dialog';
+/* eslint-disable react/no-this-in-sfc */
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import MoreVertIcon from 'material-ui-icons/MoreVert';
-import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import Grid from 'material-ui/Grid';
 import Icon from 'material-ui/Icon';
-import Add from 'material-ui-icons/Add';
-import Edit from 'material-ui-icons/Edit';
-import Delete from 'material-ui-icons/Delete';
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  ExpansionPanelActions,
-} from 'material-ui/ExpansionPanel';
-import Divider from 'material-ui/Divider';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx';
-
-import {
-  rhythmDiv,
-  mobile,
-} from '/imports/ui/components/landing/components/jss/helpers.js';
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox';
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers';
+import { isArray } from 'lodash';
 
 const ButtonsWrapper = styled.div`
   display: flex;
@@ -45,7 +26,7 @@ const ButtonWrapper = styled.div`
   margin-right: ${rhythmDiv * 2}px;
 `;
 
-export default function (props) {
+export default function () {
   const {
     classes,
     childPanelHeader,
@@ -57,33 +38,35 @@ export default function (props) {
     locationData,
     isSaved,
     handleIsSavedState,
-
+    MainTableHandleSubmit,
+    moveToNextTab,
   } = this.props;
+  const { showForm, formData, deleteConfirmationModal } = this.state;
   const FormComponent = childPanelHeader.actions.component;
   return (
     <div>
-      {this.props.childTable.title == 'Class Times' ? (
+      {childTable.title === 'Class Times' ? (
         <div className="panel-child-table">
-          {(this.state.showForm
+          {(showForm
             || (this.props
-              && this.props.MainTableHandleSubmit
-              && this.props.MainTableHandleSubmit[
-                this.props && this.props.parentKey
+              && MainTableHandleSubmit
+              && MainTableHandleSubmit[
+                parentKey
               ])) && (
               <FormComponent
                 schoolId={schoolId}
                 parentKey={parentKey}
                 parentData={parentData}
-                data={this.state.formData}
+                data={formData}
                 open={
-                  this.state.showForm
-                  || (this.props.MainTableHandleSubmit
-                    && this.props.MainTableHandleSubmit[
-                      this.props && this.props.parentKey
+                  showForm
+                  || (MainTableHandleSubmit
+                    && MainTableHandleSubmit[
+                      parentKey
                     ])
                 }
                 onClose={this.handleFormModal}
-                moveToNextTab={this.props.moveToNextTab}
+                moveToNextTab={moveToNextTab}
                 locationData={locationData}
                 isSaved={isSaved}
                 handleIsSavedState={handleIsSavedState}
@@ -124,7 +107,7 @@ export default function (props) {
               </Grid>
             </ExpansionPanelSummary>
 
-            {_.isArray(childTableData)
+            {isArray(childTableData)
               && childTableData.map((tableData, index) => (
                 <div
                   key={index.toString()}
@@ -143,20 +126,6 @@ export default function (props) {
                             expandIcon={<ExpandMoreIcon />}
                           >
                             <div style={{ float: 'right' }}>
-                              {/* <Button
-                                  onClick={() =>
-                                    this.setState({
-                                      showForm: true,
-                                      formData: tableData
-                                    })
-                                  }
-                                  color="accent"
-                                  raised
-                                  dense
-                                >
-                                  <Edit style={{ marginRight: 2 }} />
-                                  {childTable.actions.edit.title}
-                                </Button> */}
                               <FormGhostButton
 
                                 onClick={() => this.setState({
@@ -167,18 +136,18 @@ export default function (props) {
                                 label={childTable.actions.edit.title}
                               />
                             </div>
-                            {tableData.scheduleType == 'oneTime'
+                            {tableData.scheduleType === 'oneTime'
                                 && `${tableData.name}: Single/Set`}
-                            {tableData.scheduleType == 'OnGoing'
+                            {tableData.scheduleType === 'OnGoing'
                                 && `${tableData.name}: Ongoing`}
-                            {tableData.scheduleType == 'recurring'
+                            {tableData.scheduleType === 'recurring'
                                 && `${tableData.name}: Series`}
                           </ExpansionPanelSummary>
                           <ExpansionPanelDetails style={{ flexWrap: 'wrap' }}>
 
                             {childTable
-                                && childTable.tableFields.map((field, index) => (
-                                  <Fragment key={index}>
+                                && childTable.tableFields.map((field, index1) => (
+                                  <Fragment key={index1.toString}>
                                     <Grid
                                       item
                                       xs={12}
@@ -200,8 +169,7 @@ export default function (props) {
                                       {field.nestedObjectOfArray ? (
                                         tableData[field.key]
                                           && Object.keys(tableData[field.key]).map(
-                                            (itemkey, index) => {
-                                              const itemData = tableData[field.key][itemkey];
+                                            (itemkey) => {
                                               const fields = [
                                                 {
                                                   label: 'Start Time',
@@ -261,33 +229,32 @@ export default function (props) {
         </div>
       ) : (
         <div className="panel-child-table">
-          {(this.state.showForm
-              || (this.props
-                && this.props.MainTableHandleSubmit
-                && this.props.MainTableHandleSubmit[
-                  this.props && this.props.parentKey
+          {(showForm
+              || (MainTableHandleSubmit
+                && MainTableHandleSubmit[
+                  parentKey
                 ])) && (
                 <FormComponent
                   schoolId={schoolId}
                   parentKey={parentKey}
                   parentData={parentData}
-                  data={this.state.formData}
+                  data={formData}
                   open={
-                    this.state.showForm
-                    || (this.props.MainTableHandleSubmit
-                      && this.props.MainTableHandleSubmit[
-                        this.props && this.props.parentKey
+                    showForm
+                    || (MainTableHandleSubmit
+                      && MainTableHandleSubmit[
+                        parentKey
                       ])
                   }
                   onClose={this.handleFormModal}
-                  moveToNextTab={this.props.moveToNextTab}
+                  moveToNextTab={moveToNextTab}
                   isSaved={isSaved}
                   handleIsSavedState={handleIsSavedState}
                 />
           )}
-          {this.state.deleteConfirmationModal && (
+          {deleteConfirmationModal && (
           <SkillShapeDialogBox
-            open={this.state.deleteConfirmationModal}
+            open={deleteConfirmationModal}
             type="alert"
             defaultButtons
             title="Are you sure?"
@@ -334,10 +301,10 @@ export default function (props) {
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
-            {_.isArray(childTableData)
+            {isArray(childTableData)
                 && childTableData.map((tableData, index) => (
                   <ExpansionPanelDetails
-                    key={index}
+                    key={index.toString}
                     className={classes.details}
                     style={{
                       boxShadow: '0px 0px 0px 3px #bdbdbd',
@@ -351,8 +318,8 @@ export default function (props) {
                           className={classes.classtypeInputContainer}
                         >
                           {childTable
-                              && childTable.tableFields.map((field, index) => (
-                                <Fragment key={index}>
+                              && childTable.tableFields.map((field, index2) => (
+                                <Fragment key={index2.toString}>
                                   <Grid
                                     item
                                     xs={12}
@@ -374,7 +341,7 @@ export default function (props) {
                                     {field.nestedObjectOfArray ? (
                                       tableData[field.key]
                                         && Object.keys(tableData[field.key]).map(
-                                          (itemkey, index) => {
+                                          (itemkey) => {
                                             const itemData = tableData[field.key][itemkey];
                                             const fields = [
                                               {
@@ -421,60 +388,10 @@ export default function (props) {
                                 </Fragment>
                               ))}
                         </Grid>
-                        {/* <div style={{ float: "right", margin: 10 }}>
-                          <Button
-                            onClick={() =>
-                              this.setState({
-                                showForm: true,
-                                formData: tableData
-                              })
-                            }
-                            color="accent"
-                            raised
-                            dense
-                          >
-                            <Edit style={{ marginRight: 2 }} />
-                            {childTable.actions.edit.title}
-                          </Button>
 
-                          <Button
-                            onClick={() => {
-                              this.setState(state => {
-                                return {
-                                  ...state,
-                                  formData: tableData
-                                };
-                              });
-                              this.showDeleteConfirmationModal();
-                            }}
-                            color="accent"
-                            raised
-                            dense
-                          >
-                            <Delete style={{ marginRight: 2 }} />
-                            {childTable.actions.del.title}
-                          </Button>
-                        </div> */}
 
                         <ButtonsWrapper>
                           <ButtonWrapper>
-                            {/* <Button
-                              onClick={() => {
-                                this.setState(state => {
-                                  return {
-                                    ...state,
-                                    formData: tableData
-                                  };
-                                });
-                                this.showDeleteConfirmationModal();
-                              }}
-                              color="accent"
-                              raised
-                              dense
-                            >
-                              <Delete style={{ marginRight: 2 }} />
-                              {childTable.actions.del.title}
-                            </Button> */}
                             <FormGhostButton
                               alertColor
                               onClick={() => {
@@ -489,20 +406,6 @@ export default function (props) {
                           </ButtonWrapper>
 
                           <ButtonWrapper>
-                            {/* <Button
-                                onClick={() =>
-                                  this.setState({
-                                    showForm: true,
-                                    formData: tableData
-                                  })
-                                }
-                                color="accent"
-                                raised
-                                dense
-                              >
-                                <Edit style={{ marginRight: 2 }} />
-                                {childTable.actions.edit.title}
-                              </Button> */}
                             <FormGhostButton
                               onClick={() => this.setState({
                                 showForm: true,

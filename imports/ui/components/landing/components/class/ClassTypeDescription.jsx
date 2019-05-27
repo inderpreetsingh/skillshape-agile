@@ -1,21 +1,20 @@
-import React, {Fragment} from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import React from 'react';
 import ReactHtmlParser from 'react-html-parser';
-
-import StarsBar from '../StarsBar.jsx';
-import * as helpers from '../jss/helpers.js';
+import { Link } from 'react-router';
+import styled from 'styled-components';
+import * as helpers from '../jss/helpers';
+import StarsBar from '../StarsBar';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 496px;
 
-  opacity: ${props => props.isEdit ? 0 : 1};
+  opacity: ${props => (props.isEdit ? 0 : 1)};
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-    display: ${props => props.isEdit ? 'none' : 'flex'};
+    display: ${props => (props.isEdit ? 'none' : 'flex')};
   }
 `;
 
@@ -52,15 +51,6 @@ const Description = styled.p`
   margin: 0;
 `;
 
-const StarsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StarWrapper = styled.div`
-  margin-right: ${helpers.rhythmDiv/2}px;
-`;
-
 const Reviews = styled.a`
   color: ${helpers.information};
   font-weight: 400;
@@ -78,33 +68,57 @@ const SchoolLink = styled(Link)`
 `;
 
 const ClassTypeDescription = (props) => {
-  const PublishStatusButton = props.publishStatusButton;
+  const {
+    publishStatusButton: PublishStatusButton,
+    isEdit,
+    isClassTypeNameAvailable,
+    friendlySlug,
+    schoolName,
+    classTypeName,
+    noOfStars,
+    noOfReviews,
+    description,
+  } = props;
   return (
-    <Wrapper isEdit={props.isEdit}>
-        {props.isClassTypeNameAvailable ?
+    <Wrapper isEdit={isEdit}>
+      {isClassTypeNameAvailable ? (
         <Title>
-          <SchoolLink to={`/schools/${props.friendlySlug}`} target="_blank">{props.schoolName.toLowerCase()} {props.classTypeName && `:`}</SchoolLink>
-          <span> { props.classTypeName.toLowerCase()}</span>
+          <SchoolLink to={`/schools/${friendlySlug}`} target="_blank">
+            {schoolName.toLowerCase()}
+            {' '}
+            {classTypeName && ':'}
+          </SchoolLink>
+          <span>
+            {' '}
+            {classTypeName.toLowerCase()}
+          </span>
         </Title>
-        :
-        <Title>{props.schoolName.toLowerCase()}
-          {(!props.isEdit && props.publishStatusButton) && <PublishStatusButton />}
-        </Title>}
+      ) : (
+        <Title>
+          {schoolName.toLowerCase()}
+          {!isEdit && PublishStatusButton && <PublishStatusButton />}
+        </Title>
+      )}
 
-        <ReviewsWrapper>
-          {props.noOfStars && <StarsBar noOfStars={props.noOfStars} />}
+      <ReviewsWrapper>
+        {noOfStars && <StarsBar noOfStars={noOfStars} />}
 
-          <NoOfReviews>
-            {props.noOfReviews > 0 && <Reviews href="#">({props.noOfReviews} Reviews)</Reviews>}
-          </NoOfReviews>
-        </ReviewsWrapper>
+        <NoOfReviews>
+          {noOfReviews > 0 && (
+          <Reviews href="#">
+(
+            {noOfReviews}
+            {' '}
+Reviews)
+          </Reviews>
+          )}
+        </NoOfReviews>
+      </ReviewsWrapper>
 
-        <Description>
-          {props.description && ReactHtmlParser(props.description)}
-        </Description>
+      <Description>{description && ReactHtmlParser(description)}</Description>
     </Wrapper>
-  )
-}
+  );
+};
 
 ClassTypeDescription.propTypes = {
   classTypeName: PropTypes.string.isRequired,
@@ -112,11 +126,18 @@ ClassTypeDescription.propTypes = {
   description: PropTypes.string,
   noOfReviews: PropTypes.number,
   noOfStars: PropTypes.number,
-  isEdit: PropTypes.bool
-}
+  isEdit: PropTypes.bool,
+  isClassTypeNameAvailable: PropTypes.string,
+  friendlySlug: PropTypes.string,
+};
 
 ClassTypeDescription.defaultProps = {
-  isEdit: false
-}
+  isEdit: false,
+  description: '',
+  noOfReviews: 0,
+  noOfStars: 0,
+  isClassTypeNameAvailable: '',
+  friendlySlug: '',
+};
 
 export default ClassTypeDescription;

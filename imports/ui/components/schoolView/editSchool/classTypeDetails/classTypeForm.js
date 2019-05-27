@@ -207,6 +207,7 @@ class ClassTypeForm extends React.Component {
       "getSkillCategoryIdsFromSkillSubjects",
       { skillSubjectIds: payload.skillSubject },
       (err, res) => {
+        console.log("TCL: ClassTypeForm -> err, res", err, res)
         if (res) {
           payload.skillCategoryId = res;
           if (data && data._id) {
@@ -231,6 +232,7 @@ class ClassTypeForm extends React.Component {
     //this.props.enableParentPanelToDefaultOpen();
     const {handleIsSavedState} = this.props;
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+    console.log("TCL: ClassTypeForm -> handleSubmit -> error, result", error, result)
 
       if (error) {
       }
@@ -282,7 +284,7 @@ class ClassTypeForm extends React.Component {
           )}
 
           {this.state.error ? (
-            <div style={{ color: "red" }}>{this.state.error}</div>
+            <div style={{ color: "red" }}>{this.state.error.error}</div>
           ) : (
               <DialogContent>
                   <TextField
