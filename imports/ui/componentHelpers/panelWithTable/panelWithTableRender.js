@@ -371,7 +371,7 @@ export default function () {
                                 formData: tableData,
                               })
                               }
-                              label={settings.mainTable.actions.edit.title}
+                              label={settings.mainTable.actions && settings.mainTable.actions.edit.title}
 
                             />
                           </ButtonWrapper>

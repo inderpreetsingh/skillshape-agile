@@ -35,8 +35,7 @@ Meteor.methods({
       ) {
         updateHookForClassType({ classTypeId: doc.classTypeId, doc });
         if (
-          doc
-          && doc.pymtType
+          doc.pymtType
           && (doc.pymtType.autoWithDraw || doc.pymtType.payAsYouGo || doc.pymtType.payUpFront)
         ) {
           doc.pymtDetails.map((elem, index) => {
