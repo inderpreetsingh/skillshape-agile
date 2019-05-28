@@ -7,7 +7,7 @@ import { withSubscriptionAndPagination } from '/imports/util';
 class SchoolMemberListItems extends React.Component {
   render() {
     // console.log(this.props, "SCHOOL MEMBERS LIST");
-    return SchoolMemberCards.call(this, this.props, this.state);
+    return SchoolMemberCards();
   }
 }
 

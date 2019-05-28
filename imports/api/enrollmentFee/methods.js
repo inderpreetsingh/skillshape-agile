@@ -59,13 +59,13 @@ Meteor.methods({
         check(diselectedIds, [String]);
         EnrollmentFees.update({ classTypeId: null }, { $set: { classTypeId: [] } })
         try {
-            if (!isEmpty(diselectedIds)) {
-                let result = EnrollmentFees.update({ _id: { $in: diselectedIds } }, { $pull: { classTypeId } }, { multi: true })
-            }
-            if (!isEmpty(selectedIds)) {
-                let result = EnrollmentFees.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
+            // if (!isEmpty(diselectedIds)) {
+            //     let result = EnrollmentFees.update({ _id: { $in: diselectedIds } }, { $pull: { classTypeId } }, { multi: true })
+            // }
+            // if (!isEmpty(selectedIds)) {
+            //     let result = EnrollmentFees.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true })
 
-            }
+            // }
             return true;
 
         }

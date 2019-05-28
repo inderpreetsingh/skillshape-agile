@@ -175,7 +175,7 @@ class CreateMedia extends React.Component {
 	}
 
 	render() {
-		let { mediaFormData, formType, fullScreen, showCreateMediaModal, onClose, taggedMemberInfo, openEditTaggedModal, _id, closeEditTaggedModal } = this.props;
+		let { mediaFormData,  fullScreen, showCreateMediaModal, onClose, } = this.props;
 		const { selectedOption, schoolMembers } = this.state;
 
 		return (

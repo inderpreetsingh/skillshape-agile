@@ -38,7 +38,6 @@ Picker.route("/api/v1/classTypes/", (params, req, res, next) => {
 
     // Add experienceLevel Filter for class type
     if (experienceLevel) {
-      age = Number(age);
       classTypeFilter["experienceLevel"] = experienceLevel;
     }
 

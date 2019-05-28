@@ -1,15 +1,12 @@
-import React,{Fragment} from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-// import ShadowDOM from 'react-shadow';
-
-import PrimaryButton from '../../buttons/PrimaryButton.jsx';
-
+import React, { Fragment } from 'react';
 import MultiselectTag from 'react-widgets/lib/MultiselectTag';
-import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
 import { dataIndexOf } from 'react-widgets/lib/util/dataHelpers';
+import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
+import styled from 'styled-components';
+import * as helpers from '../../jss/helpers';
 
-import * as helpers from '../../jss/helpers.js';
+
 // disabled === true || [1, 2, 3, etc]
 const isDisabled = (item, list, value) =>
   !!(Array.isArray(list) ? ~dataIndexOf(list, item, value) : list)
@@ -18,19 +15,12 @@ const FilterButtonWrapper = styled.div`
   display: flex;
 `;
 
-const FilterButtonTabletView = styled.div`
-  display: none;
 
-  @media screen and (max-width: ${helpers.tablet}px) {
-    display: block;
-  }
-`;
 
 const FilterButtonDesktopView = styled.div`
   display: flex;
 `;
 
-let ourMultiSelect = '';
 class ListMultiSelectList extends React.Component {
   static propTypes ={
     id: PropTypes.string.isRequired,
@@ -165,14 +155,8 @@ class ListMultiSelectList extends React.Component {
   render() {
     let {
         id
-      , value
-      , activeId
-      , valueAccessor
-      , textAccessor
       , label
-      , disabled
-      , focusedItem
-      , valueComponent: ValueComponent }  = this.props;
+       }  = this.props;
 
     return (<Fragment>
       <ul

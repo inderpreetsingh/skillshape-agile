@@ -1,16 +1,11 @@
-import React, { PureComponent, Fragment } from "react";
 import { Meteor } from "meteor/meteor";
+import moment from "moment";
+import React, { PureComponent } from "react";
 import styled from "styled-components";
 import Activity from "./Activity.jsx";
-import moment from "moment";
-
-import {
-  Heading,
-  Italic,
-  SubHeading,
-  Text
-} from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Heading, Italic, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+
 
 const calculateElapsedTime = startTime => {
   // startTime is expected to be a date Obj with proper Time information stored in it
@@ -120,7 +115,7 @@ class TimeLineContainer extends PureComponent {
 
   getClassModulesActivites = () => {
     const { totalEventTime, classModulesData } = this.props;
-    let { elapsedTime, eventCompleted } = this.state;
+    let { elapsedTime,  } = this.state;
     if(classModulesData){
       return classModulesData.map((moduleData, index) => {
         let currentActivityTimeElapsed = 0;

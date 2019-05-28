@@ -411,7 +411,6 @@ Meteor.methods({
     ) {
       doc.createdBy = this.userId;
       doc.inviteAccepted = false;
-      let memberId = SchoolMemberDetails.insert(doc);
       return { addedNewMember: true };
     } else {
       throw new Meteor.Error("Access Denied!!!!");

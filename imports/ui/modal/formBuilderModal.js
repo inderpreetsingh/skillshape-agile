@@ -206,7 +206,7 @@ export class FormBuilderModal extends React.Component {
         editByFieldValue = formFieldsValues[tableData.actions.edit.editByField];
       }
 
-      methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal.bind(this), editByFieldValue, parentKeyValue});
+      methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal, editByFieldValue, parentKeyValue});
 
     }
   }

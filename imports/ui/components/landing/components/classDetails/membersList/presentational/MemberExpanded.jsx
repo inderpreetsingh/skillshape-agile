@@ -1,25 +1,23 @@
-import React, { Component } from "react";
-import styled from "styled-components";
+import { get, isEmpty, isEqual } from 'lodash';
 import { withStyles } from "material-ui/styles";
-
+import React, { Component } from "react";
+import ProgressiveImage from "react-progressive-image";
+import { browserHistory } from "react-router";
+import styled from "styled-components";
 import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
 import SkillShapeButton from "/imports/ui/components/landing/components/buttons/SkillShapeButton.jsx";
 import DropDownMenu from "/imports/ui/components/landing/components/form/DropDownMenu.jsx";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
 import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
 import { formatDate } from "/imports/util/formatSchedule";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { isEmpty, get, isEqual } from 'lodash';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import { browserHistory, Link } from "react-router";
-import ProgressiveImage from "react-progressive-image";
 
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+
 const styles = {
   iconButton: {
     color: "white",
   }
 };
-const ButtonWrapper = styled.div`margin-bottom: ${rhythmDiv}px;`;
 
 const menuOptions = [
   {
@@ -203,7 +201,7 @@ handleNoteChange = (doc_id, notes) => {
   Meteor.call("schoolMemberDetails.editSchoolMemberDetails", { doc_id, doc: { adminNotes: notes } });
 }
 PaymentAndStatus = (props) => {
-  let { alreadyPurchasedData: { epStatus, purchased, purchasedEP } } = props;
+  let { alreadyPurchasedData: { epStatus, purchased } } = props;
   let packageRequired = 'enrollment';
   if (epStatus && isEmpty(purchased)) {
     packageRequired = 'perClassAndMonthly';
@@ -214,7 +212,7 @@ PaymentAndStatus = (props) => {
     show = false;
   }
   else{
-    purchased.map((obj, index) => {
+    purchased.map((obj) => {
       if (obj.noClasses == null && obj.packageType == 'MP') {
         show = false;
       }

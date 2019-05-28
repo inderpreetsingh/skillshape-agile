@@ -120,7 +120,7 @@ const ClassTimesList = props => {
   );
 
   const SchedulePopUp = props => {
-    let { day, time, duration, eventDate } = props;
+    let { day } = props;
     if (
       props.scheduleType === "recurring" ||
       props.scheduleType === "ongoing"
