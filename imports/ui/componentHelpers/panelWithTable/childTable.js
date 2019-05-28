@@ -206,13 +206,13 @@ class ChildTable extends React.Component {
                 <div className={classes.inputDisableBox}>
                   <span>
                 
-                    {x && x.key  ? x.key.map((current)=>{
+                    { x.key  ? x.key.map((current)=>{
                       if(current.label){
                         let result = `${first ?'':', '}${current.label}`
                         first = false;
                         return result;
                       }
-                    }) : x && x.startDate && moment(x.startDate).format('dddd') }
+                    }) : x.startDate && moment(x.startDate).format('dddd') }
                   </span>
                 </div>
               </Grid>

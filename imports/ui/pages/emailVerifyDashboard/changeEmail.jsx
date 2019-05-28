@@ -50,8 +50,8 @@ const Content = styled.div`
   min-height: 337px;
   transition: all 1s ease-out;
   ${props => (props.changeEmail
-    ? `animation: ${changeContentAnim} 1s`
-    : `animation: ${changeContentAnim} 1s`)}
+    && `animation: ${changeContentAnim} 1s`
+  )}
 `;
 export function ChangeEmailComponent(props) {
   return (

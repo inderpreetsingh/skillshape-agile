@@ -62,7 +62,7 @@ Meteor.methods({
           viewName: 'ClassTimes_CUD',
         })
       ) {
-        if (doc && doc.classTypeId && doc.locationId) {
+        if (doc.classTypeId && doc.locationId) {
           Meteor.call('classType.addLocationFilter', doc.classTypeId, doc.locationId, doc_id, 'editTime');
         }
         const classInterestData = ClassInterest.find({ classTimeId: doc_id }).fetch();

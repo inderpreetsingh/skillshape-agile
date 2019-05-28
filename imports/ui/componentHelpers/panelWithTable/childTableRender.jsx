@@ -48,8 +48,7 @@ export default function () {
       {childTable.title === 'Class Times' ? (
         <div className="panel-child-table">
           {(showForm
-            || (this.props
-              && MainTableHandleSubmit
+            || (MainTableHandleSubmit
               && MainTableHandleSubmit[
                 parentKey
               ])) && (
@@ -145,7 +144,7 @@ export default function () {
                           </ExpansionPanelSummary>
                           <ExpansionPanelDetails style={{ flexWrap: 'wrap' }}>
 
-                            {childTable
+                            {childTable.tableFields
                                 && childTable.tableFields.map((field, index1) => (
                                   <Fragment key={index1.toString}>
                                     <Grid
@@ -317,7 +316,7 @@ export default function () {
                           container
                           className={classes.classtypeInputContainer}
                         >
-                          {childTable
+                          {childTable.tableFields
                               && childTable.tableFields.map((field, index2) => (
                                 <Fragment key={index2.toString}>
                                   <Grid

@@ -3,7 +3,7 @@ import moment from 'moment';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants.js';
 export const formatTime = (startTime,timeZone) => {
 	const {props} = startTime
-	if (startTime && timeZone) {
+	if ( timeZone) {
 		return moment(props || startTime).tz(timeZone).format('hh:mm A z');
 	}
 	else{
@@ -47,10 +47,8 @@ export const formatClassTimesData = (classTimesData, hidePastDates = true) => {
 };
 
 export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
-	const classTimesData = { ...data };
-	// debugger;
 	let classTimes;
-	if (data && data.scheduleDetails && data.scheduleType === 'oneTime') {
+	if ( data.scheduleDetails && data.scheduleType === 'oneTime') {
 		classTimes = {};
 		let currentSchedule = data.scheduleDetails.oneTime || data.scheduleDetails;
 		let startDate, dayOfTheWeek, day, startTime, formattedTime, timePeriod, currentJsonData, timeUnits;
@@ -72,7 +70,7 @@ export const formatDataBasedOnScheduleType = (data, hidePastDates = true) => {
 				timeUnits: timeUnits,
 				date: `${startDate}`
 			};
-			if (classTimes && classTimes[day]) {
+			if ( classTimes[day]) {
 				let existingTimes = classTimes[day];
 				existingTimes.push(currentJsonData);
 				classTimes[day] = existingTimes;

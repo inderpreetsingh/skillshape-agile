@@ -57,7 +57,7 @@ export default function () {
           onModalClose={this.handleDialogState('emailUsDialog', false)}
         />
       )}
-      {schoolData && (
+      {schoolData.name && (
         <SectionTitle bgColor="white">
           Media at
           {schoolData.name}

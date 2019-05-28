@@ -462,31 +462,27 @@ class ClassTime extends Component {
       formattedClassTimesDetails,
       onModalClose,
       editMode,
-      classTimeData,
+      classTimeData={},
       onEditClassTimesClick,
       schoolId,
       params,
       classTypeId,
       popUp,
       schoolData,
-      enrollmentIds,
       schoolName
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
     const {
       thinkingAboutAttending,
       description,
-      addToCalendar,
-      notification
     } = this.state;
-    const {_id:classTimeId} = classTimeData || {};
+    const {_id:classTimeId} = classTimeData;
     // console.group("formattedClassTimes");
     // console.groupEnd();
 
     //const showDescription = this.showDescription(formattedClassTimes);
     const {selectedLocation:{timeZone}} = classTimeData;
     const {name:classTimeName,classTypeName:{name:className}} = classTimeData;
-    const dotColor = this.getDotColor(this.props.addToCalendar);
     const title = `${className}: ${classTimeName}`; 
     return (
       <Fragment>

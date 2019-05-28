@@ -107,7 +107,7 @@ Meteor.methods({
     } else if (claimRequestRec.status === 'approved') {
       throw new Meteor.Error('This request has already been approved!');
     } else {
-      if (schoolData) delete schoolData._id;
+      delete schoolData._id;
       let approveRequest = false;
       if (status && status.keepMeSuperAdmin) {
         // Just keep me as a Super Admin.

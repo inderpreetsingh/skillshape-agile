@@ -104,7 +104,7 @@ export default class AddRow extends React.Component {
                       <Select
                         required
                         input={<Input id="currency" />}
-                        value={(data && data.currency) || currency}
+                        value={data.currency || currency}
                         onChange={(event) => {
                           const oldRow = [...this.state.row];
                           oldRow[index].currency = event.target.value;

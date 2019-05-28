@@ -15,12 +15,12 @@ import styled from "styled-components";
 import "/imports/api/classInterest/methods";
 import ClassTimes from "/imports/api/classTimes/fields";
 import "/imports/api/classTimes/methods";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes.jsx";
-import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import * as settings from "/imports/ui/components/landing/site-settings.js";
+import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton";
+import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
+import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
+import * as settings from "/imports/ui/components/landing/site-settings";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import { checkForAddToCalender, formatClassTimesData, formatDataBasedOnScheduleType, formStyles, imageExists } from "/imports/util";
 import Events from "/imports/util/events";
@@ -262,11 +262,11 @@ class ClassDetailModal extends React.Component {
   }
 
   componentWillMount() {
-    const {eventData} = this.props;
+    const {eventData:{schoolId}} = this.props;
     Meteor.call(
       "school.findSuperAdmin",
       null,
-      eventData.schoolId,
+      schoolId,
       (err, res) => {
         if (res)
           if (get(res, 'superAdmin', null) == Meteor.userId() || includes(get(res, 'admins', []), Meteor.userId())) {
@@ -549,7 +549,7 @@ class ClassDetailModal extends React.Component {
                   </ImageContainer>
                   <Event center={classImg !== ""}>
                     <EventName>
-                      {`${classType && classType.name.toLowerCase()}: ${
+                      {`${classType.name.toLowerCase()}: ${
                         eventData.name
                         }`}
                     </EventName>
@@ -776,7 +776,7 @@ class ClassDetailModal extends React.Component {
                       )}
                   </IconsWrapper>
                   <Grid item xs={12}>
-                    {classTypeData &&
+                    {
                       classTypeData.ageMin &&
                       classTypeData.ageMax && (
                         <MetaInfo
@@ -786,7 +786,7 @@ class ClassDetailModal extends React.Component {
                           title={"Age:" + " "}
                         />
                       )}
-                    {classTypeData &&
+                    {
                       classTypeData.gender &&
                       classTypeData.gender !== "All" && (
                         <MetaInfo
@@ -795,7 +795,7 @@ class ClassDetailModal extends React.Component {
                         />
                       )}
 
-                    {classTypeData &&
+                    {
                       classTypeData.experienceLevel &&
                       classTypeData.experienceLevel == "All" ? (
                         <MetaInfo
@@ -808,7 +808,7 @@ class ClassDetailModal extends React.Component {
                           title={"Experience:  " + " "}
                         />
                       )}
-                    {classType &&
+                    {
                       classType.desc && (
                         <MetaInfo
                           data={`  ${classType.desc}`}

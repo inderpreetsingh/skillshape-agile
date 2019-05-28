@@ -130,7 +130,7 @@ export default class SchoolViewBase extends React.Component {
 			currentUser.profile.schoolId.length > 1
 		) {
 			return 'btn-default';
-		} if (claimed == 'Y') {
+		} else if (claimed === 'Y') {
 			return 'btn-danger';
 		} else {
 			return 'btn-success';
@@ -146,7 +146,7 @@ export default class SchoolViewBase extends React.Component {
 		let image = ClassType.findOne({ _id: classType }).classTypeImg;
 		if (image && image.length) {
 			return image;
-		} if (classImagePath && classImagePath.length > 1) {
+		} else if (classImagePath && classImagePath.length > 1) {
 			return classImagePath;
 		} else {
 			return 'http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg';
@@ -289,7 +289,7 @@ export default class SchoolViewBase extends React.Component {
 		const { claimSchoolModal, claimRequestModal, successModal } = this.state;
 		if (claimSchoolModal) {
 			return 'Are you sure You Claim this school?';
-		} if (claimRequestModal) {
+		} else if (claimRequestModal) {
 			return 'This school is already claimed. Do you want to continue?';
 		} else if (successModal) {
 			return 'Claim Status';

@@ -51,10 +51,11 @@ Meteor.methods({
         ***/
         const fromEmail = 'Notices@SkillShape.com';
         const schoolData = School.findOne({_id: data.schoolId});
+        const {_id:schoolId,slug,admins,superAdmin} = schoolData;
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
-        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members?userId=${this.userId}` : '';
-        const updateClassLocationLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
-        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${slug}/members?userId=${this.userId}` : '';
+        const updateClassLocationLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${slug}`;
         const currentUserName = data.name;
         const requestFor = "Class location";
 
@@ -63,7 +64,7 @@ Meteor.methods({
         let toEmail = '';
 
          // 1. sending mail to the school owner.
-         if(schoolData) {
+         if(superAdmin || admins) {
             // Get Admin of School As school Owner
            const adminUser = Meteor.users.findOne(schoolData.admins[0] || schoolData.superAdmin);
            ownerName= getUserFullName(adminUser);

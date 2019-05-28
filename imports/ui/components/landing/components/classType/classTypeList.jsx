@@ -331,7 +331,6 @@ export default createContainer((props) => {
   let isLoading = true;
   let subscription;
   let reviewsSubscription;
-  let classTimesSubscription;
   const filters = props.filters ? props.filters : {};
   if (props.mapView) {
     const query = props.location && props.location.query;
@@ -350,7 +349,7 @@ export default createContainer((props) => {
 
   const classInterestSub = Meteor.subscribe('classInterest.getClassInterest');
   // debugger;
-  const { schoolId } = props.filters;
+  const { schoolId } = props.filters || {};
   if (schoolId) {
     classTypeData = ClassType.find({
       schoolId,

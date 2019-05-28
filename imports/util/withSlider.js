@@ -86,7 +86,6 @@ const withSlider = (WrappedComponent, sliderConfig, sliderBreakPoints) => (props
     variableWidth: sliderConfig.variableWidth || false,
     infinite: true,
     speed: sliderConfig.speed || 500,
-    slidesToShow: 1,
     slidesToScroll: 1,
     arrows: sliderConfig.arrows || false,
     autoplay,
@@ -100,7 +99,7 @@ const withSlider = (WrappedComponent, sliderConfig, sliderBreakPoints) => (props
       const { sliderProps } = props;
       if (sliderProps && sliderProps.onAfterSlideChange) { sliderProps.onAfterSlideChange(index); }
     },
-    slidesToShow: sliderConfig.desktop,
+    slidesToShow: sliderConfig.desktop || 1,
     responsive: [{ breakpoint: breakPoints.mobile, settings: { slidesToShow: sliderConfig.mobile } }, { breakpoint: breakPoints.tablet, settings: { slidesToShow: sliderConfig.tablet } }],
   };
 

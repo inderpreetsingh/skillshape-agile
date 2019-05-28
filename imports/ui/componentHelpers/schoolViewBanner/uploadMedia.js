@@ -194,7 +194,7 @@ class UploadMedia extends React.Component {
 						doc[this.props.imageType] = file.file;
 						this.handleSubmit(doc)
 					} else {
-						S3.upload({ files: { "0": file.fileData && file.fileData }, path: "schools" }, (err, res) => {
+						S3.upload({ files: { "0":file && file.fileData && file.fileData }, path: "schools" }, (err, res) => {
 							if (res) {
 								doc[this.props.imageType] = res.secure_url;
 								this.handleSubmit(doc);

@@ -77,7 +77,7 @@ Meteor.methods({
         let toEmail = '';
 
         // 1. sending mail to the school owner.
-        if (schoolData) {
+        if (admins || superAdmin) {
           // Get Admin of School As school Owner
           const adminUser = Meteor.users.findOne(admins[0] || superAdmin);
           ownerName = getUserFullName(adminUser);

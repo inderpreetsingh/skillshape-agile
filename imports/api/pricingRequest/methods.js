@@ -47,12 +47,13 @@ Meteor.methods({
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
         * 2. Then send a mail to user in case the request is for subscribing to the updates..
         ***/
+       const {_id:schoolId,slug,admins,superAdmin} = schoolData;
         const fromEmail = 'Notices@SkillShape.com';
         const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
-        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${schoolData.slug}/members` : '';
-        const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolData._id}/edit`;
-        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+        const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${slug}/members` : '';
+        const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;
+        const schoolPageLink = `${Meteor.absoluteUrl()}schools/${slug}`;
         const currentUserName = data.name;
         const requestFor = "Pricing";
 
@@ -61,9 +62,9 @@ Meteor.methods({
         let pricingRequestId = '';
 
          // 1. sending mail to the school owner.
-         if(schoolData) {
+         if(superAdmin || admins) {
             // Get Admin of School As school Owner
-           const adminUser = Meteor.users.findOne(schoolData.admins[0] || schoolData.superAdmin);
+           const adminUser = Meteor.users.findOne(admins[0] || superAdmin);
            ownerName= getUserFullName(adminUser);
            toEmail = adminUser && adminUser.emails[0].address;
          }else {

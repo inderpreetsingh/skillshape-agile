@@ -651,10 +651,11 @@ class DashBoardView extends React.Component {
     // memberInfo = this.state.memberInfo
     let subscriptionList = await packageCoverProvider(get(purchaseByUserId, _id, []));
     this.handleDrawerToggle();
+    const {_id:mId,adminNotes,classmatesNotes,classTypeIds,studentWithoutEmail,packageDetails} = memberInfo;
     this.setState({
       memberInfo: {
         _id: _id,
-        memberId: memberInfo._id,
+        memberId:mId,
         name: profile.name,
         phone: profile.phone,
         email: email,
@@ -662,15 +663,15 @@ class DashBoardView extends React.Component {
         emailAccess,
         activeUserId: get(memberInfo, 'activeUserId', _id),
         schoolId: schoolId,
-        adminNotes: memberInfo.adminNotes,
-        classmatesNotes: memberInfo.classmatesNotes,
+        adminNotes: adminNotes,
+        classmatesNotes: classmatesNotes,
         birthYear: profile.birthYear,
         lastName: profile.lastName,
-        classTypeIds: memberInfo.classTypeIds,
+        classTypeIds: classTypeIds,
         firstName: profile.firstName,
         pic: pic,
-        studentWithoutEmail: memberInfo.studentWithoutEmail,
-        packageDetails: memberInfo.packageDetails,
+        studentWithoutEmail: studentWithoutEmail,
+        packageDetails: packageDetails,
         schoolName: schoolName,
         subscriptionList,
         superAdmin,

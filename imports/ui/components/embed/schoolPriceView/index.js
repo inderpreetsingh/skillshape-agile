@@ -8,16 +8,16 @@ import ClassType from '/imports/api/classType/fields';
 import { EnrollmentPackagesDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList.jsx';
+import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList';
 import {
   withPopUp, emailRegex, stripePaymentHelper, normalizeMonthlyPricingData, handleSignUpSubmit, handleLoginFacebook, handleLoginGoogle,
 } from '/imports/util';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import Events from '/imports/util/events';
-import LoginDialogBox from '/imports/ui/components/landing/components/dialogs/LoginDialogBox.jsx';
-import SignUpDialogBox from '/imports/ui/components/landing/components/dialogs/SignUpDialogBox.jsx';
+import LoginDialogBox from '/imports/ui/components/landing/components/dialogs/LoginDialogBox';
+import SignUpDialogBox from '/imports/ui/components/landing/components/dialogs/SignUpDialogBox';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 
 class SchoolPriceView extends React.Component {
   constructor(props) {
@@ -240,7 +240,7 @@ class SchoolPriceView extends React.Component {
     const { isBusy } = this.state;
     return (
       <div className="wrapper">
-        {this.state && this.state.isLoading && <ContainerLoader />}
+        { this.state.isLoading && <ContainerLoader />}
         {this.state.loginModal && (
           <LoginDialogBox
             {...this.state}
