@@ -651,7 +651,7 @@ class DashBoardView extends React.Component {
     // memberInfo = this.state.memberInfo
     let subscriptionList = await packageCoverProvider(get(purchaseByUserId, _id, []));
     this.handleDrawerToggle();
-    const {_id:mId,adminNotes,classmatesNotes,classTypeIds,studentWithoutEmail,packageDetails} = memberInfo;
+    const {_id:mId,adminNotes,classmatesNotes,classTypeIds,studentWithoutEmail,packageDetails} = memberInfo || {};
     this.setState({
       memberInfo: {
         _id: _id,

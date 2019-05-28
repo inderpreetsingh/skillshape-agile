@@ -12,10 +12,10 @@ import styled from 'styled-components';
 import ChildTable from './childTable';
 import MapComponent from './mapComponent';
 import MediaUpload from '/imports/ui/componentHelpers/mediaUpload';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx';
-import { rhythmDiv, tablet } from '/imports/ui/components/landing/components/jss/helpers.js';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox';
+import { rhythmDiv, tablet } from '/imports/ui/components/landing/components/jss/helpers';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 const ButtonsWrapper = styled.div`
   display: flex;
@@ -249,7 +249,7 @@ export default function () {
                           container
                           className={classes.classtypeInputContainer}
                         >
-                          {settings.mainTable
+                          {settings.mainTable.tableFields
                             && settings.mainTable.tableFields.map(
                               (field, index) =>
                                 // console.log("test1 Name -->>",test1);
@@ -317,7 +317,7 @@ export default function () {
                             )}
                         </Grid>
                         <ButtonsWrapper>
-                          {settings.mainTable.actions.del && (
+                          {settings.mainTable.actions && settings.mainTable.actions.del && (
                             <ButtonWrapper left>
                               {/* <Button
                                 onClick={() => {

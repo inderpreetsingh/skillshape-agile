@@ -67,7 +67,7 @@ export default function () {
               ref={(ref) => { this.gender = ref; }}
               onChange={() => this.props.onSearch(this)}
             >
-              <option value="" disabled selected>Select Gender</option>
+              <option defaultValue={config.gender[0].value} disabled>Select Gender</option>
               {
                             config.gender.map((data, index) => <option key={index} value={data.value}>{data.label}</option>)
                         }
@@ -113,7 +113,7 @@ export default function () {
             ref={(ref) => { this.experienceLevel = ref; }}
             onChange={() => this.props.onSearch(this)}
           >
-            <option value="" disabled selected>Select Experience Level</option>
+            <option defaultValue={config.experienceLevel[0].value} disabled>Select Experience Level</option>
             {
                         config.experienceLevel.map((data, index) => <option key={index} value={data.value}>{data.label}</option>)
                     }

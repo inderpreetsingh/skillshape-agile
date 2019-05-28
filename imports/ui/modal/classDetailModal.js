@@ -595,7 +595,7 @@ class ClassDetailModal extends React.Component {
                         {/* timeUnits are added for mins,hours */}
                         {`${eventData.eventStartTime}`}
 
-                        {eventData &&
+                        {
                           eventData.durationAndTimeunits &&
                           "  For " + eventData.durationAndTimeunits}
                         {/* {scheduleDetails.map(value => {

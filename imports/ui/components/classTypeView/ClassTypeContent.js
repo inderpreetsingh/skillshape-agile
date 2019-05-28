@@ -1,48 +1,43 @@
-import { isEmpty } from "lodash";
-import Typography from "material-ui/Typography";
-import React, { Component, Fragment } from "react";
-import { Element, scroller } from "react-scroll";
-import styled from "styled-components";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
-import ClassTypeCover from "/imports/ui/components/landing/components/class/cover/ClassTypeCover.jsx";
-import ClassTypeCoverContent from "/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent.jsx";
-import SchoolDetails from "/imports/ui/components/landing/components/class/details/SchoolDetails.jsx";
-import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import ReviewsManager from "/imports/ui/components/landing/components/class/reviews/ReviewsManager.jsx";
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
+import { isEmpty, get } from 'lodash';
+import Typography from 'material-ui/Typography';
+import React, { Component, Fragment } from 'react';
+import { Element, scroller } from 'react-scroll';
+import styled from 'styled-components';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
+import ClassTypeCover from '/imports/ui/components/landing/components/class/cover/ClassTypeCover';
+import ClassTypeCoverContent from '/imports/ui/components/landing/components/class/cover/ClassTypeCoverContent';
+import SchoolDetails from '/imports/ui/components/landing/components/class/details/SchoolDetails';
+import PackagesList from '/imports/ui/components/landing/components/class/packages/PackagesList';
+import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager';
+import ClassTimesBoxes from '/imports/ui/components/landing/components/classTimes/ClassTimesBoxes';
 import {
   EmailUsDialogBox,
   CallUsDialogBox,
   GiveReviewDialogBox,
   ManageRequestsDialogBox,
   EnrollmentPackagesDialogBox,
-  NonUserDefaultDialogBox
+  NonUserDefaultDialogBox,
 } from '/imports/ui/components/landing/components/dialogs/';
 
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import Preloader from "/imports/ui/components/landing/components/Preloader.jsx";
-import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
-import ManageMyCalendar from "/imports/ui/components/users/manageMyCalendar/index.js";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopUp, stripePaymentHelper } from "/imports/util";
-import { getUserFullName } from "/imports/util/getUserData";
-import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
-import withImageExists from "/imports/util/withImageExists.js";
-import {normalizeMonthlyPricingData} from "/imports/util";
-import { get } from "lodash";
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import Preloader from '/imports/ui/components/landing/components/Preloader';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings';
+import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import {
+  capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopUp, stripePaymentHelper,
+  normalizeMonthlyPricingData,
+} from '/imports/util';
+import { getUserFullName } from '/imports/util/getUserData';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
+import withImageExists from '/imports/util/withImageExists';
+
+
 const imageExistsConfig = {
-  originalImagePath: "classTypeData.classTypeImg",
-  defaultImage: classTypeImgSrc
+  originalImagePath: 'classTypeData.classTypeImg',
+  defaultImage: classTypeImgSrc,
 };
 
-const SchoolImgWrapper = styled.div`
-  height: 400px;
-`;
-
-const SchoolImg = styled.img`
-  width: 100%;
-  height: 100%;
-`;
 
 const PreloaderWrapper = styled.div`
   ${helpers.flexCenter};
@@ -57,43 +52,28 @@ const Main = styled.main`
 `;
 
 const MainInnerFixedContainer = styled.div`
-  max-width: ${props =>
-    props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth}px;
+  max-width: ${props => (props.fixedWidth ? props.fixedWidth : helpers.maxContainerWidth)}px;
   width: 100%;
   margin: 0 auto;
   margin-top: ${props => props.marginTop}px;
-  margin-bottom: ${props =>
-    props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2}px;
+  margin-bottom: ${props => (props.marginBottom ? props.marginBottom : helpers.rhythmDiv * 2)}px;
 `;
 
 const MainInner = styled.div`
-  padding: ${props =>
-    props.largePadding ? props.largePadding : helpers.rhythmDiv * 2}px;
-  overflow: ${props =>
-    props.reviews || props.classTimes ? "hidden" : "initial"};
+  padding: ${props => (props.largePadding ? props.largePadding : helpers.rhythmDiv * 2)}px;
+  overflow: ${props => (props.reviews || props.classTimes ? 'hidden' : 'initial')};
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding: ${props =>
-    props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
+    padding: ${props => (props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2)}px;
   }
 `;
 
-const ClassTypeDetailsWrapper = styled.div`
-  ${helpers.flexDirectionColumn};
-`;
-
-const DescriptionText = styled.p`
-  font-family: ${helpers.commonFont};
-  font-size: ${helpers.baseFontSize}px;
-  line-height: 1;
-`;
 
 const ClassWrapper = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    padding-bottom: ${props =>
-    props.paddingBottom ? props.paddingBottom : 0}px;
+    padding-bottom: ${props => (props.paddingBottom ? props.paddingBottom : 0)}px;
   }
 `;
 
@@ -111,8 +91,7 @@ const ClassTimesInnerWrapper = styled.div`
   padding: 0px;
   overflow: hidden;
   @media screen and (max-width: ${helpers.mobile}px) {
-    padding: ${props =>
-    props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2}px;
+    padding: ${props => (props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2)}px;
     padding-top: 0;
   }
 `;
@@ -170,8 +149,7 @@ const ClassContainer = styled.div`
   padding-bottom: ${props => props.paddingBottom}px;
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter} flex-direction: column;
-    padding-bottom: ${props =>
-    props.smallPadding ? props.smallPadding : props.paddingBottom}px;
+    padding-bottom: ${props => (props.smallPadding ? props.smallPadding : props.paddingBottom)}px;
   }
 `;
 
@@ -190,17 +168,17 @@ class ClassTypeContent extends Component {
     giveReviewDialog: false,
     manageRequestsDialog: false,
     nonUserDefaultDialog: false,
-    defaultDialogBoxTitle: "",
-    manageRequestTitle: "",
-    type: "both",
+    defaultDialogBoxTitle: '',
+    manageRequestTitle: '',
+    type: 'both',
     classTimesData: [],
     myClassTimes: [],
     manageAll: true,
     attendAll: true,
     filter: {
       classTimesIds: [],
-      classTimesIdsForCI: []
-    }
+      classTimesIdsForCI: [],
+    },
   };
   //
   // _setDefaultDialogBoxTitle = (title) => {
@@ -208,23 +186,19 @@ class ClassTypeContent extends Component {
   //   this.setState(newState);
   // }
 
-  getContactNumbers = () => {
-    return (
-      this.props.schoolData.phone &&
-      this.props.schoolData.phone.split(/[\|\,\\]/)
-    );
-  };
+  getContactNumbers = () => (
+    this.props.schoolData.phone
+      && this.props.schoolData.phone.split(/[\|\,\\]/)
+  );
 
-  getOurEmail = () => {
-    return this.props.schoolData.email;
-  };
+  getOurEmail = () => this.props.schoolData.email;
 
   handleEmailUsButtonClick = () => {
-    this.handleDialogState("emailUsDialog", true);
+    this.handleDialogState('emailUsDialog', true);
   };
 
   handleCallUsButtonClick = () => {
-    this.handleDialogState("callUsDialog", true);
+    this.handleDialogState('callUsDialog', true);
   };
 
   handleDialogState = (dialogName, state, event, errorMessage, resMessage) => {
@@ -233,12 +207,12 @@ class ClassTypeContent extends Component {
     newState[dialogName] = state;
     this.setState(newState);
     if (resMessage) {
-      popUp.appear("success", { content: resMessage });
+      popUp.appear('success', { content: resMessage });
     }
   };
 
   _getCategoryName = (categoryId, categoryData) => {
-    let categoryName = "";
+    const categoryName = '';
     for (let i = 0; i < categoryData.length; ++i) {
       if (categoryData[i]._id === categoryId) {
         return categoryData[i].name;
@@ -249,11 +223,11 @@ class ClassTypeContent extends Component {
   modifySelectSubjectsInClassTypeData = () => {
     const { classTypeData } = this.props;
 
-    classTypeData.selectedSkillSubject.map(subjectData => {
-      if (subjectData.name == "Others") {
+    classTypeData.selectedSkillSubject.map((subjectData) => {
+      if (subjectData.name == 'Others') {
         const categoryName = this._getCategoryName(
           subjectData.skillCategoryId,
-          classTypeData.selectedSkillCategory
+          classTypeData.selectedSkillCategory,
         );
         subjectData.name = `${subjectData.name} -- ${categoryName}`;
       }
@@ -263,35 +237,34 @@ class ClassTypeContent extends Component {
     return classTypeData;
   };
 
- 
 
   scrollTo(name) {
-    scroller.scrollTo(name || "content-container", {
+    scroller.scrollTo(name || 'content-container', {
       duration: 800,
       delay: 0,
-      smooth: "easeInOutQuart"
+      smooth: 'easeInOutQuart',
     });
   }
 
-  requestPricingInfo = text => {
+  requestPricingInfo = (text) => {
     const { popUp, classTypeData, schoolData } = this.props;
     if (!Meteor.userId()) {
-      this.handleManageRequestsDialogBox("Pricing", true);
+      this.handleManageRequestsDialogBox('Pricing', true);
       // this.handleDialogState('manageRequestsDialog',true);
     } else {
       const data = {
         classTypeId: classTypeData._id,
-        schoolId: schoolData._id
+        schoolId: schoolData._id,
       };
 
-      Meteor.call("pricingRequest.addRequest", data, (err, res) => {
+      Meteor.call('pricingRequest.addRequest', data, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
-            //popUp.appear('error',err.reason || err.message,"Error", {}, false);
-            popUp.appear("alert", { content: err.reason || err.message });
+            // popUp.appear('error',err.reason || err.message,"Error", {}, false);
+            popUp.appear('alert', { content: err.reason || err.message });
           } else {
             // popUp.appear(,'Your request has been processed','success');
-            this.handleRequest("pricing");
+            this.handleRequest('pricing');
           }
         });
       });
@@ -314,18 +287,18 @@ class ClassTypeContent extends Component {
     // }*/
   };
 
-  handleRequest = text => {
+  handleRequest = (text) => {
     const { schoolData } = this.props;
 
     if (!isEmpty(schoolData)) {
-      let emailBody = "";
-      let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
-      let subject = "",
-        message = "";
-      let currentUserName = getUserFullName(Meteor.user());
+      let emailBody = '';
+      const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+      const subject = '';
+      const message = '';
+      const currentUserName = getUserFullName(Meteor.user());
       emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
-        text ? text : pricing
-        }%3F %0D%0A%0D%0A Thanks`;
+        text || pricing
+      }%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
 
@@ -336,25 +309,25 @@ class ClassTypeContent extends Component {
   };
 
   handleClassTimeRequest = () => {
-    this.setState({ isBusy: true },()=>{
+    this.setState({ isBusy: true }, () => {
       const { popUp, classTypeData, schoolData } = this.props;
       if (!Meteor.userId()) {
-        this.handleManageRequestsDialogBox("Schedule Info", true);
+        this.handleManageRequestsDialogBox('Schedule Info', true);
       } else {
         const data = {
           classTypeId: classTypeData._id,
-          schoolId: schoolData._id
+          schoolId: schoolData._id,
         };
-        Meteor.call("classTimesRequest.addRequest", data, "save",(err, res) => {
+        Meteor.call('classTimesRequest.addRequest', data, 'save', (err, res) => {
           this.setState({ isBusy: false }, () => {
             if (err) {
-              //debugger;
-              popUp.appear("alert", { content: err.reason || err.message });
+              // debugger;
+              popUp.appear('alert', { content: err.reason || err.message });
             } else {
-              popUp.appear("success", {
-                content: "Your request has been processed"
+              popUp.appear('success', {
+                content: 'Your request has been processed',
               });
-              this.handleRequest("Class times");
+              this.handleRequest('Class times');
             }
           });
         });
@@ -394,7 +367,7 @@ class ClassTypeContent extends Component {
     const newState = {
       ...this.state,
       defaultDialogBoxTitle: title,
-      nonUserDefaultDialog: state
+      nonUserDefaultDialog: state,
     };
     this.setState(newState);
   };
@@ -403,7 +376,7 @@ class ClassTypeContent extends Component {
     const newState = {
       ...this.state,
       manageRequestTitle: title,
-      manageRequestsDialog: state
+      manageRequestsDialog: state,
     };
     // console.info(newState,"my new State...");
     this.setState(newState);
@@ -411,15 +384,13 @@ class ClassTypeContent extends Component {
 
   handleGiveReview = () => {
     if (Meteor.userId()) {
-      this.handleDialogState("giveReviewDialog", true);
+      this.handleDialogState('giveReviewDialog', true);
     } else {
-      this.handleDefaultDialogBox("Login to give review", true);
+      this.handleDefaultDialogBox('Login to give review', true);
     }
   };
 
-  getReviewTitle = name => {
-    return `Give review for ${capitalizeString(name)}`;
-  };
+  getReviewTitle = name => `Give review for ${capitalizeString(name)}`;
 
   componentDidMount = () => {
     document.title = this.props.classTypeData
@@ -435,7 +406,8 @@ class ClassTypeContent extends Component {
         : this.props.params.classTypeName;
     });
   };
-  handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType
+
+  handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,
   ) => {
     try {
       stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
@@ -457,7 +429,7 @@ class ClassTypeContent extends Component {
       mediaData,
       reviewsData,
       classInterestData,
-      currency
+      currency,
     } = this.props;
 
     if (isLoading) {
@@ -469,64 +441,62 @@ class ClassTypeContent extends Component {
     }
 
 
-
-    /*if (isEmpty(classTypeData)) {
+    /* if (isEmpty(classTypeData)) {
       return (
         <Typography type="display2" gutterBottom align="center">
           Class Type not found!!!
         </Typography>
       );
-    }*/
+    } */
 
-    let submitBtnLabel = "Request pricing";
-    let requestFor = "price";
+    let submitBtnLabel = 'Request pricing';
+    let requestFor = 'price';
     const ourEmail = this.getOurEmail();
-    const emailUsButton = ourEmail ? true : false;
+    const emailUsButton = !!ourEmail;
     const isReviewsDataEmpty = isEmpty(reviewsData);
     const { manageRequestTitle } = this.state;
     const formattedClassTimesData = formatClassTimesData(classTimesData).filter(
-      data => data.formattedClassTimesDetails.totalClassTimes > 0
+      data => data.formattedClassTimesDetails.totalClassTimes > 0,
     );
 
 
     if (manageRequestTitle) {
-      submitBtnLabel =
-        manageRequestTitle != "Pricing"
-          ? "Request class times"
-          : submitBtnLabel;
-      requestFor = manageRequestTitle != "Pricing" ? "class times" : requestFor;
+      submitBtnLabel = manageRequestTitle != 'Pricing'
+        ? 'Request class times'
+        : submitBtnLabel;
+      requestFor = manageRequestTitle != 'Pricing' ? 'class times' : requestFor;
     }
     const purchasedSuccessfully = () => {
       this.setState({ enrollmentPackagesDialog: false });
-    }
+    };
     return (
       <div>
         {this.state.callUsDialog && (
           <CallUsDialogBox
             contactNumbers={this.getContactNumbers()}
             open={this.state.callUsDialog}
-            onModalClose={() => this.handleDialogState("callUsDialog", false)}
+            onModalClose={() => this.handleDialogState('callUsDialog', false)}
           />
         )}
         {
-          this.state.enrollmentPackagesDialog &&
+          this.state.enrollmentPackagesDialog
+          && (
           <EnrollmentPackagesDialogBox
             open={this.state.enrollmentPackagesDialog}
             schoolId={classTypeData.schoolId}
             onAddToCartIconButtonClick={this.handlePurchasePackage}
             onModalClose={() => {
-              this.setState(state => {
-                return {
-                  ...state,
-                  enrollmentPackagesDialog: false,
-                  selectedClassTypeIds: null
-                }
-              })
+              this.setState(state => ({
+                ...state,
+                enrollmentPackagesDialog: false,
+                selectedClassTypeIds: null,
+              }));
             }}
             classTypeIds={this.state.selectedClassTypeIds}
             epData={this.state.epData}
             currentPackageData={this.state.currentPackageData}
           />
+          )
         }
         {this.state.emailUsDialog && (
           <EmailUsDialogBox
@@ -534,19 +504,17 @@ class ClassTypeContent extends Component {
             ourEmail={ourEmail}
             open={this.state.emailUsDialog}
             currentUser={this.props.currentUser}
-            onModalClose={(err, res) =>
-              this.handleDialogState("emailUsDialog", false, err, res)
+            onModalClose={(err, res) => this.handleDialogState('emailUsDialog', false, err, res)
             }
           />
         )}
         {this.state.giveReviewDialog && (
           <GiveReviewDialogBox
-            title={this.getReviewTitle(classTypeData && classTypeData.name)}
+            title={this.getReviewTitle(classTypeData.name)}
             reviewFor="class"
             reviewForId={classTypeData._id}
             open={this.state.giveReviewDialog}
-            onModalClose={() =>
-              this.handleDialogState("giveReviewDialog", false)
+            onModalClose={() => this.handleDialogState('giveReviewDialog', false)
             }
           />
         )}
@@ -554,24 +522,24 @@ class ClassTypeContent extends Component {
           <NonUserDefaultDialogBox
             title={this.state.defaultDialogBoxTitle}
             open={this.state.nonUserDefaultDialog}
-            onModalClose={() => this.handleDefaultDialogBox("", false)}
+            onModalClose={() => this.handleDefaultDialogBox('', false)}
           />
         )}
         {this.state.manageRequestsDialog && (
           <ManageRequestsDialogBox
             title={this.state.manageRequestTitle}
             open={this.state.manageRequestsDialog}
-            onModalClose={() => this.handleManageRequestsDialogBox("", false)}
+            onModalClose={() => this.handleManageRequestsDialogBox('', false)}
             requestFor={requestFor}
             submitBtnLabel={submitBtnLabel}
             schoolData={schoolData}
             classTypeId={classTypeData._id}
-            onToastrClose={() => this.handleManageRequestsDialogBox("", false)}
+            onToastrClose={() => this.handleManageRequestsDialogBox('', false)}
           />
         )}
         {this.state.isBusy && <ContainerLoader />}
 
-        {/* Class Type Cover includes description, map, foreground image, class type information*/}
+        {/* Class Type Cover includes description, map, foreground image, class type information */}
         <ClassTypeCover coverSrc={bgImg}>
           <ClassTypeCoverContent
             coverSrc={bgImg}
@@ -579,20 +547,20 @@ class ClassTypeContent extends Component {
             classTypeData={{ ...this.modifySelectSubjectsInClassTypeData() }}
             contactNumbers={this.getContactNumbers()}
             actionButtonProps={{
-              emailUsButton: emailUsButton,
+              emailUsButton,
               onCallUsButtonClick: this.handleCallUsButtonClick,
               onEmailButtonClick: this.handleEmailUsButtonClick,
-              onPricingButtonClick: () => this.scrollTo("price-section")
+              onPricingButtonClick: () => this.scrollTo('price-section'),
             }}
             reviews={{
               noOfRatings: getAverageNoOfRatings(reviewsData),
-              noOfReviews: reviewsData.length
+              noOfReviews: reviewsData.length,
             }}
           />
         </ClassTypeCover>
         <Main>
           <MainInnerFixedContainer
-            marginTop={isReviewsDataEmpty ? "0" : "32"}
+            marginTop={isReviewsDataEmpty ? '0' : '32'}
             marginBottom={64}
           >
             {!isReviewsDataEmpty && (
@@ -604,7 +572,7 @@ class ClassTypeContent extends Component {
             )}
 
             <ClassContainer
-              marginTop={isReviewsDataEmpty ? "64" : "0"}
+              marginTop={isReviewsDataEmpty ? '64' : '0'}
               marginBottom="32"
             >
               {isReviewsDataEmpty && (
@@ -630,9 +598,10 @@ class ClassTypeContent extends Component {
             <ClassTimesInnerWrapper>
               <ClassTimesWrapper paddingBottom="48">
                 <ClassTimesTitle>
-                  Class times for{" "}
+                  Class times for
+                  {' '}
                   <ClassTimesName>
-                    {get(classTypeData,"name","").toLowerCase()}
+                    {get(classTypeData, 'name', '').toLowerCase()}
                   </ClassTimesName>
                 </ClassTimesTitle>
                 {isEmpty(formattedClassTimesData) ? (
@@ -652,11 +621,11 @@ class ClassTypeContent extends Component {
                     </GenericButtonWrapper>
                   </ClassContainer>
                 ) : (
-                    <ClassTimesBoxes
-                      classTimesData={formattedClassTimesData}
-                      classInterestData={classInterestData}
-                    />
-                  )}
+                  <ClassTimesBoxes
+                    classTimesData={formattedClassTimesData}
+                    classInterestData={classInterestData}
+                  />
+                )}
               </ClassTimesWrapper>
             </ClassTimesInnerWrapper>
           </MainInnerFixedContainer>
@@ -665,28 +634,21 @@ class ClassTypeContent extends Component {
               website={schoolData.website}
               address={schoolData.address}
               images={
-                !isEmpty(mediaData) &&
-                mediaData.map(media => ({
+                !isEmpty(mediaData)
+                && mediaData.map(media => ({
                   original: media.sourcePath,
                   thumbnail: media.sourcePath,
-                  media: media
+                  media,
                 }))
               }
-              schoolName={schoolData && schoolData.name}
+              schoolName={schoolData.name}
               notes={schoolData.studentNotesHtml}
               description={schoolData.aboutHtml}
             />
-            {/*<CalendarWrapper>
-                      <MyCalendar params={this.props.params} onJoinClassButtonClick={this.handleClassTimeRequest}/>
-                  </CalendarWrapper>*/}
-            {
-              /*<MyCalender {...this.props}/>*/
-
-            }
           </MainInnerFixedContainer>
           <CalendarWrapper>
             <ManageMyCalendar
-              classCalendar={true}
+              classCalendar
               {...this.props}
             />
           </CalendarWrapper>
@@ -716,18 +678,18 @@ class ClassTypeContent extends Component {
                   </GenericButtonWrapper>
                 </ClassContainer>
               ) : (
-                  <PackagesList
-                    onAddToCartIconButtonClick={this.handlePurchasePackage}
-                    schoolId={classTypeData.schoolId}
-                    enrollMentPackages
-                    enrollMentPackagesData={enrollmentFeeData}
-                    perClassPackagesData={classPricingData}
-                    monthlyPackagesData={normalizeMonthlyPricingData(
-                      monthlyPricingData
-                    )}
-                    currency={currency}
-                  />
-                )}
+                <PackagesList
+                  onAddToCartIconButtonClick={this.handlePurchasePackage}
+                  schoolId={classTypeData.schoolId}
+                  enrollMentPackages
+                  enrollMentPackagesData={enrollmentFeeData}
+                  perClassPackagesData={classPricingData}
+                  monthlyPackagesData={normalizeMonthlyPricingData(
+                    monthlyPricingData,
+                  )}
+                  currency={currency}
+                />
+              )}
             </PackagesWrapper>
           </Element>
 

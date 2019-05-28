@@ -784,7 +784,7 @@ class ManageMyCalendar extends React.Component {
                               managedClassTimes.map((classTime, index) => {
                                 const result = classTypeData.filter(item => {
                                   if (item._id == classTime.classTypeId) {
-                                    if (item) return item;
+                                    return item;
                                   }
                                 });
                                 return (

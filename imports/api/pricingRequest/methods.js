@@ -47,9 +47,9 @@ Meteor.methods({
         * 1. Now here we will have to send a mail to the school owner. (different emails for registered/unregistered)
         * 2. Then send a mail to user in case the request is for subscribing to the updates..
         ***/
+       const fromEmail = 'Notices@SkillShape.com';
+       const schoolData = School.findOne({_id: data.schoolId});
        const {_id:schoolId,slug,admins,superAdmin} = schoolData;
-        const fromEmail = 'Notices@SkillShape.com';
-        const schoolData = School.findOne({_id: data.schoolId});
         const classTypeName = data.classTypeId ? ClassType.findOne({_id: data.classTypeId}).name : '';
         const memberLink = this.userId ? `${Meteor.absoluteUrl()}schools/${slug}/members` : '';
         const updatePriceLink = `${Meteor.absoluteUrl()}SchoolAdmin/${schoolId}/edit`;

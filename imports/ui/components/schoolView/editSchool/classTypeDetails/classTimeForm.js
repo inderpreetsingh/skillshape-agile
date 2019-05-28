@@ -26,7 +26,7 @@ import LocationForm from '/imports/ui/components/schoolView/editSchool/locationD
 import RoomForm from "/imports/ui/components/schoolView/editSchool/locationDetails/roomForm";
 import { ContainerLoader } from "/imports/ui/loading/container";
 import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-import { withPopUp ,confirmationDialog,unSavedChecker,} from '/imports/util';
+import { unSavedChecker, withPopUp } from '/imports/util';
 import ResponsiveTabs from "/imports/util/responsiveTabs";
 
 
@@ -42,10 +42,7 @@ const ListWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-let FormWrapper, FormInputsWrapper;
-FormWrapper = FormInputsWrapper = styled.div`
-  padding: 0 ${helpers.rhythmDiv * 3}px;
-`;
+
 
 const DialogContentText = Text.extend`
   padding: 0;
@@ -222,7 +219,7 @@ class ClassTimeForm extends React.Component {
           if (location._id == event.target.value) {
             this.setState({
               roomData: !isEmpty(location.rooms) ? location.rooms : [],
-              roomId: location && location.rooms && location.rooms[0].id || ''
+              roomId: location.rooms && location.rooms[0].id || ''
             });
           }
         }) : this.setState({ roomId: '', roomData: [] })

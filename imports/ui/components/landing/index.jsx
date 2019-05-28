@@ -811,15 +811,19 @@ class Landing extends Component {
       && this.state.sticky
     ) {
       return 96; // Size of filter bar + buttons
-    } if (!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
+    } 
+    else if (!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
       return 96; // if any filter is applied
-    } else if (!this.state.mapView && this.state.sticky) {
+    } 
+    else if (!this.state.mapView && this.state.sticky) {
       // size without buttons..
       return 72;
     }
+    else{
+      return 0;
+    }
 
 
-    return 0; // if no filter is applied
   };
 
   render() {

@@ -29,7 +29,7 @@ Meteor.methods({
       if (
         checkMyAccess({
           user,
-          schoolId: doc.schoolId,
+          schoolId: doc && doc.schoolId,
           viewName: 'monthlyPricing_CUD',
         })
       ) {
