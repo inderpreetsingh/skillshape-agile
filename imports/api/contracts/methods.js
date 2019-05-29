@@ -17,11 +17,14 @@ Meteor.methods({
       const schoolData = School.findOne({ _id: schoolId });
       const { name, email } = schoolData;
       sendContractCancelledEmail({
-        userName, packageName, to: email, schoolName: name,
+        userName,
+        packageName,
+        to: email,
+        schoolName: name,
       });
       return Contracts.insert(doc);
-    } if (action == 'update') {
-      if (doc.status == 'allowed') {
+    } if (action === 'update') {
+      if (doc.status === 'allowed') {
         Meteor.call('purchases.addTransactionEntry', purchaseId, 'contractCancelled');
         if (!payAsYouGo) {
           cancelSubscription(purchaseId);
@@ -42,7 +45,10 @@ const cancelSubscription = (_id) => {
       subscriptionId,
       Meteor.bindEnvironment((err, confirmation) => {
         if (confirmation) {
-          Purchases.update({ subscriptionId }, { $set: { subscriptionCancelResponse: confirmation } });
+          Purchases.update(
+            { subscriptionId },
+            { $set: { subscriptionCancelResponse: confirmation } },
+          );
         }
       }),
     );
