@@ -341,9 +341,7 @@ export default class MyCalender extends React.Component {
     let filterForNotificationStatus = {classTimeId,classTypeId,userId:Meteor.userId()}
       Meteor.call("classInterest.getClassInterest",filterForNotificationStatus,(err,result)=>{
         if(!isEmpty(result)){
-          const {classInterestData,notification:{classTimesRequest,classTypeLocationRequest}} = result;
-          let calendar = !isEmpty(classInterestData);
-          let notification = !isEmpty(classTimesRequest)&& !isEmpty(classTypeLocationRequest) ;
+          const {notification:{classTimesRequest,}} = result;
           if(!isEmpty(classTimesRequest) || status == 'Sign Out'){
             if (status == "Sign In") {
               this.handleClassUpdate(classDetails ? classDetails : filter, 'signIn', popUp)

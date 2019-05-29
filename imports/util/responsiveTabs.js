@@ -67,7 +67,6 @@ const InnerWrapper = styled.div`
 class ResponsiveTabs extends React.Component {
   constructor(props) {
     super(props);
-    let { defaultValue } = this.props;
 
     this.state = {
       tabValue: this.props.tabValue

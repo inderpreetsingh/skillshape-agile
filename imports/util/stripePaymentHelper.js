@@ -200,7 +200,6 @@ isEnrollmentPurchase = (packageId, userId, packageType, self) => {
 //UI for enrollment package again purchase message
 popUpForEnrollment = (popUp, res, self) => {
     let classTypeIds = compact(res.map((obj) => { if (!obj.epStatus) return obj._id; }))
-    let classTypeNames = compact(res.map((obj) => { if (!obj.epStatus) return obj.name; }));
     popUp.close();
     self.setState(state => {
         return {
@@ -892,7 +891,6 @@ handleCharge = (
     contract
 ) => {
     const { popUp } = self.props;
-    let currentUser = Meteor.user();
     Meteor.call(
         'stripe.chargeCard',
         token.id,

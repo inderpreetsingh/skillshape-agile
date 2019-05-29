@@ -137,7 +137,7 @@ Meteor.methods({
   },
   "schoolMemberDetails.addNewMember": function(memberData) {
     check(memberData,Object);
-    const {activeUserId,schoolId,classTypeIds,classTypeId} = memberData;
+    const {activeUserId,schoolId,classTypeId} = memberData;
     memberData.addedOn = new Date();
     // First time new member added.
     if(!classTypeId){

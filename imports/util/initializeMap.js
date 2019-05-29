@@ -81,7 +81,7 @@ export function initializeSchoolEditLocationMap(location) {
         geolocate = new google.maps.LatLng(location.loc[1], location.loc[0])
         map.setCenter(geolocate);
 
-        let marker = new google.maps.Marker({
+         new google.maps.Marker({
             position: geolocate,
             map: map
         });

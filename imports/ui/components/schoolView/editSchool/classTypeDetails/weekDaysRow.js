@@ -115,7 +115,6 @@ export class WeekDaysRow extends React.Component {
     oldRow[index][fieldName] = event.target.value;
 
     if (fieldName === "key") {
-      let indexOfDay = scheduleDetails.indexOf(event.target.value);
       oldRow[index].day = 1 + scheduleDetails.indexOf(event.target.value);
     }
 

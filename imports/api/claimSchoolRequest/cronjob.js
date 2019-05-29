@@ -76,10 +76,6 @@ SyncedCron.add({
           emailSuccess = sendClaimSchoolEmail(requestObj, requestObj._id, toField);
         } else if (requestObj && requestObj.emailCount === 10) {
           requestObj.emailCount += 1;
-          toField = 'help@skillshape.com';
-          if (process.env.NODE_ENV === 'development') {
-            toField = 'naruto@ryaz.io';
-          }
           ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj });
           sendEmailToRequester(requestObj.userEmail, requestObj.userName, requestObj.schoolName);
         } else {

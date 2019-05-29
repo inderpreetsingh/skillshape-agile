@@ -269,9 +269,7 @@ class ClassTime extends Component {
   };
 
   reformatNewFlowData = () => {
-    const newData = {};
-    let { formattedClassTimesDetails, scheduleType } = this.props;
-    scheduleType = scheduleType.toLowerCase();
+    let { formattedClassTimesDetails } = this.props;
     return formattedClassTimesDetails;
   };
 

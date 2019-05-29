@@ -775,7 +775,7 @@ class DashBoardView extends React.Component {
     this.setMembersViewDimensions(height);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return !nextProps.isLoading;
   }
   render() {
@@ -786,7 +786,7 @@ class DashBoardView extends React.Component {
       schoolMemberListFilters.schoolId =
         !isEmpty(schoolData) && schoolData[0]._id;
     }
-    let { currentUser, isUserSubsReady } = this.props;
+    let { currentUser } = this.props;
     let filters = { ...this.state.filters };
     if (this.props.isLoading) {
       return <ContainerLoader />;

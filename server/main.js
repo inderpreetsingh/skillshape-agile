@@ -254,14 +254,5 @@ if (Meteor.isServer) {
       return true;
     }
   });
-  var restServiceGetCall = function(url) {
-    var result = HTTP.get(url);
-    if (result.statusCode == 200) {
-      response = JSON.parse(result.content);
-      return response;
-    } else {
-      var json = JSON.parse(result.content);
-      throw new Meteor.Error(result.statusCode, json.error);
-    }
-  };
+  
 }

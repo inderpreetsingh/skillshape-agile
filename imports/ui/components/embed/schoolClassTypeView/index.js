@@ -1,17 +1,17 @@
-import { createContainer } from "meteor/react-meteor-data";
-import React from "react";
+import { createContainer } from 'meteor/react-meteor-data';
+import React from 'react';
 import { isEmpty } from 'lodash';
-import ClassType from "/imports/api/classType/fields";
-import School from "/imports/api/school/fields";
-import config from "/imports/config.js";
-import ClassTypeList from "/imports/ui/components/landing/components/classType/classTypeList.jsx";
-import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
+import ClassType from '/imports/api/classType/fields';
+import School from '/imports/api/school/fields';
+import config from '/imports/config';
+import ClassTypeList from '/imports/ui/components/landing/components/classType/classTypeList';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 
 class SchoolClassTypeView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      seeMoreCount: 4
+      seeMoreCount: 4,
     };
   }
 
@@ -20,21 +20,20 @@ class SchoolClassTypeView extends React.Component {
     function getDocHeight(doc) {
       doc = doc || document;
       // from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
-      var body = doc.body,
-        html = doc.documentElement;
-      
-      return doc.getElementById("UserMainPanel").offsetHeight;
+
+
+      return doc.getElementById('UserMainPanel').offsetHeight;
     }
     // send docHeight onload
     function sendDocHeightMsg(e) {
-      var ht = getDocHeight();
+      const ht = getDocHeight();
 
       parent.postMessage(
         JSON.stringify({
           docHeight: ht,
-          iframeId: "ss-school-classtype-view"
+          iframeId: 'ss-school-classtype-view',
         }),
-        "*"
+        '*',
       );
     }
     // assign onload handler
@@ -49,7 +48,7 @@ class SchoolClassTypeView extends React.Component {
   handleSeeMore = () => {
     // Attach count with skill cateory name so that see more functionlity can work properly.
     // console.log("handleSeeMore");
-    let currentCount = this.state.seeMoreCount;
+    const currentCount = this.state.seeMoreCount;
     this.setState({ seeMoreCount: config.seeMoreCount + currentCount });
   };
 
@@ -57,54 +56,55 @@ class SchoolClassTypeView extends React.Component {
     const { schoolId, classTimesData } = this.props;
     return (
       <div className="wrapper">
-        {!isEmpty(classTimesData) ?
-          <ClassTypeList
-            containerPaddingTop="0px"
-            locationName={null}
-            mapView={false}
-            filters={{ schoolId: schoolId, limit: this.state.seeMoreCount }}
-            splitByCategory={false}
-            classTypeBySchool="classTypeBySchool"
-            handleSeeMore={this.handleSeeMore}
-            schoolView={true}
-            hideClassTypeOptions={this.props.route.name == "EmbedClassTypeView"}
-            classTimesData={classTimesData}
-            params={this.props.params}
-          />
-          :
-          <Text align="center">This school don't have any class yet.</Text>
+        {!isEmpty(classTimesData)
+          ? (
+            <ClassTypeList
+              containerPaddingTop="0px"
+              locationName={null}
+              mapView={false}
+              filters={{ schoolId, limit: this.state.seeMoreCount }}
+              splitByCategory={false}
+              classTypeBySchool="classTypeBySchool"
+              handleSeeMore={this.handleSeeMore}
+              schoolView
+              hideClassTypeOptions={this.props.route.name == 'EmbedClassTypeView'}
+              classTimesData={classTimesData}
+              params={this.props.params}
+            />
+          )
+          : <Text align="center">This school don't have any class yet.</Text>
         }
       </div>
     );
   }
 }
 
-export default createContainer(props => {
+export default createContainer((props) => {
   const { slug } = props.params;
   let classTimesData;
-  Meteor.subscribe("UserSchoolbySlug", slug);
-  const schoolData = School.findOne({ slug: slug });
+  Meteor.subscribe('UserSchoolbySlug', slug);
+  const schoolData = School.findOne({ slug });
   const schoolId = schoolData && schoolData._id;
   //   console.log("schoolId----------->",schoolId)
-  Meteor.subscribe("classTypeBySchool", { schoolId });
+  Meteor.subscribe('classTypeBySchool', { schoolId });
   if (schoolId) {
-    Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
-      schoolId: schoolId
+    Meteor.subscribe('classTimes.getclassTimesByClassTypeIds', {
+      schoolId,
     });
-    let classType = ClassType.find({ schoolId: schoolId }).fetch();
+    const classType = ClassType.find({ schoolId }).fetch();
     // Class times subscription.
-    let classTypeIds = classType && classType.map(data => data._id);
+    const classTypeIds = classType && classType.map(data => data._id);
     if (classTypeIds) {
-      Meteor.subscribe("classTimes.getclassTimesByClassTypeIds", {
+      Meteor.subscribe('classTimes.getclassTimesByClassTypeIds', {
         schoolId,
-        classTypeIds
+        classTypeIds,
       });
     }
   }
   //   console.log("classTimesData----------->",classTimesData)
   return {
     ...props,
-    classTimesData: classTimesData,
-    schoolId: schoolId
+    classTimesData,
+    schoolId,
   };
 }, SchoolClassTypeView);

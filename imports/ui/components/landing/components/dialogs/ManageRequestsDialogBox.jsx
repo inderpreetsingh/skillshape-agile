@@ -129,16 +129,12 @@ class ManageRequestsDialogBox extends Component {
 
   handleRequest = text => {
     const { schoolData } = this.props;
-    const userName = Meteor.userId
-      ? getUserFullName(Meteor.user())
-      : this.state.name;
     if (!isEmpty(schoolData)) {
       const ourEmail = schoolData.email;
       let emailBody = "";
-      let subject = "",
-        message = "";
+      let subject = "";
+      
       let url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
-      let currentUserName = userName;
       // emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text ? text : pricing}%3F %0D%0A%0D%0A Thanks`
       emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
         text ? text : pricing

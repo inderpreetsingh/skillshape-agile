@@ -135,13 +135,9 @@ class SchoolPriceView extends React.Component {
 
   onSignInButtonClick = (event) => {
     event.preventDefault();
-    let redirectUrl;
     const { email, password } = this.state;
     const stateObj = { ...this.state };
 
-    if (this.state.redirectUrl) {
-      redirectUrl = this.state.redirectUrl;
-    }
 
     if (email && password) {
       this.setState({ isLoading: true });

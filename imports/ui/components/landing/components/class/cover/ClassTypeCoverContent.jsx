@@ -311,8 +311,6 @@ class ClassTypeCoverContent extends React.Component {
       let emailBody = "";
       let url = `${Meteor.absoluteUrl()}schools/${schoolDetails.slug}`;
       let subject = "",
-        message = "";
-      let currentUserName = getUserFullName(Meteor.user());
       emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
         text ? text : pricing
         }%3F %0D%0A%0D%0A Thanks`;

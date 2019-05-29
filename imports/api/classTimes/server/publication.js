@@ -15,32 +15,27 @@ Meteor.publish('classTime.getClassTimesTypeByFilter', function (filter) {
 Meteor.publish('classTimes.getclassTimesForCalendar', function ({
   schoolId,
   classTypeId,
-  calendarStartDate,
-  calendarEndDate,
+  // calendarStartDate,
+  // calendarEndDate,
   view,
 }) {
-  let startDate = '';
-  let endDate = '';
   const result = [];
   let school;
+  // let startDate;
   // console.log("schoolId, classTypeId, calendarStartDate, calendarEndDate, view", schoolId, classTypeId, calendarStartDate, calendarEndDate, view)
-  if (calendarStartDate && calendarEndDate) {
-    startDate = new Date(calendarStartDate);
-    endDate = new Date(calendarEndDate);
-  } else {
-    calendarStartDate = new Date();
-    calendarEndDate = new Date();
-    startDate = new Date(
-      calendarStartDate.getFullYear(),
-      calendarStartDate.getMonth(),
-      0,
-    );
-    endDate = new Date(
-      calendarEndDate.getFullYear(),
-      calendarEndDate.getMonth(),
-      0,
-    );
-  }
+  // if (calendarStartDate && calendarEndDate) {
+  //   startDate = new Date(calendarStartDate);
+  //   // endDate = new Date(calendarEndDate);
+  // } else {
+  //   calendarStartDate = new Date();
+  //   calendarEndDate = new Date();
+  //   // startDate = new Date(calendarStartDate.getFullYear(), calendarStartDate.getMonth(), 0);
+  //   // endDate = new Date(
+  //   //   calendarEndDate.getFullYear(),
+  //   //   calendarEndDate.getMonth(),
+  //   //   0,
+  //   // );
+  // }
 
   const condition = {
     $or: [
@@ -51,12 +46,12 @@ Meteor.publish('classTimes.getclassTimesForCalendar', function ({
   };
 
   // School View
-  if (view == 'SchoolView') {
+  if (view === 'SchoolView') {
     school = School.findOne({ $or: [{ _id: schoolId }, { slug: schoolId }] });
     // condition.schoolId = school && school._id;
   }
   // Class Type View
-  if (view == 'ClassType') {
+  if (view === 'ClassType') {
     const classTypeRec = ClassType.findOne({ _id: classTypeId });
     const schoolId = classTypeRec && classTypeRec.schoolId;
     condition.$or.push({ classTypeId, schoolId });
@@ -80,7 +75,7 @@ Meteor.publish('classTimes.getclassTimesForCalendar', function ({
     const classTimeIds = classInterestCursor.map(data => data.classTimeId);
 
     // My Calander View and I don't manage any school and I have no class Interests.
-    if (view == 'MyCalendar') {
+    if (view === 'MyCalendar') {
       if (_.isEmpty(schoolIds) && _.isEmpty(classTimeIds)) {
         return [];
       }
@@ -112,10 +107,7 @@ Meteor.publish('classTimes.getclassTimesForCalendar', function ({
   return result;
 });
 
-Meteor.publish('classTimes.getclassTimesByClassTypeIds', function ({
-  schoolId,
-  classTypeIds,
-}) {
+Meteor.publish('classTimes.getclassTimesByClassTypeIds', function ({ schoolId, classTypeIds }) {
   // console.log("classTimes.getclassTimesByClassTypeIds -->>", schoolId, classTypeIds);
   const cursor = ClassTimes.find({
     schoolId,

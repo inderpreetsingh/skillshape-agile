@@ -170,16 +170,6 @@ Meteor.methods({
           userId: this.userId
         };
         PriceInfoRequest.insert(requestObj);
-
-        let superAdminData;
-        const currentUserData = Meteor.users.findOne({ _id: this.userId });
-        const schoolOwnerData = Meteor.users.findOne({
-          "profile.schoolId": schoolId
-        });
-
-        if (!schoolOwnerData) {
-          superAdminData = Meteor.users.findOne({ roles: "Superadmin" });
-        }
       }
       // Send Email to Admin of School if admin available
       const toEmail = "sam@skillshape.com"; // Needs to replace by Admin of School

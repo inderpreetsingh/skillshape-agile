@@ -500,16 +500,6 @@ class ClassDetailModal extends React.Component {
       return false;
     }); // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
-    const scheduleDetails = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"
-    ];
-    let route = this.state.adminAccess ? '/classdetails-instructor' : '/classdetails-student';
     return (
       <Dialog
         fullScreen={true}

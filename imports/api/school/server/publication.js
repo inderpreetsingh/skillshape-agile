@@ -474,7 +474,6 @@ Meteor.publish('ClaimSchoolFilter', (tempFilter) => {
   let {
     schoolName,
     coords,
-    role,
     gender,
     age,
     limit,

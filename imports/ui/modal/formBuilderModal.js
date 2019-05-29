@@ -23,12 +23,11 @@ export class FormBuilderModal extends React.Component {
     this.initializeFormValues();  
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
+ 
 
   getFormFields = () => {
     let formFields;
-    let { tableData, formFieldsValues } = this.props;
+    let { tableData } = this.props;
     if(tableData && tableData.actions.formFields) {
       formFields = tableData.actions.formFields 
     } else if(tableData && tableData.actions.edit.formFields) {
