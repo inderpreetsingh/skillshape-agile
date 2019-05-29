@@ -505,7 +505,7 @@ class Multiselect extends React.Component {
   }
 
   renderTags(messages) {
-    let { readOnly, onNoOfFiltersClick } = this.props;
+    let { readOnly } = this.props;
     let { focusedTag, dataItems } = this.state;
 
     let Component = this.props.tagComponent;

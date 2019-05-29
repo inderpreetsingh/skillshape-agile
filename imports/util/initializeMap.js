@@ -129,7 +129,7 @@ export function initializeMap(center) {
         //     map.setCenter(geolocate);
         // }
 
-        let marker = new google.maps.Marker({
+         new google.maps.Marker({
             position: geolocate,
             icon: '/images/bluecircle.png',
             map: map

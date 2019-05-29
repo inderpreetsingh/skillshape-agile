@@ -1,16 +1,16 @@
 import React, { Component, Fragment, } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
-import MembersList from "./presentational/MembersList.jsx";
+import { rhythmDiv, panelColor } from '/imports/ui/components/landing/components/jss/helpers';
+import MembersList from "./presentational/MembersList";
 import AddInstructorDialogBox from "/imports/ui/components/landing/components/dialogs/AddInstructorDialogBox";
 import { membersList } from "/imports/ui/components/landing/constants/classDetails";
 import { isEmpty, get, isEqual } from 'lodash';
-import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages.jsx';
-import Notification from "/imports/ui/components/landing/components/helpers/Notification.jsx";
+import ClassTypePackages from '/imports/ui/components/landing/components/dialogs/classTypePackages';
+import Notification from "/imports/ui/components/landing/components/helpers/Notification";
 import { BuyPackagesDialogBox } from "/imports/ui/components/landing/components/dialogs/";
-import { danger } from "/imports/ui/components/landing/components/jss/helpers.js";
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+import { danger } from "/imports/ui/components/landing/components/jss/helpers";
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
 import { capitalizeString, confirmationDialog } from '/imports/util';
 import { ContainerLoader } from "/imports/ui/loading/container";
 import Pagination from "/imports/ui/componentHelpers/pagination";
@@ -231,7 +231,6 @@ class MembersListContainer extends Component {
       else {
         let packageType, packagesRequired, content, title;
         if (!epStatus) {
-          packageType = ' Enrollment package ';
           packagesRequired = 'enrollment';
           title = 'Enrollment Fee Required';
           content = 'This class requires an enrollment fee and the fee for the class itself. You can purchase the enrollment fee here, and afterward, you will be shown packages available for this class type.';
@@ -584,8 +583,8 @@ class MembersListContainer extends Component {
     this.setState({ isBusy: !this.state.isBusy });
   }
   render() {
-    const { studentsList, instructorsList, currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData, slug,notification,packagesRequired:propsPR } = this.props;
-    let { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, purchaseData, packagesRequired, buyPackagesBoxState, currentProps,  isBusy } = this.state;
+    const {  currentView, classData, instructorsData, popUp, instructorsIds, schoolId, params, schoolName, classTypeName, schoolData, slug,notification,packagesRequired:propsPR } = this.props;
+    let { addInstructorDialogBoxState, studentsData, text, classTypePackages, userId, packagesRequired, buyPackagesBoxState, currentProps,  isBusy } = this.state;
     // const currentView =
     //   location.pathname === "/classdetails-student"
     //     ? "studentsView"

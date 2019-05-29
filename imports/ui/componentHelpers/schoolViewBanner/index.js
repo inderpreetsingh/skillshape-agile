@@ -47,11 +47,8 @@ class SchoolViewBanner extends React.Component {
 		// Detect mobile and dial number on phone else show popup that shows phone information.
 		let md = new MobileDetect(window.navigator.userAgent);
 		if(md.mobile()) {
-  		let schoolPhone = "tel:+1-303-499-7111";
-  		if(schoolData.phone) {
-			schoolPhone = `tel:${schoolData.phone}`;
+			const schoolPhone = `tel:${schoolData.phone || "tel:+1-303-499-7111"}`;
 			return `${schoolPhone}`;
-		}
 		} else {
 			this.handleCallUsButtonClick();
 		}

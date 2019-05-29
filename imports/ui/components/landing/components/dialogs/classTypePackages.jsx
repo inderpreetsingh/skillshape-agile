@@ -5,10 +5,10 @@ import { MuiThemeProvider, withStyles } from 'material-ui/styles';
 import { createContainer } from "meteor/react-meteor-data";
 import React from 'react';
 import styled from "styled-components";
-import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList.jsx";
-import muiTheme from '../jss/muitheme.jsx';
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { mobile } from "/imports/ui/components/landing/components/jss/helpers.js";
+import PackagesList from "/imports/ui/components/landing/components/class/packages/PackagesList";
+import muiTheme from '../jss/muitheme';
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
+import { mobile } from "/imports/ui/components/landing/components/jss/helpers";
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ClassPricing from "/imports/api/classPricing/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
@@ -17,9 +17,7 @@ import School from "/imports/api/school/fields";
 import { get } from 'lodash';
 import { EnrollmentPackagesDialogBox } from '/imports/ui/components/landing/components/dialogs/';
 import { withPopUp, stripePaymentHelper, normalizeMonthlyPricingData } from "/imports/util";
-const ButtonWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
+
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   width: 100%;
@@ -60,7 +58,6 @@ class ClassTypePackages extends React.Component {
     handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType) => {
 
         try {
-            let userId = this.props.userId;
             this.packagesRequired = this.props.fromSignFunctionality ? this.props.packagesRequired : null;
             stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
         } catch (error) {

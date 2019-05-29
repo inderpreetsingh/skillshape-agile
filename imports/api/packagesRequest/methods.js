@@ -1,12 +1,12 @@
+import { isEmpty } from 'lodash';
+import { check } from 'meteor/check';
 import PackageRequest, { PackageRequestSchema } from "./fields.js";
-import { sendPackagePurchaseEmail ,sendPackageLink} from "/imports/api/email";
-import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import ClassPricing from "/imports/api/classPricing/fields";
+import { sendPackageLink, sendPackagePurchaseEmail } from "/imports/api/email";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
 import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "/imports/api/school/fields";
 import { getUserFullName } from "/imports/util/getUserData";
-import { check } from 'meteor/check';
-import {get,isEmpty} from 'lodash';
 Meteor.methods({
   "packageRequest.addRequest": function({ typeOfTable, tableId, schoolId }) {
     check(typeOfTable, String);
@@ -88,7 +88,7 @@ Meteor.methods({
   },
   "packageRequest.addRecord":function(data){
     check(data,Object);
-    let {userId,packageId,classesId,valid} = data,record,result;
+    let record,result;
     record = PackageRequest.findOne(data);
     if(!isEmpty(record)){
      result = {status:false,record};

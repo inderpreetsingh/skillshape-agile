@@ -1,31 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
-import SecondaryButton from '../buttons/SecondaryButton';
-import PrimaryButton from '../buttons/PrimaryButton';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import TextField from 'material-ui/TextField';
-import styled from 'styled-components';
-import Input, { InputLabel } from 'material-ui/Input';
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
 import { FormControl, FormHelperText } from 'material-ui/Form';
-
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
-
-import * as helpers from '../jss/helpers.js';
+import IconButton from 'material-ui/IconButton';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import PrimaryButton from '../buttons/PrimaryButton';
+import * as helpers from '../jss/helpers';
 import muiTheme from '../jss/muitheme.jsx';
-
-import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
-
 import { ContainerLoader } from '/imports/ui/loading/container';
+
+
+
+
+
 
 const styles = theme => {
   return {

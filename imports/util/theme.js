@@ -1,5 +1,4 @@
-import { green, blue ,lightBlue, amber } from 'material-ui/colors';
-import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
+import { amber, lightBlue } from 'material-ui/colors';
 
 const themeGreen = {
   50: '#F7F7F1',
@@ -21,16 +20,16 @@ const themeGreen = {
 };
 
 const themeRed = {
-  50: 	'#FCEDE9',
-  100: 	'#F8DBD7',
-  200: 	'#F4C9C5',
-  300: 	'#F0B7B3',
-  400: 	'#ECA5A1',
-  500: 	'#E8938F',
-  600: 	'#E4817D',
-  700: 	'#E06F6B',
-  800: 	'#DC5D59',
-  900: 	'#D84B47',
+  50: '#FCEDE9',
+  100: '#F8DBD7',
+  200: '#F4C9C5',
+  300: '#F0B7B3',
+  400: '#ECA5A1',
+  500: '#E8938F',
+  600: '#E4817D',
+  700: '#E06F6B',
+  800: '#DC5D59',
+  900: '#D84B47',
   A100: '#D84B47',
   A200: '#D84B47',
   A400: '#D84B47',
@@ -40,16 +39,16 @@ const themeRed = {
 };
 
 const themeYellow = {
-  50: 	'#FBF8ED',
-  100: 	'#F9F1DA',
-  200: 	'#F7EAC7',
-  300: 	'#F5E3B4',
-  400: 	'#F3DCA1',
-  500: 	'#F1D58E',
-  600: 	'#EFCE7B',
-  700: 	'#EDC768',
-  800: 	'#EBC055',
-  900: 	'#E9B942',
+  50: '#FBF8ED',
+  100: '#F9F1DA',
+  200: '#F7EAC7',
+  300: '#F5E3B4',
+  400: '#F3DCA1',
+  500: '#F1D58E',
+  600: '#EFCE7B',
+  700: '#EDC768',
+  800: '#EBC055',
+  900: '#E9B942',
   A100: '#E9B942',
   A200: '#E9B942',
   A400: '#E9B942',
@@ -75,20 +74,20 @@ const themeYellow = {
 //   A700 : "#00c853"
 // }
 
-lightBlue.rgba = 'rgba(3, 169, 244, 0.34)'
+lightBlue.rgba = 'rgba(3, 169, 244, 0.34)';
 lightBlue.main = lightBlue.A700;
 lightBlue.default = lightBlue.A700;
 
 export const material_ui_next_theme = {
-    palette: {
-        // primary: lightBlue,
-        primary: themeGreen,
-        secondary: amber,
-        themeColor3: themeYellow
-    },
-    typography: {
+  palette: {
+    // primary: lightBlue,
+    primary: themeGreen,
+    secondary: amber,
+    themeColor3: themeYellow,
+  },
+  typography: {
     	button: {
-    		fontWeight: 300
-    	}
-    }
-}
+    		fontWeight: 300,
+    	},
+  },
+};
