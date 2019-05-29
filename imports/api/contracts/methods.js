@@ -23,7 +23,7 @@ Meteor.methods({
         schoolName: name,
       });
       return Contracts.insert(doc);
-    } if (action === 'update') {
+    }else if (action === 'update') {
       if (doc.status === 'allowed') {
         Meteor.call('purchases.addTransactionEntry', purchaseId, 'contractCancelled');
         if (!payAsYouGo) {
@@ -32,7 +32,7 @@ Meteor.methods({
       }
       return Contracts.update({ _id }, { $set: doc });
     }
-    if (action == 'find') {
+   else if (action == 'find') {
       const { userId, purchaseId } = doc;
       return Contracts.findOne({ userId, purchaseId });
     }
