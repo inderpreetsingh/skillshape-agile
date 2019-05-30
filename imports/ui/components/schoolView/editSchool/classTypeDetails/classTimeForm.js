@@ -42,7 +42,9 @@ const ListWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
 
-
+const FormInputsWrapper = styled.div`
+  padding: 0 ${helpers.rhythmDiv * 3}px;
+`;
 
 const DialogContentText = Text.extend`
   padding: 0;
