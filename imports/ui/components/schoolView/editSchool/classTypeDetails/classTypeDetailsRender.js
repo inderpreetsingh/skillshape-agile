@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import ClassTypeExpansionRender from './classTypeExpansionRender';
-import UploadMedia from '/imports/ui/componentHelpers/schoolViewBanner/uploadMedia.js';
-import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
-import ClassTimeForm from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm.js';
-import ClassTypeForm from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm.js';
+import UploadMedia from '/imports/ui/componentHelpers/schoolViewBanner/uploadMedia';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox';
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers';
+import ClassTimeForm from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm';
+import ClassTypeForm from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm';
 import { ContainerLoader } from '/imports/ui/loading/container';
 
 
@@ -15,10 +15,6 @@ const Wrapper = styled.div`
 
 export default function () {
   const {
-    classTypeData,
-    classTimesData,
-    showFormBuilderModal,
-    moveTab,
     schoolId,
     locationData,
     isLoading,
@@ -27,8 +23,6 @@ export default function () {
   } = this.props;
 
   const {
-    isBusy,
-    formAction,
     notifyFor,
     classTimeForm,
     classTypeForm,
