@@ -81,10 +81,10 @@ Meteor.methods({
   }) => {
     check(doc, Object);
 
-    const user = Meteor.users.findOne(this.userId);
+    
     if (
       checkMyAccess({
-        user,
+        user:Meteor.user(),
         schoolId: doc.schoolId,
         viewName: 'classType_CUD',
       })
