@@ -1,12 +1,9 @@
-import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import ClassTypeDetailsRender from './classTypeDetailsRender';
 import '/imports/api/classPricing/methods';
 import ClassTimes from '/imports/api/classTimes/fields';
-import ClassType from '/imports/api/classType/fields';
-import SkillCategory from '/imports/api/skillCategory/fields';
-import SkillSubject from '/imports/api/skillSubject/fields';
 import { compressImage, formatClassTimesData, withPopUp } from '/imports/util';
+import { scroller } from 'react-scroll';
 
 
 class ClassTypeDetails extends React.Component {
@@ -18,8 +15,18 @@ class ClassTypeDetails extends React.Component {
     };
   }
 
+
   getChildTableData(parentData) {
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
+  }
+
+  componentDidUpdate() {
+    const { currentPanelId } = this.state;
+    scroller.scrollTo(currentPanelId, {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart',
+    });
   }
 
   handleEditImageClick = classTypeData => (e) => {
@@ -326,24 +333,21 @@ class ClassTypeDetails extends React.Component {
   }
 
   handleClassTypeFormClose = (parentId, formAction) => {
-    if (formAction === 'add') {
-      this.setState(state => ({
-        ...state,
-        formAction,
-        classTimeForm: true,
-        classTypeForm: false,
-        // isBusy: true,
-        selectedClassTypeId: parentId,
-      }));
-    } else {
-      this.setState(state => ({
-        ...state,
-        formAction,
-        classTypeForm: false,
-        selectedClassTypeId: null,
-        selectedClassTypeData: null,
-      }));
-    }
+    this.setState({
+      formAction,
+      classTimeForm: formAction === 'add',
+      classTypeForm: false,
+      selectedClassTypeId: formAction === 'add' ? parentId : null,
+      selectedClassTypeData: null,
+      currentPanelId: parentId,
+    });
+  }
+
+  currentPanelIdHandler = (currentPanelId) => {
+    this.setState((state) => {
+      const { currentPanelId: prevCurrentPanelId } = state;
+      return { currentPanelId: currentPanelId === prevCurrentPanelId ? 'fakeId' : currentPanelId };
+    });
   }
 
   render() {
@@ -351,39 +355,4 @@ class ClassTypeDetails extends React.Component {
   }
 }
 
-export default createContainer((props) => {
-  const { schoolId } = props;
-  let classTimesData = [];
-  let classTypeData = [];
-
-  const subscription = Meteor.subscribe('classType.getclassType', { schoolId });
-
-  // if (subscription.ready()) {
-  classTypeData = ClassType.find({ schoolId }).fetch();
-  const classTypeIds = classTypeData && classTypeData.map(data => data._id);
-
-  const classTimesDataSubscription = Meteor.subscribe(
-    'classTimes.getclassTimesByClassTypeIds',
-    {
-      schoolId,
-      classTypeIds,
-    },
-  );
-  classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
-  // }
-
-  /* Find skills to make this container reactive on skill
-    other wise skills are joined with collections using package
-    perak:joins */
-  SkillCategory.find().fetch();
-  SkillSubject.find().fetch();
-  /** ************************************************** */
-
-  return {
-    isLoading: !classTimesDataSubscription.ready() && !subscription.ready(),
-    ...props,
-    schoolId,
-    classTypeData,
-    classTimesData,
-  };
-}, withPopUp(ClassTypeDetails));
+export default withPopUp(ClassTypeDetails);

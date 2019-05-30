@@ -37,6 +37,7 @@
 		"import/no-absolute-path": 0,
 		"no-underscore-dangle": 0,
 		"camelcase": 0,
+		"react/no-this-in-sfc":0,
 		"no-plusplus": [
 			2,
 			{

@@ -32,12 +32,10 @@ export default function () {
     selectedClassTimeData,
     selectedClassTypeData,
     selectedClassTypeId,
+    currentPanelId,
   } = this.state;
 
   const classTimeParentData = selectedClassTypeId ? this.getClassTypeData(selectedClassTypeId) : selectedClassTypeData;
-  // console.group("CLASS TIME PARENT DATA");
-  // console.log(classTimeParentData, selectedClassTypeData);
-  // console.groupEnd();
 
   return (
     <Wrapper>
@@ -128,8 +126,10 @@ export default function () {
         onImageSave={this.handleImageSave}
         moveToNextTab={this.moveToNextTab}
         moveToPreviousTab={this.moveToPreviousTab}
+        currentPanelIdHandler={this.currentPanelIdHandler}
         /* completeClassTimesData={classTimesData} */
         classTypeData={this.modifySelectSubjectsInClassTypeData()}
+        currentPanelId={currentPanelId}
       />
 
       {/* <PanelWithTable
