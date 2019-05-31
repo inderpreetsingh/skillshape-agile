@@ -1,36 +1,28 @@
-import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
 import get from 'lodash/get';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import React, { Component } from 'react';
+import Multiselect from 'react-widgets/lib/Multiselect';
 // import SchoolMemberFilterRender from "./schoolMemberFilter";
 import styled from 'styled-components';
-import Grid from 'material-ui/Grid';
-import Multiselect from 'react-widgets/lib/Multiselect'
-import Hidden from 'material-ui/Hidden';
-import { MuiThemeProvider } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import Icon from 'material-ui/Icon';
-import TextField from 'material-ui/TextField';
-
+import IconInput from '/imports/ui/components/landing/components/form/IconInput';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
-import IconInput from '/imports/ui/components/landing/components/form/IconInput';
 
 // import ClassType from "/imports/api/classType/fields";
 
 const styles = {
-	widget: {
-		background: 'transparent'
-	}
-}
+  widget: {
+    background: 'transparent',
+  },
+};
 
 const FilterPanelContainer = styled.div`
-    background: ${props => props.stickyPosition ? '#ffffff' : '1000px'};
-    flex-grow: 1;
-    padding:16px;
+  background: ${props => (props.stickyPosition ? '#ffffff' : '1000px')};
+  flex-grow: 1;
+  padding: 16px;
 `;
 
-const FilterPanelContent = styled.div`
-`;
+const FilterPanelContent = styled.div``;
 
 const Inputs = styled.div`
 	margin: 0 auto;
@@ -55,56 +47,59 @@ const InputWrapper = styled.div`
 `;
 
 class SchoolMemberFilter extends Component {
+  state = {
+    classTypeData: [],
+  };
 
-	state = {
-		classTypeData: [],
-	}
+  setClassTypeData = (classTypeData) => {
+    this.setState({ classTypeData });
+  };
 
-	setClassTypeData = (classTypeData) => {
-		this.setState({ classTypeData })
-	}
+  render() {
+    const {
+      stickyPosition, isAdmin, view, classes, cardsView,
+    } = this.props;
 
-	render() {
-		const { stickyPosition, isAdmin, view, classes, cardsView } = this.props;
-
-		return (
-			<MuiThemeProvider theme={muiTheme}>
-				<FilterPanelContainer stickyPosition={stickyPosition}>
-					<FilterPanelContent stickyPosition={stickyPosition}>
-						<form noValidate autoComplete="off">
-							<Inputs cardsView={cardsView}>
-								<InputWrapper cardsView={cardsView}>
-									<IconInput
-										id="search"
-										type="text"
-										margin="normal"
-										onChange={this.props.handleMemberNameChange}
-										skillShapeInput={true}
-										iconName='search'
-										classes={{ widgetInput: classes.widget, widgetRoot: classes.widget }}
-										placeholder={`Search ${view == 'classmates' ? "Member" : "Admin"} by Name`}
-										value={get(this.props, "filters.memberName", "")}
-									/>
-								</InputWrapper>
-								<InputWrapper cardsView={cardsView}>
-									<div className='ss-multi-select--transparent'>
-										<Multiselect
-											className={classes.input}
-											textField={"name"}
-											valueField={"_id"}
-											placeholder={`Search ${view == 'classmates' ? "Member" : "Admin"} by Class Type`}
-											data={this.props.classTypeData}
-											onChange={this.props.handleClassTypeDataChange}
-										/>
-									</div>
-								</InputWrapper>
-							</Inputs>
-						</form>
-					</FilterPanelContent>
-				</FilterPanelContainer>
-			</MuiThemeProvider>
-		)
-	}
+    return (
+      <MuiThemeProvider theme={muiTheme}>
+        <FilterPanelContainer stickyPosition={stickyPosition}>
+          <FilterPanelContent stickyPosition={stickyPosition}>
+            <form noValidate autoComplete="off">
+              <Inputs cardsView={cardsView}>
+                <InputWrapper cardsView={cardsView}>
+                  <IconInput
+                    id="search"
+                    type="text"
+                    margin="normal"
+                    onChange={this.props.handleMemberNameChange}
+                    skillShapeInput
+                    iconName="search"
+                    classes={{ widgetInput: classes.widget, widgetRoot: classes.widget }}
+                    placeholder={`Search ${view == 'classmates' ? 'Member' : 'Admin'} by Name`}
+                    value={get(this.props, 'filters.memberName', '')}
+                  />
+                </InputWrapper>
+                <InputWrapper cardsView={cardsView}>
+                  <div className="ss-multi-select--transparent">
+                    <Multiselect
+                      className={classes.input}
+                      textField="name"
+                      valueField="_id"
+                      placeholder={`Search ${
+                        view == 'classmates' ? 'Member' : 'Admin'
+                      } by Class Type`}
+                      data={this.props.classTypeData}
+                      onChange={this.props.handleClassTypeDataChange}
+                    />
+                  </div>
+                </InputWrapper>
+              </Inputs>
+            </form>
+          </FilterPanelContent>
+        </FilterPanelContainer>
+      </MuiThemeProvider>
+    );
+  }
 }
 
-export default withStyles(styles)(SchoolMemberFilter); 
+export default withStyles(styles)(SchoolMemberFilter);

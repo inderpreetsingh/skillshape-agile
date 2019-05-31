@@ -1,12 +1,10 @@
-"use strict";
-import React from "react";
-import { tablet } from '/imports/ui/components/landing/components/jss/helpers.js';
-import { createTable } from "/imports/util";
+import { tablet } from '/imports/ui/components/landing/components/jss/helpers';
+import { createTable } from '/imports/util';
 
 export const getTableProps = (schoolView) => {
   const tableProps = {
-    //className: "table-view"
-    horizontalBar: true
+    // className: "table-view"
+    horizontalBar: true,
   };
   const tableHeaderProps = {
     adjustForCheckbox: false,
@@ -15,124 +13,123 @@ export const getTableProps = (schoolView) => {
     listViewBreakPnt: tablet,
   };
   const tableRowProps = {
-    className: "table-header"
+    className: 'table-header',
   };
 
   let tableHeaderColumns = [];
-  if(schoolView){
+  if (schoolView) {
     tableHeaderColumns = [
       {
-        columnName: "User Name",
-        tooltip: "",
+        columnName: 'User Name',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "Date",
-        tooltip: "",
+        columnName: 'Date',
+        tooltip: '',
         // className: "wd-211"
       },
       {
-        columnName: "Transaction Type",
-        tooltip: "",
+        columnName: 'Transaction Type',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: " Payment Method",
-        tooltip: "",
+        columnName: ' Payment Method',
+        tooltip: '',
         // className: "wd-100"
       },
       {
-        columnName: "Amount",
-        tooltip: "",
+        columnName: 'Amount',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "Net",
-        tooltip: "",
+        columnName: 'Net',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "Fee",
-        tooltip: "",
+        columnName: 'Fee',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "School Name",
-        tooltip: "",
+        columnName: 'School Name',
+        tooltip: '',
         // className: "wd-100"
       },
       {
-        columnName: "Class",
-        tooltip: "",
+        columnName: 'Class',
+        tooltip: '',
         // className: "wd-100"
       },
       {
-        columnName: "Package Name",
-        tooltip: "",
+        columnName: 'Package Name',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "Package Type",
-        tooltip: "",
+        columnName: 'Package Type',
+        tooltip: '',
         // className: "wd-150"
-      }
+      },
     ];
-  }
-  else{
+  } else {
     tableHeaderColumns = [
       {
-        columnName: "User Name",
-        tooltip: "",
+        columnName: 'User Name',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "Date",
-        tooltip: "",
+        columnName: 'Date',
+        tooltip: '',
         // className: "wd-211"
       },
       {
-        columnName: "Transaction Type",
-        tooltip: "",
+        columnName: 'Transaction Type',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: " Payment Method",
-        tooltip: "",
+        columnName: ' Payment Method',
+        tooltip: '',
         // className: "wd-100"
       },
       {
-        columnName: "Amount",
-        tooltip: "",
+        columnName: 'Amount',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "School Name",
-        tooltip: "",
+        columnName: 'School Name',
+        tooltip: '',
         // className: "wd-100"
       },
       {
-        columnName: "Class",
-        tooltip: "",
+        columnName: 'Class',
+        tooltip: '',
         // className: "wd-100"
       },
       {
-        columnName: "Package Name",
-        tooltip: "",
+        columnName: 'Package Name',
+        tooltip: '',
         // className: "wd-150"
       },
       {
-        columnName: "Package Type",
-        tooltip: "",
+        columnName: 'Package Type',
+        tooltip: '',
         // className: "wd-150"
       },
     ];
   }
   const tableHeaderColumnProps = {
-    className: "table-column"
+    className: 'table-column',
   };
   const tableBodyProps = {
     displayRowCheckbox: false,
-    className: "table-body"
+    className: 'table-body',
   };
   const tableComponentProps = {
     tableProps,
@@ -140,11 +137,9 @@ export const getTableProps = (schoolView) => {
     tableRowProps,
     tableHeaderColumns,
     tableHeaderColumnProps,
-    tableBodyProps
+    tableBodyProps,
   };
   return tableComponentProps;
 };
 
-export const TransactionDetailsTable=(schoolView) =>{
-  return createTable(getTableProps(schoolView))
-} ;
+export const TransactionDetailsTable = schoolView => createTable(getTableProps(schoolView));

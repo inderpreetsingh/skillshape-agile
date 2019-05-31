@@ -1,14 +1,10 @@
-import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
-import Button from "material-ui/Button";
-import { Link } from "react-router";
-import Icon from "material-ui/Icon";
+import { get } from 'lodash';
 import { withStyles } from "material-ui/styles";
+import { createContainer } from "meteor/react-meteor-data";
 import ClaimSchoolBase from "./claimSchoolBase";
 import ClaimSchoolRender from "./claimSchoolRender";
 import SkillCategory from "/imports/api/skillCategory/fields";
-import { withPopUp,confirmationDialog ,redirectToThisUrl,getUserFullName} from "/imports/util";
-import {get} from 'lodash';
+import { confirmationDialog, getUserFullName, redirectToThisUrl, withPopUp } from "/imports/util";
 const styles = theme => ({
   sideButton: {
     fontWeight: 600,

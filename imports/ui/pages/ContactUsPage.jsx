@@ -1,18 +1,14 @@
-import { isEmpty } from 'lodash';
-import ClearIcon from "material-ui-icons/Clear";
-import Dialog, { DialogActions, DialogContent, DialogTitle } from "material-ui/Dialog";
-import IconButton from "material-ui/IconButton";
-import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import ClearIcon from 'material-ui-icons/Clear';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import ContactUsForm from '/imports/ui/components/landing/components/contactUs/ContactUsForm.jsx';
-import SocialAccounts from '/imports/ui/components/landing/components/contactUs/SocialAccounts.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import { logoSrc } from '/imports/ui/components/landing/site-settings.js';
-
-
-
+import ContactUsForm from '/imports/ui/components/landing/components/contactUs/ContactUsForm';
+import SocialAccounts from '/imports/ui/components/landing/components/contactUs/SocialAccounts';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
+import { logoSrc } from '/imports/ui/components/landing/site-settings';
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -38,8 +34,7 @@ const SkillShapeLogo = styled.div`
     width: 100%;
     margin-bottom: ${helpers.rhythmDiv * 2}px;
     flex-shrink: 1;
-    ${props => props.addMember && `height: 100px;`
-  };
+    ${props => props.addMember && 'height: 100px;'};
 `;
 const Title = styled.h1`
   font-size: ${helpers.baseFontSize * 3}px;
@@ -80,7 +75,7 @@ const MapOuterContainer = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
 
-  @media screen and (max-width : ${helpers.tablet + 50}px) {
+  @media screen and (max-width: ${helpers.tablet + 50}px) {
     padding: 0;
   }
 
@@ -98,78 +93,64 @@ const MapContainer = styled.div`
   }
 `;
 
-const ContentWrapper = styled.div`
-
-`;
+const ContentWrapper = styled.div``;
 
 const MyMap = styled.div`
   width: 100%;
   height: 100%;
 `;
-const styles = theme => {
-  return {
-    dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
-        3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`,
-      "@media screen and (max-width : 500px)": {
-        padding: `0 ${helpers.rhythmDiv * 3}px`
-      }
-    },
-    dialogContent: {
+const styles = theme => ({
+  dialogTitleRoot: {
+    padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+    '@media screen and (max-width : 500px)': {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
-      paddingBottom: helpers.rhythmDiv * 2,
-      flexGrow: 0,
-      display: "flex",
-      justifyContent: "center",
-      minHeight: 200,
-      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
-        padding: `0 ${helpers.rhythmDiv * 2}px`
-      }
     },
-    dialogRoot: {
-      width: "100%",
-      maxWidth: "fit-content",
-      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
-        margin: helpers.rhythmDiv
-      }
+  },
+  dialogContent: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    paddingBottom: helpers.rhythmDiv * 2,
+    flexGrow: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    minHeight: 200,
+    [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+      padding: `0 ${helpers.rhythmDiv * 2}px`,
     },
-    iconButton: {
-      height: "auto",
-      width: "auto"
-    }
-  };
-};
+  },
+  dialogRoot: {
+    width: '100%',
+    maxWidth: 'fit-content',
+    [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+      margin: helpers.rhythmDiv,
+    },
+  },
+  iconButton: {
+    height: 'auto',
+    width: 'auto',
+  },
+});
 class ContactUs extends Component {
+  state = {};
 
-  state = {
-  }
+  componentDidMount = () => {};
 
- 
-
-  
-
-  componentDidMount = () => {
-  }
-
-  componentDidUpdate = () => {
-    
-  }
+  componentDidUpdate = () => {};
 
   render() {
-    const {props} = this;
+    const { props } = this;
     return (
       <Dialog
         open={props.open}
         onClose={props.onModalClose}
         onRequestClose={props.onModalClose}
-        aria-labelledby={`Contact Us`}
+        aria-labelledby="Contact Us"
         classes={{ paper: props.classes.dialogRoot }}
       >
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-            <Title>We would love to talk with you</Title>
+              <Title>We would love to talk with you</Title>
               <IconButton
                 color="primary"
                 onClick={props.onModalClose}
@@ -181,27 +162,24 @@ class ContactUs extends Component {
           </DialogTitle>
           <DialogContent classes={{ root: props.classes.dialogContent }}>
             <Wrapper>
-              {/* Content section including form and map and social accounts*/}
+              {/* Content section including form and map and social accounts */}
               <ContentWrapper>
                 <FormMapWrapper>
-                  <ContactUsForm onModalClose ={props.onModalClose}/>
+                  <ContactUsForm onModalClose={props.onModalClose} />
                   <MapOuterContainer>
                     <MapContainer>
-                      <SkillShapeLogo src={logoSrc}/>
-                      </MapContainer>
+                      <SkillShapeLogo src={logoSrc} />
+                    </MapContainer>
                     <SocialAccounts />
                   </MapOuterContainer>
-
                 </FormMapWrapper>
               </ContentWrapper>
             </Wrapper>
           </DialogContent>
 
-          <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
-          </DialogActions>
+          <DialogActions classes={{ root: props.classes.dialogActionsRoot }} />
         </MuiThemeProvider>
-      </Dialog >
-
+      </Dialog>
     );
   }
 }

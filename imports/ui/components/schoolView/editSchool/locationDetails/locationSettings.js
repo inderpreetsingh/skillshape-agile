@@ -1,125 +1,186 @@
-import React from "react";
-import LocationForm from "./locationForm";
-import RoomForm from "./roomForm";
+import LocationForm from './locationForm';
+import RoomForm from './roomForm';
 
 export default (locationSettings = {
   mainPanelHeader: {
-    leftIcon: "location_on",
-    title: "Locations",
-    titleKey: ["address", "city", "country"],
-    notes: "",
+    leftIcon: 'location_on',
+    title: 'Locations',
+    titleKey: ['address', 'city', 'country'],
+    notes: '',
     showImageUpload: false,
     showAddressOnMap: true,
     actions: {
       component: LocationForm,
-      buttonTitle: "ADD LOCATION",
-      onSubmit: "addLocation",
-      title: "Location",
+      buttonTitle: 'ADD LOCATION',
+      onSubmit: 'addLocation',
+      title: 'Location',
       formFields: [
-        { key: "title", label: "Location Name", type: "text", required: false },
         {
-          key: "address",
-          label: "Street Address",
-          type: "text",
-          required: true
+          key: 'title',
+          label: 'Location Name',
+          type: 'text',
+          required: false,
         },
-        { key: "city", label: "City", type: "text", required: true },
-        { key: "state", label: "State", type: "text", required: false },
-        { key: "zip", label: "Zip Code", type: "text", required: true },
-        { key: "country", label: "Country", type: "text", required: true }
-      ]
-    }
+        {
+          key: 'address',
+          label: 'Street Address',
+          type: 'text',
+          required: true,
+        },
+        {
+          key: 'city',
+          label: 'City',
+          type: 'text',
+          required: true,
+        },
+        {
+          key: 'state',
+          label: 'State',
+          type: 'text',
+          required: false,
+        },
+        {
+          key: 'zip',
+          label: 'Zip Code',
+          type: 'text',
+          required: true,
+        },
+        {
+          key: 'country',
+          label: 'Country',
+          type: 'text',
+          required: true,
+        },
+      ],
+    },
   },
   mainTable: {
-    title: "Location",
+    title: 'Location',
     tableFields: [
-      { key: "title", label: "Location Name" },
-      { key: "address", label: "Street Address" },
-      { key: "city", label: "City" },
-      { key: "state", label: "State" },
-      { key: "zip", label: "Zip Code" },
-      { key: "country", label: "Country" }
+      { key: 'title', label: 'Location Name' },
+      { key: 'address', label: 'Street Address' },
+      { key: 'city', label: 'City' },
+      { key: 'state', label: 'State' },
+      { key: 'zip', label: 'Zip Code' },
+      { key: 'country', label: 'Country' },
     ],
     actions: {
-      label: "Actions",
+      label: 'Actions',
       havingImage: false,
       toggleChildTable: true,
       edit: {
         component: LocationForm,
-        title: "Edit Location",
-        onSubmit: "editLocation",
-        editByField: "_id",
+        title: 'Edit Location',
+        onSubmit: 'editLocation',
+        editByField: '_id',
         formFields: [
           {
-            key: "title",
-            label: "Location Name",
-            type: "text",
-            required: false
+            key: 'title',
+            label: 'Location Name',
+            type: 'text',
+            required: false,
           },
           {
-            key: "address",
-            label: "Street Address",
-            type: "text",
-            required: true
+            key: 'address',
+            label: 'Street Address',
+            type: 'text',
+            required: true,
           },
-          { key: "city", label: "City", type: "text", required: true },
-          { key: "state", label: "State", type: "text", required: false },
-          { key: "zip", label: "Zip Code", type: "text", required: true },
-          { key: "country", label: "Country", type: "text", required: true }
-        ]
+          {
+            key: 'city',
+            label: 'City',
+            type: 'text',
+            required: true,
+          },
+          {
+            key: 'state',
+            label: 'State',
+            type: 'text',
+            required: false,
+          },
+          {
+            key: 'zip',
+            label: 'Zip Code',
+            type: 'text',
+            required: true,
+          },
+          {
+            key: 'country',
+            label: 'Country',
+            type: 'text',
+            required: true,
+          },
+        ],
       },
-      delete: "removeLocation",
+      delete: 'removeLocation',
       del: {
-        title: "Delete Location",
-        dialogBoxContent: "This will delete the location, are you sure?",
-        onSubmit: "location.removeLocation"
-      }
-    }
+        title: 'Delete Location',
+        dialogBoxContent: 'This will delete the location, are you sure?',
+        onSubmit: 'location.removeLocation',
+      },
+    },
   },
   childPanelHeader: {
-    leftIcon: "business",
-    title: "Room",
+    leftIcon: 'business',
+    title: 'Room',
     havingImage: false,
-    notes: "Rooms with this location",
+    notes: 'Rooms with this location',
     actions: {
       component: RoomForm,
-      parentKey: "_id",
-      buttonTitle: "Add Room",
-      onSubmit: "addRoom",
-      title: "Room",
+      parentKey: '_id',
+      buttonTitle: 'Add Room',
+      onSubmit: 'addRoom',
+      title: 'Room',
       formFields: [
-        { key: "name", label: "Name", type: "text", required: true },
-        { key: "capacity", label: "Capacity", type: "text", required: false }
-      ]
-    }
+        {
+          key: 'name',
+          label: 'Name',
+          type: 'text',
+          required: true,
+        },
+        {
+          key: 'capacity',
+          label: 'Capacity',
+          type: 'text',
+          required: false,
+        },
+      ],
+    },
   },
   childTable: {
-    title: "Room",
-    tableFields: [
-      { key: "name", label: "Name" },
-      { key: "capacity", label: "Capacity" }
-    ],
+    title: 'Room',
+    tableFields: [{ key: 'name', label: 'Name' }, { key: 'capacity', label: 'Capacity' }],
     actions: {
-      parentKey: "_id",
-      label: "Actions",
+      parentKey: '_id',
+      label: 'Actions',
       havingImage: false,
       toggleChildTable: false,
       edit: {
         component: RoomForm,
-        onSubmit: "editRoom",
-        title: "Edit Room",
-        editByField: "id",
+        onSubmit: 'editRoom',
+        title: 'Edit Room',
+        editByField: 'id',
         formFields: [
-          { key: "name", label: "Name", type: "text", required: true },
-          { key: "capacity", label: "Capacity", type: "text", required: false }
-        ]
+          {
+            key: 'name',
+            label: 'Name',
+            type: 'text',
+            required: true,
+          },
+          {
+            key: 'capacity',
+            label: 'Capacity',
+            type: 'text',
+            required: false,
+          },
+        ],
       },
-      delete: "removeRoom",
+      delete: 'removeRoom',
       del: {
-        onSubmit: "location.roomRemove",
-        dialogBoxContent: "This will delete the room, are you sure ?",
-        title: "Delete Room"
-      }
-    }
-  }
+        onSubmit: 'location.roomRemove',
+        dialogBoxContent: 'This will delete the room, are you sure ?',
+        title: 'Delete Room',
+      },
+    },
+  },
 });

@@ -1,9 +1,6 @@
-import config from "/imports/config";
-import ClassType from "/imports/api/classType/fields";
+import config from '/imports/config';
 
-const SchoolMemberDetails = new Mongo.Collection(
-  config.collections.schoolMemberDetails
-);
+const SchoolMemberDetails = new Mongo.Collection(config.collections.schoolMemberDetails);
 /**
  * Create the schema
  * See: https://github.com/aldeed/meteor-autoform#common-questions
@@ -11,64 +8,63 @@ const SchoolMemberDetails = new Mongo.Collection(
  */
 SchoolMemberDetails.attachSchema(
   new SimpleSchema({
-   
     classTypeIds: {
       type: [String],
-      optional: true
+      optional: true,
     },
     schoolId: {
       type: String,
-      optional: true
+      optional: true,
     },
     sendMeSkillShapeNotification: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
     adminNotes: {
       type: String,
-      optional: true
+      optional: true,
     },
     activeUserId: {
       type: String,
-      optional: true
+      optional: true,
     },
     inviteAccepted: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
     classmatesNotes: {
       type: Object,
       optional: true,
-      blackbox: true
+      blackbox: true,
     },
     studentWithoutEmail: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
     addedOn: {
       type: Date,
-      optional: true
-  },
+      optional: true,
+    },
     emailAccess: {
       type: String,
-      optional: true
+      optional: true,
     },
-    phoneAccess:{
+    phoneAccess: {
       type: String,
-      optional: true
-    } 
-  })
+      optional: true,
+    },
+  }),
 );
-Meteor.startup(function() {
+Meteor.startup(() => {
   // FTS on the basis of first name last name and class types.
   if (Meteor.isServer) {
     SchoolMemberDetails._ensureIndex({
-      firstName: "text",
-      lastName: "text",
-      classType: "text"
+      firstName: 'text',
+      lastName: 'text',
+      classType: 'text',
     });
   }
 });
-SchoolMemberDetails.join(Meteor.users, "activeUserId", "profile", ["profile",'emails']);
+SchoolMemberDetails.join(Meteor.users, 'activeUserId', 'profile', ['profile', 'emails']);
 
 export default SchoolMemberDetails;

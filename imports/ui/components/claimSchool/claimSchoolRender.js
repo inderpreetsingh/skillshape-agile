@@ -2,15 +2,12 @@ import React from 'react';
 import DocumentTitle from 'react-document-title';
 // import Sticky from 'react-sticky-el';
 import Sticky from 'react-stickynode';
-import styled from 'styled-components';
 import FiltersDialogBox from '../landing/components/dialogs/FiltersDialogBox';
 // import  ClaimSchoolFilter  from "./filter";
 import FilterPanel from '../landing/components/FilterPanel';
 import ClaimSchoolList from './claimSchoolList';
 import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { ContainerLoader } from '/imports/ui/loading/container';
-
 
 export default function (props) {
   return (
@@ -26,8 +23,7 @@ export default function (props) {
             title="New School"
             content="This will create a new school for you, Are you sure?"
             onAffirmationButtonClick={this.handleListingOfNewSchool}
-            onCloseButtonClick={() => this.setState({ showConfirmationModal: false })
-            }
+            onCloseButtonClick={() => this.setState({ showConfirmationModal: false })}
           />
         )}
         {this.state.filterPanelDialogBox && (
@@ -48,8 +44,7 @@ export default function (props) {
               skillLevelFilter: this.skillLevelFilter,
               perClassPriceFilter: this.perClassPriceFilter,
               pricePerMonthFilter: this.pricePerMonthFilter,
-              collectSelectedSkillCategories: this
-                .collectSelectedSkillCategories,
+              collectSelectedSkillCategories: this.collectSelectedSkillCategories,
               collectSelectedSkillSubject: this.collectSelectedSkillSubject,
             }}
           />
@@ -80,10 +75,8 @@ export default function (props) {
             collectSelectedSkillCategories={this.collectSelectedSkillCategories}
             fliterSchoolName={this.fliterSchoolName}
             locationInputChanged={this.locationInputChanged}
-            handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)
-            }
-            handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)
-            }
+            handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+            handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
             filters={this.state.filters}
             onLocationChange={this.onLocationChange}
           />

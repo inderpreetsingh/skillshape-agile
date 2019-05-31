@@ -1,13 +1,13 @@
-import React, { PureComponent, Component, Fragment } from "react";
 import isEmpty from "lodash/isEmpty";
+import React, { Component, Fragment } from "react";
 import styled from "styled-components";
-
+import FilterPanel from "/imports/ui/components/landing/components/FilterPanel";
+import NoResultsFound from "/imports/ui/components/landing/components/helpers/NoResultsFound";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
+import { ContainerLoader } from "/imports/ui/loading/container";
 import { emailRegex, withPopUp } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
 
-import FilterPanel from "/imports/ui/components/landing/components/FilterPanel.jsx";
-import NoResultsFound from "/imports/ui/components/landing/components/helpers/NoResultsFound.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+
 
 const Wrapper = styled.div`
   text-align: center;
