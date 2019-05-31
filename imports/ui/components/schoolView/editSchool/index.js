@@ -1,15 +1,14 @@
+import { get, isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import { browserHistory } from 'react-router';
 import SchoolEditRender from './schoolEditRender';
+import ClassTimes from '/imports/api/classTimes/fields';
 import ClassType from '/imports/api/classType/fields';
 import School from '/imports/api/school/fields';
 import SLocation from '/imports/api/sLocation/fields';
 import config from '/imports/config';
-import { get, isEmpty, isEqual } from 'lodash';
-import { ContainerLoader } from '/imports/ui/loading/container';
 import { handleOnBeforeUnload, unSavedChecker, withPopUp } from '/imports/util';
-import ClassTimes from '/imports/api/classTimes/fields';
 
 class SchoolEditView extends React.Component {
   constructor(props) {
@@ -19,13 +18,6 @@ class SchoolEditView extends React.Component {
       queryTabValue: null,
       isSaved: true,
     };
-  }
-
-  componentDidUpdate() {
-    window.onbeforeunload = null;
-    if (!this.state.isSaved) {
-      window.onbeforeunload = handleOnBeforeUnload;
-    }
   }
 
   componentDidMount() {
@@ -68,6 +60,13 @@ class SchoolEditView extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.defaultTab(get(nextProps.route, 'name', 0));
+  }
+
+  componentDidUpdate() {
+    window.onbeforeunload = null;
+    if (!this.state.isSaved) {
+      window.onbeforeunload = handleOnBeforeUnload;
+    }
   }
 
   defaultTab = (routeName) => {

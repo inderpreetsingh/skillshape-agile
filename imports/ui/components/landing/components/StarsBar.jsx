@@ -1,10 +1,8 @@
-import React, { Fragment } from 'react';
-import Slider from 'react-slick';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
-import Star from './icons/Star.jsx';
-import * as helpers from './jss/helpers.js';
+import React from 'react';
+import styled from 'styled-components';
+import Star from './icons/Star';
+import * as helpers from './jss/helpers';
 
 const StarsWrapper = styled.div`
   display: flex;
@@ -29,18 +27,12 @@ const createStars = (noOfStars) => {
   return stars;
 };
 
-const StarsBar = props => (
-  <StarsWrapper>
-    {createStars(props.noOfStars)}
-  </StarsWrapper>
-);
+const StarsBar = props => <StarsWrapper>{createStars(props.noOfStars)}</StarsWrapper>;
 
 StarsBar.propTypes = {
   noOfStars: PropTypes.number,
 };
 
-StarsBar.defaultProps = {
-
-};
+StarsBar.defaultProps = {};
 
 export default StarsBar;

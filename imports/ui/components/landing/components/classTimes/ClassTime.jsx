@@ -1,33 +1,28 @@
-import { isEmpty,get } from "lodash";
-import Icon from "material-ui/Icon";
-import Paper from "material-ui/Paper";
-import { withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
-import React, { Component, Fragment } from "react";
-import { scroller } from "react-scroll";
-import styled from "styled-components";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import ClassTimesList from "/imports/ui/components/landing/components/classTimes/ClassTimesList.jsx";
-import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
-import ThinkingAboutAttending from "/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending";
-import TrendingIcon from "/imports/ui/components/landing/components/icons/Trending.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import { CLASS_TIMES_CARD_WIDTH } from "/imports/ui/components/landing/constants/classTypeConstants.js";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { formatDate, getUserFullName, withPopUp } from "/imports/util";
-
-
-
-
-
+import { get, isEmpty } from 'lodash';
+import Icon from 'material-ui/Icon';
+import Paper from 'material-ui/Paper';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import { scroller } from 'react-scroll';
+import styled from 'styled-components';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import ClassTimesList from '/imports/ui/components/landing/components/classTimes/ClassTimesList';
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox';
+import ThinkingAboutAttending from '/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending';
+import TrendingIcon from '/imports/ui/components/landing/components/icons/Trending';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { CLASS_TIMES_CARD_WIDTH } from '/imports/ui/components/landing/constants/classTypeConstants';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { formatDate, withPopUp } from '/imports/util';
 
 const styles = {
   classTimeIcon: {
     fontSize: helpers.baseFontSize,
     color: helpers.black,
-    marginRight: helpers.rhythmDiv / 2
+    marginRight: helpers.rhythmDiv / 2,
   },
   descriptionPanelCloseIcon: {
     top: 0,
@@ -35,38 +30,38 @@ const styles = {
     fontSize: helpers.baseFontSize,
     color: helpers.black,
     padding: helpers.rhythmDiv,
-    borderRadius: "50%",
-    background: "white",
-    position: "absolute",
+    borderRadius: '50%',
+    background: 'white',
+    position: 'absolute',
     boxShadow: helpers.buttonBoxShadow,
-    cursor: "pointer"
+    cursor: 'pointer',
   },
   descriptionPanel: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
-    width: "100%",
-    transition: "transform 0.2s linear",
-    maxHeight: "272px",
-    transformOrigin: "50% 100%",
+    width: '100%',
+    transition: 'transform 0.2s linear',
+    maxHeight: '272px',
+    transformOrigin: '50% 100%',
     paddingTop: helpers.rhythmDiv,
     marginBottom: helpers.rhythmDiv,
-    overflowY: "auto",
-    background: "white",
-    borderRadius: 5
-  }
+    overflowY: 'auto',
+    background: 'white',
+    borderRadius: 5,
+  },
 };
 
 const ClassTimeContainer = styled.div`
   ${helpers.flexHorizontalSpaceBetween} flex-direction: column;
   max-width: 100%;
   width: 100%;
-  height: ${props => (props.inPopUp ? "auto" : "380px")};
+  height: ${props => (props.inPopUp ? 'auto' : '380px')};
   padding: ${helpers.rhythmDiv * 2}px;
   position: relative;
   z-index: 0;
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     bottom: 0;
@@ -82,7 +77,7 @@ const ClassTimeContainer = styled.div`
   }
 
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    max-width: ${props => (props.inPopUp ? "100%" : CLASS_TIMES_CARD_WIDTH)}px;
+    max-width: ${props => (props.inPopUp ? '100%' : CLASS_TIMES_CARD_WIDTH)}px;
   }
 `;
 
@@ -98,7 +93,7 @@ const ClassTimeContentInnerWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  ${props => props.showDescription && "filter: blur(2px);"};
+  ${props => props.showDescription && 'filter: blur(2px);'};
 `;
 
 const ClassTimeDescription = Text.extend`
@@ -108,9 +103,8 @@ const ClassTimeDescription = Text.extend`
   overflow-y: auto;
 `;
 
-const ClassTypeName = Text.withComponent("h4").extend`
-  font-size: ${props =>
-    props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25}px;
+const ClassTypeName = Text.withComponent('h4').extend`
+  font-size: ${props => (props.inPopUp ? helpers.baseFontSize * 1.5 : helpers.baseFontSize * 1.25)}px;
   text-align: center;
   text-transform: capitalize;
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -137,21 +131,24 @@ const ClassTimeLocationWrapper = styled.div`
 
 const EventLocation = styled.div`
   ${helpers.flexCenter} justify-content: flex-start;
-  flex-direction: ${props => (!props.locationTitle ? "column-reverse" : "row")};
+  flex-direction: ${props => (!props.locationTitle ? 'column-reverse' : 'row')};
   margin-bottom: ${helpers.rhythmDiv / 2}px;
 `;
 
-let ClassTimeRoom, ClassTimeLocation;
+let ClassTimeRoom;
+let ClassTimeLocation;
 ClassTimeLocation = ClassTimeRoom = styled.div`
   ${helpers.flexCenter};
-  ${props => !props.locationTitle && "align-items: flex-start;"};
+  ${props => !props.locationTitle && 'align-items: flex-start;'};
 `;
 
 ClassTimeLocation = ClassTimeLocation.extend`
   margin-right: ${helpers.rhythmDiv}px;
 `;
 
-let LocationTitle, LocationDetails, RoomName;
+let LocationTitle;
+let LocationDetails;
+let RoomName;
 LocationTitle = LocationDetails = RoomName = Text.extend`
   font-weight: 300;
   font-style: italic;
@@ -169,7 +166,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   transition: 0.1s ease-in opacity;
-  ${props => (props.showCard ? "opacity: 0" : "opacity: 1")};
+  ${props => (props.showCard ? 'opacity: 0' : 'opacity: 1')};
   ${props => props.marginBottom && `margin-bottom: ${helpers.rhythmDiv}px;`};
 `;
 
@@ -187,8 +184,7 @@ const ClassTimesCardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   max-height: auto;
-  // max-height: ${props =>
-    props.inPopUp ? "auto" : "296px"}; // computed height
+  // max-height: ${props => (props.inPopUp ? 'auto' : '296px')}; // computed height
 `;
 
 const ClickableLink = Text.extend`
@@ -202,13 +198,11 @@ const ClickableLink = Text.extend`
   }
 `;
 
-const Trending = () => {
-  return (
-    <TrendingWrapper>
-      <TrendingIcon />
-    </TrendingWrapper>
-  );
-};
+const Trending = () => (
+  <TrendingWrapper>
+    <TrendingIcon />
+  </TrendingWrapper>
+);
 
 class ClassTime extends Component {
   state = {
@@ -216,75 +210,66 @@ class ClassTime extends Component {
     showCard: false,
     showDescription: false,
     thinkingAboutAttending: false,
-    description: this.props.desc
+    description: this.props.desc,
   };
 
   componentWillReceiveProps(nextProps) {
     if (this.state.description != nextProps.desc) {
-      this.setState(state => {
-        return {
-          ...state,
-          description: nextProps.desc
-        };
-      });
+      this.setState(state => ({
+        ...state,
+        description: nextProps.desc,
+      }));
     }
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.escFunction, false);
+    document.addEventListener('keydown', this.escFunction, false);
   }
+
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.escFunction, false);
+    document.removeEventListener('keydown', this.escFunction, false);
   }
 
   componentWillMount() {
-    Meteor.call(
-      "classTypeLocationRequest.getUserRecord",
-      this.props.classTypeId,
-      (err, res) => {
-        if (err) {
-        } else {
-          this.setState({ notification: res });
-        }
+    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
+      if (err) {
+      } else {
+        this.setState({ notification: res });
       }
-    );
+    });
   }
 
-  handleShowMoreLinkClick = event => {
+  handleShowMoreLinkClick = (event) => {
     this.handleDescriptionState(true)(event);
   };
 
-  escFunction = event => {
+  escFunction = (event) => {
     if (event.keyCode === 27) {
       this.handleDescriptionState(false)(event);
     }
   };
 
-  
-
-  handleNonUserDialogBoxState = state => e => {
+  handleNonUserDialogBoxState = state => (e) => {
     this.setState({
-      nonUserDialogBox: state
+      nonUserDialogBox: state,
     });
   };
 
   reformatNewFlowData = () => {
-    let { formattedClassTimesDetails } = this.props;
+    const { formattedClassTimesDetails } = this.props;
     return formattedClassTimesDetails;
   };
 
-  setDescription = description => {
+  setDescription = (description) => {
     if (this.state.description !== description) {
-      this.setState(state => {
-        return {
-          ...state,
-          description
-        };
-      });
+      this.setState(state => ({
+        ...state,
+        description,
+      }));
     }
   };
 
-  handleShowMoreLinkClick = completeDesc => event => {
+  handleShowMoreLinkClick = completeDesc => (event) => {
     this.setDescription(completeDesc);
     this.handleDescriptionState(true)(event);
   };
@@ -292,7 +277,8 @@ class ClassTime extends Component {
   returnClickableLink(completeDesc, shortDesc) {
     return (
       <span>
-        {shortDesc}{" "}
+        {shortDesc}
+        {' '}
         <ClickableLink onClick={this.handleShowMoreLinkClick(completeDesc)}>
           click for more info.
         </ClickableLink>
@@ -301,64 +287,60 @@ class ClassTime extends Component {
   }
 
   getScheduleTypeFormatted = () => {
-    const { startDate, endDate, scheduleType, addToCalendar } = this.props;
+    const {
+      startDate, endDate, scheduleType, addToCalendar,
+    } = this.props;
     const classScheduleType = scheduleType.toLowerCase();
 
-    if (classScheduleType === "recurring") {
-      const strAsDesc =
-        "This is a Closed Series. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+    if (classScheduleType === 'recurring') {
+      const strAsDesc = 'This is a Closed Series. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.';
 
       return (
         <Fragment>
           <ScheduleType>
-            {addToCalendar == "closed"
-              ? this.returnClickableLink(strAsDesc, "This is closed series.")
-              : "This is a series class time."}{" "}
+            {addToCalendar == 'closed'
+              ? this.returnClickableLink(strAsDesc, 'This is closed series.')
+              : 'This is a series class time.'}
+            {' '}
             {<br />}
           </ScheduleType>
         </Fragment>
       );
-    } else if (classScheduleType === "onetime") {
-      /* Adding manual small letters splitted schedule type one time*/
-      const strAsDesc =
-        "This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.";
+    }
+    if (classScheduleType === 'onetime') {
+      /* Adding manual small letters splitted schedule type one time */
+      const strAsDesc = 'This is a Closed Single/set. Enrollment closes once the first class starts. If you join the class, you are enrolled in all the classes in the series.';
 
       return (
         <ScheduleType>
-          {addToCalendar == "closed"
-            ? this.returnClickableLink(strAsDesc, "This is closed single/set.")
-            : "This is a single/set class time."}{" "}
+          {addToCalendar == 'closed'
+            ? this.returnClickableLink(strAsDesc, 'This is closed single/set.')
+            : 'This is a single/set class time.'}
+          {' '}
           {<br />}
         </ScheduleType>
       );
     }
-    return (
-      <ScheduleType>
-        {`This is an ${classScheduleType} class time.`}
-      </ScheduleType>
-    );
+    return <ScheduleType>{`This is an ${classScheduleType} class time.`}</ScheduleType>;
   };
 
-  getWrapperClassName = addToCalendar =>
-    addToCalendar ? "add-to-calendar" : "remove-from-calendar";
+  getWrapperClassName = addToCalendar => (addToCalendar ? 'add-to-calendar' : 'remove-from-calendar');
 
-  getOuterClockClassName = addToCalendar =>
-    addToCalendar ? "add-to-calendar-clock" : "remove-from-calendar-clock";
+  getOuterClockClassName = addToCalendar => (addToCalendar ? 'add-to-calendar-clock' : 'remove-from-calendar-clock');
 
-  getDotColor = addToCalendar =>
-    addToCalendar ? helpers.primaryColor : helpers.cancel;
+  getDotColor = addToCalendar => (addToCalendar ? helpers.primaryColor : helpers.cancel);
 
   getCalenderButton = (addToCalender, formattedClassTimesDetails) => {
-    const iconName = addToCalender ? "add_circle_outline" : "delete";
+    const iconName = addToCalender ? 'add_circle_outline' : 'delete';
     // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
 
     return (
-      <div style={{ display: "flex" }}>
+      <div style={{ display: 'flex' }}>
         <FormGhostButton
           onClick={() => {
             this.setState({
               thinkingAboutAttending: true,
-              addToCalendar: addToCalender
+              addToCalendar: addToCalender,
             });
           }}
           label="Thinking About Attending"
@@ -368,22 +350,19 @@ class ClassTime extends Component {
   };
 
   scrollTo(name) {
-    scroller.scrollTo(name || "content-container", {
+    scroller.scrollTo(name || 'content-container', {
       duration: 800,
       delay: 0,
-      smooth: "easeInOutQuart"
+      smooth: 'easeInOutQuart',
     });
   }
-
- 
 
   getClassTimeRoomInfo = () => {
     const { selectedLocation, classes } = this.props;
 
     if (
-      isEmpty(selectedLocation) ||
-      (typeof selectedLocation.rooms === "undefined" ||
-        !selectedLocation.rooms.length)
+      isEmpty(selectedLocation)
+      || (typeof selectedLocation.rooms === 'undefined' || !selectedLocation.rooms.length)
     ) {
       return null;
     }
@@ -392,8 +371,8 @@ class ClassTime extends Component {
 
     return (
       <ClassTimeRoom>
-        <Icon className={classes.classTimeIcon}>{"meeting_room"}</Icon>
-        <RoomName>{rooms.map(room => room.name).join(",")}</RoomName>
+        <Icon className={classes.classTimeIcon}>meeting_room</Icon>
+        <RoomName>{rooms.map(room => room.name).join(',')}</RoomName>
       </ClassTimeRoom>
     );
   };
@@ -406,44 +385,35 @@ class ClassTime extends Component {
       return null;
     }
 
-    let eventAddress = "";
-    const addressComponents = ["address", "city", "state", "country"];
-    const eventLocationTitle = selectedLocation.title || "";
-    addressComponents.forEach(component => {
-      if (selectedLocation[component])
-        eventAddress += ", " + selectedLocation[component];
+    let eventAddress = '';
+    const addressComponents = ['address', 'city', 'state', 'country'];
+    const eventLocationTitle = selectedLocation.title || '';
+    addressComponents.forEach((component) => {
+      if (selectedLocation[component]) eventAddress += `, ${selectedLocation[component]}`;
     });
-    eventAddress = eventAddress.replace(",", "");
+    eventAddress = eventAddress.replace(',', '');
 
     const RoomInfo = this.getClassTimeRoomInfo();
     return (
       <ClassTimeLocationWrapper>
         <EventLocation locationTitle={eventLocationTitle} roomInfo={RoomInfo}>
           <ClassTimeLocation locationTitle={eventLocationTitle}>
-            <Icon className={classes.classTimeIcon}>{"location_on"}</Icon>
-            <LocationTitle>
-              {eventLocationTitle ? eventLocationTitle : eventAddress}
-            </LocationTitle>
+            <Icon className={classes.classTimeIcon}>location_on</Icon>
+            <LocationTitle>{eventLocationTitle || eventAddress}</LocationTitle>
           </ClassTimeLocation>
           {this.getClassTimeRoomInfo()}
         </EventLocation>
-        {eventLocationTitle && (
-          <LocationDetails>{eventAddress}</LocationDetails>
-        )}
+        {eventLocationTitle && <LocationDetails>{eventAddress}</LocationDetails>}
       </ClassTimeLocationWrapper>
     );
   };
 
-  
-
-  handleDescriptionState = descriptionState => e => {
+  handleDescriptionState = descriptionState => (e) => {
     e.stopPropagation();
-    this.setState(state => {
-      return {
-        ...state,
-        showDescription: descriptionState
-      };
-    });
+    this.setState(state => ({
+      ...state,
+      showDescription: descriptionState,
+    }));
   };
 
   render() {
@@ -460,93 +430,97 @@ class ClassTime extends Component {
       formattedClassTimesDetails,
       onModalClose,
       editMode,
-      classTimeData={},
+      classTimeData = {},
       onEditClassTimesClick,
       schoolId,
       params,
       classTypeId,
       popUp,
       schoolData,
-      schoolName
+      schoolName,
     } = this.props;
     // const formattedClassTimes = formatDataBasedOnScheduleType(this.props);
-    const {
-      thinkingAboutAttending,
-      description,
-    } = this.state;
-    const {_id:classTimeId} = classTimeData;
+    const { thinkingAboutAttending, description } = this.state;
+    const { _id: classTimeId } = classTimeData;
     // console.group("formattedClassTimes");
     // console.groupEnd();
 
-    //const showDescription = this.showDescription(formattedClassTimes);
-    const {selectedLocation:{timeZone}} = classTimeData;
-    const {name:classTimeName,classTypeName:{name:className}} = classTimeData;
-    const title = `${className}: ${classTimeName}`; 
+    // const showDescription = this.showDescription(formattedClassTimes);
+    const {
+      selectedLocation: { timeZone },
+    } = classTimeData;
+    const {
+      name: classTimeName,
+      classTypeName: { name: className },
+    } = classTimeData;
+    const title = `${className}: ${classTimeName}`;
     return (
       <Fragment>
-        {" "}
+        {' '}
         {formattedClassTimesDetails.totalClassTimes > 0 && (
           <Fragment>
             {this.state.isLoading && <ContainerLoader />}
             {this.state.nonUserDialogBox && (
               <NonUserDefaultDialogBox
-                title={"Sign In"}
-                content={"You need to sign in to add classes"}
+                title="Sign In"
+                content="You need to sign in to add classes"
                 open={this.state.nonUserDialogBox}
                 onModalClose={this.handleNonUserDialogBoxState(false)}
               />
             )}
-            {thinkingAboutAttending &&
-              !editMode && (
-                <ThinkingAboutAttending
-                  schoolId = {schoolId}
-                  open={thinkingAboutAttending}
-                  onModalClose={() => {
-                    this.setState({ thinkingAboutAttending: false });
-                  }}
-                  name= {title}
-                  params = {params}
-                  classTypeId = {classTypeId}
-                  classTimeId = {classTimeId}
-                  popUp={popUp}
-                  schoolName={schoolName ? schoolName : schoolData && get(schoolData[0],'name','School')}
-                />
-              )}
+            {thinkingAboutAttending && !editMode && (
+              <ThinkingAboutAttending
+                schoolId={schoolId}
+                open={thinkingAboutAttending}
+                onModalClose={() => {
+                  this.setState({ thinkingAboutAttending: false });
+                }}
+                name={title}
+                params={params}
+                classTypeId={classTypeId}
+                classTimeId={classTimeId}
+                popUp={popUp}
+                schoolName={schoolName || (schoolData && get(schoolData[0], 'name', 'School'))}
+              />
+            )}
             <div>
               <ClassTimeContainer
                 editMode
                 onClick={this.handleDescriptionState(false)}
                 inPopUp={inPopUp}
-                className={`class-time-bg-transition ${editMode ? 'add-to-calendar' : this.getWrapperClassName(
-                  this.props.addToCalendar
-                )}`}
+                className={`class-time-bg-transition ${
+                  editMode ? 'add-to-calendar' : this.getWrapperClassName(this.props.addToCalendar)
+                }`}
                 key={this.props._id}
               >
                 <ClassTimeContent>
-                  {/*Class type name */}
+                  {/* Class type name */}
                   <ClassTypeName inPopUp={inPopUp}>{`${name}`}</ClassTypeName>
 
-                  <ClassTimeContentInnerWrapper
-                    showDescription={this.state.showDescription}
-                  >
+                  <ClassTimeContentInnerWrapper showDescription={this.state.showDescription}>
                     {/* Schedule type */}
                     {this.getScheduleTypeFormatted()}
 
                     {/* Class Location */}
                     {this.getClassTimeLocation()}
 
-                    {scheduleType === "recurring" && (
+                    {scheduleType === 'recurring' && (
                       <RecurringDate>
-                        Between {formatDate(startDate, "MMM")} and{" "}
-                        {formatDate(endDate, "MMM")}
+                        Between
+                        {' '}
+                        {formatDate(startDate, 'MMM')}
+                        {' '}
+and
+                        {' '}
+                        {formatDate(endDate, 'MMM')}
                       </RecurringDate>
                     )}
 
                     {/* class times */}
                     <ClassTimesCardWrapper inPopUp={inPopUp}>
                       <ClassTimesList
-                        inPopUp={true}
-                        show={true}
+                        inPopUp
+                        show
                         formattedClassTimes={this.reformatNewFlowData()}
                         scheduleType={scheduleType}
                         timeZone={timeZone}
@@ -558,18 +532,16 @@ class ClassTime extends Component {
                   <Paper
                     className={classes.descriptionPanel}
                     style={{
-                      transform: this.state.showDescription
-                        ? "scaleY(1)"
-                        : "scaleY(0)"
+                      transform: this.state.showDescription ? 'scaleY(1)' : 'scaleY(0)',
                     }}
                   >
                     <Icon
                       classes={{
-                        root: classes.descriptionPanelCloseIcon
+                        root: classes.descriptionPanelCloseIcon,
                       }}
                       onClick={this.handleDescriptionState(false)}
                     >
-                      {"close"}
+                      {'close'}
                     </Icon>
 
                     <ClassTimeDescription>{description}</ClassTimeDescription>
@@ -586,16 +558,14 @@ class ClassTime extends Component {
                         icon
                         iconName="description"
                         label="View Description"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.stopPropagation();
 
-                          this.setState(state => {
-                            return {
-                              ...state,
-                              description: desc ? desc : state.description,
-                              showDescription: true
-                            };
-                          });
+                          this.setState(state => ({
+                            ...state,
+                            description: desc || state.description,
+                            showDescription: true,
+                          }));
                         }}
                       />
                     </ButtonWrapper>
@@ -616,7 +586,8 @@ class ClassTime extends Component {
                   )}
                 </ButtonsWrapper>
                 {this.props.isTrending && <Trending />}
-              </ClassTimeContainer>{" "}
+              </ClassTimeContainer>
+              {' '}
             </div>
           </Fragment>
         )}
@@ -631,11 +602,11 @@ ClassTime.propTypes = {
   scheduleType: PropTypes.string.isRequired,
   inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
   isTrending: PropTypes.bool,
-  editMode: PropTypes.bool
+  editMode: PropTypes.bool,
 };
 
 ClassTime.defaultProps = {
-  editMode: false
+  editMode: false,
 };
 // export default withPopUp(withShowMoreText(ClassTime, { description: "desc"}));
 export default withPopUp(withStyles(styles)(ClassTime));

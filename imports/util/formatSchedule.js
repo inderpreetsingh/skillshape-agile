@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants';
+// eslint-disable-next-line no-unused-vars
 import tz from 'moment-timezone';
 
 export const formatTime = (startTime, timeZone) => {

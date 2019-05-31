@@ -1,19 +1,14 @@
-import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { browserHistory } from "react-router";
-
-import { withStyles } from "material-ui/styles";
-import Radio, { RadioGroup } from "material-ui/Radio";
-import { FormLabel, FormControl, FormControlLabel } from "material-ui/Form";
-
-import { withPopUp ,confirmationDialog} from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import IconInput from "/imports/ui/components/landing/components/form/IconInput.jsx";
-
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { FormControl, FormControlLabel } from 'material-ui/Form';
+import Radio, { RadioGroup } from 'material-ui/Radio';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+import IconInput from '/imports/ui/components/landing/components/form/IconInput';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { confirmationDialog, withPopUp } from '/imports/util';
 
 const styles = {
   radioGroupWrapper: {
@@ -21,62 +16,62 @@ const styles = {
     marginTop: helpers.rhythmDiv * 3,
     paddingLeft: helpers.rhythmDiv,
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
-      width: "auto"
-    }
+      width: 'auto',
+    },
   },
   radioGroupNoMarginTop: {
-    marginTop: 0
+    marginTop: 0,
   },
   radioLabelRoot: {
-    marginRight: helpers.rhythmDiv * 3
+    marginRight: helpers.rhythmDiv * 3,
   },
   radioLabelOther: {
     marginBottom: 0,
-    transform: "translateY(4px)"
+    transform: 'translateY(4px)',
   },
   radioLabelRootZeroMargin: {
-    marginRight: 0
+    marginRight: 0,
   },
   radioLabel: {
     fontSize: helpers.baseFontSize,
     [`@media screen and (max-width: ${helpers.mobile + 50}px)`]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   },
   radioLabelMarginBottom: {
-    marginBottom: helpers.rhythmDiv * 2
+    marginBottom: helpers.rhythmDiv * 2,
   },
   radioButton: {
     height: helpers.rhythmDiv * 3,
     width: helpers.rhythmDiv * 3,
-    marginRight: helpers.rhythmDiv
+    marginRight: helpers.rhythmDiv,
   },
   radioButtonGroup: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
     [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
-      justifyContent: "flex-start"
+      justifyContent: 'flex-start',
     },
     [`@media screen and (max-width: ${helpers.mobile}px)`]: {
-      flexDirection: "column"
-    }
+      flexDirection: 'column',
+    },
   },
   formLabel: {
     fontWeight: 400,
-    color: `rgba(0,0,0,0.87)`,
-    cursor: "pointer"
+    color: 'rgba(0,0,0,0.87)',
+    cursor: 'pointer',
   },
   radioButtonOther: {
     width: 36,
-    transform: "translateY(4px)"
-  }
+    transform: 'translateY(4px)',
+  },
 };
 
 const FormElementWrapper = styled.div`
   width: 100%;
-  display: ${props => (props.show ? "block" : "none")};
+  display: ${props => (props.show ? 'block' : 'none')};
 `;
 
 /*
@@ -164,19 +159,19 @@ class ContactUsForm extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      name: "",
-      email: "",
-      subject: "Something Else",
-      message: "",
-      radioButtonGroupValue: "feature",
-      inputsName: ["email", "name", "message"],
-      readyToSumit: false
+      name: '',
+      email: '',
+      subject: 'Something Else',
+      message: '',
+      radioButtonGroupValue: 'feature',
+      inputsName: ['email', 'name', 'message'],
+      readyToSumit: false,
     };
   }
 
   _validateAllInputs = (data, inputNames) => {
     for (let i = 0; i < inputNames.length; ++i) {
-      if (data[inputNames[i]] == "") {
+      if (data[inputNames[i]] == '') {
         return false;
       }
     }
@@ -184,20 +179,20 @@ class ContactUsForm extends Component {
     return true;
   };
 
-  setInputRef = el => {
+  setInputRef = (el) => {
     this.otherMessageInput = el;
   };
 
   handleLabelClick = () => {
     this.otherMessageInput.focus();
     this.setState({
-      radioButtonGroupValue: "other"
+      radioButtonGroupValue: 'other',
     });
   };
 
-  handleInputFieldChange = fieldName => e => {
+  handleInputFieldChange = fieldName => (e) => {
     this.setState({
-      [fieldName]: e.target.value
+      [fieldName]: e.target.value,
     });
 
     if (this.props.onInputValueChange) {
@@ -208,7 +203,7 @@ class ContactUsForm extends Component {
   handleRadioChange = (e, value) => {
     // debugger;
     this.setState({
-      radioButtonGroupValue: e.target.value
+      radioButtonGroupValue: e.target.value,
     });
 
     if (this.props.onRadioButtonChange) {
@@ -216,69 +211,73 @@ class ContactUsForm extends Component {
     }
   };
 
-  handleFormSubmit = e => {
+  handleFormSubmit = (e) => {
     const { popUp } = this.props;
     e.preventDefault();
 
-    let subject = this.state.subject;
-    const name = this.state.name;
-    const email = this.state.email;
-    const message = this.state.message;
+    let { subject } = this.state;
+    const { name } = this.state;
+    const { email } = this.state;
+    const { message } = this.state;
     const selectedOption = this.state.radioButtonGroupValue;
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     // console.info(message,selectedOption,email,name);
-    if (selectedOption !== "other") {
-      subject = "";
+    if (selectedOption !== 'other') {
+      subject = '';
     }
     if (this.state.readyToSumit) {
-      //..
+      // ..
       if (!email) {
-        popUp.appear("alert", { content: "Please enter your email." });
+        popUp.appear('alert', { content: 'Please enter your email.' });
         return false;
-      } else if (!emailReg.test(email)) {
-        popUp.appear("alert", { content: "Please enter valid email address" });
+      } if (!emailReg.test(email)) {
+        popUp.appear('alert', { content: 'Please enter valid email address' });
         return false;
-      } else if (!message) {
-        popUp.appear("alert", { content: "Please enter a message." });
+      } if (!message) {
+        popUp.appear('alert', { content: 'Please enter a message.' });
         return false;
-      } else {
-        // Start loading
-        this.setState({ isLoading: true });
-
-        Meteor.call(
-          "sendfeedbackToAdmin",
-          name,
-          email,
-          message,
-          selectedOption,
-          subject,
-          (error, result) => {
-            if (error) {
-            } else {
-              let data = {};
-              data = {
-                popUp,
-                title: 'Success',
-                type: 'success',
-                content:"Thanks for providing your feedback" ,
-                buttons: [{ label: 'Ok', onClick: () => {this.props.onModalClose() }, greyColor: true }]
-              }
-              confirmationDialog(data);
-            }
-            this.setState({ isLoading: false });
-          }
-        );
       }
+      // Start loading
+      this.setState({ isLoading: true });
+
+      Meteor.call(
+        'sendfeedbackToAdmin',
+        name,
+        email,
+        message,
+        selectedOption,
+        subject,
+        (error, result) => {
+          if (error) {
+          } else {
+            let data = {};
+            data = {
+              popUp,
+              title: 'Success',
+              type: 'success',
+              content: 'Thanks for providing your feedback',
+              buttons: [
+                {
+                  label: 'Ok',
+                  onClick: () => {
+                    this.props.onModalClose();
+                  },
+                  greyColor: true,
+                },
+              ],
+            };
+            confirmationDialog(data);
+          }
+          this.setState({ isLoading: false });
+        },
+      );
     }
   };
 
   componentDidUpdate = () => {
-    const readyToSumit = this._validateAllInputs(
-      this.state,
-      this.state.inputsName
-    );
+    const readyToSumit = this._validateAllInputs(this.state, this.state.inputsName);
     if (this.state.readyToSumit !== readyToSumit) {
-      this.setState({ readyToSumit: readyToSumit });
+      this.setState({ readyToSumit });
     }
   };
 
@@ -294,7 +293,7 @@ class ContactUsForm extends Component {
               inputId="name"
               labelText="Your name"
               value={this.state.name}
-              onChange={this.handleInputFieldChange("name")}
+              onChange={this.handleInputFieldChange('name')}
             />
           </InputWrapper>
 
@@ -304,10 +303,9 @@ class ContactUsForm extends Component {
               type="email"
               labelText="Enter your email address"
               value={this.state.email}
-              onChange={this.handleInputFieldChange("email")}
+              onChange={this.handleInputFieldChange('email')}
             />
           </InputWrapper>
-
 
           <FormControl
             component="fieldset"
@@ -323,11 +321,8 @@ class ContactUsForm extends Component {
             >
               <FormControlLabel
                 classes={{
-                  root:
-                    classes.radioLabelRoot +
-                    " " +
-                    classes.radioLabelMarginBottom,
-                  label: classes.radioLabel
+                  root: `${classes.radioLabelRoot} ${classes.radioLabelMarginBottom}`,
+                  label: classes.radioLabel,
                 }}
                 value="feature"
                 control={<Radio classes={{ root: classes.radioButton }} />}
@@ -335,11 +330,8 @@ class ContactUsForm extends Component {
               />
               <FormControlLabel
                 classes={{
-                  root:
-                    classes.radioLabelRoot +
-                    " " +
-                    classes.radioLabelMarginBottom,
-                  label: classes.radioLabel
+                  root: `${classes.radioLabelRoot} ${classes.radioLabelMarginBottom}`,
+                  label: classes.radioLabel,
                 }}
                 value="somethingBroken"
                 control={<Radio classes={{ root: classes.radioButton }} />}
@@ -347,11 +339,8 @@ class ContactUsForm extends Component {
               />
               <FormControlLabel
                 classes={{
-                  root:
-                    classes.radioLabelRoot +
-                    " " +
-                    classes.radioLabelMarginBottom,
-                  label: classes.radioLabel
+                  root: `${classes.radioLabelRoot} ${classes.radioLabelMarginBottom}`,
+                  label: classes.radioLabel,
                 }}
                 value="liked"
                 control={<Radio classes={{ root: classes.radioButton }} />}
@@ -359,11 +348,8 @@ class ContactUsForm extends Component {
               />
               <FormControlLabel
                 classes={{
-                  root:
-                    classes.radioLabelRoot +
-                    " " +
-                    classes.radioLabelMarginBottom,
-                  label: classes.radioLabel
+                  root: `${classes.radioLabelRoot} ${classes.radioLabelMarginBottom}`,
+                  label: classes.radioLabel,
                 }}
                 value="question"
                 control={<Radio classes={{ root: classes.radioButton }} />}
@@ -371,11 +357,8 @@ class ContactUsForm extends Component {
               />
               <FormControlLabel
                 classes={{
-                  root:
-                    classes.radioLabelRootZeroMargin +
-                    " " +
-                    classes.radioLabelMarginBottom,
-                  label: classes.radioLabel
+                  root: `${classes.radioLabelRootZeroMargin} ${classes.radioLabelMarginBottom}`,
+                  label: classes.radioLabel,
                 }}
                 value="SomethingElse"
                 control={<Radio classes={{ root: classes.radioButton }} />}
@@ -406,9 +389,9 @@ class ContactUsForm extends Component {
             <IconInput
               inputId="message"
               labelText="Your message goes here"
-              multiline={true}
+              multiline
               value={this.state.message}
-              onChange={this.handleInputFieldChange("message")}
+              onChange={this.handleInputFieldChange('message')}
             />
           </InputWrapper>
 
@@ -423,13 +406,10 @@ class ContactUsForm extends Component {
                   onClick={this.handleFormSubmit}
                 />
               ) : (
-                  <button
-                    className="cancel-button full-width increase-height"
-                    disabled
-                  >
-                    Send Message
+                <button className="cancel-button full-width increase-height" disabled>
+                  Send Message
                 </button>
-                )}
+              )}
             </ButtonWrapper>
           </SubmitButtonWrapper>
         </Form>
@@ -440,7 +420,7 @@ class ContactUsForm extends Component {
 
 ContactUsForm.propTypes = {
   onInputValueChange: PropTypes.func,
-  onRadioButtonChange: PropTypes.func
+  onRadioButtonChange: PropTypes.func,
 };
 
 export default withStyles(styles)(withPopUp(ContactUsForm));

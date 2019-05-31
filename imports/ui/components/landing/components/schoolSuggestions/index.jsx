@@ -1,14 +1,12 @@
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
-import isEmpty from "lodash/isEmpty";
-import { createContainer } from "meteor/react-meteor-data";
-
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import BrandBar from "/imports/ui/components/landing/components/BrandBar.jsx";
-import SuggestionTable from "/imports/ui/components/landing/components/schoolSuggestions/SuggestionTable.jsx";
-import SchoolSuggestion from "/imports/api/schoolSuggestion/fields.js";
-
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import isEmpty from 'lodash/isEmpty';
+import { createContainer } from 'meteor/react-meteor-data';
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import SchoolSuggestion from '/imports/api/schoolSuggestion/fields';
+import BrandBar from '/imports/ui/components/landing/components/BrandBar';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import SuggestionTable from '/imports/ui/components/landing/components/schoolSuggestions/SuggestionTable';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
 const Heading = styled.h2`
   font-size: ${helpers.baseFontSize * 2}px;
@@ -34,11 +32,11 @@ class SchoolSuggestionsView extends Component {
     super(props);
     this.state = {
       accessAllowed: true,
-      noLoggedIn: false
+      noLoggedIn: false,
     };
   }
 
-  _setAccessForUser = currentUser => {
+  _setAccessForUser = (currentUser) => {
     // debugger;
     if (!isEmpty(currentUser)) {
       const accessAllowed = checkMyAccess({ user: currentUser });
@@ -53,12 +51,12 @@ class SchoolSuggestionsView extends Component {
   };
 
   componentWillMount = () => {
-    const currentUser = this.props.currentUser;
+    const { currentUser } = this.props;
     this._setAccessForUser(currentUser);
   };
 
-  componentWillReceiveProps = nextProps => {
-    const currentUser = nextProps.currentUser;
+  componentWillReceiveProps = (nextProps) => {
+    const { currentUser } = nextProps;
     this._setAccessForUser(currentUser);
   };
 
@@ -78,11 +76,7 @@ class SchoolSuggestionsView extends Component {
         ) : (
           <ContentWrapper>
             <Heading>School Suggestions</Heading>
-            {isLoading ? (
-              <ContainerLoader />
-            ) : (
-              <SuggestionTable data={schoolSuggestions} />
-            )}
+            {isLoading ? <ContainerLoader /> : <SuggestionTable data={schoolSuggestions} />}
           </ContentWrapper>
         )}
       </Wrapper>
@@ -90,12 +84,10 @@ class SchoolSuggestionsView extends Component {
   }
 }
 
-export default createContainer(props => {
+export default createContainer((props) => {
   let schoolSuggestions;
   let isLoading = true;
-  const schoolSuggestionsSubscription = Meteor.subscribe(
-    "schoolSuggestion.getAllSuggestions"
-  );
+  const schoolSuggestionsSubscription = Meteor.subscribe('schoolSuggestion.getAllSuggestions');
   if (schoolSuggestionsSubscription && schoolSuggestionsSubscription.ready()) {
     isLoading = false;
     schoolSuggestions = SchoolSuggestion.find({}).fetch();
@@ -103,6 +95,6 @@ export default createContainer(props => {
   return {
     ...props,
     isLoading,
-    schoolSuggestions: schoolSuggestions
+    schoolSuggestions,
   };
 }, SchoolSuggestionsView);

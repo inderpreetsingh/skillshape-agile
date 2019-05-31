@@ -1,113 +1,112 @@
 import get from 'lodash/get';
 import includes from 'lodash/includes';
-import isEmpty from "lodash/isEmpty";
-import ClearIcon from "material-ui-icons/Clear";
+import isEmpty from 'lodash/isEmpty';
+import ClearIcon from 'material-ui-icons/Clear';
 // import { blue500 } from 'material-ui/styles/colors';
-import Dialog, { DialogActions, DialogTitle, withMobileDialog } from "material-ui/Dialog";
-import Grid from "material-ui/Grid";
-import Icon from "material-ui/Icon";
-import IconButton from "material-ui/IconButton";
-import { withStyles } from "material-ui/styles";
-import moment from "moment";
-import React from "react";
-import { browserHistory, Link } from "react-router";
-import styled from "styled-components";
-import "/imports/api/classInterest/methods";
-import ClassTimes from "/imports/api/classTimes/fields";
-import "/imports/api/classTimes/methods";
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton";
-import ClassTimesBoxes from "/imports/ui/components/landing/components/classTimes/ClassTimesBoxes";
-import MetaInfo from "/imports/ui/components/landing/components/helpers/MetaInfo";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
-import * as settings from "/imports/ui/components/landing/site-settings";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { checkForAddToCalender, formatClassTimesData, formatDataBasedOnScheduleType, formStyles, imageExists } from "/imports/util";
-import Events from "/imports/util/events";
-import { withPopUp } from "/imports/util";
+import Dialog, { DialogActions, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import Grid from 'material-ui/Grid';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
+import { withStyles } from 'material-ui/styles';
+import moment from 'moment';
+import React from 'react';
+import { browserHistory } from 'react-router';
+import styled from 'styled-components';
+import '/imports/api/classInterest/methods';
+import ClassTimes from '/imports/api/classTimes/fields';
+import '/imports/api/classTimes/methods';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import ClassTimesBoxes from '/imports/ui/components/landing/components/classTimes/ClassTimesBoxes';
+import MetaInfo from '/imports/ui/components/landing/components/helpers/MetaInfo';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import * as settings from '/imports/ui/components/landing/site-settings';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import {
+  checkForAddToCalender,
+  formatClassTimesData,
+  formatDataBasedOnScheduleType,
+  imageExists,
+  withPopUp,
+} from '/imports/util';
+import Events from '/imports/util/events';
 
-
-
-const styles = theme => {
-  return {
-    dialogPaper: {
-      overflowX: "hidden",
-      padding: helpers.rhythmDiv * 2,
-      maxWidth: 450,
-      maxHeight: "80vh",
-      height: 'auto'
-    },
-    dialogTitleRoot: {
-      width: "100%",
-      position: "absolute",
-      right: helpers.rhythmDiv,
-      top: helpers.rhythmDiv,
-      padding: 0,
-      marginBottom: 0
-    },
-    dialogAction: {
-      width: "100%",
-      justifyContent: "space-between"
-    },
-    dialogTitle: {
-      position: "relative"
-    },
-    gridItem: {
-      padding: 0
-    },
-    gridContainer: {
-      padding: helpers.rhythmDiv
-    },
-    aboutClassGridContainer: {
-      marginTop: helpers.rhythmDiv * 2,
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    },
-    image: {
-      verticalAlign: "middle",
-      width: "100%",
-      height: "100%",
-      objectFit: "cover"
-    },
-    imageContainer: {
-      backgroundColor: "#000",
-      display: "inline-flex",
-      alignItems: "center",
-      color: "#fff",
-      width: "100%",
-      minHeight: 200,
-      justifyContent: "center",
-      backgroundSize: "auto",
-      height: "200px"
-    },
-    iconStyle: {
-      marginRight: "5px"
-    },
-    iconButton: {
-      height: "auto",
-      width: "auto"
-    },
-    iconWithDetailContainer: {
-      display: "inline-flex",
-      alignItems: "center",
-      marginTop: "10px"
-    },
-    bottomSpace: {},
-    about: {
-      width: "100%",
-      fontSize: "21px",
-      padding: "5px",
-      backgroundColor: "aliceblue"
-    }
-  };
-};
+const styles = theme => ({
+  dialogPaper: {
+    overflowX: 'hidden',
+    padding: helpers.rhythmDiv * 2,
+    maxWidth: 450,
+    maxHeight: '80vh',
+    height: 'auto',
+  },
+  dialogTitleRoot: {
+    width: '100%',
+    position: 'absolute',
+    right: helpers.rhythmDiv,
+    top: helpers.rhythmDiv,
+    padding: 0,
+    marginBottom: 0,
+  },
+  dialogAction: {
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  dialogTitle: {
+    position: 'relative',
+  },
+  gridItem: {
+    padding: 0,
+  },
+  gridContainer: {
+    padding: helpers.rhythmDiv,
+  },
+  aboutClassGridContainer: {
+    marginTop: helpers.rhythmDiv * 2,
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+  },
+  image: {
+    verticalAlign: 'middle',
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  imageContainer: {
+    backgroundColor: '#000',
+    display: 'inline-flex',
+    alignItems: 'center',
+    color: '#fff',
+    width: '100%',
+    minHeight: 200,
+    justifyContent: 'center',
+    backgroundSize: 'auto',
+    height: '200px',
+  },
+  iconStyle: {
+    marginRight: '5px',
+  },
+  iconButton: {
+    height: 'auto',
+    width: 'auto',
+  },
+  iconWithDetailContainer: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginTop: '10px',
+  },
+  bottomSpace: {},
+  about: {
+    width: '100%',
+    fontSize: '21px',
+    padding: '5px',
+    backgroundColor: 'aliceblue',
+  },
+});
 
 // const ButtonWrapper = styled.div`
 //   width: 100%;
 //   ${flexCenter}
 //   padding: ${rhythmDiv}px 0px;
 // `;
-
-
 
 const ActionButtons = styled.div`
   display: flex;
@@ -146,13 +145,13 @@ const IconsRowWrapper = styled.div`
 `;
 
 const scheduleDetails = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
 ];
 
 const Heading = styled.h2`
@@ -162,8 +161,7 @@ const Heading = styled.h2`
   margin: 0;
   margin-bottom: ${helpers.rhythmDiv}px;
   color: ${helpers.primaryColor};
-  text-transform: ${props =>
-    props.textTransform ? props.textTransform : "capitalize"};
+  text-transform: ${props => (props.textTransform ? props.textTransform : 'capitalize')};
   text-align: center;
   width: 100%;
   line-height: 1;
@@ -181,7 +179,7 @@ const Text = styled.p`
   font-weight: 400;
   line-height: 1;
   margin-bottom: ${props => props.marginBottom}px;
-  text-align: ${props => (props.center ? "center" : "left")};
+  text-align: ${props => (props.center ? 'center' : 'left')};
 `;
 
 const EventHeader = styled.div`
@@ -223,9 +221,9 @@ const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
 const Div = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 `;
 const ClassTypeDescription = styled.div`
   border: 2px solid black;
@@ -257,40 +255,45 @@ class ClassDetailModal extends React.Component {
     this.state = {
       isLoading: true,
       error: false,
-      classImg: this.props.classType ? this.props.classType.classTypeImg : ""
+      classImg: this.props.classType ? this.props.classType.classTypeImg : '',
     };
   }
 
   componentWillMount() {
-    const {eventData:{schoolId}} = this.props;
-    Meteor.call(
-      "school.findSuperAdmin",
-      null,
-      schoolId,
-      (err, res) => {
-        if (res)
-          if (get(res, 'superAdmin', null) == Meteor.userId() || includes(get(res, 'admins', []), Meteor.userId())) {
-            this.setState({ adminAccess: true });
-          }
+    const {
+      eventData: { schoolId },
+    } = this.props;
+    Meteor.call('school.findSuperAdmin', null, schoolId, (err, res) => {
+      if (res) {
+        if (
+          get(res, 'superAdmin', null) == Meteor.userId()
+          || includes(get(res, 'admins', []), Meteor.userId())
+        ) {
+          this.setState({ adminAccess: true });
+        }
       }
-    );
+    });
     if (eventData) {
       const {
-        schoolId,
-        classTypeId,
-        classTimeId,
-        locationId
+        schoolId, classTypeId, classTimeId, locationId,
       } = eventData;
       this.setState({
         isLoading: true,
         removeFromCalendarPopUp: false,
-        permanentlyRemove: false
+        permanentlyRemove: false,
       });
       Meteor.call(
-        "classTimes.getClassTimes",
-        { schoolId, classTypeId, classTimeId, locationId },
-        (error, { school, classTimes, classType, location }) => {
-          let addToMyCalender = checkForAddToCalender(classTimes);
+        'classTimes.getClassTimes',
+        {
+          schoolId,
+          classTypeId,
+          classTimeId,
+          locationId,
+        },
+        (error, {
+          school, classTimes, classType, location,
+        }) => {
+          const addToMyCalender = checkForAddToCalender(classTimes);
           this.setState({
             isLoading: false,
             school,
@@ -298,14 +301,14 @@ class ClassDetailModal extends React.Component {
             classType,
             location,
             error,
-            addToMyCalender
+            addToMyCalender,
           });
-        }
+        },
       );
     } else {
       this.setState({
-        error: "Event Data not found!!!!",
-        isLoading: false
+        error: 'Event Data not found!!!!',
+        isLoading: false,
       });
     }
   }
@@ -320,41 +323,41 @@ class ClassDetailModal extends React.Component {
     this.setImageSrc(classType, school);
   };
 
-  formatScheduleType = scheduleType => {
+  formatScheduleType = (scheduleType) => {
     const classScheduleType = scheduleType.toLowerCase();
 
-    if (classScheduleType === "recurring" || classScheduleType === "ongoing")
+    if (classScheduleType === 'recurring' || classScheduleType === 'ongoing') {
       return (
         <Text>
           <Capitalize>{classScheduleType}</Capitalize>
         </Text>
       );
+    }
 
-    return <Text>{"One Time"}</Text>;
+    return <Text>One Time</Text>;
   };
 
-  formatScheduleType = scheduleType => {
+  formatScheduleType = (scheduleType) => {
     const classScheduleType = scheduleType.toLowerCase();
 
-    if (classScheduleType === "recurring" || classScheduleType === "ongoing")
+    if (classScheduleType === 'recurring' || classScheduleType === 'ongoing') {
       return (
         <Text>
           <Capitalize>{classScheduleType}</Capitalize>
         </Text>
       );
+    }
 
-    return <Text>{"One Time"}</Text>;
+    return <Text>One Time</Text>;
   };
 
   setImageSrc = (classType, school) => {
-    imageExists((classType && classType.classTypeImg) || "")
-      .then(res => {
-        if (this.state.classImg !== classType.classTypeImg)
-          this.setState({ classImg: classType.classTypeImg });
+    imageExists((classType && classType.classTypeImg) || '')
+      .then((res) => {
+        if (this.state.classImg !== classType.classTypeImg) this.setState({ classImg: classType.classTypeImg });
       })
       .catch(() => {
-        if (this.state.classImg !== settings.classTypeImgSrc)
-          this.setState({ classImg: settings.classTypeImgSrc });
+        if (this.state.classImg !== settings.classTypeImgSrc) this.setState({ classImg: settings.classTypeImgSrc });
       });
 
     // if (classType && classType.classTypeImg) {
@@ -367,14 +370,14 @@ class ClassDetailModal extends React.Component {
   removeMyClassInterest = (event, classTimeId) => {
     this.setState({ isLoading: true });
     Meteor.call(
-      "classInterest.removeClassInterestByClassTimeId",
+      'classInterest.removeClassInterestByClassTimeId',
       { userId: Meteor.userId(), classTimeId },
       (error, res) => {
         this.setState({ isLoading: false, error });
         this.props.closeEventModal(false, null);
         if (error) {
         }
-      }
+      },
     );
   };
 
@@ -384,74 +387,75 @@ class ClassDetailModal extends React.Component {
         classTimeId: eventData.classTimeId,
         classTypeId: eventData.classTypeId,
         schoolId: eventData.schoolId,
-        userId: Meteor.userId()
+        userId: Meteor.userId(),
       };
       // Start Loading
       this.setState({ isLoading: true });
-      Meteor.call("classInterest.addClassInterest", { doc }, (err, res) => {
+      Meteor.call('classInterest.addClassInterest', { doc }, (err, res) => {
         // Stop loading and close modal.
         this.setState({ isLoading: false, error: err });
         this.props.closeEventModal(false, null);
       });
     } else {
       // Show Login popup
-      Events.trigger("loginAsUser");
+      Events.trigger('loginAsUser');
       this.props.closeEventModal(false, null);
     }
   };
 
   renderdaySchedule = (data, eventData) => {
-    let type = eventData.scheduleType;
+    const type = eventData.scheduleType;
     const result = data.map((item, index) => {
       const { startTime, duration } = item;
-      let startDate = moment(item.startDate).format("DD:MM:YYYY");
-      let endDate = moment(item.endDate).format("DD:MM:YYYY");
+      const startDate = moment(item.startDate).format('DD:MM:YYYY');
+      const endDate = moment(item.endDate).format('DD:MM:YYYY');
       // let endDate = new Date(eventData.endDate);
-      let date = new Date(startTime);
-      let day = date.getDay();
-      let scheduleDay = scheduleDetails[day - 1];
-      const eventStartTime = moment(startTime).format("hh:mm");
+      const date = new Date(startTime);
+      const day = date.getDay();
+      const scheduleDay = scheduleDetails[day - 1];
+      const eventStartTime = moment(startTime).format('hh:mm');
       const eventEndTime = moment(new Date(startTime))
-        .add(duration, "minutes")
-        .format("hh:mm");
-      if (type == "OnGoing") {
+        .add(duration, 'minutes')
+        .format('hh:mm');
+      if (type == 'OnGoing') {
         return `Every ${scheduleDay} at ${eventStartTime}`;
-      } else if (type == "recurring") {
+      }
+      if (type == 'recurring') {
         return `Every ${scheduleDay} at ${eventStartTime} from ${startDate} to ${endDate}`;
-      } else if (type == "oneTime") {
+      }
+      if (type == 'oneTime') {
         return `${scheduleDay} ${startDate} at ${eventStartTime}`;
       }
     });
     return result.toString();
   };
 
-  goToSchoolPage = school => {
+  goToSchoolPage = (school) => {
     browserHistory.push(`/schools/${school.slug}`);
     this.props.closeEventModal(false, null);
   };
+
   goToClassTypePage = (className, classId) => {
     browserHistory.push(`/classType/${className}/${classId}`);
     this.props.closeEventModal(false, null);
   };
+
   /*
   1.open dialog box
   2.Cancel=close
   3.Ok=functionality
   */
-  handleRemoveFromMyCalendar = props => {
+  handleRemoveFromMyCalendar = (props) => {
     Meteor.call(
-      "classInterest.deleteEventFromMyCalendar",
+      'classInterest.deleteEventFromMyCalendar',
       props.eventData.classTimeId,
-      props.clickedDate
+      props.clickedDate,
     );
     props.closeEventModal(false, null);
   };
-  handlePermanentlyRemove = props => {
-    Meteor.call(
-      "classTimes.permanentlyRemove",
-      props.eventData.classTimeId,
-      props.clickedDate
-    );
+
+  handlePermanentlyRemove = (props) => {
+    Meteor.call('classTimes.permanentlyRemove', props.eventData.classTimeId, props.clickedDate);
     this.setState({ removeFromCalendarPopUp: false });
     props.closeEventModal(false, null);
   };
@@ -465,7 +469,7 @@ class ClassDetailModal extends React.Component {
       location,
       addToMyCalender,
       classImg,
-      classDetail
+      classDetail,
     } = this.state;
     const {
       eventData,
@@ -475,78 +479,65 @@ class ClassDetailModal extends React.Component {
       classInterestData,
       params,
       schoolName,
-      type
+      type,
     } = this.props;
-    let enrollmentIds = get(this.state.classType, 'enrollmentIds', []);
+    const enrollmentIds = get(this.state.classType, 'enrollmentIds', []);
     const classTypeData = ClassTimes.findOne({ _id: eventData.classTimeId });
-    const formattedClassTimesDetails = formatDataBasedOnScheduleType(
-      eventData,
-      false
-    ); // false is for not hiding the past schedule types.
+    const formattedClassTimesDetails = formatDataBasedOnScheduleType(eventData, false); // false is for not hiding the past schedule types.
     const classTimesData = ClassTimes.find({
-      classTypeId: eventData.classTypeId
+      classTypeId: eventData.classTypeId,
     });
-    const allFormattedClassTimeDetails = formatClassTimesData(
-      classTimesData,
-      true
-    ).filter(classTime => {
-      if (
-        classTime._id != eventData.classTimeId &&
-        classTime.formattedClassTimesDetails &&
-        classTime.formattedClassTimesDetails.totalClassTimes > 0
-      ) {
-        return true;
-      }
-      return false;
-    }); // false is for not hiding the past schedule types;
+    const allFormattedClassTimeDetails = formatClassTimesData(classTimesData, true).filter(
+      (classTime) => {
+        if (
+          classTime._id != eventData.classTimeId
+          && classTime.formattedClassTimesDetails
+          && classTime.formattedClassTimesDetails.totalClassTimes > 0
+        ) {
+          return true;
+        }
+        return false;
+      },
+    ); // false is for not hiding the past schedule types;
     classTypeData.formattedClassTimesDetails = formattedClassTimesDetails;
     return (
       <Dialog
-        fullScreen={true}
+        fullScreen
         open={this.props.showModal}
         onClose={() => this.props.closeEventModal(false, null)}
         aria-labelledby="responsive-dialog-title"
         classes={{
-          paper: classes.dialogPaper
+          paper: classes.dialogPaper,
         }}
       >
         {isLoading && <ContainerLoader />}
-        {error && <div style={{ color: "red" }}>{error}</div>}
+        {error && <div style={{ color: 'red' }}>{error}</div>}
 
-        {!isLoading &&
-          !error && (
-            <Grid container style={{ padding: "16px" }}>
-              <Grid container classes={{ typeItem: classes.gridItem }}>
-                <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
-                  <DialogTitleWrapper>
-                    <IconButton
-                      color="primary"
-                      onClick={() => this.props.closeEventModal(false, null)}
-                      classes={{ root: classes.iconButton }}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </DialogTitleWrapper>
-                </DialogTitle>
+        {!isLoading && !error && (
+          <Grid container style={{ padding: '16px' }}>
+            <Grid container classes={{ typeItem: classes.gridItem }}>
+              <DialogTitle classes={{ root: classes.dialogTitleRoot }}>
+                <DialogTitleWrapper>
+                  <IconButton
+                    color="primary"
+                    onClick={() => this.props.closeEventModal(false, null)}
+                    classes={{ root: classes.iconButton }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </DialogTitleWrapper>
+              </DialogTitle>
 
-                <EventHeader>
-                  <ImageContainer src={classImg}>
-                    {
-                      <div
-                        style={{ position: "absolute", top: 10, right: 10 }}
-                      />
-                    }
-                  </ImageContainer>
-                  <Event center={classImg !== ""}>
-                    <EventName>
-                      {`${classType.name.toLowerCase()}: ${
-                        eventData.name
-                        }`}
-                    </EventName>
-                    {/* {this.formatScheduleType(eventData.scheduleType)} */}
-                  </Event>
-                </EventHeader>
-                {/* <Grid
+              <EventHeader>
+                <ImageContainer src={classImg}>
+                  {<div style={{ position: 'absolute', top: 10, right: 10 }} />}
+                </ImageContainer>
+                <Event center={classImg !== ''}>
+                  <EventName>{`${classType.name.toLowerCase()}: ${eventData.name}`}</EventName>
+                  {/* {this.formatScheduleType(eventData.scheduleType)} */}
+                </Event>
+              </EventHeader>
+              {/* <Grid
                   item
                   sm={12}
                   md={12}
@@ -555,40 +546,38 @@ class ClassDetailModal extends React.Component {
                 >
                   <EventDesc>{eventData.desc || ""}</EventDesc>
                 </Grid> */}
-                <Grid item xs={6} classes={{ typeItem: classes.gridItem }}>
-                  <div className={classes.iconWithDetailContainer}>
-                    <div  className={classes.iconStyle}>
-                      <Icon className="material-icons" color="primary">
-                        date_range
-                      </Icon>
-                    </div>
-                    <div>
-                      <Text>
-                        <Italic>Date</Italic>
-                      </Text>
-                      <Text>{clickedDate}</Text>
-                    </div>
+              <Grid item xs={6} classes={{ typeItem: classes.gridItem }}>
+                <div className={classes.iconWithDetailContainer}>
+                  <div className={classes.iconStyle}>
+                    <Icon className="material-icons" color="primary">
+                      date_range
+                    </Icon>
                   </div>
-                </Grid>
-                <Grid item xs={6}>
-                  <div className={classes.iconWithDetailContainer}>
-                    <div  className={classes.iconStyle}>
-                      <Icon className="material-icons" color="primary">
-                        av_timer
-                      </Icon>
-                    </div>
-                    <div>
-                      <Text>
-                        <Italic>Time</Italic>
-                      </Text>
-                      <Text>
-                        {/* timeUnits are added for mins,hours */}
-                        {`${eventData.eventStartTime}`}
+                  <div>
+                    <Text>
+                      <Italic>Date</Italic>
+                    </Text>
+                    <Text>{clickedDate}</Text>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div className={classes.iconWithDetailContainer}>
+                  <div className={classes.iconStyle}>
+                    <Icon className="material-icons" color="primary">
+                      av_timer
+                    </Icon>
+                  </div>
+                  <div>
+                    <Text>
+                      <Italic>Time</Italic>
+                    </Text>
+                    <Text>
+                      {/* timeUnits are added for mins,hours */}
+                      {`${eventData.eventStartTime}`}
 
-                        {
-                          eventData.durationAndTimeunits &&
-                          "  For " + eventData.durationAndTimeunits}
-                        {/* {scheduleDetails.map(value => {
+                      {eventData.durationAndTimeunits && `  For ${eventData.durationAndTimeunits}`}
+                      {/* {scheduleDetails.map(value => {
                           if (classTypeData.formattedClassTimesDetails[value]) {
                             return (
                               classTypeData.formattedClassTimesDetails[value][0]
@@ -599,16 +588,16 @@ class ClassDetailModal extends React.Component {
                             );
                           }
                         })} */}
-                      </Text>
-                    </div>
+                    </Text>
                   </div>
-                </Grid>
+                </div>
               </Grid>
-              <center style={{ width: "100%" }}>
-                {this.props.routeName !== "EmbedSchoolCalanderView" && (
-                  <Grid container style={{ padding: "8px" }}>
-                    {/*Removed previous two button and added two new button according to new task*/}
-                    {/* <Grid item xs={6}>
+            </Grid>
+            <center style={{ width: '100%' }}>
+              {this.props.routeName !== 'EmbedSchoolCalanderView' && (
+                <Grid container style={{ padding: '8px' }}>
+                  {/* Removed previous two button and added two new button according to new task */}
+                  {/* <Grid item xs={6}>
                       <ClassTimeButton
                         fullWidth
                         label="View Class Type"
@@ -629,35 +618,34 @@ class ClassDetailModal extends React.Component {
                         onClick={() => this.goToSchoolPage(school)}
                       />
                     </Grid> */}
-                    {type == "attending" && (
-                        <Grid item xs={6} style={{ margin: "auto" }}>
-                          <ClassTimeButton
-                            fullWidth
-                            label="Remove from my Calendar"
-                            noMarginBottom
-                            onClick={() => {
-                              this.setState({ removeFromCalendarPopUp: true });
-                            }}
+                  {type == 'attending' && (
+                    <Grid item xs={6} style={{ margin: 'auto' }}>
+                      <ClassTimeButton
+                        fullWidth
+                        label="Remove from my Calendar"
+                        noMarginBottom
+                        onClick={() => {
+                          this.setState({ removeFromCalendarPopUp: true });
+                        }}
+                      />
+                    </Grid>
+                  )}
 
-                          />
-                        </Grid>
-                      )}
+                  {this.state.adminAccess && (
+                    <Grid item xs={6} style={{ margin: 'auto' }}>
+                      <ClassTimeButton
+                        fullWidth
+                        noMarginBottom
+                        label="Permanently Delete "
+                        onClick={() => {
+                          this.setState({ permanentlyRemove: true });
+                        }}
+                      />
+                    </Grid>
+                  )}
 
-                    {this.state.adminAccess && (
-                      <Grid item xs={6} style={{ margin: "auto" }}>
-                        <ClassTimeButton
-                          fullWidth
-                          noMarginBottom
-                          label="Permanently Delete "
-                          onClick={() => {
-                            this.setState({ permanentlyRemove: true });
-                          }}
-                        />
-                      </Grid>
-                    )}
-
-                    <Grid item xs={6} style={{ margin: "auto" }}>
-                      {/* <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
+                  <Grid item xs={6} style={{ margin: 'auto' }}>
+                    {/* <Link to={{ pathname: route, state: { props: this.props,state:this.state} }}>
                         <ClassTimeButton
                           fullWidth
                           noMarginBottom
@@ -665,67 +653,55 @@ class ClassDetailModal extends React.Component {
                           onClick={()=>{}}
                         />
                         </Link> */}
-                    </Grid>
                   </Grid>
-                )}
-              </center>
-              <Grid container style={{ marginTop: "16px" }}>
-                {!isEmpty(classTypeData) && (
-                  <div style={{ backgroundColor: "", width: "100%" }}>
-                    <Heading marginTop={helpers.rhythmDiv} textTransform="none">
-                      This class is part of this Series:
-                    </Heading>
-                    <div>
-                      <ClassTimesBoxes
-                        inPopUp={true}
-                        withSlider={false}
-                        classTimesData={[classTypeData]}
-                        classInterestData={classInterestData}
-                        onModalClose={() => { this.props.closeEventModal(false, null) }}
-                        params={params}
-                        schoolName={schoolName}
-                        enrollmentIds={enrollmentIds}
-                      />
-                    </div>
+                </Grid>
+              )}
+            </center>
+            <Grid container style={{ marginTop: '16px' }}>
+              {!isEmpty(classTypeData) && (
+                <div style={{ backgroundColor: '', width: '100%' }}>
+                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">
+                    This class is part of this Series:
+                  </Heading>
+                  <div>
+                    <ClassTimesBoxes
+                      inPopUp
+                      withSlider={false}
+                      classTimesData={[classTypeData]}
+                      classInterestData={classInterestData}
+                      onModalClose={() => {
+                        this.props.closeEventModal(false, null);
+                      }}
+                      params={params}
+                      schoolName={schoolName}
+                      enrollmentIds={enrollmentIds}
+                    />
                   </div>
-                )}
-                <Grid container className={classes.aboutClassGridContainer}>
-                  {/*<Typography component="p" style={{marginBottom:'20px'}}>
+                </div>
+              )}
+              <Grid container className={classes.aboutClassGridContainer}>
+                {/* <Typography component="p" style={{marginBottom:'20px'}}>
       							{classType && classType.desc}
-                  </Typography>*/}
-                  <center className={classes.about}>
-                    {" "}
-                    <i>{` About ${classType.name}`}</i>
-                  </center>
-                  <IconsWrapper>
-                    <IconsRowWrapper>
-                      <div
-                        className={
-                          classes.iconWithDetailContainer +
-                          " " +
-                          classes.bottomSpace
-                        }
-                      >
-                        <div
-                          className={classes.iconStyle}
-                        >
-                          <Icon className="material-icons" color="primary">
-                            account_balance
-                          </Icon>
-                        </div>
-                        <div>
-                          <Text>{school && school.name}</Text>
-                        </div>
+                  </Typography> */}
+                <center className={classes.about}>
+                  {' '}
+                  <i>{` About ${classType.name}`}</i>
+                </center>
+                <IconsWrapper>
+                  <IconsRowWrapper>
+                    <div className={`${classes.iconWithDetailContainer} ${classes.bottomSpace}`}>
+                      <div className={classes.iconStyle}>
+                        <Icon className="material-icons" color="primary">
+                          account_balance
+                        </Icon>
                       </div>
+                      <div>
+                        <Text>{school && school.name}</Text>
+                      </div>
+                    </div>
 
-                      <div
-                        className={
-                          classes.iconWithDetailContainer +
-                          " " +
-                          classes.bottomSpace
-                        }
-                      >
-                        {/* <div
+                    <div className={`${classes.iconWithDetailContainer} ${classes.bottomSpace}`}>
+                      {/* <div
                         className="circle-icon"
                         className={classes.iconStyle}
                       >
@@ -733,7 +709,7 @@ class ClassDetailModal extends React.Component {
                           class
                         </Icon>
                       </div> */}
-                        {/* <div>
+                      {/* <div>
                         <Text>
                           <Italic>Class Name</Italic>
                         </Text>
@@ -742,72 +718,49 @@ class ClassDetailModal extends React.Component {
                             classType.name.toLowerCase()}`}</Capitalize>
                         </Text>
                       </div> */}
+                    </div>
+                  </IconsRowWrapper>
+                  {location && location.address && (
+                    <div className={classes.iconWithDetailContainer}>
+                      <div className={classes.iconStyle}>
+                        <Icon className="material-icons" color="primary">
+                          location_on
+                        </Icon>
                       </div>
-                    </IconsRowWrapper>
-                    {location &&
-                      location.address && (
-                        <div className={classes.iconWithDetailContainer}>
-                          <div
-                            className={classes.iconStyle}
-                          >
-                            <Icon className="material-icons" color="primary">
-                              location_on
-                            </Icon>
-                          </div>
-                          <div>
-                            <Text>
-                              {location &&
-                                `${location.address}, ${location.city}, ${
-                                location.state
-                                }`}
-                            </Text>
-                          </div>
-                        </div>
-                      )}
-                  </IconsWrapper>
-                  <Grid item xs={12}>
-                    {
-                      classTypeData.ageMin &&
-                      classTypeData.ageMax && (
-                        <MetaInfo
-                          data={`  ${classTypeData.ageMin} to ${
-                            classTypeData.ageMax
-                            }`}
-                          title={"Age:" + " "}
-                        />
-                      )}
-                    {
-                      classTypeData.gender &&
-                      classTypeData.gender !== "All" && (
-                        <MetaInfo
-                          data={classTypeData.gender}
-                          title={"Gender: " + ""}
-                        />
-                      )}
+                      <div>
+                        <Text>
+                          {location && `${location.address}, ${location.city}, ${location.state}`}
+                        </Text>
+                      </div>
+                    </div>
+                  )}
+                </IconsWrapper>
+                <Grid item xs={12}>
+                  {classTypeData.ageMin && classTypeData.ageMax && (
+                    <MetaInfo
+                      data={`  ${classTypeData.ageMin} to ${classTypeData.ageMax}`}
+                      title={'Age:' + ' '}
+                    />
+                  )}
+                  {classTypeData.gender && classTypeData.gender !== 'All' && (
+                    <MetaInfo data={classTypeData.gender} title={'Gender: ' + ''} />
+                  )}
 
-                    {
-                      classTypeData.experienceLevel &&
-                      classTypeData.experienceLevel == "All" ? (
-                        <MetaInfo
-                          data={"  All levels are welcome"}
-                          title={"Experience:  " + " "}
-                        />
-                      ) : classTypeData.experienceLevel && (
-                        <MetaInfo
-                          data={`  ${classTypeData.experienceLevel}`}
-                          title={"Experience:  " + " "}
-                        />
-                      )}
-                    {
-                      classType.desc && (
-                        <MetaInfo
-                          data={`  ${classType.desc}`}
-                          title={"Description:"}
-                          marginBottom={16}
-                        />
-                      )}
-                  </Grid>
-                  {/*<Grid item xs={6}>
+                  {classTypeData.experienceLevel && classTypeData.experienceLevel == 'All' ? (
+                    <MetaInfo data="  All levels are welcome" title={'Experience:  ' + ' '} />
+                  ) : (
+                    classTypeData.experienceLevel && (
+                      <MetaInfo
+                        data={`  ${classTypeData.experienceLevel}`}
+                        title={'Experience:  ' + ' '}
+                      />
+                    )
+                  )}
+                  {classType.desc && (
+                    <MetaInfo data={`  ${classType.desc}`} title="Description:" marginBottom={16} />
+                  )}
+                </Grid>
+                {/* <Grid item xs={6}>
       						<div className={classes.iconWithDetailContainer}>
       							<div className="circle-icon" className={classes.iconStyle}>
       								<Icon
@@ -822,33 +775,36 @@ class ClassDetailModal extends React.Component {
       								<Typography type="caption" >{`${eventData.eventStartTime} to ${eventData.eventEndTime}`}</Typography>
       							</div>
       						</div>
-      					</Grid>*/}
-                </Grid>
-
-                {!isEmpty(allFormattedClassTimeDetails) && (
-                  <div style={{ backgroundColor: "aliceblue", width: "100%" }}>
-                    <Heading marginTop={helpers.rhythmDiv} textTransform="none">
-                      More class times for{" "}
-                      <Capitalize>{classType.name.toLowerCase()}</Capitalize>
-                    </Heading>
-                    <div>
-                      <ClassTimesBoxes
-                        inPopUp={true}
-                        withSlider={false}
-                        classTimesData={allFormattedClassTimeDetails}
-                        classInterestData={classInterestData}
-                        onModalClose={() => { this.props.closeEventModal(false, null) }}
-                        params={params}
-                        schoolName={schoolName}
-                        enrollmentIds={enrollmentIds}
-                      />
-                    </div>
-                  </div>
-                )}
+      					</Grid> */}
               </Grid>
 
-              <DialogActions className={classes.dialogAction}>
-                {/* <ClassTimeButton
+              {!isEmpty(allFormattedClassTimeDetails) && (
+                <div style={{ backgroundColor: 'aliceblue', width: '100%' }}>
+                  <Heading marginTop={helpers.rhythmDiv} textTransform="none">
+                    More class times for
+                    {' '}
+                    <Capitalize>{classType.name.toLowerCase()}</Capitalize>
+                  </Heading>
+                  <div>
+                    <ClassTimesBoxes
+                      inPopUp
+                      withSlider={false}
+                      classTimesData={allFormattedClassTimeDetails}
+                      classInterestData={classInterestData}
+                      onModalClose={() => {
+                        this.props.closeEventModal(false, null);
+                      }}
+                      params={params}
+                      schoolName={schoolName}
+                      enrollmentIds={enrollmentIds}
+                    />
+                  </div>
+                </div>
+              )}
+            </Grid>
+
+            <DialogActions className={classes.dialogAction}>
+              {/* <ClassTimeButton
                   fullWidth
                   label="View Class"
                   noMarginBottom
@@ -873,40 +829,35 @@ class ClassDetailModal extends React.Component {
                     this.props.closeEventModal(false, null);
                   }}
                 /> */}
-                <ActionButtons>
-                  <ButtonWrapper>
-                    <FormGhostButton
-                      darkGreyColor
-                      label="Close"
-                      onClick={() => {
-                        this.props.closeEventModal(false, null);
-                      }}
-                    />
-                  </ButtonWrapper>
-                  <ButtonWrapper>
-                    <FormGhostButton
-                      label="View Class"
-                      onClick={() =>
-                        this.goToClassTypePage(
-                          classType.name,
-                          eventData.classTypeId
-                        )
-                      }
-                    />
-                  </ButtonWrapper>
-                  <ButtonWrapper>
-                    <FormGhostButton
-                      label="View School"
-                      onClick={() => this.goToSchoolPage(school)}
-                    />
-                  </ButtonWrapper>
-                </ActionButtons>
-              </DialogActions>
+              <ActionButtons>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    darkGreyColor
+                    label="Close"
+                    onClick={() => {
+                      this.props.closeEventModal(false, null);
+                    }}
+                  />
+                </ButtonWrapper>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    label="View Class"
+                    onClick={() => this.goToClassTypePage(classType.name, eventData.classTypeId)}
+                  />
+                </ButtonWrapper>
+                <ButtonWrapper>
+                  <FormGhostButton
+                    label="View School"
+                    onClick={() => this.goToSchoolPage(school)}
+                  />
+                </ButtonWrapper>
+              </ActionButtons>
+            </DialogActions>
 
-              {/*fullScreen && (
+            {/* fullScreen && (
 
-              )*/}
-              {/*<Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
+              ) */}
+            {/* <Typography type="p" style={{marginBottom:'20px', marginTop:'20px'}}>
       					Entire Class Dates
       				</Typography>
       				<Grid container>
@@ -923,8 +874,8 @@ class ClassDetailModal extends React.Component {
       								<Typography type="caption" >{ eventData.endDate ? moment(eventData.endDate).format("Do MMM YYYY") : "NA"}</Typography>
       							</div>
       						</div>
-      					</Grid>*/}
-              {/*<Grid item xs={6}>
+      					</Grid> */}
+            {/* <Grid item xs={6}>
       						<div className={classes.iconWithDetailContainer}>
       							<div className="circle-icon" className={classes.iconStyle}>
       								<Icon
@@ -939,13 +890,13 @@ class ClassDetailModal extends React.Component {
       							</div>
       						</div>
       				</Grid>
-      					</Grid>*/}
+      					</Grid> */}
 
-              {/*<ButtonWrapper>
+            {/* <ButtonWrapper>
       			  <PrimaryButton icon iconName="add_circle_outline" label="Join This Class" onClick={this.props.onJoinClassButtonClick}/>
-      			</ButtonWrapper>*/}
-            </Grid>
-          )}
+      			</ButtonWrapper> */}
+          </Grid>
+        )}
         <Dialog
           disableBackdropClick
           disableEscapeKeyDown
@@ -1009,10 +960,7 @@ class ClassDetailModal extends React.Component {
             >
               Ok
             </Button> */}
-            <FormGhostButton
-              label="Ok"
-              onClick={() => this.handlePermanentlyRemove(this.props)}
-            />
+            <FormGhostButton label="Ok" onClick={() => this.handlePermanentlyRemove(this.props)} />
           </DialogActions>
         </Dialog>
       </Dialog>

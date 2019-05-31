@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import { SOLUTION_BOX_WIDTH } from './constants';
 import { SolutionGfx } from './sharedStyledComponents';
-import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers.js';
+import { rhythmDiv } from '/imports/ui/components/landing/components/jss/helpers';
+import { SubHeading, Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 
-import { SOLUTION_BOX_WIDTH } from './constants.js';
 
 const Wrapper = styled.div`
     max-width: 1200px;

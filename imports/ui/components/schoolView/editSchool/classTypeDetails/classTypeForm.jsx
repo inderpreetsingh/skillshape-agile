@@ -128,8 +128,7 @@ class ClassTypeForm extends React.Component {
   };
 
   onSkillSubjectChange = (values) => {
-    let newValues = values;
-    newValues = values.map((ele) => {
+    let newValues = values.map((ele) => {
       if (ele.skillCategoryId || ele._id) {
         return ele;
       }

@@ -1,15 +1,5 @@
-import React from 'react';
 import { withStyles } from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
-import styled from 'styled-components';
-import IconInput from '/imports/ui/components/landing/components/form/IconInput.jsx';
-import IconSelect from '/imports/ui/components/landing/components/form/IconSelect.jsx';
-import SliderControl from '/imports/ui/components/landing/components/form/SliderControl.jsx';
-import IconButton from 'material-ui/IconButton';
-import {FormHelperText } from 'material-ui/Form';
-import Multiselect from 'react-widgets/lib/Multiselect'
-import Menu, { MenuItem } from 'material-ui/Menu';
-import Button from 'material-ui/Button';
+import React from 'react';
 
 const drawerWidth = 240;
 
@@ -61,21 +51,19 @@ const styles = theme => ({
   },
 });
 class AddSchoolMember extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-    constructor(props) {
-        super(props);
-    }
-    // Return Dash view from here
-    render() {
-        const { renderStudentModal } = this.props;
-        return (
-          <form id="addUser" onSubmit={this.props.addNewMember}>
-            {renderStudentModal && this.props.renderStudentAddModal()}
-          </form>
-        )
-    }
+  // Return Dash view from here
+  render() {
+    const { renderStudentModal } = this.props;
+    return (
+      <form id="addUser" onSubmit={this.props.addNewMember}>
+        {renderStudentModal && this.props.renderStudentAddModal()}
+      </form>
+    );
+  }
 }
 
-
 export default withStyles(styles, { withTheme: true })(AddSchoolMember);
-

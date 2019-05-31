@@ -1,20 +1,8 @@
-import React, { Component, Fragment } from "react";
-import isEmpty from 'lodash/isEmpty';
-
-import { formatClassTimesData, withPopUp } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import ClassTimes from "/imports/api/classTimes/fields";
-
-import ClassTimeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTimeForm.js";
-import ClassTypeForm from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeForm.js";
-import ClassTypeExpansionRender from "/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeExpansionRender.js";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
+import React, { Component, Fragment } from 'react';
+import ClassTypeExpansionRender from '/imports/ui/components/schoolView/editSchool/classTypeDetails/classTypeExpansionRender';
+import { withPopUp } from '/imports/util';
 
 class ClassTypeExpansion extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   // cancelConfirmationModal = () =>
   //   this.setState({ showConfirmationModal: false });
 
@@ -155,23 +143,16 @@ class ClassTypeExpansion extends Component {
   //   });
   // }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
-  componentDidUpdate() {
-  }
+  componentDidUpdate() {}
 
   render() {
     const {
-      classTypeData,
-      isLoading,
-      schoolId,
-      locationData,
-      moveToNextTab
+      classTypeData, isLoading, schoolId, locationData, moveToNextTab,
     } = this.props;
 
     // debugger;
-
 
     return (
       <Fragment>

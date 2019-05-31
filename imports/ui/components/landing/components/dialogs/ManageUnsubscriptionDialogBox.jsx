@@ -98,9 +98,10 @@ class ManageUnsubscriptionDialogBox extends Component {
   _getCollectionName = () => {
     const { requestFor } = this.props;
 
-    if (requestFor == 'price details') {
+    if (requestFor === 'price details') {
       return 'pricingRequest';
-    } if (requestFor == 'location') {
+    }
+    if (requestFor === 'location') {
       return 'classTypeLocationRequest';
     }
     return 'classTimesRequest';
@@ -112,7 +113,7 @@ class ManageUnsubscriptionDialogBox extends Component {
   };
 
   handleButtonClick = buttonName => (e) => {
-    const { toastr, requestFor, requestId } = this.props;
+    const { toastr, requestId } = this.props;
     const methodNameToCall = this._getCompleteMethodName('removeRequest');
 
     if (buttonName === 'yes') {

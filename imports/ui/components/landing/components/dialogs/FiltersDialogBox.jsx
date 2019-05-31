@@ -1,56 +1,40 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Recaptcha from "react-recaptcha";
-import styled from "styled-components";
-import { SocialIcon } from "react-social-icons";
-
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
-
-import AttachedAlert from "/imports/ui/components/landing/components/helpers/AttachedAlert.jsx";
-import PrimaryButton from "../buttons/PrimaryButton.jsx";
-import FilterPanel from "../FilterPanel.jsx";
-import IconInput from "../form/IconInput.jsx";
-
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
-import config from "/imports/config";
-
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  withMobileDialog
-} from "material-ui/Dialog";
+import ClearIcon from 'material-ui-icons/Clear';
+import Dialog, { DialogContent, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import FilterPanel from '../FilterPanel';
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
+import AttachedAlert from '/imports/ui/components/landing/components/helpers/AttachedAlert';
 
 const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`,
     paddingBottom: `${helpers.rhythmDiv}px`,
     position: 'relative',
-    overflowY: 'auto'
+    overflowY: 'auto',
   },
   dialogTitleRoot: {
-    display: "flex",
-    fontFamily: `${helpers.specialFont}`
+    display: 'flex',
+    fontFamily: `${helpers.specialFont}`,
   },
   dialogContentRoot: {
-    width: "100%",
+    width: '100%',
     padding: `${helpers.rhythmDiv}px 0 0 ${helpers.rhythmDiv}px`,
     margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+    },
   },
   iconButton: {
     position: 'absolute',
     right: helpers.rhythmDiv,
-    height: "auto",
-    width: "auto"
-  }
+    height: 'auto',
+    width: 'auto',
+  },
 };
 
 const DialogTitleContainer = styled.div`
@@ -81,7 +65,7 @@ class FiltersDialogBox extends Component {
     super(props);
 
     this.state = {
-      filterDialogBoxNoSearch: true
+      filterDialogBoxNoSearch: true,
     };
   }
 
@@ -92,12 +76,13 @@ class FiltersDialogBox extends Component {
     //   "component will receive props....................."
     // );
     if (
-      this.props.filterPanelProps.isCardsBeingSearched !==
-      nextProps.filterPanelProps.isCardsBeingSearched
-    )
+      this.props.filterPanelProps.isCardsBeingSearched
+      !== nextProps.filterPanelProps.isCardsBeingSearched
+    ) {
       this.setState({
-        filterDialogBoxNoSearch: false
+        filterDialogBoxNoSearch: false,
       });
+    }
   }
 
   render() {
@@ -109,7 +94,7 @@ class FiltersDialogBox extends Component {
       onModalClose,
       filterPanelProps,
       filtersForSuggestion,
-      onGiveSuggestion
+      onGiveSuggestion,
     } = this.props;
 
     return (
@@ -126,12 +111,9 @@ class FiltersDialogBox extends Component {
             <DialogTitle>{title}</DialogTitle>
 
             <AttachedAlert
-              open={
-                !filterPanelProps.isCardsBeingSearched &&
-                !this.state.filterDialogBoxNoSearch
-              }
-              direction={"right"}
-              alertMsg={"Search results updated"}
+              open={!filterPanelProps.isCardsBeingSearched && !this.state.filterDialogBoxNoSearch}
+              direction="right"
+              alertMsg="Search results updated"
             />
             <IconButton
               color="primary"
@@ -144,7 +126,7 @@ class FiltersDialogBox extends Component {
 
           <DialogContent
             classes={{
-              root: classes.dialogContentRoot
+              root: classes.dialogContentRoot,
             }}
           >
             <FilterPanel
@@ -169,12 +151,12 @@ FiltersDialogBox.propTypes = {
   onGiveSuggestion: PropTypes.func,
   open: PropTypes.bool,
   errorText: PropTypes.string,
-  unsetError: PropTypes.func
+  unsetError: PropTypes.func,
 };
 
 FiltersDialogBox.defaultProps = {
-  title: "Filter Content",
-  onGiveSuggestion: () => {}
+  title: 'Filter Content',
+  onGiveSuggestion: () => {},
 };
 
 export default withMobileDialog()(withStyles(styles)(FiltersDialogBox));

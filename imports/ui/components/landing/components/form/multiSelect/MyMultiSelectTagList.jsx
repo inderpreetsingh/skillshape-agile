@@ -4,26 +4,21 @@ import MultiselectTag from 'react-widgets/lib/MultiselectTag';
 import { dataIndexOf } from 'react-widgets/lib/util/dataHelpers';
 import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
 import styled from 'styled-components';
-import * as helpers from '../../jss/helpers.js';
-
-
 
 // disabled === true || [1, 2, 3, etc]
-const isDisabled = (item, list, value) =>
-  !!(Array.isArray(list) ? ~dataIndexOf(list, item, value) : list)
+// eslint-disable-next-line max-len
+const isDisabled = (item, list, value) => !!(Array.isArray(list) ? ~dataIndexOf(list, item, value) : list);
 
 const FilterButtonWrapper = styled.div`
   display: flex;
 `;
-
-
 
 const FilterButtonDesktopView = styled.div`
   display: flex;
 `;
 
 class MyTagList extends React.Component {
-  static propTypes ={
+  static propTypes = {
     id: PropTypes.string.isRequired,
     activeId: PropTypes.string.isRequired,
     label: PropTypes.string,
@@ -40,90 +35,92 @@ class MyTagList extends React.Component {
 
   handleDelete = (item, event) => {
     // console.log('handling delete,',item);
-    if (this.props.disabled !== true)
-      this.props.onDelete(item, event)
+    if (this.props.disabled !== true) this.props.onDelete(item, event);
   };
 
   handleNoOfFiltersClick = (e) => {
     e.preventDefault();
-    if(this.props.onNoOfFiltersClick)
-      this.props.onNoOfFiltersClick();
-  }
+    if (this.props.onNoOfFiltersClick) this.props.onNoOfFiltersClick();
+  };
 
   renderCustomList() {
-    const { value ,valueAccessor, ValueComponent, textAccessor, label, disabled, focusedItem} = this.props;
+    const {
+      value,
+      valueAccessor,
+      ValueComponent,
+      textAccessor,
+      label,
+      disabled,
+      focusedItem,
+    } = this.props;
 
     const noOfFilters = value.length - 1;
-    if(value.length > 1) {
+    if (value.length > 1) {
       const item = value[value.length - 1];
       const isFocused = focusedItem === item;
-      return (<Fragment>
-      <MultiselectTag
-        key={1}
-        id={isFocused ? activeId : null }
-        value={item}
-        focused={isFocused}
-        onClick={this.handleDelete}
-        disabled={isDisabled(item, disabled, valueAccessor)}
-      >
-        {ValueComponent
-          ? <ValueComponent item={item} />
-          : <span>{textAccessor(item)}</span>
-        }
-      </MultiselectTag>
-      <FilterButtonWrapper>
-
-        {/*<FilterButtonTabletView>
+      return (
+        <Fragment>
+          <MultiselectTag
+            key={1}
+            id={isFocused ? activeId : null}
+            value={item}
+            focused={isFocused}
+            onClick={this.handleDelete}
+            disabled={isDisabled(item, disabled, valueAccessor)}
+          >
+            {ValueComponent ? <ValueComponent item={item} /> : <span>{textAccessor(item)}</span>}
+          </MultiselectTag>
+          <FilterButtonWrapper>
+            {/* <FilterButtonTabletView>
           <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
         </FilterButtonTabletView> */}
 
-        <FilterButtonDesktopView>
-          <button className="no-shrink primary-button my-multi-select-filter-btn" onClick={this.handleNoOfFiltersClick}>{`+${noOfFilters}`}</button>
-        </FilterButtonDesktopView>
-
-      </FilterButtonWrapper>
-    </Fragment>
-    );
+            <FilterButtonDesktopView>
+              <button
+                className="no-shrink primary-button my-multi-select-filter-btn"
+                onClick={this.handleNoOfFiltersClick}
+              >
+                {`+${noOfFilters}`}
+              </button>
+            </FilterButtonDesktopView>
+          </FilterButtonWrapper>
+        </Fragment>
+      );
     }
 
     return value.map((item, i) => {
-      let isFocused = focusedItem === item;
+      const isFocused = focusedItem === item;
 
-      return (<MultiselectTag
+      return (
+        <MultiselectTag
           key={i}
-          id={isFocused ? activeId : null }
+          id={isFocused ? activeId : null}
           value={item}
           focused={isFocused}
           onClick={this.handleDelete}
           disabled={isDisabled(item, disabled, valueAccessor)}
         >
-          {ValueComponent
-            ? <ValueComponent item={item} />
-            : <span>{textAccessor(item)}</span>
-          }
+          {ValueComponent ? <ValueComponent item={item} /> : <span>{textAccessor(item)}</span>}
         </MultiselectTag>
-      )
-    })
+      );
+    });
   }
 
   render() {
-    let {
-        id
-      , label
-      }  = this.props;
+    const { id, label } = this.props;
 
     return (
       <ul
         id={id}
-        tabIndex='-1'
-        role='listbox'
+        tabIndex="-1"
+        role="listbox"
         aria-label={label}
-        className='rw-my-multiselect-taglist'
+        className="rw-my-multiselect-taglist"
       >
         {this.renderCustomList()}
       </ul>
-    )
+    );
   }
 }
 
-export default MyTagList
+export default MyTagList;
