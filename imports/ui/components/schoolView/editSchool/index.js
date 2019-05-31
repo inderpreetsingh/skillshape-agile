@@ -114,7 +114,6 @@ class SchoolEditView extends React.Component {
     }
   };
 
-
   render() {
     const { schoolData, isLoading } = this.props;
     if (
@@ -170,7 +169,7 @@ export default createContainer((props) => {
       currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
       locationData = SLocation.find().fetch();
       classTypeData = ClassType.find({ schoolId }).fetch();
-      const classTypeIds = classTypeData && classTypeData.map(data => data._id);
+      const classTypeIds = classTypeData.map(data => data._id);
       const classTimesDataSubscription = Meteor.subscribe(
         'classTimes.getclassTimesByClassTypeIds',
         {

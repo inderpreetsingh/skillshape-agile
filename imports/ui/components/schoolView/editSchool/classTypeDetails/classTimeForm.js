@@ -174,8 +174,8 @@ class ClassTimeForm extends React.Component {
       state.roomData = locationData[0] && locationData[0].rooms && locationData[0].rooms || [];
       state.roomId = locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id || '';
     } else {
-      locationData.map((location) => {
-        location && location.rooms ? location.rooms.map((room) => {
+      locationData.forEach((location) => {
+        location && location.rooms ? location.rooms.forEach((room) => {
           if (room.id == state.roomId) {
             state.roomData = !isEmpty(location.rooms) ? location.rooms : [];
           }
@@ -213,13 +213,13 @@ class ClassTimeForm extends React.Component {
       return;
     }
 
-    if (key == 'roomId') {
+    if (key === 'roomId') {
       this.setState({ roomId: event.target.value });
     } else {
       this.setState({ locationId: event.target.value });
       const { locationData } = this.props;
-      locationData.map((location) => {
-        !isEmpty(location.rooms) ? location.rooms.map((room) => {
+      locationData.forEach((location) => {
+        !isEmpty(location.rooms) ? location.rooms.forEach((room) => {
           if (location._id == event.target.value) {
             this.setState({
               roomData: !isEmpty(location.rooms) ? location.rooms : [],

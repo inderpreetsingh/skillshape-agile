@@ -133,14 +133,13 @@ const filterOutAndAddTotalClassTimes = (classTimes) => {
 };
 
 const removePastTimesFromSchedule = (classTimes, scheduleType, scheduleData) => {
-  const currentDate = new Date();
   if (scheduleType === 'recurring') {
     if (scheduleData.endDate > new Date()) {
       return addTotalClassTimes(classTimes);
     }
 
     return {};
-  } if (scheduleType === 'onetime') {
+  } else if (scheduleType === 'onetime') {
     let allPastDate = true;
     DAYS_IN_WEEK.map((day) => {
       const scheduleData = classTimes[day];

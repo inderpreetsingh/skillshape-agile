@@ -136,7 +136,7 @@ if (Meteor.isServer) {
         // even worse hackery
         Meteor.users.remove({ _id: existingUser._id }); // remove existing record
         return existingUser;
-      } if (service == 'google') {
+      } else if (service === 'google') {
         const { email } = user.services[service];
         user.profile = user.profile || {};
         user.profile.firstName = user.services.google.given_name;
