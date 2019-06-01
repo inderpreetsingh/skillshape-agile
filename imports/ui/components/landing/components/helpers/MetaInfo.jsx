@@ -1,7 +1,6 @@
-import React, { Fragment } from "react";
-import styled from "styled-components";
-
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import React from 'react';
+import styled from 'styled-components';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const InfoCapsule = styled.div`
   display: inline-flex;
@@ -14,7 +13,7 @@ const InfoCapsule = styled.div`
   font-size: ${helpers.baseFontSize}px;
   margin-right: ${helpers.rhythmDiv}px;
   margin-top: 5px;
-  margin-bottom: ${props => props.marginBottom || 0 }px;
+  margin-bottom: ${props => props.marginBottom || 0}px;
   min-height: ${helpers.rhythmDiv * 4}px;
   line-height: 1;
 `;
@@ -29,8 +28,13 @@ const CapsuleText = styled.span`
 
 const MetaInfo = props => (
   <InfoCapsule {...props}>
-    <CapsuleHead><b>{props.title}</b></CapsuleHead>
-    <CapsuleText style={{ marginLeft: "10px" }}> {props.data}</CapsuleText>
+    <CapsuleHead>
+      <b>{props.title}</b>
+    </CapsuleHead>
+    <CapsuleText style={{ marginLeft: '10px' }}>
+      {' '}
+      {props.data}
+    </CapsuleText>
   </InfoCapsule>
 );
 

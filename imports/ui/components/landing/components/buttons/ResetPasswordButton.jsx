@@ -1,12 +1,7 @@
-import React, { Component, Fragment } from "react";
-import { isEmpty, get } from "lodash";
-import PropTypes from "prop-types";
-import { browserHistory } from "react-router";
-
-import { emailRegex, toastrModal } from "/imports/util";
-
-import SecondaryButton from "/imports/ui/components/landing/components/buttons/SecondaryButton.jsx";
-import ResetPasswordDialogBox from "/imports/ui/components/landing/components/dialogs/ResetPasswordDialogBox.jsx";
+import React, { Component, Fragment } from 'react';
+import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
+import ResetPasswordDialogBox from '/imports/ui/components/landing/components/dialogs/ResetPasswordDialogBox';
+import { emailRegex, toastrModal } from '/imports/util';
 
 class ResetPasswordButton extends Component {
   constructor(props) {
@@ -14,16 +9,16 @@ class ResetPasswordButton extends Component {
     this.state = {
       resetModal: false,
       error: {},
-      email: "",
-      loading: false
+      email: '',
+      loading: false,
     };
   }
 
-  handleResetPasswordModalState = state => {
+  handleResetPasswordModalState = (state) => {
     this.setState({ resetModal: state });
   };
 
-  handleInputChange = event => {
+  handleInputChange = (event) => {
     const { error } = this.state;
     const email = event.target.value;
     error.email = false;
@@ -33,10 +28,10 @@ class ResetPasswordButton extends Component {
     this.setState({ error, email });
   };
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     const { email, error } = this.state;
     event.preventDefault();
-    let stateObj = { ...this.state };
+    const stateObj = { ...this.state };
     if (email) {
       this.setState({ loading: true });
       Accounts.forgotPassword({ email }, (err, res) => {
@@ -47,15 +42,15 @@ class ResetPasswordButton extends Component {
         } else {
           stateObj.resetModal = false;
           this.props.toastr.success(
-            "We send a reset password link, Please check your inbox!!",
-            "success"
+            'We send a reset password link, Please check your inbox!!',
+            'success',
           );
         }
 
         this.setState(stateObj);
       });
     } else {
-      stateObj.error.message = "Enter Email Address";
+      stateObj.error.message = 'Enter Email Address';
       this.setState(stateObj);
     }
   };

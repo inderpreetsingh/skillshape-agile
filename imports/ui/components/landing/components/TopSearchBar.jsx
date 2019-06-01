@@ -1,45 +1,38 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import isEmpty from "lodash/isEmpty";
+import isEmpty from 'lodash/isEmpty';
+import PropTypes from 'prop-types';
+import React from 'react';
 // import SearchBar from 'material-ui-search-bar';
-import { browserHistory, Link } from "react-router";
-import MySearchBar from "./MySearchBar.jsx";
-import { redirectUserBasedOnType } from "/imports/util";
+import { Link } from 'react-router';
+import styled from 'styled-components';
+import JoinButton from './buttons/JoinButton';
+import LoginButton from './buttons/LoginButton';
+// TODO: Automatic imports depending upon variables used - intellij
+import * as helpers from './jss/helpers';
+import Logo from './Logo';
+import MySearchBar from './MySearchBar';
+import SideNav from './SideNav';
+import { redirectUserBasedOnType, withUserSchoolInfo } from '/imports/util';
 
-import Logo from "./Logo.jsx";
-import SideNav from "./SideNav.jsx";
-import LoginButton from "./buttons/LoginButton.jsx";
-import AddSchoolButton from "./buttons/AddSchoolButton.jsx";
-import JoinButton from "./buttons/JoinButton.jsx";
-
-import { withUserSchoolInfo } from "/imports/util";
-
-//TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from "./jss/helpers.js";
-
-/*Search Bar requires inline styles because of limitations of it using material-ui
+/* Search Bar requires inline styles because of limitations of it using material-ui
 rather than material ui next */
 const MySearchBarWrapper = styled.div`
   margin-left: ${helpers.rhythmDiv}px;
   height: ${helpers.rhythmDiv * 4}px;
 `;
 
-const MySearchBarStyled = props => {
-  return (
-    <MySearchBarWrapper>
-      <MySearchBar
-        onChange={props.onSearch}
-        onRequestSearch={props.onSearch}
-        noCloseIcon
-        itemScope
-        itemType="http://schema.org/SearchAction"
-        className="is-search-bar"
-        {...props}
-      />
-    </MySearchBarWrapper>
-  );
-};
+const MySearchBarStyled = props => (
+  <MySearchBarWrapper>
+    <MySearchBar
+      onChange={props.onSearch}
+      onRequestSearch={props.onSearch}
+      noCloseIcon
+      itemScope
+      itemType="http://schema.org/SearchAction"
+      className="is-search-bar"
+      {...props}
+    />
+  </MySearchBarWrapper>
+);
 
 const NavBarWrapper = styled.div`
   display: flex;
@@ -114,40 +107,28 @@ const LogoWrapper = styled.div`
 const TopSearchBar = props => (
   <NavBarWrapper>
     <LogoSearchSection>
-      {props.logoArea ||
-        (props.showLogo ? (
-          <LogoWrapper
-            onClick={redirectUserBasedOnType(
-              props.currentUser,
-              props.isUserSubsReady
-            )}
-          >
-            <Logo
-              showLogo={props.showLogo}
-              brandTextShown={false}
-              width={32}
-              height={32}
-            />
+      {props.logoArea
+        || (props.showLogo ? (
+          <LogoWrapper onClick={redirectUserBasedOnType(props.currentUser, props.isUserSubsReady)}>
+            <Logo showLogo={props.showLogo} brandTextShown={false} width={32} height={32} />
             <BrandText>Skillshape</BrandText>
           </LogoWrapper>
         ) : null)}
-      {/*<MySearchBarStyled {...props.searchBar}/> */}
+      {/* <MySearchBarStyled {...props.searchBar}/> */}
     </LogoSearchSection>
 
     <NavRightSection>
       <LinksWrapper>
         {isEmpty(props.currentUser) && (
-          <TopBarLink onClick={props.handleLogoClick}>
-            SkillShape For Schools
-          </TopBarLink>
+          <TopBarLink onClick={props.handleLogoClick}>SkillShape For Schools</TopBarLink>
         )}
-        {/*<TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
-        <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink>*/}
+        {/* <TopBarLink onClick={props.onSignUpLinkClick}>Sign Up</TopBarLink>
+        <TopBarLink onClick={props.onLoginLinkClick}>Log In</TopBarLink> */}
         <JoinButton label="Sign Up" {...props} />
         <LoginButton icon={false} {...props} />
       </LinksWrapper>
       <SideNavWrapper>
-        <SideNav {...props} smallSize={true} />
+        <SideNav {...props} smallSize />
       </SideNavWrapper>
     </NavRightSection>
   </NavBarWrapper>
@@ -159,7 +140,7 @@ TopSearchBar.propTypes = {
   searchBar: PropTypes.object,
   onSignUpLinkClick: PropTypes.func,
   onLoginLinkClick: PropTypes.func,
-  onLogoClick: PropTypes.func
+  onLogoClick: PropTypes.func,
 };
 
 export default withUserSchoolInfo(TopSearchBar);

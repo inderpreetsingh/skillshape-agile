@@ -1,23 +1,19 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import ProgressiveImage from "react-progressive-image";
-import styled from 'styled-components';
-import get from "lodash/get";
-import Paper from 'material-ui/Paper';
-import { CSSTransition, Transition } from 'react-transition-group';
-
+import get from 'lodash/get';
 import Clear from 'material-ui-icons/Clear';
 import Edit from 'material-ui-icons/Edit';
-import PhotoCamera from 'material-ui-icons/PhotoCamera';
 import MoreVert from 'material-ui-icons/MoreVert';
 import IconButton from 'material-ui/IconButton';
-
-import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
+import Paper from 'material-ui/Paper';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import ProgressiveImage from 'react-progressive-image';
+import { CSSTransition, Transition } from 'react-transition-group';
+import styled from 'styled-components';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
-import { cardImgSrc } from '/imports/ui/components/landing/site-settings.js';
-import { verifyImageURL } from "/imports/util";
-import { callbackify } from "util";
+import { cardImgSrc } from '/imports/ui/components/landing/site-settings';
+import { verifyImageURL } from '/imports/util';
 
 const styles = {
   cardWrapper: {
@@ -29,22 +25,22 @@ const styles = {
   cardIcon: {
     cursor: 'pointer',
     height: 24,
-    width: 24
+    width: 24,
   },
   cardProfileImageIcon: {
     cursor: 'pointer',
     height: 24,
     width: 24,
     position: 'absolute',
-    top: `8px`,
-    right: `8px`
-  }
-}
+    top: '8px',
+    right: '8px',
+  },
+};
 
 const imageExistsConfig = {
   originalImagePath: 'classTypeImg',
-  defaultImage: cardImgSrc
-}
+  defaultImage: cardImgSrc,
+};
 
 const CardImageTitleWrapper = styled.div`
   display: flex;
@@ -71,9 +67,7 @@ const CardImage = styled.img`
   object-fit: cover;
 `;
 
-const CardContent = styled.div`
-
-`;
+const CardContent = styled.div``;
 
 const EditImageButtonWrapper = styled.div`
   position: absolute;
@@ -100,13 +94,13 @@ const CardContentTitle = styled.h3`
   line-height: 1;
   margin: 0;
   text-transform: capitalize;
-  ${props => props.description ? `padding: 0 ${helpers.rhythmDiv}px` : ''};
-  text-align: ${props => props.description ? 'center' : 'left'};
-  @media screen and (max-width : ${helpers.mobile}px) {
+  ${props => (props.description ? `padding: 0 ${helpers.rhythmDiv}px` : '')};
+  text-align: ${props => (props.description ? 'center' : 'left')};
+  @media screen and (max-width: ${helpers.mobile}px) {
     font-size: ${helpers.baseFontSize}px;
   }
 
-  @media screen and (max-width : ${helpers.tablet}px) {
+  @media screen and (max-width: ${helpers.tablet}px) {
     font-size: ${helpers.baseFontSize * 1.2}px;
   }
 `;
@@ -156,7 +150,7 @@ const CardContentInnerTitle = styled.span`
 `;
 
 const Avatar = styled.div`
-transition: background-image 1s linear !important;
+  transition: background-image 1s linear !important;
   background-image: url(${props => props.bgImg});
   background-size: cover;
   border-radius: 50%;
@@ -173,8 +167,8 @@ const CardDescription = ({
   maxCharsLimit,
   hideCardContent,
   descriptionContent,
-  bgImg }) => {
-
+  bgImg,
+}) => {
   const _getRefactoredTitle = (title, maxLimit) => {
     if (title.length <= maxLimit) {
       return title;
@@ -182,8 +176,8 @@ const CardDescription = ({
 
     const words = title.split(' ');
     const maxCharsToDisplay = _getMaxCharsTitleLimit(words, maxLimit);
-    return title.substr(0, maxCharsToDisplay) + '...';
-  }
+    return `${title.substr(0, maxCharsToDisplay)}...`;
+  };
 
   // This function will let us count the max words of title we can display
   const _getMaxCharsTitleLimit = (words, maxLimit) => {
@@ -194,7 +188,7 @@ const CardDescription = ({
 
       // if the count increases the maxLimit, gets the last complete word
       if (count > maxLimit) {
-        count -= (words[i].length + 1);
+        count -= words[i].length + 1;
         break;
       } else if (count == maxLimit) {
         break;
@@ -202,88 +196,87 @@ const CardDescription = ({
     }
 
     return count;
-  }
+  };
 
-
-  return (<CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
-    <CardDescriptionHeader>
-      <CardImageContainer>
-        <ProgressiveImage
-          src={bgImg}
-          placeholder={config.blurImage}>
-          {(src) => <Avatar bgImg={src} />}
-        </ProgressiveImage>
-      </CardImageContainer>
-
-      <CardContentTitle description>{editMode ? name : _getRefactoredTitle(name, maxCharsLimit)}</CardContentTitle>
-
-      <CardDescriptionActionArea>
-        <IconButton
-          className={classes.cardIcon}
-          color="primary" onClick={hideCardContent}> <Clear /> </IconButton>
-      </CardDescriptionActionArea>
-    </CardDescriptionHeader>
-
-    {descriptionContent}
-  </CardDescriptionWrapper>);
-}
-
-const Reveal = ({ children, ...props }) => {
-  // console.log(props,"props..");
   return (
-    <CSSTransition
-      {...props}
-      classNames="reveal-card"
-      timeout={500}
-    >
+    <CardDescriptionWrapper key={key} className={`reveal-card reveal-card-${className}`}>
+      <CardDescriptionHeader>
+        <CardImageContainer>
+          <ProgressiveImage src={bgImg} placeholder={config.blurImage}>
+            {src => <Avatar bgImg={src} />}
+          </ProgressiveImage>
+        </CardImageContainer>
+
+        <CardContentTitle description>
+          {editMode ? name : _getRefactoredTitle(name, maxCharsLimit)}
+        </CardContentTitle>
+
+        <CardDescriptionActionArea>
+          <IconButton className={classes.cardIcon} color="primary" onClick={hideCardContent}>
+            {' '}
+            <Clear />
+            {' '}
+          </IconButton>
+        </CardDescriptionActionArea>
+      </CardDescriptionHeader>
+
+      {descriptionContent}
+    </CardDescriptionWrapper>
+  );
+};
+
+const Reveal = ({ children, ...props }) =>
+  // console.log(props,"props..");
+  (
+    <CSSTransition {...props} classNames="reveal-card" timeout={500}>
       {children}
     </CSSTransition>
   );
-}
-
 class CardsReveal extends Component {
   state = {
     maxCharsLimit: 18,
     revealCard: false,
-    bgImg: this.props.bgImg
+    bgImg: this.props.bgImg,
   };
 
   revealCardContent = (e) => {
     this.setState({ revealCard: true });
-  }
+  };
 
   hideCardContent = (e) => {
     this.setState({ revealCard: false });
-  }
+  };
+
   setSchoolImage = (schoolId) => {
     Meteor.call('school.getMySchool', schoolId, true, (err, res) => {
       if (res && res.mainImage) {
-        let img = get(res, "mainImageMedium", get(res, "mainImage", ""));
+        const img = get(res, 'mainImageMedium', get(res, 'mainImage', ''));
         verifyImageURL(img, (res) => {
           if (res) {
-            this.setState({ bgImg: img })
+            this.setState({ bgImg: img });
           } else {
             this.setState({ bgImg: cardImgSrc });
           }
-        })
+        });
       }
-    })
-  }
+    });
+  };
 
   verifyAndUpdateImageUrl(data) {
-    const { bgImg, schoolId, medium, name } = data;
-    let img = medium ? medium : bgImg;
-    if (img == "/images/classtype/classtype-cover.jpg") {
+    const {
+      bgImg, schoolId, medium, name,
+    } = data;
+    const img = medium || bgImg;
+    if (img == '/images/classtype/classtype-cover.jpg') {
       this.setSchoolImage(schoolId);
-    }
-    else {
+    } else {
       verifyImageURL(img, (res) => {
         if (res) {
-          this.setState({ bgImg: img })
+          this.setState({ bgImg: img });
         } else {
           this.setSchoolImage(schoolId);
         }
-      })
+      });
     }
   }
 
@@ -292,78 +285,87 @@ class CardsReveal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { bgImg, schoolId, medium, name } = nextProps;
-    let img = medium ? medium : bgImg;
+    const {
+      bgImg, schoolId, medium, name,
+    } = nextProps;
+    const img = medium || bgImg;
     if (this.state.bgImg !== img) {
       this.verifyAndUpdateImageUrl(nextProps);
     }
   }
 
   render() {
-    const { name,
+    const {
+      name,
       classTypeImg,
       descriptionContent,
-      body, classes,
+      body,
+      classes,
       onEditClassTypeImageClick,
       onEditClassTypeClick,
-      editMode } = this.props;
+      editMode,
+    } = this.props;
     const { bgImg } = this.state;
     const myTitle = name.toLowerCase();
-    //console.log(ShowDetails,"adsljfj")
-    return (<Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
-      <div onClick={this.revealCardContent}>
-        <CardImageTitleWrapper>
-          <ProgressiveImage
-            placeholder={config.blurImage}
-            src={bgImg}>
-            {(src) => <CardImageWrapper bgImage={src}>
-              {editMode &&
-                (<EditImageButtonWrapper>
-                  <PrimaryButton
-                    icon
-                    iconName="photo_camera"
-                    onClick={onEditClassTypeImageClick}
-                    label="Edit Image"
-                  />
-                </EditImageButtonWrapper>)}
-            </CardImageWrapper>}
-          </ProgressiveImage>
+    // console.log(ShowDetails,"adsljfj")
+    return (
+      <Paper className={classes.cardWrapper} itemScope itemType="http://schema.org/Service">
+        <div onClick={this.revealCardContent}>
+          <CardImageTitleWrapper>
+            <ProgressiveImage placeholder={config.blurImage} src={bgImg}>
+              {src => (
+                <CardImageWrapper bgImage={src}>
+                  {editMode && (
+                    <EditImageButtonWrapper>
+                      <PrimaryButton
+                        icon
+                        iconName="photo_camera"
+                        onClick={onEditClassTypeImageClick}
+                        label="Edit Image"
+                      />
+                    </EditImageButtonWrapper>
+                  )}
+                </CardImageWrapper>
+              )}
+            </ProgressiveImage>
 
-          <CardContentHeader>
-            <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
+            <CardContentHeader>
+              <CardContentTitle itemProp="name">{myTitle}</CardContentTitle>
 
-            <IconButtons>
-              {editMode && <IconButton className={classes.cardIcon} onClick={onEditClassTypeClick}>
-                <Edit />
-              </IconButton>}
-              <IconButton className={classes.cardIcon} onClick={this.revealCardContent} >
-                <MoreVert />
-              </IconButton>
-            </IconButtons>
+              <IconButtons>
+                {editMode && (
+                  <IconButton className={classes.cardIcon} onClick={onEditClassTypeClick}>
+                    <Edit />
+                  </IconButton>
+                )}
+                <IconButton className={classes.cardIcon} onClick={this.revealCardContent}>
+                  <MoreVert />
+                </IconButton>
+              </IconButtons>
+            </CardContentHeader>
+          </CardImageTitleWrapper>
 
-          </CardContentHeader>
+          <CardContent>
+            <CardContentBody>{body}</CardContentBody>
+          </CardContent>
+        </div>
 
-        </CardImageTitleWrapper>
-
-        <CardContent>
-          <CardContentBody>{body}</CardContentBody>
-        </CardContent>
-      </div>
-
-      <Transition timeout={{ enter: 0, exit: 0 }} in={this.state.revealCard}>
-        {(transitionState) => (<CardDescription
-          editMode
-          descriptionContent={descriptionContent}
-          hideCardContent={this.hideCardContent}
-          name={myTitle}
-          classes={classes}
-          className={transitionState}
-          maxCharsLimit={this.state.maxCharsLimit}
-          key={this.props._id}
-          bgImg={bgImg}
-        />)}
-      </Transition>
-    </Paper>
+        <Transition timeout={{ enter: 0, exit: 0 }} in={this.state.revealCard}>
+          {transitionState => (
+            <CardDescription
+              editMode
+              descriptionContent={descriptionContent}
+              hideCardContent={this.hideCardContent}
+              name={myTitle}
+              classes={classes}
+              className={transitionState}
+              maxCharsLimit={this.state.maxCharsLimit}
+              key={this.props._id}
+              bgImg={bgImg}
+            />
+          )}
+        </Transition>
+      </Paper>
     );
   }
 }
@@ -371,8 +373,8 @@ class CardsReveal extends Component {
 CardDescription.propTypes = {
   name: PropTypes.string,
   descriptionContent: PropTypes.element,
-  hideCardContent: PropTypes.func.isRequired
-}
+  hideCardContent: PropTypes.func.isRequired,
+};
 
 CardsReveal.propTypes = {
   name: PropTypes.string,
@@ -381,12 +383,12 @@ CardsReveal.propTypes = {
   classes: PropTypes.object.isRequired,
   descriptionContent: PropTypes.element,
   body: PropTypes.element,
-  showDetailsComponent: PropTypes.element
-}
+  showDetailsComponent: PropTypes.element,
+};
 
 CardsReveal.defaultProps = {
   classTypeImg: cardImgSrc,
-  name: 'Card Title'
-}
+  name: 'Card Title',
+};
 
 export default withStyles(styles)(CardsReveal);

@@ -230,10 +230,10 @@ class ContactUsForm extends Component {
       if (!email) {
         popUp.appear('alert', { content: 'Please enter your email.' });
         return false;
-      } if (!emailReg.test(email)) {
+      }else if (!emailReg.test(email)) {
         popUp.appear('alert', { content: 'Please enter valid email address' });
         return false;
-      } if (!message) {
+      } else if (!message) {
         popUp.appear('alert', { content: 'Please enter a message.' });
         return false;
       }

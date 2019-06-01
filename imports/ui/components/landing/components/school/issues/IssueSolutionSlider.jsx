@@ -1,15 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import IssueSolution from './IssueSolution';
-import { SOLUTION_BOX_WIDTH } from './constants.js';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import withSlider from '/imports/util/withSlider.js';
-
-const config = {
-  desktop: 1,
-  tablet: 2,
-  mobile: 1
-}
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const Wrapper = styled.div`
   position: relative;
@@ -88,7 +80,7 @@ const SliderRightArrow = Arrow.extend`
   @media screen and (max-width: 1000px) {
     right: ${helpers.rhythmDiv * 3}px;
   }
-  
+
   @media screen and (max-width: 900px) {
     right: 0px;
   }
@@ -99,42 +91,52 @@ class IssueSolutionSlider extends React.Component {
     super(props);
     this.state = {
       selectedIndex: 0,
-      totalElements: this.props.data.length - 1
-    }
+      totalElements: this.props.data.length - 1,
+    };
   }
 
   handleMoveLeft = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        selectedIndex: state.selectedIndex === 0 ? state.totalElements : --state.selectedIndex
-      }
-    })
-  }
+    this.setState(state => ({
+      ...state,
+      selectedIndex: state.selectedIndex === 0 ? state.totalElements : --state.selectedIndex,
+    }));
+  };
 
   handleMoveRight = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        selectedIndex: state.selectedIndex === state.totalElements ? 0 : ++state.selectedIndex
-      }
-    })
-  }
+    this.setState(state => ({
+      ...state,
+      selectedIndex: state.selectedIndex === state.totalElements ? 0 : ++state.selectedIndex,
+    }));
+  };
 
   render() {
     const { totalElements, selectedIndex } = this.state;
     const { data, cardBgColor } = this.props;
-    return (<Wrapper>
-      {totalElements > 0 && <SliderLeftArrow onClick={this.handleMoveLeft}> {"<"} </SliderLeftArrow>}
-      <Container totalElements={totalElements} selectedIndex={selectedIndex}>
-        {data.map((cardData, i) => (
-          <IssueSolutionWrapper key={i}>
-            <IssueSolution cardBgColor={cardBgColor} {...cardData} />
-          </IssueSolutionWrapper>))}
-      </Container>
-      {totalElements > 0 && <SliderRightArrow onClick={this.handleMoveRight}> {">"} </SliderRightArrow>}
-    </Wrapper>
-    )
+    return (
+      <Wrapper>
+        {totalElements > 0 && (
+          <SliderLeftArrow onClick={this.handleMoveLeft}>
+            {' '}
+            {'<'}
+            {' '}
+          </SliderLeftArrow>
+        )}
+        <Container totalElements={totalElements} selectedIndex={selectedIndex}>
+          {data.map((cardData, i) => (
+            <IssueSolutionWrapper key={i}>
+              <IssueSolution cardBgColor={cardBgColor} {...cardData} />
+            </IssueSolutionWrapper>
+          ))}
+        </Container>
+        {totalElements > 0 && (
+          <SliderRightArrow onClick={this.handleMoveRight}>
+            {' '}
+            {'>'}
+            {' '}
+          </SliderRightArrow>
+        )}
+      </Wrapper>
+    );
   }
 }
 

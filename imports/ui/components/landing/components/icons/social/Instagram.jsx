@@ -1,10 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
-import SVGInline from "react-svg-inline";
 import PropTypes from 'prop-types';
+import React from 'react';
+import SVGInline from 'react-svg-inline';
 
-const Instagram = (props) => (
-  <SVGInline className={props.className} height={props.height} width={props.width} svg={`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 49.652 49.652" style="enable-background:new 0 0 49.652 49.652;" xml:space="preserve">
+const Instagram = props => (
+  <SVGInline
+    className={props.className}
+    height={props.height}
+    width={props.width}
+    svg={`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 49.652 49.652" style="enable-background:new 0 0 49.652 49.652;" xml:space="preserve">
   <g>
   	<g>
   		<g>
@@ -16,18 +19,19 @@ const Instagram = (props) => (
   	</g>
   </g>
 </svg>
-`} />
+`}
+  />
 );
 
 Instagram.propTypes = {
   height: PropTypes.string,
   width: PropTypes.string,
   className: PropTypes.string,
-}
+};
 
 Instagram.defaultProps = {
   height: '32px',
-  width: '32px'
-}
+  width: '32px',
+};
 
 export default Instagram;

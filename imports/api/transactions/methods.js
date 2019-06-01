@@ -1,11 +1,11 @@
-import Transactions from './fields';
 import {
-  get, isEmpty, uniq, includes, flatten, compact,
+  compact, get, isEmpty, uniq,
 } from 'lodash';
 import { check } from 'meteor/check';
-import Purchases from '/imports/api/purchases/fields.js';
 import { isArray } from 'util';
-import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields.js';
+import Transactions from './fields';
+import Purchases from '/imports/api/purchases/fields';
+import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields';
 
 Meteor.methods({
   'transactions.handleEntry': function (data) {
