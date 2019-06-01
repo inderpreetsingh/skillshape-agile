@@ -225,13 +225,6 @@ const CardDescription = ({
   );
 };
 
-const Reveal = ({ children, ...props }) =>
-  // console.log(props,"props..");
-  (
-    <CSSTransition {...props} classNames="reveal-card" timeout={500}>
-      {children}
-    </CSSTransition>
-  );
 class CardsReveal extends Component {
   state = {
     maxCharsLimit: 18,

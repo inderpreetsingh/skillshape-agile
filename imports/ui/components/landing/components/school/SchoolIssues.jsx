@@ -114,11 +114,11 @@ class SchoolIssues extends Component {
   _getDataForSolutionBox = index => this.props.cardsData[`solutionBox${index + 1}`];
 
   _getAvatar = (index, smallScreen) => {
-    if (index == 0) {
+    if (index === 0) {
       return smallScreen ? <Boy height="50px" /> : <Boy />;
-    } if (index == 1) {
+    } else if (index === 1) {
       return smallScreen ? <Girl height="50px" /> : <Girl />;
-    } if (index == 2) {
+    }else if (index === 2) {
       return smallScreen ? <Desk height="50px" /> : <Desk />;
     }
   };

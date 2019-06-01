@@ -1,4 +1,3 @@
-import isEmpty from 'lodash/isEmpty';
 import { check } from 'meteor/check';
 import Contracts from '../fields';
 

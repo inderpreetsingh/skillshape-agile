@@ -1,82 +1,79 @@
-import ClearIcon from "material-ui-icons/Clear";
-import Checkbox from "material-ui/Checkbox";
-import Dialog, { DialogActions, DialogContent, withMobileDialog } from "material-ui/Dialog";
-import { FormControl, FormControlLabel, FormGroup } from "material-ui/Form";
-import IconButton from "material-ui/IconButton";
-import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import Recaptcha from "react-recaptcha";
-import styled from "styled-components";
-import { logoSrc } from "../../site-settings.js";
-import FacebookIconButton from "../buttons/FacebookIconButton.jsx";
-import GoogleIconButton from "../buttons/GoogleIconButton.jsx";
-import LoginButton from "../buttons/LoginButton.jsx";
-import PrimaryButton from "../buttons/PrimaryButton.jsx";
-import IconInput from "../form/IconInput.jsx";
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
-import config from "/imports/config";
-import { emailRegex } from "/imports/util";
+import ClearIcon from 'material-ui-icons/Clear';
+import Checkbox from 'material-ui/Checkbox';
+import Dialog, { DialogActions, DialogContent, withMobileDialog } from 'material-ui/Dialog';
+import { FormControl, FormControlLabel, FormGroup } from 'material-ui/Form';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Recaptcha from 'react-recaptcha';
+import styled from 'styled-components';
+import { logoSrc } from '../../site-settings';
+import FacebookIconButton from '../buttons/FacebookIconButton';
+import GoogleIconButton from '../buttons/GoogleIconButton';
+import LoginButton from '../buttons/LoginButton';
+import PrimaryButton from '../buttons/PrimaryButton';
+import IconInput from '../form/IconInput';
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
+import config from '/imports/config';
+import TermsOfServiceDialogBox from '/imports/ui/components/landing/components/dialogs/TermsOfServiceDetailDialogBox';
 import { ContainerLoader } from '/imports/ui/loading/container';
-import TermsOfServiceDialogBox from "/imports/ui/components/landing/components/dialogs/TermsOfServiceDetailDialogBox.jsx";
+import { emailRegex } from '/imports/util';
 
 const styles = {
   dialogPaper: {
     padding: `${helpers.rhythmDiv * 2}px`,
-    height: 'auto'
+    height: 'auto',
   },
   dialogTitleRoot: {
-    display: "flex",
-    fontFamily: `${helpers.specialFont}`
+    display: 'flex',
+    fontFamily: `${helpers.specialFont}`,
   },
   dialogContent: {
-    "@media screen and (max-width : 500px)": {
-      minHeight: "150px"
-    }
+    '@media screen and (max-width : 500px)': {
+      minHeight: '150px',
+    },
   },
   dialogAction: {
-    width: "100%",
-    margin: 0
+    width: '100%',
+    margin: 0,
   },
   dialogActionsRoot: {
-    width: "100%",
+    width: '100%',
     padding: `0 ${helpers.rhythmDiv * 3}px`,
     margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+    },
   },
   dialogActionsRootButtons: {
-    width: "100%",
+    width: '100%',
     padding: `0 ${helpers.rhythmDiv}px`,
     margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv}px`
-    }
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv}px`,
+    },
   },
   dialogActionsRootSubmitButton: {
-    width: "100%",
+    width: '100%',
     padding: `0 ${helpers.rhythmDiv * 3}px`,
     margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+    },
   },
   iconButton: {
-    height: "auto",
-    width: "auto"
+    height: 'auto',
+    width: 'auto',
   },
   formControlRoot: {
-    marginBottom: `${helpers.rhythmDiv * 2}px`
-  }
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+  },
 };
 
-const DialogBoxHeaderText = styled.p`
-  font-family: ${helpers.commonFont};
-  color: ${helpers.textColor};
-`;
+
 
 const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
@@ -133,12 +130,12 @@ const LoginButtonWrapper = styled.div`
 const ButtonWrapper = styled.div`
   width: calc(50% - ${helpers.rhythmDiv}px);
   padding: ${helpers.rhythmDiv};
-  text-align: ${props => (props.facebook ? "right" : "left")};
+  text-align: ${props => (props.facebook ? 'right' : 'left')};
 
   @media screen and (max-width: ${helpers.mobile}px) {
     width: 100%;
     text-align: center;
-    margin-bottom: ${props => (props.facebook ? "0" : helpers.rhythmDiv)}px;
+    margin-bottom: ${props => (props.facebook ? '0' : helpers.rhythmDiv)}px;
   }
 `;
 
@@ -169,14 +166,14 @@ class SignUpDialogBox extends Component {
     name: this.props.userName,
     email: this.props.userEmail,
     sendMeSkillShapeNotification: true,
-    skillShapeTermsAndConditions:true,
+    skillShapeTermsAndConditions: true,
     robotOption: false,
     errorEmail: false,
-    captchaValue: null
+    captchaValue: null,
   };
 
   handleTextChange = (inputName, e) => {
-    if (inputName === "email") {
+    if (inputName === 'email') {
       let errorEmail = false;
       if (!emailRegex.email.test(e.target.value)) {
         errorEmail = true;
@@ -187,21 +184,21 @@ class SignUpDialogBox extends Component {
     }
   };
 
-  handleTextOnChange = inputName => e => {
+  handleTextOnChange = inputName => (e) => {
     this.setState({
-      [inputName]: e.target.value
+      [inputName]: e.target.value,
     });
   };
 
-  handleCheckBoxChange = checkBoxName => e => {
+  handleCheckBoxChange = checkBoxName => (e) => {
     const currentValue = e.target.checked;
     this.setState(state => ({
       ...state,
-      [checkBoxName]: currentValue
+      [checkBoxName]: currentValue,
     }));
   };
 
-  recaptchaVerifyCallback = response => {
+  recaptchaVerifyCallback = (response) => {
     this.props.unsetError();
     this.setState({ captchaValue: response });
   };
@@ -218,16 +215,12 @@ class SignUpDialogBox extends Component {
       open,
       fullScreen,
       onModalClose,
-      onLoginButtonClick,
-      onSignUpButtonClick,
       onSignUpWithGoogleButtonClick,
       onSignUpWithFacebookButtonClick,
       onSubmit,
-      isBusy
+      isBusy,
     } = this.props;
     const {
-      emailOption,
-      robotOption,
       name,
       email,
       errorEmail,
@@ -238,7 +231,7 @@ class SignUpDialogBox extends Component {
       password,
       confirmPassword,
       errorPassword,
-      errorConfirmPassword
+      errorConfirmPassword,
     } = this.state;
 
     return (
@@ -250,14 +243,32 @@ class SignUpDialogBox extends Component {
         aria-labelledby="sign-up"
         classes={{ paper: classes.dialogPaper }}
       >
-      {isBusy && <ContainerLoader/>}
-      {termsOfServiceDialogBox && <TermsOfServiceDialogBox
-      open={termsOfServiceDialogBox}
-      onModalClose={()=>{this.setState({termsOfServiceDialogBox:false})}}
-
-      />}
+        {isBusy && <ContainerLoader />}
+        {termsOfServiceDialogBox && (
+          <TermsOfServiceDialogBox
+            open={termsOfServiceDialogBox}
+            onModalClose={() => {
+              this.setState({ termsOfServiceDialogBox: false });
+            }}
+          />
+        )}
         <MuiThemeProvider theme={muiTheme}>
-          <form onSubmit={ (e)=>{onSubmit({ name, email, captchaValue, sendMeSkillShapeNotification, skillShapeTermsAndConditions, password, confirmPassword },e)} } >
+          <form
+            onSubmit={(e) => {
+              onSubmit(
+                {
+                  name,
+                  email,
+                  captchaValue,
+                  sendMeSkillShapeNotification,
+                  skillShapeTermsAndConditions,
+                  password,
+                  confirmPassword,
+                },
+                e,
+              );
+            }}
+          >
             <DialogTitleContainer>
               <DialogTitleWrapper>
                 <LogoImg src={logoSrc} />
@@ -275,7 +286,7 @@ class SignUpDialogBox extends Component {
             <DialogActions
               classes={{
                 root: classes.dialogActionsRoot,
-                action: classes.dialogAction
+                action: classes.dialogAction,
               }}
             >
               <DialogActionButtonsWrapper>
@@ -283,9 +294,7 @@ class SignUpDialogBox extends Component {
                   <GoogleIconButton onClick={onSignUpWithGoogleButtonClick} />
                 </ButtonWrapper>
                 <ButtonWrapper facebook>
-                  <FacebookIconButton
-                    onClick={onSignUpWithFacebookButtonClick}
-                  />
+                  <FacebookIconButton onClick={onSignUpWithFacebookButtonClick} />
                 </ButtonWrapper>
               </DialogActionButtonsWrapper>
             </DialogActions>
@@ -296,7 +305,7 @@ class SignUpDialogBox extends Component {
                   labelText="Your Name *"
                   iconName="person"
                   value={name}
-                  onChange={this.handleTextChange.bind(this, "name")}
+                  onChange={this.handleTextChange.bind(this, 'name')}
                 />
                 <IconInput
                   type="email"
@@ -304,68 +313,69 @@ class SignUpDialogBox extends Component {
                   value={email}
                   iconName="email"
                   error={errorEmail}
-                  onChange={this.handleTextChange.bind(this, "email")}
-                  errorText={errorEmail && "Invalid Email Address"}
+                  onChange={this.handleTextChange.bind(this, 'email')}
+                  errorText={errorEmail && 'Invalid Email Address'}
                 />
                 <IconInput
-                  type='password'
+                  type="password"
                   labelText="Password *"
                   value={password}
                   iconName="lock_open"
                   error={errorPassword}
-                  onChange={this.handleTextChange.bind(this, "password")}
-                  errorText={errorPassword && "Invalid Email Address"}
+                  onChange={this.handleTextChange.bind(this, 'password')}
+                  errorText={errorPassword && 'Invalid Email Address'}
                 />
                 <IconInput
-                  type='password'
+                  type="password"
                   labelText="Confirm Password *"
                   value={confirmPassword}
                   iconName="lock_open"
                   error={errorConfirmPassword}
-                  onChange={this.handleTextChange.bind(this, "confirmPassword")}
-                  errorText={errorConfirmPassword && "Invalid Email Address"}
+                  onChange={this.handleTextChange.bind(this, 'confirmPassword')}
+                  errorText={errorConfirmPassword && 'Invalid Email Address'}
                 />
-                {this.props.errorText && (
-                <ErrorWrapper>{this.props.errorText}</ErrorWrapper>
-              )}
+                {this.props.errorText && <ErrorWrapper>{this.props.errorText}</ErrorWrapper>}
               </InputWrapper>
 
-              <FormControl
-                component="fieldset"
-                classes={{ root: classes.formControlRoot }}
-              >
+              <FormControl component="fieldset" classes={{ root: classes.formControlRoot }}>
                 <FormGroup>
                   <FormControlLabel
-                    control={
+                    control={(
                       <Checkbox
                         checked={sendMeSkillShapeNotification}
                         value="sendMeSkillShapeNotification"
                       />
-                    }
-                    onChange={this.handleCheckBoxChange(
-                      "sendMeSkillShapeNotification"
-                    )}
+)}
+                    onChange={this.handleCheckBoxChange('sendMeSkillShapeNotification')}
                     label="I would like to recieve new, surveys, and updates via email about SkillShape and it's participating schools"
                   />
                 </FormGroup>
               </FormControl>
 
-               <FormControl
-                component="fieldset"
-                classes={{ root: classes.formControlRoot }}
-              >
+              <FormControl component="fieldset" classes={{ root: classes.formControlRoot }}>
                 <FormGroup>
                   <FormControlLabel
-                    control={
+                    control={(
                       <Checkbox
                         checked={skillShapeTermsAndConditions}
                         value="skillShapeTermsAndConditions"
                       />
-                    }
-                    onChange={this.handleCheckBoxChange(
-                      "skillShapeTermsAndConditions"
-                    )}
-                    label={<div>I agree to skillshape <BlueColorText onClick={()=>{this.setState({termsOfServiceDialogBox:true})}}>Terms & Conditions</BlueColorText>.</div>}
+)}
+                    onChange={this.handleCheckBoxChange('skillShapeTermsAndConditions')}
+                    label={(
+                      <div>
+                        I agree to skillshape
+                        {' '}
+                        <BlueColorText
+                          onClick={() => {
+                            this.setState({ termsOfServiceDialogBox: true });
+                          }}
+                        >
+                          Terms & Conditions
+                        </BlueColorText>
+                        .
+                      </div>
+)}
                   />
                 </FormGroup>
               </FormControl>
@@ -376,25 +386,19 @@ class SignUpDialogBox extends Component {
                 onloadCallback={this.recaptchaCallback}
                 expiredCallback={this.recaptchaExpiredCallback}
               />
-             
             </DialogContent>
             <DialogActions
               classes={{
                 root: classes.dialogActionsRootSubmitButton,
-                action: classes.dialogAction
+                action: classes.dialogAction,
               }}
             >
-              <PrimaryButton
-                type="submit"
-                label="Sign Up"
-                noMarginBottom
-              />
-               
+              <PrimaryButton type="submit" label="Sign Up" noMarginBottom />
             </DialogActions>
             <DialogActions
               classes={{
                 root: classes.dialogActionsRootButtons,
-                action: classes.dialogAction
+                action: classes.dialogAction,
               }}
             >
               <DialogActionWrapper>
@@ -420,7 +424,7 @@ SignUpDialogBox.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
   errorText: PropTypes.string,
-  unsetError: PropTypes.func
+  unsetError: PropTypes.func,
 };
 
 export default withMobileDialog()(withStyles(styles)(SignUpDialogBox));

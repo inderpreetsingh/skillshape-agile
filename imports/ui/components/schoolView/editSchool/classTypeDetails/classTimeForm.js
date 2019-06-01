@@ -189,8 +189,7 @@ class ClassTimeForm extends React.Component {
 
   onTabChange = (tabValue) => {
     this.setState({ tabValue });
-    const { data } = this.props;
-    if (tabValue == 0 && this.state.noOfRow != 0) {
+    if (tabValue === 0 && this.state.noOfRow !== 0) {
       this.setState({ noOfRow: 0 });
     }
   };

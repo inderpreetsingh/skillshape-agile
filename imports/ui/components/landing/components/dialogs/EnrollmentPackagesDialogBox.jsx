@@ -80,20 +80,6 @@ const PackageWrapper = styled.div`
   }
 `;
 
-const ActionButton = styled.div`
-    display: flex;
-    width: calc(50% - ${helpers.rhythmDiv}px);
-    margin-bottom: ${helpers.rhythmDiv} px;
-
-    @media screen and(max-width: ${helpers.mobile - 100}px) {
-        width: 100%;
-
-        :last-of-type {
-            margins-bottom: 0;
-        }
-    }
-`;
-
 const styles = theme => ({
   ...dialogStyles,
   dialogRoot: {

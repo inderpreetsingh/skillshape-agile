@@ -1,12 +1,10 @@
 import isEmpty from 'lodash/isEmpty';
-import { check } from 'meteor/check';
-
 import ClassType from '../fields';
-import ClassTimes from '/imports/api/classTimes/fields';
-import School from '/imports/api/school/fields';
 import ClassPricing from '/imports/api/classPricing/fields';
-import MonthlyPricing from '/imports/api/monthlyPricing/fields';
+import ClassTimes from '/imports/api/classTimes/fields';
 import Media from '/imports/api/media/fields';
+import MonthlyPricing from '/imports/api/monthlyPricing/fields';
+import School from '/imports/api/school/fields';
 
 Meteor.publish('classType.getclassType', function ({ schoolId }) {
   // console.log("classType.getclassType pub -->>",schoolId)
@@ -41,9 +39,7 @@ Meteor.publish('classType.getClassTimesWithIds', function ({ classTypeId }) {
   return ClassTimes.publishJoinedCursors(cursor, { reactive: true }, this);
 });
 
-Meteor.publish('classType.getClassTypeWithClassTimes', function ({
-  classTypeId,
-}) {
+Meteor.publish('classType.getClassTypeWithClassTimes', function ({ classTypeId }) {
   const cursor = ClassType.find({ _id: classTypeId });
   const classTypeData = cursor.fetch();
 
@@ -53,24 +49,14 @@ Meteor.publish('classType.getClassTypeWithClassTimes', function ({
 
   // const classTimesCursor = ClassTimes.find({ classTypeId: classTypeId });
 
-  const publishJoinedCursors = ClassType.publishJoinedCursors(
-    cursor,
-    { reactive: true },
-    this,
-  );
+  const publishJoinedCursors = ClassType.publishJoinedCursors(cursor, { reactive: true }, this);
 
   // console.log(publishJoinedCursors, "===============");
   publishJoinedCursors.push(ClassTimes.find({ classTypeId }));
   publishJoinedCursors.push(School.find({ _id: classTypeData[0].schoolId }));
-  publishJoinedCursors.push(
-    ClassPricing.find({ classTypeId: { $in: [classTypeId] } }),
-  );
-  publishJoinedCursors.push(
-    MonthlyPricing.find({ classTypeId: { $in: [classTypeId] } }),
-  );
-  publishJoinedCursors.push(
-    Media.find({ schoolId: classTypeData[0].schoolId }),
-  );
+  publishJoinedCursors.push(ClassPricing.find({ classTypeId: { $in: [classTypeId] } }));
+  publishJoinedCursors.push(MonthlyPricing.find({ classTypeId: { $in: [classTypeId] } }));
+  publishJoinedCursors.push(Media.find({ schoolId: classTypeData[0].schoolId }));
 
   return publishJoinedCursors;
 });

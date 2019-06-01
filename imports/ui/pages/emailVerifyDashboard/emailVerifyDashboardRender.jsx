@@ -1,12 +1,9 @@
-import { Fragment } from "react";
-import styled, { keyframes } from "styled-components";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { specialFont } from "/imports/ui/components/landing/components/jss/helpers.js";
-import { NewFooter } from "./NewFooter";
-import {CustomButton} from '/imports/ui/components/landing/components/buttons';
-import React from "react";
-import {ChangeEmailComponent} from './changeEmail';
+import React, { Fragment } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { ChangeEmailComponent } from './changeEmail';
+import { NewFooter } from './NewFooter';
+import { CustomButton } from '/imports/ui/components/landing/components/buttons';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const emailSvgAnim = keyframes`
 50%   {
@@ -93,8 +90,8 @@ const ButtonsWrapper = styled.div`
   width: 100%;
   margin-bottom: 90px;
   text-align: center;
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   @media screen and (max-width: ${helpers.tablet}px) {
     display: block;
@@ -112,19 +109,27 @@ const EmailStatus = styled.div`
   font-style: italic;
   text-align: center;
   min-width: 280px;
-  font-family: ${specialFont};
+  font-family: ${helpers.specialFont};
   transition: all 0.3s ease-out;
-  visibility: ${props => (props.emailSend || props.isLoading || props.initialLoad ? "visible" : "hidden")};
-  padding: ${props => (props.emailSend || props.isLoading || props.initialLoad  ? "4px 50px 4px 50px" : "0px")};
-  height: ${props => (props.emailSend || props.isLoading || props.initialLoad ? "35px" : "0px")};
+  visibility: ${props => (props.emailSend || props.isLoading || props.initialLoad ? 'visible' : 'hidden')};
+  padding: ${props => (props.emailSend || props.isLoading || props.initialLoad ? '4px 50px 4px 50px' : '0px')};
+  height: ${props => (props.emailSend || props.isLoading || props.initialLoad ? '35px' : '0px')};
 `;
 const GroupSvg = styled.div`
   background-image: url(${config.groupSvg});
   background-repeat: no-repeat;
   height: 122px;
   width: 121px;
-  ${props => ( `animation: ${props.changeEmail ? changeGroupSvgAnim : props.initialLoad  ? initialGroupSvgAnim : props.emailSend ? groupSvgAnim :  ''} 1s ease-in ${props.initialLoad ? "0.2s" :''};` )}
-  `;
+  ${props => `animation: ${
+    props.changeEmail
+      ? changeGroupSvgAnim
+      : props.initialLoad
+        ? initialGroupSvgAnim
+        : props.emailSend
+          ? groupSvgAnim
+          : ''
+  } 1s ease-in ${props.initialLoad ? '0.2s' : ''};`}
+`;
 const EmailSvg = styled.div`
   background-image: url(${config.emailSvg});
   background-position: 100% calc(100% - 14px);
@@ -135,13 +140,21 @@ const EmailSvg = styled.div`
   height: 71px;
   top: 25%;
   right: 27%;
-  ${props => (`animation: ${ props.changeEmail  ? changeEmailAnim :props.emailSend ? emailSvgAnim : props.initialLoad ? initialEmailAnim : ''} 1s ease-in ${props.initialLoad ? "0.2s" :''};`)}
-  `;
+  ${props => `animation: ${
+    props.changeEmail
+      ? changeEmailAnim
+      : props.emailSend
+        ? emailSvgAnim
+        : props.initialLoad
+          ? initialEmailAnim
+          : ''
+  } 1s ease-in ${props.initialLoad ? '0.2s' : ''};`}
+`;
 const Text = styled.div`
   margin: auto;
   text-align: center;
   width: fit-content;
-  font-family: ${specialFont};
+  font-family: ${helpers.specialFont};
   font-size: 48px;
   color: #333;
   line-height: 1.5;
@@ -152,7 +165,7 @@ const Text = styled.div`
 `;
 const Summary = styled.div`
   margin: auto;
-  font-family: ${specialFont};
+  font-family: ${helpers.specialFont};
   font-size: 24px;
   font-weight: lighter;
   color: #555;
@@ -167,7 +180,7 @@ const Summary = styled.div`
   }
 `;
 const Counter = styled.div`
-  font-family: ${specialFont};
+  font-family: ${helpers.specialFont};
   font-style: italic;
   font-weight: lighter;
   margin: 5px auto 5px auto;
@@ -180,35 +193,35 @@ const Container = styled.div`
 const ImagesContainer = styled.div`
   position: relative;
   width: fit-content;
-  margin:41px auto 24px auto;
+  margin: 41px auto 24px auto;
 `;
 
 const ChangeEmailButton = styled.div`
-    color: #333;
-    height: 48px;
-    font-family: ${specialFont};
-    font-size: 24px;
-    padding: 8px 30px;
-    box-sizing: border-box;
-    border-radius: 5px;
-    font-style: italic;
-    font-weight: lighter;
-    margin-top: 10px;
-    border: 1px solid;
-    max-width: 200px;
-    margin: 10px auto 10px auto;
-    cursor: pointer;
-
-@media screen and (max-width: ${helpers.tablet}px) {
-  color: blue;
-  border: 0px;
-  font-size: 19px;
+  color: #333;
+  height: 48px;
+  font-family: ${helpers.specialFont};
+  font-size: 24px;
+  padding: 8px 30px;
+  box-sizing: border-box;
+  border-radius: 5px;
   font-style: italic;
   font-weight: lighter;
-  position: relative;
+  margin-top: 10px;
+  border: 1px solid;
+  max-width: 200px;
+  margin: 10px auto 10px auto;
   cursor: pointer;
-  text-decoration: underline;
-}
+
+  @media screen and (max-width: ${helpers.tablet}px) {
+    color: blue;
+    border: 0px;
+    font-size: 19px;
+    font-style: italic;
+    font-weight: lighter;
+    position: relative;
+    cursor: pointer;
+    text-decoration: underline;
+  }
 `;
 const Footer = styled.div`
   height: 48px;
@@ -218,7 +231,9 @@ const Footer = styled.div`
   position: fixed;
 `;
 const Content = styled.div`
-${props => `animation: ${props.initialLoad ? initialChangeContentAnim : !props.changeEmail ? changeContentAnim :'' } 1s ease-in ${props.initialLoad ? "0.2s" :''};`}
+  ${props => `animation: ${
+    props.initialLoad ? initialChangeContentAnim : !props.changeEmail ? changeContentAnim : ''
+  } 1s ease-in ${props.initialLoad ? '0.2s' : ''};`}
 `;
 
 const Center = styled.div`
@@ -233,47 +248,76 @@ const EmailStatusContainer = styled.div`
 `;
 export function EmailVerifyDashboardRender() {
   const {
-    state: { email, isLoading, disabled, emailSend,changeEmail ,errorMessage,initialLoad},
-    reSendEmailVerificationLink,handleState,onSubmit
+    state: {
+      email, isLoading, disabled, emailSend, changeEmail, errorMessage, initialLoad,
+    },
+    reSendEmailVerificationLink,
+    handleState,
+    onSubmit,
   } = this;
   return (
     <Fragment>
-        <NewFooter />
+      <NewFooter />
       <Container>
         <Center>
-        <EmailStatusContainer>
-        <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad} >{isLoading ? 'Please wait!' : emailSend ?"An email sent again!" : initialLoad ? "Email is sent": "" }</EmailStatus>
-        </EmailStatusContainer>
+          <EmailStatusContainer>
+            <EmailStatus emailSend={emailSend} isLoading={isLoading} initialLoad={initialLoad}>
+              {isLoading
+                ? 'Please wait!'
+                : emailSend
+                  ? 'An email sent again!'
+                  : initialLoad
+                    ? 'Email is sent'
+                    : ''}
+            </EmailStatus>
+          </EmailStatusContainer>
           <ImagesContainer>
-            <GroupSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail} />
-            <EmailSvg emailSend={emailSend} initialLoad={initialLoad}  changeEmail={changeEmail}  />
+            <GroupSvg emailSend={emailSend} initialLoad={initialLoad} changeEmail={changeEmail} />
+            <EmailSvg emailSend={emailSend} initialLoad={initialLoad} changeEmail={changeEmail} />
           </ImagesContainer>
-        {!changeEmail ?
-           <Content changeEmail={changeEmail} initialLoad={initialLoad}> <Text> Please check your inbox!.</Text>
-         <Summary>
-           {" "}
-           We just send a confirmation link to {email}. Click the link in the
-           email to sign in to your dashboard.
-         </Summary>
-           <ButtonsWrapper>
-             <CustomButton
-               disabled={disabled}
-               onClick={()=>{reSendEmailVerificationLink()}}
-               label={"Resend Email"}
-               id="counter"
-             />
-             <ChangeEmailButton  onClick={()=>{handleState('changeEmail',true)}}>Change Email</ChangeEmailButton>
-           </ButtonsWrapper>
-          </Content>  
-         : <ChangeEmailComponent 
-         changeEmail={changeEmail}
-         onSubmit={onSubmit} 
-         errorMessage={errorMessage}
-         back={()=>{handleState('changeEmail',false)}}
-         />}
-         </Center>
+          {!changeEmail ? (
+            <Content changeEmail={changeEmail} initialLoad={initialLoad}>
+              {' '}
+              <Text> Please check your inbox!.</Text>
+              <Summary>
+                {' '}
+                We just send a confirmation link to
+                {' '}
+                {email}
+. Click the link in the email to sign in
+                to your dashboard.
+              </Summary>
+              <ButtonsWrapper>
+                <CustomButton
+                  disabled={disabled}
+                  onClick={() => {
+                    reSendEmailVerificationLink();
+                  }}
+                  label="Resend Email"
+                  id="counter"
+                />
+                <ChangeEmailButton
+                  onClick={() => {
+                    handleState('changeEmail', true);
+                  }}
+                >
+                  Change Email
+                </ChangeEmailButton>
+              </ButtonsWrapper>
+            </Content>
+          ) : (
+            <ChangeEmailComponent
+              changeEmail={changeEmail}
+              onSubmit={onSubmit}
+              errorMessage={errorMessage}
+              back={() => {
+                handleState('changeEmail', false);
+              }}
+            />
+          )}
+        </Center>
       </Container>
-      <Footer/>
+      <Footer />
     </Fragment>
   );
 }

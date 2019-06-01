@@ -5,7 +5,7 @@ import ClassPricing from '/imports/api/classPricing/fields';
 import ClassTimes from '/imports/api/classTimes/fields';
 import ClassType from '/imports/api/classType/fields';
 import EnrollmentFees from '/imports/api/enrollmentFee/fields';
-import Media from '/imports/api/media/fields.js';
+import Media from '/imports/api/media/fields';
 import MonthlyPricing from '/imports/api/monthlyPricing/fields';
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields';
 import SkillCategory from '/imports/api/skillCategory/fields';
@@ -44,129 +44,130 @@ Meteor.publish('UserSchoolbySlug', (slug, _id) => {
   return [];
 });
 
-Meteor.publish('classTypeBySchool', ({ schoolId, limit }) => [
-  ClassType.find({ schoolId }),
-]);
+Meteor.publish('classTypeBySchool', ({ schoolId, limit }) => [ClassType.find({ schoolId })]);
 
-Meteor.publish('school.getSchoolClasses', ({
-  is_map_view,
-  schoolId,
-  user_id,
-  coords,
-  NEPoint,
-  SWPoint,
-  skill,
-  _classPrice,
-  _monthPrice,
-  textSearch,
-  limit,
-  selectedTag,
-}) => {
-  const classfilter = { isPublish: true };
-  if (is_map_view && schoolId) {
-    classfilter.schoolId = schoolId;
-  }
-  if (textSearch) {
-    classfilter.$text = { $search: textSearch };
-  }
-  if (coords && !NEPoint && !SWPoint) {
-    // place variable will have all the information you are looking for.
-    let maxDistance = 50;
-    // we need to convert the distance to radians
-    // the raduis of Earth is approximately 6371 kilometers
-    maxDistance /= 63;
-    classfilter['filters.location.loc'] = {
-      $geoWithin: { $center: [[coords[1], coords[0]], maxDistance] },
-    };
-  } else if (NEPoint && SWPoint) {
-    classfilter['filters.location.loc'] = {
-      $geoWithin: { $box: [[SWPoint[1], SWPoint[0]], [NEPoint[1], NEPoint[0]]] },
-    };
-  }
+Meteor.publish(
+  'school.getSchoolClasses',
+  ({
+    is_map_view,
+    schoolId,
+    user_id,
+    coords,
+    NEPoint,
+    SWPoint,
+    skill,
+    _classPrice,
+    _monthPrice,
+    textSearch,
+    limit,
+    selectedTag,
+  }) => {
+    const classfilter = { isPublish: true };
+    if (is_map_view && schoolId) {
+      classfilter.schoolId = schoolId;
+    }
+    if (textSearch) {
+      classfilter.$text = { $search: textSearch };
+    }
+    if (coords && !NEPoint && !SWPoint) {
+      // place variable will have all the information you are looking for.
+      let maxDistance = 50;
+      // we need to convert the distance to radians
+      // the raduis of Earth is approximately 6371 kilometers
+      maxDistance /= 63;
+      classfilter['filters.location.loc'] = {
+        $geoWithin: { $center: [[coords[1], coords[0]], maxDistance] },
+      };
+    } else if (NEPoint && SWPoint) {
+      classfilter['filters.location.loc'] = {
+        $geoWithin: { $box: [[SWPoint[1], SWPoint[0]], [NEPoint[1], NEPoint[0]]] },
+      };
+    }
 
-  if (_classPrice) {
-    const minPrice = parseInt(_classPrice[0]);
-    const maxPrice = parseInt(_classPrice[1]);
-    classfilter['filters.classPriceCost'] = {
-      $gte: minPrice,
-      $lt: maxPrice,
-    };
-  }
-  if (_monthPrice) {
-    const minMonthPrice = parseInt(_monthPrice[0]);
-    const maxMonthPrice = parseInt(_monthPrice[1]);
-    classfilter.$or = [
-      {
-        'filters.monthlyPriceCost.oneMonCost': {
-          $gte: minMonthPrice,
-          $lt: maxMonthPrice,
+    if (_classPrice) {
+      const minPrice = parseInt(_classPrice[0]);
+      const maxPrice = parseInt(_classPrice[1]);
+      classfilter['filters.classPriceCost'] = {
+        $gte: minPrice,
+        $lt: maxPrice,
+      };
+    }
+    if (_monthPrice) {
+      const minMonthPrice = parseInt(_monthPrice[0]);
+      const maxMonthPrice = parseInt(_monthPrice[1]);
+      classfilter.$or = [
+        {
+          'filters.monthlyPriceCost.oneMonCost': {
+            $gte: minMonthPrice,
+            $lt: maxMonthPrice,
+          },
         },
-      },
-      {
-        'filters.monthlyPriceCost.threeMonCost': {
-          $gte: minMonthPrice,
-          $lt: maxMonthPrice,
+        {
+          'filters.monthlyPriceCost.threeMonCost': {
+            $gte: minMonthPrice,
+            $lt: maxMonthPrice,
+          },
         },
-      },
-      {
-        'filters.monthlyPriceCost.sixMonCost': {
-          $gte: minMonthPrice,
-          $lt: maxMonthPrice,
+        {
+          'filters.monthlyPriceCost.sixMonCost': {
+            $gte: minMonthPrice,
+            $lt: maxMonthPrice,
+          },
         },
-      },
-      {
-        'filters.monthlyPriceCost.annualCost': {
-          $gte: minMonthPrice,
-          $lt: maxMonthPrice,
+        {
+          'filters.monthlyPriceCost.annualCost': {
+            $gte: minMonthPrice,
+            $lt: maxMonthPrice,
+          },
         },
-      },
-      {
-        'filters.monthlyPriceCost.lifetimeCost': {
-          $gte: minMonthPrice,
-          $lt: maxMonthPrice,
+        {
+          'filters.monthlyPriceCost.lifetimeCost': {
+            $gte: minMonthPrice,
+            $lt: maxMonthPrice,
+          },
         },
-      },
-    ];
-  }
-  //     "<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>",
-  //     JSON.stringify(classfilter, null, "  ")
-  // );
-  //     "<<<<<<<<<<<<<<<<class type data >>>>>>>>>>>>>>>",
-  //     ClassType.find(classfilter).fetch()
-  // );
-  const classTypeCursor = ClassType.find(classfilter, {
-    limit: is_map_view ? undefined : limit,
-  });
-  const classTypeIds = classTypeCursor.map(classTypeData => classTypeData._id);
-  const schoolIds = [];
-  const classTimesCursor = ClassTimes.find({
-    classTypeId: { $in: classTypeIds },
-  });
-  const locationIds = [];
-  if ((is_map_view && schoolId) || !is_map_view) {
+      ];
+    }
+    //     "<<<<<<<<<<<<<<<<classfilter>>>>>>>>>>>>>>>",
+    //     JSON.stringify(classfilter, null, "  ")
+    // );
+    //     "<<<<<<<<<<<<<<<<class type data >>>>>>>>>>>>>>>",
+    //     ClassType.find(classfilter).fetch()
+    // );
+    const classTypeCursor = ClassType.find(classfilter, {
+      limit: is_map_view ? undefined : limit,
+    });
+    const classTypeIds = classTypeCursor.map(classTypeData => classTypeData._id);
+    const schoolIds = [];
+    const classTimesCursor = ClassTimes.find({
+      classTypeId: { $in: classTypeIds },
+    });
+    const locationIds = [];
+    if ((is_map_view && schoolId) || !is_map_view) {
+      classTimesCursor.map((classData) => {
+        schoolIds.push(classData.schoolId);
+        // classTypeIds.push(classData.classTypeId);
+        locationIds.push(classData.locationId);
+      });
+      return [
+        classTimesCursor,
+        classTypeCursor,
+        SLocation.find({ _id: { $in: locationIds } }),
+        // ClassType.find({ _id: { $in: classTypeIds } }),
+        School.find({ _id: { $in: schoolIds } }),
+      ];
+    }
     classTimesCursor.map((classData) => {
-      schoolIds.push(classData.schoolId);
-      // classTypeIds.push(classData.classTypeId);
       locationIds.push(classData.locationId);
     });
-    return [
-      classTimesCursor,
-      classTypeCursor,
-      SLocation.find({ _id: { $in: locationIds } }),
-      // ClassType.find({ _id: { $in: classTypeIds } }),
-      School.find({ _id: { $in: schoolIds } }),
-    ];
-  }
-  classTimesCursor.map((classData) => {
-    locationIds.push(classData.locationId);
-  });
-  return [SLocation.find({ _id: { $in: locationIds } })];
-});
+    return [SLocation.find({ _id: { $in: locationIds } })];
+  },
+);
 
 // This publication run on skillshape homepage and give the data of class type by categorization of skill category.
 Meteor.publish('school.getClassTypesByCategory', function ({
   is_map_view,
-  schoolId, /* schoolId filter is used when we click on marker on map on home page */
+  schoolId /* schoolId filter is used when we click on marker on map on home page */,
   user_id,
   coords,
   NEPoint,
@@ -199,7 +200,6 @@ Meteor.publish('school.getClassTypesByCategory', function ({
     classfilter.$text = { $search: schoolName };
   }
 
-
   const isAllZero = coords && coords.some(el => el !== 0);
   if (coords && !is_map_view) {
     if (isAllZero) {
@@ -217,7 +217,18 @@ Meteor.publish('school.getClassTypesByCategory', function ({
   }
 
   // If no location is available and user has an address in their profile: Show classes in categories based on address.
-  if (!coords && !locationText && !skillCategoryIds && !age && !gender && !experienceLevel && !skillCategoryClassLimit && !schoolName && !skillTypeText && !skillSubjectIds) {
+  if (
+    !coords
+    && !locationText
+    && !skillCategoryIds
+    && !age
+    && !gender
+    && !experienceLevel
+    && !skillCategoryClassLimit
+    && !schoolName
+    && !skillTypeText
+    && !skillSubjectIds
+  ) {
     const user = this.userId && Meteor.users.findOne(this.userId);
     if (user && user.profile && user.profile.coords) {
       classfilter.$or.push({
@@ -237,8 +248,7 @@ Meteor.publish('school.getClassTypesByCategory', function ({
             },
           });
         }
-      } catch (err) {
-      }
+      } catch (err) {}
     }
   }
 
@@ -340,9 +350,7 @@ Meteor.publish('school.getClassTypesByCategory', function ({
 
     // if we have any skill subject data corresponding to skill type then filter out skill category Id from skill subject data.
     if (!_.isEmpty(skillSubjectData)) {
-      const skillCategoryIds = skillSubjectData.map(
-        data => data.skillCategoryId,
-      );
+      const skillCategoryIds = skillSubjectData.map(data => data.skillCategoryId);
       skillCategoryFilter.$or.push({ _id: { $in: skillCategoryIds } });
     }
 
@@ -378,9 +386,14 @@ Meteor.publish('school.getClassTypesByCategory', function ({
     classTypeCursor = ClassType.find(classfilter, { limit: undefined }).fetch();
 
     classTypeCursor.forEach((classTypeData) => {
-      classTypeData.filters && classTypeData.filters.location && classTypeData.filters.location.map((current) => {
-        current && current.loc && current.loc.locationId && locationIds.push(current.loc.locationId);
-      });
+      classTypeData.filters
+        && classTypeData.filters.location
+        && classTypeData.filters.location.map((current) => {
+          current
+            && current.loc
+            && current.loc.locationId
+            && locationIds.push(current.loc.locationId);
+        });
 
       classTypeIds.push(classTypeData._id);
       schoolIds.push(classTypeData.schoolId);
@@ -405,7 +418,6 @@ Meteor.publish('school.getClassTypesByCategory', function ({
 
   // const classTypesCursor = ClassType.find({ _id: { $in: classTypeIds } });
 
-
   /* If there is no filter and no class type data found correspond to user's location
     then need to show default classes to user. */
   if (!applyFilterStatus && _.isEmpty(ClassType.find({ _id: { $in: classTypeIds } }).fetch())) {
@@ -423,9 +435,7 @@ Meteor.publish('school.getClassTypesByCategory', function ({
       }).fetch();
 
       if (!_.isEmpty(skillSubjectData)) {
-        const skillCategoryIds = skillSubjectData.map(
-          data => data.skillCategoryId,
-        );
+        const skillCategoryIds = skillSubjectData.map(data => data.skillCategoryId);
         skillCategoryFilter.$or.push({
           _id: { $in: skillCategoryIds },
         });
@@ -485,7 +495,6 @@ Meteor.publish('ClaimSchoolFilter', (tempFilter) => {
     locationName,
   } = filterObj;
 
-
   const schoolFilter = { isPublish: true };
   const classTypeFilter = { isPublish: true };
   limit = { limit };
@@ -493,7 +502,6 @@ Meteor.publish('ClaimSchoolFilter', (tempFilter) => {
   // if (this.userId) {
   //     schoolFilter["admins"] = { '$nin': [this.userId] };
   // }
-
 
   if (schoolName) {
     schoolName = schoolName.split(' ');
@@ -579,7 +587,6 @@ Meteor.publish('ClaimSchoolFilter', (tempFilter) => {
     ];
   }
 
-
   const schoolIds = [];
 
   if (coords && locationName && size(filterObj) == 3) {
@@ -608,7 +615,6 @@ Meteor.publish('ClaimSchoolFilter', (tempFilter) => {
 
     schoolFilter._id = { $in: schoolIds };
   }
-
 
   if (_.isEmpty(classTypeFilter)) {
     return School.find(schoolFilter, limit);
@@ -641,13 +647,9 @@ Meteor.publish('school.getSchoolWithConnectedTagedMedia', function ({ email }) {
       schoolCursor = School.find({ _id: { $in: uniq(schoolIds) } });
     }
 
-    return [
-      schoolCursor,
-      schoolMemberCursor,
-    ];
+    return [schoolCursor, schoolMemberCursor];
   }
 });
-
 
 // //////////////////// Helper function ///////////////////////////////////
 function removeKeyValue(object) {
@@ -660,19 +662,17 @@ function removeKeyValue(object) {
   return temp;
 }
 
-
 function categorizeClassTypeData({
   classTypeIds = [],
   schoolIds = [],
   locationIds = [],
   is_map_view,
   skillCategoryFilter,
-  skillCategoryClassLimit,
+  skillCategoryClassLimit = {},
   classfilter,
   collectSkillCategoriesIds,
 }) {
   const skillCategoryCursor = SkillCategory.find(skillCategoryFilter);
-  skillCategoryClassLimit || {};
   const newClassFilters = { ...classfilter };
   // Test query
   // db.ClassType.find({ "filters.location.loc" : { "$geoWithin" : { "$center" : [ [35.6894875,139.69170639999993] , 50 ] } } })
@@ -686,16 +686,20 @@ function categorizeClassTypeData({
 
     // db.ClassType.find({ "isPublish": true, "$or": [{ "filters.location.loc": { "$geoWithin": { "$center": [[-117.16108380000003, 32.715738], 0.26997840172786175] } } }, {"ageMin": { "$lte": "10" }},{"ageMax": { "$gte": "10" }},{"skillCategoryId": { "$in": ["zmB8mKh6gvLm6pJTv"] }}] }).pretty()
 
-
     // findout location and school for a class type.
     classTypeCursor.forEach((classTypeData) => {
       collectSkillCategoriesIds.push(skillCategory._id);
       // if (classTypeData.locationId) {
       //     locationIds.push(classTypeData.locationId);
       // }
-      classTypeData.filters && classTypeData.filters.location && classTypeData.filters.location.map((current) => {
-        current && current.loc && current.loc.locationId && locationIds.push(current.loc.locationId);
-      });
+      classTypeData.filters
+        && classTypeData.filters.location
+        && classTypeData.filters.location.map((current) => {
+          current
+            && current.loc
+            && current.loc.locationId
+            && locationIds.push(current.loc.locationId);
+        });
       classTypeIds.push(classTypeData._id);
       schoolIds.push(classTypeData.schoolId);
     });
@@ -711,10 +715,22 @@ Meteor.publish('school.findSchoolByIds', (schoolIds) => {
 
 Meteor.publish('school.getUserCompletePromptData', function (slug, schoolId) {
   try {
-    let userData = []; let schoolData = []; let classTypeData = []; let classTimeData = []; let schoolLocationData = []; let classPriceData = []; let monthlyPriceData = []; let
-      enrollmentPriceData = [];
+    let userData = [];
+    let schoolData = [];
+    let classTypeData = [];
+    let classTimeData = [];
+    let schoolLocationData = [];
+    let classPriceData = [];
+    let monthlyPriceData = [];
+    let enrollmentPriceData = [];
     userData = Meteor.users.find({ _id: this.userId });
-    if (schoolId) { schoolData = School.find({ _id: schoolId }); } else { schoolData = School.find({ $or: [{ admins: { $in: [this.userId] } }, { superAdmin: this.userId }] }); }
+    if (schoolId) {
+      schoolData = School.find({ _id: schoolId });
+    } else {
+      schoolData = School.find({
+        $or: [{ admins: { $in: [this.userId] } }, { superAdmin: this.userId }],
+      });
+    }
     if (schoolData.fetch().length == 1) {
       const { _id: schoolId } = schoolData.fetch()[0];
       const filter = { schoolId };
@@ -724,7 +740,16 @@ Meteor.publish('school.getUserCompletePromptData', function (slug, schoolId) {
       classPriceData = ClassPricing.find(filter);
       monthlyPriceData = MonthlyPricing.find(filter);
       enrollmentPriceData = EnrollmentFees.find(filter);
-      return [userData, schoolData, classTypeData, classTimeData, schoolLocationData, classPriceData, monthlyPriceData, enrollmentPriceData];
+      return [
+        userData,
+        schoolData,
+        classTypeData,
+        classTimeData,
+        schoolLocationData,
+        classPriceData,
+        monthlyPriceData,
+        enrollmentPriceData,
+      ];
     }
     return [userData, schoolData];
   } catch (error) {

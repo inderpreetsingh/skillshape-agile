@@ -168,9 +168,6 @@ const LogoAndActionButtons = styled.div`
     padding: 0;
   }
 `;
-const Li = styled.li`
-  list-style-position: outside;
-`;
 
 class ClassTypeCoverContent extends React.Component {
   state = {
@@ -302,9 +299,8 @@ class ClassTypeCoverContent extends React.Component {
       let emailBody = '';
       const url = `${Meteor.absoluteUrl()}schools/${schoolDetails.slug}`;
       const subject = '';
-      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
-        text || pricing
-      }%3F %0D%0A%0D%0A Thanks`;
+      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text
+        || pricing}%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
       // const mailToNormalized = encodeURI(mailTo);
@@ -349,9 +345,9 @@ class ClassTypeCoverContent extends React.Component {
     const { props } = this;
     const { noClassTypeData } = this.props;
     const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
-    const selectedLocation = props.noClassTypeData
-      ? props.schoolLocation
-      : props.classTypeData.selectedLocation;
+    // const selectedLocation = props.noClassTypeData
+    //   ? props.schoolLocation
+    //   : props.classTypeData.selectedLocation;
     // const selectedLocation = '';
     const description = props.noClassTypeData
       ? props.schoolDetails.aboutHtml

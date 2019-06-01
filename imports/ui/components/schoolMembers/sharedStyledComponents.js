@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-import { SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents.js';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { SubHeading } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 
 export const SectionTitle = SubHeading.extend`
     font-size: font-size: ${helpers.baseFontSize * 1.5}px;

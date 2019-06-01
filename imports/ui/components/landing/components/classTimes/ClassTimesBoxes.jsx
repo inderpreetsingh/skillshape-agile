@@ -1,15 +1,12 @@
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-import { isEmpty } from "lodash";
-
-import ClassInterest from "/imports/api/classInterest/fields";
-
-import ClassTimesSlider from "/imports/ui/components/landing/components/classTimes/ClassTimesSlider.jsx";
-import ClassTimesBar from "/imports/ui/components/landing/components/classTimes/ClassTimesBar.jsx";
-import classTime from "/imports/ui/components/landing/constants/structure/classTime.js";
-import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { isEmpty } from 'lodash';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
+import ClassInterest from '/imports/api/classInterest/fields';
+import ClassTimesBar from '/imports/ui/components/landing/components/classTimes/ClassTimesBar';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants';
+import classTime from '/imports/ui/components/landing/constants/structure/classTime';
 
 const SliderWrapper = styled.div`
   display: none;
@@ -21,34 +18,33 @@ const SliderWrapper = styled.div`
 const BarWrapper = styled.div`
   display: block;
   @media screen and (max-width: ${helpers.mobile + 100}px) {
-    display: ${props => (props.show ? "none" : "block")};
+    display: ${props => (props.show ? 'none' : 'block')};
   }
 `;
 
 class ClassTimesBoxes extends Component {
-  _checkForAddToCalender = data => {
+  _checkForAddToCalender = (data) => {
     let closedChecker;
     const userId = Meteor.userId();
     if (!isEmpty(data)) {
-      DAYS_IN_WEEK.map(day => {
+      DAYS_IN_WEEK.map((day) => {
         const scheduleData = data.formattedClassTimesDetails[day];
         if (!isEmpty(scheduleData)) {
           scheduleData.forEach((schedule, i) => {
             if (schedule.startTime < new Date() && data.closed) {
-              closedChecker = "closed";
+              closedChecker = 'closed';
             }
           });
         }
       });
-      if (closedChecker) return "closed";
+      if (closedChecker) return 'closed';
     }
     if (!isEmpty(data) && data.closed && data.startDate < new Date()) {
-      return "closed";
-    } else if (isEmpty(data) || isEmpty(userId)) {
+      return 'closed';
+    } if (isEmpty(data) || isEmpty(userId)) {
       return true;
-    } else {
-      return isEmpty(ClassInterest.find({ classTimeId: data._id }).fetch());
     }
+    return isEmpty(ClassInterest.find({ classTimeId: data._id }).fetch());
   };
 
   render() {
@@ -63,7 +59,7 @@ class ClassTimesBoxes extends Component {
       params,
       schoolName,
       enrollmentIds,
-      schoolData
+      schoolData,
     } = this.props;
     // console.group("CLASS TIMES DATA IN BOXES");
     // console.info(classTimesData);
@@ -72,7 +68,7 @@ class ClassTimesBoxes extends Component {
     let modifiedClassTimesData = classTimesData;
 
     if (!editMode) {
-      modifiedClassTimesData = classTimesData.map(data => {
+      modifiedClassTimesData = classTimesData.map((data) => {
         data.addToCalendar = this._checkForAddToCalender(data);
         return data;
       });
@@ -80,15 +76,14 @@ class ClassTimesBoxes extends Component {
 
     return (
       <Fragment>
-        {withSlider &&
-          !editMode && (
-            <SliderWrapper>
-              {/* <ClassTimesSlider
+        {withSlider && !editMode && (
+          <SliderWrapper>
+            {/* <ClassTimesSlider
                 data={modifiedClassTimesData}
                 componentProps={{ classInterestData: classInterestData }}
               /> */}
-            </SliderWrapper>
-          )}
+          </SliderWrapper>
+        )}
         <BarWrapper show={withSlider}>
           <ClassTimesBar
             editMode={editMode}
@@ -97,9 +92,9 @@ class ClassTimesBoxes extends Component {
             classTimesData={modifiedClassTimesData}
             classInterestData={classInterestData}
             onModalClose={onModalClose}
-            params ={params}
-            schoolName = {schoolName}
-            enrollmentIds = {enrollmentIds}
+            params={params}
+            schoolName={schoolName}
+            enrollmentIds={enrollmentIds}
             schoolData={schoolData}
           />
         </BarWrapper>
@@ -111,12 +106,12 @@ class ClassTimesBoxes extends Component {
 ClassTimesBoxes.propTypes = {
   withSlider: PropTypes.bool,
   inPopUp: PropTypes.bool,
-  classTimesData: PropTypes.arrayOf(classTime)
+  classTimesData: PropTypes.arrayOf(classTime),
 };
 
 ClassTimesBoxes.defaultProps = {
   withSlider: true,
-  inPopUp: false
+  inPopUp: false,
 };
 
 export default ClassTimesBoxes;

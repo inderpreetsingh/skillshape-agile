@@ -1,4 +1,3 @@
-import React from "react";
 
 export default embedCodeSettings = [
     { title: "Calendar Embed Code", codeName: "calendar", id: "ss-school-calender-view" },

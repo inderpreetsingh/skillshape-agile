@@ -71,21 +71,6 @@ const SolutionCards = styled.div`
 	}
 `;
 
-const Solutions = styled.div`
-  max-width: 800px;
-  height: ${CARD_HEIGHT}px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 0 ${helpers.rhythmDiv * 2}px;
-  position: relative;
-  margin: 0;
-
-  @media screen and (max-width: ${helpers.tablet + 50}px) {
-    display: none;
-  }
-`;
-
 const CardWrapper = styled.div`
   max-width: 300px;
   max-height: fit-content;
@@ -94,13 +79,6 @@ const CardWrapper = styled.div`
     max-width: 500px;
     max-height: none;
   }
-`;
-
-const SolutionGfx = styled.img`
-  height: 100%;
-  border-radius: 10px;
-  background-position: 50% 50%;
-  box-shadow: ${helpers.buttonBoxShadow};
 `;
 
 const Problem = styled.div`

@@ -212,7 +212,6 @@ class ClassTypeContent extends Component {
   };
 
   _getCategoryName = (categoryId, categoryData) => {
-    const categoryName = '';
     for (let i = 0; i < categoryData.length; ++i) {
       if (categoryData[i]._id === categoryId) {
         return categoryData[i].name;
@@ -294,8 +293,6 @@ class ClassTypeContent extends Component {
       let emailBody = '';
       const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
       const subject = '';
-      const message = '';
-      const currentUserName = getUserFullName(Meteor.user());
       emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
         text || pricing
       }%3F %0D%0A%0D%0A Thanks`;

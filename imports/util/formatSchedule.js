@@ -117,21 +117,21 @@ const addTotalClassTimes = (classTimes, scheduleType) => {
   return classTimes;
 };
 
-const filterOutAndAddTotalClassTimes = (classTimes) => {
-  const currentDate = new Date();
-  Object.keys(classTimes).forEach((day) => {
-    if (typeof classTimes[day] === 'object') {
-      classTimes[day] = classTimes[day].filter((classTime) => {
-        if (moment(currentDate).isBefore(moment(classTime.startTime))) {
-          return true;
-        }
-        return false;
-      });
-    }
-  });
+// const filterOutAndAddTotalClassTimes = (classTimes) => {
+//   const currentDate = new Date();
+//   Object.keys(classTimes).forEach((day) => {
+//     if (typeof classTimes[day] === 'object') {
+//       classTimes[day] = classTimes[day].filter((classTime) => {
+//         if (moment(currentDate).isBefore(moment(classTime.startTime))) {
+//           return true;
+//         }
+//         return false;
+//       });
+//     }
+//   });
 
-  return addTotalClassTimes(classTimes);
-};
+//   return addTotalClassTimes(classTimes);
+// };
 
 const removePastTimesFromSchedule = (classTimes, scheduleType, scheduleData) => {
   if (scheduleType === 'recurring') {

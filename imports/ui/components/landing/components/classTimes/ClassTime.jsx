@@ -419,7 +419,6 @@ class ClassTime extends Component {
   render() {
     // debugger;
     const {
-      selectedLocation,
       desc,
       startDate,
       endDate,
@@ -428,7 +427,6 @@ class ClassTime extends Component {
       classes,
       inPopUp,
       formattedClassTimesDetails,
-      onModalClose,
       editMode,
       classTimeData = {},
       onEditClassTimesClick,

@@ -70,12 +70,6 @@ const NotesContent = styled.textarea`
   margin-bottom: ${helpers.rhythmDiv * 4}px;
 `;
 
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-height: 300px;
-`;
-
 const TitleForPayment = Text.extend`
   text-align: center;
   font-weight: 400;
@@ -293,21 +287,21 @@ class BuyPackagesDialogBox extends Component {
                   <PackagesListWrapper key={index.toString()}>
                     <Title>{obj.title}</Title>
                     {!isEmpty(obj.packageData)
-                        && obj.packageData.map((packageData, index) => (
-                          <PackageWrapper key={index.toString()}>
-                            <Package
-                              {...packageData}
-                              packageSelected={
-                                i === selectedPackageIndex && obj.title == selectedPackageType
-                              }
-                              onPackageClick={this.handlePackageClick(i, obj.title)}
-                              usedFor="buyPackagesDialogBox"
-                              variant="lightEnhanced"
-                              schoolId={schoolId}
-                              currency={currency}
-                            />
-                          </PackageWrapper>
-                        ))}
+                      && obj.packageData.map((packageData, index) => (
+                        <PackageWrapper key={index.toString()}>
+                          <Package
+                            {...packageData}
+                            packageSelected={
+                              i === selectedPackageIndex && obj.title == selectedPackageType
+                            }
+                            onPackageClick={this.handlePackageClick(i, obj.title)}
+                            usedFor="buyPackagesDialogBox"
+                            variant="lightEnhanced"
+                            schoolId={schoolId}
+                            currency={currency}
+                          />
+                        </PackageWrapper>
+                      ))}
                   </PackagesListWrapper>
                 ))}
 

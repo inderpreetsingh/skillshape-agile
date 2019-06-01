@@ -6,7 +6,6 @@ import * as helpers from '/imports/ui/components/landing/components/jss/helpers'
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants';
 import { formatDate, formatTime } from '/imports/util';
 
-
 const ClockOuterWrapper = styled.div`
   ${helpers.flexCenter} justify-content: flex-start;
   flex-direction: column;
@@ -130,11 +129,6 @@ const Schedule = styled.p`
 `;
 
 // Assuming the duration in mins
-const convertDurationToHours = (duration) => {
-  const hours = Math.floor(duration / 60);
-  const minsLeft = duration % 60;
-  return `${hours}.${minsLeft} hr`;
-};
 
 /*
   type --> Multiple clocks, or is it single clock shown
@@ -193,12 +187,8 @@ const Day = styled.p`
   border-radius: 50%;
   padding: ${helpers.rhythmDiv}px;
   border: 1px solid
-    ${props => (props.active
-    ? helpers.primaryColor
-    : `rgba(${helpers.classTimeClockButtonColor},0.8)`)};
-  color: ${props => (props.active
-    ? helpers.primaryColor
-    : `rgba(${helpers.classTimeClockButtonColor},0.8)`)};
+    ${props => (props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)`)};
+  color: ${props => (props.active ? helpers.primaryColor : `rgba(${helpers.classTimeClockButtonColor},0.8)`)};
 
   &:last-of-type {
     margin-right: 0;
@@ -211,23 +201,19 @@ const MyClock = props => (
     currentClock={props.currentClock}
     onClick={props.onClockClick}
   >
-    <ClockWrapper
-      active={props.active}
-      className={`class-time-transition ${props.className}`}
-    >
+    <ClockWrapper active={props.active} className={`class-time-transition ${props.className}`}>
       <TimeContainer active={props.active}>
         {props.active && (
-        <Duration active={props.active}>
-          {props.schedule.duration && `${props.schedule.duration}mins`}
-        </Duration>
+          <Duration active={props.active}>
+            {props.schedule.duration && `${props.schedule.duration}mins`}
+          </Duration>
         )}
         <Time active={props.active}>
-          {props.schedule.time
-              || (props.eventStartTime && formatTime(props.eventStartTime))}
+          {props.schedule.time || (props.eventStartTime && formatTime(props.eventStartTime))}
         </Time>
         <TimePeriod active={props.active}>
           {props.schedule.timePeriod
-              || (props.eventStartTime && props.formatAmPm(props.eventStartTime))}
+            || (props.eventStartTime && props.formatAmPm(props.eventStartTime))}
         </TimePeriod>
       </TimeContainer>
     </ClockWrapper>
@@ -331,25 +317,14 @@ class ClassTimeNewClock extends Component {
   formatScheduleDisplay = (data) => {
     const { scheduleType } = this.props;
     const {
-      currentDay,
-      currentDate,
-      eventStartTime,
-      time,
-      timePeriod,
-      duration,
+      currentDay, currentDate, eventStartTime, time, timePeriod, duration,
     } = data;
     const eventScheduleType = scheduleType.toLowerCase();
-    const eventTime = `${formatTime(eventStartTime)} ${this.formatAmPm(
-      eventStartTime,
-    )}`;
+    const eventTime = `${formatTime(eventStartTime)} ${this.formatAmPm(eventStartTime)}`;
 
     if (eventScheduleType === 'recurring' || eventScheduleType === 'ongoing') {
       return (
-        <RecurringScheduleDisplay
-          eventDay={currentDay}
-          eventTime={eventTime}
-          duration={duration}
-        />
+        <RecurringScheduleDisplay eventDay={currentDay} eventTime={eventTime} duration={duration} />
       );
     }
     // oneTime...
@@ -437,10 +412,7 @@ class ClassTimeNewClock extends Component {
           };
           // console.info(eventStartTime,"===========================");
           allDates.push(
-            <CurrentDate
-              clockType={type}
-              visible={clockCounter === currentClockIndex}
-            >
+            <CurrentDate clockType={type} visible={clockCounter === currentClockIndex}>
               {this.formatScheduleDisplay(data)}
             </CurrentDate>,
           );
@@ -505,10 +477,7 @@ class ClassTimeNewClock extends Component {
           <Day
             key={myStartingClockCount}
             active={this.props.currentDayIndex === this._getIndexForDay(day)}
-            onClick={this.handleDayClick(
-              myStartingClockCount,
-              this._getIndexForDay(day),
-            )}
+            onClick={this.handleDayClick(myStartingClockCount, this._getIndexForDay(day))}
           >
             {this._getDayInShortFormat(day)}
           </Day>,
@@ -545,26 +514,18 @@ class ClassTimeNewClock extends Component {
     return (
       <Container>
         {/* Days of week in circle format */}
-        {formattedClassTimes
-          && Object.keys(formattedClassTimes).length > 1 && (
-            <ChangeSlide>
-              <Days>
-                {' '}
-                {this.getDaysOfWeekFromFormattedClassTimesData()}
-                {' '}
-              </Days>
-            </ChangeSlide>
+        {formattedClassTimes && Object.keys(formattedClassTimes).length > 1 && (
+          <ChangeSlide>
+            <Days>
+              {' '}
+              {this.getDaysOfWeekFromFormattedClassTimesData()}
+              {' '}
+            </Days>
+          </ChangeSlide>
         )}
 
-        <ClockOuterWrapper
-          visible
-          clockType={type}
-          currentClockIndex={currentClockIndex}
-        >
-          <ClockInnerWrapper
-            clockType={type}
-            currentClockIndex={currentClockIndex}
-          >
+        <ClockOuterWrapper visible clockType={type} currentClockIndex={currentClockIndex}>
+          <ClockInnerWrapper clockType={type} currentClockIndex={currentClockIndex}>
             {this.getClocksFromFormattedClassTimesData()}
           </ClockInnerWrapper>
         </ClockOuterWrapper>

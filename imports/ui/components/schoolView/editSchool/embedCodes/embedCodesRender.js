@@ -1,15 +1,15 @@
-import React from "react";
-import Typography from "material-ui/Typography";
-import Grid from "material-ui/Grid";
-import Button from "material-ui/Button";
-import Card, { CardContent } from "material-ui/Card";
-import PanelHeader from "/imports/ui/components/schoolView/editSchool/priceDetails/panelHeader";
+import React from 'react';
+import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
+import Card, { CardContent } from 'material-ui/Card';
+import PanelHeader from '/imports/ui/components/schoolView/editSchool/priceDetails/panelHeader';
 
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import embedCodeSettings from "./embedCodeSettings";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import embedCodeSettings from './embedCodeSettings';
 
-export default function() {
-  const { schoolData, moveTab,popUp } = this.props;
+export default function () {
+  const { schoolData, popUp } = this.props;
   return (
     <div className="tab-pane active" id="tab_default_10">
       <PanelHeader
@@ -20,12 +20,11 @@ export default function() {
       />
       <div className="col-md-12">
         {embedCodeSettings.map((setting, index) => {
-          let code =
-            Meteor.absoluteUrl(
-              `embed/schools/${schoolData.slug}/${setting.codeName}`
-            ) + "?height=800";
-          let script = `<script type="text/javascript">function calculateTopOfModal(offset) { console.log("offset from parent",offset);window.scrollTo(0,offset);};function setIframeHeightCO(id,ht){var ifrm=document.getElementById(id);ifrm.style.visibility='hidden';ifrm.style.height=ht+4+"px";ifrm.style.visibility='visible'};function handleDocHeightMsg(e){console.log("<<<<<<<<<<<<<---------------------------->>>>>>>>>>>>>",e);if( "${Meteor.absoluteUrl()}"==(e.origin+"/")){var data=JSON.parse(e.data);if(data.popUpOpened) {calculateTopOfModal(data.offset);}if(data.docHeight){setIframeHeightCO(data.iframeId,data.docHeight)}}};if(window.addEventListener){window.addEventListener('message',handleDocHeightMsg,!1)}else if(window.attachEvent){window.attachEvent('onmessage',handleDocHeightMsg)}</script>`;
-          let value = `${script}<iframe id=${
+          const code = `${Meteor.absoluteUrl(
+            `embed/schools/${schoolData.slug}/${setting.codeName}`,
+          )}?height=800`;
+          const script = `<script type="text/javascript">function calculateTopOfModal(offset) { console.log("offset from parent",offset);window.scrollTo(0,offset);};function setIframeHeightCO(id,ht){var ifrm=document.getElementById(id);ifrm.style.visibility='hidden';ifrm.style.height=ht+4+"px";ifrm.style.visibility='visible'};function handleDocHeightMsg(e){console.log("<<<<<<<<<<<<<---------------------------->>>>>>>>>>>>>",e);if( "${Meteor.absoluteUrl()}"==(e.origin+"/")){var data=JSON.parse(e.data);if(data.popUpOpened) {calculateTopOfModal(data.offset);}if(data.docHeight){setIframeHeightCO(data.iframeId,data.docHeight)}}};if(window.addEventListener){window.addEventListener('message',handleDocHeightMsg,!1)}else if(window.attachEvent){window.attachEvent('onmessage',handleDocHeightMsg)}</script>`;
+          const value = `${script}<iframe id=${
             setting.id
           } src=${code} seamless="seamless" name="skillshape" frameborder="0" scrolling="auto" style="width: 100%;min-height:400px;"></iframe>`;
           return (
@@ -40,10 +39,10 @@ export default function() {
                       <textarea
                         value={value}
                         style={{
-                          width: "100%",
-                          paddingTop: "1%",
-                          paddingBottom: "1%",
-                          resize: "none"
+                          width: '100%',
+                          paddingTop: '1%',
+                          paddingBottom: '1%',
+                          resize: 'none',
                         }}
                         onChange={() => this.setState({ value, copied: false })}
                         id="iframe_code_textarea"
@@ -54,11 +53,11 @@ export default function() {
                         disabled="disabled"
                       />
                     </Grid>
-                    <Grid item xs={12} style={{ textAlign: "right" }}>
+                    <Grid item xs={12} style={{ textAlign: 'right' }}>
                       <CopyToClipboard
                         text={value}
                         onCopy={() => {
-                        popUp.appear("success", { title: "Inform", content:  "Code Copied." })
+                          popUp.appear('success', { title: 'Inform', content: 'Code Copied.' });
                         }}
                       >
                         <Button color="default" raised dense>
@@ -71,11 +70,11 @@ export default function() {
               </Grid>
             </Grid>
 
-            /*<div key={index} className="col-sm-12 card" style={{paddingBottom: '20px'}}>
+          /* <div key={index} className="col-sm-12 card" style={{paddingBottom: '20px'}}>
 
 				                <div className="col-sm-12" id="iframe_code">
 				                </div>
-				            </div>*/
+				            </div> */
           );
         })}
       </div>
@@ -85,7 +84,7 @@ export default function() {
           className="btn btn-finish btn-fill btn-rose btn-wd"
           name="finish"
           value="Finish"
-          style={{ display: "none" }}
+          style={{ display: 'none' }}
         />
       </div>
       <div className="clearfix" />

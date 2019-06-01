@@ -1,38 +1,17 @@
 import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import SearchBar from 'material-ui-search-bar';
-import { Link } from 'react-router';
 import styled from 'styled-components';
 import JoinButton from './buttons/JoinButton';
 import LoginButton from './buttons/LoginButton';
 // TODO: Automatic imports depending upon variables used - intellij
 import * as helpers from './jss/helpers';
 import Logo from './Logo';
-import MySearchBar from './MySearchBar';
 import SideNav from './SideNav';
 import { redirectUserBasedOnType, withUserSchoolInfo } from '/imports/util';
 
 /* Search Bar requires inline styles because of limitations of it using material-ui
 rather than material ui next */
-const MySearchBarWrapper = styled.div`
-  margin-left: ${helpers.rhythmDiv}px;
-  height: ${helpers.rhythmDiv * 4}px;
-`;
-
-const MySearchBarStyled = props => (
-  <MySearchBarWrapper>
-    <MySearchBar
-      onChange={props.onSearch}
-      onRequestSearch={props.onSearch}
-      noCloseIcon
-      itemScope
-      itemType="http://schema.org/SearchAction"
-      className="is-search-bar"
-      {...props}
-    />
-  </MySearchBarWrapper>
-);
 
 const NavBarWrapper = styled.div`
   display: flex;
@@ -41,17 +20,6 @@ const NavBarWrapper = styled.div`
   padding: ${helpers.rhythmDiv * 2}px;
   width: 100%;
   background: white;
-`;
-
-const ActionArea = styled.div`
-  ${helpers.flexCenter},;
-`;
-
-const ButtonsWrapper = styled.div`
-  ${helpers.flexCenter}
-  @media screen and (max-width : ${helpers.tablet}px) {
-    ${helpers.hide}
-  }
 `;
 
 const LogoSearchSection = styled.div`
@@ -94,10 +62,6 @@ const BrandText = styled.h1`
   font-weight: 600;
   line-height: 30px;
   color: ${helpers.danger};
-`;
-
-const MyLink = styled(Link)`
-  display: flex;
 `;
 
 const LogoWrapper = styled.div`

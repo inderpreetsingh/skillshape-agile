@@ -76,13 +76,6 @@ const CardImageWrapper = styled.div`
   background-image: url('${props => props.bgImage}');
 `;
 
-const CardImage = styled.img`
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
 const CardContent = styled.div``;
 
 const CardContentHeader = styled.div`
@@ -112,33 +105,6 @@ const CardContentTitle = styled.h2`
 `;
 
 const CardContentBody = styled.div``;
-
-const CardDescriptionWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  font-family: ${helpers.specialFont};
-  padding: 10px;
-  position: absolute;
-  background-color: white;
-  width: 100%;
-  z-index: 10;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  transform-origin: 100% 100%;
-`;
-
-const CardDescriptionHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CardDescriptionActionArea = styled.div`
-  padding: 5px;
-`;
 
 const ActionButtonsWrapper = styled.div`
   ${helpers.flexCenter} justify-content: space-evenly;

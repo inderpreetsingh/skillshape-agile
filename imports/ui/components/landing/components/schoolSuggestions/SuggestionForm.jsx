@@ -1,13 +1,11 @@
-import isEmpty from "lodash/isEmpty";
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
-import FilterPanel from "/imports/ui/components/landing/components/FilterPanel";
-import NoResultsFound from "/imports/ui/components/landing/components/helpers/NoResultsFound";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { emailRegex, withPopUp } from "/imports/util";
-
-
+import isEmpty from 'lodash/isEmpty';
+import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
+import FilterPanel from '/imports/ui/components/landing/components/FilterPanel';
+import NoResultsFound from '/imports/ui/components/landing/components/helpers/NoResultsFound';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { emailRegex, withPopUp } from '/imports/util';
 
 const Wrapper = styled.div`
   text-align: center;
@@ -15,17 +13,6 @@ const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-`;
-
-const FormSubmitButtonWrapper = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
-`;
-
-const TextWrapper = styled.div`
-  font-size: ${helpers.baseFontSize * 1.25}px;
-  text-align: left;
-  max-width: 900px;
-  margin-left: ${helpers.rhythmDiv * 2}px;
 `;
 
 const NoResultsFoundContainer = styled.div`
@@ -46,19 +33,19 @@ class SuggestionForm extends Component {
     this.state = {
       filters: this.props.filters || {},
       tempFilters: this.props.tempFilters || {},
-      errors: {}
+      errors: {},
     };
 
     this.fieldNames = [
-      "skillSubjectIds",
-      "skillCategoryIds",
-      "schoolName",
-      "schoolEmail",
-      "schoolWebsite",
-      "locationName",
-      "experienceLevel",
-      "gender",
-      "age"
+      'skillSubjectIds',
+      'skillCategoryIds',
+      'schoolName',
+      'schoolEmail',
+      'schoolWebsite',
+      'locationName',
+      'experienceLevel',
+      'gender',
+      'age',
     ];
   }
 
@@ -76,11 +63,11 @@ class SuggestionForm extends Component {
     // console.log(nextProps, "---------------- udpating filters....");
     this.setState({
       filters: Object.assign({}, nextProps.filters),
-      tempFilters: Object.assign({}, nextProps.tempFilters)
+      tempFilters: Object.assign({}, nextProps.tempFilters),
     });
   }
 
-  _ifAllFieldsEmpty = data => {
+  _ifAllFieldsEmpty = (data) => {
     let allFieldsEmpty = true;
     for (let i = 0; i < this.fieldNames.length; ++i) {
       if (!isEmpty(data[this.fieldNames[i]])) {
@@ -100,13 +87,12 @@ class SuggestionForm extends Component {
       schoolName,
       skillCategoryIds,
       skillSubjectIds,
-      defaultSkillSubject,
       gender,
       age,
       schoolWebsite,
       schoolEmail,
       _classPrice,
-      _monthPrice
+      _monthPrice,
     } = this.state.filters;
 
     // const { schoolWebsite, schoolEmail } = this.state;
@@ -120,54 +106,53 @@ class SuggestionForm extends Component {
       skillCategoryIds,
       skillSubjectIds,
       gender,
-      age
+      age,
     };
 
     if (_monthPrice) {
       data.monthPrice = {
         min: _monthPrice[0],
-        max: _monthPrice[1]
+        max: _monthPrice[1],
       };
     }
 
     if (_classPrice) {
       data.classPrice = {
         min: _classPrice[0],
-        max: _classPrice[1]
+        max: _classPrice[1],
       };
     }
 
     // console.info('data 0----',data);
 
     if (this._ifAllFieldsEmpty(data)) {
-      popUp.appear("alert", {
-        title: "Empty Fields",
-        content: "Please fill one atleast 1 field for suggestion of school"
+      popUp.appear('alert', {
+        title: 'Empty Fields',
+        content: 'Please fill one atleast 1 field for suggestion of school',
       });
     } else if (data.schoolEmail && !emailRegex.email.test(data.schoolEmail)) {
       this.setState({
         ...this.state,
         filters: { ...this.state.filters },
         errors: {
-          schoolEmail: "email format not valid"
-        }
+          schoolEmail: 'email format not valid',
+        },
       });
     } else {
       this.setState({ isLoading: true });
-      Meteor.call("schoolSuggestion.addSuggestion", data, (err, res) => {
+      Meteor.call('schoolSuggestion.addSuggestion', data, (err, res) => {
         this.setState({
           isLoading: false,
           filters: {},
           tempFilters: {},
-          errors: {}
+          errors: {},
         });
         if (err) {
-          popUp.appear("alert", { content: err.reason });
+          popUp.appear('alert', { content: err.reason });
         } else {
-          popUp.appear("success", {
-            content:
-              "Thank you for your suggestion, we will try our best to get this school.",
-            onAffirmationButtonClick: this.props.removeAllFilters
+          popUp.appear('success', {
+            content: 'Thank you for your suggestion, we will try our best to get this school.',
+            onAffirmationButtonClick: this.props.removeAllFilters,
           });
         }
       });
@@ -175,13 +160,13 @@ class SuggestionForm extends Component {
   };
 
   onLocationChange = (location, updateKey1, updateKey2) => {
-    let stateObj = {};
+    const stateObj = {};
 
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         coords: location.coords,
-        locationName: location.fullAddress
+        locationName: location.fullAddress,
       };
     }
 
@@ -189,23 +174,23 @@ class SuggestionForm extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: location.coords,
-        locationName: location.fullAddress
+        locationName: location.fullAddress,
       };
     }
 
     this.setState(stateObj);
   };
 
-  /*When user empties the location filter then need to update state
-  so that no data is available on the basis of location filter*/
+  /* When user empties the location filter then need to update state
+  so that no data is available on the basis of location filter */
   locationInputChanged = (event, updateKey1, updateKey2) => {
-    let stateObj = {};
+    const stateObj = {};
 
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         coords: null,
-        locationName: event.target.value
+        locationName: event.target.value,
       };
     }
 
@@ -213,7 +198,7 @@ class SuggestionForm extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         coords: null,
-        locationName: event.target.value
+        locationName: event.target.value,
       };
     }
 
@@ -222,19 +207,19 @@ class SuggestionForm extends Component {
 
   // Filter that works when user starts typing school name on /claimSchool page
   fliterSchoolName = (event, updateKey1, updateKey2) => {
-    let stateObj = {};
+    const stateObj = {};
 
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
-        schoolName: event.target.value
+        schoolName: event.target.value,
       };
     }
 
     if (updateKey2) {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
-        schoolName: event.target.value
+        schoolName: event.target.value,
       };
     }
 
@@ -243,13 +228,13 @@ class SuggestionForm extends Component {
 
   // This is used to collect selected skill categories.
   collectSelectedSkillCategories = (text, updateKey1, updateKey2) => {
-    let stateObj = {};
+    const stateObj = {};
 
     if (updateKey1) {
       stateObj[updateKey1] = {
         ...this.state[updateKey1],
         skillCategoryIds: text.map(ele => ele._id),
-        defaultSkillCategories: text
+        defaultSkillCategories: text,
       };
     }
 
@@ -257,52 +242,52 @@ class SuggestionForm extends Component {
       stateObj[updateKey2] = {
         ...this.state[updateKey2],
         skillCategoryIds: text.map(ele => ele._id),
-        defaultSkillCategories: text
+        defaultSkillCategories: text,
       };
     }
 
     this.setState(stateObj);
   };
 
-  collectSelectedSkillSubject = text => {
-    let oldFilter = { ...this.state.filters };
+  collectSelectedSkillSubject = (text) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter.skillSubjectIds = text.map(ele => ele._id);
     oldFilter.defaultSkillSubject = text;
     this.setState({ filters: oldFilter });
   };
 
-  skillLevelFilter = text => {
-    let oldFilter = { ...this.state.filters };
+  skillLevelFilter = (text) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter.experienceLevel = text;
     this.setState({ filters: oldFilter });
   };
 
-  filterGender = event => {
-    let oldFilter = { ...this.state.filters };
+  filterGender = (event) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter.gender = event.target.value;
     this.setState({ filters: oldFilter });
   };
 
-  filterAge = event => {
-    let oldFilter = { ...this.state.filters };
+  filterAge = (event) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter.age = parseInt(event.target.value);
     this.setState({ filters: oldFilter });
   };
 
-  handleSchoolDetails = name => event => {
-    let oldFilter = { ...this.state.filters };
+  handleSchoolDetails = name => (event) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter[name] = event.target.value;
     this.setState({ filters: oldFilter });
   };
 
-  perClassPriceFilter = text => {
-    let oldFilter = { ...this.state.filters };
+  perClassPriceFilter = (text) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter._classPrice = text;
     this.setState({ filters: oldFilter });
   };
 
-  pricePerMonthFilter = text => {
-    let oldFilter = { ...this.state.filters };
+  pricePerMonthFilter = (text) => {
+    const oldFilter = { ...this.state.filters };
     oldFilter._monthPrice = text;
     this.setState({ filters: oldFilter });
   };
@@ -350,8 +335,8 @@ class SuggestionForm extends Component {
               tempFilters={this.state.tempFilters}
               errors={this.state.errors}
               onLocationChange={this.onLocationChange}
-              onSchoolWebsiteChange={this.handleSchoolDetails("schoolWebsite")}
-              onSchoolEmailChange={this.handleSchoolDetails("schoolEmail")}
+              onSchoolWebsiteChange={this.handleSchoolDetails('schoolWebsite')}
+              onSchoolEmailChange={this.handleSchoolDetails('schoolEmail')}
               locationInputChanged={this.locationInputChanged}
               fliterSchoolName={this.fliterSchoolName}
               filterAge={this.filterAge}
@@ -359,9 +344,7 @@ class SuggestionForm extends Component {
               skillLevelFilter={this.skillLevelFilter}
               perClassPriceFilter={this.perClassPriceFilter}
               pricePerMonthFilter={this.pricePerMonthFilter}
-              collectSelectedSkillCategories={
-                this.collectSelectedSkillCategories
-              }
+              collectSelectedSkillCategories={this.collectSelectedSkillCategories}
               collectSelectedSkillSubject={this.collectSelectedSkillSubject}
               removeAllFilters={this.removeAllFilters}
               onGiveSuggestion={this.handleGiveSuggestion}

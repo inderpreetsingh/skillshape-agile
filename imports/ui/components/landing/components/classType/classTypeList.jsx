@@ -39,13 +39,6 @@ const MapContentContainer = styled.div`
   display: flex;
 `;
 
-const SearchBarWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CardsContainer = styled.div`
   width: 100%;
   padding-top: ${props => (props.containerPaddingTop ? props.containerPaddingTop : `${helpers.rhythmDiv * 3}px`)};
@@ -99,14 +92,6 @@ const FooterOuterWrapper = styled.div`
 
 const FooterWrapper = styled.div`
   width: 100%;
-`;
-
-const RevertSearch = styled.span`
-  padding: ${helpers.rhythmDiv}px;
-  font-size: ${helpers.baseFontSize * 2}px;
-  font-weight: 300;
-  font-family: ${helpers.specialFont};
-  color: ${helpers.black};
 `;
 
 class ClassTypeList extends Component {

@@ -26,8 +26,6 @@ const styles = {
   },
 };
 
-
-
 const ClassTimesWrapper = styled.div`
   max-width: ${props => getContainerMaxWidth(CARD_WIDTH, props.spacing, 4)}px;
   margin: 0 auto;
@@ -170,10 +168,8 @@ const ClassTimesBar = (props) => {
   const {
     editMode,
     inPopUp,
-    handleAddToMyCalendarButtonClick,
     classTimesData,
     classInterestData,
-    handleRemoveFromCalendarButtonClick,
     onModalClose,
     onEditClassTimesClick,
     params,
@@ -181,7 +177,6 @@ const ClassTimesBar = (props) => {
     enrollmentIds,
     schoolData,
   } = props;
-  let addToCalender;
   return (
     <Wrapper>
       <ClassTimesWrapper spacing={32}>

@@ -97,9 +97,10 @@ class ManageRequestsDialogBox extends Component {
   _getCollectionName = () => {
     const { requestFor } = this.props;
 
-    if (requestFor == 'price') {
+    if (requestFor === 'price') {
       return 'pricingRequest';
-    } if (requestFor == 'location') {
+    }
+     else if (requestFor === 'location') {
       return 'classTypeLocationRequest';
     }
     return 'classTimesRequest';

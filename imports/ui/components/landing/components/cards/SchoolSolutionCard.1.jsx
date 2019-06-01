@@ -103,8 +103,6 @@ const SolutionCardContent = styled.div`
   height: 100%;
 `;
 
-const SolutionIconButtonWrapper = styled.div``;
-
 const CardTitle = styled.h3`
   font-size: ${helpers.baseFontSize * 2}px;
   font-weight: 500;
