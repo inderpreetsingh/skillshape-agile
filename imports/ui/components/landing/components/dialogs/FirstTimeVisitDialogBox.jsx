@@ -1,69 +1,51 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { createContainer } from "meteor/react-meteor-data";
-import { browserHistory } from "react-router";
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import { withStyles } from "material-ui/styles";
-import { Loading } from "/imports/ui/loading/";
-// import { withPopUp } from "/imports/util";
+import ClearIcon from 'material-ui-icons/Clear';
+import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
+import styled from 'styled-components';
+import School from '/imports/ui/components/landing/components/icons/School';
+import Student from '/imports/ui/components/landing/components/icons/Student';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import { Loading } from '/imports/ui/loading/';
 
-import { MuiThemeProvider } from "material-ui/styles";
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import Student from "/imports/ui/components/landing/components/icons/Student.jsx";
-import School from "/imports/ui/components/landing/components/icons/School.jsx";
-
-import Dialog, {
-  DialogContent,
-  DialogActions,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
-const styles = theme => {
-  return {
-    dialogRoot: {
-      minHeight: 100
-    },
-    dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
-        3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`
-    },
-    dialogContent: {
-      padding: `0 ${helpers.rhythmDiv * 3}px`,
+const styles = theme => ({
+  dialogTitleRoot: {
+    padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+  },
+  dialogContent: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    paddingBottom: helpers.rhythmDiv,
+    display: 'block',
+    overflowY: 'visible',
+  },
+  dialogActionsRoot: {
+    padding: `0 ${helpers.rhythmDiv}px`,
+    paddingBottom: helpers.rhythmDiv * 3,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 0,
+    [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
       paddingBottom: helpers.rhythmDiv,
-      display: "block",
-      overflowY: "visible"
     },
-    dialogActionsRoot: {
-      padding: `0 ${helpers.rhythmDiv}px`,
-      paddingBottom: helpers.rhythmDiv * 3,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      margin: 0,
-      [`@media screen and (max-width: ${helpers.mobile + 100}px)`]: {
-        paddingBottom: helpers.rhythmDiv
-      }
-    },
-    dialogActions: {
-      width: "100%",
-    },
-    dialogRoot: {
-      width: "100%"
-    },
-    iconButton: {
-      height: "auto",
-      width: "auto"
-    }
-  };
-};
+  },
+  dialogActions: {
+    width: '100%',
+  },
+  dialogRoot: {
+    width: '100%',
+    minHeight: 100,
+  },
+  iconButton: {
+    height: 'auto',
+    width: 'auto',
+  },
+});
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -164,16 +146,17 @@ class FirstTimeVisitDialogBox extends Component {
     super(props);
     this.state = {
       open: true,
-      showLoader: false
+      showLoader: false,
     };
   }
-  _redirectTo = path => {
+
+  _redirectTo = (path) => {
     browserHistory.push(path);
   };
 
   _closeModal = () => {
     this.setState({
-      open: false
+      open: false,
     });
   };
 
@@ -192,18 +175,18 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleIamStudentClick = () => {
-    localStorage.setItem("visitorRedirected", true);
-    localStorage.setItem("visitorType", "student");
+    localStorage.setItem('visitorRedirected', true);
+    localStorage.setItem('visitorType', 'student');
     this._closeModal();
     setTimeout(() => {
-      this._redirectTo("/");
+      this._redirectTo('/');
     }, 100);
   };
 
   handleIamSchoolClick = () => {
     const { isUserSubsReady, currentUser } = this.props;
-    localStorage.setItem("visitorRedirected", true);
-    localStorage.setItem("visitorType", "school");
+    localStorage.setItem('visitorRedirected', true);
+    localStorage.setItem('visitorType', 'school');
     // this._closeModal();
     // setTimeout(() => {
     //   this._redirectTo("/claimSchool");
@@ -241,7 +224,7 @@ class FirstTimeVisitDialogBox extends Component {
 
     this._closeModal();
     setTimeout(() => {
-      this._redirectTo("/skillshape-for-school");
+      this._redirectTo('/skillshape-for-school');
     }, 100);
   };
 
@@ -261,9 +244,7 @@ class FirstTimeVisitDialogBox extends Component {
         <MuiThemeProvider theme={muiTheme}>
           <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
             <DialogTitleWrapper>
-              <Title>
-                {isUserSubsReady ? "Let us know!" : "Thanks for patience!"}
-              </Title>
+              <Title>{isUserSubsReady ? 'Let us know!' : 'Thanks for patience!'}</Title>
               <IconButton
                 color="primary"
                 onClick={this.handleModalClose}
@@ -277,18 +258,19 @@ class FirstTimeVisitDialogBox extends Component {
           <DialogContent classes={{ root: props.classes.dialogContent }}>
             {isUserSubsReady ? (
               <Text>
-                You need to select any one option from below, will allow to
-                serve you in a better way.
+                You need to select any one option from below, will allow to serve you in a better
+                way.
               </Text>
             ) : (
-                <Text>
-                  Just give us a moment, we are fetching some data, to make your
-                  experience better :).
+              <Text>
+                Just give us a moment, we are fetching some data, to make your experience better :).
               </Text>
-              )}
+            )}
           </DialogContent>
 
-          <DialogActions classes={{ root: props.classes.dialogActionsRoot, action: props.classes.dialogActions }}>
+          <DialogActions
+            classes={{ root: props.classes.dialogActionsRoot, action: props.classes.dialogActions }}
+          >
             {isUserSubsReady || showLoader ? (
               <CardsWrapper>
                 <OptionCard
@@ -304,8 +286,8 @@ class FirstTimeVisitDialogBox extends Component {
                 />
               </CardsWrapper>
             ) : (
-                <Loading />
-              )}
+              <Loading />
+            )}
           </DialogActions>
         </MuiThemeProvider>
       </Dialog>

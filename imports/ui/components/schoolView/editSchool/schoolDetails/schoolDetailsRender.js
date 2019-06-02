@@ -6,48 +6,41 @@ import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
-import React from "react";
+import React from 'react';
 import ReactPhoneInput from 'react-phone-input-2';
-import styled from "styled-components";
+import styled from 'styled-components';
 import config from '/imports/config';
-import MaterialRTE from "/imports/startup/client/material-rte";
-import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner.jsx';
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { get } from 'lodash';
+import MaterialRTE from '/imports/startup/client/material-rte';
+import SchoolViewNewBanner from '/imports/ui/componentHelpers/schoolViewBanner/schoolViewNewBanner';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 // Need to import this in order to show loading component.
-import { ContainerLoader } from '/imports/ui/loading/container.js';
+import { ContainerLoader } from '/imports/ui/loading/container';
+
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 export default function () {
-  let {
-    name,
-    website,
+  const {
+
     phone,
-    firstName,
-    lastName,
-    email,
-    backGroundVideoUrl,
-    mainImage,
-    aboutHtml,
-    studentNotesHtml,
+
   } = this.state;
 
   const {
     schoolId,
     schoolData,
     classes,
-    route,
-    mediaFormData,
+
     currentUser,
     popUp,
-    isSaved,
-    handleIsSavedState
+    handleIsSavedState,
   } = this.props;
   return (
     <div>
-      <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} />
-      {/*this.props.route.name === 'SchoolAdminDev' ? <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> :
+      <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit />
+      {/* this.props.route.name === 'SchoolAdminDev' ? <SchoolViewNewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> :
         <SchoolViewBanner schoolData={schoolData} schoolId={schoolId} currentUser={currentUser} isEdit={true} /> */}
       {
         this.state.isLoading && <ContainerLoader />
@@ -62,65 +55,63 @@ export default function () {
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
-                    required={true}
-                    defaultValue={schoolData && schoolData.name == 'my-school' ? ' ' : schoolData.name}
-                    inputRef={(ref) => this.name = ref}
+                    required
+                    defaultValue={get(schoolData, 'name', '') == 'my-school' ? ' ' : schoolData.name}
+                    inputRef={ref => this.name = ref}
                     label="School Name"
                     type="text"
                     fullWidth
                     onChange={(event) => {
-                    this.setState({ name: event.target.value });
-                    handleIsSavedState(false);
-                  }}
+                      this.setState({ name: event.target.value });
+                      handleIsSavedState(false);
+                    }}
                   />
                 </Grid>
 
                 <Grid item xs={12}>
                   <TextField
-                    required={true}
-                    defaultValue={schoolData && schoolData.website ? schoolData.website : 'https://www.'}
-                    inputRef={(ref) => this.website = ref}
+                    required
+                    defaultValue={get(schoolData, 'website', 'https://www.')}
+                    inputRef={ref => this.website = ref}
                     label="Website"
                     type="text"
                     fullWidth
-                    onChange={(event) => { 
-                      this.setState({ website: event.target.value }); 
+                    onChange={(event) => {
+                      this.setState({ website: event.target.value });
                       handleIsSavedState(false);
                     }}
                   />
-                   <TextField
-                required={true}
-                defaultValue={schoolData && schoolData.email}
-                inputRef={(ref) => this.email = ref}
-                label="Email"
-                type="email"
-                fullWidth
-                onChange={(event) => {
-                  this.setState({ email: event.target.value }); 
-                  handleIsSavedState(false);
-                }}
-              />
-              <ReactPhoneInput
-                required={true}
-                defaultCountry={'us'}
-                value={phone ? phone.toString() : ''}
-                onChange={phone => {
-                this.setState({ phone })
-                handleIsSavedState(false);
-              }}
-                inputStyle={{width:'100%'}}
-                placeHolder={'Phone Number'}
-                containerStyle={{marginTop:'10px'}}
-                disableAreaCodes={true}
-              />
+                  <TextField
+                    required
+                    defaultValue={get(schoolData, 'email', '')}
+                    inputRef={ref => this.email = ref}
+                    label="Email"
+                    type="email"
+                    fullWidth
+                    onChange={(event) => {
+                      this.setState({ email: event.target.value });
+                      handleIsSavedState(false);
+                    }}
+                  />
+                  <ReactPhoneInput
+                    required
+                    defaultCountry="us"
+                    value={phone ? phone.toString() : ''}
+                    onChange={(phone) => {
+                      this.setState({ phone });
+                      handleIsSavedState(false);
+                    }}
+                    inputStyle={{ width: '100%' }}
+                    placeHolder="Phone Number"
+                    containerStyle={{ marginTop: '10px' }}
+                    disableAreaCodes
+                  />
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sm={4}>
-             
-            </Grid>
+            <Grid item xs={12} sm={4} />
             {/* <Grid item xs={12} sm={4}> */}
-              {/* <TextField
+            {/* <TextField
                 required={true}
                 defaultValue={schoolData && schoolData.phone && parseInt((schoolData.phone).replace(/[^0-9]/g, ''), 10)}
                 inputRef={(ref) => this.phone = ref}
@@ -129,7 +120,7 @@ export default function () {
                 fullWidth
                 onChange={(event) => { this.setState({ phone: parseInt(event.target.value) }) }}
               /> */}
-              
+
             {/* </Grid> */}
           </Grid>
           <Grid container style={{ display: 'flex', alignItems: 'baseline' }}>
@@ -138,27 +129,27 @@ export default function () {
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
-                required={true}
-                defaultValue={schoolData && schoolData.firstName}
-                inputRef={(ref) => this.fname = ref}
+                required
+                defaultValue={get(schoolData, 'firstName', '')}
+                inputRef={ref => this.fname = ref}
                 label="First Name"
                 type="text"
                 fullWidth
-                onChange={(event) => { 
-                  this.setState({ firstName: event.target.value }) 
+                onChange={(event) => {
+                  this.setState({ firstName: event.target.value });
                   handleIsSavedState(false);
                 }}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
-                required={true}
-                defaultValue={schoolData && schoolData.lastName}
-                inputRef={(ref) => this.lname = ref}
+                required
+                defaultValue={get(schoolData, 'lastName', '')}
+                inputRef={ref => this.lname = ref}
                 label="Last Name"
                 type="text"
                 fullWidth
-                onChange={(event) => { 
+                onChange={(event) => {
                   this.setState({ lastName: event.target.value });
                   handleIsSavedState(false);
                 }}
@@ -170,28 +161,29 @@ export default function () {
               <Typography type="title"> School Currency  </Typography>
             </Grid>
             <Grid item xs={12} sm={8}>
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="currency">Preferred Currency</InputLabel>
                 <Select
                   input={<Input id="currency" />}
                   value={this.state.currency}
                   onChange={(event) => {
                     if (event.target.value != this.state.previousSelectedCurrency) {
-                        popUp.appear("success", { title: "Inform", content:  "You are going to change your Preferred Currency.Please make changes in packages according to your currency." })
+                      popUp.appear('success', { title: 'Inform', content: 'You are going to change your Preferred Currency.Please make changes in packages according to your currency.' });
                     }
                     handleIsSavedState(false);
-                    this.setState({ currency: event.target.value })
+                    this.setState({ currency: event.target.value });
                   }}
                   fullWidth
                 >
                   {
-                    config.currency.map((data, index) => {
-                      return <MenuItem
+                    config.currency.map((data, index) => (
+                      <MenuItem
                         key={`${index}-${data.value}`}
-                        value={data.value}>
+                        value={data.value}
+                      >
                         {data.label}
                       </MenuItem>
-                    })
+                    ))
                   }
                 </Select>
               </FormControl>
@@ -236,7 +228,7 @@ export default function () {
                   </Button> */}
             <ButtonWrapper>
               <FormGhostButton
-                onClick={this.editSchoolCall.bind(this,null)}
+                onClick={this.editSchoolCall.bind(this, null)}
                 label="Save"
               />
             </ButtonWrapper>
@@ -253,5 +245,5 @@ export default function () {
       </Card>
     </div>
 
-  )
+  );
 }

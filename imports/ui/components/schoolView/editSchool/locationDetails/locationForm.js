@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import Button from "material-ui/Button";
 import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
 import { withStyles } from "material-ui/styles";
@@ -9,8 +10,7 @@ import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialo
 import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
 import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
 import { ContainerLoader } from "/imports/ui/loading/container";
-import {isEmpty,get} from "lodash";
-import {confirmationDialog,withPopUp,unSavedChecker} from "/imports/util";
+import { confirmationDialog, unSavedChecker, withPopUp } from "/imports/util";
 
 
 const formId = "LocationForm";
@@ -225,7 +225,6 @@ class LocationForm extends React.Component {
         });
         if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
-            let place = results[0];
             // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
             // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
             const addressComponents = results[0].address_components;
@@ -414,7 +413,7 @@ class LocationForm extends React.Component {
       docObj.doc = payload;
     }
     this.props.handleIsSavedState(true);
-    this.props && this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
+     this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, docObj, (error, result) => {
       if (error) {
       }

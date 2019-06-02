@@ -1,61 +1,51 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
-
-import PrimaryButton from "../buttons/PrimaryButton.jsx";
-import IconInput from "../form/IconInput.jsx";
-
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
-import { logoSrc } from "../../site-settings.js";
-import { toastrModal } from "/imports/util";
-import { ContainerLoader } from "/imports/ui/loading/container";
-
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
+import ClearIcon from 'material-ui-icons/Clear';
+import Dialog, { DialogActions, DialogContent, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { logoSrc } from '../../site-settings';
+import PrimaryButton from '../buttons/PrimaryButton';
+import IconInput from '../form/IconInput';
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { toastrModal } from '/imports/util';
 
 const styles = {
   dialogPaper: {
-    padding: `${helpers.rhythmDiv * 2}px`
+    padding: `${helpers.rhythmDiv * 2}px`,
   },
   dialogContent: {
-    "@media screen and (max-width : 500px)": {
-      minHeight: "150px"
-    }
+    '@media screen and (max-width : 500px)': {
+      minHeight: '150px',
+    },
   },
   dialogAction: {
-    width: "100%",
-    margin: 0
+    width: '100%',
+    margin: 0,
   },
   dialogActionsRoot: {
-    width: "100%",
+    width: '100%',
     padding: `0 ${helpers.rhythmDiv * 3}px`,
     margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+    },
   },
   dialogActionsRootSubmitButton: {
-    width: "100%",
+    width: '100%',
     padding: `0 ${helpers.rhythmDiv * 3}px`,
     margin: 0,
-    "@media screen and (max-width : 500px)": {
-      padding: `0 ${helpers.rhythmDiv * 3}px`
-    }
+    '@media screen and (max-width : 500px)': {
+      padding: `0 ${helpers.rhythmDiv * 3}px`,
+    },
   },
   iconButton: {
-    height: "auto",
-    width: "auto"
-  }
+    height: 'auto',
+    width: 'auto',
+  },
 };
 
 const DialogTitleContainer = styled.div`
@@ -99,34 +89,32 @@ const LogoImg = styled.img`
 
 class ChangePasswordDialogBox extends Component {
   state = {
-    errorText: null
+    errorText: null,
   };
 
   handleTextChange = (inputName, e) => {
     this.setState({ [inputName]: e.target.value });
   };
 
-  changePassword = event => {
+  changePassword = (event) => {
     event.preventDefault();
     const { oldPasswd, newPasswd, confirmPasswd } = this.state;
     const { toastr } = this.props;
-    let self = this;
+    const self = this;
     if (newPasswd != confirmPasswd) {
       this.setState({
-        errorText: "Change password and confirm password are not same"
+        errorText: 'Change password and confirm password are not same',
       });
     } else {
       this.setState({ isBusy: true });
-      Accounts.changePassword(oldPasswd, newPasswd, error => {
-        let stateObj = { isBusy: true };
+      Accounts.changePassword(oldPasswd, newPasswd, (error) => {
+        const stateObj = { isBusy: true };
         if (error) {
           stateObj.errorText = error.reason || error.message;
           this.setState(stateObj);
         } else {
           // alert("close modal");
-          this.props.hideChangePassword(
-            "Your password has been changed successfully"
-          );
+          this.props.hideChangePassword('Your password has been changed successfully');
           this.props.onModalClose();
         }
         stateObj.isBusy = false;
@@ -136,7 +124,9 @@ class ChangePasswordDialogBox extends Component {
   };
 
   render() {
-    const { classes, open, fullScreen, onModalClose } = this.props;
+    const {
+      classes, open, fullScreen, onModalClose,
+    } = this.props;
 
     const { oldPasswd, newPasswd, confirmPasswd } = this.state;
 
@@ -173,38 +163,32 @@ class ChangePasswordDialogBox extends Component {
                   labelText="Old Password *"
                   iconName="lock_open"
                   value={oldPasswd}
-                  onChange={this.handleTextChange.bind(this, "oldPasswd")}
+                  onChange={this.handleTextChange.bind(this, 'oldPasswd')}
                 />
                 <IconInput
                   type="password"
                   labelText="New Password *"
                   value={newPasswd}
                   iconName="lock_open"
-                  onChange={this.handleTextChange.bind(this, "newPasswd")}
+                  onChange={this.handleTextChange.bind(this, 'newPasswd')}
                 />
                 <IconInput
                   type="password"
                   labelText="Confirm New Password *"
                   iconName="lock_open"
                   value={confirmPasswd}
-                  onChange={this.handleTextChange.bind(this, "confirmPasswd")}
+                  onChange={this.handleTextChange.bind(this, 'confirmPasswd')}
                 />
               </InputWrapper>
-              {this.state.errorText && (
-                <ErrorWrapper>{this.state.errorText}</ErrorWrapper>
-              )}
+              {this.state.errorText && <ErrorWrapper>{this.state.errorText}</ErrorWrapper>}
             </DialogContent>
             <DialogActions
               classes={{
                 root: classes.dialogActionsRootSubmitButton,
-                action: classes.dialogAction
+                action: classes.dialogAction,
               }}
             >
-              <PrimaryButton
-                type="submit"
-                label="Change Password"
-                noMarginBottom
-              />
+              <PrimaryButton type="submit" label="Change Password" noMarginBottom />
             </DialogActions>
           </form>
         </MuiThemeProvider>
@@ -216,9 +200,7 @@ class ChangePasswordDialogBox extends Component {
 ChangePasswordDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   classes: PropTypes.object.isRequired,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };
 
-export default withMobileDialog()(
-  withStyles(styles)(toastrModal(ChangePasswordDialogBox))
-);
+export default withMobileDialog()(withStyles(styles)(toastrModal(ChangePasswordDialogBox)));

@@ -1,14 +1,10 @@
+import { isEmpty } from 'lodash';
+import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router';
-import { isEmpty } from 'lodash';
-
-import { handleOutBoundLink, addHttp } from '/imports/util';
-
-import ClassTypeLogo from './ClassTypeLogo.jsx';
-import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { addHttp, handleOutBoundLink } from '/imports/util';
 
 const ActionButtonsWrapper = styled.div`
   ${helpers.flexCenter}
@@ -51,7 +47,7 @@ const ActionButton = styled.div`
   min-height: ${helpers.rhythmDiv * 4}px;
 
   @media screen and (max-width: 1100px) {
-    margin-bottom: ${props => props.rightSide ? helpers.rhythmDiv * 2 : 0}px;
+    margin-bottom: ${props => (props.rightSide ? helpers.rhythmDiv * 2 : 0)}px;
   }
 
   @media screen and (max-width: ${helpers.tablet + 100}px) {
@@ -72,37 +68,90 @@ const ShowOnSmallScreen = styled.div`
 `;
 
 const ActionButtons = (props) => {
-  const ActionButtonsContainer = props.rightSide ? ActionButtonsRightSideWrapper : ActionButtonsWrapper;
+  const ActionButtonsContainer = props.rightSide
+    ? ActionButtonsRightSideWrapper
+    : ActionButtonsWrapper;
   const EditButton = props.editButton;
-  return (<ActionButtonsContainer>
-    {props.isEdit ? <Fragment></Fragment> :
-      <Fragment>
-        {props.editButton && <ShowOnSmallScreen><ActionButton rightSide={props.rightSide}>
-          <EditButton />
-        </ActionButton></ShowOnSmallScreen>}
+  return (
+    <ActionButtonsContainer>
+      {props.isEdit ? (
+        <Fragment />
+      ) : (
+        <Fragment>
+          {props.editButton && (
+            <ShowOnSmallScreen>
+              <ActionButton rightSide={props.rightSide}>
+                <EditButton />
+              </ActionButton>
+            </ShowOnSmallScreen>
+          )}
 
-        {props.callUsButton && <ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton icon iconName='phone' label="Call Us" onClick={props.onCallUsButtonClick} />
-        </ActionButton>}
+          {props.callUsButton && (
+            <ActionButton rightSide={props.rightSide}>
+              <ClassTimeButton
+                icon
+                iconName="phone"
+                label="Call Us"
+                onClick={props.onCallUsButtonClick}
+              />
+            </ActionButton>
+          )}
 
-        {props.emailUsButton && <ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton secondary noMarginBottom label="Email Us" icon iconName="email" onClick={props.onEmailButtonClick} />
-        </ActionButton>}
+          {props.emailUsButton && (
+            <ActionButton rightSide={props.rightSide}>
+              <ClassTimeButton
+                secondary
+                noMarginBottom
+                label="Email Us"
+                icon
+                iconName="email"
+                onClick={props.onEmailButtonClick}
+              />
+            </ActionButton>
+          )}
 
-        {props.pricingButton && <ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton secondary noMarginBottom label="Pricing" icon iconName="attach_money" onClick={props.onPricingButtonClick} />
-        </ActionButton>}
+          {props.pricingButton && (
+            <ActionButton rightSide={props.rightSide}>
+              <ClassTimeButton
+                secondary
+                noMarginBottom
+                label="Pricing"
+                icon
+                iconName="attach_money"
+                onClick={props.onPricingButtonClick}
+              />
+            </ActionButton>
+          )}
 
-        {props.scheduleButton && <ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton secondary noMarginBottom label="Schedule" icon iconName="schedule" onClick={props.onScheduleButtonClick} />
-        </ActionButton>}
+          {props.scheduleButton && (
+            <ActionButton rightSide={props.rightSide}>
+              <ClassTimeButton
+                secondary
+                noMarginBottom
+                label="Schedule"
+                icon
+                iconName="schedule"
+                onClick={props.onScheduleButtonClick}
+              />
+            </ActionButton>
+          )}
 
-        {props.visitSiteButton && !isEmpty(props.siteLink) && <a href={addHttp(props.siteLink.toLowerCase())} target="_blank" onClick={handleOutBoundLink}><ActionButton rightSide={props.rightSide}>
-          <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" />
-        </ActionButton></a>}
-      </Fragment>}
-  </ActionButtonsContainer>)
-}
+          {props.visitSiteButton && !isEmpty(props.siteLink) && (
+            <a
+              href={addHttp(props.siteLink.toLowerCase())}
+              target="_blank"
+              onClick={handleOutBoundLink}
+            >
+              <ActionButton rightSide={props.rightSide}>
+                <ClassTimeButton secondary noMarginBottom label="Visit Site" icon iconName="web" />
+              </ActionButton>
+            </a>
+          )}
+        </Fragment>
+      )}
+    </ActionButtonsContainer>
+  );
+};
 
 ActionButtons.propTypes = {
   onCallUsButtonClick: PropTypes.func,
@@ -116,8 +165,8 @@ ActionButtons.propTypes = {
   scheduleButton: PropTypes.bool,
   visitSiteButton: PropTypes.bool,
   rightSide: PropTypes.bool,
-  editButton: PropTypes.element
-}
+  editButton: PropTypes.element,
+};
 
 ActionButtons.defaultProps = {
   editButton: false,
@@ -127,6 +176,6 @@ ActionButtons.defaultProps = {
   pricingButton: true,
   scheduleButton: false,
   visitSiteButton: false,
-}
+};
 
 export default ActionButtons;

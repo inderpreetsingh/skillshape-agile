@@ -1,28 +1,31 @@
 import { isEmpty, cloneDeep } from 'lodash';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-const colors = { 'Attendance': helpers.alertColor, "Purchases": helpers.primaryColor,"Expired":helpers.black,'Cancelled':"dodgerblue","Members":helpers.cancel };
+
+const colors = {
+  Attendance: helpers.alertColor, Purchases: helpers.primaryColor, Expired: helpers.black, Cancelled: 'dodgerblue', Members: helpers.cancel,
+};
 export function generateGraphData(graphData, options) {
-  let data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"],
-    datasets: []
+  const data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    datasets: [],
   };
   let maxMonth = 0;
   if (graphData && !isEmpty(graphData)) {
-    let keyNames = Object.keys(graphData);
-    keyNames.map((keyName) => {
+    const keyNames = Object.keys(graphData);
+    keyNames.forEach((keyName) => {
       let graphValues = [];
-      let currentGraphData = graphData[keyName];
-      let color = colors[keyName] || helpers.alertColor;
+      const currentGraphData = graphData[keyName];
+      const color = colors[keyName] || helpers.alertColor;
       if (!isEmpty(currentGraphData)) {
-        currentGraphData.map((obj, index) => {
-          let { _id: { month }, count } = obj;
+        currentGraphData.forEach((obj, index) => {
+          const { _id: { month }, count } = obj;
           graphValues[month - 1] = count;
           if (month > maxMonth) {
             maxMonth = month;
           }
-        })
+        });
         graphValues = Array.from(graphValues, item => item || 0);
-        let objForDataSets = {
+        const objForDataSets = {
           label: keyName,
           fill: false,
           lineTension: 0.1,
@@ -41,13 +44,12 @@ export function generateGraphData(graphData, options) {
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
-          data: graphValues
+          data: graphValues,
         };
         data.datasets.push(cloneDeep(objForDataSets));
       }
-    })
+    });
   }
-	console.log('TCL: generateGraphData -> data', data)
+  console.log('TCL: generateGraphData -> data', data);
   return data;
 }
-

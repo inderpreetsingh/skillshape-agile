@@ -1,12 +1,8 @@
-import React from 'react';
-import Events from '/imports/util/events';
-import ClassPricing from "/imports/api/classPricing/fields";
+import { isNumber } from 'lodash';
 import { browserHistory } from 'react-router';
-import ClassType from "/imports/api/classType/fields";
-import {cutString} from '/imports/util';
-import config from '/imports/config';
-import { isEmpty, isNumber } from 'lodash';
 import { MarkerClusterer } from '/imports/ui/components/landing/components/jss/markerclusterer';
+import { cutString } from '/imports/util';
+import Events from '/imports/util/events';
 
 let mc;
 let infobox;
@@ -27,7 +23,7 @@ const mapOptions = {
 function infoSchool({school, classTypes}) {
     if(school) {
         let backgroundUrl = school.mainImage || "images/SkillShape-Whitesmoke.png";
-        const schoolName = school ? cutString(school.name, 30) : "";
+        const schoolName = cutString(school.name, 30) ;
         Events.trigger("getSeletedSchoolData",{school});
         const view = getSchoolViewOnMap(classTypes, backgroundUrl, schoolName);
         return view;
@@ -85,7 +81,7 @@ export function initializeSchoolEditLocationMap(location) {
         geolocate = new google.maps.LatLng(location.loc[1], location.loc[0])
         map.setCenter(geolocate);
 
-        let marker = new google.maps.Marker({
+         new google.maps.Marker({
             position: geolocate,
             map: map
         });
@@ -133,7 +129,7 @@ export function initializeMap(center) {
         //     map.setCenter(geolocate);
         // }
 
-        let marker = new google.maps.Marker({
+         new google.maps.Marker({
             position: geolocate,
             icon: '/images/bluecircle.png',
             map: map

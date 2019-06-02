@@ -1,17 +1,9 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import ReactStars from 'react-stars';
-import PropTypes from 'prop-types';
-
-import { MuiThemeProvider} from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
-
 import Review from './Review';
-
-import ReviewStructure from '/imports/ui/components/landing/constants/structure/review.js';
-
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import ReviewStructure from '/imports/ui/components/landing/constants/structure/review';
 
 const Wrapper = styled.div`
   ${helpers.flexDirectionColumn}
@@ -59,26 +51,23 @@ const ReviewsBar = (props) => (
 );
 */
 
-const ReviewsBar = (props) => (
+const ReviewsBar = props => (
   <Wrapper>
     <ReviewsContainer>
       <ReviewsGrid>
-        {props.reviewsData && props.reviewsData.map(data => {
-          return (
+        {props.reviewsData
+          && props.reviewsData.map(data => (
             <ReviewWrapper key={data._id}>
               <Review {...data} />
             </ReviewWrapper>
-          );
-        })}
+          ))}
       </ReviewsGrid>
     </ReviewsContainer>
   </Wrapper>
 );
 
-
-
 ReviewsBar.propTypes = {
-  reviewsData: PropTypes.arrayOf(ReviewStructure)
-}
+  reviewsData: PropTypes.arrayOf(ReviewStructure),
+};
 
 export default ReviewsBar;

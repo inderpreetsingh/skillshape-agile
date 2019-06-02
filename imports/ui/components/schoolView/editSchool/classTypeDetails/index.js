@@ -1,14 +1,9 @@
-import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
-import ClassTypeDetailsRender from "./classTypeDetailsRender";
-import "/imports/api/classPricing/methods";
-import { compressImage } from "/imports/util";
-import ClassType from "/imports/api/classType/fields";
-import SkillCategory from "/imports/api/skillCategory/fields";
-import SkillSubject from "/imports/api/skillSubject/fields";
-import ClassTimes from "/imports/api/classTimes/fields";
-import { formatClassTimesData, withPopUp } from "/imports/util";
-import { Loading } from '/imports/ui/loading';
+import React from 'react';
+import ClassTypeDetailsRender from './classTypeDetailsRender';
+import '/imports/api/classPricing/methods';
+import ClassTimes from '/imports/api/classTimes/fields';
+import { compressImage, formatClassTimesData, withPopUp } from '/imports/util';
+import { scroller } from 'react-scroll';
 
 
 class ClassTypeDetails extends React.Component {
@@ -20,40 +15,50 @@ class ClassTypeDetails extends React.Component {
     };
   }
 
+
   getChildTableData(parentData) {
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
   }
 
-  handleEditImageClick = (classTypeData) => (e) => {
+  componentDidUpdate() {
+    const { currentPanelId } = this.state;
+    scroller.scrollTo(currentPanelId, {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart',
+    });
+  }
+
+  handleEditImageClick = classTypeData => (e) => {
     e.stopPropagation();
     e.preventDefault();
 
     this.setState({
       showBackgroundUpload: true,
       selectedClassTypeData: classTypeData,
-    })
+    });
   }
 
-  handleImageChange = file => {
+  handleImageChange = (file) => {
     this.setState({ file });
   };
 
   handleImageSave = (schoolId, classTypeId) => {
     const { file } = this.state;
-    let allUploadPromise = [];
-    let doc = {
-      schoolId: schoolId
+    const allUploadPromise = [];
+    const doc = {
+      schoolId,
     };
     try {
-      compressImage(file["org"], file.file, file.isUrl).then(result => {
-        console.group("ClassTypeDetails");
+      compressImage(file.org, file.file, file.isUrl).then((result) => {
+        console.group('ClassTypeDetails');
         if (_.isArray(result)) {
-          console.log("Non-cors");
+          console.log('Non-cors');
           for (let i = 0; i <= 1; i++) {
             allUploadPromise.push(
               new Promise((resolve, reject) => {
                 S3.upload(
-                  { files: { "0": result[i] }, path: "compressed" },
+                  { files: { 0: result[i] }, path: 'compressed' },
                   (err, res) => {
                     if (res) {
                       if (i == 0) {
@@ -64,15 +69,15 @@ class ClassTypeDetails extends React.Component {
                         resolve();
                       }
                     }
-                  }
+                  },
                 );
-              })
+              }),
             );
           }
           Promise.all(allUploadPromise).then(() => {
             if (file && file.fileData && !file.isUrl) {
               S3.upload(
-                { files: { "0": file.fileData }, path: "schools" },
+                { files: { 0: file.fileData }, path: 'schools' },
                 (err, res) => {
                   if (err) {
                   }
@@ -80,7 +85,7 @@ class ClassTypeDetails extends React.Component {
                     doc.classTypeImg = res.secure_url;
                     this.editClassType({ doc_id: classTypeId, doc });
                   }
-                }
+                },
               );
             } else if (file && file.isUrl) {
               doc.classTypeImg = file.file;
@@ -91,10 +96,10 @@ class ClassTypeDetails extends React.Component {
             }
           });
         } else {
-          console.log("cors");
+          console.log('cors');
           if (file && file.fileData && !file.isUrl) {
             S3.upload(
-              { files: { "0": file.fileData }, path: "schools" },
+              { files: { 0: file.fileData }, path: 'schools' },
               (err, res) => {
                 if (err) {
                 }
@@ -102,7 +107,7 @@ class ClassTypeDetails extends React.Component {
                   doc.classTypeImg = res.secure_url;
                   this.editClassType({ doc_id: classTypeId, doc });
                 }
-              }
+              },
             );
           } else if (file && file.isUrl) {
             doc.classTypeImg = file.file;
@@ -112,7 +117,7 @@ class ClassTypeDetails extends React.Component {
             this.editClassType({ doc_id: classTypeId, doc });
           }
         }
-        console.groupEnd("ClassTypeDetails");
+        console.groupEnd('ClassTypeDetails');
       });
     } catch (error) {
       throw new Meteor.Error(error);
@@ -120,28 +125,25 @@ class ClassTypeDetails extends React.Component {
   };
 
   handleImageUploadClose = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        showBackgroundUpload: false,
-        selectedClassTypeData: null,
-        file: null
-      }
-    })
+    this.setState(state => ({
+      ...state,
+      showBackgroundUpload: false,
+      selectedClassTypeData: null,
+      file: null,
+    }));
   }
 
   editClassType = ({ doc, doc_id }) => {
     const { popUp } = this.props;
     this.props.handleIsSavedState(true);
-    Meteor.call("classType.editClassType", { doc, doc_id }, (error, result) => {
+    Meteor.call('classType.editClassType', { doc, doc_id }, (error, result) => {
       if (error) {
       }
       if (result) {
-        popUp.appear("success", {
-          title: "Message",
-          content: "Image Saved Successfully"
+        popUp.appear('success', {
+          title: 'Message',
+          content: 'Image Saved Successfully',
         });
-
       }
     });
   };
@@ -155,7 +157,7 @@ class ClassTypeDetails extends React.Component {
   };
 
   _getCategoryName = (categoryId, categoryData) => {
-    let categoryName = "";
+    const categoryName = '';
     for (let i = 0; i < categoryData.length; ++i) {
       if (categoryData[i]._id === categoryId) {
         return categoryData[i].name;
@@ -165,12 +167,12 @@ class ClassTypeDetails extends React.Component {
 
   modifySelectSubjectsInClassTypeData = () => {
     const { classTypeData } = this.props;
-    classTypeData.map(obj => {
-      obj.selectedSkillSubject.map(subjectData => {
-        if (subjectData.name == "Others") {
+    classTypeData.map((obj) => {
+      obj.selectedSkillSubject.map((subjectData) => {
+        if (subjectData.name == 'Others') {
           const categoryName = this._getCategoryName(
             subjectData.skillCategoryId,
-            obj.selectedSkillCategory
+            obj.selectedSkillCategory,
           );
           subjectData.name = `${subjectData.name} -- ${categoryName}`;
         }
@@ -184,7 +186,7 @@ class ClassTypeDetails extends React.Component {
   /* LIFTING THE STATE UP */
 
   getClassTypeData = (classTypeId) => {
-    console.info("CHECKING", classTypeId, this.props);
+    console.info('CHECKING', classTypeId, this.props);
     if (!classTypeId) {
       return null;
     }
@@ -207,30 +209,26 @@ class ClassTypeDetails extends React.Component {
     Meteor.call(methodToCall, { doc: formData }, (err, res) => {
       this.closeDeleteConfirmationModal();
       if (err) {
-        popUp.appear("alert", { content: err.reason || err.message });
+        popUp.appear('alert', { content: err.reason || err.message });
       } else {
-        popUp.appear("success", { title: "success", content: res.message });
+        popUp.appear('success', { title: 'success', content: res.message });
       }
     });
   };
 
-  handleModalState = (modalName, modalState) => e => {
-    this.setState(state => {
-      return {
-        ...state,
-        [modalName]: modalState
-      };
-    });
+  handleModalState = (modalName, modalState) => (e) => {
+    this.setState(state => ({
+      ...state,
+      [modalName]: modalState,
+    }));
   };
 
   closeDeleteConfirmationModal = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        deleteConfirmationModal: false,
-        isBusy: false
-      }
-    });
+    this.setState(state => ({
+      ...state,
+      deleteConfirmationModal: false,
+      isBusy: false,
+    }));
   };
 
   getClassTimesData(classTypeId) {
@@ -238,58 +236,50 @@ class ClassTypeDetails extends React.Component {
     return formatClassTimesData(classTimesData, false);
   }
 
-  handleEditClassTypeClick = (classTypeData) => (e) => {
+  handleEditClassTypeClick = classTypeData => (e) => {
     e.stopPropagation();
 
-    this.setState(state => {
-      return {
-        ...state,
-        formAction: 'edit',
-        classTypeForm: true,
-        selectedClassTypeData: classTypeData
-      }
-    });
+    this.setState(state => ({
+      ...state,
+      formAction: 'edit',
+      classTypeForm: true,
+      selectedClassTypeData: classTypeData,
+    }));
   }
 
-  handleEditClassTimesClick = (classTypeData) => (classTimeData) => (e) => {
+  handleEditClassTimesClick = classTypeData => classTimeData => (e) => {
     e.stopPropagation();
 
-    this.setState(state => {
-      return {
-        ...state,
-        formAction: 'edit',
-        classTimeForm: true,
-        selectedClassTimeData: classTimeData,
-        selectedClassTypeData: classTypeData,
-      }
-    })
+    this.setState(state => ({
+      ...state,
+      formAction: 'edit',
+      classTimeForm: true,
+      selectedClassTimeData: classTimeData,
+      selectedClassTypeData: classTypeData,
+    }));
   }
 
-  handleAddClassTimeClick = (classTypeData) => (e) => {
+  handleAddClassTimeClick = classTypeData => (e) => {
     e.stopPropagation();
 
-    this.setState(state => {
-      return {
-        ...state,
-        formAction: 'add',
-        classTimeForm: true,
-        selectedClassTimeData: null,
-        selectedClassTypeData: classTypeData
-      }
-    })
+    this.setState(state => ({
+      ...state,
+      formAction: 'add',
+      classTimeForm: true,
+      selectedClassTimeData: null,
+      selectedClassTypeData: classTypeData,
+    }));
   }
 
   handleAddClassTypeClick = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        formAction: 'add',
-        classTypeForm: true,
-        selectedClassTypeId: null,
-        selectedClassTimeData: null,
-        selectedClassTypeData: null
-      }
-    })
+    this.setState(state => ({
+      ...state,
+      formAction: 'add',
+      classTypeForm: true,
+      selectedClassTypeId: null,
+      selectedClassTimeData: null,
+      selectedClassTypeData: null,
+    }));
   }
 
   handleNotifyForChange = () => {
@@ -301,7 +291,7 @@ class ClassTypeDetails extends React.Component {
         {
           schoolId: data.schoolId,
           classTypeId: data._id,
-          classTypeName: data.name
+          classTypeName: data.name,
         },
         (err, res) => {
           // console.log("classType.notifyToStudentForClassTimes",error, result)
@@ -309,13 +299,13 @@ class ClassTypeDetails extends React.Component {
           this.setState({ showConfirmationModal: false, isBusy: false }, () => {
             if (res && res.message) {
               // Need to show message to user when email is send successfully.
-              popUp.appear("success", { content: res.message });
+              popUp.appear('success', { content: res.message });
             }
             if (err) {
-              popUp.appear("alert", { content: err.reason || err.message });
+              popUp.appear('alert', { content: err.reason || err.message });
             }
           });
-        }
+        },
       );
     }
   }
@@ -326,87 +316,43 @@ class ClassTypeDetails extends React.Component {
       showConfirmationModal: true,
       selectedClassTypeData,
       methodName,
-      notifyFor
+      notifyFor,
     });
   };
-  
 
 
   handleClassTimeFormClose = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        classTimeForm: false,
-        formAction: null,
-        selectedClassTypeId: null,
-        selectedClassTypeData: null,
-        selectedClassTimeData: null,
-      }
-    });
+    this.setState(state => ({
+      ...state,
+      classTimeForm: false,
+      formAction: null,
+      selectedClassTypeId: null,
+      selectedClassTypeData: null,
+      selectedClassTimeData: null,
+    }));
   }
 
   handleClassTypeFormClose = (parentId, formAction) => {
-    if (formAction === 'add') {
-      this.setState(state => {
-        return {
-          ...state,
-          formAction,
-          classTimeForm: true,
-          classTypeForm: false,
-          // isBusy: true,
-          selectedClassTypeId: parentId
-        }
-      });
-    } else {
-      this.setState(state => {
-        return {
-          ...state,
-          formAction,
-          classTypeForm: false,
-          selectedClassTypeId: null,
-          selectedClassTypeData: null
-        }
-      });
-    }
+    this.setState({
+      formAction,
+      classTimeForm: formAction === 'add',
+      classTypeForm: false,
+      selectedClassTypeId: formAction === 'add' ? parentId : null,
+      selectedClassTypeData: null,
+      currentPanelId: parentId,
+    });
   }
+
+  currentPanelIdHandler = (currentPanelId) => {
+    this.setState((state) => {
+      const { currentPanelId: prevCurrentPanelId } = state;
+      return { currentPanelId: currentPanelId === prevCurrentPanelId ? 'fakeId' : currentPanelId };
+    });
+  }
+
   render() {
     return ClassTypeDetailsRender.call(this, this.props, this.state);
   }
 }
 
-export default createContainer(props => {
-  const { schoolId } = props;
-  let classTimesData = [];
-  let classTypeData = [];
-
-  let subscription = Meteor.subscribe("classType.getclassType", { schoolId });
-
-  // if (subscription.ready()) {
-  classTypeData = ClassType.find({ schoolId: schoolId }).fetch();
-  let classTypeIds = classTypeData && classTypeData.map(data => data._id);
-
-  let classTimesDataSubscription = Meteor.subscribe(
-    "classTimes.getclassTimesByClassTypeIds",
-    {
-      schoolId,
-      classTypeIds
-    }
-  );
-  classTimesData = ClassTimes.find({ schoolId }, { sort: { _id: -1 } }).fetch();
-  // }
-
-  /*Find skills to make this container reactive on skill
-    other wise skills are joined with collections using package
-    perak:joins */
-  SkillCategory.find().fetch();
-  SkillSubject.find().fetch();
-  /*****************************************************/
-
-  return {
-    isLoading: !classTimesDataSubscription.ready() && !subscription.ready(),
-    ...props,
-    schoolId,
-    classTypeData,
-    classTimesData
-  };
-}, withPopUp(ClassTypeDetails));
+export default withPopUp(ClassTypeDetails);

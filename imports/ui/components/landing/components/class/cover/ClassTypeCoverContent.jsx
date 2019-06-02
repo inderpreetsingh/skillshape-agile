@@ -1,42 +1,33 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { isEmpty } from "lodash";
-
-import { withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import Button from "material-ui/Button";
-import Icon from "material-ui/Icon";
-
-import { createMarkersOnMap, toastrModal } from "/imports/util";
-import get from "lodash/get";
-import uniq from "lodash/uniq";
-import ClassMap from "/imports/ui/components/landing/components/map/ClassMap";
-import ClassTypeDescription from "/imports/ui/components/landing/components/class/ClassTypeDescription.jsx";
-import ClassTypeInfo from "/imports/ui/components/landing/components/class/ClassTypeInfo.jsx";
-import ActionButtons from "/imports/ui/components/landing/components/class/ActionButtons.jsx";
-import BestPrices from "/imports/ui/components/landing/components/class/BestPrices.jsx";
-import ClassTypeLogo from "/imports/ui/components/landing/components/class/ClassTypeLogo.jsx";
-
-import ClassTimeButton from "/imports/ui/components/landing/components/buttons/ClassTimeButton";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton";
-import ProgressiveImage from "react-progressive-image";
-import NonUserDefaultDialogBox from "/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox.jsx";
-import ManageRequestsDialogBox from "/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { schoolLogo } from "/imports/ui/components/landing/site-settings.js";
-import Events from "/imports/util/events";
-import { getUserFullName } from "/imports/util/getUserData";
-import { openMailToInNewTab } from "/imports/util/openInNewTabHelpers";
+import { isEmpty } from 'lodash';
+import get from 'lodash/get';
+import uniq from 'lodash/uniq';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import ProgressiveImage from 'react-progressive-image';
+import styled from 'styled-components';
+import ClassTimeButton from '/imports/ui/components/landing/components/buttons/ClassTimeButton';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
+import ActionButtons from '/imports/ui/components/landing/components/class/ActionButtons';
+import BestPrices from '/imports/ui/components/landing/components/class/BestPrices';
+import ClassTypeDescription from '/imports/ui/components/landing/components/class/ClassTypeDescription';
+import ClassTypeInfo from '/imports/ui/components/landing/components/class/ClassTypeInfo';
+import ClassTypeLogo from '/imports/ui/components/landing/components/class/ClassTypeLogo';
+import ManageRequestsDialogBox from '/imports/ui/components/landing/components/dialogs/ManageRequestsDialogBox';
+import NonUserDefaultDialogBox from '/imports/ui/components/landing/components/dialogs/NonUserDefaultDialogBox';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { createMarkersOnMap, toastrModal } from '/imports/util';
+import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
 const styles = {
   myLocationIcon: {
-    transform: "translateY(2px)",
+    transform: 'translateY(2px)',
     marginRight: helpers.rhythmDiv / 2,
     color: helpers.textColor,
-    fontSize: helpers.baseFontSize
-  }
+    fontSize: helpers.baseFontSize,
+  },
 };
 
 const CoverContent = styled.div`
@@ -120,8 +111,7 @@ const ClassTypeForegroundImage = styled.div`
   ${helpers.coverBg}
   transition: background-image 1s linear !important;
   background-position: center center;
-  background-image: url('${props =>
-    props.coverSrc ? props.coverSrc : settings.classTypeImgSrc}');
+  background-image: url('${props => (props.coverSrc ? props.coverSrc : settings.classTypeImgSrc)}');
   height: 480px;
   border-radius: 5px;
   flex-grow: 1;
@@ -132,12 +122,11 @@ const ClassTypeForegroundImage = styled.div`
 `;
 
 const ContentSection = styled.div`
-  margin-right: ${props =>
-    props.leftSection ? `${helpers.rhythmDiv * 2}px` : 0};
+  margin-right: ${props => (props.leftSection ? `${helpers.rhythmDiv * 2}px` : 0)};
   flex-grow: ${props => (props.leftSection ? 0 : 1)};
   display: flex;
   flex-direction: column;
-  align-items: ${props => (props.leftSection ? "initial" : "stretch")};
+  align-items: ${props => (props.leftSection ? 'initial' : 'stretch')};
   @media screen and (max-width: ${helpers.tablet}px) {
     margin-right: 0;
   }
@@ -179,16 +168,14 @@ const LogoAndActionButtons = styled.div`
     padding: 0;
   }
 `;
-const Li = styled.li`
-  list-style-position: outside;
-`;
 
 class ClassTypeCoverContent extends React.Component {
   state = {
     nonUserDefaultDialog: false,
     isBusy: false,
-    locationData: []
+    locationData: [],
   };
+
   componentDidMount() {
     this._addLocationOnMap();
   }
@@ -196,51 +183,49 @@ class ClassTypeCoverContent extends React.Component {
   componentDidUpdate() {
     this._addLocationOnMap();
   }
+
   componentWillMount() {
-    if (!isEmpty(get(this.props, "classTypeData.filters.location", []))) {
-      let locIds = [];
-      this.props.classTypeData.filters.location.map(obj => {
-        locIds.push(get(obj, "loc.locationId", null));
+    if (!isEmpty(get(this.props, 'classTypeData.filters.location', []))) {
+      const locIds = [];
+      this.props.classTypeData.filters.location.map((obj) => {
+        locIds.push(get(obj, 'loc.locationId', null));
       });
-      Meteor.call("location.getLocsFromIds", locIds, (err, res) => {
+      Meteor.call('location.getLocsFromIds', locIds, (err, res) => {
         if (res) {
           this.setState({ locationData: res });
         }
       });
     }
   }
+
   _createAddressStr(locationData) {
-    let address = [];
-    for (obj of locationData) {
+    const address = [];
+    for (const obj of locationData) {
       // const addressArray = [obj.address && obj.address, obj.city && obj.city, obj.state && obj.state, obj.country && obj.country];
       // return addressArray.filter(str => str).join(", ");
       address.push(
-        `${obj.address ? obj.address : "Address"}, ${
-        obj.city ? obj.city : "City"
-        }, ${obj.state ? obj.state : "State"}, ${
-        obj.country ? obj.country : "Country"
-        }`
+        `${obj.address ? obj.address : 'Address'}, ${obj.city ? obj.city : 'City'}, ${
+          obj.state ? obj.state : 'State'
+        }, ${obj.country ? obj.country : 'Country'}`,
       );
     }
     return uniq(address);
   }
 
   _addLocationOnMap() {
-    let locationData = get(this.state, "locationData", []);
+    let locationData = get(this.state, 'locationData', []);
     if (this.props.noClassTypeData) {
       if (!isEmpty(this.props.schoolLocation)) {
         locationData = this.props.schoolLocation;
-        createMarkersOnMap("myMap", locationData);
+        createMarkersOnMap('myMap', locationData);
       }
-    } else {
-      if (!isEmpty(locationData)) {
-        createMarkersOnMap("myMap", locationData);
-      }
+    } else if (!isEmpty(locationData)) {
+      createMarkersOnMap('myMap', locationData);
     }
   }
 
   getAddress() {
-    let locationData = get(this.state, "locationData", []);
+    let locationData = get(this.state, 'locationData', []);
     if (this.props.noClassTypeData) {
       if (!isEmpty(this.props.schoolLocation)) {
         locationData = this.props.schoolLocation;
@@ -254,11 +239,11 @@ class ClassTypeCoverContent extends React.Component {
     }
   }
 
-  getSkillValues = data => {
-    let str = "";
+  getSkillValues = (data) => {
+    let str = '';
     if (!isEmpty(data)) {
       str = data.map(skill => skill.name);
-      str = str.join(", ");
+      str = str.join(', ');
     }
     return str;
   };
@@ -267,14 +252,14 @@ class ClassTypeCoverContent extends React.Component {
     const newState = {
       ...state,
       defaultDialogBoxTitle: title,
-      nonUserDefaultDialog: state
+      nonUserDefaultDialog: state,
     };
     this.setState(newState);
   };
 
-  handleManageRequestsDialogBox = state => {
+  handleManageRequestsDialogBox = (state) => {
     this.setState({
-      manageRequestsDialog: state
+      manageRequestsDialog: state,
     });
   };
 
@@ -305,22 +290,17 @@ class ClassTypeCoverContent extends React.Component {
   //     }
   // }
 
-  getOurEmail = () => {
-    return this.props.schoolDetails.email;
-  };
+  getOurEmail = () => this.props.schoolDetails.email;
 
-  handleRequest = text => {
-    const { toastr, schoolDetails } = this.props;
+  handleRequest = (text) => {
+    const { schoolDetails } = this.props;
 
     if (!isEmpty(schoolDetails)) {
-      let emailBody = "";
-      let url = `${Meteor.absoluteUrl()}schools/${schoolDetails.slug}`;
-      let subject = "",
-        message = "";
-      let currentUserName = getUserFullName(Meteor.user());
-      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
-        text ? text : pricing
-        }%3F %0D%0A%0D%0A Thanks`;
+      let emailBody = '';
+      const url = `${Meteor.absoluteUrl()}schools/${schoolDetails.slug}`;
+      const subject = '';
+      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text
+        || pricing}%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
       // const mailToNormalized = encodeURI(mailTo);
@@ -331,67 +311,55 @@ class ClassTypeCoverContent extends React.Component {
 
   requestClassTypeLocation = () => {
     const {
-      toastr,
-      classTypeData,
-      noClassTypeData,
-      schoolDetails
+      toastr, classTypeData, noClassTypeData, schoolDetails,
     } = this.props;
     if (Meteor.userId()) {
       let payload;
       if (noClassTypeData) {
         payload = {
-          schoolId: schoolDetails._id
+          schoolId: schoolDetails._id,
         };
       } else {
         payload = {
           schoolId: classTypeData.schoolId,
-          classTypeId: classTypeData._id
+          classTypeId: classTypeData._id,
         };
       }
       this.setState({ isBusy: true });
-      Meteor.call(
-        "classTypeLocationRequest.addRequest",
-        payload,
-        "save",
-        (err, res) => {
-          this.setState({ isBusy: false }, () => {
-            if (err) {
-              toastr.error(err.reason || err.message, "Error", {}, false);
-            } else {
-              toastr.success("Your request has been processed", "success");
-              this.handleRequest("class location");
-            }
-          });
-        }
-      );
+      Meteor.call('classTypeLocationRequest.addRequest', payload, 'save', (err, res) => {
+        this.setState({ isBusy: false }, () => {
+          if (err) {
+            toastr.error(err.reason || err.message, 'Error', {}, false);
+          } else {
+            toastr.success('Your request has been processed', 'success');
+            this.handleRequest('class location');
+          }
+        });
+      });
     } else {
       this.handleManageRequestsDialogBox(true);
     }
   };
 
   render() {
-    const props = this.props;
+    const { props } = this;
     const { noClassTypeData } = this.props;
-    const classTypeName = props.noClassTypeData ? "" : props.classTypeData.name;
-    const selectedLocation = props.noClassTypeData
-      ? props.schoolLocation
-      : props.classTypeData.selectedLocation;
+    const classTypeName = props.noClassTypeData ? '' : props.classTypeData.name;
+    // const selectedLocation = props.noClassTypeData
+    //   ? props.schoolLocation
+    //   : props.classTypeData.selectedLocation;
     // const selectedLocation = '';
     const description = props.noClassTypeData
       ? props.schoolDetails.aboutHtml
       : props.classTypeData.desc;
-    const noOfRatings =
-      !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfRatings;
-    const noOfReviews =
-      !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfReviews;
+    const noOfRatings = !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfRatings;
+    const noOfReviews = !props.isEdit && !isEmpty(props.reviews) && props.reviews.noOfReviews;
     const EditButton = props.editButton;
     let noLocation = false;
     if (noClassTypeData) {
-      noLocation = isEmpty(get(this.props, "schoolLocation", []));
+      noLocation = isEmpty(get(this.props, 'schoolLocation', []));
     } else {
-      noLocation = isEmpty(
-        get(this.props, "classTypeData.filters.location", [])
-      );
+      noLocation = isEmpty(get(this.props, 'classTypeData.filters.location', []));
     }
     return (
       <CoverContentWrapper>
@@ -401,16 +369,16 @@ class ClassTypeCoverContent extends React.Component {
             <NonUserDefaultDialogBox
               title={this.state.defaultDialogBoxTitle}
               open={this.state.nonUserDefaultDialog}
-              onModalClose={() => this.handleDefaultDialogBox("", false)}
+              onModalClose={() => this.handleDefaultDialogBox('', false)}
             />
           )}
           {this.state.manageRequestsDialog && (
             <ManageRequestsDialogBox
-              title={"Location Info"}
+              title="Location Info"
               open={this.state.manageRequestsDialog}
               onModalClose={() => this.handleManageRequestsDialogBox(false)}
-              requestFor={"location"}
-              submitBtnLabel={"Request location"}
+              requestFor="location"
+              submitBtnLabel="Request location"
               schoolData={props.schoolDetails}
               classTypeId={!props.noClassTypeData && props.classTypeData._id}
               onToastrClose={() => this.handleManageRequestsDialogBox(false)}
@@ -418,7 +386,7 @@ class ClassTypeCoverContent extends React.Component {
           )}
 
           <ContentSection leftSection>
-            {/* Displays map when it's not edit mode*/}
+            {/* Displays map when it's not edit mode */}
             {!props.isEdit && (
               <MapContainer>
                 {noLocation ? (
@@ -431,25 +399,18 @@ class ClassTypeCoverContent extends React.Component {
                     />
                   </LocationNotFound>
                 ) : (
-                    <Fragment>
-                      <div
-                        id="myMap"
-                        style={{ minHeight: 320 }}
-                      />
-                      <MyLocationList>
-                        {this.getAddress().map((location, index) => {
-                          return (
-                            <MyLocation>
-                              <Icon className={props.classes.myLocationIcon}>
-                                location_on
-                            </Icon>
-                              <LocationText>{location}</LocationText>
-                            </MyLocation>
-                          );
-                        })}
-                      </MyLocationList>
-                    </Fragment>
-                  )}
+                  <Fragment>
+                    <div id="myMap" style={{ minHeight: 320 }} />
+                    <MyLocationList>
+                      {this.getAddress().map((location, index) => (
+                        <MyLocation key={index.toString()}>
+                          <Icon className={props.classes.myLocationIcon}>location_on</Icon>
+                          <LocationText>{location}</LocationText>
+                        </MyLocation>
+                      ))}
+                    </MyLocationList>
+                  </Fragment>
+                )}
               </MapContainer>
             )}
 
@@ -468,36 +429,33 @@ class ClassTypeCoverContent extends React.Component {
                 </ClassTypeLogo>
               </LogoContainer>
             ) : (
-                <ClassTypeDescription
-                  isEdit={props.isEdit}
-                  publishStatusButton={props.publishStatusButton}
-                  schoolName={props.schoolDetails.name}
-                  friendlySlug={props.schoolDetails.friendlySlugs.slug.base}
-                  description={description}
-                  isClassTypeNameAvailable={!props.noClassTypeData}
-                  classTypeName={classTypeName}
-                  noOfStars={noOfRatings}
-                  noOfReviews={noOfReviews}
-                />
-              )}
+              <ClassTypeDescription
+                isEdit={props.isEdit}
+                publishStatusButton={props.publishStatusButton}
+                schoolName={props.schoolDetails.name}
+                friendlySlug={props.schoolDetails.friendlySlugs.slug.base}
+                description={description}
+                isClassTypeNameAvailable={!props.noClassTypeData}
+                classTypeName={classTypeName}
+                noOfStars={noOfRatings}
+                noOfReviews={noOfReviews}
+              />
+            )}
 
-            {!props.isEdit &&
-              props.noClassTypeData &&
-              (props.bestPriceDetails.class ||
-                props.bestPriceDetails.monthly) && (
+            {!props.isEdit
+              && props.noClassTypeData
+              && (props.bestPriceDetails.class || props.bestPriceDetails.monthly) && (
                 <BestPrices
-                  onPricingButtonClick={
-                    props.actionButtonProps.onPricingButtonClick
-                  }
+                  onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
                   bestPriceDetails={props.bestPriceDetails}
                 />
-              )}
+            )}
           </ContentSection>
 
           <ContentSection>
             {props.isEdit && (
               <ShowOnMobile>
-                {" "}
+                {' '}
                 <EditButtonWrapper>
                   <ClassTimeButton
                     icon
@@ -508,25 +466,16 @@ class ClassTypeCoverContent extends React.Component {
                 </EditButtonWrapper>
               </ShowOnMobile>
             )}
-            <ProgressiveImage
-              src={props.coverSrc}
-              placeholder={config.blurImage}
-            >
+            <ProgressiveImage src={props.coverSrc} placeholder={config.blurImage}>
               {src => (
                 <ClassTypeForegroundImage coverSrc={src}>
                   <Fragment>
                     <LogoAndActionButtons>
-                      {props.noClassTypeData &&
-                        !props.isEdit &&
-                        props.logoSrc && (
-                          <HideOnSmallScreen>
-                            <ClassTypeLogo
-                              publicView
-                              position={"static"}
-                              logoSrc={props.logoSrc}
-                            />
-                          </HideOnSmallScreen>
-                        )}
+                      {props.noClassTypeData && !props.isEdit && props.logoSrc && (
+                        <HideOnSmallScreen>
+                          <ClassTypeLogo publicView position="static" logoSrc={props.logoSrc} />
+                        </HideOnSmallScreen>
+                      )}
 
                       {props.actionButtons || (
                         <ActionButtons
@@ -534,32 +483,20 @@ class ClassTypeCoverContent extends React.Component {
                           emailUsButton={props.actionButtonProps.emailUsButton}
                           pricingButton={props.actionButtonProps.pricingButton}
                           callUsButton={props.actionButtonProps.callUsButton}
-                          scheduleButton={
-                            props.actionButtonProps.scheduleButton
-                          }
-                          visitSiteButton={
-                            props.actionButtonProps.visitSiteButton
-                          }
-                          onCallUsButtonClick={
-                            props.actionButtonProps.onCallUsButtonClick
-                          }
-                          onEmailButtonClick={
-                            props.actionButtonProps.onEmailButtonClick
-                          }
-                          onPricingButtonClick={
-                            props.actionButtonProps.onPricingButtonClick
-                          }
-                          onScheduleButtonClick={
-                            props.actionButtonProps.onScheduleButtonClick
-                          }
+                          scheduleButton={props.actionButtonProps.scheduleButton}
+                          visitSiteButton={props.actionButtonProps.visitSiteButton}
+                          onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
+                          onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
+                          onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                          onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                           siteLink={props.actionButtonProps.siteLink}
                           rightSide={props.noClassTypeData && props.logoSrc}
                         />
                       )}
                     </LogoAndActionButtons>
 
-                    {props.editButton &&
-                      (props.isEdit ? (
+                    {props.editButton
+                      && (props.isEdit ? (
                         <EditButtonWrapper>
                           <ClassTimeButton
                             icon
@@ -569,36 +506,31 @@ class ClassTypeCoverContent extends React.Component {
                           />
                         </EditButtonWrapper>
                       ) : (
-                          <EditButtonWrapper>
-                            {" "}
-                            <EditButton />{" "}
-                          </EditButtonWrapper>
-                        ))}
+                        <EditButtonWrapper>
+                          {' '}
+                          <EditButton />
+                          {' '}
+                        </EditButtonWrapper>
+                      ))}
                   </Fragment>
                 </ClassTypeForegroundImage>
               )}
             </ProgressiveImage>
 
             {/* On large screens this section will be below foregroud image,
-                on smaller screens it's below the left side*/}
+                on smaller screens it's below the left side */}
             <ClassTypeInfoWrapper>
               {(props.classTypeMetaInfo || props.classTypeData) && (
                 <ClassTypeInfo
                   ageRange={
-                    props.classTypeData.ageMin &&
-                    props.classTypeData.ageMax &&
-                    `${props.classTypeData.ageMin} - ${
-                    props.classTypeData.ageMax
-                    }`
+                    props.classTypeData.ageMin
+                    && props.classTypeData.ageMax
+                    && `${props.classTypeData.ageMin} - ${props.classTypeData.ageMax}`
                   }
                   gender={props.classTypeData.gender}
                   experience={props.classTypeData.experienceLevel}
-                  subjects={this.getSkillValues(
-                    props.classTypeData.selectedSkillSubject
-                  )}
-                  categories={this.getSkillValues(
-                    props.classTypeData.selectedSkillCategory
-                  )}
+                  subjects={this.getSkillValues(props.classTypeData.selectedSkillSubject)}
+                  categories={this.getSkillValues(props.classTypeData.selectedSkillCategory)}
                 />
               )}
 
@@ -612,18 +544,10 @@ class ClassTypeCoverContent extends React.Component {
                     callUsButton={props.actionButtonProps.callUsButton}
                     scheduleButton={props.actionButtonProps.scheduleButton}
                     visitSiteButton={props.actionButtonProps.visitSiteButton}
-                    onCallUsButtonClick={
-                      props.actionButtonProps.onCallUsButtonClick
-                    }
-                    onEmailButtonClick={
-                      props.actionButtonProps.onEmailButtonClick
-                    }
-                    onPricingButtonClick={
-                      props.actionButtonProps.onPricingButtonClick
-                    }
-                    onScheduleButtonClick={
-                      props.actionButtonProps.onScheduleButtonClick
-                    }
+                    onCallUsButtonClick={props.actionButtonProps.onCallUsButtonClick}
+                    onEmailButtonClick={props.actionButtonProps.onEmailButtonClick}
+                    onPricingButtonClick={props.actionButtonProps.onPricingButtonClick}
+                    onScheduleButtonClick={props.actionButtonProps.onScheduleButtonClick}
                     siteLink={props.actionButtonProps.siteLink}
                   />
                 )}
@@ -645,11 +569,11 @@ ClassTypeCoverContent.propTypes = {
   mapLocation: PropTypes.string,
   classTypeData: PropTypes.object,
   schoolDetails: PropTypes.object,
-  actionButtonProps: PropTypes.object
+  actionButtonProps: PropTypes.object,
 };
 
 ClassTypeCoverContent.defaultProps = {
-  actionButtonProps: {}
+  actionButtonProps: {},
 };
 
 export default toastrModal(withStyles(styles)(ClassTypeCoverContent));

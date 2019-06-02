@@ -1,65 +1,48 @@
-import React, { Component, Fragment } from "react";
-import { CSSTransitionGroup } from "react-transition-group";
-import get from "lodash/get";
-import isEmpty from "lodash/isEmpty";
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import Button from 'material-ui/Button';
+import Grid from 'material-ui/Grid';
+import Hidden from 'material-ui/Hidden';
+import Icon from 'material-ui/Icon';
+import { MenuItem } from 'material-ui/Menu';
+import { MuiThemeProvider } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import Multiselect from 'react-widgets/lib/Multiselect';
+import styled from 'styled-components';
+import IconInput from './form/IconInput.jsx';
+import IconSelect from './form/IconSelect.jsx';
+import MyMultiSelect from './form/multiSelect/MyMultiSelect.jsx';
+import SliderControl from './form/SliderControl.jsx';
+import * as helpers from './jss/helpers.js';
+import muiTheme from './jss/muitheme.jsx';
+import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton.jsx';
 
-import PropTypes from "prop-types";
-import Grid from "material-ui/Grid";
-import { MuiThemeProvider } from "material-ui/styles";
-import Menu, { MenuItem } from "material-ui/Menu";
-import Button from "material-ui/Button";
-import Icon from "material-ui/Icon";
-import IconButton from "material-ui/IconButton";
-import Multiselect from "react-widgets/lib/Multiselect";
-import { withStyles } from "material-ui/styles";
-import Hidden from "material-ui/Hidden";
-import styled from "styled-components";
-
-import IconInput from "./form/IconInput.jsx";
-import IconSelect from "./form/IconSelect.jsx";
-import SliderControl from "./form/SliderControl.jsx";
-import MyMultiSelect from "./form/multiSelect/MyMultiSelect.jsx";
-import AttachedAlert from "/imports/ui/components/landing/components/helpers/AttachedAlert.jsx";
-
-import { FormHelperText } from "material-ui/Form";
-import { coverSrc } from "../site-settings.js";
-
-import muiTheme from "./jss/muitheme.jsx";
-import SkillShapeButton from "/imports/ui/components/landing/components/buttons/SkillShapeButton.jsx";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import * as helpers from "./jss/helpers.js";
-
-import { dataSourceSkills } from "../constants/filtersData.js";
 
 const FilterPanelOuterContainer = styled.div`
   width: 100%;
-  border-bottom: ${props =>
-    props.mapView ? "none" : `2px solid ${helpers.panelColor}`};
+  border-bottom: ${props => (props.mapView ? 'none' : `2px solid ${helpers.panelColor}`)};
 `;
 
 const FilterPanelContainer = styled.div`
-  width: ${props => (props.mapView || props.stickyPosition ? "100%" : "auto")};
-  max-width: ${props =>
-    props.filtersInDialogBox ||
-    (props.stickyPosition || props.mapView || props.fullWidth)
-      ? "100%"
-      : "1000px"};
-  background: ${props =>
-    props.filtersInDialogBox || (props.stickyPosition || props.mapView)
-      ? "#ffffff"
-      : "transparent"};
+  width: ${props => (props.mapView || props.stickyPosition ? '100%' : 'auto')};
+  max-width: ${props => (props.filtersInDialogBox
+    || (props.stickyPosition || props.mapView || props.fullWidth)
+    ? '100%'
+    : '1000px')};
+  background: ${props => (props.filtersInDialogBox || (props.stickyPosition || props.mapView)
+    ? '#ffffff'
+    : 'transparent')};
   margin: auto;
-  position: ${props => (props.mapView ? "fixed" : "initial")};
-  border-bottom: ${props =>
-    props.mapView ? `2px solid ${helpers.panelColor}` : "none"};
+  position: ${props => (props.mapView ? 'fixed' : 'initial')};
+  border-bottom: ${props => (props.mapView ? `2px solid ${helpers.panelColor}` : 'none')};
   z-index: 100;
 `;
 
 const FilterPanelContent = styled.div`
-  padding: ${props =>
-    props.stickyPosition || props.mapView || props.filtersInDialogBox
-      ? helpers.rhythmDiv * 2
-      : helpers.rhythmDiv * 3}px;
+  padding: ${props => (props.stickyPosition || props.mapView || props.filtersInDialogBox
+    ? helpers.rhythmDiv * 2
+    : helpers.rhythmDiv * 3)}px;
   margin: auto;
 `;
 
@@ -87,7 +70,7 @@ const MaterialInputWrapper = styled.div`
 
 const SwitchViewWrapper = styled.div`
   @media screen and (max-width: ${helpers.tablet + 100}px) {
-    display: ${props => (props.mapView ? "none" : "block")};
+    display: ${props => (props.mapView ? 'none' : 'block')};
   }
 `;
 
@@ -106,12 +89,12 @@ const MapChangeButtonWrapper = styled.div`
 
 const FilterBarWrapper = styled.div`
   width: calc(
-    100% - ${props => (props.displayChangeViewButton ? "130px" : "0px")}
+    100% - ${props => (props.displayChangeViewButton ? '130px' : '0px')}
   );
 
   @media screen and (max-width: ${helpers.mobile + 20}px) {
     width: calc(
-      100% - ${props => (props.displayChangeViewButton ? "80px" : "0px")}
+      100% - ${props => (props.displayChangeViewButton ? '80px' : '0px')}
     );
   }
 `;
@@ -119,7 +102,7 @@ const FilterBarWrapper = styled.div`
 const SuggestionFormButton = styled.div`
   max-width: 250px;
   // margin: 0 auto;
-  ${props => (props.right ? "margin-right: auto;" : "margin-left: auto;")};
+  ${props => (props.right ? 'margin-right: auto;' : 'margin-left: auto;')};
   width: 100%;
   // padding: ${helpers.rhythmDiv * 2}px;
 
@@ -143,7 +126,7 @@ class FilterPanel extends Component {
     showMoreFilters: false,
     skillCategoryData: [],
     skillSubjectData: [],
-    locationName: "",
+    locationName: '',
     mobile: false,
     filter: {
       skillSubjectIds: null,
@@ -151,9 +134,9 @@ class FilterPanel extends Component {
       pricePerMonth: [],
       gender: null,
       schoolName: null,
-      age: null
+      age: null,
     },
-    skillTypeText: get(this.props, "filters.skillTypeText", "")
+    skillTypeText: get(this.props, 'filters.skillTypeText', ''),
   };
 
   handleChangeInScreenSize = () => {
@@ -163,17 +146,15 @@ class FilterPanel extends Component {
         this.setState({
           ...this.state,
           mobile: true,
-          ...this.state.filter
+          ...this.state.filter,
         });
       }
-    } else {
-      if (this.state.mobile) {
-        this.setState({
-          ...this.state,
-          mobile: false,
-          ...this.state.filter
-        });
-      }
+    } else if (this.state.mobile) {
+      this.setState({
+        ...this.state,
+        mobile: false,
+        ...this.state.filter,
+      });
     }
   };
 
@@ -182,25 +163,25 @@ class FilterPanel extends Component {
       this.setState({ skillTypeText: nextProps.skillTypeText });
     }
     if (
-      isEmpty(this.state.skillSubjectData) &&
-      nextProps.filters.skillCategoryIds
-    )
-      this.inputFromUser("");
+      isEmpty(this.state.skillSubjectData)
+      && nextProps.filters.skillCategoryIds
+    ) { this.inputFromUser(''); }
   };
 
   componentDidMount = () => {
-    window.addEventListener("resize", this.handleChangeInScreenSize);
+    window.addEventListener('resize', this.handleChangeInScreenSize);
   };
+
   componentWillUnMount = () => {
-    window.removeEventListener("resize", this.handleChangeInScreenSize);
+    window.removeEventListener('resize', this.handleChangeInScreenSize);
   };
 
   componentWillMount() {
     const dataSourceCategories = Meteor.call(
-      "getAllSkillCategories",
+      'getAllSkillCategories',
       (err, result) => {
         this.setState({ skillCategoryData: result });
-      }
+      },
     );
   }
 
@@ -209,52 +190,52 @@ class FilterPanel extends Component {
   }
 
   // This is used to get subjects on the basis of subject category.
-  inputFromUser = text => {
+  inputFromUser = (text) => {
     // Do db call on the basis of text entered by user
-    let skillCategoryIds = this.props.filters.skillCategoryIds;
+    const { skillCategoryIds } = this.props.filters;
     Meteor.call(
-      "getSkillSubjectBySkillCategory",
-      { skillCategoryIds: skillCategoryIds, textSearch: text },
-      (err, res) => {
+      'getSkillSubjectBySkillCategory',
+      { skillCategoryIds, textSearch: text },
+      (err, res = []) => {
         if (res) {
           // console.log("result",res)
-          this.setState({ skillSubjectData: res || [] });
+          this.setState({ skillSubjectData: res });
         }
-      }
+      },
     );
   };
 
-  handleSkillTypeText = event => {
+  handleSkillTypeText = (event) => {
     // console.log("handleSkillTypeText", event.target.value);
 
     this.setState({ skillTypeText: event.target.value });
     this.props.handleSkillTypeSearch(event.target.value);
   };
 
-  renderFilterBar = () => {
+  renderFilterBar = () =>
     // console.log("------ renderFilterBar -----",this.props.filters)
-    return (
+    (
       <GridContainerWrapper>
         {this.props.displayChangeViewButton && (
-          <MapChangeButtonWrapper>
-            {this.props.mapView ? (
-              <PrimaryButton
-                noMarginBottom
-                icon
-                iconName="grid_on"
-                label={this.state.mobile ? "List" : "List View"}
-                onClick={this.props.handleToggleMapView}
-              />
-            ) : (
-              <PrimaryButton
-                noMarginBottom
-                icon
-                iconName="map"
-                label={this.state.mobile ? "Map" : "Map View"}
-                onClick={this.props.handleToggleMapView}
-              />
-            )}
-          </MapChangeButtonWrapper>
+        <MapChangeButtonWrapper>
+          {this.props.mapView ? (
+            <PrimaryButton
+              noMarginBottom
+              icon
+              iconName="grid_on"
+              label={this.state.mobile ? 'List' : 'List View'}
+              onClick={this.props.handleToggleMapView}
+            />
+          ) : (
+            <PrimaryButton
+              noMarginBottom
+              icon
+              iconName="map"
+              label={this.state.mobile ? 'Map' : 'Map View'}
+              onClick={this.props.handleToggleMapView}
+            />
+          )}
+        </MapChangeButtonWrapper>
         )}
         <FilterBarWrapper
           displayChangeViewButton={this.props.displayChangeViewButton}
@@ -263,16 +244,14 @@ class FilterPanel extends Component {
             <Grid item xs={9} sm={3}>
               <MaterialInputWrapper>
                 <IconInput
-                  value={get(this.props, "filters.locationName", "")}
-                  onChange={event =>
-                    this.props.locationInputChanged(event, "filters", null)
+                  value={get(this.props, 'filters.locationName', '')}
+                  onChange={event => this.props.locationInputChanged(event, 'filters', null)
                   }
                   iconName="location_on"
                   defaultValue={this.props.currentAddress}
-                  googlelocation={true}
+                  googlelocation
                   labelText="Location"
-                  onLocationChange={event =>
-                    this.props.onLocationChange(event, "filters", null)
+                  onLocationChange={event => this.props.onLocationChange(event, 'filters', null)
                   }
                 />
               </MaterialInputWrapper>
@@ -281,10 +260,9 @@ class FilterPanel extends Component {
               <Grid item xs={1} sm={4}>
                 <MaterialInputWrapper>
                   <IconInput
-                    value={get(this.props, "filters.schoolName", "")}
+                    value={get(this.props, 'filters.schoolName', '')}
                     iconName="school"
-                    onChange={event =>
-                      this.props.fliterSchoolName(event, "filters", null)
+                    onChange={event => this.props.fliterSchoolName(event, 'filters', null)
                     }
                     labelText="School Name"
                   />
@@ -294,21 +272,20 @@ class FilterPanel extends Component {
               <Grid item xs={1} sm={4}>
                 <div className="my-multi-select-filter">
                   <MyMultiSelect
-                    textField={"name"}
-                    valueField={"_id"}
+                    textField="name"
+                    valueField="_id"
                     data={this.state.skillCategoryData}
                     placeholder="Skill category"
                     value={get(
-                      this.props,
-                      "filters.defaultSkillCategories",
-                      []
-                    )}
-                    onChange={event =>
-                      this.props.collectSelectedSkillCategories(
-                        event,
-                        "filters",
-                        null
-                      )
+                       this.props,
+                       'filters.defaultSkillCategories',
+                       [],
+                     )}
+                    onChange={event => this.props.collectSelectedSkillCategories(
+                       event,
+                       'filters',
+                       null,
+                     )
                     }
                     onNoOfFiltersClick={this.props.handleNoOfFiltersClick}
                   />
@@ -332,8 +309,8 @@ class FilterPanel extends Component {
           </Grid>
         </FilterBarWrapper>
       </GridContainerWrapper>
-    );
-  };
+    )
+  ;
 
   renderFiltersForDialogBox = () => {
     // console.log("------ renderFiltersForDialogBox -----",this.props)
@@ -364,10 +341,9 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={6}>
               <MaterialInputWrapper>
                 <IconInput
-                  value={get(this.props, "filters.schoolName", "")}
+                  value={get(this.props, 'filters.schoolName', '')}
                   iconName="school"
-                  onChange={event =>
-                    this.props.fliterSchoolName(event, "filters", null)
+                  onChange={event => this.props.fliterSchoolName(event, 'filters', null)
                   }
                   labelText="School Name"
                 />
@@ -377,16 +353,14 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={6}>
               <MaterialInputWrapper>
                 <IconInput
-                  value={get(this.props, "filters.locationName", "")}
-                  onChange={event =>
-                    this.props.locationInputChanged(event, "filters", null)
+                  value={get(this.props, 'filters.locationName', '')}
+                  onChange={event => this.props.locationInputChanged(event, 'filters', null)
                   }
                   iconName="location_on"
                   defaultValue={this.props.currentAddress}
-                  googlelocation={true}
+                  googlelocation
                   labelText="Location"
-                  onLocationChange={event =>
-                    this.props.onLocationChange(event, "filters", null)
+                  onLocationChange={event => this.props.onLocationChange(event, 'filters', null)
                   }
                 />
               </MaterialInputWrapper>
@@ -397,10 +371,9 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={12}>
               <MaterialInputWrapper>
                 <IconInput
-                  value={get(this.props, "filters.schoolName", "")}
+                  value={get(this.props, 'filters.schoolName', '')}
                   iconName="school"
-                  onChange={event =>
-                    this.props.fliterSchoolName(event, "filters", null)
+                  onChange={event => this.props.fliterSchoolName(event, 'filters', null)
                   }
                   labelText="School Name"
                 />
@@ -409,16 +382,14 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={12}>
               <MaterialInputWrapper>
                 <IconInput
-                  value={get(this.props, "filters.locationName", "")}
-                  onChange={event =>
-                    this.props.locationInputChanged(event, "filters", null)
+                  value={get(this.props, 'filters.locationName', '')}
+                  onChange={event => this.props.locationInputChanged(event, 'filters', null)
                   }
                   iconName="location_on"
                   defaultValue={this.props.currentAddress}
-                  googlelocation={true}
+                  googlelocation
                   labelText="Location"
-                  onLocationChange={event =>
-                    this.props.onLocationChange(event, "filters", null)
+                  onLocationChange={event => this.props.onLocationChange(event, 'filters', null)
                   }
                 />
               </MaterialInputWrapper>
@@ -438,7 +409,7 @@ class FilterPanel extends Component {
             <Grid item xs={12} sm={6}>
               <MaterialInputWrapper>
                 <IconInput
-                  value={get(this.props, "filters.schoolWebsite", "")}
+                  value={get(this.props, 'filters.schoolWebsite', '')}
                   iconName="web"
                   onChange={this.props.onSchoolWebsiteChange}
                   labelText="Website"
@@ -449,7 +420,7 @@ class FilterPanel extends Component {
               <MaterialInputWrapper>
                 <IconInput
                   type="email"
-                  value={get(this.props, "filters.schoolEmail", "")}
+                  value={get(this.props, 'filters.schoolEmail', '')}
                   iconName="email"
                   onChange={this.props.onSchoolEmailChange}
                   labelText="Email"
@@ -471,17 +442,16 @@ class FilterPanel extends Component {
         <Grid item xs={12} sm={12}>
           <div className="filters-dialog">
             <Multiselect
-              textField={"name"}
-              valueField={"_id"}
+              textField="name"
+              valueField="_id"
               data={this.state.skillCategoryData}
-              value={get(this.props, "filters.defaultSkillCategories", [])}
+              value={get(this.props, 'filters.defaultSkillCategories', [])}
               placeholder="Skill category"
-              onChange={event =>
-                this.props.collectSelectedSkillCategories(
-                  event,
-                  "filters",
-                  null
-                )
+              onChange={event => this.props.collectSelectedSkillCategories(
+                event,
+                'filters',
+                null,
+              )
               }
             />
           </div>
@@ -491,9 +461,9 @@ class FilterPanel extends Component {
           <div className="filters-dialog">
             <Multiselect
               data={this.state.skillSubjectData}
-              defaultValue={get(this.props, "filters.defaultSkillSubject", [])}
+              defaultValue={get(this.props, 'filters.defaultSkillSubject', [])}
               placeholder="Type to search skills"
-              textField={"name"}
+              textField="name"
               onSearch={this.inputFromUser}
               onChange={this.props.collectSelectedSkillSubject}
             />
@@ -503,8 +473,8 @@ class FilterPanel extends Component {
           <div className="filters-dialog">
             <Multiselect
               onChange={this.props.skillLevelFilter}
-              defaultValue={get(this.props, "filters.experienceLevel", [])}
-              data={["All", "Beginner", "Intermediate", "Advanced", "Expert"]}
+              defaultValue={get(this.props, 'filters.experienceLevel', [])}
+              data={['All', 'Beginner', 'Intermediate', 'Advanced', 'Expert']}
               placeholder="Skill Level"
             />
           </div>
@@ -518,13 +488,13 @@ class FilterPanel extends Component {
               labelText="Gender"
               inputId="gender"
               iconName="people"
-              value={get(this.props, "filters.gender", "")}
+              value={get(this.props, 'filters.gender', '')}
               onChange={this.props.filterGender}
             >
               <MenuItem value=""> Gender</MenuItem>
-              <MenuItem value={"Male Only"}> Male </MenuItem>
-              <MenuItem value={"Female Only"}> Female </MenuItem>
-              <MenuItem value={"All"}> All </MenuItem>
+              <MenuItem value="Male Only"> Male </MenuItem>
+              <MenuItem value="Female Only"> Female </MenuItem>
+              <MenuItem value="All"> All </MenuItem>
             </IconSelect>
           </MaterialInputWrapper>
         </Grid>
@@ -535,7 +505,7 @@ class FilterPanel extends Component {
               type="number"
               min={5}
               max={60}
-              value={get(this.props, "filters.age", "")}
+              value={get(this.props, 'filters.age', '')}
               onChange={this.props.filterAge}
               iconName="star"
               labelText="Ages"
@@ -546,9 +516,9 @@ class FilterPanel extends Component {
         {/* Price Per Class And Per Month Section */}
         <Grid item xs={12} sm={6}>
           <SliderControl
-            labelText={"Price Per Class"}
-            defaultRange={get(this.props, "filters._classPrice", [10, 50])}
-            value={get(this.props, "filters._classPrice", [10, 50])}
+            labelText="Price Per Class"
+            defaultRange={get(this.props, 'filters._classPrice', [10, 50])}
+            value={get(this.props, 'filters._classPrice', [10, 50])}
             onChange={this.props.perClassPriceFilter}
             max={100}
             min={0}
@@ -557,9 +527,9 @@ class FilterPanel extends Component {
 
         <Grid item xs={12} sm={6}>
           <SliderControl
-            labelText={"Price Per Month"}
-            defaultRange={get(this.props, "filters._monthPrice", [10, 50])}
-            value={get(this.props, "filters._monthPrice", [10, 50])}
+            labelText="Price Per Month"
+            defaultRange={get(this.props, 'filters._monthPrice', [10, 50])}
+            value={get(this.props, 'filters._monthPrice', [10, 50])}
             onChange={this.props.pricePerMonthFilter}
             max={100}
             min={0}
@@ -572,7 +542,7 @@ class FilterPanel extends Component {
               <PrimaryButton
                 fullWidth
                 label="Clear Filters"
-                icon={true}
+                icon
                 iconName="refresh"
                 onClick={() => {
                   this.props.removeAllFilters();
@@ -591,7 +561,7 @@ class FilterPanel extends Component {
                   <PrimaryButton
                     fullWidth
                     label="Suggest School"
-                    icon={true}
+                    icon
                     iconName="sentiment_satisfied"
                     onClick={this.props.onGiveSuggestion}
                   />
@@ -634,13 +604,14 @@ class FilterPanel extends Component {
       </Grid>
     );
   };
+
   render() {
     const { showMoreFilters } = this.state;
     const {
       stickyPosition,
       mapView,
       filtersInDialogBox,
-      fullWidth
+      fullWidth,
     } = this.props;
     // console.log("FilterPanel props  -->>",this.props);
     // console.log("FilterPanel state  -->>",this.state);
@@ -680,7 +651,7 @@ FilterPanel.propTypes = {
   fullWidth: PropTypes.bool,
   stickyPosition: PropTypes.bool,
   mapView: PropTypes.bool,
-  onGiveSuggestion: PropTypes.func
+  onGiveSuggestion: PropTypes.func,
 };
 
 FilterPanel.defaultProps = {
@@ -688,7 +659,7 @@ FilterPanel.defaultProps = {
   filtersForSuggestion: false,
   displayChangeViewButton: true,
   fullWidth: false,
-  onGiveSuggestion: () => {}
+  onGiveSuggestion: () => {},
 };
 
 export default FilterPanel;

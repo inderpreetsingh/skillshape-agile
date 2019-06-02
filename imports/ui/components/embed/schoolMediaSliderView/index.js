@@ -1,45 +1,40 @@
-import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
-import School from "/imports/api/school/fields";
-import MediaList from "/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList/index.js";
+import React from 'react';
+import { createContainer } from 'meteor/react-meteor-data';
+import School from '/imports/api/school/fields';
+import MediaList from '/imports/ui/components/schoolView/editSchool/mediaDetails/mediaList/';
 
 class SchoolMediaSliderView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      limit: 4
+      limit: 4,
     };
   }
 
   componentDidUpdate() {
-      // Get height of document
-      function getDocHeight(doc) {
-          doc = doc || document;
-          // from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
-          var body = doc.body,
-              html = doc.documentElement;
-          var height = Math.max(body.scrollHeight, body.offsetHeight,
-              html.clientHeight, html.scrollHeight, html.offsetHeight);
-          return doc.getElementById('UserMainPanel').offsetHeight;
-      }
-      // send docHeight onload
-      function sendDocHeightMsg(e) {
-        setTimeout(()=> {
-          var ht = getDocHeight();
-          parent.postMessage(JSON.stringify({ 'docHeight': ht, 'iframeId' : 'ss-school-mediaslider-view'}), '*');
-        }, 3000)
-      }
-      // assign onload handler
-      sendDocHeightMsg();
-      // if (window.addEventListener) {
-      //     window.addEventListener('load', sendDocHeightMsg, false);
-      // } else if (window.attachEvent) { // ie8
-      //     window.attachEvent('onload', sendDocHeightMsg);
-      // }
+    // Get height of document
+    function getDocHeight(doc) {
+      doc = doc || document;
+      return doc.getElementById('UserMainPanel').offsetHeight;
+    }
+    // send docHeight onload
+    function sendDocHeightMsg(e) {
+      setTimeout(() => {
+        const ht = getDocHeight();
+        parent.postMessage(JSON.stringify({ docHeight: ht, iframeId: 'ss-school-mediaslider-view' }), '*');
+      }, 3000);
+    }
+    // assign onload handler
+    sendDocHeightMsg();
+    // if (window.addEventListener) {
+    //     window.addEventListener('load', sendDocHeightMsg, false);
+    // } else if (window.attachEvent) { // ie8
+    //     window.attachEvent('onload', sendDocHeightMsg);
+    // }
   }
 
   changeLimit = () => {
-    let incerementFactor = 1;
+    const incerementFactor = 1;
     this.setState({ limit: this.state.limit + incerementFactor });
   };
 
@@ -61,18 +56,19 @@ class SchoolMediaSliderView extends React.Component {
   }
 }
 
-export default createContainer(props => {
+export default createContainer((props) => {
   const { slug } = props.params;
-  let subscription = Meteor.subscribe("UserSchoolbySlug", slug);
+  const subscription = Meteor.subscribe('UserSchoolbySlug', slug);
   const subsReady = subscription && subscription.ready();
-  let schoolData, schoolId;
+  let schoolData; let
+    schoolId;
   if (subsReady) {
-    schoolData = School.findOne({ slug: slug });
+    schoolData = School.findOne({ slug });
     schoolId = schoolData && schoolData._id;
   }
   return {
     ...props,
-    subsReady: subsReady,
-    schoolId: schoolId
+    subsReady,
+    schoolId,
   };
 }, SchoolMediaSliderView);

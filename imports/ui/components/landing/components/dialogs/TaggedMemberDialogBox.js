@@ -1,32 +1,23 @@
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
-import PropTypes from "prop-types";
+import Checkbox from "material-ui/Checkbox";
+import Dialog, { withMobileDialog } from "material-ui/Dialog";
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import Grid from "material-ui/Grid";
 import Radio, { RadioGroup } from "material-ui/Radio";
-import Input, { InputLabel, InputAdornment } from "material-ui/Input";
-import Button from "material-ui/Button";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
-import Checkbox from "material-ui/Checkbox";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
-
-import Dialog, { withMobileDialog } from "material-ui/Dialog";
-
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
-
+import PropTypes from "prop-types";
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
+import * as helpers from "../jss/helpers";
+import muiTheme from "../jss/muitheme";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton";
 import { ContainerLoader } from "/imports/ui/loading/container";
+
+
+
+
 
 const styles = {
   dialogPaper: {
@@ -113,8 +104,6 @@ class TaggedMemberDialogBox extends Component {
       open,
       fullScreen,
       onModalClose,
-      onUntagMeButtonClick,
-      onEditButtonClick,
       currentMediaData,
       schoolData
     } = this.props;
@@ -147,7 +136,7 @@ class TaggedMemberDialogBox extends Component {
                   currentMediaData.taggedMemberData.map(userData => {
                     console.log("first",first);
                     if (userData.firstName && userData.lastName) {
-                       let result=`${first ?'':', '}${userData.firstName} ${userData &&
+                       let result=`${first ?'':', '}${userData.firstName} ${
                         userData.lastName}`;
                         first = false;
                         return result;

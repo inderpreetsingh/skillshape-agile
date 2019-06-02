@@ -1,9 +1,8 @@
-import React , {Fragment} from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import styled from 'styled-components';
-
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -57,39 +56,64 @@ const PriceText = Text.extend`
   font-weight: 400;
 `;
 
-const BestPrice = (props) => (<BestPriceWrapper>
-  <Text>{props.type} packages from</Text>
-  <PriceText>{props.currency} {props.price} per {props.priceFor}</PriceText>
-</BestPriceWrapper>);
+const BestPrice = props => (
+  <BestPriceWrapper>
+    <Text>
+      {props.type}
+      {' '}
+packages from
+    </Text>
+    <PriceText>
+      {props.currency}
+      {' '}
+      {props.price}
+      {' '}
+per
+      {' '}
+      {props.priceFor}
+    </PriceText>
+  </BestPriceWrapper>
+);
 
-const BestPrices = (props) => (<Wrapper>
-
-  {props.bestPriceDetails.monthly && <BestPrice
-      type="Monthly"
-      price={props.bestPriceDetails.monthly}
-      priceFor="month"
-      currency={props.currency}
-  />}
-  {props.bestPriceDetails.class && <BestPrice
-      type="Class"
-      price={props.bestPriceDetails.class}
-      priceFor="class"
-      currency={props.currency}
-    />}
-  <ButtonWrapper>
-    <FormGhostButton icon iconName="attach_money" fullWidth label="Pricing" onClick={props.onPricingButtonClick}/>
-  </ButtonWrapper>
-</Wrapper>);
+const BestPrices = props => (
+  <Wrapper>
+    {props.bestPriceDetails.monthly && (
+      <BestPrice
+        type="Monthly"
+        price={props.bestPriceDetails.monthly}
+        priceFor="month"
+        currency={props.currency}
+      />
+    )}
+    {props.bestPriceDetails.class && (
+      <BestPrice
+        type="Class"
+        price={props.bestPriceDetails.class}
+        priceFor="class"
+        currency={props.currency}
+      />
+    )}
+    <ButtonWrapper>
+      <FormGhostButton
+        icon
+        iconName="attach_money"
+        fullWidth
+        label="Pricing"
+        onClick={props.onPricingButtonClick}
+      />
+    </ButtonWrapper>
+  </Wrapper>
+);
 
 BestPrices.propTypes = {
   text: PropTypes.string,
   price: PropTypes.number,
   priceFor: PropTypes.string,
   currency: PropTypes.string,
-}
+};
 
 BestPrices.defaultProps = {
-  currency: '$'
-}
+  currency: '$',
+};
 
 export default BestPrices;

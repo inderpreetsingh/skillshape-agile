@@ -1,72 +1,68 @@
-import React from "react";
-import moment from "moment";
-import { get } from "lodash";
-import Grid from "material-ui/Grid";
-import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
+import Grid from 'material-ui/Grid';
+import { withStyles } from 'material-ui/styles';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ChildTableRender from './childTableRender';
+import { withPopUp } from '/imports/util';
 
-import { withPopUp } from "/imports/util";
-import ChildTableRender from "./childTableRender";
+const styles = theme => ({
+  input: {
+    display: 'none',
+  },
+  classtimeHeader: {
+    backgroundColor: theme.palette.grey[400],
+    padding: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 2,
+    color: '#fff',
+  },
+  headerBtn: {
+    color: 'black',
+    fontSize: 13,
+    border: 'solid 1px #fff',
+    whiteSpace: 'nowrap',
+  },
+  headerText: {
+    color: '#fff',
+  },
+  classtimeFormOuter: {
+    // backgroundColor: theme.palette.secondary[500],
+    borderRadius: 5,
+    width: '100%',
+  },
+  classtimeFormContainer: {
+    backgroundColor: '#fff',
+    padding: theme.spacing.unit,
+    borderRadius: 5,
+    marginBottom: 12,
+  },
+  inputDisableBox: {
+    textAlign: 'left',
+    border: '1px solid #ccc',
+    boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
+    marginRight: 6,
+    padding: theme.spacing.unit,
+    borderRadius: 2,
+    backgroundColor: '#fff',
+    minHeight: 15,
+  },
+  classtypeInputContainer: {
+    alignItems: 'center',
+    textAlign: 'left',
+  },
+  childTableSubData: {
+    marginBottom: theme.spacing.unit,
+    backgroundColor: theme.palette.grey[100],
+    borderRadius: 5,
 
-const styles = theme => {
-  return {
-    input: {
-      display: "none"
-    },
-    classtimeHeader: {
-      backgroundColor: theme.palette.grey[400],
-      padding: theme.spacing.unit,
-      paddingLeft: theme.spacing.unit * 2,
-      color: "#fff"
-    },
-    headerBtn: {
-      color: "black",
-      fontSize: 13,
-      border: "solid 1px #fff",
-      whiteSpace: "nowrap"
-    },
-    headerText: {
-      color: "#fff"
-    },
-    classtimeFormOuter: {
-      // backgroundColor: theme.palette.secondary[500],
-      borderRadius: 5,
-      width: "100%"
-    },
-    classtimeFormContainer: {
-      backgroundColor: "#fff",
-      padding: theme.spacing.unit,
-      borderRadius: 5,
-      marginBottom: 12
-    },
-    inputDisableBox: {
-      textAlign: "left",
-      border: "1px solid #ccc",
-      boxShadow: "inset 0 1px 1px rgba(0,0,0,.075)",
-      marginRight: 6,
-      padding: theme.spacing.unit,
-      borderRadius: 2,
-      backgroundColor: "#fff",
-      minHeight: 15
-    },
-    classtypeInputContainer: {
-      alignItems: "center",
-      textAlign: "left"
-    },
-    childTableSubData: {
-      marginBottom: theme.spacing.unit,
-      backgroundColor: theme.palette.grey[100],
-      borderRadius: 5,
-
-      padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 4}px`
-    },
-    details: {
-      margin: 5,
-      border: "2px solid #bdbdbd",
-      boxShadow: "5px 5px 5px 1px #bdbdbd"
-    }
-  };
-};
+    padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 4}px`,
+  },
+  details: {
+    margin: 5,
+    border: '2px solid #bdbdbd',
+    boxShadow: '5px 5px 5px 1px #bdbdbd',
+  },
+});
 
 class ChildTable extends React.Component {
   constructor(props) {
@@ -74,13 +70,13 @@ class ChildTable extends React.Component {
     this.state = {
       open: false,
       expanded: false,
-      value: "",
+      value: '',
       showForm: props.showClassTimeFormModal,
-      classTimeModalOpen: false
+      classTimeModalOpen: false,
     };
   }
 
-  handleFormModal = value => {
+  handleFormModal = (value) => {
     if (!value) {
       this.props.handleMainTableState(this.props.parentKey);
       this.setState({ showForm: false, formData: null });
@@ -103,38 +99,34 @@ class ChildTable extends React.Component {
 
   handleClose = () => {
     this.setState({
-      open: false
+      open: false,
     });
   };
 
   handleClick = () => {
     this.setState({
-      open: true
+      open: true,
     });
   };
 
   classTimeModalHandleClose = () => {
     this.setState({
-      classTimeModalOpen: false
+      classTimeModalOpen: false,
     });
   };
 
   showDeleteConfirmationModal = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        deleteConfirmationModal: true
-      };
-    });
+    this.setState(state => ({
+      ...state,
+      deleteConfirmationModal: true,
+    }));
   };
 
   closeDeleteConfirmationModal = () => {
-    this.setState(state => {
-      return {
-        ...state,
-        deleteConfirmationModal: false
-      };
-    });
+    this.setState(state => ({
+      ...state,
+      deleteConfirmationModal: false,
+    }));
   };
 
   handleDeleteData = () => {
@@ -144,143 +136,137 @@ class ChildTable extends React.Component {
 
     // NOTE: we are only covering case for location.roomRemove
     // need to somehow cover it for other panel methods as well.
-    Meteor.call(
-      methodToCall,
-      { locationId: parentKey, data: formData },
-      (err, res) => {
-        this.closeDeleteConfirmationModal();
-        if (err) {
-          popUp.appear("alert", { content: err.reason || err.message });
-        } else {
-          popUp.appear("success", { title: "success", content: res.message });
-        }
+    Meteor.call(methodToCall, { locationId: parentKey, data: formData }, (err, res) => {
+      this.closeDeleteConfirmationModal();
+      if (err) {
+        popUp.appear('alert', { content: err.reason || err.message });
+      } else {
+        popUp.appear('success', { title: 'success', content: res.message });
       }
-    );
+    });
   };
 
-  handleAddClassTime = event => {
+  handleAddClassTime = (event) => {
     event.preventDefault();
     event.stopPropagation();
     this.setState({
-      classTimeModalOpen: true
+      classTimeModalOpen: true,
     });
   };
 
   getRoomName = (roomId, data) => {
     let roomName = 'Not Selected';
-    data.map((current,index)=>{
-     current.rooms && current && current.rooms.map((current1,index1)=>{
-        if(current1.id == roomId){
-          roomName = current1.name;
-        }
-      })
-    })
-    
-    return  roomName;
+    data.map((current) => {
+      current.rooms
+        && current.rooms.map((current1) => {
+          if (current1.id == roomId) {
+            roomName = current1.name;
+          }
+        });
+    });
+
+    return roomName;
   };
-  getLocationName = (locationId,data) => {
+
+  getLocationName = (locationId, data) => {
     let locationName = 'No Location Selected';
-    data.map((current,index)=>{
-      if(current._id == locationId){
-        locationName = `${current.address && current.address} ${current.state && current.state} ${current.country && current.country}`;
+    data.map((current, index) => {
+      if (current._id == locationId) {
+        locationName = `${current.address && current.address} ${current.state
+          && current.state} ${current.country && current.country}`;
       }
-    })
+    });
     return locationName;
-  }
-  renderScheduleTypeData = (classes, parentData, tableData, field,locationData) => {
+  };
+
+  renderScheduleTypeData = (classes, parentData, tableData, field, locationData) => {
     itemData = tableData.scheduleDetails;
-    let first=true;
+    let first = true;
     if (_.isArray(itemData)) {
-      return itemData.map((x, index) => {
-        return (
-          <div
-            style={{ marginTop: 5 }}
-            key={index}
-            className={classes.childTableSubData}
-          >
-            <Grid className={classes.classtypeInputContainer} container>
-              <Grid item xs={12} sm={3} md={2}>
-                <div>{field[0].label}</div>
-              </Grid>
-              <Grid item xs={12} sm={9} md={4}>
-                <div className={classes.inputDisableBox}>
-                  <span>
-                
-                    {x && x.key  ? x.key.map((current)=>{
-                      if(current.label){
-                        let result = `${first ?'':', '}${current.label}`
+      return itemData.map((x, index) => (
+        <div style={{ marginTop: 5 }} key={index} className={classes.childTableSubData}>
+          <Grid className={classes.classtypeInputContainer} container>
+            <Grid item xs={12} sm={3} md={2}>
+              <div>{field[0].label}</div>
+            </Grid>
+            <Grid item xs={12} sm={9} md={4}>
+              <div className={classes.inputDisableBox}>
+                <span>
+                  {x.key
+                    ? x.key.map((current) => {
+                      if (current.label) {
+                        const result = `${first ? '' : ', '}${current.label}`;
                         first = false;
                         return result;
                       }
-                    }) : x && x.startDate && moment(x.startDate).format('dddd') }
-                  </span>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={3} md={2}>
-                <div>{field[1].label}</div>
-              </Grid>
-              <Grid item xs={12} sm={9} md={4}>
-                <div className={classes.inputDisableBox}>
-                  <span>
-                    {x[field[1]["key"]] &&
-                      moment(new Date(x[field[1]["key"]])).format("LT")}
-                  </span>
-                </div>
-              </Grid>
+                    })
+                    : x.startDate && moment(x.startDate).format('dddd')}
+                </span>
+              </div>
             </Grid>
+            <Grid item xs={12} sm={3} md={2}>
+              <div>{field[1].label}</div>
+            </Grid>
+            <Grid item xs={12} sm={9} md={4}>
+              <div className={classes.inputDisableBox}>
+                <span>
+                  {x[field[1].key] && moment(new Date(x[field[1].key])).format('LT')}
+                </span>
+              </div>
+            </Grid>
+          </Grid>
 
-            <Grid className={classes.classtypeInputContainer} container>
-              <Grid item xs={12} sm={3} md={2}>
-                <div>{field[2].label}</div>
-              </Grid>
-              <Grid item xs={12} sm={9} md={4}>
-                <div
-                  style={{
-                    minHeight: 31,
-                    marginTop: 5
-                  }}
-                  className={classes.inputDisableBox}
-                >
-                  <span>{x[field[2]["key"]]}</span>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={3} md={2}>
-                <div>{field[3].label}</div>
-              </Grid>
-              <Grid item xs={12} sm={9} md={4}>
-                <div
-                  style={{
-                    minHeight: 31,
-                    marginTop: 5
-                  }}
-                  className={classes.inputDisableBox}
-                >
-                  <span>
-                    {tableData.roomId &&
-                      this.getRoomName(tableData.roomId, locationData)}
-                  </span>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={3} md={2}>
-                <div>{field[4].label}</div>
-              </Grid>
-              <Grid item xs={12} sm={9} md={4}>
-                <div
-                  style={{
-                    minHeight: 31,
-                    marginTop: 5
-                  }}
-                  className={classes.inputDisableBox}
-                >
-                  <span>{tableData.locationId &&
-                this.getLocationName(tableData.locationId,locationData)
-                }</span>
-                </div>
-              </Grid>
+          <Grid className={classes.classtypeInputContainer} container>
+            <Grid item xs={12} sm={3} md={2}>
+              <div>{field[2].label}</div>
             </Grid>
-          </div>
-        );
-      });
+            <Grid item xs={12} sm={9} md={4}>
+              <div
+                style={{
+                  minHeight: 31,
+                  marginTop: 5,
+                }}
+                className={classes.inputDisableBox}
+              >
+                <span>{x[field[2].key]}</span>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={3} md={2}>
+              <div>{field[3].label}</div>
+            </Grid>
+            <Grid item xs={12} sm={9} md={4}>
+              <div
+                style={{
+                  minHeight: 31,
+                  marginTop: 5,
+                }}
+                className={classes.inputDisableBox}
+              >
+                <span>
+                  {tableData.roomId && this.getRoomName(tableData.roomId, locationData)}
+                </span>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={3} md={2}>
+              <div>{field[4].label}</div>
+            </Grid>
+            <Grid item xs={12} sm={9} md={4}>
+              <div
+                style={{
+                  minHeight: 31,
+                  marginTop: 5,
+                }}
+                className={classes.inputDisableBox}
+              >
+                <span>
+                  {tableData.locationId
+                      && this.getLocationName(tableData.locationId, locationData)}
+                </span>
+              </div>
+            </Grid>
+          </Grid>
+        </div>
+      ));
     }
   };
 
@@ -290,7 +276,7 @@ class ChildTable extends React.Component {
 }
 
 ChildTable.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(withPopUp(ChildTable));

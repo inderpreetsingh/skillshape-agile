@@ -1,11 +1,7 @@
-import { Fragment } from "react";
-import styled, { keyframes } from "styled-components";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { specialFont } from "/imports/ui/components/landing/components/jss/helpers.js";
-import { NewFooter } from "./NewFooter";
-import React from "react";
-import {CustomButton} from '/imports/ui/components/landing/components/buttons';
+import React, { Fragment } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { CustomButton } from '/imports/ui/components/landing/components/buttons';
+import { specialFont } from '/imports/ui/components/landing/components/jss/helpers';
 
 const changeContentAnim = keyframes`
 0% {
@@ -16,7 +12,7 @@ const changeContentAnim = keyframes`
 }
 `;
 const Input = styled.input.attrs({
-  type: "email"
+  type: 'email',
 })`
   margin: auto;
   position: relative;
@@ -38,7 +34,7 @@ const Input = styled.input.attrs({
     }
   `;
 
-const Center =  styled.div`
+const Center = styled.div`
     text-align: center;
     margin-top: 28px;
 `;
@@ -53,32 +49,33 @@ const Error = styled.div`
 const Content = styled.div`
   min-height: 337px;
   transition: all 1s ease-out;
-  ${props =>
-    props.changeEmail
-      ? `animation: ${changeContentAnim} 1s`
-      : `animation: ${changeContentAnim} 1s`}
+  ${props => (props.changeEmail
+    && `animation: ${changeContentAnim} 1s`
+  )}
 `;
 export function ChangeEmailComponent(props) {
- 
   return (
     <Fragment>
-      <Content changeEmail={props.changeEmail}> 
-      <Center>
-      <form onSubmit={props.onSubmit}>
-      <Input placeholder="Please Enter Email" id={'emailField'} required />
-      <Error> {props.errorMessage}</Error>
-      <CustomButton 
-      label={'Send'}
-      type={'Submit'}
-      />
-      <br/>
-      <CustomButton 
-      label={'Back'}
-      onClick={props.back}
-      />
-      </form>
-      </Center>
-      </Content> 
+      <Content changeEmail={props.changeEmail}>
+        <Center>
+          <form onSubmit={props.onSubmit}>
+            <Input placeholder="Please Enter Email" id="emailField" required />
+            <Error>
+              {' '}
+              {props.errorMessage}
+            </Error>
+            <CustomButton
+              label="Send"
+              type="Submit"
+            />
+            <br />
+            <CustomButton
+              label="Back"
+              onClick={props.back}
+            />
+          </form>
+        </Center>
+      </Content>
     </Fragment>
   );
 }

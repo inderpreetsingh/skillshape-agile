@@ -187,7 +187,7 @@ Meteor.methods({
                             if (classTypeObject.name) {
                             try{
 
-                                let res=   ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc }, { $set: classTypeObject }, { upsert: true });
+                                 ClassType.update({ schoolId: schoolId, name: csvdata[i].classTypeName, desc: csvdata[i].classTypeDesc }, { $set: classTypeObject }, { upsert: true });
                             }catch(error){
 
                             }

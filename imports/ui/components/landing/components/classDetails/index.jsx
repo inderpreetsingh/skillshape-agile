@@ -1,24 +1,24 @@
-import React from "react";
-import styled from "styled-components";
 import get from 'lodash/get';
-import PropTypes from "prop-types";
-import { withRouter } from "react-router";
-import { createContainer } from 'meteor/react-meteor-data';
-
-import ClassTimeInformation from "./classTimeInformation/index.jsx";
-import ClassTimeCover from "./classTimeCover/index.jsx";
-import MembersList from "./membersList/index.jsx";
-
-import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar";
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-
-import { withImageExists } from "/imports/util";
-import { maxContainerWidth, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
-import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
+import PropTypes from 'prop-types';
+import React from 'react';
+import { withRouter } from 'react-router';
+import styled from 'styled-components';
+import ClassTimeCover from './classTimeCover/index';
+import ClassTimeInformation from './classTimeInformation/index';
+import MembersList from './membersList/index';
+import Footer from '/imports/ui/components/landing/components/footer/index';
+import {
+  maxContainerWidth,
+  rhythmDiv,
+  tablet,
+} from '/imports/ui/components/landing/components/jss/helpers';
+import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings';
+import { withImageExists } from '/imports/util';
 
 const imageExistsBgImage = {
-  originalImagePath: "headerProps.bgImg",
-  defaultImage: classTypeImgSrc
+  originalImagePath: 'headerProps.bgImg',
+  defaultImage: classTypeImgSrc,
 };
 
 const Wrapper = styled.div`
@@ -29,9 +29,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
 `;
 
-const PageContent = styled.div`
-
-`;
+const PageContent = styled.div``;
 
 const InnerWrapper = styled.div`
   max-width: ${maxContainerWidth}px;
@@ -67,8 +65,8 @@ const ClassTimeWrapper = styled.div`
   }
 `;
 
-const ClassDetails = props => {
-  const { 
+const ClassDetails = (props) => {
+  const {
     headerProps,
     classData,
     instructorsData,
@@ -84,7 +82,7 @@ const ClassDetails = props => {
     notification,
     loginUserPurchases,
     packagesRequired,
-    classInterestData
+    classInterestData,
   } = props;
   return (
     <Wrapper>
@@ -108,11 +106,11 @@ const ClassDetails = props => {
               schoolId={schoolData._id}
               popUp={popUp}
               params={params}
-              classData={classData }
+              classData={classData}
               notification={notification}
               loginUserPurchases={loginUserPurchases}
               packagesRequired={packagesRequired}
-              classInterestData = {classInterestData}
+              classInterestData={classInterestData}
               {...classTimeInformationProps}
             />
           </ClassTimeWrapper>
@@ -140,11 +138,11 @@ const ClassDetails = props => {
   );
 };
 ClassDetails.propTypes = {
-  noPurchasedClasses: PropTypes.bool
+  noPurchasedClasses: PropTypes.bool,
 };
 
 ClassDetails.defaultProps = {
-  noPurchasedClasses: true
+  noPurchasedClasses: true,
 };
 
 export default withImageExists(withRouter(ClassDetails), imageExistsBgImage);

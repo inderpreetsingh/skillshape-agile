@@ -1,62 +1,48 @@
-import React, {Fragment,Component} from 'react';
-import PropTypes from 'prop-types';
-import {browserHistory} from 'react-router';
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
-
-
-import { toastrModal } from '/imports/util';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { isEmpty} from 'lodash';
-
-import PrimaryButton from '../buttons/PrimaryButton';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import TextField from 'material-ui/TextField';
-import styled from 'styled-components';
-
-import IconInput from '/imports/ui/components/landing/components/form/IconInput.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
-
-import Dialog , {
+import Dialog, {
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   withMobileDialog,
 } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import { browserHistory } from 'react-router';
+import styled from 'styled-components';
+import PrimaryButton from '../buttons/PrimaryButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { toastrModal } from '/imports/util';
 
-const styles = theme => {
-  return {
-    dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`,
-      '@media screen and (max-width : 500px)': {
-        padding: `0 ${helpers.rhythmDiv * 3}px`
-      }
-    },
-    dialogContent: {
+const styles = theme => ({
+  dialogTitleRoot: {
+    padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+    '@media screen and (max-width : 500px)': {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: helpers.rhythmDiv * 2,
-      flexShrink: 0,
-      '@media screen and (max-width : 500px)': {
-        minHeight: '150px'
-      }
     },
-    dialogActionsRoot: {
-      justifyContent: 'center',
-      margin: 0,
+  },
+  dialogContent: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: helpers.rhythmDiv * 2,
+    flexShrink: 0,
+    '@media screen and (max-width : 500px)': {
+      minHeight: '150px',
     },
-    dialogRoot: {
-
-    },
-    iconButton: {
-      height: 'auto',
-      width: 'auto'
-    }
-  }
-}
+  },
+  dialogActionsRoot: {
+    justifyContent: 'center',
+    margin: 0,
+  },
+  dialogRoot: {},
+  iconButton: {
+    height: 'auto',
+    width: 'auto',
+  },
+});
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -98,72 +84,75 @@ const Content = styled.p`
   color: ${helpers.black};
 `;
 
-
 class ManageUnsubscriptionDialogBox extends Component {
   state = {
     isBusy: false,
     classTypeName: '',
     schoolName: '',
-  }
+  };
 
   _redirectUser = () => {
     browserHistory.push('/');
-  }
+  };
 
   _getCollectionName = () => {
-    const {requestFor} = this.props;
+    const { requestFor } = this.props;
 
-    if(requestFor == 'price details')  {
+    if (requestFor === 'price details') {
       return 'pricingRequest';
-    }else if(requestFor == 'location') {
-      return 'classTypeLocationRequest';
-    }else {
-      return 'classTimesRequest';
     }
-  }
+    if (requestFor === 'location') {
+      return 'classTypeLocationRequest';
+    }
+    return 'classTimesRequest';
+  };
 
   _getCompleteMethodName = (methodName) => {
     const collectionName = this._getCollectionName();
-    return collectionName + '.' + methodName;
-  }
+    return `${collectionName}.${methodName}`;
+  };
 
-  handleButtonClick = (buttonName) => (e)=> {
-    const {toastr,requestFor,requestId} = this.props;
+  handleButtonClick = buttonName => (e) => {
+    const { toastr, requestId } = this.props;
     const methodNameToCall = this._getCompleteMethodName('removeRequest');
 
-    if(buttonName === 'yes') {
-      this.setState({isBusy: true});
-      Meteor.call(methodNameToCall,requestId,(err,res) => {
-        this.setState({isBusy: false}, () => {
-          if(err) {
+    if (buttonName === 'yes') {
+      this.setState({ isBusy: true });
+      Meteor.call(methodNameToCall, requestId, (err, res) => {
+        this.setState({ isBusy: false }, () => {
+          if (err) {
             toastr.error(err.reason || err.message);
-          }else {
-            toastr.success("You have been successfully unsubscribed");
+          } else {
+            toastr.success('You have been successfully unsubscribed');
           }
-        })
+        });
       });
-    }else {
+    } else {
       this._redirectUser();
     }
-  }
+  };
 
   componentDidMount = () => {
     const { toastr, requestId } = this.props;
     const methodNameToCall = this._getCompleteMethodName('getRequestData');
-   // debugger;
-    Meteor.call(methodNameToCall,requestId,(err,res) => {
-      if(err) {
-        toastr.error("There was no data found with this request id, you have already unsubscribed.","Error");
-      }else {
-        this.setState({ classTypeName: res.classTypeName, schoolName: res.schoolName});
+    // debugger;
+    Meteor.call(methodNameToCall, requestId, (err, res) => {
+      if (err) {
+        toastr.error(
+          'There was no data found with this request id, you have already unsubscribed.',
+          'Error',
+        );
+      } else {
+        this.setState({ classTypeName: res.classTypeName, schoolName: res.schoolName });
       }
     });
-  }
+  };
 
   render() {
-    const {props} = this;
+    const { props } = this;
     // console.log(props,"...");
-    return (<Fragment>
+    return (
+      <Fragment>
         {this.state.isBusy && <ContainerLoader />}
         <Dialog
           fullScreen={props.fullScreen}
@@ -171,33 +160,60 @@ class ManageUnsubscriptionDialogBox extends Component {
           onClose={props.onModalClose}
           onRequestClose={props.onModalClose}
           aria-labelledby="manage unsubscriptions"
-          classes={{paper: props.classes.dialogRoot}}
+          classes={{ paper: props.classes.dialogRoot }}
         >
-        <MuiThemeProvider theme={muiTheme}>
-          <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
-            <DialogTitleWrapper>
-              <Title>Unsubcribe Me :( </Title>
-              <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
-                <ClearIcon/>
-              </IconButton>
-            </DialogTitleWrapper>
-          </DialogTitle>
+          <MuiThemeProvider theme={muiTheme}>
+            <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
+              <DialogTitleWrapper>
+                <Title>Unsubcribe Me :( </Title>
+                <IconButton
+                  color="primary"
+                  onClick={props.onModalClose}
+                  classes={{ root: props.classes.iconButton }}
+                >
+                  <ClearIcon />
+                </IconButton>
+              </DialogTitleWrapper>
+            </DialogTitle>
 
-          <DialogContent classes={{root : props.classes.dialogContent}}>
-            <Content>You are requesting for unsubscription from {props.requestFor} of {this.state.classTypeName && `${this.state.classTypeName} class of`} {this.state.schoolName} school. </Content>
-            <Content>Click <Bold>Yes</Bold> to continue or <Bold>No</Bold> to cancel your request.</Content>
-          </DialogContent>
+            <DialogContent classes={{ root: props.classes.dialogContent }}>
+              <Content>
+                You are requesting for unsubscription from
+                {' '}
+                {props.requestFor}
+                {' '}
+of
+                {' '}
+                {this.state.classTypeName && `${this.state.classTypeName} class of`}
+                {' '}
+                {this.state.schoolName}
+                {' '}
+school.
+                {' '}
+              </Content>
+              <Content>
+                Click
+                {' '}
+                <Bold>Yes</Bold>
+                {' '}
+to continue or
+                {' '}
+                <Bold>No</Bold>
+                {' '}
+to cancel your request.
+              </Content>
+            </DialogContent>
 
-          <DialogActions classes={{root: props.classes.dialogActionsRoot}}>
-            <ButtonsWrapper>
-              <ButtonWrapper>
-                <PrimaryButton label="Yes" onClick={this.handleButtonClick('yes')} />
-              </ButtonWrapper>
-              <ButtonWrapper>
-                <PrimaryButton label="No" onClick={this.handleButtonClick('no')}/>
-              </ButtonWrapper>
-            </ButtonsWrapper>
-          </DialogActions>
+            <DialogActions classes={{ root: props.classes.dialogActionsRoot }}>
+              <ButtonsWrapper>
+                <ButtonWrapper>
+                  <PrimaryButton label="Yes" onClick={this.handleButtonClick('yes')} />
+                </ButtonWrapper>
+                <ButtonWrapper>
+                  <PrimaryButton label="No" onClick={this.handleButtonClick('no')} />
+                </ButtonWrapper>
+              </ButtonsWrapper>
+            </DialogActions>
           </MuiThemeProvider>
         </Dialog>
       </Fragment>
@@ -212,12 +228,12 @@ ManageUnsubscriptionDialogBox.propTypes = {
   schoolData: PropTypes.object,
   classTypeName: PropTypes.string,
   submitBtnLabel: PropTypes.string,
-}
+};
 
 ManageUnsubscriptionDialogBox.defaultProps = {
   title: 'Pricing',
   requestFor: 'price',
-  submitBtnLabel: 'Request pricing'
-}
+  submitBtnLabel: 'Request pricing',
+};
 
 export default toastrModal(withMobileDialog()(withStyles(styles)(ManageUnsubscriptionDialogBox)));

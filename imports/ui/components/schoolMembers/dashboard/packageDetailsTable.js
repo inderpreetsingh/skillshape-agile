@@ -1,36 +1,35 @@
-"use strict";
-import React from "react";
-import { createTable } from "/imports/util";
+
+import { createTable } from '/imports/util';
 
 const getTableProps = () => {
   const tableProps = {
-    className: "table-view"
+    className: 'table-view',
   };
   const tableHeaderProps = {
     adjustForCheckbox: false,
-    displaySelectAll: false
+    displaySelectAll: false,
   };
   const tableRowProps = {
-    className: "table-header"
+    className: 'table-header',
   };
   const tableHeaderColumns = [
     {
-      columnName: "Date",
-      tooltip: "",
-      className: "wd-150"
+      columnName: 'Date',
+      tooltip: '',
+      className: 'wd-150',
     },
     {
-      columnName: "Package",
-      tooltip: "",
-      className: "wd-211"
-    }
+      columnName: 'Package',
+      tooltip: '',
+      className: 'wd-211',
+    },
   ];
   const tableHeaderColumnProps = {
-    className: "table-column"
+    className: 'table-column',
   };
   const tableBodyProps = {
     displayRowCheckbox: false,
-    className: "table-body"
+    className: 'table-body',
   };
   const tableComponentProps = {
     tableProps,
@@ -38,7 +37,7 @@ const getTableProps = () => {
     tableRowProps,
     tableHeaderColumns,
     tableHeaderColumnProps,
-    tableBodyProps
+    tableBodyProps,
   };
   return tableComponentProps;
 };

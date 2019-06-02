@@ -129,7 +129,6 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         emailId: user.emails[0].address,
         userName: user.profile.firstName || user.profile.name,
         packageName: desc,
-        stripeRequest: stripeRequest,
         createdOn: new Date(),
         packageId: packageId,
         packageType: packageType,
@@ -142,6 +141,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
         amount:amount/100,
         contractLength,
         payUpFront,
+        payAsYouGo,
         currency ,
         monthlyAttendance,
         paymentMethod:'stripe'
@@ -223,7 +223,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
   },
   "stripe.addStripeJsonForUser": function (data) {
     check(data,Object);
-    let customer_id = UserStripeData.insert(data);
+    UserStripeData.insert(data);
     Meteor.users.update(
       { _id: this.userId },
       { $set: { "profile.stripeStatus": true } }
@@ -266,14 +266,14 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
   "stripe.createStripeProduct": function (productId) {
     try {
     check(productId,String);
-    let existingProduct = stripe.products.retrieve(productId, function (
+     stripe.products.retrieve(productId, function (
       err,
       product
     ) {
       // asynchronously called
       if (!product && err && err.message.indexOf("No such product") != -1) {
         //Create a service product
-          const product = stripe.products.create(
+         stripe.products.create(
             {
               name: "Skillshape Monthly Package Product",
               type: "service",
@@ -392,7 +392,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     } catch (err) {
       const {message} = err;
       payload = { status: "error",errorMessage:  message };
-      let resultOfErrorUpdate = ClassSubscription.update(
+      ClassSubscription.update(
         { _id: subscriptionDbId },
         { $set: payload }
       );
@@ -405,7 +405,7 @@ Meteor.methods({ "stripe.chargeCard": async function ( stripeToken, desc, packag
     try {
       let {userId,packageId,schoolId,packageType,paymentMethod,packageName,noClasses,planId} = data;
       let user = Meteor.users.findOne({_id:userId});
-      let payload,status,userName,emailId,fee,amount,classTypeIds,
+      let payload,status,userName,emailId,amount,classTypeIds,
       monthlyAttendance={},currency,expDuration,expPeriod,
       contractLength = 0,payAsYouGo = false,payUpFront = false,
       autoWithdraw=false,startDate,endDate,recordId;

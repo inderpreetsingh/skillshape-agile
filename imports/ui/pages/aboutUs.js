@@ -74,13 +74,13 @@ class AboutUs extends React.Component{
       const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
       if (!email) {
           toastr.error('Please enter your email.', 'Error');
-          return false;
+          event.stopPropagation();
       } else if (!emailReg.test(email)) {
           toastr.error("Please enter valid email address", "Error");
-          return false;
+          event.stopPropagation();
       } else if (!message) {
           toastr.error("Please enter a message.", "Error");
-          return false;
+          event.stopPropagation();
       } else {
           // Start loading
           this.setState({ isLoading: true });

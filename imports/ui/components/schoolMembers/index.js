@@ -5,7 +5,7 @@ import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import DashBoardView from './dashboard';
-import Preloader from '/imports/ui/components/landing/components/Preloader.jsx';
+import Preloader from '/imports/ui/components/landing/components/Preloader';
 import { checkIsEmailVerified } from "/imports/util";
 
 class SchoolMemberView extends Component {
@@ -20,7 +20,7 @@ class SchoolMemberView extends Component {
         checkIsEmailVerified.call(this,true);
       }
     render() {
-        let { currentUser, isUserSubsReady, admin } = this.props;
+        let { currentUser, isUserSubsReady,  } = this.props;
         let slug = get(this.props.params, 'slug', this.props.slug);
         let view = get(this.props, 'view', 'classmates');
         let userId = get(this.props, 'userId', null);

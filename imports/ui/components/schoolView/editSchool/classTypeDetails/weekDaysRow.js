@@ -1,41 +1,26 @@
-import React from "react";
-import styled from "styled-components";
-import { withStyles } from 'material-ui/styles';
-import Grid from "material-ui/Grid";
-import Select from "material-ui/Select";
-import MultiSelect from "react-select";
-import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
 import { FormControl } from "material-ui/Form";
+import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-import Typography from "material-ui/Typography";
-
-
+import Select from "material-ui/Select";
+import TextField from "material-ui/TextField";
+import React from "react";
+import MultiSelect from "react-select";
+import styled from "styled-components";
+import { CTFormControlHW, CTFormRow, CTFormWrapper, LinkedTime } from './sharedStyledComponents';
 import config from "/imports/config";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
 import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton";
+import * as helpers from "/imports/ui/components/landing/components/jss/helpers";
 
-import {
-  DeleteClassTime,
-  styles,
-  LinkedTime,
-  CTFormWrapper,
-  CTFormRow,
-  CTFormControlHW
-} from './sharedStyledComponents';
+
+
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
   flex-direction: column;
 `;
 
-const IconButtonWrapper = styled.div`
-  position: absolute;
-  top: ${helpers.rhythmDiv}px;
-  right: ${helpers.rhythmDiv}px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-`;
+
 
 const ButtonWrapper = styled.div`
   margin-left: ${helpers.rhythmDiv}px;
@@ -69,7 +54,7 @@ export class WeekDaysRow extends React.Component {
           startTime: obj.startTime,
           duration: obj.duration,
           day: obj.day || 0,
-          timeUnits: (obj && obj.timeUnits) || "Minutes",
+          timeUnits:  obj.timeUnits || "Minutes",
         })
       })
       // for (let key in data) {
@@ -130,7 +115,6 @@ export class WeekDaysRow extends React.Component {
     oldRow[index][fieldName] = event.target.value;
 
     if (fieldName === "key") {
-      let indexOfDay = scheduleDetails.indexOf(event.target.value);
       oldRow[index].day = 1 + scheduleDetails.indexOf(event.target.value);
     }
 
@@ -165,7 +149,8 @@ export class WeekDaysRow extends React.Component {
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<CTFormWrapper>
+          const {key,startTime,duration,timeUnits} = data;
+          return (<CTFormWrapper key={index.toString()}>
             {/*Repeating class is useful when you plan to teach the same class multiple times. You can schedule the recurring class at one go without the need to schedule every time you plan to offer the same class.*/}
             <CTFormRow
               marginBottom={helpers.rhythmDiv * 2}>
@@ -196,7 +181,7 @@ export class WeekDaysRow extends React.Component {
                   <MultiSelect
                     name="filters"
                     placeholder="Weekdays"
-                    value={data.key || [{ label: 'Sunday', value: 6 }]}
+                    value={key || [{ label: 'Sunday', value: 6 }]}
                     options={Weekdays}
                     onChange={(e) => { this.handleWeekDay(e, index) }}
                     multi
@@ -209,7 +194,7 @@ export class WeekDaysRow extends React.Component {
               <CTFormControlHW marginRight={helpers.rhythmDiv}>
                 <MaterialTimePicker
                   required={true}
-                  value={data && data.startTime}
+                  value={startTime}
                   floatingLabelText={"Start Time *"}
                   hintText={"Start Time"}
                   // className={classes.formFieldSmReset}
@@ -226,7 +211,7 @@ export class WeekDaysRow extends React.Component {
                 <CTFormControlHW marginRight={helpers.rhythmDiv} marginRightSm noMarginBottom>
                   <TextField
                     // className={classes.formField}
-                    defaultValue={data && data.duration || 60}
+                    defaultValue={duration || 60}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,
@@ -236,7 +221,7 @@ export class WeekDaysRow extends React.Component {
                     type="number"
                     fullWidth
                     required={
-                      data && data.key && data.key != '' ? true : false
+                     key != '' ? true : false
                     } /*Made it mandatory if week day selected*/
                     inputProps={{ min: "0" }}
                   />
@@ -248,7 +233,7 @@ export class WeekDaysRow extends React.Component {
                   </InputLabel>
                   <Select
                     input={<Input id="duration" />}
-                    value={(data && data.timeUnits) || "Minutes"}
+                    value={timeUnits || "Minutes"}
                     onChange={this.handleSelectInputChange.bind(
                       this,
                       index,

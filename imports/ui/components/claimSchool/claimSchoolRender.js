@@ -1,50 +1,15 @@
-import React from "react";
-import DocumentTitle from "react-document-title";
-// import  ClaimSchoolFilter  from "./filter";
-
-import FilterPanel from "../landing/components/FilterPanel.jsx";
-import FiltersDialogBox from "../landing/components/dialogs/FiltersDialogBox.jsx";
-
+import React from 'react';
+import DocumentTitle from 'react-document-title';
 // import Sticky from 'react-sticky-el';
-import Sticky from "react-stickynode";
-import styled from "styled-components";
-import Button from "material-ui/Button";
+import Sticky from 'react-stickynode';
+import FiltersDialogBox from '../landing/components/dialogs/FiltersDialogBox';
+// import  ClaimSchoolFilter  from "./filter";
+import FilterPanel from '../landing/components/FilterPanel';
+import ClaimSchoolList from './claimSchoolList';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
-import ClaimSchoolList from "./claimSchoolList";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import PrimaryButton from "/imports/ui/components/landing/components/buttons/PrimaryButton.jsx";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import ConfirmationModal from "/imports/ui/modal/confirmationModal";
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
-`;
-
-const FormSubmitButtonWrapper = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
-`;
-
-const TextWrapper = styled.div``;
-
-const ButtonsWrapper = styled.div`
-  ${helpers.flexCenter};
-`;
-
-{
-  /*<ConfirmationModal
-    open={this.state.showConfirmationModal}
-    submitBtnLabel="Yes"
-    cancelBtnLabel="Cancel"
-    message="This will create a new school for you, Are you sure?"
-    onSubmit={this.handleListingOfNewSchool}
-    onClose={() => this.setState({showConfirmationModal: false})} /> */
-}
-
-export default function(props) {
+export default function (props) {
   return (
     <DocumentTitle title={this.props.route.name}>
       <div>
@@ -58,9 +23,7 @@ export default function(props) {
             title="New School"
             content="This will create a new school for you, Are you sure?"
             onAffirmationButtonClick={this.handleListingOfNewSchool}
-            onCloseButtonClick={() =>
-              this.setState({ showConfirmationModal: false })
-            }
+            onCloseButtonClick={() => this.setState({ showConfirmationModal: false })}
           />
         )}
         {this.state.filterPanelDialogBox && (
@@ -68,7 +31,7 @@ export default function(props) {
             open={this.state.filterPanelDialogBox}
             onModalClose={() => this.handleFiltersDialogBoxState(false)}
             filterPanelProps={{
-              ref: "ClaimSchoolFilter",
+              ref: 'ClaimSchoolFilter',
               removeAllFilters: this.removeAllFilters,
               onLocationChange: this.onLocationChange,
               handleSchoolNameChange: this.handleSchoolNameChange,
@@ -81,19 +44,18 @@ export default function(props) {
               skillLevelFilter: this.skillLevelFilter,
               perClassPriceFilter: this.perClassPriceFilter,
               pricePerMonthFilter: this.pricePerMonthFilter,
-              collectSelectedSkillCategories: this
-                .collectSelectedSkillCategories,
-              collectSelectedSkillSubject: this.collectSelectedSkillSubject
+              collectSelectedSkillCategories: this.collectSelectedSkillCategories,
+              collectSelectedSkillSubject: this.collectSelectedSkillSubject,
             }}
           />
         )}
 
         <Sticky
-          activeClassName={"filter-panel-sticked"}
+          activeClassName="filter-panel-sticked"
           innerZ={1}
           onStateChange={this.handleFixedToggle}
         >
-          {/*<ClaimSchoolFilter
+          {/* <ClaimSchoolFilter
                 stickyPosition={this.state.sticky}
                 ref="ClaimSchoolFilter"
                 {...this.props}
@@ -102,7 +64,7 @@ export default function(props) {
                 handleSchoolNameChange={this.handleSchoolNameChange}
                 locationInputChanged={this.locationInputChanged}
                 filters={this.state.filters}
-             />*/}
+             /> */}
           <FilterPanel
             displayChangeViewButton={false}
             fullWidth
@@ -113,17 +75,13 @@ export default function(props) {
             collectSelectedSkillCategories={this.collectSelectedSkillCategories}
             fliterSchoolName={this.fliterSchoolName}
             locationInputChanged={this.locationInputChanged}
-            handleShowMoreFiltersButtonClick={() =>
-              this.handleFiltersDialogBoxState(true)
-            }
-            handleNoOfFiltersClick={() =>
-              this.handleFiltersDialogBoxState(true)
-            }
+            handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+            handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
             filters={this.state.filters}
             onLocationChange={this.onLocationChange}
           />
         </Sticky>
-        {/*<Wrapper>
+        {/* <Wrapper>
           <TextWrapper className={this.props.classes.textStyle}>
               Check to see if any of these are your school.
               if so, press the <b>claim</b> button
@@ -137,7 +95,6 @@ export default function(props) {
           removeAllFilters={this.removeAllFilters}
           filters={this.state.filters}
           tempFilters={this.state.tempFilters}
-          removeAllFilters={this.removeAllFilters}
           handleClaimASchool={this.handleClaimASchool}
           handleSuggestionFormState={this.handleSuggestionFormState}
           handleGoBackButtonClick={this.handleGoBackButtonClick}

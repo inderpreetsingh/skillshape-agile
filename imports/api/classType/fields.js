@@ -1,7 +1,8 @@
-import config from "/imports/config";
-import SkillCategory from "/imports/api/skillCategory/fields";
-import SkillSubject from "/imports/api/skillSubject/fields";
-import SLocation from "/imports/api/sLocation/fields";
+import config from '/imports/config';
+import SkillCategory from '/imports/api/skillCategory/fields';
+import SkillSubject from '/imports/api/skillSubject/fields';
+import SLocation from '/imports/api/sLocation/fields';
+import { find } from 'lodash';
 
 const ClassType = new Mongo.Collection(config.collections.classType);
 /**
@@ -13,171 +14,169 @@ ClassType.attachSchema(
   new SimpleSchema({
     createdBy: {
       type: String,
-      optional: true
+      optional: true,
     },
     schoolId: {
       type: String,
-      optional: true
+      optional: true,
     },
     name: {
       type: String,
-      optional: true
+      optional: true,
     },
     enrollmentIds: {
       type: [String],
-      optional: true
+      optional: true,
     },
     desc: {
       type: String,
-      optional: true
+      optional: true,
     },
     skillTypeId: {
       type: String,
-      optional: true
+      optional: true,
     },
     classTypeImg: {
       type: String,
-      optional: true
+      optional: true,
     },
     medium: {
       type: String,
-      optional: true
+      optional: true,
     },
     low: {
       type: String,
-      optional: true
+      optional: true,
     },
     classes: {
       type: [String],
-      optional: true
+      optional: true,
     },
     gender: {
       type: String,
-      optional: true
+      optional: true,
     },
     ageMin: {
       type: Number,
-      optional: true
+      optional: true,
     },
     ageMax: {
       type: Number,
-      optional: true
+      optional: true,
     },
     experienceLevel: {
       type: String,
-      optional: true
+      optional: true,
     },
     skillCategoryId: {
       type: [String],
-      optional: true
+      optional: true,
     },
     skillSubject: {
       type: [String],
-      optional: true
+      optional: true,
     },
     locationId: {
       type: String,
-      optional: true
+      optional: true,
     },
     isPublish: {
       type: Boolean,
-      optional: true
+      optional: true,
     },
     filters: {
       type: Object,
-      optional: true
+      optional: true,
     },
-    "filters.classPriceCost": {
+    'filters.classPriceCost': {
       type: Number,
       optional: true,
-      decimal:true,
-      blackbox:true
+      decimal: true,
+      blackbox: true,
     },
-    "filters.monthlyPriceCost": {
+    'filters.monthlyPriceCost': {
       type: Object,
       optional: true,
-      blackbox: true
+      blackbox: true,
     },
-    "filters.location": {
-      type: Array, 
+    'filters.location': {
+      type: Array,
       optional: true,
     },
-    "filters.location.$": {
-      type: Object, 
-      optional: true,
-    },
-    "filters.location.$.loc": {
+    'filters.location.$': {
       type: Object,
       optional: true,
-      index: "2dsphere",
     },
-    "filters.location.$.loc.type": {
+    'filters.location.$.loc': {
+      type: Object,
+      optional: true,
+      index: '2dsphere',
+    },
+    'filters.location.$.loc.type': {
       type: String,
-      optional: true
+      optional: true,
     },
-    "filters.location.$.loc.coordinates": {
+    'filters.location.$.loc.coordinates': {
       type: [Number],
       optional: true,
-      decimal:true
+      decimal: true,
     },
-    "filters.location.$.loc.title": {
+    'filters.location.$.loc.title': {
       type: String,
-      optional: true
+      optional: true,
     },
-    "filters.location.$.loc.locationId": {
+    'filters.location.$.loc.locationId': {
       type: String,
-      optional: true
+      optional: true,
     },
-    "filters.location.$.loc.classTimeId": {
+    'filters.location.$.loc.classTimeId': {
       type: String,
-      optional: true
+      optional: true,
     },
-    "filters.schoolName": {
+    'filters.schoolName': {
       type: String,
-      optional: true
+      optional: true,
     },
     createdAt: {
       type: new Date(),
-      optional: true
-    }
-  })
+      optional: true,
+    },
+  }),
 );
 
-ClassType.join(SkillCategory, "skillCategoryId", "selectedSkillCategory", [
-  "name"
+ClassType.join(SkillCategory, 'skillCategoryId', 'selectedSkillCategory', [
+  'name',
 ]);
 
-ClassType.join(SkillSubject, "skillSubject", "selectedSkillSubject", [
-  "name",
-  "skillCategoryId"
+ClassType.join(SkillSubject, 'skillSubject', 'selectedSkillSubject', [
+  'name',
+  'skillCategoryId',
 ]);
 
-ClassType.join(SLocation, "locationId", "selectedLocation", [
-  "loc",
-  "rooms",
-  "address",
-  "city",
-  "country"
+ClassType.join(SLocation, 'locationId', 'selectedLocation', [
+  'loc',
+  'rooms',
+  'address',
+  'city',
+  'country',
 ]);
 
-Meteor.startup(function() {
+Meteor.startup(() => {
   if (Meteor.isServer) {
     ClassType._ensureIndex({
-      name: "text",
-      desc: "text",
-      "filters.locationTitle": "text",
-      "filters.schoolName": "text"
+      name: 'text',
+      desc: 'text',
+      'filters.locationTitle': 'text',
+      'filters.schoolName': 'text',
     });
 
 
     const raw = ClassType.rawCollection();
     const indexes = Meteor.wrapAsync(raw.indexes, raw)();
 
-    const found = _.find(indexes, index => {
-           return index.key["filters.location"] == "2d";
-    });
-    if(found) {
-      ClassType._dropIndex({"filters.location": "2d"});
+    const found = find(indexes, index => index.key['filters.location'] === '2d');
+    if (found) {
+      ClassType._dropIndex({ 'filters.location': '2d' });
     }
   }
 });

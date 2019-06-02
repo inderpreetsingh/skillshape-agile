@@ -505,7 +505,7 @@ class Multiselect extends React.Component {
   }
 
   renderTags(messages) {
-    let { readOnly, onNoOfFiltersClick } = this.props;
+    let { readOnly } = this.props;
     let { focusedTag, dataItems } = this.state;
 
     let Component = this.props.tagComponent;
@@ -736,7 +736,7 @@ class Multiselect extends React.Component {
   }
 
   getPlaceholder() {
-    let { value, placeholder } = this.props;
+    let {  placeholder } = this.props;
     return placeholder;
     // return (value && value.length ? '' : placeholder) || ''
   }

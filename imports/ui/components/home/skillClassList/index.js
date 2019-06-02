@@ -1,18 +1,17 @@
-import React from "react";
-import {createContainer} from 'meteor/react-meteor-data';
-import SkillClassListRender from "./skillClassListRender";
-import { Session } from 'meteor/session';
-import { withSubscriptionAndPagination } from '/imports/util';
-import ListView from '/imports/ui/components/listView';
 import SkillClassListBase from './skillClassListBase';
-import ClassType from "/imports/api/classType/fields";
+import SkillClassListRender from './skillClassListRender';
+import ClassType from '/imports/api/classType/fields';
+import { withSubscriptionAndPagination } from '/imports/util';
 
 class SkillClassList extends SkillClassListBase {
-
-
   render() {
-    return SkillClassListRender.call(this, this.props, this.state)
+    return SkillClassListRender.call(this, this.props, this.state);
   }
 }
 
-export default withSubscriptionAndPagination(SkillClassList, {collection: ClassType, subscriptionName: "school.getClassTypesByCategory", filter: {}, recordLimit: 10});
+export default withSubscriptionAndPagination(SkillClassList, {
+  collection: ClassType,
+  subscriptionName: 'school.getClassTypesByCategory',
+  filter: {},
+  recordLimit: 10,
+});

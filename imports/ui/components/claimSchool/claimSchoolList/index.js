@@ -1,44 +1,37 @@
-import React from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
-import isEmpty from 'lodash/isEmpty';
-
-import ClaimSchoolListRender from './claimSchoolListRender';
 import { Session } from 'meteor/session';
-import { withPopUp, withSubscriptionAndPagination } from '/imports/util';
-import { withStyles } from 'material-ui/styles';
-import { emailRegex } from '/imports/util';
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-
+import React from 'react';
+import ClaimSchoolListRender from './claimSchoolListRender';
 import School from '/imports/api/school/fields';
+import { withPopUp, withSubscriptionAndPagination } from '/imports/util';
 
 class ClaimSchoolList extends React.Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			listLoaded: false
-		};
-	}
+    this.state = {
+      listLoaded: false,
+    };
+  }
 
-	// componentDidMount() {
-	//   this.setState({
-	//     listLoaded: true
-	//   })
-	// }
+  // componentDidMount() {
+  //   this.setState({
+  //     listLoaded: true
+  //   })
+  // }
 
-	componentWillUnmount() {
-		Session.set('pagesToload', 1);
-	}
+  componentWillUnmount() {
+    Session.set('pagesToload', 1);
+  }
 
-	render() {
-		return ClaimSchoolListRender.call(this, this.props, this.state);
-	}
+  render() {
+    return ClaimSchoolListRender.call(this, this.props, this.state);
+  }
 }
 
 export default withSubscriptionAndPagination(withPopUp(ClaimSchoolList), {
-	collection: School,
-	subscriptionName: 'ClaimSchoolFilter',
-	recordLimit: 10
+  collection: School,
+  subscriptionName: 'ClaimSchoolFilter',
+  recordLimit: 10,
 });
 
 // export default createContainer(props => {

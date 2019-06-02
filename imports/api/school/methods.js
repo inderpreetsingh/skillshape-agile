@@ -1,22 +1,16 @@
 import get from "lodash/get";
+import isArray from "lodash/isArray";
 import uniq from 'lodash/uniq';
 import { check } from 'meteor/check';
-import isEmpty from "lodash/isEmpty";
-import isArray from "lodash/isArray";
-import ClassType from "/imports/api/classType/fields";
-import EnrollmentFees from "/imports/api/enrollmentFee/fields";
-import ClassPricing from "/imports/api/classPricing/fields";
-import MonthlyPricing from "/imports/api/monthlyPricing/fields";
 import School from "./fields";
-import { sendPackagePurchaseEmail, newSchoolJoinNotification } from "/imports/api/email";
-import ClaimSchoolRequest from "/imports/api/claimSchoolRequest/fields.js";
-import PriceInfoRequest from "/imports/api/priceInfoRequest/fields.js";
-import { sendClaimASchoolEmail } from "/imports/api/email";
-import { sendConfirmationEmail } from "/imports/api/email";
-import { sendPriceInfoRequestEmail } from "/imports/api/email";
-import { sendEmailToStudentForClaimAsMember, adminInvitation } from "/imports/api/email";
-import { getUserFullName } from "/imports/util/getUserData";
+import ClassPricing from "/imports/api/classPricing/fields";
+import ClassType from "/imports/api/classType/fields";
+import { adminInvitation, newSchoolJoinNotification, sendEmailToStudentForClaimAsMember, sendPackagePurchaseEmail, sendPriceInfoRequestEmail } from "/imports/api/email";
+import EnrollmentFees from "/imports/api/enrollmentFee/fields";
+import MonthlyPricing from "/imports/api/monthlyPricing/fields";
+import PriceInfoRequest from "/imports/api/priceInfoRequest/fields";
 import SchoolMemberDetails from "/imports/api/schoolMemberDetails/fields";
+import { getUserFullName } from "/imports/util/getUserData";
 Meteor.methods({
   editSchool: function (id, data) {
     check(data, Object);
@@ -176,16 +170,6 @@ Meteor.methods({
           userId: this.userId
         };
         PriceInfoRequest.insert(requestObj);
-
-        let superAdminData;
-        const currentUserData = Meteor.users.findOne({ _id: this.userId });
-        const schoolOwnerData = Meteor.users.findOne({
-          "profile.schoolId": schoolId
-        });
-
-        if (!schoolOwnerData) {
-          superAdminData = Meteor.users.findOne({ roles: "Superadmin" });
-        }
       }
       // Send Email to Admin of School if admin available
       const toEmail = "sam@skillshape.com"; // Needs to replace by Admin of School
@@ -194,7 +178,7 @@ Meteor.methods({
         schoolData._id
         }/edit`;
       let ownerName;
-      if (schoolData && schoolData.userId) {
+      if ( schoolData.userId) {
         // Get Admin of School As school Owner
         let adminUser = Meteor.users.findOne(schoolData.userId);
         ownerName = getUserFullName(adminUser);
@@ -417,7 +401,6 @@ Meteor.methods({
     ) {
       doc.createdBy = this.userId;
       doc.inviteAccepted = false;
-      let memberId = SchoolMemberDetails.insert(doc);
       return { addedNewMember: true };
     } else {
       throw new Meteor.Error("Access Denied!!!!");

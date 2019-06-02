@@ -1,68 +1,60 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import config from "/imports/config";
+import React, { Component } from 'react';
+import { Marker } from 'react-google-maps';
+import config from '/imports/config';
 
-import { Marker } from "react-google-maps";
+export default (withMovingMarker = WrappedComponent => class extends Component {
+  constructor(props) {
+    super(props);
 
-export default (withMovingMarker = WrappedComponent => {
-  return class extends Component {
-    constructor(props) {
-      super(props);
+    this.state = {
+      myLocation: this._initializeLocation(),
+    };
+  }
 
-      this.state = {
-        myLocation: this._initializeLocation()
-      };
-    }
-
-    _initializeLocation = nextProps => {
+    _initializeLocation = (nextProps) => {
       const { locationData, myCurrentPosition } = nextProps || this.props;
       return {
         lat:
-          (locationData && locationData.lat) ||
-          (myCurrentPosition && myCurrentPosition[0]) ||
-          config.defaultLocationObject.lat,
+          (locationData && locationData.lat)
+          || (myCurrentPosition && myCurrentPosition[0])
+          || config.defaultLocationObject.lat,
         lng:
-          (locationData && locationData.lng) ||
-          (myCurrentPosition && myCurrentPosition[1]) ||
-          config.defaultLocationObject.lng
+          (locationData && locationData.lng)
+          || (myCurrentPosition && myCurrentPosition[1])
+          || config.defaultLocationObject.lng,
       };
     };
 
-    componentWillReceiveProps = nextProps => {
+    componentWillReceiveProps = (nextProps) => {
       if (this.props.locationData || nextProps.locationData) {
         if (
-          (this.props.locationData && this.props.locationData.lat) !==
-            nextProps.locationData.lat ||
-          (this.props.locationData && this.props.locationData.lng) !==
-            nextProps.locationData.lng
+          (this.props.locationData && this.props.locationData.lat) !== nextProps.locationData.lat
+          || (this.props.locationData && this.props.locationData.lng) !== nextProps.locationData.lng
         ) {
-          this.setState(state => {
-            return {
-              ...state,
-              myLocation: this._initializeLocation(nextProps)
-            };
-          });
+          this.setState(state => ({
+            ...state,
+            myLocation: this._initializeLocation(nextProps),
+          }));
         }
       }
     };
 
-    dragEnd = e => {
+    dragEnd = (e) => {
       this.setState({
         ...this.state,
         myLocation: {
           lat: e.latLng.lat(),
-          lng: e.latLng.lng()
-        }
+          lng: e.latLng.lng(),
+        },
       });
 
-      this.props.onDragEnd &&
-        this.props.onDragEnd({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+      this.props.onDragEnd && this.props.onDragEnd({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     };
 
     dragStart = (e, ar) => {
-      //debugger;
-      this.props.onDragStart &&
-        this.props.onDragStart({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+      // debugger;
+      this.props.onDragStart
+        && this.props.onDragStart({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     };
 
     render() {
@@ -70,16 +62,15 @@ export default (withMovingMarker = WrappedComponent => {
         <WrappedComponent
           {...this.props}
           myLocation={this.state.myLocation}
-          renderMarker={
+          renderMarker={(
             <Marker
               draggable={this.props.markerDraggable}
               position={this.state.myLocation}
               onDragStart={this.dragStart}
               onDragEnd={this.dragEnd}
             />
-          }
+)}
         />
       );
     }
-  };
 });

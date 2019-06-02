@@ -1,68 +1,52 @@
-import ClearIcon from "material-ui-icons/Clear";
-import Dialog, { DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
-import IconButton from "material-ui/IconButton";
-import { MuiThemeProvider, withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
-import React, { Component, Fragment } from "react";
-import ReactStars from "react-stars";
-import styled from "styled-components";
-import PrimaryButton from "../buttons/PrimaryButton";
-import IconInput from "../form/IconInput.jsx";
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
-import { ContainerLoader } from "/imports/ui/loading/container.js";
-import { toastrModal } from "/imports/util";
+import ClearIcon from 'material-ui-icons/Clear';
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import ReactStars from 'react-stars';
+import styled from 'styled-components';
+import PrimaryButton from '../buttons/PrimaryButton';
+import IconInput from '../form/IconInput';
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { toastrModal } from '/imports/util';
 
-
-
-
-
-
-
-const styles = theme => {
-  return {
-    dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
-        3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`,
-      "@media screen and (max-width : 500px)": {
-        padding: `0 ${helpers.rhythmDiv * 3}px`
-      }
-    },
-    dialogContent: {
+const styles = theme => ({
+  dialogTitleRoot: {
+    padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+    '@media screen and (max-width : 500px)': {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
-      flexShrink: 0,
-      "@media screen and (max-width : 500px)": {
-        minHeight: "150px"
-      }
     },
-    dialogActionsRoot: {
-      padding: "0 8px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-end",
-      justifyContent: "flex-start"
+  },
+  dialogContent: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    flexShrink: 0,
+    '@media screen and (max-width : 500px)': {
+      minHeight: '150px',
     },
-    dialogActions: {
-      width: "100%",
-      paddingLeft: `${helpers.rhythmDiv * 2}px`
-    },
-    dialogRoot: {
-      width: "100%"
-    },
-    iconButton: {
-      height: "auto",
-      width: "auto"
-    }
-  };
-};
-
-const Link = styled.a`
-  color: ${helpers.textColor};
-  &:hover {
-    color: ${helpers.focalColor};
-  }
-`;
+  },
+  dialogActionsRoot: {
+    padding: '0 8px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+  },
+  dialogActions: {
+    width: '100%',
+    paddingLeft: `${helpers.rhythmDiv * 2}px`,
+  },
+  dialogRoot: {
+    width: '100%',
+  },
+  iconButton: {
+    height: 'auto',
+    width: 'auto',
+  },
+});
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -75,21 +59,10 @@ const ButtonWrapper = styled.div`
   margin: ${helpers.rhythmDiv * 4}px 0;
 `;
 
-const DialogActionText = styled.p`
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv}px;
-  flex-shrink: 0;
-`;
-
-const ActionWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter} justify-content: flex-end;
-`;
-
 const InputWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
   display: flex;
-  justify-content: ${props => (props.stars ? "center" : "flex-start")};
+  justify-content: ${props => (props.stars ? 'center' : 'flex-start')};
 `;
 
 const Title = styled.span`
@@ -102,12 +75,12 @@ class GiveReviewDialogBox extends Component {
   state = {
     isBusy: false,
     ratings: 5,
-    comment: ""
+    comment: '',
   };
 
-  handleRatingsChange = newRating => {
+  handleRatingsChange = (newRating) => {
     this.setState({
-      ratings: newRating
+      ratings: newRating,
     });
 
     if (this.props.onRatingsChange) {
@@ -115,9 +88,9 @@ class GiveReviewDialogBox extends Component {
     }
   };
 
-  handleReviewChange = e => {
+  handleReviewChange = (e) => {
     this.setState({
-      comment: e.target.value
+      comment: e.target.value,
     });
 
     if (this.props.onReviewChange) {
@@ -125,7 +98,7 @@ class GiveReviewDialogBox extends Component {
     }
   };
 
-  handleFormSubmit = e => {
+  handleFormSubmit = (e) => {
     const { toastr } = this.props;
     e.preventDefault();
 
@@ -133,18 +106,18 @@ class GiveReviewDialogBox extends Component {
       reviewForId: this.props.reviewForId,
       reviewFor: this.props.reviewFor,
       ratings: this.state.ratings,
-      comment: this.state.comment
+      comment: this.state.comment,
     };
 
     if (Meteor.userId()) {
       this.setState({ isBusy: true });
 
-      Meteor.call("reviews.addReview", data, (err, res) => {
+      Meteor.call('reviews.addReview', data, (err, res) => {
         this.setState({ isBusy: false }, () => {
           if (err) {
-            toastr.error(err.reason || err.message, "Error");
+            toastr.error(err.reason || err.message, 'Error');
           } else if (res) {
-            toastr.success("Your review has been added/updated", "success");
+            toastr.success('Your review has been added/updated', 'success');
             this.props.onModalClose();
           }
 
@@ -157,11 +130,11 @@ class GiveReviewDialogBox extends Component {
   };
 
   componentDidMount = () => {
-    Meteor.call("reviews.getMyReview", this.props.reviewForId, (err, data) => {
+    Meteor.call('reviews.getMyReview', this.props.reviewForId, (err, data) => {
       if (data) {
         this.setState({
           ratings: data.ratings,
-          comment: data.comment
+          comment: data.comment,
         });
       }
     });
@@ -210,7 +183,7 @@ class GiveReviewDialogBox extends Component {
                   <IconInput
                     inputId="comment"
                     labelText="Give your review here"
-                    multiline={true}
+                    multiline
                     value={this.state.comment}
                     onChange={this.handleReviewChange}
                   />
@@ -240,13 +213,11 @@ GiveReviewDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   title: PropTypes.string,
   reviewFor: PropTypes.string,
-  reviewForId: PropTypes.string
+  reviewForId: PropTypes.string,
 };
 
 GiveReviewDialogBox.defaultProps = {
-  title: "Give Review"
+  title: 'Give Review',
 };
 
-export default toastrModal(
-  withMobileDialog()(withStyles(styles)(GiveReviewDialogBox))
-);
+export default toastrModal(withMobileDialog()(withStyles(styles)(GiveReviewDialogBox)));

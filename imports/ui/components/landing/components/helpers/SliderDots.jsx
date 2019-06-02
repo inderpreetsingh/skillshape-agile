@@ -1,8 +1,6 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter};
@@ -16,7 +14,7 @@ const Dot = styled.div`
   margin-right: ${helpers.rhythmDiv / 2}px;
   transition: background 0.2s linear;
   cursor: pointer;
-  background: ${props => (props.selected ? props.dotColor : "white")};
+  background: ${props => (props.selected ? props.dotColor : 'white')};
 
   &:last-of-type {
     margin-right: 0;
@@ -25,7 +23,7 @@ const Dot = styled.div`
 
 class SliderDots extends Component {
   state = {
-    currentIndex: this.props.currentIndex
+    currentIndex: this.props.currentIndex,
   };
 
   handleDotClick = index => () => {
@@ -38,7 +36,7 @@ class SliderDots extends Component {
     }
   };
 
-  createDots = noOfDots => {
+  createDots = (noOfDots) => {
     const dots = [];
     const { currentIndex } = this.state;
     const { dotColor, dotClassName } = this.props;
@@ -49,25 +47,31 @@ class SliderDots extends Component {
           selected={i === currentIndex}
           dotColor={dotColor}
           onClick={this.handleDotClick(i)}
-        />
+        />,
       );
     }
     return dots;
   };
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps) => {
     if (nextProps.currentIndex !== this.state.currentIndex) {
       this.setState({ currentIndex: nextProps.currentIndex });
     }
   };
 
   render() {
-    return <Wrapper> {this.createDots(this.props.noOfDots)} </Wrapper>;
+    return (
+      <Wrapper>
+        {' '}
+        {this.createDots(this.props.noOfDots)}
+        {' '}
+      </Wrapper>
+    );
   }
 }
 
 SliderDots.defaultProps = {
-  dotColor: helpers.black
+  dotColor: helpers.black,
 };
 
 export default SliderDots;

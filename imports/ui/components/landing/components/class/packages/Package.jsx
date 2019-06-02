@@ -415,7 +415,6 @@ class Package extends React.Component {
 			</Fragment>
 			);
 		}
-		let BB = { backgroundColor: 'black' };
 		return (<Fragment>
 			<OuterWrapper
 				appearance={appearance}

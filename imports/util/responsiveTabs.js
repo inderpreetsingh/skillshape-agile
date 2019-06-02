@@ -67,7 +67,6 @@ const InnerWrapper = styled.div`
 class ResponsiveTabs extends React.Component {
   constructor(props) {
     super(props);
-    let { defaultValue } = this.props;
 
     this.state = {
       tabValue: this.props.tabValue
@@ -97,6 +96,7 @@ class ResponsiveTabs extends React.Component {
           {this.props.tabs.map((tab, index) => {
             return (
               <Button
+              key={index.toString()}
                 classes={{ label: classes.muiLabel }}
                 className={
                   index == this.state.tabValue ? btnActive : btn

@@ -1,35 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Recaptcha from "react-recaptcha";
-import styled from "styled-components";
-import Input, { InputLabel } from "material-ui/Input";
-
-import IconButton from "material-ui/IconButton";
 import ClearIcon from "material-ui-icons/Clear";
-import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
-import { MuiThemeProvider } from "material-ui/styles";
+import Dialog, { DialogContent, withMobileDialog } from "material-ui/Dialog";
+import { FormControl } from "material-ui/Form";
+import IconButton from "material-ui/IconButton";
+import Input, { InputLabel } from "material-ui/Input";
+import { MuiThemeProvider, withStyles } from "material-ui/styles";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import styled from "styled-components";
+import PrimaryButton from "../buttons/PrimaryButton";
+import * as helpers from "../jss/helpers";
+import muiTheme from "../jss/muitheme";
 
-import PrimaryButton from "../buttons/PrimaryButton.jsx";
 
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
 
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
 
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
+
 
 const styles = {
   dialogPaper: {
@@ -58,10 +43,7 @@ const styles = {
   }
 };
 
-const DialogBoxHeaderText = styled.p`
-  font-family: ${helpers.commonFont};
-  color: ${helpers.textColor};
-`;
+
 
 const DialogTitleContainer = styled.div`
   ${helpers.flexCenter};
@@ -120,7 +102,7 @@ class SchoolGetStartedDialogBox extends Component {
   };
 
   render() {
-    const { classes, open, fullScreen, onModalClose } = this.props;
+    const { classes, open,  onModalClose } = this.props;
 
     return (
       <Dialog

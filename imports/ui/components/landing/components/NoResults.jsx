@@ -1,19 +1,16 @@
-import React from 'react';
 import get from 'lodash/get';
-import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
+import React from 'react';
+import DocumentTitle from 'react-document-title';
 import styled from 'styled-components';
-import Plant from './icons/Plant.jsx';
-import Duster from './icons/Duster.jsx';
-
-//TODO: Automatic imports depending upon variables used - intellij
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
 import PrimaryButton from './buttons/PrimaryButton.jsx';
 import SecondaryButton from './buttons/SecondaryButton.jsx';
-import Footer from './footer/index.jsx';
-
+import Duster from './icons/Duster.jsx';
+import Plant from './icons/Plant.jsx';
 import * as helpers from './jss/helpers.js';
-import { noResultsImgSrc } from '../site-settings.js';
+// TODO: Automatic imports depending upon variables used - intellij
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
+
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -72,15 +69,6 @@ const IconWrapperSmallScreen = IconWrapper.extend`
   }
 `;
 
-const NoResultsImg = styled.div`
-  background-position: 50% 50%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-image: url('${props => props.imgSrc}');
-  width: 100%;
-  height: 100%;
-`;
-
 const OrText = styled.p`
   font-weight: 400;
   font-style: italic;
@@ -93,55 +81,67 @@ const OrText = styled.p`
   }
 `;
 
-const GreenDuster = () => <Duster color={helpers.primaryColor} />
+const GreenDuster = () => <Duster color={helpers.primaryColor} />;
 
-const NoResults = (props) => (
-  <DocumentTitle title={get(props, "route.name", "Untitled")}>
-  <Wrapper>
-    {props.icon && <IconWrapper>
-      <Plant />
-    </IconWrapper>}
+const NoResults = props => (
+  <DocumentTitle title={get(props, 'route.name', 'Untitled')}>
+    <Wrapper>
+      {props.icon && (
+      <IconWrapper>
+        <Plant />
+      </IconWrapper>
+      )}
 
-    {props.icon && <IconWrapperSmallScreen> <Plant width={(helpers.rhythmDiv * 16) + 'px'} height={(helpers.rhythmDiv * 16) + 'px'}/> </IconWrapperSmallScreen>}
+      {props.icon && (
+      <IconWrapperSmallScreen>
+        {' '}
+        <Plant width={`${helpers.rhythmDiv * 16}px`} height={`${helpers.rhythmDiv * 16}px`} />
+        {' '}
+      </IconWrapperSmallScreen>
+      )}
 
-    {!props.hideTitle && <Title>Wow! you are the first one here with this idea.</Title>}
+      {!props.hideTitle && <Title>Wow! you are the first one here with this idea.</Title>}
 
-    {!props.ghostButtons
-      ? <ButtonsWrapper>
-          <PrimaryButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
-          <OrText> or </OrText>
-          {props.showSchoolSuggestion ?
-            <SecondaryButton fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
-            : <SecondaryButton fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>}
-        </ButtonsWrapper>
-      :
-      <ButtonsWrapper>
-        <FormGhostButton fullWidth={true} onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={GreenDuster} noMarginBottom />
-        <OrText> or </OrText>
-        {props.showSchoolSuggestion ?
-          <FormGhostButton darkGreyColor fullWidth={true} onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
-          : <FormGhostButton darkGreyColor fullWidth={true} onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom/>}
-      </ButtonsWrapper>}
-  </Wrapper>
+      {!props.ghostButtons
+        ? (
+          <ButtonsWrapper>
+            <PrimaryButton fullWidth onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={Duster} noMarginBottom />
+            <OrText> or </OrText>
+            {props.showSchoolSuggestion
+              ? <SecondaryButton fullWidth onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
+              : <SecondaryButton fullWidth onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom />}
+          </ButtonsWrapper>
+        )
+        : (
+          <ButtonsWrapper>
+            <FormGhostButton fullWidth onClick={props.removeAllFiltersButtonClick} label="Clear Filters" icon customIcon={GreenDuster} noMarginBottom />
+            <OrText> or </OrText>
+            {props.showSchoolSuggestion
+              ? <FormGhostButton darkGreyColor fullWidth onClick={props.schoolSuggestionButtonClick} label="Give Suggestion" icon iconName="sentiment_satisfied" noMarginBottom />
+              : <FormGhostButton darkGreyColor fullWidth onClick={props.addYourSchoolButtonClick} label="Add your school" icon iconName="domain" noMarginBottom />}
+          </ButtonsWrapper>
+        )}
+    </Wrapper>
   </DocumentTitle>
 );
 
 NoResults.propTypes = {
-  imgSrc: PropTypes.string,
   removeAllFiltersButtonClick: PropTypes.func,
   addYourSchoolButtonClick: PropTypes.func,
   schoolSuggestionButtonClick: PropTypes.func,
   icon: PropTypes.bool,
   hideTitle: PropTypes.bool,
-  ghostButtons: PropTypes.bool
-}
+  ghostButtons: PropTypes.bool,
+};
 
 NoResults.defaultProps = {
-  imgSrc: noResultsImgSrc,
-  showSchoolSuggestion: false,
   icon: true,
   hideTitle: false,
   ghostButtons: false,
-}
+  removeAllFiltersButtonClick: () => {},
+  addYourSchoolButtonClick: () => {},
+  schoolSuggestionButtonClick: () => {},
+
+};
 
 export default NoResults;

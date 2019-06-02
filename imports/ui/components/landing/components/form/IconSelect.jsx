@@ -1,7 +1,7 @@
 import { FormControl } from 'material-ui/Form';
 import Icon from 'material-ui/Icon';
 import Input, { InputAdornment, InputLabel } from 'material-ui/Input';
-import { MenuItem } from "material-ui/Menu";
+import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
@@ -10,43 +10,48 @@ import * as helpers from '../jss/helpers';
 
 const styles = {
   label: {
-    color: helpers.defaultInputColor
-  }
-}
+    color: helpers.defaultInputColor,
+  },
+};
 
-const IconSelect = (props) => (
-    <FormControl fullWidth>
-      <InputLabel htmlFor={props.inputId} classes={{ root: props.classes.label }}>{props.labelText}</InputLabel>
-      <Select
-        autoWidth
-        value={props.value || ''}
-        onChange={props.onChange}
-        MenuProps={{
-          onEnter: () => {
-            setTimeout(() => {
-              if (document.activeElement) {
-                document.activeElement.blur();
-              }
-            }, 500);
-          }   
-        }}
-        input={<Input
+const IconSelect = props => (
+  <FormControl fullWidth>
+    <InputLabel htmlFor={props.inputId} classes={{ root: props.classes.label }}>{props.labelText}</InputLabel>
+    <Select
+      autoWidth
+      value={props.value || ''}
+      onChange={props.onChange}
+      MenuProps={{
+        onEnter: () => {
+          setTimeout(() => {
+            if (document.activeElement) {
+              document.activeElement.blur();
+            }
+          }, 500);
+        },
+      }}
+      input={(
+        <Input
           name={props.inputId || props.inputProps.name}
           id={props.inputId || props.inputProps.id}
-          endAdornment={
+          endAdornment={(
             <InputAdornment position="end">
               <Icon color="disabled">{props.iconName}</Icon>
             </InputAdornment>
-          } />
-      
-        }>
-        {props.children ||
-          props.options.map(selectOption => (
-            <MenuItem value={selectOption.value}>
+)}
+        />
+)
+
+        }
+    >
+      {props.children
+          || props.options.map((selectOption, index) => (
+            <MenuItem value={selectOption.value} key={index.toString()}>
               {selectOption.name || selectOption.label}
-            </MenuItem>))}
-      </Select>
-    </FormControl>
+            </MenuItem>
+          ))}
+    </Select>
+  </FormControl>
 );
 
 IconSelect.propTypes = {
@@ -57,13 +62,13 @@ IconSelect.propTypes = {
   onChange: PropTypes.func,
   inputId: PropTypes.string,
   children: PropTypes.element,
-}
+};
 
 IconSelect.defaultProps = {
   inputProps: {
     name: 'input-select',
-    id: ''
-  }
-}
+    id: '',
+  },
+};
 
 export default withStyles(styles)(IconSelect);

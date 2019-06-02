@@ -176,7 +176,6 @@ class EmailUsDialogBox extends Component {
     if (this.state.readyToSumit) {
       if (!emailReg.test(yourEmail) && !Meteor.user()) {
         toastr.appear("alert", { content: "Please enter valid email address" });
-        return false;
       } else {
         // Start loading
         this.setState({ isLoading: true });

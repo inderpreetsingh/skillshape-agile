@@ -1,24 +1,36 @@
+import { isEmpty } from 'lodash';
+import { check } from 'meteor/check';
 import Attendance from './fields';
-import ClassType from '/imports/api/classType/fields.js';
-import {get,isEmpty,uniq,includes,flatten} from 'lodash';
+import ClassType from '/imports/api/classType/fields';
 
 Meteor.methods({
-    "attendance.updateData":function(filter,status){
-        filter.attendedTime = new Date();
-        filter.classId = filter._id;
-        delete filter._id;
-        Attendance.insert(filter);
-        return true;
-    },
-    "attendance.findById":function(filter){
-        let attendanceData = Attendance.find(filter).fetch();
-        !isEmpty(attendanceData) && attendanceData.map((obj,index)=>{
-            obj.classTypeName = ClassType.findOne({_id:obj.classTypeId},{fields:{name:1}}).name;
-        })
-        return attendanceData;
-    },
-    'attendance.removeData':function(filter){
-        let {_id:classId,userId} = filter;
-        Attendance.remove({userId,classId});
+  'attendance.updateData': (filter = {}) => {
+    check(filter, Object);
+    const newFilter = Object.assign(filter);
+    newFilter.attendedTime = new Date();
+    newFilter.classId = newFilter._id;
+    delete newFilter._id;
+    Attendance.insert(newFilter);
+    return true;
+  },
+  'attendance.findById': (filter = {}) => {
+    check(filter, Object);
+    const attendanceData = Attendance.find(filter).fetch();
+    let response = [];
+    if (!isEmpty(attendanceData)) {
+      response = attendanceData.map((obj) => {
+        const newObj = Object.assign(obj);
+        newObj.classTypeName = ClassType.findOne(
+          { _id: newObj.classTypeId }, { fields: { name: 1 } },
+        ).name;
+        return newObj;
+      });
     }
-})
+    return response;
+  },
+  'attendance.removeData': (filter) => {
+    check(filter, Object);
+    const { _id: classId, userId } = filter;
+    Attendance.remove({ userId, classId });
+  },
+});

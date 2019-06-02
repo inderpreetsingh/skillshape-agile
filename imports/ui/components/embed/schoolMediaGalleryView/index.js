@@ -1,39 +1,28 @@
-import { createContainer } from "meteor/react-meteor-data";
-import React from "react";
-import School from "/imports/api/school/fields";
-import ImageGridGallery from "/imports/ui/components/schoolView/editSchool/mediaDetails/gridGallery/gridGalleryView.js";
+import { createContainer } from 'meteor/react-meteor-data';
+import React from 'react';
+import School from '/imports/api/school/fields';
+import ImageGridGallery from '/imports/ui/components/schoolView/editSchool/mediaDetails/gridGallery/gridGalleryView';
 
 class SchoolMediaGalleryView extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidUpdate() {
     // Get height of document
     function getDocHeight(doc) {
       doc = doc || document;
-      // from http://stackoverflow.com/questions/1145850/get-height-of-entire-document-with-javascript
-      var body = doc.body,
-        html = doc.documentElement;
-      var height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight
-      );
-      return doc.getElementById("UserMainPanel").offsetHeight;
+
+      html = doc.documentElement;
+
+      return doc.getElementById('UserMainPanel').offsetHeight;
     }
     // send docHeight onload
     function sendDocHeightMsg(e) {
       setTimeout(() => {
-        var ht = getDocHeight();
+        const ht = getDocHeight();
         parent.postMessage(
           JSON.stringify({
             docHeight: ht,
-            iframeId: "ss-school-mediagallery-view"
+            iframeId: 'ss-school-mediagallery-view',
           }),
-          "*"
+          '*',
         );
       }, 3000);
     }
@@ -55,8 +44,8 @@ class SchoolMediaGalleryView extends React.Component {
         <ImageGridGallery
           filters={filters}
           hideCustomControls={
-            this.props.route &&
-            this.props.route.name === "EmbedMediaGalleryView"
+            this.props.route
+            && this.props.route.name === 'EmbedMediaGalleryView'
           }
         />
       </div>
@@ -64,13 +53,13 @@ class SchoolMediaGalleryView extends React.Component {
   }
 }
 
-export default createContainer(props => {
+export default createContainer((props) => {
   const { slug } = props.params;
-  Meteor.subscribe("UserSchoolbySlug", slug);
-  const schoolData = School.findOne({ slug: slug });
+  Meteor.subscribe('UserSchoolbySlug', slug);
+  const schoolData = School.findOne({ slug });
   const schoolId = schoolData && schoolData._id;
   return {
     ...props,
-    schoolId: schoolId
+    schoolId,
   };
 }, SchoolMediaGalleryView);

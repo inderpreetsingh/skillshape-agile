@@ -1,13 +1,11 @@
-import React, { Component } from "react";
 // import SearchBar from 'material-ui-search-bar';
-import { red, grey } from "material-ui/colors";
-
-import Logo from "./Logo.jsx";
-import FilterCards from "./FilterCards.jsx";
-
+import { red } from 'material-ui/colors';
+import React, { Component } from 'react';
 // Import Buttons
-import LoginButton from "./buttons/Login.jsx";
-import MenuIconButton from "./buttons/MenuIconButton.jsx";
+import LoginButton from './buttons/Login';
+import MenuIconButton from './buttons/MenuIconButton';
+import FilterCards from './FilterCards';
+import Logo from './Logo';
 
 class IsNavBar extends Component {
   render() {
@@ -21,7 +19,7 @@ class IsNavBar extends Component {
                 <Logo
                   brandText={brandText}
                   brandTagline={brandTagline}
-                  logoSrc={"/public/logo.png"}
+                  logoSrc="/public/logo.png"
                 />
               </div>
 
@@ -34,7 +32,7 @@ class IsNavBar extends Component {
             </div>
 
             <div className="is-search-panel">
-              {/*<SearchBar
+              {/* <SearchBar
                         className = 'is-search-bar'
                         hintText ='Yoga in Delhi...'
                         style={{
@@ -42,15 +40,13 @@ class IsNavBar extends Component {
                           maxWidth: 400,
                           marginTop:'50px',
                         }}
-                      />*/}
+                      /> */}
               <p className="or" style={{ color: red[900] }}>
-                {" "}
-                Or{" "}
+                {' '}
+                Or
+                {' '}
               </p>
-              <FindLocationButton
-                itemScope
-                itemType="http://schema.org/DiscoverAction"
-              />
+              <FindLocationButton itemScope itemType="http://schema.org/DiscoverAction" />
             </div>
           </div>
         </header>

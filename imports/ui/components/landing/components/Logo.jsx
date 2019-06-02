@@ -1,12 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { redirectUserBasedOnType } from "/imports/util";
-import { browserHistory } from "react-router";
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import * as settings from '../site-settings';
+// TODO: Automatic imports depending upon variables used - intellij
+import * as helpers from './jss/helpers';
 
-//TODO: Automatic imports depending upon variables used - intellij
-import * as helpers from "./jss/helpers.js";
-import * as settings from "../site-settings.js";
 
 const BrandArea = styled.div`
   cursor: pointer;
@@ -19,16 +17,14 @@ const BrandArea = styled.div`
 `;
 
 const BrandText = styled.h1`
-  font-size: ${props =>
-    props.smallBrandText
-      ? helpers.baseFontSize * 1.5
-      : helpers.baseFontSize * 2}px;
+  font-size: ${props => (props.smallBrandText
+    ? helpers.baseFontSize * 1.5
+    : helpers.baseFontSize * 2)}px;
   margin: 0;
   font-weight: 600;
-  line-height: ${props =>
-    props.smallBrandText
-      ? helpers.baseFontSize * 1.25
-      : helpers.brandBarHeight}px;
+  line-height: ${props => (props.smallBrandText
+    ? helpers.baseFontSize * 1.25
+    : helpers.brandBarHeight)}px;
   color: ${helpers.focalColor};
 
   @media screen and (min-width: 0) and (max-width: ${helpers.mobile}px) {
@@ -48,10 +44,8 @@ const MainText = styled.span`
 
 const BrandTagline = styled.span`
   font-weight: 300;
-  font-size: ${props =>
-    props.smallBrandText ? helpers.baseFontSize : helpers.baseFontSize * 1.5}px;
-  line-height: ${props =>
-    props.smallBrandText ? "1" : helpers.brandBarHeight + "px"};
+  font-size: ${props => (props.smallBrandText ? helpers.baseFontSize : helpers.baseFontSize * 1.5)}px;
+  line-height: ${props => (props.smallBrandText ? '1' : `${helpers.brandBarHeight}px`)};
   color: ${helpers.textColor};
 
   @media screen and (min-width: 0) and (max-width: ${helpers.mobile}px) {
@@ -61,8 +55,8 @@ const BrandTagline = styled.span`
 `;
 
 const LogoWrapper = styled.div`
-  width: ${props => (props.height ? props.height : "50")}px;
-  height: ${props => (props.width ? props.width : "50")}px;
+  width: ${props => (props.height ? props.height : '50')}px;
+  height: ${props => (props.width ? props.width : '50')}px;
 `;
 
 const LogoImage = styled.img`
@@ -77,9 +71,8 @@ const LogoImage = styled.img`
   }
 
   @media screen and (min-width: 0) and (max-width: ${helpers.mobile}px) {
-    margin-right: ${props => (props.brandTextShown ? "5" : "0")}px;
-    height: ${props =>
-      props.height ? props.height : helpers.brandBarHeightMobile}px;
+    margin-right: ${props => (props.brandTextShown ? '5' : '0')}px;
+    height: ${props => (props.height ? props.height : helpers.brandBarHeightMobile)}px;
     font-size: ${helpers.baseFontSize}px;
   }
 `;
@@ -93,7 +86,7 @@ const Logo = ({
   brandTagline,
   logoSrc,
   showLogo,
-  onLogoClick
+  onLogoClick,
 }) => (
   <BrandArea
     onClick={onLogoClick}
@@ -119,12 +112,17 @@ const Logo = ({
       <BrandText
         itemProp="name"
         smallBrandText={smallBrandText}
-        className={smallBrandText && "flex-column"}
+        className={smallBrandText && 'flex-column'}
       >
-        <MainText>{brandText},</MainText>
+        <MainText>
+          {brandText}
+,
+        </MainText>
         <BrandTagline smallBrandText={smallBrandText}>
-          {" "}
-          {brandTagline}.{" "}
+          {' '}
+          {brandTagline}
+.
+          {' '}
         </BrandTagline>
       </BrandText>
     )}
@@ -133,11 +131,14 @@ const Logo = ({
 Logo.propTypes = {
   brandText: PropTypes.string,
   brandTagline: PropTypes.string,
-  brandText: PropTypes.string,
   logoSrc: PropTypes.string,
   showLogo: PropTypes.bool,
   smallBrandText: PropTypes.bool,
-  onLogoClick: PropTypes.func
+  onLogoClick: PropTypes.func,
+  brandTextShown: PropTypes.bool,
+  height: PropTypes.number,
+  width: PropTypes.number,
+
 };
 
 Logo.defaultProps = {
@@ -146,7 +147,10 @@ Logo.defaultProps = {
   brandTextShown: true,
   brandText: settings.brandText,
   brandTagline: settings.brandTagline,
-  logoSrc: settings.logoSrc
+  logoSrc: settings.logoSrc,
+  onLogoClick: () => {},
+  height: 50,
+  width: 50,
 };
 
 export default Logo;

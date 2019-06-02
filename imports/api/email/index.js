@@ -5,7 +5,6 @@ import config from "/imports/config";
 import { getUserFullName } from "/imports/util/getUserData";
 import {welcomeEMail} from './welcome_email';
 let platform = Meteor.settings.platform;
-let styleForLinks = "display: block; width: 224px; text-align: center; padding: .7em;font-size: 16px; font-family: 'Zilla Slab', serif; margin-right: 8px;background-color: #4caf50; color: white; text-decoration: none;"
 export const sendNewSchoolSuggestionEmail = function ({ newSuggestionLink }) {
   let to;
   if (platform == 'local') {
@@ -717,7 +716,7 @@ export const errorBoundaryEmail = function ({
   url
 }) {
   let emails = ['naruto@ryaz.io', 'singhs.ishwer@gmail.com'];
-  emails.map((to) => {
+  emails.forEach((to) => {
     Email.send({
       to: to, //emailObj.to
       from: "Notices@SkillShape.com",

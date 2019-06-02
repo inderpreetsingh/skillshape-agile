@@ -132,7 +132,7 @@ export class OneTimeRow extends React.Component {
     return (
       <Wrapper>
         {row.map((data, index) => {
-          return (<CTFormWrapper>
+          return (<CTFormWrapper key={index.toString()}>
             <CTFormRow
               marginBottom={helpers.rhythmDiv * 2}
             >

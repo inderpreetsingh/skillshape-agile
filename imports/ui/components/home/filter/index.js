@@ -1,30 +1,29 @@
-import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
-import { browserHistory } from "react-router";
-import SkillClassFilterRender from "./skillClassFilterRender";
+import { createContainer } from 'meteor/react-meteor-data';
+import React from 'react';
+import SkillClassFilterRender from './skillClassFilterRender';
 
 class SkillClassFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classPrice: ["0.0", "1000"],
-      monthPrice: ["0.0", "1000"],
+      classPrice: ['0.0', '1000'],
+      monthPrice: ['0.0', '1000'],
       SLocation: null,
       skillCategory: null,
-      skillSubject: null
+      skillSubject: null,
     };
   }
 
   componentDidMount() {
     this.initializeSlider();
     setTimeout(() => {
-      let autocomplete = new google.maps.places.Autocomplete(this.location);
-      autocomplete.addListener("place_changed", () => {
-        let place = autocomplete.getPlace();
-        let coords = [];
-        coords[0] = place.geometry["location"] && place.geometry["location"].lat();
-        coords[1] = place.geometry["location"] && place.geometry["location"].lng();
-        
+      const autocomplete = new google.maps.places.Autocomplete(this.location);
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        const coords = [];
+        coords[0] = place.geometry.location && place.geometry.location.lat();
+        coords[1] = place.geometry.location && place.geometry.location.lng();
+
         this.coords = coords;
         this.setState({ SLocation: place.formatted_address });
         this.props.onSearch(this);
@@ -40,9 +39,9 @@ class SkillClassFilter extends React.Component {
   }
 
   initializeSlider = () => {
-    let self = this;
-    const rangeClass = document.getElementById("sliderPriceClass");
-    const rangeMonth = document.getElementById("sliderPriceMonth");
+    const self = this;
+    const rangeClass = document.getElementById('sliderPriceClass');
+    const rangeMonth = document.getElementById('sliderPriceMonth');
     // noUiSlider.create(rangeClass,{
     //   start: [0, 1000],
     //   connect: true,
@@ -72,10 +71,8 @@ class SkillClassFilter extends React.Component {
   };
 
   autocompleteOnChange = () => {
-    this.skillCategory = this.refs[
-      "skillCategoryId"
-    ].getSelectedAutoCompleteValue();
-    this.skillSubject = this.refs["skillCategoryId"].getAutoSelectValue();
+    this.skillCategory = this.refs.skillCategoryId.getSelectedAutoCompleteValue();
+    this.skillSubject = this.refs.skillCategoryId.getAutoSelectValue();
     if (this.skillCategory) {
       this.props.onSearch(this);
     }
@@ -86,8 +83,8 @@ class SkillClassFilter extends React.Component {
   }
 }
 
-export default createContainer(props => {
-  Meteor.subscribe("SkillType");
+export default createContainer((props) => {
+  Meteor.subscribe('SkillType');
   const skillType = SkillType.find({}).fetch();
   return { ...props, skillType };
 }, SkillClassFilter);

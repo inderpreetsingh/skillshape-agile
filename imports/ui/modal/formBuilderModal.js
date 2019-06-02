@@ -23,12 +23,11 @@ export class FormBuilderModal extends React.Component {
     this.initializeFormValues();  
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
+ 
 
   getFormFields = () => {
     let formFields;
-    let { tableData, formFieldsValues } = this.props;
+    let { tableData } = this.props;
     if(tableData && tableData.actions.formFields) {
       formFields = tableData.actions.formFields 
     } else if(tableData && tableData.actions.edit.formFields) {
@@ -144,7 +143,7 @@ export class FormBuilderModal extends React.Component {
       let payload = {};
       let formFields = this.getFormFields()
       
-      for(formField of formFields) {
+      for(let formField of formFields) {
         
         switch(formField.type) {
 
@@ -206,7 +205,7 @@ export class FormBuilderModal extends React.Component {
         editByFieldValue = formFieldsValues[tableData.actions.edit.editByField];
       }
 
-      methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal.bind(this), editByFieldValue, parentKeyValue});
+      methods[callApi]({formPayload: payload, props: this.props, closeModal: this.hideModal, editByFieldValue, parentKeyValue});
 
     }
   }
@@ -245,7 +244,7 @@ export class FormBuilderModal extends React.Component {
           ref={field.key}
         >
           { 
-            field.defaultOption && <option disabled selected>{field.defaultOption}</option>
+            field.defaultOption && <option disabled defaultValue={field.options[0].value}>{field.defaultOption}</option>
           }
           { 
             field.options.map((option, i) => {

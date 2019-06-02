@@ -1,71 +1,68 @@
-import React from "react";
-import { createContainer } from "meteor/react-meteor-data";
-import FullCalendarRender from "./fullCalendarRender";
-import ClassTimes from "/imports/api/classTimes/fields";
-import ClassInterest from "/imports/api/classInterest/fields";
-import moment from "moment";
-import tz from 'moment-timezone';
-import ClassType from "/imports/api/classType/fields";
-import { uniq } from "lodash";
-import fullCalendarRender from "./fullCalendarRender";
-import {get} from 'lodash';
-import {  formatTime } from "/imports/util";
+import { get, uniq } from "lodash";
+import { createContainer } from 'meteor/react-meteor-data';
+import moment from 'moment';
+import React from 'react';
+import FullCalendarRender from './fullCalendarRender';
+import ClassInterest from '/imports/api/classInterest/fields';
+import ClassTimes from '/imports/api/classTimes/fields';
+import { formatTime } from '/imports/util';
+
 
 class FullCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.options = {
       header: {
-        left: "prev,next today",
-        center: "title",
-        right: "month,week,listWeek"
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,week,listWeek',
         // right: "month,agendaWeek,agendaDay,listWeek"
       },
-      defaultView: $(window).width() < 500 ? "listWeek" : "week",
+      defaultView: $(window).width() < 500 ? 'listWeek' : 'week',
       views: {
         week: {
-          type: "basic",
-          duration: { weeks: 3 }
-        }
+          type: 'basic',
+          duration: { weeks: 3 },
+        },
       },
-      //theme:false,
+      // theme:false,
       firstDay: moment().day(),
-      //columnFormat: 'ddd - D',
+      // columnFormat: 'ddd - D',
       // contentHeight: 'auto',
-      height: "auto", // Sets the height of the entire calendar, including header and footer.
+      height: 'auto', // Sets the height of the entire calendar, including header and footer.
       defaultDate: new Date(),
       selectable: true,
       selectHelper: true,
       navLinks: false, // can click day/week names to navigate views
       editable: false,
       eventLimit: false,
-      windowResize: view => {
+      windowResize: (view) => {
         if ($(window).width() < 500) {
-          $("#fullcalendar-container").fullCalendar("changeView", "listWeek");
+          $('#fullcalendar-container').fullCalendar('changeView', 'listWeek');
         } else {
-          $("#fullcalendar-container").fullCalendar("changeView", "week");
+          $('#fullcalendar-container').fullCalendar('changeView', 'week');
         }
       },
       // allow "more" link when too many events
-      /*eventSources :[sevents],*/
+      /*eventSources :[sevents], */
       eventSources: (start, end, timezone, callback) => {
-        let startDate = new Date(start);
-        let endDate = new Date(end);
+        const startDate = new Date(start);
+        const endDate = new Date(end);
         if (!this.props.startDate && startDate) {
           this.props.setDate(startDate, endDate);
         }
         if (
-          this.props.startDate &&
-          startDate &&
-          this.props.startDate.valueOf() !== startDate.valueOf()
+          this.props.startDate
+          && startDate
+          && this.props.startDate.valueOf() !== startDate.valueOf()
         ) {
           this.props.setDate(startDate, endDate);
         }
-        let sevents = this.buildCalander() || [];
+        const sevents = this.buildCalander() || [];
         callback(sevents);
       },
-      dayRender: function (date, cell) { },
-      eventRender: function (event, element, view) {
+      dayRender (date, cell) { },
+      eventRender (event, element, view) {
         let renderEvent = true;
         event.deletedEvents &&
           event.deletedEvents.map(current => {
@@ -102,23 +99,24 @@ class FullCalendar extends React.Component {
         }
       },
       eventClick: (event, jsEvent) => {
-        let clickedDate = moment(event.start).format("YYYY-MM-DD");
+        const clickedDate = moment(event.start).format('YYYY-MM-DD');
         if (event.classTimeId && event.classTypeId) {
           this.props.showEventModal(true, event, clickedDate, jsEvent);
         }
-      }
+      },
     };
   }
-  _getNormalizedDayValue = value => {
+
+  _getNormalizedDayValue = (value) => {
     if (value == 6) {
       return 0;
     } else {
-      return value ;
+      return value;
     }
   };
 
-  _createSEventForSeriesClasses = (sevent, scheduleDetailsObj,timeZone) => {
-    let temp = { ...sevent };
+  _createSEventForSeriesClasses = (sevent, scheduleDetailsObj, timeZone) => {
+    const temp = { ...sevent };
     // console.group("object for svent");
     // console.log(dateObj.value, "----");
     // console.groupEnd();
@@ -126,21 +124,21 @@ class FullCalendar extends React.Component {
     temp.dow = [scheduleDetailsObj.day];
 
     // Keys `start` and ``end` are needed to show start and end time of an event on Calander.
-    temp.start = moment(scheduleDetailsObj.startTime).format("HH:mm");
+    temp.start = moment(scheduleDetailsObj.startTime).format('HH:mm');
     temp.startTime = scheduleDetailsObj.startTime;
     temp.end = moment(new Date(scheduleDetailsObj.startTime))
-      .add(scheduleDetailsObj.duration, "minutes")
-      .format("hh:mm");
-      
-    temp.eventStartTime = formatTime(scheduleDetailsObj.startTime,timeZone);
+      .add(scheduleDetailsObj.duration, 'minutes')
+      .format('hh:mm');
+
+    temp.eventStartTime = formatTime(scheduleDetailsObj.startTime, timeZone);
     temp.eventEndTime = moment(new Date(scheduleDetailsObj.startTime))
       .add(
         scheduleDetailsObj.duration,
-        (scheduleDetailsObj.timeUnits &&
-          scheduleDetailsObj.timeUnits.toLowerCase()) ||
-        "minutes"
+        (scheduleDetailsObj.timeUnits
+          && scheduleDetailsObj.timeUnits.toLowerCase())
+        || 'minutes',
       )
-      .format("hh:mm");
+      .format('hh:mm');
     temp.title = scheduleDetailsObj.title;
 
     // +
@@ -150,8 +148,8 @@ class FullCalendar extends React.Component {
     // temp.eventEndTime;
     temp.roomId = scheduleDetailsObj.roomId;
     temp.durationAndTimeunits = `${scheduleDetailsObj.duration} ${
-      scheduleDetailsObj.timeUnits ? scheduleDetailsObj.timeUnits : "Minutes"
-      }`;
+      scheduleDetailsObj.timeUnits ? scheduleDetailsObj.timeUnits : 'Minutes'
+    }`;
 
     // sevent.age = classTypeData && classTypeData.ageMin;
     // sevent.gender = classTypeData && classTypeData.gender;
@@ -176,35 +174,37 @@ class FullCalendar extends React.Component {
   };
 
   buildCalander = () => {
-    let {
+    const {
       classTimesData,
       classInterestData,
       managedClassTimes,
-      schoolClassTimes
+      schoolClassTimes,
     } = this.props;
-    let { manageMyCalendarFilter } = this.props;
-    let sevents = [];
-    let myClassTimesIds = classInterestData.map(data => data.classTimeId);
+    const { manageMyCalendarFilter } = this.props;
+    const sevents = [];
+    const myClassTimesIds = classInterestData.map(data => data.classTimeId);
     // Class Time Ids managed by current user
-    let { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
+    const { manageClassTimeIds, schoolClassTimeId } = manageMyCalendarFilter;
     // let schoolClassTimesIds = schoolClassTimes.map(data => data._id);
-    // merging deletedEvents data from classInterestData to classTimesData for disabling  
-    classInterestData.map(current1 => {
-      classTimesData.map(current2 => {
+    // merging deletedEvents data from classInterestData to classTimesData for disabling
+    classInterestData.map((current1) => {
+      classTimesData.map((current2) => {
         if (current1.classTimeId == current2._id) {
-          current2 && current2.deletedEvents
-            ? (current2.deletedEvents = uniq(
-              current2.deletedEvents.concat(current1.deletedEvents)
-            ))
-            : (current2.deletedEvents = current1.deletedEvents);
+          if(current2.deletedEvents){
+            current2.deletedEvents = uniq(
+              current2.deletedEvents.concat(current1.deletedEvents))
+          }
+          else{
+            current2.deletedEvents = current1.deletedEvents
+          }
         }
       });
     });
-    for (var i = 0; i < classTimesData.length; i++) {
-      let classTime = classTimesData[i];
+    for (let i = 0; i < classTimesData.length; i++) {
+      const classTime = classTimesData[i];
       try {
         let sevent;
-        let timeZone = get(classTime,'selectedLocation.timeZone',null)
+        const timeZone = get(classTime, 'selectedLocation.timeZone', null);
         sevent = {
           classTimeId: classTime._id,
           classTypeId: classTime.classTypeId,
@@ -217,43 +217,43 @@ class FullCalendar extends React.Component {
           endDate: classTime.endDate,
           allDay: false, // This property affects whether an event's time is shown.
           deletedEvents: classTime.deletedEvents,
-          timeZone
+          timeZone,
         };
         let checkedClassTimes = false;
         // Three type of class times seperated into different colors.
         if (manageClassTimeIds.indexOf(classTime._id) > -1) {
-          sevent.className = "event-rose";
+          sevent.className = 'event-rose';
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (myClassTimesIds.indexOf(classTime._id) > -1) {
-          sevent.className = "event-green";
+          sevent.className = 'event-green';
           sevent.attending = true;
           checkedClassTimes = true;
         } else if (schoolClassTimeId.indexOf(classTime._id) > -1) {
-          sevent.className = "event-azure";
+          sevent.className = 'event-azure';
           sevent.attending = false;
           checkedClassTimes = true;
         }
         // let classTypeData = ClassType.findOne({ _id: classTime.classTypeId});
-        if (classTime.scheduleType === "oneTime" && checkedClassTimes) {
-          let scheduleData = classTime.scheduleDetails;
+        if (classTime.scheduleType === 'oneTime' && checkedClassTimes) {
+          const scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
           scheduleData.map((obj, index) => {
             sevent.start = obj.startTime;
             sevent.startTime = obj.startTime;
             sevent.roomId = obj.roomId;
-            sevent.eventStartTime =formatTime(obj.startTime,timeZone); 
+            sevent.eventStartTime = formatTime(obj.startTime, timeZone);
             sevent.eventEndTime = moment(new Date(obj.startTime))
               .add(
                 obj.duration,
-                (obj.timeUnits && obj.timeUnits.toLowerCase()) || "minutes"
+                (obj.timeUnits && obj.timeUnits.toLowerCase()) || 'minutes',
               )
-              .format("hh:mm");
-            sevent.title = classTime.classTypeName.name + ": " + classTime.name;
-            sevent.classTypeName  = classTime.classTypeName.name;
+              .format('hh:mm');
+            sevent.title = `${classTime.classTypeName.name  }: ${  classTime.name}`;
+            sevent.classTypeName = classTime.classTypeName.name;
             sevent.durationAndTimeunits = `${obj.duration} ${
-              obj.timeUnits ? obj.timeUnits : "Minutes"
-              }`;
+              obj.timeUnits ? obj.timeUnits : 'Minutes'
+            }`;
             // +
             // " " +
             // sevent.eventStartTime +
@@ -282,47 +282,47 @@ class FullCalendar extends React.Component {
         }
 
         if (
-          checkedClassTimes &&
-          classTime.scheduleDetails &&
-          (classTime.scheduleType === "recurring" ||
-            classTime.scheduleType === "OnGoing")
+          checkedClassTimes
+          && classTime.scheduleDetails
+          && (classTime.scheduleType === 'recurring'
+            || classTime.scheduleType === 'OnGoing')
         ) {
-          let scheduleData = classTime.scheduleDetails;
+          const scheduleData = classTime.scheduleDetails;
           sevent.scheduleDetails = classTime.scheduleDetails;
           sevent.endDate = classTime.endDate && moment(classTime.endDate);
 
           // In older data we don't have scheduleData as array
           if (!scheduleData.length) {
             const daysOfWeek = Object.keys(scheduleData);
-            scheduleData[daysOfWeek].forEach(dayDetails => {
+            scheduleData[daysOfWeek].forEach((dayDetails) => {
               const scheduleDetailsObject = {
                 ...dayDetails,
                 startTime: classTime.startDate,
-                title: classTime.classTypeName.name + ": " + classTime.name
+                title: `${classTime.classTypeName.name  }: ${  classTime.name}`,
               };
 
               const newCalendarEvent = this._createSEventForSeriesClasses(
                 sevent,
                 scheduleDetailsObject,
-                timeZone
+                timeZone,
               );
               newCalendarEvent.classTypeName = classTime.classTypeName.name;
               sevents.push(newCalendarEvent);
             });
           } else {
             scheduleData.map((obj, index) => {
-              obj.key.forEach(dateObj => {
+              obj.key.forEach((dateObj) => {
                 const scheduleDetailsObject = {
                   ...obj,
                   day: dateObj.value,
-                  title: classTime.classTypeName.name + ": " + classTime.name
+                  title: `${classTime.classTypeName.name  }: ${  classTime.name}`,
                 };
                 const newCalendarEvent = this._createSEventForSeriesClasses(
                   sevent,
                   scheduleDetailsObject,
-                  timeZone
+                  timeZone,
                 );
-              newCalendarEvent.classTypeName = classTime.classTypeName.name;
+                newCalendarEvent.classTypeName = classTime.classTypeName.name;
                 sevents.push(newCalendarEvent);
               });
             });
@@ -340,25 +340,26 @@ class FullCalendar extends React.Component {
   }
 }
 
-export default createContainer(props => {
+export default createContainer((props) => {
   const {
     startDate,
     endDate,
     manageMyCalendar,
     isUserSubsReady,
     currentUser,
-    manageMyCalendarFilter
+    manageMyCalendarFilter,
   } = props;
   let view;
+  let routeName = get (props,'route.name','')
   if (
-    (props.route && props.route.name == "SchoolView") ||
-    props.route.name == "EmbedSchoolCalanderView"
+    routeName === 'SchoolView'
+    || routeName === 'EmbedSchoolCalanderView'
   ) {
-    view = "SchoolView";
-  } else if (props.route && props.route.name == "ClassType") {
-    view = "ClassType";
-  } else if (props.route && props.route.name == "MyCalendar") {
-    view = "MyCalendar";
+    view = 'SchoolView';
+  } else if (routeName === 'ClassType') {
+    view = 'ClassType';
+  } else if (routeName === 'MyCalendar') {
+    view = 'MyCalendar';
   }
   // let view = manageMyCalendar ? "myCalendar" : "schoolCalendar"
   let { schoolId, slug, classTypeId } = props.params || {};
@@ -366,32 +367,31 @@ export default createContainer(props => {
   let classInterestData = [];
 
   if (!schoolId && !slug) {
-    schoolId =
-      currentUser && currentUser.profile && currentUser.profile.schoolId;
+    schoolId =      currentUser && currentUser.profile && currentUser.profile.schoolId;
   }
   if (slug) {
     schoolId = props.schoolData._id;
   }
   if (startDate && endDate) {
-    let subscription = Meteor.subscribe("classTimes.getclassTimesForCalendar", {
+    const subscription = Meteor.subscribe('classTimes.getclassTimesForCalendar', {
       schoolId: schoolId || slug,
-      classTypeId: classTypeId,
+      classTypeId,
       calendarStartDate: startDate,
       calendarEndDate: endDate,
-      view
+      view,
     });
     let classTimesFilter = {};
     let classInterestFilter = {};
     if (subscription.ready()) {
       if (manageMyCalendar) {
         let classTimesIds = [];
-        for (var prop in manageMyCalendarFilter) {
+        for (let prop in manageMyCalendarFilter) {
           classTimesIds.push(manageMyCalendarFilter[prop]);
         }
         classTimesIds = _.flatten(classTimesIds);
         classTimesFilter = { _id: { $in: classTimesIds } };
         classInterestFilter = {
-          classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI }
+          classTimeId: { $in: manageMyCalendarFilter.classTimesIdsForCI },
         };
       }
     }
@@ -402,12 +402,11 @@ export default createContainer(props => {
   return {
     ...props,
     classTimesData,
-    classInterestData
+    classInterestData,
   };
 }, FullCalendar);
 
-const renderEventBox = event => {
-  return $(`<div class="fc-day-grid-event fc-h-event fc-event fc-start fc-end" style="
+const renderEventBox = (event) => $(`<div class="fc-day-grid-event fc-h-event fc-event fc-start fc-end" style="
               position: relative;
               background: #f5f5f5;
               border-radius:  5px;
@@ -440,4 +439,3 @@ const renderEventBox = event => {
                 </div>
               </div>
             </div>`);
-};

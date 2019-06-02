@@ -1,65 +1,49 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
+import ClearIcon from 'material-ui-icons/Clear';
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styled from 'styled-components';
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
 
-import PrimaryButton from "../buttons/PrimaryButton";
-import IconButton from "material-ui/IconButton";
-import ClearIcon from "material-ui-icons/Clear";
-import PhoneIcon from "material-ui-icons/Phone";
-
-import { MuiThemeProvider } from "material-ui/styles";
-import { withStyles } from "material-ui/styles";
-
-import * as helpers from "../jss/helpers.js";
-import muiTheme from "../jss/muitheme.jsx";
-
-import Dialog, {
-  DialogContent,
-  DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import { ContainerLoader } from "/imports/ui/loading/container";
-
-const styles = theme => {
-  return {
-    dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv *
-        3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`
+const styles = theme => ({
+  dialogTitleRoot: {
+    padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+  },
+  dialogContent: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    flexShrink: 0,
+  },
+  dialogActionsRoot: {
+    padding: '0 8px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+  },
+  dialogActions: {
+    width: '100%',
+    paddingLeft: `${helpers.rhythmDiv * 2}px`,
+  },
+  dialogRoot: {
+    minHeight: '400px',
+    maxWidth: '300px',
+    width: '100%',
+    [`@media screen and (max-width : ${helpers.mobile}px)`]: {
+      maxWidth: '100%',
     },
-    dialogContent: {
-      padding: `0 ${helpers.rhythmDiv * 3}px`,
-      flexShrink: 0
-    },
-    dialogActionsRoot: {
-      padding: "0 8px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-end",
-      justifyContent: "flex-start"
-    },
-    dialogActions: {
-      width: "100%",
-      paddingLeft: `${helpers.rhythmDiv * 2}px`
-    },
-    dialogRoot: {
-      minHeight: "400px",
-      maxWidth: "300px",
-      width: "100%",
-      [`@media screen and (max-width : ${helpers.mobile}px)`]: {
-        maxWidth: "100%"
-      }
-    },
-    phoneIcon: {
-      width: 'auto',
-      height: 'auto',
-      marginRight: helpers.rhythmDiv,
-      color: helpers.primaryColor,
-      background: 'white'
-    }
-  };
-};
+  },
+  phoneIcon: {
+    width: 'auto',
+    height: 'auto',
+    marginRight: helpers.rhythmDiv,
+    color: helpers.primaryColor,
+    background: 'white',
+  },
+});
 
 const ContentWrapper = styled.div`
   width: 100%;
@@ -95,7 +79,6 @@ const CDWrapper = styled.div`
   border: 1px solid ${helpers.primaryColor};
 `;
 
-
 const Contact = styled.a`
   color: ${helpers.primaryColor};
   font-size: 20px;
@@ -111,14 +94,16 @@ const CMTitle = Title.extend`
 
 const ContactDetails = props => (
   <CDWrapper>
-    <IconButton color="primary" classes={{ root: props.classes.phoneIcon }} >phone</IconButton>
+    <IconButton color="primary" classes={{ root: props.classes.phoneIcon }}>
+      phone
+    </IconButton>
     <Contact href={`tel:${props.contactNumbers}`}>{props.contactNumbers}</Contact>
   </CDWrapper>
 );
 
-const CallMemberDialogBox = props => {
+const CallMemberDialogBox = props =>
   // console.log(props,"...");
-  return (
+  (
     <Dialog
       open={props.open}
       onClose={props.onModalClose}
@@ -142,23 +127,18 @@ const CallMemberDialogBox = props => {
         <DialogContent classes={{ root: props.classes.dialogContent }}>
           <ContentWrapper>
             <CMTitle>Phone Details:</CMTitle>
-            {props.contactNumbers
-              ? <ContactDetails {...props} />
-              : "No Phone is provided yet"}
-
+            {props.contactNumbers ? <ContactDetails {...props} /> : 'No Phone is provided yet'}
           </ContentWrapper>
         </DialogContent>
       </MuiThemeProvider>
     </Dialog>
   );
-};
-
 CallMemberDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   onHandleInputChange: PropTypes.func,
   contactNumbers: PropTypes.arrayOf(PropTypes.strings),
   onModalClose: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
 };
 
 export default withMobileDialog()(withStyles(styles)(CallMemberDialogBox));

@@ -1,44 +1,37 @@
-import React, { Component } from "react";
-
-import MuiThemeProvider from "/imports/startup/client/lib/material-ui-old/styles/MuiThemeProvider";
-import getMuiTheme from "/imports/startup/client/lib/material-ui-old/styles/getMuiTheme";
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardMedia,
-  CardTitle,
-  CardText
-} from "/imports/startup/client/lib/material-ui-old/Card";
-import { RadioButton } from "/imports/startup/client/lib/material-ui-old/RadioButton";
-import ActionFavorite from "/imports/startup/client/lib/material-ui-old/svg-icons/action/favorite";
-import ActionFavoriteBorder from "/imports/startup/client/lib/material-ui-old/svg-icons/action/favorite-border";
-import MoreVertIcon from "/imports/startup/client/lib/material-ui-old/svg-icons/navigation/more-vert";
-
-import IconButton from "material-ui/IconButton";
-import Icon from "material-ui/Icon";
-import Button from "material-ui/Button";
+import Button from 'material-ui/Button';
 import Dialog, {
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  withMobileDialog
-} from "material-ui/Dialog";
-
-import { material_ui_next_theme } from "/imports/util";
+  withMobileDialog,
+} from 'material-ui/Dialog';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
+import React, { Component } from 'react';
+import {
+  Card,
+  CardActions,
+  CardMedia,
+  CardText,
+  CardTitle,
+} from '/imports/startup/client/lib/material-ui-old/Card';
+import getMuiTheme from '/imports/startup/client/lib/material-ui-old/styles/getMuiTheme';
+import MuiThemeProvider from '/imports/startup/client/lib/material-ui-old/styles/MuiThemeProvider';
+import ActionFavorite from '/imports/startup/client/lib/material-ui-old/svg-icons/action/favorite';
+import { material_ui_next_theme } from '/imports/util';
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: material_ui_next_theme.palette.primary[500]
-  }
+    primary1Color: material_ui_next_theme.palette.primary[500],
+  },
 });
 
 export class SkillShapeCard extends Component {
   state = {
     showMore: false,
-    openDialog: false
+    openDialog: false,
   };
+
   handleClickOpen = () => {
     this.setState({ openDialog: true });
   };
@@ -47,10 +40,11 @@ export class SkillShapeCard extends Component {
     this.setState({ openDialog: false });
   };
 
-  closeDetails = event => {
+  closeDetails = (event) => {
     this.setState({ showMore: false });
   };
-  onMouseOver = event => {
+
+  onMouseOver = (event) => {
     this.setState({ showMore: true });
   };
 
@@ -59,24 +53,22 @@ export class SkillShapeCard extends Component {
     const { fullScreen } = this.props;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Card
-          onMouseLeave={() => this.closeDetails()}
-          style={{ position: "relative", margin: 8 }}
-        >
+        <Card onMouseLeave={() => this.closeDetails()} style={{ position: 'relative', margin: 8 }}>
           <CardMedia>
             <IconButton
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: 6,
-                textAlign: "center",
+                textAlign: 'center',
                 right: 6,
-                minWidth: "auto",
-                maxWidth: "auto",
-                width: "auto"
+                minWidth: 'auto',
+                maxWidth: 'auto',
+                width: 'auto',
               }}
             >
-              {" "}
-              <ActionFavorite style={{ color: "#D50000", height: 24 }} />{" "}
+              {' '}
+              <ActionFavorite style={{ color: '#D50000', height: 24 }} />
+              {' '}
             </IconButton>
 
             <img
@@ -91,16 +83,16 @@ export class SkillShapeCard extends Component {
           {showMore && (
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: 0,
                 left: 20,
                 right: -20,
-                zIndex: 1
+                zIndex: 1,
               }}
             >
-              <Card style={{ height: "100%" }}>
+              <Card style={{ height: '100%' }}>
                 <IconButton
-                  style={{ float: "right", zIndex: 1 }}
+                  style={{ float: 'right', zIndex: 1 }}
                   color="accent"
                   onClick={() => this.closeDetails()}
                 >
@@ -111,30 +103,35 @@ export class SkillShapeCard extends Component {
                   Acrobatics, Trapeze in Hisar, Haryana
                   <div>
                     <p>
-                      <b>Age Range:</b> 12-22
+                      <b>Age Range:</b>
+                      {' '}
+12-22
                     </p>
                     <p>
-                      <b>Skill Level:</b> All
+                      <b>Skill Level:</b>
+                      {' '}
+All
                     </p>
                     <p>
-                      <b>Gender:</b> Female
+                      <b>Gender:</b>
+                      {' '}
+Female
                     </p>
                   </div>
                   <div>
                     <div>
                       <b>Class (Type) Description </b>
                     </div>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                   </div>
                 </CardText>
-                <CardActions style={{ textAlign: "center" }}>
+                <CardActions style={{ textAlign: 'center' }}>
                   <Button
                     style={{
                       marginTop: 5,
                       fontSize: 13,
                       padding: 8,
-                      color: "#fff"
+                      color: '#fff',
                     }}
                     raised
                     color="primary"
@@ -146,7 +143,7 @@ export class SkillShapeCard extends Component {
                       marginTop: 5,
                       fontSize: 13,
                       padding: 8,
-                      color: "#fff"
+                      color: '#fff',
                     }}
                     raised
                     color="primary"
@@ -159,7 +156,7 @@ export class SkillShapeCard extends Component {
                       marginTop: 5,
                       fontSize: 13,
                       padding: 8,
-                      color: "#fff"
+                      color: '#fff',
                     }}
                     raised
                     color="accent"
@@ -190,7 +187,9 @@ export class SkillShapeCard extends Component {
               <CardText>
                 <div>
                   <p>
-                    <b>M-W-F</b> 6:00PM - 7:30PM
+                    <b>M-W-F</b>
+                    {' '}
+6:00PM - 7:30PM
                   </p>
                   <p>
                     <b>OnGoing</b>
@@ -200,16 +199,11 @@ export class SkillShapeCard extends Component {
                   <div>
                     <b>Class Description </b>
                   </div>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                 </div>
               </CardText>
               <CardActions>
-                <Button
-                  style={{ marginTop: 5, color: "#fff" }}
-                  raised
-                  color="primary"
-                >
+                <Button style={{ marginTop: 5, color: '#fff' }} raised color="primary">
                   Add To My Calendar
                 </Button>
               </CardActions>
@@ -218,7 +212,9 @@ export class SkillShapeCard extends Component {
               <CardText>
                 <div>
                   <p>
-                    <b>M-W-F</b> 6:00PM - 7:30PM
+                    <b>M-W-F</b>
+                    {' '}
+6:00PM - 7:30PM
                   </p>
                   <p>
                     <b>OnGoing</b>
@@ -228,8 +224,7 @@ export class SkillShapeCard extends Component {
                   <div>
                     <b>Class Description </b>
                   </div>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                 </div>
               </CardText>
               <CardActions>

@@ -1,18 +1,17 @@
-import React, { Component, Fragment } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { MuiThemeProvider } from 'material-ui/styles';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import { withStyles } from 'material-ui/styles';
-import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
+import Button from 'material-ui/Button';
+import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton';
+import LoginButton from '/imports/ui/components/landing/components/buttons/LoginButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
 
-import LoginButton from '/imports/ui/components/landing/components/buttons/LoginButton.jsx';
-import JoinButton from '/imports/ui/components/landing/components/buttons/JoinButton.jsx';
-import muiTheme from '/imports/ui/components/landing/components/jss/muitheme.jsx';
 
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
 
 const DialogTitleWrapper = styled.div`
 	${helpers.flexCenter} border-top: 5px solid ${(props) => props.color};

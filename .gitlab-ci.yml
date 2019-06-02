@@ -1,0 +1,9 @@
+staging:
+  type: deploy
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=skillshape2 --api-key=$HEROKU_API_KEY
+  only:
+  - master

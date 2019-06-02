@@ -220,13 +220,13 @@ const SubscriptionsDetailsDialogBox = (props) => {
                         {/* Depending upon the type of payment method */}
                         {getDatesBasedOnSubscriptions(props)}
 
-                        {classesCovered.length && <ClassesCovers>
+                        {(classesCovered.length > 0 )&& <ClassesCovers>
                             <ContentHead>
                                 This Covers:
                             </ContentHead>
                             <ClassesList>
-                                {classesCovered.map(classCovered => (
-                                    <ClassListItem>
+                                {classesCovered.map((classCovered,index) => (
+                                    <ClassListItem key={index.toString()}>
                                         {capitalizeString(classCovered)}
                                     </ClassListItem>
                                 ))}

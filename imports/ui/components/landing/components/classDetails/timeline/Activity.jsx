@@ -1,10 +1,7 @@
-import React, { PureComponent, Component } from "react";
-import styled from "styled-components";
-import {
-  Text,
-  Italic
-} from "/imports/ui/components/landing/components/jss/sharedStyledComponents";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import React, { PureComponent } from 'react';
+import styled from 'styled-components';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 
 const Wrapper = styled.div`
   height: ${props => props.length}%;
@@ -23,11 +20,10 @@ const InnerWrapper = styled.div`
   height: 100%;
 
   @media screen and (min-width: ${helpers.tablet}px) {
-    height: ${props => (props.evenPosition ? "50%" : "calc(50% - 5px)")};
-    ${props =>
-      props.evenPosition
-        ? "flex-direction: column-reverse;"
-        : "flex-direction: column; transform: translateY(100%);"} width: 100%;
+    height: ${props => (props.evenPosition ? '50%' : 'calc(50% - 5px)')};
+    ${props => (props.evenPosition
+    ? 'flex-direction: column-reverse;'
+    : 'flex-direction: column; transform: translateY(100%);')} width: 100%;
     justify-content: flex-start;
   }
 `;
@@ -39,21 +35,20 @@ const NodeDetails = styled.div`
   transition: opacity 0.25s linear, left 0.5s linear, right 0.5s linear;
   position: absolute;
   height: 100%;
-  ${props => (props.show ? "opacity: 1" : "opacity: 0")};
-  ${props => {
+  ${props => (props.show ? 'opacity: 1' : 'opacity: 0')};
+  ${(props) => {
     if (props.show) {
-      return props.evenPosition ? `left: 50%` : `right: 50%`;
+      return props.evenPosition ? 'left: 50%' : 'right: 50%';
     }
 
-    return props.evenPosition ? "left: 500px;" : "right: 500px";
+    return props.evenPosition ? 'left: 500px;' : 'right: 500px';
   }};
 
   @media screen and (min-width: ${helpers.tablet}px) {
     position: static;
     flex-direction: column;
     align-items: center;
-    justify-content: ${props =>
-      props.evenPosition ? "flex-end" : "flex-start"};
+    justify-content: ${props => (props.evenPosition ? 'flex-end' : 'flex-start')};
     width: 100%;
   }
 `;
@@ -62,7 +57,7 @@ const ActivityDetails = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: ${props => (props.evenPosition ? "flex-start" : "flex-end")};
+  align-items: ${props => (props.evenPosition ? 'flex-start' : 'flex-end')};
   padding: 0 ${helpers.rhythmDiv}px;
 
   @media screen and (min-width: ${helpers.tablet}px) {
@@ -97,13 +92,13 @@ const Attacher = styled.div`
   width: 30px;
   transition: background 0.25s ease-in;
   background: ${props => props.color};
-  ${props => (props.show ? "display: block" : "display: none")};
+  ${props => (props.show ? 'display: block' : 'display: none')};
 
   @media screen and (min-width: ${helpers.tablet}px) {
     height: 30px;
     width: 2px;
     flex-shrink: 1;
-    ${props => (!props.show ? "display: block" : "display: none")};
+    ${props => (!props.show ? 'display: block' : 'display: none')};
   }
 `;
 
@@ -115,7 +110,7 @@ const TimeLineNodeWrapper = styled.div`
 
   @media screen and (min-width: ${helpers.tablet}px) {
     width: 100%;
-    // height: ${props => (props.evenPosition ? "6px" : "5px")};
+    // height: ${props => (props.evenPosition ? '6px' : '5px')};
     height: 5px;
     flex-shrink: 0;
   }
@@ -149,28 +144,29 @@ class Activity extends PureComponent {
       <Wrapper length={props.totalTimeLength}>
         <InnerWrapper evenPosition={props.evenPosition}>
           <TimeLineNodeWrapper evenPosition={props.evenPosition}>
-            <TimeLineNode
-              color={props.color}
-              length={props.timeElapsedLength}
-            />
+            <TimeLineNode color={props.color} length={props.timeElapsedLength} />
           </TimeLineNodeWrapper>
-          <NodeDetails
-            evenPosition={props.evenPosition}
-            show={props.timeElapsedLength > 0}
-          >
+          <NodeDetails evenPosition={props.evenPosition} show={props.timeElapsedLength > 0}>
             <Attacher
               show={props.evenPosition}
               color={props.timeElapsedLength ? props.color : helpers.black}
             />
 
             <ActivityDetails evenPosition={props.evenPosition}>
-              <Time
-                color={props.timeElapsedLength ? props.color : helpers.black}
-              >
-                {props.time} mins
+              <Time color={props.timeElapsedLength ? props.color : helpers.black}>
+                {props.time}
+                {' '}
+mins
               </Time>
               <ActivityName>{props.name}</ActivityName>
-              {props.type && <ActivityType>( {props.type} )</ActivityType>}
+              {props.type && (
+              <ActivityType>
+(
+                {props.type}
+                {' '}
+)
+              </ActivityType>
+              )}
             </ActivityDetails>
 
             <Attacher

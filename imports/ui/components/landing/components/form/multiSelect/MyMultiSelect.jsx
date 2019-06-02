@@ -1,33 +1,32 @@
 import cn from 'classnames';
 import closest from 'dom-helpers/query/closest';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import React from 'react';
-import uncontrollable from 'uncontrollable';
-
+import AddToListOption from 'react-widgets/lib/AddToListOption.js';
+import List from 'react-widgets/lib/List.js';
+import { getMessages } from 'react-widgets/lib/messages';
+import MultiselectInput from 'react-widgets/lib/MultiselectInput.js';
+import Popup from 'react-widgets/lib/Popup.js';
+import Select from 'react-widgets/lib/Select.js';
+import accessorManager from 'react-widgets/lib/util/accessorManager';
+import * as Filter from 'react-widgets/lib/util/Filter';
+import focusManager from 'react-widgets/lib/util/focusManager';
+import { disabledManager, widgetEditable } from 'react-widgets/lib/util/interaction';
+import listDataManager from 'react-widgets/lib/util/listDataManager';
+import * as Props from 'react-widgets/lib/util/Props';
+import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
+import scrollManager from 'react-widgets/lib/util/scrollManager';
+import { instanceId, isFirstFocusedRender, notify } from 'react-widgets/lib/util/widgetHelpers';
+import withRightToLeft from 'react-widgets/lib/util/withRightToLeft';
+import { makeArray } from 'react-widgets/lib/util/_';
 import Widget from 'react-widgets/lib/Widget.js';
 import WidgetPicker from 'react-widgets/lib/WidgetPicker.js';
-import Select from 'react-widgets/lib/Select.js';
-import Popup from 'react-widgets/lib/Popup.js';
-import MultiselectInput from 'react-widgets/lib/MultiselectInput.js';
-import TagList from 'react-widgets/lib/MultiselectTagList.js';
+import styled from 'styled-components';
+import uncontrollable from 'uncontrollable';
 import MyTagList from './MyMultiSelectTagList.jsx';
 
-import List from 'react-widgets/lib/List.js';
-import AddToListOption from 'react-widgets/lib/AddToListOption.js';
 
-import { makeArray }  from 'react-widgets/lib/util/_';
-import * as Filter from 'react-widgets/lib/util/Filter';
-import * as Props from 'react-widgets/lib/util/Props';
-import { getMessages } from 'react-widgets/lib/messages';
-import * as CustomPropTypes from 'react-widgets/lib/util/PropTypes';
-import accessorManager from 'react-widgets/lib/util/accessorManager';
-import focusManager from 'react-widgets/lib/util/focusManager';
-import listDataManager from 'react-widgets/lib/util/listDataManager';
-import scrollManager from 'react-widgets/lib/util/scrollManager';
-import withRightToLeft from 'react-widgets/lib/util/withRightToLeft';
-import { widgetEditable, disabledManager } from 'react-widgets/lib/util/interaction';
-import { instanceId, notify, isFirstFocusedRender } from 'react-widgets/lib/util/widgetHelpers';
+
 
 const CREATE_OPTION = {};
 const ENTER = 13;
@@ -500,7 +499,7 @@ class Multiselect extends React.Component {
 
     // console.log('messages...',messages);
     return (<MyTagList
-         onNoOfFiltersClick={this.props.onNoOfFiltersClick}
+         onNoOfFiltersClick={onNoOfFiltersClick}
          ref='tagList'
          id={this.tagsId}
          activeId={this.activeTagId}
@@ -695,7 +694,7 @@ class Multiselect extends React.Component {
   }
 
   getPlaceholder() {
-    let { value, placeholder } = this.props;
+    let {  placeholder } = this.props;
     return placeholder;
     // return (value && value.length ? '' : placeholder) || ''
   }

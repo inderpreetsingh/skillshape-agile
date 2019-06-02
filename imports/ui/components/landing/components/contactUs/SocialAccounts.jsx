@@ -1,14 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-
-import Twitter from '/imports/ui/components/landing/components/icons/social/Twitter.jsx';
-import Facebook from '/imports/ui/components/landing/components/icons/social/Facebook.jsx';
-import GooglePlus from '/imports/ui/components/landing/components/icons/social/GooglePlus.jsx';
-import Instagram from '/imports/ui/components/landing/components/icons/social/Instagram.jsx';
-import Dribbble from '/imports/ui/components/landing/components/icons/social/Dribbble.jsx';
-
-import * as helpers from '../jss/helpers.js';
+import * as helpers from '../jss/helpers';
+import Facebook from '/imports/ui/components/landing/components/icons/social/Facebook';
+import GooglePlus from '/imports/ui/components/landing/components/icons/social/GooglePlus';
+import Instagram from '/imports/ui/components/landing/components/icons/social/Instagram';
+import Twitter from '/imports/ui/components/landing/components/icons/social/Twitter';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -19,25 +15,26 @@ const IconWrapper = styled.div`
   margin-right: ${helpers.rhythmDiv}px;
 `;
 
-const SocialAccounts = () => (<Wrapper>
+const SocialAccounts = () => (
+  <Wrapper>
     <IconWrapper>
       <a href="https://twitter.com/skillshape" target="_blank">
-        <Twitter className="social-icon sc-twitter"/>
+        <Twitter className="social-icon sc-twitter" />
       </a>
     </IconWrapper>
     <IconWrapper>
       <a href="https://business.facebook.com/SkillShapeLearning" target="_blank">
-        <Facebook className="social-icon sc-facebook"/>
+        <Facebook className="social-icon sc-facebook" />
       </a>
     </IconWrapper>
     <IconWrapper>
       <a href="https://plus.google.com/117321700113912820761" target="_blank">
-        <GooglePlus className="social-icon sc-google-plus"/>
+        <GooglePlus className="social-icon sc-google-plus" />
       </a>
     </IconWrapper>
     <IconWrapper>
       <a href="https://www.instagram.com/skillshape/" target="_blank">
-        <Instagram className="social-icon sc-instagram"/>
+        <Instagram className="social-icon sc-instagram" />
       </a>
     </IconWrapper>
     {/* <IconWrapper>

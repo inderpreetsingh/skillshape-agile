@@ -1,59 +1,42 @@
-import React, {Fragment,Component} from 'react';
-import PropTypes from 'prop-types';
-
-import { ContainerLoader } from '/imports/ui/loading/container.js';
-import { isEmpty} from 'lodash';
-
-import PrimaryButton from '../buttons/PrimaryButton';
-import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui-icons/Clear';
-import TextField from 'material-ui/TextField';
+import Dialog, { DialogContent, DialogTitle, withMobileDialog } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import { MuiThemeProvider, withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
+import { ContainerLoader } from '/imports/ui/loading/container';
 
-import { MuiThemeProvider} from 'material-ui/styles';
-import {withStyles} from 'material-ui/styles';
-
-import * as helpers from '../jss/helpers.js';
-import muiTheme from '../jss/muitheme.jsx';
-
-import Dialog , {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  withMobileDialog,
-} from 'material-ui/Dialog';
-
-const styles = theme => {
-  return {
-    dialogTitleRoot: {
-      padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: `${helpers.rhythmDiv * 2}px`,
-      '@media screen and (max-width : 500px)': {
-        padding: `0 ${helpers.rhythmDiv * 3}px`
-      }
-    },
-    dialogContent: {
+const styles = theme => ({
+  dialogTitleRoot: {
+    padding: `${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: `${helpers.rhythmDiv * 2}px`,
+    '@media screen and (max-width : 500px)': {
       padding: `0 ${helpers.rhythmDiv * 3}px`,
-      marginBottom: helpers.rhythmDiv * 2,
-      flexShrink: 0,
-      '@media screen and (max-width : 500px)': {
-        minHeight: '150px'
-      }
     },
-    dialogActionsRoot: {
-      justifyContent: 'center',
-      margin: 0,
+  },
+  dialogContent: {
+    padding: `0 ${helpers.rhythmDiv * 3}px`,
+    marginBottom: helpers.rhythmDiv * 2,
+    flexShrink: 0,
+    '@media screen and (max-width : 500px)': {
+      minHeight: '150px',
     },
-    dialogRoot: {
-      minHeight: 400
-    },
-    iconButton: {
-      height: 'auto',
-      width: 'auto'
-    }
-  }
-}
+  },
+  dialogActionsRoot: {
+    justifyContent: 'center',
+    margin: 0,
+  },
+  dialogRoot: {
+    minHeight: 400,
+  },
+  iconButton: {
+    height: 'auto',
+    width: 'auto',
+  },
+});
 
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
@@ -95,20 +78,18 @@ const Content = styled.p`
   color: ${helpers.black};
 `;
 
-
 class SchoolSuggestionDialogBox extends Component {
   state = {
     isBusy: false,
-  }
+  };
 
-  componentDidMount = () => {
-
-  }
+  componentDidMount = () => {};
 
   render() {
-    const {props} = this;
+    const { props } = this;
     // console.log(props,"...");
-    return (<Fragment>
+    return (
+      <Fragment>
         {this.state.isBusy && <ContainerLoader />}
         <Dialog
           fullScreen={false}
@@ -116,21 +97,23 @@ class SchoolSuggestionDialogBox extends Component {
           onClose={props.onModalClose}
           onRequestClose={props.onModalClose}
           aria-labelledby="manage unsubscriptions"
-          classes={{paper: props.classes.dialogRoot}}
+          classes={{ paper: props.classes.dialogRoot }}
         >
-        <MuiThemeProvider theme={muiTheme}>
-          <DialogTitle classes={{root: props.classes.dialogTitleRoot}}>
-            <DialogTitleWrapper>
-              <Title>Add Your Valuable Suggestion !</Title>
-              <IconButton color="primary" onClick={props.onModalClose} classes={{root: props.classes.iconButton}}>
-                <ClearIcon/>
-              </IconButton>
-            </DialogTitleWrapper>
-          </DialogTitle>
+          <MuiThemeProvider theme={muiTheme}>
+            <DialogTitle classes={{ root: props.classes.dialogTitleRoot }}>
+              <DialogTitleWrapper>
+                <Title>Add Your Valuable Suggestion !</Title>
+                <IconButton
+                  color="primary"
+                  onClick={props.onModalClose}
+                  classes={{ root: props.classes.iconButton }}
+                >
+                  <ClearIcon />
+                </IconButton>
+              </DialogTitleWrapper>
+            </DialogTitle>
 
-          <DialogContent classes={{root : props.classes.dialogContent}}>
-
-          </DialogContent>
+            <DialogContent classes={{ root: props.classes.dialogContent }} />
           </MuiThemeProvider>
         </Dialog>
       </Fragment>
@@ -141,10 +124,10 @@ class SchoolSuggestionDialogBox extends Component {
 SchoolSuggestionDialogBox.propTypes = {
   onFormSubmit: PropTypes.func,
   title: PropTypes.string,
-}
+};
 
 SchoolSuggestionDialogBox.defaultProps = {
   title: 'Pricing',
-}
+};
 
 export default withMobileDialog()(withStyles(styles)(SchoolSuggestionDialogBox));

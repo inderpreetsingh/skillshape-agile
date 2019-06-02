@@ -1,13 +1,13 @@
-import { get ,isEmpty} from "lodash";
-import { MuiThemeProvider } from "material-ui/styles";
-import React from "react";
+import { get } from 'lodash';
+import { MuiThemeProvider } from 'material-ui/styles';
+import React from 'react';
+import { browserHistory } from 'react-router';
 import styled from 'styled-components';
-import { browserHistory } from "react-router";
-import Footer from "/imports/ui/components/landing/components/footer/index.jsx";
-import muiTheme from "/imports/ui/components/landing/components/jss/muitheme.jsx";
-import TopSearchBar from "/imports/ui/components/landing/components/TopSearchBar.jsx";
-import { withStyles,checkIsEmailVerified } from "/imports/util";
-import { panelColor } from '/imports/ui/components/landing/components/jss/helpers.js';
+import Footer from '/imports/ui/components/landing/components/footer/index';
+import { panelColor } from '/imports/ui/components/landing/components/jss/helpers';
+import muiTheme from '/imports/ui/components/landing/components/jss/muitheme';
+import TopSearchBar from '/imports/ui/components/landing/components/TopSearchBar';
+import { checkIsEmailVerified, withStyles } from '/imports/util';
 
 const MainPanel = styled.div`
   position: relative;
@@ -16,16 +16,16 @@ const MainPanel = styled.div`
 
 const styles = theme => ({
   wrapper: {
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden"
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
   },
   content: {
     height: '100%',
-    backgroundColor: panelColor
+    backgroundColor: panelColor,
     // paddingTop: theme.spacing.unit*10 - theme.spacing.unit/2,
-  }
+  },
 });
 
 class PublicLayout extends React.Component {
@@ -33,18 +33,17 @@ class PublicLayout extends React.Component {
     super(props);
     this.state = {
       showSetPasswordDialogBox: false,
-      isBusy: false
+      isBusy: false,
     };
   }
 
   getMainPanelRef() {
     return this.mainPanelRef;
   }
-  
+
   componentWillMount() {
-    checkIsEmailVerified.call(this,true);
+    checkIsEmailVerified.call(this, true);
   }
-  
 
   setPasswordDialogBoxSubmit = (payload, event) => {
     event.preventDefault();
@@ -54,41 +53,31 @@ class PublicLayout extends React.Component {
     const { currentUser } = this.props;
 
     if (!password || !confirmPassword) {
-      errorMessage = "Please enter a password";
+      errorMessage = 'Please enter a password';
+    } else if (password !== confirmPassword) {
+      errorMessage = 'password not match!!!';
     } else {
-      if (password !== confirmPassword) {
-        errorMessage = "password not match!!!";
-      } else {
-        this.setState({ isBusy: true });
+      this.setState({ isBusy: true });
 
-        Meteor.call(
-          "user.setPassword",
-          { password, logout: false },
-          (err, res) => {
-            if (err) {
-              errorMessage = err.reason || err.message;
-              this.setState({ isBusy: false });
-            } else if(res) {
-              this.setState(
-                { showSetPasswordDialogBox: false, isBusy: false },
-                () => {
-                  const {onBoardingDialogBox} = res || {}
-                  if(!onBoardingDialogBox) {
-                    browserHistory.push(`/profile/${get(currentUser, '_id', null)}`);
-                  }
-                  else{
-                    this.setState({onBoardingDialogBox});
-                  }
-                }
-              );
+      Meteor.call('user.setPassword', { password, logout: false }, (err, res) => {
+        if (err) {
+          errorMessage = err.reason || err.message;
+          this.setState({ isBusy: false });
+        } else if (res) {
+          this.setState({ showSetPasswordDialogBox: false, isBusy: false }, () => {
+            const { onBoardingDialogBox } = res || {};
+            if (!onBoardingDialogBox) {
+              browserHistory.push(`/profile/${get(currentUser, '_id', null)}`);
+            } else {
+              this.setState({ onBoardingDialogBox });
             }
-          }
-        );
-      }
+          });
+        }
+      });
     }
 
     if (errorMessage) {
-      this.setState({ errorMessage: errorMessage });
+      this.setState({ errorMessage });
     }
   };
 
@@ -100,33 +89,30 @@ class PublicLayout extends React.Component {
       classes,
       isUserSubsReady,
       previousLocationPathName,
-      currentLocationPathName
+      currentLocationPathName,
     } = this.props;
-    let className = {
-      mainClass: "wrapper perfectScroll main_wrapper",
-      contentClass: "content",
-      id: "UserMainPanel"
+    const className = {
+      mainClass: 'wrapper perfectScroll main_wrapper',
+      contentClass: 'content',
+      id: 'UserMainPanel',
     };
 
     if (currentUser) {
-      className.mainClass = "main-panel";
-      className.contentClass = "content no-padding";
-      className.id = "UserMainPanel";
+      className.mainClass = 'main-panel';
+      className.contentClass = 'content no-padding';
+      className.id = 'UserMainPanel';
     }
 
     return (
       <MuiThemeProvider theme={muiTheme}>
-        <div
-          className={`${className.mainClass} ${classes.wrapper}`}
-          id={className.id}
-        >
-          {/*<BrandBar {...this.props}/>*/}
+        <div className={`${className.mainClass} ${classes.wrapper}`} id={className.id}>
+          {/* <BrandBar {...this.props}/> */}
           <div>
             <TopSearchBar {...this.props} />
           </div>
-         
+
           <MainPanel
-            ref={ref => {
+            ref={(ref) => {
               this.mainPanelRef = ref;
             }}
           >
@@ -135,7 +121,7 @@ class PublicLayout extends React.Component {
                 currentUser,
                 isUserSubsReady,
                 previousLocationPathName,
-                currentLocationPathName
+                currentLocationPathName,
               })}
             </main>
           </MainPanel>

@@ -1,101 +1,102 @@
-import config from "/imports/config";
+import config from '/imports/config';
+
 const ClassSubscription = new Mongo.Collection(
-  config.collections.classSubscription
+  config.collections.classSubscription,
 );
 
 export const ClassSubscriptionSchema = new SimpleSchema({
   userId: {
     type: String,
-    optional: true
+    optional: true,
   },
-  userName:{
+  userName: {
     type: String,
-    optional: true
+    optional: true,
   },
-  autoWithdraw:{
-    type:Boolean,
-    optional:true
+  autoWithdraw: {
+    type: Boolean,
+    optional: true,
   },
   subscriptionId: {
     type: String,
-    optional: true
+    optional: true,
   },
   contractLength: {
     type: Number,
-    optional: true
+    optional: true,
   },
   subscriptionRequest: {
     type: Object,
     optional: true,
-    blackbox: true
+    blackbox: true,
   },
   subscriptionResponse: {
     type: Object,
     optional: true,
-    blackbox: true
+    blackbox: true,
   },
   currency: {
     type: String,
-    optional: true
+    optional: true,
   },
   fee: {
     type: Number,
-    optional: true
+    optional: true,
   },
   startDate: {
     type: Date,
-    optional: true
+    optional: true,
   },
   endDate: {
     type: Date,
-    optional: true
+    optional: true,
   },
   packageId: {
     type: String,
-    optional: true
+    optional: true,
   },
   packageName: {
     type: String,
-    optional: true
+    optional: true,
   },
   schoolId: {
     type: String,
-    optional: true
+    optional: true,
   },
   status: {
     type: String,
-    optional: true
+    optional: true,
   },
   emailId: {
     type: String,
-    optional: true
+    optional: true,
   },
-  monthCounter:{
+  monthCounter: {
     type: Number,
-    optional: true
+    optional: true,
   },
-  subscriptionCancelResponse:{
+  subscriptionCancelResponse: {
     type: Object,
     optional: true,
-    blackbox: true
+    blackbox: true,
   },
-  planId:{
+  planId: {
     type: String,
-    optional: true
+    optional: true,
   },
-  monthlyAttendance:{
-    type:Object,
-    optional:true,
-    blackbox: true
+  monthlyAttendance: {
+    type: Object,
+    optional: true,
+    blackbox: true,
   },
-  amount:{
+  amount: {
     type: String,
-    optional: true
+    optional: true,
   },
-  errorMessage:{
+  errorMessage: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 });
 
 ClassSubscription.attachSchema(ClassSubscriptionSchema);

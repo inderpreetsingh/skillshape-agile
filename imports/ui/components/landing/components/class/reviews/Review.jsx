@@ -1,11 +1,9 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import ReactStars from 'react-stars';
-
-import MyProfilePic from '/imports/ui/components/landing/components/class/reviews/ReviewerPic.jsx';
-import StarsBar from '/imports/ui/components/landing/components/StarsBar.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import MyProfilePic from '/imports/ui/components/landing/components/class/reviews/ReviewerPic';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import StarsBar from '/imports/ui/components/landing/components/StarsBar';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,7 +21,7 @@ const Container = styled.div`
 const Person = styled.div`
   ${helpers.flexCenter};
   align-items: flex-end;
-  margin-top: ${helpers.rhythmDiv/2}px;
+  margin-top: ${helpers.rhythmDiv / 2}px;
 `;
 
 const ProfilePicContainer = styled.div`
@@ -44,7 +42,7 @@ const Name = styled.p`
   font-family: ${helpers.specialFont};
   color: ${helpers.headingColor};
   margin: 0;
-  padding-right: ${helpers.rhythmDiv/2}px;
+  padding-right: ${helpers.rhythmDiv / 2}px;
   font-weight: 500;
   color: ${helpers.black};
   text-transform: capitalize;
@@ -76,14 +74,14 @@ const Comment = styled.p`
   font-style: italic;
   font-family: ${helpers.specialFont};
   margin: 0;
-  padding-right: ${helpers.rhythmDiv/2}px;
+  padding-right: ${helpers.rhythmDiv / 2}px;
   font-weight: 500;
   font-size: ${helpers.baseFontSize}px;
   color: ${helpers.black};
 `;
 
 const Review = (props) => {
-  const {profile} = props.userProfile;
+  const { profile } = props.userProfile;
   return (
     <Wrapper>
       <CommentWrapper>
@@ -93,22 +91,24 @@ const Review = (props) => {
       <Person>
         <Container>
           <StarsBar noOfStars={props.ratings} />
-          {profile && (profile.name || profile.firstName) && <Name>{profile.name || profile.firstName + ' ' + props.lastName}</Name>}
+          {profile && (profile.name || profile.firstName) && (
+            <Name>{profile.name || `${profile.firstName} ${props.lastName}`}</Name>
+          )}
         </Container>
 
         <ProfilePicContainer>
           <MyProfilePic imgSrc={profile && profile.pic} />
         </ProfilePicContainer>
       </Person>
-
-    </Wrapper>);
-}
+    </Wrapper>
+  );
+};
 
 Review.propTypes = {
   imgSrc: PropTypes.string,
   name: PropTypes.string,
   comment: PropTypes.string,
-  ratings: PropTypes.number
+  ratings: PropTypes.number,
 };
 
 export default Review;
