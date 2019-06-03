@@ -6,32 +6,27 @@ import React from 'react';
 import styled from 'styled-components';
 import PrimaryButton from '../buttons/PrimaryButton';
 import TermsOfServiceButton from '../buttons/TermsOfServiceButton';
-import * as helpers from '../jss/helpers.js';
-import muiTheme from '../jss/muitheme.jsx';
-
-
-
-
-
+import * as helpers from '../jss/helpers';
+import muiTheme from '../jss/muitheme';
 
 const styles = {
   dialogPaper: {
-    padding: `${helpers.rhythmDiv * 2}px`
+    padding: `${helpers.rhythmDiv * 2}px`,
   },
-  dialogAction : {
+  dialogAction: {
     width: '100%',
     display: 'block',
     '@media screen and (max-width : 500px)': {
       justifyContent: 'center',
-    }
+    },
   },
   dialogActionInnerWrapper: {
     textAlign: 'center',
   },
-  dialogContent :  {
+  dialogContent: {
     '@media screen and (max-width : 500px)': {
       minHeight: '150px',
-    }
+    },
   },
 };
 
@@ -41,53 +36,43 @@ const DialogBoxHeaderText = styled.p`
   font-weight: 500;
 `;
 
-const ButtonsWrapper = styled.div`
-  display: flex;
-
-  @media screen and (max-width : ${helpers.mobile}px) {
-    display: flex;
-    flex-direction: column-reverse;
-    padding-top: ${helpers.rhythmDiv}px;
-  }
-`;
-
-const TermsOfServiceDialogBox = (props) => (
+const TermsOfServiceDialogBox = props => (
   <Dialog
     open={props.open}
     onClose={props.onModalClose}
     onRequestClose={props.onModalClose}
     aria-labelledby="terms-of-service"
-    classes={{paper: props.classes.dialogPaper}}
+    classes={{ paper: props.classes.dialogPaper }}
     itemScope
     itemType="http://schema.org/Service"
   >
-  <MuiThemeProvider theme={muiTheme}>
+    <MuiThemeProvider theme={muiTheme}>
+      <DialogBoxHeaderText>
+        Before you can register you must agree to the SkillShape's Terms Of Service
+      </DialogBoxHeaderText>
 
-    <DialogBoxHeaderText>
-      Before you can register you must agree to the SkillShape's Terms Of Service
-    </DialogBoxHeaderText>
-
-    <DialogActions classes={{root: props.classes.dialogAction}}>
+      <DialogActions classes={{ root: props.classes.dialogAction }}>
         <PrimaryButton
-            fullWidth={true}
-            label="I agree"
-            onClick={props.onAgreeButtonClick}
-            itemScope
-            itemType="http://schema.org/AgreeAction">
-        </PrimaryButton>
+          fullWidth
+          label="I agree"
+          onClick={props.onAgreeButtonClick}
+          itemScope
+          itemType="http://schema.org/AgreeAction"
+        />
         <TermsOfServiceButton
-            label="Terms Of Service"
-            onAgreeButtonClick={props.onAgreeButtonClick}
-            onDisAgreeButtonClick={props.onModalClose}
+          label="Terms Of Service"
+          onAgreeButtonClick={props.onAgreeButtonClick}
+          onDisAgreeButtonClick={props.onModalClose}
         />
         <Button
-            style={{ width: '100%', backgroundColor: helpers.danger, marginTop: 10, color:'#fff'}}
-            onClick={props.onModalClose}
+          style={{
+            width: '100%', backgroundColor: helpers.danger, marginTop: 10, color: '#fff',
+          }}
+          onClick={props.onModalClose}
         >
-            Cancel
+          Cancel
         </Button>
-    </DialogActions>
-
+      </DialogActions>
     </MuiThemeProvider>
   </Dialog>
 );
@@ -98,6 +83,6 @@ TermsOfServiceDialogBox.propTypes = {
   open: PropTypes.bool,
   onAgreeButtonClick: PropTypes.func,
   onTermsOfServiceButtonClick: PropTypes.func,
-}
+};
 
 export default withStyles(styles)(TermsOfServiceDialogBox);

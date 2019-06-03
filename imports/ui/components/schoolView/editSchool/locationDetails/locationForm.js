@@ -1,19 +1,23 @@
-import { isEmpty } from "lodash";
-import Button from "material-ui/Button";
-import Dialog, { DialogActions, DialogContent, DialogTitle, withMobileDialog } from "material-ui/Dialog";
-import { withStyles } from "material-ui/styles";
-import TextField from "material-ui/TextField";
-import React from "react";
-import styled from "styled-components";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import SkillShapeDialogBox from "/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { confirmationDialog, unSavedChecker, withPopUp } from "/imports/util";
+import { isEmpty } from 'lodash';
+import Button from 'material-ui/Button';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  withMobileDialog,
+} from 'material-ui/Dialog';
+import { withStyles } from 'material-ui/styles';
+import TextField from 'material-ui/TextField';
+import React from 'react';
+import styled from 'styled-components';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import SkillShapeDialogBox from '/imports/ui/components/landing/components/dialogs/SkillShapeDialogBox';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import SchoolLocationMap from '/imports/ui/components/landing/components/map/SchoolLocationMap';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { confirmationDialog, unSavedChecker, withPopUp } from '/imports/util';
 
-
-const formId = "LocationForm";
+const formId = 'LocationForm';
 
 const MyForm = styled.div`
   max-width: 50%;
@@ -56,47 +60,45 @@ const MapContainer = styled.div`
   }
 `;
 
-const styles = theme => {
-  return {
-    button: {
-      margin: 5,
-      width: 150
+const styles = theme => ({
+  button: {
+    margin: 5,
+    width: 150,
+  },
+  dialogRootPaper: {
+    maxWidth: 700,
+    width: '100%',
+  },
+  dialogContent: {
+    display: 'flex',
+    [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+      flexDirection: 'column',
     },
-    dialogRootPaper: {
-      maxWidth: 700,
-      width: "100%"
+  },
+  dialogActions: {
+    padding: `${helpers.rhythmDiv}px`,
+    paddingTop: 0,
+    [`@media screen and (max-width: ${helpers.mobile}px)`]: {
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
     },
-    dialogContent: {
-      display: "flex",
-      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
-        flexDirection: "column"
-      }
-    },
-    dialogActions: {
-      padding: `${helpers.rhythmDiv}px`,
-      paddingTop: 0,
-      [`@media screen and (max-width: ${helpers.mobile}px)`]: {
-        flexWrap: "wrap",
-        justifyContent: "flex-start"
-      }
-    },
-    delete: {
-      backgroundColor:'red',
-      color: "black",
-      fontWeight: 600
-     },
-     cancel: {
-       backgroundColor:'yellow',
-       color: "black",
-       fontWeight: 600
-      },
-      save: {
-       backgroundColor:'green',
-       color: "black",
-       fontWeight: 600
-      }
-  };
-};
+  },
+  delete: {
+    backgroundColor: 'red',
+    color: 'black',
+    fontWeight: 600,
+  },
+  cancel: {
+    backgroundColor: 'yellow',
+    color: 'black',
+    fontWeight: 600,
+  },
+  save: {
+    backgroundColor: 'green',
+    color: 'black',
+    fontWeight: 600,
+  },
+});
 
 class LocationForm extends React.Component {
   constructor(props) {
@@ -109,52 +111,47 @@ class LocationForm extends React.Component {
   }
 
   _getMyLocation = (nextProps = {}) => {
-    const data = nextProps.data || this.props.data || { loc: ["", ""] };
+    const data = nextProps.data || this.props.data || { loc: ['', ''] };
     return {
       lat: data.loc[1],
-      lng: data.loc[0]
+      lng: data.loc[0],
     };
   };
 
   _getMyCompleteAddress = (nextProps = {}) => {
     const data = nextProps.data || this.props.data || {};
     return {
-      address: data.address || "",
-      city: data.city || "",
-      state: data.state || "",
-      zip: data.zip || "",
-      country: data.country || "",
-      title:data.title || ''
+      address: data.address || '',
+      city: data.city || '',
+      state: data.state || '',
+      zip: data.zip || '',
+      country: data.country || '',
+      title: data.title || '',
     };
   };
 
-  _getComponentFromCompleteAddress = (
-    componentYouLookingFor,
-    addressComponents
-  ) => {
-   
+  _getComponentFromCompleteAddress = (componentYouLookingFor, addressComponents) => {
     for (let i = 0; i < addressComponents.length; ++i) {
       const currentAddComponent = addressComponents[i];
       if (currentAddComponent.types.indexOf(componentYouLookingFor) !== -1) {
         return currentAddComponent.long_name;
       }
     }
-    return "";
+    return '';
   };
 
   componentDidMount = () => {
     const myLocation = this._getMyLocation();
-    const {handleIsSavedState} = this.props;
+    const { handleIsSavedState } = this.props;
     handleIsSavedState && handleIsSavedState(true);
     if (!myLocation.lat || !myLocation.lng) {
       const defaultLocation = this.getMyDefaultLocation();
-      if(!isEmpty(defaultLocation))
-      this.getAddressFromLocation({ lat: defaultLocation[0], lng: defaultLocation[1] });
+      if (!isEmpty(defaultLocation)) this.getAddressFromLocation({ lat: defaultLocation[0], lng: defaultLocation[1] });
     }
   };
 
   _compareCompleteAddress = (address1, address2) => {
-    const propertiesToCompare = ["address", "zip", "city", "state", "country"];
+    const propertiesToCompare = ['address', 'zip', 'city', 'state', 'country'];
     for (let i = 0; i < propertiesToCompare.length; ++i) {
       const currentProperty = propertiesToCompare[i];
       if (address1[currentProperty] !== address2[currentProperty]) {
@@ -164,24 +161,22 @@ class LocationForm extends React.Component {
     return false;
   };
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps) => {
     const currentMyLocation = this._getMyLocation();
     const newMyLocation = this._getMyLocation(nextProps);
     const currentCompleteAddress = this._getMyCompleteAddress();
     const newCompleteAddress = this._getMyCompleteAddress(nextProps);
 
     if (
-      currentMyLocation.lat !== newMyLocation.lng ||
-      currentMyLocation.lng !== newMyLocation.lng ||
-      this._compareCompleteAddress(currentCompleteAddress, newCompleteAddress)
+      currentMyLocation.lat !== newMyLocation.lng
+      || currentMyLocation.lng !== newMyLocation.lng
+      || this._compareCompleteAddress(currentCompleteAddress, newCompleteAddress)
     ) {
-      this.setState(previousState => {
-        return {
-          ...previousState,
-          myLocation: newMyLocation,
-          completeAddress: newCompleteAddress
-        };
-      });
+      this.setState(previousState => ({
+        ...previousState,
+        myLocation: newMyLocation,
+        completeAddress: newCompleteAddress,
+      }));
     }
 
     // // if this.props.data was not present
@@ -203,75 +198,52 @@ class LocationForm extends React.Component {
     // }
   };
 
-  getMyDefaultLocation = () => {
-    return JSON.parse(localStorage.getItem("myLocation"));
-  };
+  getMyDefaultLocation = () => JSON.parse(localStorage.getItem('myLocation'));
 
   getAddressFromLocation = ({ lat, lng }) => {
     if (lat && lng) {
       const geocoder = new google.maps.Geocoder();
       const coords = [lat, lng];
       const latlng = new google.maps.LatLng(lat, lng);
-      this.setState(previousState => {
-        return {
-          isBusy: true
-        };
-      });
+      this.setState(previousState => ({
+        isBusy: true,
+      }));
       geocoder.geocode({ latLng: latlng }, (results, status) => {
-        this.setState(previousState => {
-          return {
-            isBusy: false
-          };
-        });
+        this.setState(previousState => ({
+          isBusy: false,
+        }));
         if (status == google.maps.GeocoderStatus.OK) {
           if (results[0]) {
             // coords.NEPoint = [place.geometry.bounds.b.b, place.geometry.bounds.b.f];
             // coords.SWPoint = [place.geometry.bounds.f.b,place.geometry.bounds.f.f];
             const addressComponents = results[0].address_components;
             const currentPosAddress = {
-              zip: this._getComponentFromCompleteAddress(
-                "postal_code",
-                addressComponents
-              ),
+              zip: this._getComponentFromCompleteAddress('postal_code', addressComponents),
               state: this._getComponentFromCompleteAddress(
-                "administrative_area_level_1",
-                addressComponents
+                'administrative_area_level_1',
+                addressComponents,
               ),
               city: this._getComponentFromCompleteAddress(
-                "administrative_area_level_2",
-                addressComponents
+                'administrative_area_level_2',
+                addressComponents,
               ),
               address:
-                this._getComponentFromCompleteAddress(
-                  "route",
-                  addressComponents
-                ) +
-                " " +
-                this._getComponentFromCompleteAddress(
-                  "sublocality",
-                  addressComponents
-                ) +
-                " " +
-                this._getComponentFromCompleteAddress(
-                  "locality",
-                  addressComponents
-                ),
-              country: this._getComponentFromCompleteAddress(
-                "country",
-                addressComponents
-              )
+                `${this._getComponentFromCompleteAddress('route', addressComponents)
+                } ${
+                  this._getComponentFromCompleteAddress('sublocality', addressComponents)
+                } ${
+                  this._getComponentFromCompleteAddress('locality', addressComponents)}`,
+              country: this._getComponentFromCompleteAddress('country', addressComponents),
             };
 
-            this.setState(state => {
-              return {
-                ...state,
-                completeAddress: currentPosAddress,
-                myLocation: {
-                  lat: lat,
-                  lng: lng
-                }
-              };
-            });
+            this.setState(state => ({
+              ...state,
+              completeAddress: currentPosAddress,
+              myLocation: {
+                lat,
+                lng,
+              },
+            }));
             // const sLocation = results[0].formatted_address;
           }
         }
@@ -279,35 +251,36 @@ class LocationForm extends React.Component {
     }
   };
 
-  handleBlur = event => {
+  handleBlur = (event) => {
     if (!event.target.value) {
       return false;
     }
     this.onSubmit(event, false);
   };
-  handleAddressChange = name => event => {
+
+  handleAddressChange = name => (event) => {
     // event.preventDefault();
-    const value = event.target.value;
+    const { value } = event.target;
     this.props.handleIsSavedState(false);
-    this.setState(state => {
-      return {
-        ...state,
-        completeAddress: {
-          ...state.completeAddress,
-          [name]: value
-        }
-      };
-    });
+    this.setState(state => ({
+      ...state,
+      completeAddress: {
+        ...state.completeAddress,
+        [name]: value,
+      },
+    }));
   };
 
   onSubmit = (event, submit = true) => {
     event.preventDefault();
     // debugger;
-    const {title,address,city,state,zip,country} = this.state.completeAddress;
-    if(!title){
-      const {popUp} =this.props;
+    const {
+      title, address, city, state, zip, country,
+    } = this.state.completeAddress;
+    if (!title) {
+      const { popUp } = this.props;
       const content = 'Location Name is required.';
-      confirmationDialog({popUp,errDialog:true,content});
+      confirmationDialog({ popUp, errDialog: true, content });
       return;
     }
     const payload = {
@@ -320,28 +293,46 @@ class LocationForm extends React.Component {
       zip,
       country,
     };
-    const sLocationDetail =
-      payload.address +
-      "," +
-      payload.city +
-      "," +
-      payload.zip +
-      "," +
-      payload.country;
+    const sLocationDetail = `${payload.address},${payload.city},${payload.zip},${payload.country}`;
     // debugger;
     if (!sLocationDetail) {
       return false;
     }
 
     this.setState({ isBusy: true });
-    getLatLong(sLocationDetail, data => {
+    getLatLong(sLocationDetail, (data) => {
       if (data) {
         payload.geoLat = data.lat;
         payload.geoLong = data.lng;
         payload.loc = [data.lat, data.lng];
 
-        this.setState(state => {
-          return {
+        this.setState(state => ({
+          ...state,
+          isBusy: false,
+          completeAddress: {
+            address: payload.address,
+            zip: payload.zip,
+            country: payload.country,
+            city: payload.city,
+            state: payload.state,
+          },
+          myLocation: {
+            lat: payload.geoLat,
+            lng: payload.geoLong,
+          },
+        }));
+
+        if (submit) this.handleSubmit(payload);
+      } else {
+        const getLatLongPayload = `${payload.city},${payload.zip},${payload.country}`;
+        getLatLong(getLatLongPayload, (data) => {
+          if (data == null) {
+            return false;
+          }
+          payload.geoLat = data.lat;
+          payload.geoLong = data.lng;
+          payload.loc = [data.lat, data.lng];
+          this.setState(state => ({
             ...state,
             isBusy: false,
             completeAddress: {
@@ -349,71 +340,40 @@ class LocationForm extends React.Component {
               zip: payload.zip,
               country: payload.country,
               city: payload.city,
-              state: payload.state
+              state: payload.state,
             },
             myLocation: {
               lat: payload.geoLat,
-              lng: payload.geoLong
-            }
-          };
-        });
+              lng: payload.geoLong,
+            },
+          }));
 
-        if (submit) this.handleSubmit(payload);
-      } else {
-        const getLatLongPayload =
-          payload.city + "," + payload.zip + "," + payload.country;
-        getLatLong(getLatLongPayload, data => {
-          if (data == null) {
-            return false;
-          } else {
-            payload.geoLat = data.lat;
-            payload.geoLong = data.lng;
-            payload.loc = [data.lat, data.lng];
-            this.setState(state => {
-              return {
-                ...state,
-                isBusy: false,
-                completeAddress: {
-                  address: payload.address,
-                  zip: payload.zip,
-                  country: payload.country,
-                  city: payload.city,
-                  state: payload.state
-                },
-                myLocation: {
-                  lat: payload.geoLat,
-                  lng: payload.geoLong
-                }
-              };
-            });
-
-            if (submit) this.handleSubmit(payload);
-          }
+          if (submit) this.handleSubmit(payload);
         });
       }
     });
   };
 
   handleSubmit = (payload, deleteObj) => {
-  this.setState({ isBusy: true });
-    
+    this.setState({ isBusy: true });
+
     const { data } = this.props;
     let methodName;
-    let docObj = {};
+    const docObj = {};
     if (data && data._id) {
       docObj.doc = payload;
       if (deleteObj) {
-        methodName = "location.removeLocation";
+        methodName = 'location.removeLocation';
       } else {
-        methodName = "location.editLocation";
+        methodName = 'location.editLocation';
         docObj.doc_id = data._id;
       }
     } else {
-      methodName = "location.addLocation";
+      methodName = 'location.addLocation';
       docObj.doc = payload;
     }
     this.props.handleIsSavedState(true);
-     this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
+    this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, docObj, (error, result) => {
       if (error) {
       }
@@ -425,7 +385,7 @@ class LocationForm extends React.Component {
     });
   };
 
-  getActionButtons = data => {
+  getActionButtons = (data) => {
     if (data) {
       return (
         <DialogActions>
@@ -437,27 +397,28 @@ class LocationForm extends React.Component {
           </Button>
         </DialogActions>
       );
-    } else {
-      return (
-        <DialogActions>
-          <Button type="submit" form={formId} color="primary">
-            Submit
-          </Button>
-          <Button onClick={() => this.props.onClose()} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      );
     }
+    return (
+      <DialogActions>
+        <Button type="submit" form={formId} color="primary">
+            Submit
+        </Button>
+        <Button onClick={() => this.props.onClose()} color="primary">
+            Cancel
+        </Button>
+      </DialogActions>
+    );
   };
-  
+
   render() {
-    const { fullScreen, data, classes, currentUser,handleIsSavedState } = this.props;
+    const { data, classes, handleIsSavedState } = this.props;
     return (
       <div>
         <Dialog
           open={this.props.open}
-          onClose={()=>{unSavedChecker.call(this)}}
+          onClose={() => {
+            unSavedChecker.call(this);
+          }}
           aria-labelledby="form-dialog-title"
           fullScreen={false}
           classes={{ paper: classes.dialogRootPaper }}
@@ -465,8 +426,8 @@ class LocationForm extends React.Component {
           <DialogTitle id="form-dialog-title">
             <Title>Add Location</Title>
             <Tagline>
-              You can drag the marker to point your location on the map, or just
-              type the details in the form.
+              You can drag the marker to point your location on the map, or just type the details in
+              the form.
             </Tagline>
           </DialogTitle>
 
@@ -481,27 +442,25 @@ class LocationForm extends React.Component {
               title="Are you sure ?"
               content="You will delete this location permanently, so you want to delete it?"
               onAffirmationButtonClick={() => this.handleSubmit(data, true)}
-              onModalClose={() =>
-                this.setState({ showConfirmationModal: false })
-              }
+              onModalClose={() => this.setState({ showConfirmationModal: false })}
             />
           )}
           {this.state.error ? (
-            <div style={{ color: "red" }}>{this.state.error}</div>
+            <div style={{ color: 'red' }}>{this.state.error}</div>
           ) : (
             <DialogContent classes={{ root: classes.dialogContent }}>
               <MapContainer>
                 <SchoolLocationMap
                   locationData={this.state.myLocation}
-                  markerDraggable={true}
+                  markerDraggable
                   myCurrentPosition={this.getMyDefaultLocation()}
                   onDragEnd={this.getAddressFromLocation}
                 />
               </MapContainer>
 
-              <MyForm >
+              <MyForm>
                 <TextField
-                  required={true}
+                  required
                   value={this.state.completeAddress.title}
                   inputRef={ref => (this.title = ref)}
                   margin="dense"
@@ -517,46 +476,46 @@ class LocationForm extends React.Component {
                   label="Street Address"
                   type="text"
                   fullWidth
-                  onChange={this.handleAddressChange("address")}
+                  onChange={this.handleAddressChange('address')}
                 />
                 <TextField
-                  required={true}
+                  required
                   value={this.state.completeAddress.city}
                   margin="dense"
                   inputRef={ref => (this.city = ref)}
                   label="City"
                   type="text"
-                  onChange={this.handleAddressChange("city")}
+                  onChange={this.handleAddressChange('city')}
                   fullWidth
                 />
-                {/* state ==> for the state in a country*/}
+                {/* state ==> for the state in a country */}
                 <TextField
                   value={this.state.completeAddress.state}
                   margin="dense"
                   inputRef={ref => (this.locState = ref)}
                   label="State"
                   type="text"
-                  onChange={this.handleAddressChange("state")}
+                  onChange={this.handleAddressChange('state')}
                   fullWidth
                 />
                 <TextField
-                  required={true}
+                  required
                   value={this.state.completeAddress.zip}
                   margin="dense"
                   inputRef={ref => (this.zipCode = ref)}
                   label="Zip Code"
                   type="text"
-                  onChange={this.handleAddressChange("zip")}
+                  onChange={this.handleAddressChange('zip')}
                   fullWidth
                 />
                 <TextField
-                  required={true}
+                  required
                   value={this.state.completeAddress.country}
                   margin="dense"
                   inputRef={ref => (this.country = ref)}
                   label="Country"
                   type="text"
-                  onChange={this.handleAddressChange("country")}
+                  onChange={this.handleAddressChange('country')}
                   fullWidth
                 />
               </MyForm>
@@ -576,7 +535,7 @@ class LocationForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={()=>{
+                onClick={() => {
                   handleIsSavedState(true);
                   this.props.onClose();
                 }}
@@ -587,7 +546,7 @@ class LocationForm extends React.Component {
             <ButtonWrapper>
               <FormGhostButton
                 onClick={this.onSubmit}
-                label={data ? "Save" : "Submit"}
+                label={data ? 'Save' : 'Submit'}
                 className={classes.save}
               />
             </ButtonWrapper>

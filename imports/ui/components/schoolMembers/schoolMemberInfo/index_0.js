@@ -595,19 +595,11 @@ class SchoolMemberInfo extends Component {
 
   render() {
     const {
-      memberInfo,
-      view,
-      classes,
-      isAdmin,
-      currentUser,
-      notClassmatePage,
-      selectedSchoolData,
+      memberInfo, view, classes, isAdmin, notClassmatePage,
     } = this.props;
     const {
       showUploadAvatarModal,
-      mediaFormData,
-      filterStatus,
-      limit,
+
       bgImg,
       showConfirmation,
       manageMemberShipDialog,

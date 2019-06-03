@@ -14,7 +14,6 @@ import * as helpers from './jss/helpers';
 import MySearchBar from './MySearchBar';
 import ListMultiSelect from '/imports/ui/components/landing/components/form/listMultiSelect/ListMultiSelect';
 
-
 // import IconInput from './form/IconInput.jsx';
 
 const styles = {
@@ -136,7 +135,6 @@ const SkillInputWrapper = InputsWrapper.extend`
     margin-left: 0;
     margin-bottom: ${helpers.rhythmDiv}px;
   }
-
 `;
 
 const MapViewButtonWrapper = GenericButtonWrapper.extend`
@@ -255,7 +253,9 @@ const SearchInputsSection = props => (
           onSearchIconClick={props.onSearchIconClick}
           onChange={event => props.locationInputChanged(event, 'filters', null)}
           filters={props.filters}
-          onLocationChange={(event) => { props.onLocationChange(event, 'filters', null); }}
+          onLocationChange={(event) => {
+            props.onLocationChange(event, 'filters', null);
+          }}
           currentAddress={props.currentAddress}
           googlelocation="true"
           value={props.currentAddress}
@@ -327,8 +327,8 @@ const BottomSectionContent = props => (
       {' '}
       <span itemProp="object">classes</span>
       {' '}
-on your subject of interest, in
-      your location, and at your price
+on your subject of
+      interest, in your location, and at your price
     </TaglineText>
     <ButtonsWrapper>
       <GenericButtonWrapper>
@@ -364,19 +364,18 @@ class SearchArea extends Component {
   };
 
   componentWillMount() {
-    const dataSourceCategories = Meteor.call(
-      'getAllSkillCategories',
-      (err, result) => {
-        this.setState({ skillCategoryData: result });
-      },
-    );
+    Meteor.call('getAllSkillCategories', (err, result) => {
+      this.setState({ skillCategoryData: result });
+    });
   }
 
   componentDidUpdate(prevProps) {
     const previousSkillCategoryIds = prevProps.filters.skillCategoryIds || [];
     const currentSkillCategoryIds = this.props.filters.skillCategoryIds || [];
 
-    if (previousSkillCategoryIds.length !== currentSkillCategoryIds.length) { this.inputFromUser(''); }
+    if (previousSkillCategoryIds.length !== currentSkillCategoryIds.length) {
+      this.inputFromUser('');
+    }
   }
 
   // This is used to get subjects on the basis of subject category.
@@ -409,7 +408,9 @@ class SearchArea extends Component {
     //
     // //console.log(nextProps.fillters.skillCategoryIds,this.props.filters.skillCategoryIds)
 
-    if (previousSkillCategoryIds.length !== currentSkillCategoryIds.length) { this.inputFromUser(''); }
+    if (previousSkillCategoryIds.length !== currentSkillCategoryIds.length) {
+      this.inputFromUser('');
+    }
   }
 
   handleLocationInputChange = (event) => {

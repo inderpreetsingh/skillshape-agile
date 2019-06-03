@@ -1,20 +1,18 @@
-import { FormControl } from "material-ui/Form";
-import Input, { InputLabel } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import Select from "material-ui/Select";
-import TextField from "material-ui/TextField";
-import React from "react";
-import styled from "styled-components";
-import { CTFormControlHW, CTFormRow, CTFormWrapper, LinkedTime } from './sharedStyledComponents';
-import config from "/imports/config";
-import { MaterialDatePicker } from "/imports/startup/client/material-ui-date-picker";
-import { MaterialTimePicker } from "/imports/startup/client/material-ui-time-picker";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
-
-
-
+import { FormControl } from 'material-ui/Form';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import Select from 'material-ui/Select';
+import TextField from 'material-ui/TextField';
+import React from 'react';
+import styled from 'styled-components';
+import {
+  CTFormControlHW, CTFormRow, CTFormWrapper, LinkedTime,
+} from './sharedStyledComponents';
+import config from '/imports/config';
+import { MaterialDatePicker } from '/imports/startup/client/material-ui-date-picker';
+import { MaterialTimePicker } from '/imports/startup/client/material-ui-time-picker';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const Wrapper = styled.div`
   ${helpers.flexCenter}
@@ -27,7 +25,7 @@ const Wrapper = styled.div`
 
 const SSFormTimePickerControl = CTFormControlHW.extend`
   margin-top: 0px;
-  
+
   @media screen and (max-width: ${helpers.mobile}px) {
     margin-top: 0;
   }
@@ -47,16 +45,15 @@ export class OneTimeRow extends React.Component {
     let state;
     const { data, parentData } = this.props;
     if (_.isEmpty(data)) {
-
       state = {
         row: [
           {
             startDate: new Date(),
             startTime: new Date(),
             duration: 60,
-            timeUnits: "Minutes",
-          }
-        ]
+            timeUnits: 'Minutes',
+          },
+        ],
       };
       this.props.handleNoOfRow(1);
     } else {
@@ -67,7 +64,6 @@ export class OneTimeRow extends React.Component {
   };
 
   addNewRow = () => {
-    const { locationData, data, roomData } = this.props;
     const oldRow = [...this.state.row];
     oldRow.push({
       startDate: new Date(),
@@ -78,7 +74,7 @@ export class OneTimeRow extends React.Component {
     this.props.handleNoOfRow(1);
   };
 
-  removeRow = (index, event) => {
+  removeRow = (index) => {
     const oldRow = [...this.state.row];
     oldRow.splice(index, 1);
     this.setState({ row: oldRow });
@@ -86,32 +82,34 @@ export class OneTimeRow extends React.Component {
   };
 
   handleChangeDate = (index, fieldName, date) => {
-    const {handleIsSavedState} = this.props;
+    const { handleIsSavedState } = this.props;
     handleIsSavedState();
     const oldRow = [...this.state.row];
-    if (fieldName == "startTime") {
-      let selectedDate = oldRow[index]["startDate"];
-      let currentDate = selectedDate.getDate();
+    if (fieldName == 'startTime') {
+      const selectedDate = oldRow[index].startDate;
+      const currentDate = selectedDate.getDate();
       date = new Date(date).setDate(currentDate);
     } else {
       // Need to change time according to selected date.
-      oldRow[index]["startTime"] = new Date(date);
+      oldRow[index].startTime = new Date(date);
     }
     oldRow[index][fieldName] = new Date(date);
     this.setState({ row: oldRow });
   };
-  //Set default location id if nothing selected 
+
+  // Set default location id if nothing selected
   setDefaultLocation = (defaultLocId) => {
-    this.setState({ locationId: defaultLocId })
+    this.setState({ locationId: defaultLocId });
     return defaultLocId;
-  }
+  };
+
   handleSelectInputChange = (index, fieldName, event) => {
-    //index condition in if below is removed
-    const { locationData,handleIsSavedState } = this.props;
+    // index condition in if below is removed
+    const { handleIsSavedState } = this.props;
     handleIsSavedState();
     if (fieldName && event) {
       const oldRow = [...this.state.row];
-      if (fieldName === "duration") {
+      if (fieldName === 'duration') {
         oldRow[index][fieldName] = parseInt(event.target.value);
       } else {
         oldRow[index][fieldName] = event.target.value;
@@ -119,105 +117,78 @@ export class OneTimeRow extends React.Component {
       this.setState({ row: oldRow });
     }
   };
-  getRowData = () => {
-    //console.log("this.state.row ", this.state.row);
-    return this.state.row;
-  };
+
+  getRowData = () =>
+    // console.log("this.state.row ", this.state.row);
+    this.state.row;
+
   handleRoomData = (locationId, roomId, index) => {
     this.setState({ row: oldRow });
-  }
+  };
+
   render() {
     const { row } = this.state;
-    const { classes } = this.props;
     return (
       <Wrapper>
-        {row.map((data, index) => {
-          return (<CTFormWrapper key={index.toString()}>
-            <CTFormRow
-              marginBottom={helpers.rhythmDiv * 2}
-            >
+        {row.map((data, index) => (
+          <CTFormWrapper key={index.toString()}>
+            <CTFormRow marginBottom={helpers.rhythmDiv * 2}>
               <MaterialDatePicker
-                required={true}
-                hintText={"Date"}
-                floatingLabelText={"Date *"}
-                value={data ? data.startDate : ""}
-                onChange={this.handleChangeDate.bind(
-                  this,
-                  index,
-                  "startDate"
-                )}
-                fullWidth={true}
+                required
+                hintText="Date"
+                floatingLabelText="Date *"
+                value={data ? data.startDate : ''}
+                onChange={this.handleChangeDate.bind(this, index, 'startDate')}
+                fullWidth
               />
             </CTFormRow>
 
             <CTFormRow>
               <SSFormTimePickerControl marginRight={helpers.rhythmDiv * 2}>
                 <MaterialTimePicker
-                  required={true}
-                  value={data ? data.startTime : ""}
-                  floatingLabelText={"Start Time *"}
-                  hintText={"Start Time"}
-                  onChange={this.handleChangeDate.bind(
-                    this,
-                    index,
-                    "startTime"
-                  )}
-                  fullWidth={true}
+                  required
+                  value={data ? data.startTime : ''}
+                  floatingLabelText="Start Time *"
+                  hintText="Start Time"
+                  onChange={this.handleChangeDate.bind(this, index, 'startTime')}
+                  fullWidth
                 />
               </SSFormTimePickerControl>
 
               <CTFormControlHW>
-                <CTFormControlHW
-                  noMarginBottom
-                  marginRightSm
-                  marginRight={helpers.rhythmDiv}>
+                <CTFormControlHW noMarginBottom marginRightSm marginRight={helpers.rhythmDiv}>
                   <TextField
-                    required={true}
-                    defaultValue={data && data.duration != "" ? data.duration : 60}
+                    required
+                    defaultValue={data && data.duration != '' ? data.duration : 60}
                     label="Duration"
                     type="number"
-                    onChange={this.handleSelectInputChange.bind(
-                      this,
-                      index,
-                      "duration"
-                    )}
+                    onChange={this.handleSelectInputChange.bind(this, index, 'duration')}
                     fullWidth
-                    inputProps={{ min: "0" }}
+                    inputProps={{ min: '0' }}
                   />
                 </CTFormControlHW>
 
                 <FormControl fullWidth>
-                  <InputLabel htmlFor="weekDay" shrink={true}>
+                  <InputLabel htmlFor="weekDay" shrink>
                     Units
                   </InputLabel>
                   <Select
                     input={<Input id="duration" />}
-                    value={(data && data.timeUnits) || "Minutes"}
-                    onChange={this.handleSelectInputChange.bind(
-                      this,
-                      index,
-                      "timeUnits"
-                    )}
+                    value={(data && data.timeUnits) || 'Minutes'}
+                    onChange={this.handleSelectInputChange.bind(this, index, 'timeUnits')}
                     fullWidth
                   >
-                    {config.duration.map((data, index) => {
-                      return (
-                        <MenuItem
-                          key={`${index}-${data.value}`}
-                          value={data.value}
-                        >
-                          {data.label}
-                        </MenuItem>
-                      );
-                    })}
+                    {config.duration.map((data, index) => (
+                      <MenuItem key={`${index}-${data.value}`} value={data.value}>
+                        {data.label}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </CTFormControlHW>
             </CTFormRow>
 
-            <CTFormRow
-              justifyContent="center"
-            >
+            <CTFormRow justifyContent="center">
               <ButtonWrapper>
                 <FormGhostButton
                   icon
@@ -229,27 +200,19 @@ export class OneTimeRow extends React.Component {
               </ButtonWrapper>
             </CTFormRow>
 
-            {/*<DeleteClassTime
+            {/* <DeleteClassTime
               classes={this.props.classes}
               removeRow={this.removeRow.bind(this, index)}
-            />*/}
+            /> */}
           </CTFormWrapper>
-          );
-        })}
+        ))}
 
         <LinkedTime>
           <ButtonWrapper>
-            <FormGhostButton
-              darkGreyColor
-              onClick={this.addNewRow}
-              label="Add Linked Class Time"
-            />
-
+            <FormGhostButton darkGreyColor onClick={this.addNewRow} label="Add Linked Class Time" />
           </ButtonWrapper>
         </LinkedTime>
-
       </Wrapper>
     );
   }
 }
-

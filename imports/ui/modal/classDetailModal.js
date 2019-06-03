@@ -117,18 +117,6 @@ const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const InnerWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-const ClassTimesWrapper = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
-  width: 100%;
-  display: flex;
-  border: 2px solid #ccc;
-`;
-
 const IconsWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -166,10 +154,6 @@ const Heading = styled.h2`
   width: 100%;
   line-height: 1;
   margin-top: ${props => props.marginTop}px;
-`;
-
-const ClassTimeCardsWrapper = styled.div`
-  width: 100%;
 `;
 
 const Text = styled.p`
@@ -220,26 +204,11 @@ const EventName = Heading.extend`
 const ConfirmationDialog = styled.div`
   margin: 8px;
 `;
-const Div = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-`;
-const ClassTypeDescription = styled.div`
-  border: 2px solid black;
-  width: 100%;
-  padding: 7px;
-  margin-top: 5px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-`;
 
 const Event = styled.div`
   ${helpers.flexCenter} flex-direction: column;
   padding-right: ${helpers.rhythmDiv * 2}px;
 `;
-
-const EventDesc = Text.extend``;
 
 const Capitalize = styled.span`
   text-transform: capitalize;
@@ -405,7 +374,7 @@ class ClassDetailModal extends React.Component {
 
   renderdaySchedule = (data, eventData) => {
     const type = eventData.scheduleType;
-    const result = data.map((item, index) => {
+    const result = data.map((item) => {
       const { startTime, duration } = item;
       const startDate = moment(item.startDate).format('DD:MM:YYYY');
       const endDate = moment(item.endDate).format('DD:MM:YYYY');
@@ -414,16 +383,14 @@ class ClassDetailModal extends React.Component {
       const day = date.getDay();
       const scheduleDay = scheduleDetails[day - 1];
       const eventStartTime = moment(startTime).format('hh:mm');
-      const eventEndTime = moment(new Date(startTime))
-        .add(duration, 'minutes')
-        .format('hh:mm');
-      if (type == 'OnGoing') {
+
+      if (type === 'OnGoing') {
         return `Every ${scheduleDay} at ${eventStartTime}`;
       }
-      if (type == 'recurring') {
+      if (type === 'recurring') {
         return `Every ${scheduleDay} at ${eventStartTime} from ${startDate} to ${endDate}`;
       }
-      if (type == 'oneTime') {
+      if (type === 'oneTime') {
         return `${scheduleDay} ${startDate} at ${eventStartTime}`;
       }
     });
@@ -462,18 +429,10 @@ class ClassDetailModal extends React.Component {
 
   render() {
     const {
-      isLoading,
-      error,
-      school,
-      classType,
-      location,
-      addToMyCalender,
-      classImg,
-      classDetail,
+      isLoading, error, school, classType, location, classImg,
     } = this.state;
     const {
       eventData,
-      fullScreen,
       classes,
       clickedDate,
       classInterestData,

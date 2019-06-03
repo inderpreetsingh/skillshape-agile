@@ -53,21 +53,6 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
-const ContentWrapper = styled.div``;
-
-const ButtonsWrapper = styled.div`
-  ${helpers.flexCenter}
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    flex-direction: column;
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  /* prettier-ignore */
-  ${helpers.flexCenter}
-`;
-
 const Title = styled.span`
   display: inline-block;
   width: 100%;

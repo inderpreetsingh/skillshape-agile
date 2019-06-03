@@ -8,7 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ProgressiveImage from 'react-progressive-image';
-import { CSSTransition, Transition } from 'react-transition-group';
+import { Transition } from 'react-transition-group';
 import styled from 'styled-components';
 import PrimaryButton from '/imports/ui/components/landing/components/buttons/PrimaryButton';
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
@@ -37,11 +37,6 @@ const styles = {
   },
 };
 
-const imageExistsConfig = {
-  originalImagePath: 'classTypeImg',
-  defaultImage: cardImgSrc,
-};
-
 const CardImageTitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -58,13 +53,6 @@ const CardImageWrapper = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-image: url('${props => props.bgImage}');
-`;
-
-const CardImage = styled.img`
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 `;
 
 const CardContent = styled.div``;
@@ -143,10 +131,6 @@ const CardImageContainer = styled.div`
 
 const CardDescriptionActionArea = styled.div`
   padding: 5px;
-`;
-
-const CardContentInnerTitle = styled.span`
-  text-transform: capitalize;
 `;
 
 const Avatar = styled.div`

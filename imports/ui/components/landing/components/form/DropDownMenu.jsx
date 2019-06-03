@@ -1,68 +1,64 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
-import IconButton from "material-ui/IconButton";
-import Menu, { MenuItem } from "material-ui/Menu";
 // import {MenuItem from "material-ui/Menu";
-import MoreVertIcon from "material-ui-icons/MoreVert";
-
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import MoreVertIcon from 'material-ui-icons/MoreVert';
+import IconButton from 'material-ui/IconButton';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const styles = {
   iconButton: {
-    cursor: "pointer",
+    cursor: 'pointer',
     width: 8,
     height: 24,
     fontSize: helpers.baseFontSize,
-    color: "rgb(0, 0, 0) !important",
-    backgroundColor:'rgb(255, 255, 255) !important',
+    color: 'rgb(0, 0, 0) !important',
+    backgroundColor: 'rgb(255, 255, 255) !important',
   },
   icon: {
     height: 24,
-    width: 24
-  }
+    width: 24,
+  },
 };
 
 class DropDownMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      anchorEl: null
+      anchorEl: null,
     };
   }
 
-  handleClick = e => {
+  handleClick = (e) => {
     this.setState({
-      anchorEl: e.currentTarget
+      anchorEl: e.currentTarget,
     });
   };
 
   handleClose = () => {
     this.setState({
-      anchorEl: null
+      anchorEl: null,
     });
   };
 
   handleMenuItemClick = option => () => {
     this.setState({
-      anchorEl: null
+      anchorEl: null,
     });
 
     this.props.onMenuItemClick && this.props.onMenuItemClick(option);
   };
 
-  handleMenuEnter = element => {
+  handleMenuEnter = (element) => {
     // NOTE: Allow first menu to not be focused.
     element.firstChild.firstChild.blur();
     // console.log(element, );
   };
 
   render() {
-    const { menu, anchorEl } = this.state;
+    const {  anchorEl } = this.state;
     const {
-      options,
-      selectedOptionValue,
-      onMenuButtonClick,
       menuButton,
       menuOptions,
       menuIconClass,
@@ -70,24 +66,24 @@ class DropDownMenu extends Component {
       classes,
     } = this.props;
 
-    let rootClass,
-      iconClass = "";
+    let rootClass;
+    let iconClass = '';
     rootClass = classes.iconButton;
     iconClass = classes.icon;
 
-    if (menuButtonClass) rootClass = rootClass + " " + menuButtonClass;
-    if (menuIconClass) iconClass = iconClass + " " + menuIconClass;
+    if (menuButtonClass) rootClass = `${rootClass} ${menuButtonClass}`;
+    if (menuIconClass) iconClass = `${iconClass} ${menuIconClass}`;
     return (
       <div>
         {(menuButton && React.clone(menuButton)) || (
           <IconButton
-            aria-owns={anchorEl ? "my-menu" : null}
+            aria-owns={anchorEl ? 'my-menu' : null}
             aria-label="More"
             aria-haspopup="true"
             onClick={this.handleClick}
             classes={{
               root: rootClass,
-              icon: iconClass
+              icon: iconClass,
             }}
           >
             <MoreVertIcon />
@@ -96,7 +92,7 @@ class DropDownMenu extends Component {
 
         <Menu
           id="my-menu"
-          disableAutoFocusItem={true}
+          disableAutoFocusItem
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
           onClose={this.handleClose}
@@ -121,8 +117,8 @@ DropDownMenu.propTypes = {
   menuButton: PropTypes.element,
   menuOptions: PropTypes.arrayOf({
     name: PropTypes.string,
-    value: PropTypes.string
-  })
+    value: PropTypes.string,
+  }),
 };
 
 export default withStyles(styles)(DropDownMenu);

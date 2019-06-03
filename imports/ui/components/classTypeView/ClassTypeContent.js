@@ -25,19 +25,21 @@ import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings';
 import ManageMyCalendar from '/imports/ui/components/users/manageMyCalendar/index';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import {
-  capitalizeString, formatClassTimesData, getAverageNoOfRatings, withPopUp, stripePaymentHelper,
+  capitalizeString,
+  formatClassTimesData,
+  getAverageNoOfRatings,
+  withPopUp,
+  stripePaymentHelper,
   normalizeMonthlyPricingData,
 } from '/imports/util';
 import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 import withImageExists from '/imports/util/withImageExists';
 
-
 const imageExistsConfig = {
   originalImagePath: 'classTypeData.classTypeImg',
   defaultImage: classTypeImgSrc,
 };
-
 
 const PreloaderWrapper = styled.div`
   ${helpers.flexCenter};
@@ -66,7 +68,6 @@ const MainInner = styled.div`
     padding: ${props => (props.smallPadding ? props.smallPadding : helpers.rhythmDiv * 2)}px;
   }
 `;
-
 
 const ClassWrapper = styled.div`
   max-width: 1200px;
@@ -186,10 +187,7 @@ class ClassTypeContent extends Component {
   //   this.setState(newState);
   // }
 
-  getContactNumbers = () => (
-    this.props.schoolData.phone
-      && this.props.schoolData.phone.split(/[\|\,\\]/)
-  );
+  getContactNumbers = () => this.props.schoolData.phone && this.props.schoolData.phone.split(/[\|\,\\]/);
 
   getOurEmail = () => this.props.schoolData.email;
 
@@ -235,7 +233,6 @@ class ClassTypeContent extends Component {
 
     return classTypeData;
   };
-
 
   scrollTo(name) {
     scroller.scrollTo(name || 'content-container', {
@@ -293,11 +290,9 @@ class ClassTypeContent extends Component {
       let emailBody = '';
       const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
       const subject = '';
-      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${
-        text || pricing
-      }%3F %0D%0A%0D%0A Thanks`;
+      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text
+        || pricing}%3F %0D%0A%0D%0A Thanks`;
       const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-
 
       // const mailToNormalized = encodeURI(mailTo);
       // window.location.href = mailToNormalized;
@@ -404,10 +399,36 @@ class ClassTypeContent extends Component {
     });
   };
 
-  handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,
+  handlePurchasePackage = async (
+    packageType,
+    packageId,
+    schoolId,
+    packageName,
+    amount,
+    monthlyPymtDetails,
+    expDuration,
+    expPeriod,
+    noClasses,
+    planId,
+    currency,
+    pymtType,
   ) => {
     try {
-      stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
+      stripePaymentHelper.call(
+        this,
+        packageType,
+        packageId,
+        schoolId,
+        packageName,
+        amount,
+        monthlyPymtDetails,
+        expDuration,
+        expPeriod,
+        noClasses,
+        planId,
+        currency,
+        pymtType,
+      );
     } catch (error) {
       console.log('Error in handlePurchasePackage', error);
     }
@@ -437,7 +458,6 @@ class ClassTypeContent extends Component {
       );
     }
 
-
     /* if (isEmpty(classTypeData)) {
       return (
         <Typography type="display2" gutterBottom align="center">
@@ -456,16 +476,11 @@ class ClassTypeContent extends Component {
       data => data.formattedClassTimesDetails.totalClassTimes > 0,
     );
 
-
     if (manageRequestTitle) {
-      submitBtnLabel = manageRequestTitle != 'Pricing'
-        ? 'Request class times'
-        : submitBtnLabel;
+      submitBtnLabel = manageRequestTitle != 'Pricing' ? 'Request class times' : submitBtnLabel;
       requestFor = manageRequestTitle != 'Pricing' ? 'class times' : requestFor;
     }
-    const purchasedSuccessfully = () => {
-      this.setState({ enrollmentPackagesDialog: false });
-    };
+
     return (
       <div>
         {this.state.callUsDialog && (
@@ -475,9 +490,7 @@ class ClassTypeContent extends Component {
             onModalClose={() => this.handleDialogState('callUsDialog', false)}
           />
         )}
-        {
-          this.state.enrollmentPackagesDialog
-          && (
+        {this.state.enrollmentPackagesDialog && (
           <EnrollmentPackagesDialogBox
             open={this.state.enrollmentPackagesDialog}
             schoolId={classTypeData.schoolId}
@@ -493,16 +506,14 @@ class ClassTypeContent extends Component {
             epData={this.state.epData}
             currentPackageData={this.state.currentPackageData}
           />
-          )
-        }
+        )}
         {this.state.emailUsDialog && (
           <EmailUsDialogBox
             schoolData={schoolData}
             ourEmail={ourEmail}
             open={this.state.emailUsDialog}
             currentUser={this.props.currentUser}
-            onModalClose={(err, res) => this.handleDialogState('emailUsDialog', false, err, res)
-            }
+            onModalClose={(err, res) => this.handleDialogState('emailUsDialog', false, err, res)}
           />
         )}
         {this.state.giveReviewDialog && (
@@ -511,8 +522,7 @@ class ClassTypeContent extends Component {
             reviewFor="class"
             reviewForId={classTypeData._id}
             open={this.state.giveReviewDialog}
-            onModalClose={() => this.handleDialogState('giveReviewDialog', false)
-            }
+            onModalClose={() => this.handleDialogState('giveReviewDialog', false)}
           />
         )}
         {this.state.nonUserDefaultDialog && (
@@ -556,10 +566,7 @@ class ClassTypeContent extends Component {
           />
         </ClassTypeCover>
         <Main>
-          <MainInnerFixedContainer
-            marginTop={isReviewsDataEmpty ? '0' : '32'}
-            marginBottom={64}
-          >
+          <MainInnerFixedContainer marginTop={isReviewsDataEmpty ? '0' : '32'} marginBottom={64}>
             {!isReviewsDataEmpty && (
               <MainInner reviews largePadding="32" smallPadding="32">
                 <ClassWrapper reviews>
@@ -568,15 +575,10 @@ class ClassTypeContent extends Component {
               </MainInner>
             )}
 
-            <ClassContainer
-              marginTop={isReviewsDataEmpty ? '64' : '0'}
-              marginBottom="32"
-            >
+            <ClassContainer marginTop={isReviewsDataEmpty ? '64' : '0'} marginBottom="32">
               {isReviewsDataEmpty && (
                 <Fragment>
-                  <Typography>
-                    You are the first one to write review for this class.
-                  </Typography>
+                  <Typography>You are the first one to write review for this class.</Typography>
                   <br />
                 </Fragment>
               )}
@@ -597,15 +599,13 @@ class ClassTypeContent extends Component {
                 <ClassTimesTitle>
                   Class times for
                   {' '}
-                  <ClassTimesName>
-                    {get(classTypeData, 'name', '').toLowerCase()}
-                  </ClassTimesName>
+                  <ClassTimesName>{get(classTypeData, 'name', '').toLowerCase()}</ClassTimesName>
                 </ClassTimesTitle>
                 {isEmpty(formattedClassTimesData) ? (
                   <ClassContainer paddingBottom="16" smallPadding="0">
                     <Typography caption="p">
-                      No class times have been given by the school. Please click
-                      this button to request the school complete their listing.
+                      No class times have been given by the school. Please click this button to
+                      request the school complete their listing.
                     </Typography>
                     <br />
                     <GenericButtonWrapper>
@@ -644,10 +644,7 @@ class ClassTypeContent extends Component {
             />
           </MainInnerFixedContainer>
           <CalendarWrapper>
-            <ManageMyCalendar
-              classCalendar
-              {...this.props}
-            />
+            <ManageMyCalendar classCalendar {...this.props} />
           </CalendarWrapper>
           <Element name="price-section">
             <PackagesWrapper
@@ -661,8 +658,8 @@ class ClassTypeContent extends Component {
               {isEmpty(classPricingData) && isEmpty(monthlyPricingData) ? (
                 <ClassContainer paddingBottom="32">
                   <Typography caption="p">
-                    No class pricing have been given by the school. Please click
-                    this button to request the school complete their listing.
+                    No class pricing have been given by the school. Please click this button to
+                    request the school complete their listing.
                   </Typography>
                   <br />
                   <GenericButtonWrapper>
@@ -681,16 +678,12 @@ class ClassTypeContent extends Component {
                   enrollMentPackages
                   enrollMentPackagesData={enrollmentFeeData}
                   perClassPackagesData={classPricingData}
-                  monthlyPackagesData={normalizeMonthlyPricingData(
-                    monthlyPricingData,
-                  )}
+                  monthlyPackagesData={normalizeMonthlyPricingData(monthlyPricingData)}
                   currency={currency}
                 />
               )}
             </PackagesWrapper>
           </Element>
-
-
         </Main>
       </div>
     );

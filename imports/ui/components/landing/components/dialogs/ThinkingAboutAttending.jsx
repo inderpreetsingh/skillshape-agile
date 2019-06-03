@@ -66,10 +66,6 @@ const TextWrapper = styled.div`
   font-size: 15px;
   font-weight: 500;
 `;
-const ErrorWrapper = styled.span`
-  color: red;
-  float: right;
-`;
 
 class ThinkingAboutAttending extends React.Component {
   constructor(props) {
@@ -99,7 +95,7 @@ class ThinkingAboutAttending extends React.Component {
   }
 
   getCheckBoxValues = () => {
-    const { classTypeId, classTimeId, schoolId } = this.props;
+    const { classTypeId, schoolId } = this.props;
     const filterForNotificationStatus = { classTypeId, userId: Meteor.userId() };
     Meteor.call(
       'classInterest.getClassInterest',
@@ -108,7 +104,6 @@ class ThinkingAboutAttending extends React.Component {
       (err, result) => {
         if (!isEmpty(result)) {
           const {
-            classInterestData,
             notification: { classTimesRequest, classTypeLocationRequest },
             schoolMemberData,
             isFirstTime,

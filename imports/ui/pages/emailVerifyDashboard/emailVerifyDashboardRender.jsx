@@ -179,12 +179,7 @@ const Summary = styled.div`
     padding: 5px 30px 5px 30px;
   }
 `;
-const Counter = styled.div`
-  font-family: ${helpers.specialFont};
-  font-style: italic;
-  font-weight: lighter;
-  margin: 5px auto 5px auto;
-`;
+
 const Container = styled.div`
   background-color: #f2f2f2;
   height: -webkit-fill-available;

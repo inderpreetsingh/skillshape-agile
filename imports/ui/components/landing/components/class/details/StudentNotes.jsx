@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import styled from 'styled-components';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,7 +27,8 @@ const Notes = styled.div`
   color: ${helpers.black};
   padding: 0 ${helpers.rhythmDiv * 2}px;
 
-  ul, ol {
+  ul,
+  ol {
     margin: 0;
     padding: 0;
   }
@@ -37,22 +37,6 @@ const Notes = styled.div`
     list-style-position: outside;
     margin-bottom: ${helpers.rhythmDiv}px;
   }
-`;
-
-const Note = styled.li`
-  list-style: dot;
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
-  line-height: 1;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  color: ${helpers.primaryColor};
-`;
-
-const NoteStyled = styled.p`
-  font-size: ${helpers.baseFontSize}px;
-  font-family: ${helpers.specialFont};
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-  color: ${helpers.black};
 `;
 
 // const transformNotes = function(node,index) {
@@ -67,22 +51,18 @@ const NoteStyled = styled.p`
 //   return undefined;
 // }
 
-const conditionalRender = (props) => {
-  return (props.notes ? (<Wrapper>
+const conditionalRender = props => (props.notes ? (
+  <Wrapper>
     <Title>Student Notes</Title>
-    <Notes>
-      {ReactHtmlParser(props.notes)}
-    </Notes>
-  </Wrapper>) : null);
-}
+    <Notes>{ReactHtmlParser(props.notes)}</Notes>
+  </Wrapper>
+) : null);
 
-const StudentNotes = (props) => {
-  return conditionalRender(props);
-}
+const StudentNotes = props => conditionalRender(props);
 
 StudentNotes.propTypes = {
   noClassTypeData: false,
-  notes: PropTypes.arrayOf(PropTypes.String)
-}
+  notes: PropTypes.arrayOf(PropTypes.String),
+};
 
 export default StudentNotes;

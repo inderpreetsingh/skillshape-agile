@@ -104,18 +104,12 @@ const styles = theme => ({
 });
 
 class EnrollmentPackagesDialogBox extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { props } = this;
     const {
       classes,
       open,
       onModalClose,
-      schoolId,
-      epData,
       isLoading,
       onAddToCartIconButtonClick,
       currentPackage,
@@ -123,7 +117,6 @@ class EnrollmentPackagesDialogBox extends Component {
       packageType,
       classPackages,
       classTypeWithNoEpNames,
-      classTypeWithEpNames,
     } = props;
     return (
       <Dialog
@@ -245,11 +238,11 @@ export default withStyles(styles)(
         }
       });
     if (!isEmpty(classTypeWithNoEp)) {
-      if (packageType == 'CP') {
+      if (packageType === 'CP') {
         Meteor.subscribe('classPricing.getClassPricingFromId', { _id: [packageId] });
         currentPackage = ClassPricing.find({ _id: packageId }).fetch();
         classPackages = true;
-      } else if (packageType == 'MP') {
+      } else if (packageType === 'MP') {
         Meteor.subscribe('monthlyPricing.getMonthlyPricingFromId', { _id: [packageId] });
         currentPackage = MonthlyPricing.find({ _id: packageId }).fetch();
         currentPackage = normalizeMonthlyPricingData(currentPackage);
