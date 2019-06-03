@@ -99,8 +99,6 @@ class ChangePasswordDialogBox extends Component {
   changePassword = (event) => {
     event.preventDefault();
     const { oldPasswd, newPasswd, confirmPasswd } = this.state;
-    const { toastr } = this.props;
-    const self = this;
     if (newPasswd != confirmPasswd) {
       this.setState({
         errorText: 'Change password and confirm password are not same',

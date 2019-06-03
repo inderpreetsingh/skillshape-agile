@@ -48,7 +48,7 @@ class SchoolView extends SchoolViewBase {
       },
     };
     return state;
-  }
+  };
 
   componentWillMount() {
     // let { slug } = this.props.params;
@@ -117,9 +117,6 @@ export default createContainer((props) => {
     });
     currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;
   }
-
-  const sub1 = reviewsSubscriptions && reviewsSubscriptions.ready();
-  const sub2 = subscription && subscription.ready();
   if (schoolId) {
     Meteor.subscribe('UserSchool', schoolId);
     Meteor.subscribe('SkillClassbySchool', schoolId);

@@ -29,15 +29,6 @@ const ProfilePicContainer = styled.div`
   height: 40px;
 `;
 
-const ProfilePic = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: url('${props => props.imgSrc}');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-`;
-
 const Name = styled.p`
   font-family: ${helpers.specialFont};
   color: ${helpers.headingColor};

@@ -47,37 +47,10 @@ const styles = theme => ({
   },
 });
 
-const Link = styled.a`
-  color: ${helpers.textColor};
-  &:hover {
-    color: ${helpers.focalColor};
-  }
-`;
-
 const DialogTitleWrapper = styled.div`
   ${helpers.flexHorizontalSpaceBetween}
   font-family: ${helpers.specialFont};
   width: 100%;
-`;
-
-const ButtonWrapper = styled.div`
-  ${helpers.flexCenter}
-  margin: ${helpers.rhythmDiv * 4}px 0;
-`;
-
-const DialogActionText = styled.p`
-  margin: 0;
-  margin-right: ${helpers.rhythmDiv}px;
-  flex-shrink: 0;
-`;
-
-const ActionWrapper = styled.div`
-  width: 100%;
-  ${helpers.flexCenter} justify-content: flex-end;
-`;
-
-const InputWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const Title = styled.span`

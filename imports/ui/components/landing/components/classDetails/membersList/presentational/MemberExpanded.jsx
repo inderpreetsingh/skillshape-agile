@@ -182,13 +182,16 @@ const getStatusColor = (status) => {
 };
 
 const getStatusInfo = (status) => {
-  if (status == 'signIn') {
+  if (status === 'signIn') {
     return 'Signed In';
-  } if (status == 'signOut') {
+  }
+ else if (status === 'signOut') {
     return 'Singed Out';
-  } if (status == 'checkIn') {
+  }
+ else if (status === 'checkIn') {
     return 'Checked In';
-  } if (status == 'checkOut') {
+  }
+else  if (status === 'checkOut') {
     return 'Check In';
   }
 };

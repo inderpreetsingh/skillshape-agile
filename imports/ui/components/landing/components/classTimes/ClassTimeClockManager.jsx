@@ -1,15 +1,11 @@
-import { isEqual } from "lodash";
-import PropTypes from "prop-types";
-import React, { Component, Fragment } from "react";
-import styled from "styled-components";
-import ClassTimeNewClock from "/imports/ui/components/landing/components/classTimes/ClassTimeNewClock.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { DAYS_IN_WEEK } from "/imports/ui/components/landing/constants/classTypeConstants.js";
+import { isEqual } from 'lodash';
+import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import styled from 'styled-components';
+import ClassTimeNewClock from '/imports/ui/components/landing/components/classTimes/ClassTimeNewClock';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants';
 
-
-
-
-const ONE_TIME = "onetime";
 
 const Container = styled.div`
   ${helpers.flexCenter} width: 100%;
@@ -54,14 +50,12 @@ const InnerWrapper = styled.div`
 class ClassTimeClockManager extends Component {
   state = {
     currentClockIndex: 0,
-    currentDayIndex: 0
+    currentDayIndex: 0,
   };
 
-  _getIndexForDay = day => {
-    return DAYS_IN_WEEK.indexOf(day);
-  };
+  _getIndexForDay = day => DAYS_IN_WEEK.indexOf(day);
 
-  getDayInShortFormat = dayDb => {
+  getDayInShortFormat = (dayDb) => {
     const day = dayDb.toLowerCase();
     return day.substr(0, 2);
   };
@@ -82,7 +76,7 @@ class ClassTimeClockManager extends Component {
     return clockCounter;
   };
 
-  handleDayClick = (clockIndex, dayIndex) => e => {
+  handleDayClick = (clockIndex, dayIndex) => (e) => {
     e.preventDefault();
 
     this.handleSliderState(clockIndex, dayIndex);
@@ -90,12 +84,12 @@ class ClassTimeClockManager extends Component {
 
   handleSliderState = (newClockIndex, newDayIndex) => {
     if (
-      this.state.currentClockIndex !== newClockIndex ||
-      this.state.currentDayIndex !== newDayIndex
+      this.state.currentClockIndex !== newClockIndex
+      || this.state.currentDayIndex !== newDayIndex
     ) {
       this.setState({
         currentClockIndex: newClockIndex,
-        currentDayIndex: newDayIndex
+        currentDayIndex: newDayIndex,
       });
     }
   };
@@ -105,14 +99,13 @@ class ClassTimeClockManager extends Component {
     let selectedDay = 6;
 
     if (formattedClassTimes) {
-      Object.keys(formattedClassTimes).forEach(day => {
+      Object.keys(formattedClassTimes).forEach((day) => {
         const currentDay = this._getIndexForDay(day);
 
         if (currentDay < selectedDay) selectedDay = currentDay;
       });
 
-      if (this.state.currentDayIndex !== selectedDay)
-        this.setState({ currentDayIndex: selectedDay });
+      if (this.state.currentDayIndex !== selectedDay) this.setState({ currentDayIndex: selectedDay });
     }
   };
 
@@ -120,15 +113,10 @@ class ClassTimeClockManager extends Component {
     this.setCurrentSelectedDay();
   };
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps) => {
     const currentClassTimesData = this.props.formattedClassTimes;
     const nextClassTimesData = nextProps.formattedClassTimes;
-    if (
-      !isEqual(
-        Object.keys(currentClassTimesData),
-        Object.keys(nextClassTimesData)
-      )
-    ) {
+    if (!isEqual(Object.keys(currentClassTimesData), Object.keys(nextClassTimesData))) {
       this.setCurrentSelectedDay(nextProps.formattedClassTimes);
     }
   };
@@ -141,17 +129,21 @@ class ClassTimeClockManager extends Component {
       scheduleStartDate,
       clockProps,
       formattedClassTimes,
-      classTypeName
+      classTypeName,
     } = this.props;
     const scheduleTypeLowerCase = scheduleType.toLowerCase();
     return (
       <Fragment>
-        {/*Clock Times*/}
+        {/* Clock Times */}
         <OuterWrapper width={this.props.outerWidth}>
           {/* For recurring schedule only */}
-          {scheduleTypeLowerCase === "recurring" && (
+          {scheduleTypeLowerCase === 'recurring' && (
             <StartEndDate>
-              {scheduleStartDate} - {scheduleEndDate}{" "}
+              {scheduleStartDate}
+              {' '}
+-
+              {scheduleEndDate}
+              {' '}
             </StartEndDate>
           )}
 
@@ -177,7 +169,7 @@ class ClassTimeClockManager extends Component {
 
 ClassTimeClockManager.propTypes = {
   classTimes: PropTypes.arrayOf(PropTypes.object),
-  scheduleType: PropTypes.string
+  scheduleType: PropTypes.string,
 };
 
 ClassTimeClockManager.defaultProps = {};

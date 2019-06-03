@@ -4,12 +4,11 @@ import IconButton from 'material-ui/IconButton';
 import { MuiThemeProvider, withStyles } from 'material-ui/styles';
 import React from 'react';
 import styled from 'styled-components';
-import muiTheme from '../jss/muitheme.jsx';
+import muiTheme from '../jss/muitheme';
 import PackageAddNew from './PackageAddNew';
 import PackageListingAttachment from './PackageListingAttachment';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-import { mobile } from '/imports/ui/components/landing/components/jss/helpers.js';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { ContainerLoader } from '/imports/ui/loading/container';
 
 const ButtonWrapper = styled.div`
@@ -20,27 +19,19 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
-
-const InputWrapper = styled.div`
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-`;
-
 const styles = {
   dialogAction: {
     width: '100%',
   },
   dialogActionsRoot: {
-    [`@media screen and (max-width: ${mobile}px)`]: {
+    [`@media screen and (max-width: ${helpers.mobile}px)`]: {
       flexWrap: 'wrap',
       justifyContent: 'center',
     },
   },
 };
 
-const ErrorWrapper = styled.span`
-    color: red;
-    float: right;
-`;
+
 
 class PackageAttachment extends React.Component {
   constructor(props) {
@@ -50,7 +41,13 @@ class PackageAttachment extends React.Component {
 
   render() {
     const {
-      schoolId, classTypeId, classTypeName, parentData, closed, popUp, handleIsSavedState,
+      schoolId,
+      classTypeId,
+      classTypeName,
+      parentData,
+      closed,
+      popUp,
+      handleIsSavedState,
     } = this.props;
 
     return (
@@ -65,70 +62,84 @@ class PackageAttachment extends React.Component {
           {this.props.isLoading && <ContainerLoader />}
           <DialogTitle>
             <DialogTitleWrapper>
-                            Select Package
-
-              <IconButton color="primary" onClick={() => { this.props.onClose(); }}>
+              Select Package
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  this.props.onClose();
+                }}
+              >
                 <ClearIcon />
               </IconButton>
             </DialogTitleWrapper>
           </DialogTitle>
           <DialogContent style={{ fontSize: '18px' }}>
-            {closed ? 'You have created a Closed Series/Set. Often, their is an enrollment fee for a closed series.'
-              : 'Would you like to connect class packages to this class type?'
-                        }
-
+            {closed
+              ? 'You have created a Closed Series/Set. Often, their is an enrollment fee for a closed series.'
+              : 'Would you like to connect class packages to this class type?'}
           </DialogContent>
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
-
             <ButtonWrapper>
               <FormGhostButton
-                onClick={() => { this.setState({ PackageAddNew: true }); }}
+                onClick={() => {
+                  this.setState({ PackageAddNew: true });
+                }}
                 label="Create New Package"
               />
             </ButtonWrapper>
             <ButtonWrapper>
               <FormGhostButton
-                onClick={(e) => { this.setState({ PackageListingAttachment: true }); }}
+                onClick={(e) => {
+                  this.setState({ PackageListingAttachment: true });
+                }}
                 label="Linked Existing Packages"
               />
             </ButtonWrapper>
             <ButtonWrapper>
               <FormGhostButton
                 darkGreyColor
-                onClick={() => { this.props.classTimeFormOnClose(); }}
+                onClick={() => {
+                  this.props.classTimeFormOnClose();
+                }}
                 label="No thanks"
               />
             </ButtonWrapper>
           </DialogActions>
-
         </Dialog>
         {this.state.PackageListingAttachment && (
-        <PackageListingAttachment
-          open={this.state.pacLisAttOpen}
-          onClose={() => { this.setState({ PackageListingAttachment: false }); }}
-          schoolId={schoolId}
-          popUp={popUp}
-          classTypeId={classTypeId}
-          classTimeFormOnClose={() => { this.props.classTimeFormOnClose(); }}
-          handleIsSavedState={handleIsSavedState}
-        />
+          <PackageListingAttachment
+            open={this.state.pacLisAttOpen}
+            onClose={() => {
+              this.setState({ PackageListingAttachment: false });
+            }}
+            schoolId={schoolId}
+            popUp={popUp}
+            classTypeId={classTypeId}
+            classTimeFormOnClose={() => {
+              this.props.classTimeFormOnClose();
+            }}
+            handleIsSavedState={handleIsSavedState}
+          />
         )}
         {this.state.PackageAddNew && (
-        <PackageAddNew
-          open={this.state.PackageAddNew}
-          onClose={() => { this.setState({ PackageAddNew: false }); }}
-          schoolId={schoolId}
-          classTypeId={classTypeId}
-          classTimeFormOnClose={() => { this.props.classTimeFormOnClose(); }}
-          classTypeName={classTypeName}
-          parentData={parentData}
-          handleIsSavedState={handleIsSavedState}
-        />
+          <PackageAddNew
+            open={this.state.PackageAddNew}
+            onClose={() => {
+              this.setState({ PackageAddNew: false });
+            }}
+            schoolId={schoolId}
+            classTypeId={classTypeId}
+            classTimeFormOnClose={() => {
+              this.props.classTimeFormOnClose();
+            }}
+            classTypeName={classTypeName}
+            parentData={parentData}
+            handleIsSavedState={handleIsSavedState}
+          />
         )}
       </MuiThemeProvider>
     );
   }
 }
-
 
 export default withStyles(styles)(PackageAttachment);

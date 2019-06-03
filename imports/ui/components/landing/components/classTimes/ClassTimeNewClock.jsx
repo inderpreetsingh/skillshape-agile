@@ -395,11 +395,10 @@ class ClassTimeNewClock extends Component {
     const allDates = [];
     let clockCounter = 0;
 
-    DAYS_IN_WEEK.forEach((day, i) => {
+    DAYS_IN_WEEK.forEach((day) => {
       const scheduleData = formattedClassTimes[day];
-      const currentDay = day;
       if (scheduleData) {
-        scheduleData.forEach((schedule, i) => {
+        scheduleData.forEach((schedule) => {
           const eventStartTime = new Date(schedule.startTime);
 
           const data = {

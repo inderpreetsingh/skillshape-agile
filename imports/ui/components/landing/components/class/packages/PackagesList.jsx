@@ -1,13 +1,11 @@
-import React, { Fragment } from 'react';
 import isEmpty from 'lodash/isEmpty';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Package from './Package';
-
-import PackageStructure from '../../../constants/structure/package.js';
-
-import * as helpers from '../../jss/helpers.js';
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
+import PackageStructure from '../../../constants/structure/package';
+import * as helpers from '../../jss/helpers';
 import { SubHeading } from '../../jss/sharedStyledComponents';
+import Package from './Package';
 
 const PACKAGE_WIDTH = 500;
 const PACKAGE_TYPE_CATEGORIES = ['payAsYouGo', 'autoWithDraw', 'payUpFront'];
@@ -33,13 +31,13 @@ const PACKAGE_LIST_STYLES = {
 };
 
 const Wrapper = styled.div`
-	width: 100%;
-	${helpers.flexCenter}
-	flex-direction: column; 
+  width: 100%;
+  ${helpers.flexCenter}
+  flex-direction: column;
 
-	@media screen and (max-width: ${helpers.tablet}px) {
-		${helpers.flexDirectionColumn};
-	}
+  @media screen and (max-width: ${helpers.tablet}px) {
+    ${helpers.flexDirectionColumn};
+  }
 `;
 
 const PackagesListWrapper = styled.section`
@@ -84,7 +82,6 @@ const PackagesListWrapper = styled.section`
 // 	}
 // `;
 
-
 const PackagesWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -94,7 +91,7 @@ const PackagesWrapper = styled.div`
   position: relative;
   z-index: 1;
   ${props => props.onPriceEdit
-        && `flex-direction: row; 
+    && `flex-direction: row; 
     flex-wrap: wrap; 
     justify-content: space-around;`}
 
@@ -107,53 +104,53 @@ const PackagesWrapper = styled.div`
 `;
 
 const PackagesContainer = styled.div`
-	${helpers.flexCenter}  
-	flex-wrap: wrap;
-	justify-content: ${props => (props.packagesLength > 1 ? 'space-between' : 'center')}; 
-    width: 100%;
-	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
-	margin: 0 auto;
+  ${helpers.flexCenter}
+  flex-wrap: wrap;
+  justify-content: ${props => (props.packagesLength > 1 ? 'space-between' : 'center')};
+  width: 100%;
+  max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
+  margin: 0 auto;
 
-	@media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
-		max-width: ${PACKAGE_WIDTH}px;
-	}
+  @media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
+    max-width: ${PACKAGE_WIDTH}px;
+  }
 `;
 
 const PackageWrapper = styled.div`
-	margin-bottom: ${helpers.rhythmDiv * 2}px;
-	max-width: ${PACKAGE_WIDTH}px;
-	width: 100%;
+  margin-bottom: ${helpers.rhythmDiv * 2}px;
+  max-width: ${PACKAGE_WIDTH}px;
+  width: 100%;
 `;
 
 const Title = styled.h2`
-	font-family: ${helpers.specialFont};
-	font-weight: 300;
-	text-align: center;
-	font-style: italic;
-	line-height: 1;
-	font-size: ${helpers.baseFontSize * 1.5}px;
-	margin: 0;
-	margin-bottom: ${helpers.rhythmDiv * 4}px;
-	color: ${helpers.textColor};
-	width: 100%;
+  font-family: ${helpers.specialFont};
+  font-weight: 300;
+  text-align: center;
+  font-style: italic;
+  line-height: 1;
+  font-size: ${helpers.baseFontSize * 1.5}px;
+  margin: 0;
+  margin-bottom: ${helpers.rhythmDiv * 4}px;
+  color: ${helpers.textColor};
+  width: 100%;
 `;
 
 const PackageTypeTitle = SubHeading.extend`
-    font-size: 20px;
-    font-weight: 400;
-    width: 100%;
-	max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
-    margin: 0 auto;
-    margin-bottom: ${helpers.rhythmDiv}px;
-    ${props => props.packagesData.length === 1 && 'max-width: 500px'};
-    
-    @media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
-		max-width: ${PACKAGE_WIDTH}px;
-    }
-    
-    @media screen and (max-width: ${helpers.mobile}px) {
-        text-align: center;
-    }
+  font-size: 20px;
+  font-weight: 400;
+  width: 100%;
+  max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px;
+  margin: 0 auto;
+  margin-bottom: ${helpers.rhythmDiv}px;
+  ${props => props.packagesData.length === 1 && 'max-width: 500px'};
+
+  @media screen and (max-width: ${PACKAGE_WIDTH * 2 + helpers.rhythmDiv * 4}px) {
+    max-width: ${PACKAGE_WIDTH}px;
+  }
+
+  @media screen and (max-width: ${helpers.mobile}px) {
+    text-align: center;
+  }
 `;
 
 const Packages = props => (
@@ -187,37 +184,27 @@ const PackagesListContainer = props => (
       fullScreen={props.fullScreen}
       classPackages={props.classPackages}
     >
-      <PackagesWrapper
-        classPackages={props.classPackages}
-        onPriceEdit={props.onPriceEdit}
-      >
+      <PackagesWrapper classPackages={props.classPackages} onPriceEdit={props.onPriceEdit}>
         <Title>{props.packageListName}</Title>
-        {props.listType === 'monthlyPackages'
-          ? Object
-            .keys(props.packagesData)
-            .map((pymtType, index) => {
-              const { packages } = props.packagesData[pymtType];
-              return (
-                <React.Fragment key={index.toString()}>
-                  {!isEmpty(packages)
-                                    && (
-                                    <React.Fragment>
-                                      <PackageTypeTitle
-                                        packagesData={props.packagesData[pymtType].packages}
-                                      >
-                                        {packageTypeCategories[pymtType]}
-
-                                      </PackageTypeTitle>
-                                      <Packages
-                                        {...props}
-                                        packagesData={props.packagesData[pymtType].packages}
-                                      />
-                                    </React.Fragment>
-                                    )}
-                </React.Fragment>
-              );
-            })
-          : <Packages {...props} />}
+        {props.listType === 'monthlyPackages' ? (
+          Object.keys(props.packagesData).map((pymtType, index) => {
+            const { packages } = props.packagesData[pymtType];
+            return (
+              <React.Fragment key={index.toString()}>
+                {!isEmpty(packages) && (
+                  <React.Fragment>
+                    <PackageTypeTitle packagesData={props.packagesData[pymtType].packages}>
+                      {packageTypeCategories[pymtType]}
+                    </PackageTypeTitle>
+                    <Packages {...props} packagesData={props.packagesData[pymtType].packages} />
+                  </React.Fragment>
+                )}
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <Packages {...props} />
+        )}
       </PackagesWrapper>
     </PackagesListWrapper>
   </React.Fragment>
@@ -225,7 +212,7 @@ const PackagesListContainer = props => (
 
 const categorizeMonthlyListData = (packagesData) => {
   const categorizedData = {};
-  const categories = PACKAGE_TYPE_CATEGORIES.forEach((category) => {
+  PACKAGE_TYPE_CATEGORIES.forEach((category) => {
     categorizedData[category] = {
       name: category,
       packages: [],
@@ -286,62 +273,62 @@ const PackagesList = (props) => {
       )}
       <Wrapper>
         {!classPackagesEmpty && (
-        <PackagesListContainer
-          listType="classPackages"
-          classPackages
-          variant={props.variant}
-          packageProps={{
-            usedFor: props.usedFor,
-            appearance: props.appearance,
-            bgColor: props.bgColor,
-            variant: props.variant,
-            packageType: 'CP',
-            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-            schoolId: props.schoolId,
-          }}
-          onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
-          fullScreen={monthlyPackagesEmpty}
-          packageListName="Per Class Packages"
-          packagesData={props.perClassPackagesData}
-          schoolCurrency={schoolCurrency}
-          onSchoolEdit={props.onSchoolEdit}
-          onEditClick={() => {
-            props.onEditClick();
-          }}
-          setFormData={(packageData) => {
-            props.setFormData(packageData);
-          }}
-          onPriceEdit={props.onPriceEdit}
-        />
+          <PackagesListContainer
+            listType="classPackages"
+            classPackages
+            variant={props.variant}
+            packageProps={{
+              usedFor: props.usedFor,
+              appearance: props.appearance,
+              bgColor: props.bgColor,
+              variant: props.variant,
+              packageType: 'CP',
+              onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+              schoolId: props.schoolId,
+            }}
+            onAddToCartIconButtonClick={props.onAddToCartIconButtonClick}
+            fullScreen={monthlyPackagesEmpty}
+            packageListName="Per Class Packages"
+            packagesData={props.perClassPackagesData}
+            schoolCurrency={schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={() => {
+              props.onEditClick();
+            }}
+            setFormData={(packageData) => {
+              props.setFormData(packageData);
+            }}
+            onPriceEdit={props.onPriceEdit}
+          />
         )}
 
         {!monthlyPackagesEmpty && (
-        <PackagesListContainer
-          listType="monthlyPackages"
-          variant={props.variant}
-          packageProps={{
-            usedFor: props.usedFor,
-            appearance: props.appearance,
-            bgColor: props.bgColor,
-            variant: props.variant,
-            packageType: 'MP',
-            onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
-            schoolId: props.schoolId,
-          }}
-          monthlyPackagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
-          packageListName="Monthly Packages"
-          fullScreen={classPackagesEmpty}
-          packagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
-          schoolCurrency={schoolCurrency}
-          onSchoolEdit={props.onSchoolEdit}
-          onEditClick={() => {
-            props.onEditClick();
-          }}
-          setFormData={(packageData) => {
-            props.setFormData(packageData);
-          }}
-          onPriceEdit={props.onPriceEdit}
-        />
+          <PackagesListContainer
+            listType="monthlyPackages"
+            variant={props.variant}
+            packageProps={{
+              usedFor: props.usedFor,
+              appearance: props.appearance,
+              bgColor: props.bgColor,
+              variant: props.variant,
+              packageType: 'MP',
+              onAddToCartIconButtonClick: props.onAddToCartIconButtonClick,
+              schoolId: props.schoolId,
+            }}
+            monthlyPackagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
+            packageListName="Monthly Packages"
+            fullScreen={classPackagesEmpty}
+            packagesData={categorizeMonthlyListData(props.monthlyPackagesData)}
+            schoolCurrency={schoolCurrency}
+            onSchoolEdit={props.onSchoolEdit}
+            onEditClick={() => {
+              props.onEditClick();
+            }}
+            setFormData={(packageData) => {
+              props.setFormData(packageData);
+            }}
+            onPriceEdit={props.onPriceEdit}
+          />
         )}
       </Wrapper>
     </Fragment>

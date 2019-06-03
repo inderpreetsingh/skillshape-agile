@@ -239,12 +239,10 @@ class BuyPackagesDialogBox extends Component {
       packageList,
       currency,
       isLoading,
-      joinNow,
-      onSendLinkClick,
       currentProps,
     } = props;
 
-    const { selectedPackageIndex, radioButtonGroupValue, selectedPackageType } = this.state;
+    const { selectedPackageIndex,  selectedPackageType } = this.state;
 
     const { _id: userId } = currentProps;
 

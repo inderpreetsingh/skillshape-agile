@@ -129,39 +129,7 @@ const Details = styled.div`
   flex-direction: column;
 `;
 
-const StudentNotes = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
-  display: flex;
-  min-width: 0;
-`;
-
-const StudentNotesContent = styled.textarea`
-  font-family: ${helpers.specialFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-style: italic;
-  height: 100%;
-  border-radius: 5px;
-`;
-
-const Status = styled.div`
-  padding: ${helpers.rhythmDiv * 2}px;
-  min-width: 0;
-`;
-
 /* prettier-ignore */
-
-const ExpiresOn = Designation = Text.extend`
-  font-style: italic;
-  font-weight: 300;
-`;
-
-const onMenuItemClick = (value) => {
-  if (value === 'remove_teacher') {
-    props.history.push('/remove_teacher');
-  } else {
-    props.history.push('/some-random-link');
-  }
-};
 
 const ButtonsWrapper = styled.div`
   width: 100%;

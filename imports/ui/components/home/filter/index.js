@@ -39,9 +39,9 @@ class SkillClassFilter extends React.Component {
   }
 
   initializeSlider = () => {
-    const self = this;
-    const rangeClass = document.getElementById('sliderPriceClass');
-    const rangeMonth = document.getElementById('sliderPriceMonth');
+    // const self = this;
+    // const rangeClass = document.getElementById('sliderPriceClass');
+    // const rangeMonth = document.getElementById('sliderPriceMonth');
     // noUiSlider.create(rangeClass,{
     //   start: [0, 1000],
     //   connect: true,

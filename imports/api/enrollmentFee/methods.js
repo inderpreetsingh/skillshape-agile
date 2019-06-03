@@ -74,8 +74,6 @@ Meteor.methods({
   },
   'enrollment.checkIsEnrollmentPurchased': function (_id, userId, packageType) {
     let currentPackage = {};
-    const enrollmentPackage = {};
-    const enrollmentIds = [];
     let classTypeIds = [];
     let classTypeData;
     let classTypeDataWithPurchaseInfo;
@@ -119,7 +117,7 @@ Meteor.methods({
       packageIds = packages.map(obj => obj._id);
       purchasedPackages = Meteor.call('purchases.getPackagesFromIds', packageIds, null, null);
       return purchasedPackages;
-    } if (schoolId) {
+    }else if (schoolId) {
       return (purchasedPackages = Meteor.call('purchases.getPackagesFromIds', [], null, schoolId));
     }
   },

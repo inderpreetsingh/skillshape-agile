@@ -29,22 +29,24 @@ const styles = {
 
 const CoaButton = (props) => {
   if (props.itemScope && props.itemType) {
-    <Button
-      classes={{
-        root: props.classes.coaButton,
-        label: props.classes.coaButtonLabel,
-      }}
-      color="contrast"
-      onClick={props.onClick}
-      itemScope
-      itemProps={props.findAction}
-    >
-      <Icon className={props.classes.coaButtonIcon}>
-        {props.icon ? props.icon : 'face'}
-        {' '}
-      </Icon>
-      {props.label ? props.label : 'Submit'}
-    </Button>;
+    return (
+      <Button
+        classes={{
+          root: props.classes.coaButton,
+          label: props.classes.coaButtonLabel,
+        }}
+        color="contrast"
+        onClick={props.onClick}
+        itemScope
+        itemProps={props.findAction}
+      >
+        <Icon className={props.classes.coaButtonIcon}>
+          {props.icon ? props.icon : 'face'}
+          {' '}
+        </Icon>
+        {props.label ? props.label : 'Submit'}
+      </Button>
+    );
   }
 
   return (

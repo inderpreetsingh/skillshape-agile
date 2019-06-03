@@ -69,11 +69,6 @@ const styles = {
   },
 };
 
-const FormElementWrapper = styled.div`
-  width: 100%;
-  display: ${props => (props.show ? 'block' : 'none')};
-`;
-
 /*
 const LabelOrInput = props => (
   <Fragment>
@@ -129,14 +124,6 @@ const Form = styled.form`
   @media screen and (max-width: ${helpers.mobile + 100}px) {
     width: 100%;
   }
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  align-items: baseline;
-  width: calc(100% + 12px);
-  transform: translateX(-12px);
-  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 const SubmitButtonWrapper = styled.div`
@@ -230,10 +217,12 @@ class ContactUsForm extends Component {
       if (!email) {
         popUp.appear('alert', { content: 'Please enter your email.' });
         return false;
-      }else if (!emailReg.test(email)) {
+      }
+      if (!emailReg.test(email)) {
         popUp.appear('alert', { content: 'Please enter valid email address' });
         return false;
-      } else if (!message) {
+      }
+      if (!message) {
         popUp.appear('alert', { content: 'Please enter a message.' });
         return false;
       }
