@@ -101,7 +101,7 @@ class CreateMedia extends React.Component {
     if (file) {
       if (file.type.match('image/*')) {
         return 'Image';
-      }else  if (file.type.match('video/*') || file.type.match('audio/*')) {
+      } if (file.type.match('video/*') || file.type.match('audio/*')) {
         return 'Media';
       }
       return 'Document';
@@ -118,7 +118,7 @@ class CreateMedia extends React.Component {
     event.preventDefault();
     let file;
     const mediaData = {};
-    const { mediaFormData, formType } = this.props;
+    const { mediaFormData } = this.props;
     if (!this.state.file) {
       this.setState({ fileUploadError: true });
       return;

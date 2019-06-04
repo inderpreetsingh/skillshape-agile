@@ -62,22 +62,6 @@ const TaglineText = styled.p`
   }
 `;
 
-const In = styled.p`
-  ${helpers.flexCenter}
-  font-family : ${helpers.specialFont};
-  font-weight: 500;
-  font-style: italic;
-  font-size: ${helpers.baseFontSize}px;
-  margin: 0;
-  line-height: 1;
-  height: ${helpers.rhythmDiv * 6}px;
-  background-color: white;
-  color: rgba(0,0,0,0.4);
-  padding: 0 8px;
-  position: relative;
-  box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1), 0px 2px 0px 0px rgba(0, 0, 0, 0.1), 0px 3px 1px -2px rgba(0, 0, 0, 0.05);
-`;
-
 const GenericButtonWrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     ${helpers.flexCenter} max-width: 300px;

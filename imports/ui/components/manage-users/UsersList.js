@@ -80,7 +80,7 @@ class UsersList extends React.Component {
 
   render() {
     const {
-      isBusy, usersData, pageCount, usersCount,
+       usersData, pageCount, usersCount,
     } = this.state;
     return (
       <Fragment>

@@ -91,7 +91,6 @@ export function handleSignUpSubmit(payload, event) {
   this.setState(obj);
   if (obj.errorText == null) {
     this.setState({ isBusy: true }, () => {
-      const { popUp } = this.props;
       Meteor.call(
         'user.createUser',
         { ...obj.userData, signUpType: 'skillshape-signup' },

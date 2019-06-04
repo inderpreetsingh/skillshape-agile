@@ -97,17 +97,6 @@ const MembersScreenWrapper = SplitScreenWrapper.extend`
   flex-direction: column;
 `;
 
-const style = {
-  w211: {
-    width: 211,
-  },
-  w100: {
-    width: 100,
-  },
-  w150: {
-    width: 150,
-  },
-};
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -310,7 +299,7 @@ class DashBoardView extends React.Component {
   };
 
   renderStudentAddModal = () => {
-    const { isAdmin, view } = this.props;
+    const {  view } = this.props;
     const currentYear = new Date().getFullYear();
     const birthYears = [];
     for (let i = 0; i < 60; i++) {

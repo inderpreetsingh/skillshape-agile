@@ -57,8 +57,7 @@ class MySubscription extends React.Component {
 
   getContactNumbers = data =>
     // console.info('data for phones', data);
-    data.phone && data.phone.split(/[\|\,\\]/)
-  ;
+    data.phone && data.phone.split(/[\|\,\\]/);
 
   classDataFinder = (schoolData) => {
     const { currentUser } = this.props;
@@ -410,11 +409,9 @@ export default createContainer((props) => {
   let purchaseData = [];
   let isLoading = true;
   let schoolSubscription;
-  let packagesDataSubscription;
   let classSubscription;
   let classInterestSubscription;
   let purchaseSubscription;
-  let adminsDataSubscriptions;
   let classSubscriptionData;
   let classInterestData;
   userId = get(props.params, 'id', get(currentUser, '_id', null));
@@ -443,11 +440,6 @@ export default createContainer((props) => {
       purchaseData.map((current) => {
         schoolIds.push(current.schoolId);
       });
-
-      const packagesData = purchaseData.map(data => ({
-        packageId: data.packageId,
-        packageType: data.packageType,
-      }));
 
       if (!isEmpty(classSubscriptionData)) {
         classSubscriptionData.map((current) => {

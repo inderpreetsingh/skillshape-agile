@@ -30,7 +30,7 @@ export class WeekDaysRow extends React.Component {
   }
 
   initializeFields = () => {
-    const { data, locationData } = this.props;
+    const { data } = this.props;
     const state = {
       row: [],
       Weekdays: [

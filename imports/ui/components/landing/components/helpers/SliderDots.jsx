@@ -39,7 +39,7 @@ class SliderDots extends Component {
   createDots = (noOfDots) => {
     const dots = [];
     const { currentIndex } = this.state;
-    const { dotColor, dotClassName } = this.props;
+    const { dotColor } = this.props;
     for (let i = 0; i < noOfDots; ++i) {
       dots.push(
         <Dot

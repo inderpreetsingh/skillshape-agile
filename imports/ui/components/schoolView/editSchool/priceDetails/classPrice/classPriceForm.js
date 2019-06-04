@@ -17,8 +17,8 @@ import styled from 'styled-components';
 import '/imports/api/classPricing/methods';
 import config from '/imports/config';
 import SelectArrayInput from '/imports/startup/client/material-ui-chip-input/selectArrayInput';
-import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { ContainerLoader } from '/imports/ui/loading/container';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import {
@@ -90,7 +90,6 @@ class ClassPriceForm extends React.Component {
     const { selectedClassType, expPeriod } = this.state;
     const { classTypeData, popUp } = this.props;
     const { data, schoolId } = this.props;
-    const expDuration = this.expDuration.value && parseInt(this.expDuration.value);
     const allClassTypeIds = classTypeData.map(item => item._id);
     const payload = {
       schoolId,

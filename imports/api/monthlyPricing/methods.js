@@ -23,8 +23,8 @@ Meteor.methods({
   'monthlyPricing.addMonthlyPricing': function ({ doc }) {
     check(doc, Object);
     try {
-      let amount; let
-        currency;
+      let amount;
+      let currency;
       const user = Meteor.users.findOne(this.userId);
       if (
         checkMyAccess({
@@ -43,15 +43,22 @@ Meteor.methods({
               if (data.value == elem.currency) {
                 currency = data.label;
                 amount = String(elem.cost);
-                if (amount.indexOf('.') == -1) { amount = parseInt(String(elem.cost).split('.').join('')) * data.multiplyFactor; } else { amount = parseInt(String(elem.cost).split('.').join('')); }
+                if (amount.indexOf('.') == -1) {
+                  amount = parseInt(
+                    String(elem.cost)
+                      .split('.')
+                      .join(''),
+                  ) * data.multiplyFactor;
+                } else {
+                  amount = parseInt(
+                    String(elem.cost)
+                      .split('.')
+                      .join(''),
+                  );
+                }
               }
             });
-            const result = Meteor.call(
-              'stripe.createStripePlan',
-              currency,
-              'month',
-              amount,
-            );
+            const result = Meteor.call('stripe.createStripePlan', currency, 'month', amount);
             return (doc.pymtDetails[index].planId = result);
           });
         }
@@ -67,8 +74,8 @@ Meteor.methods({
     try {
       check(doc, Object);
       check(doc_id, String);
-      let amount; let
-        currency;
+      let amount;
+      let currency;
       const user = Meteor.users.findOne(this.userId);
       if (
         checkMyAccess({
@@ -85,7 +92,7 @@ Meteor.methods({
         updateHookForClassType({ classTypeId: doc.classTypeId, doc });
         if (
           doc.pymtType
-        && (doc.pymtType.autoWithDraw || doc.pymtType.payAsYouGo || doc.pymtType.payUpFront)
+          && (doc.pymtType.autoWithDraw || doc.pymtType.payAsYouGo || doc.pymtType.payUpFront)
         ) {
           doc.pymtDetails.map((elem, index) => {
             config.currency.map((data, index) => {
@@ -94,12 +101,7 @@ Meteor.methods({
                 amount = elem.cost * data.multiplyFactor;
               }
             });
-            const result = Meteor.call(
-              'stripe.createStripePlan',
-              currency,
-              'month',
-              amount,
-            );
+            const result = Meteor.call('stripe.createStripePlan', currency, 'month', amount);
 
             doc.pymtDetails[index].planId = result;
           });
@@ -125,10 +127,7 @@ Meteor.methods({
       })
     ) {
       updateHookForClassType({ classTypeId: doc.classTypeId, doc: null });
-      return MonthlyPricing.update(
-        { _id: doc._id },
-        { $set: { deleted: true } },
-      );
+      return MonthlyPricing.update({ _id: doc._id }, { $set: { deleted: true } });
     }
     throw new Meteor.Error('Permission denied!!');
   },
@@ -139,10 +138,18 @@ Meteor.methods({
     MonthlyPricing.update({ classTypeId: null }, { $set: { classTypeId: [] } });
     try {
       if (!isEmpty(diselectedIds)) {
-        const result = MonthlyPricing.update({ _id: { $in: diselectedIds } }, { $pull: { classTypeId } }, { multi: true });
+        MonthlyPricing.update(
+          { _id: { $in: diselectedIds } },
+          { $pull: { classTypeId } },
+          { multi: true },
+        );
       }
       if (!isEmpty(selectedIds)) {
-        const result = MonthlyPricing.update({ _id: { $in: selectedIds } }, { $push: { classTypeId } }, { multi: true });
+        MonthlyPricing.update(
+          { _id: { $in: selectedIds } },
+          { $push: { classTypeId } },
+          { multi: true },
+        );
       }
       return true;
     } catch (error) {

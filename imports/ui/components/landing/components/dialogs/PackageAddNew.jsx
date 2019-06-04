@@ -144,9 +144,7 @@ class PackageAddNew extends React.Component {
 }
 
 export default createContainer((props) => {
-  const {
-    schoolId, classTypeId, classTypeName, parentData,
-  } = props;
+  const { schoolId, classTypeName, parentData } = props;
   let currency;
   let schoolDataSubscription;
   const data = {};

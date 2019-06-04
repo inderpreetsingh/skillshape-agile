@@ -139,17 +139,6 @@ const FieldsWrapper = styled.div`
   }
 `;
 
-const VideoPlayerWrapper = styled.div`
-  padding-right: 80px;
-  margin-bottom: ${helpers.rhythmDiv}px;
-
-  @media screen and (max-width: ${helpers.mobile}px) {
-    padding-right: 0;
-    height: 100%;
-    width: 100%;
-  }
-`;
-
 const ButtonWrapper = styled.div`
   @media screen and (max-width: ${helpers.tablet}px) {
     display: none;

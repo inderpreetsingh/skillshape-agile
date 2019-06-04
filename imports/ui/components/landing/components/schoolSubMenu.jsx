@@ -37,7 +37,6 @@ class SchoolSubMenu extends React.Component {
 
   render() {
     const { data, classes } = this.props;
-    const childData = null;
     const role = _.indexOf(this.props.currentUser.roles, 'Superadmin');
     return (
       <Fragment>

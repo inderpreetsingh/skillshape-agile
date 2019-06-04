@@ -488,7 +488,6 @@ class ManageMyCalendar extends React.Component {
     const { classes } = this.props;
     const {
       type,
-      classTimesData,
       myClassTimes,
       filter,
       managedClassTimes,
@@ -746,40 +745,33 @@ class ManageMyCalendar extends React.Component {
                             }}
                           >
                             {managedClassTimes
-                              && managedClassTimes.map((classTime, index) => {
-                                const result = classTypeData.filter((item) => {
-                                  if (item._id == classTime.classTypeId) {
-                                    return item;
-                                  }
-                                });
-                                return (
-                                  <div key={index} style={styles.formControl}>
-                                    <div style={inputStyle}>
-                                      <FormControlLabel
-                                        control={(
-                                          <Checkbox
-                                            checked={classTime.isCheck}
-                                            onChange={this.handleChangeClassTime.bind(
-                                              this,
-                                              'manageAll',
-                                              'managedClassTimes',
-                                              'manageClassTimeIds',
-                                              classTime._id,
-                                            )}
-                                            value={classTime._id}
-                                          />
+                              && managedClassTimes.map((classTime, index) => (
+                                <div key={index} style={styles.formControl}>
+                                  <div style={inputStyle}>
+                                    <FormControlLabel
+                                      control={(
+                                        <Checkbox
+                                          checked={classTime.isCheck}
+                                          onChange={this.handleChangeClassTime.bind(
+                                            this,
+                                            'manageAll',
+                                            'managedClassTimes',
+                                            'manageClassTimeIds',
+                                            classTime._id,
+                                          )}
+                                          value={classTime._id}
+                                        />
 )}
-                                        classes={{ label: classes.label }}
-                                        label={this.idmatching(
-                                          classTime.classTypeId,
-                                          classTime.name,
-                                          this.props.classTypeData,
-                                        )}
-                                      />
-                                    </div>
+                                      classes={{ label: classes.label }}
+                                      label={this.idmatching(
+                                        classTime.classTypeId,
+                                        classTime.name,
+                                        this.props.classTypeData,
+                                      )}
+                                    />
                                   </div>
-                                );
-                              })}
+                                </div>
+                              ))}
                           </div>
                           <Divider />
                         </Fragment>

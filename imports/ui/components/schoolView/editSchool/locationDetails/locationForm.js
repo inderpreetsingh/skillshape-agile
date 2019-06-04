@@ -203,7 +203,6 @@ class LocationForm extends React.Component {
   getAddressFromLocation = ({ lat, lng }) => {
     if (lat && lng) {
       const geocoder = new google.maps.Geocoder();
-      const coords = [lat, lng];
       const latlng = new google.maps.LatLng(lat, lng);
       this.setState(previousState => ({
         isBusy: true,

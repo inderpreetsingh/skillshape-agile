@@ -544,7 +544,6 @@ class FilterPanel extends Component {
   };
 
   render() {
-    const { showMoreFilters } = this.state;
     const {
       stickyPosition, mapView, filtersInDialogBox, fullWidth,
     } = this.props;

@@ -3,7 +3,10 @@ import isEmpty from 'lodash/isEmpty';
 import Button from 'material-ui/Button';
 import Checkbox from 'material-ui/Checkbox';
 import Dialog, {
-  DialogActions, DialogContent, DialogTitle, withMobileDialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  withMobileDialog,
 } from 'material-ui/Dialog';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
@@ -69,9 +72,7 @@ class MonthlyPriceForm extends React.Component {
       tabValue: 0,
       autoWithDraw: pymtType && pymtType.autoWithDraw,
       payAsYouGo: pymtType && pymtType.payAsYouGo,
-      pymtDetails: get(this.props, 'data.pymtDetails', [
-        { month: null, cost: null },
-      ]),
+      pymtDetails: get(this.props, 'data.pymtDetails', [{ month: null, cost: null }]),
       pymtMethod,
       includeAllClassTypes: get(this.props, 'data.includeAllClassTypes', ''),
       duPeriod: get(this.props, 'data.duPeriod', ''),
@@ -81,62 +82,71 @@ class MonthlyPriceForm extends React.Component {
     return state;
   };
 
-    onSubmit = (event) => {
-      event.preventDefault();
-      const { selectedClassType, pymtType, tabValue } = this.state;
-      const {
-        data, schoolId, popUp, classTypeData,
-      } = this.props;
-      let rowsUniqueness = true;
-      const allClassTypeIds = classTypeData.map(item => item._id);
-      this.refs.AddRow.getRowData().map((value1, index1) => {
-        this.refs.AddRow.getRowData().map((value2, index2) => {
-          if (value1.month == value2.month && value1.currency == value2.currency && index1 != index2) {
-            rowsUniqueness = false;
-          }
-        });
+  onSubmit = (event) => {
+    event.preventDefault();
+    const { selectedClassType, pymtType, tabValue } = this.state;
+    const {
+      data, schoolId, popUp, classTypeData,
+    } = this.props;
+    let rowsUniqueness = true;
+    const allClassTypeIds = classTypeData.map(item => item._id);
+    this.refs.AddRow.getRowData().map((value1, index1) => {
+      this.refs.AddRow.getRowData().map((value2, index2) => {
+        if (
+          value1.month == value2.month
+          && value1.currency == value2.currency
+          && index1 != index2
+        ) {
+          rowsUniqueness = false;
+        }
       });
-      if (rowsUniqueness) {
-        const payload = {
-          schoolId,
-          packageName: this.packageName.value,
-          classTypeId: this.state.includeAllClassTypes ? allClassTypeIds : selectedClassType && selectedClassType.map(data => data._id),
-          pymtMethod: 'Pay Up Front',
-          pymtDetails: this.refs.AddRow.getRowData(),
-          includeAllClassTypes: this.state.includeAllClassTypes,
-          noClasses: this.noClasses.value,
-          duPeriod: this.state.duPeriod,
-        };
-        if (isEmpty(payload.classTypeId) || !payload.packageName || !payload.pymtDetails) {
-          popUp.appear('alert', { title: 'Error', content: 'Some Field is missing.' });
+    });
+    if (rowsUniqueness) {
+      const payload = {
+        schoolId,
+        packageName: this.packageName.value,
+        classTypeId: this.state.includeAllClassTypes
+          ? allClassTypeIds
+          : selectedClassType && selectedClassType.map(data => data._id),
+        pymtMethod: 'Pay Up Front',
+        pymtDetails: this.refs.AddRow.getRowData(),
+        includeAllClassTypes: this.state.includeAllClassTypes,
+        noClasses: this.noClasses.value,
+        duPeriod: this.state.duPeriod,
+      };
+      if (isEmpty(payload.classTypeId) || !payload.packageName || !payload.pymtDetails) {
+        popUp.appear('alert', { title: 'Error', content: 'Some Field is missing.' });
+        return;
+      }
+      if (tabValue === 0) {
+        // No option is selected for making payment then need to show this `Please select any payment type`.
+        if ((pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo) || !pymtType) {
+          popUp.appear('alert', { title: 'Error', content: 'Please select any payment type.' });
           return;
         }
-        if (tabValue === 0) {
-          // No option is selected for making payment then need to show this `Please select any payment type`.
-          if (pymtType && !pymtType.autoWithDraw && !pymtType.payAsYouGo || !pymtType) {
-            popUp.appear('alert', { title: 'Error', content: 'Please select any payment type.' });
-            return;
-          }
-          if (pymtType && pymtType.payUpFront) {
-            delete pymtType.payUpFront;
-          }
-          payload.pymtType = pymtType;
-          payload.pymtMethod = 'Pay Each Month';
-        } else {
-          payload.pymtType = { payUpFront: true };
+        if (pymtType && pymtType.payUpFront) {
+          delete pymtType.payUpFront;
         }
-        this.setState({ isBusy: true });
-
-        if (data && data._id) {
-          this.handleSubmit({ methodName: 'monthlyPricing.editMonthlyPricing', doc: payload, doc_id: data._id });
-        } else {
-          this.handleSubmit({ methodName: 'monthlyPricing.addMonthlyPricing', doc: payload });
-        }
+        payload.pymtType = pymtType;
+        payload.pymtMethod = 'Pay Each Month';
       } else {
-        popUp.appear('alert', { title: 'Error', content: 'Month and currency must be unique' });
+        payload.pymtType = { payUpFront: true };
       }
-    }
+      this.setState({ isBusy: true });
 
+      if (data && data._id) {
+        this.handleSubmit({
+          methodName: 'monthlyPricing.editMonthlyPricing',
+          doc: payload,
+          doc_id: data._id,
+        });
+      } else {
+        this.handleSubmit({ methodName: 'monthlyPricing.addMonthlyPricing', doc: payload });
+      }
+    } else {
+      popUp.appear('alert', { title: 'Error', content: 'Month and currency must be unique' });
+    }
+  };
 
   handleSubmit = ({ methodName, doc, doc_id }) => {
     this.props.handleIsSavedState(true);
@@ -186,20 +196,21 @@ class MonthlyPriceForm extends React.Component {
 
   cancelConfirmationModal = () => this.setState({ showConfirmationModal: false });
 
-
   render() {
     const {
-      fullScreen, data, classes, schoolData, currency, handleIsSavedState,
+      data, classes, currency, handleIsSavedState,
     } = this.props;
     const { classTypeData, pymtMethod, pymtDetails } = this.state;
-    const tabValue = this.state.tabValue == 0 ? 'Pay Each Month' : 'Pay Up Front';
+    const tabValue = this.state.tabValue === 0 ? 'Pay Each Month' : 'Pay Up Front';
     return (
       <div>
         <Dialog
           open={this.props.open}
           aria-labelledby="form-dialog-title"
           fullScreen={false}
-          onClose={() => { unSavedChecker.call(this); }}
+          onClose={() => {
+            unSavedChecker.call(this);
+          }}
         >
           <DialogTitle id="form-dialog-title">Add Monthly Pricing</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
@@ -230,7 +241,9 @@ class MonthlyPriceForm extends React.Component {
                   label="Package Name"
                   type="text"
                   fullWidth
-                  onChange={() => { handleIsSavedState(false); }}
+                  onChange={() => {
+                    handleIsSavedState(false);
+                  }}
                 />
                 <SelectArrayInput
                   disabled={false}
@@ -267,14 +280,13 @@ class MonthlyPriceForm extends React.Component {
                     type="number"
                     fullWidth
                     inputProps={{ min: '0' }}
-                    onChange={() => { handleIsSavedState(false); }}
+                    onChange={() => {
+                      handleIsSavedState(false);
+                    }}
                   />
 
-
                   <FormControl fullWidth margin="dense">
-                    <InputLabel htmlFor="duration-period">
-                      Duration Period
-                    </InputLabel>
+                    <InputLabel htmlFor="duration-period">Duration Period</InputLabel>
                     <Select
                       required
                       input={<Input id="duration-period" />}
@@ -282,8 +294,7 @@ class MonthlyPriceForm extends React.Component {
                       onChange={(event) => {
                         handleIsSavedState(false);
                         this.setState({ duPeriod: event.target.value });
-                      }
-                      }
+                      }}
                       fullWidth
                     >
                       <MenuItem value="Day">Day</MenuItem>
@@ -380,7 +391,9 @@ class MonthlyPriceForm extends React.Component {
                     }
                     classes={classes}
                     currency={currency}
-                    handleIsSavedState={() => { handleIsSavedState(false); }}
+                    handleIsSavedState={() => {
+                      handleIsSavedState(false);
+                    }}
                   />
                 </div>
               </form>
@@ -388,14 +401,14 @@ class MonthlyPriceForm extends React.Component {
           )}
           <DialogActions>
             {data && !data.from && (
-            <ButtonWrapper>
-              <FormGhostButton
-                alertColor
-                onClick={() => this.setState({ showConfirmationModal: true })}
-                label="Delete"
-                className={classes.delete}
-              />
-            </ButtonWrapper>
+              <ButtonWrapper>
+                <FormGhostButton
+                  alertColor
+                  onClick={() => this.setState({ showConfirmationModal: true })}
+                  label="Delete"
+                  className={classes.delete}
+                />
+              </ButtonWrapper>
             )}
             <ButtonWrapper>
               <FormGhostButton

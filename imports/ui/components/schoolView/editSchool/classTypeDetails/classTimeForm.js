@@ -3,7 +3,10 @@ import {
 } from 'lodash';
 import Checkbox from 'material-ui/Checkbox';
 import Dialog, {
-  DialogActions, DialogContent, DialogTitle, withMobileDialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  withMobileDialog,
 } from 'material-ui/Dialog';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
@@ -32,7 +35,6 @@ import { ContainerLoader } from '/imports/ui/loading/container';
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { unSavedChecker, withPopUp } from '/imports/util';
 import ResponsiveTabs from '/imports/util/responsiveTabs';
-
 
 const ButtonWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
@@ -68,7 +70,8 @@ const Instructors = styled.div`
 const ClassTimeDataWrapper = styled.div`
   margin-top: ${helpers.rhythmDiv}px;
   margin-bottom: ${helpers.rhythmDiv * 2}px;
-  padding: ${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px ${helpers.rhythmDiv * 2}px;
+  padding: ${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 4}px
+    ${helpers.rhythmDiv * 2}px;
   background-color: ${helpers.panelColor};
 `;
 
@@ -146,7 +149,6 @@ class ClassTimeForm extends React.Component {
       parentData,
     };
 
-
     if (!isEmpty(parentData) && !isEmpty(parentData.selectedLocation)) {
       state.roomData = parentData.selectedLocation.rooms;
     }
@@ -170,19 +172,20 @@ class ClassTimeForm extends React.Component {
     }
 
     if (!state.locationId && !state.roomId) {
-      state.locationId = locationData[0] && locationData[0]._id || '';
-      state.roomData = locationData[0] && locationData[0].rooms && locationData[0].rooms || [];
-      state.roomId = locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id || '';
+      state.locationId = (locationData[0] && locationData[0]._id) || '';
+      state.roomData = (locationData[0] && locationData[0].rooms && locationData[0].rooms) || [];
+      state.roomId = (locationData[0] && locationData[0].rooms && locationData[0].rooms[0].id) || '';
     } else {
       locationData.forEach((location) => {
-        location && location.rooms ? location.rooms.forEach((room) => {
-          if (room.id == state.roomId) {
-            state.roomData = !isEmpty(location.rooms) ? location.rooms : [];
-          }
-        }) : state.roomData = [];
+        location && location.rooms
+          ? location.rooms.forEach((room) => {
+            if (room.id == state.roomId) {
+              state.roomData = !isEmpty(location.rooms) ? location.rooms : [];
+            }
+          })
+          : (state.roomData = []);
       });
     }
-
 
     return state;
   };
@@ -196,7 +199,7 @@ class ClassTimeForm extends React.Component {
 
   handleNoOfRow = (data) => {
     this.setState({ noOfRow: this.state.noOfRow + data });
-  }
+  };
 
   handleChangeDate = (fieldName, date) => {
     const { handleIsSavedState } = this.props;
@@ -218,17 +221,19 @@ class ClassTimeForm extends React.Component {
       this.setState({ locationId: event.target.value });
       const { locationData } = this.props;
       locationData.forEach((location) => {
-        !isEmpty(location.rooms) ? location.rooms.forEach((room) => {
-          if (location._id == event.target.value) {
-            this.setState({
-              roomData: !isEmpty(location.rooms) ? location.rooms : [],
-              roomId: location.rooms && location.rooms[0].id || '',
-            });
-          }
-        }) : this.setState({ roomId: '', roomData: [] });
+        !isEmpty(location.rooms)
+          ? location.rooms.forEach((room) => {
+            if (location._id == event.target.value) {
+              this.setState({
+                roomData: !isEmpty(location.rooms) ? location.rooms : [],
+                roomId: (location.rooms && location.rooms[0].id) || '',
+              });
+            }
+          })
+          : this.setState({ roomId: '', roomData: [] });
       });
     }
-  }
+  };
 
   handleSearchChange = type => (e) => {
     const { value } = e.target;
@@ -248,12 +253,12 @@ class ClassTimeForm extends React.Component {
   submitClassTimes = (nextTab, addSeperateTime) => (event) => {
     event.preventDefault();
     this.saveClassTimes(nextTab, addSeperateTime, event);
-  }
+  };
 
   saveClassTimes = (nextTab, addSeperateTimeJson, event) => {
     event.preventDefault();
     const {
-      schoolId, data, parentKey, parentData, popUp,
+      schoolId, data, parentKey, popUp,
     } = this.props;
     const { tabValue, locationId } = this.state;
     // console.log(this, "this...");
@@ -269,14 +274,15 @@ class ClassTimeForm extends React.Component {
       instructors: this.state.instructors,
     };
     if (!this.classTimeName.value) {
-      popUp.appear('alert', {
-        title: 'Class Time Name Empty',
-        content: 'Please Enter Class Time Name',
-        RenderActions: (
-          <FormGhostButton label="Ok" onClick={() => { }} applyClose />
-
-        ),
-      }, true);
+      popUp.appear(
+        'alert',
+        {
+          title: 'Class Time Name Empty',
+          content: 'Please Enter Class Time Name',
+          RenderActions: <FormGhostButton label="Ok" onClick={() => {}} applyClose />,
+        },
+        true,
+      );
       return false;
     }
     if (tabValue === 0) {
@@ -315,7 +321,7 @@ class ClassTimeForm extends React.Component {
 
   handleAddNewLocation = () => {
     this.setState({ showLocationForm: true });
-  }
+  };
 
   onSubmit = ({
     methodName, doc, doc_id, value,
@@ -327,13 +333,19 @@ class ClassTimeForm extends React.Component {
       if (result) {
         if (value.addSeperateTime == false) {
           this.setState({
-            PackageAttachment: true, PackageOpen: true, classTimeFormOnClose: this.props.onClose, value: value.addSeperateTime,
+            PackageAttachment: true,
+            PackageOpen: true,
+            classTimeFormOnClose: this.props.onClose,
+            value: value.addSeperateTime,
           });
 
           // this.props.onClose();
         } else if (value.addSeperateTime == true) {
           this.setState({
-            PackageAttachment: true, PackageOpen: true, classTimeFormOnClose: this.props.onClose, value: value.addSeperateTime,
+            PackageAttachment: true,
+            PackageOpen: true,
+            classTimeFormOnClose: this.props.onClose,
+            value: value.addSeperateTime,
           });
           // this.props.onClose( value.addSeperateTime );
         } else if (value == 'delete') {
@@ -352,37 +364,37 @@ class ClassTimeForm extends React.Component {
     const { classes } = this.props;
     return (
       <Fragment>
-        {(this.state.tabValue == 1 || this.state.tabValue == 0 && this.state.noOfRow >= 2)
-        && (
-        <Fragment>
-          <FormControl fullWidth>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={this.state.closed}
-                  onChange={() => {
-                    this.setState({ closed: !this.state.closed });
-                  }}
-                  value="closed"
-                  classes={{
-                    root: classes.checkBoxRoot,
-                  }}
-                />
+        {(this.state.tabValue == 1 || (this.state.tabValue == 0 && this.state.noOfRow >= 2)) && (
+          <Fragment>
+            <FormControl fullWidth>
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={this.state.closed}
+                    onChange={() => {
+                      this.setState({ closed: !this.state.closed });
+                    }}
+                    value="closed"
+                    classes={{
+                      root: classes.checkBoxRoot,
+                    }}
+                  />
 )}
-              classes={{
-                label: classes.formControlLabel,
-              }}
-              label="Make it closed series/set ?"
-            />
-          </FormControl>
-          <CheckBoxText>
-            This will close registration once the first class has started and students who join will be enrolled in the entire series.
-          </CheckBoxText>
-        </Fragment>
+                classes={{
+                  label: classes.formControlLabel,
+                }}
+                label="Make it closed series/set ?"
+              />
+            </FormControl>
+            <CheckBoxText>
+              This will close registration once the first class has started and students who join
+              will be enrolled in the entire series.
+            </CheckBoxText>
+          </Fragment>
         )}
       </Fragment>
     );
-  }
+  };
 
   instructorsIdsSetter = (instructorId, action) => {
     let { instructors } = this.state;
@@ -393,11 +405,18 @@ class ClassTimeForm extends React.Component {
       instructors = remove(instructors, n => n != instructorId);
     }
     this.setState({ instructors, addInstructorDialogBoxState: false });
-  }
+  };
 
   render() {
     const {
-      data, classes, schoolId, parentKey, locationData, popUp, instructorsData, handleIsSavedState,
+      data,
+      classes,
+      schoolId,
+      parentKey,
+      locationData,
+      popUp,
+      instructorsData,
+      handleIsSavedState,
     } = this.props;
     const {
       roomId, locationId, roomData, addInstructorDialogBoxState, parentData,
@@ -411,7 +430,9 @@ class ClassTimeForm extends React.Component {
           open={this.props.open}
           aria-labelledby="form-dialog-title"
           fullScreen={false}
-          onClose={() => { unSavedChecker.call(this); }}
+          onClose={() => {
+            unSavedChecker.call(this);
+          }}
         >
           <DialogTitle id="form-dialog-title">Add Class Times</DialogTitle>
           {this.state.isBusy && <ContainerLoader />}
@@ -443,31 +464,31 @@ class ClassTimeForm extends React.Component {
             />
           )}
           {this.state.showLocationForm && (
-          <LocationForm
-            open
-            schoolId={schoolId}
-            onClose={(result) => {
-              if (result) this.setState({ showLocationForm: false, showRoomForm: true, locId: result });
-              else this.setState({ showLocationForm: false });
-            }}
-            handleIsSavedState={handleIsSavedState}
-          />
+            <LocationForm
+              open
+              schoolId={schoolId}
+              onClose={(result) => {
+                if (result) this.setState({ showLocationForm: false, showRoomForm: true, locId: result });
+                else this.setState({ showLocationForm: false });
+              }}
+              handleIsSavedState={handleIsSavedState}
+            />
           )}
-          {this.state.showRoomForm && this.state.locId
-            && (
+          {this.state.showRoomForm && this.state.locId && (
             <RoomForm
               parentKey={this.state.locId}
               open={this.state.showRoomForm}
-              onClose={() => { this.setState({ showRoomForm: false }); }}
+              onClose={() => {
+                this.setState({ showRoomForm: false });
+              }}
               from="classTime"
             />
-            )}
+          )}
 
           {this.state.error ? (
             <div style={{ color: 'red' }}>{this.state.error}</div>
           ) : (
             <DialogContent className={classes.dialogContent}>
-
               <form id={formId}>
                 <FormInputsWrapper>
                   <TextField
@@ -478,14 +499,15 @@ class ClassTimeForm extends React.Component {
                     label="Class Time Name"
                     type="text"
                     fullWidth
-                    onChange={() => { handleIsSavedState(false); }}
+                    onChange={() => {
+                      handleIsSavedState(false);
+                    }}
                     className={classes.textField}
                   />
 
                   <DialogContentText>
-                      This name helps differentiate different class times in the same
-                      class type. Good examples include "Wednesday Night Swim" or
-                      "Weekend Open Training."
+                    This name helps differentiate different class times in the same class type. Good
+                    examples include "Wednesday Night Swim" or "Weekend Open Training."
                   </DialogContentText>
 
                   <TextField
@@ -497,7 +519,9 @@ class ClassTimeForm extends React.Component {
                     fullWidth
                     multiline
                     className={classes.textField}
-                    onChange={() => { handleIsSavedState(false); }}
+                    onChange={() => {
+                      handleIsSavedState(false);
+                    }}
                     inputProps={{ maxLength: 200 }}
                   />
                   <FormControl className={classes.formControl} fullWidth margin="dense">
@@ -516,14 +540,13 @@ class ClassTimeForm extends React.Component {
                         ) */}
                       {locationData.map((data, index) => (
                         <MenuItem key={index} value={data._id}>
-                          {`${
-                            data.address ? `${data.address}, ` : ''
-                          }${data.city ? `${data.city}, ` : ''} ${data.country ? data.country : ''}`}
-
+                          {`${data.address ? `${data.address}, ` : ''}${
+                            data.city ? `${data.city}, ` : ''
+                          } ${data.country ? data.country : ''}`}
                         </MenuItem>
                       ))}
                       <MenuItem key="add_location" value="add_new_location">
-                          + Add New Location
+                        + Add New Location
                       </MenuItem>
                     </Select>
                   </FormControl>
@@ -537,16 +560,16 @@ class ClassTimeForm extends React.Component {
                       fullWidth
                     >
                       {_.isEmpty(roomData) && (
-                      <MenuItem value="" disabled>
-                            No location added in Locations.
-                      </MenuItem>
+                        <MenuItem value="" disabled>
+                          No location added in Locations.
+                        </MenuItem>
                       )}
                       {roomData
-                          && roomData.map((data, index) => (
-                            <MenuItem key={index} value={data.id}>
-                              {data.name}
-                            </MenuItem>
-                          ))}
+                        && roomData.map((data, index) => (
+                          <MenuItem key={index} value={data.id}>
+                            {data.name}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </FormInputsWrapper>
@@ -564,64 +587,59 @@ class ClassTimeForm extends React.Component {
                   <div style={styleForBox}>
                     {this.closedCheckbox()}
                     {this.state.tabValue == 1 && (
-                    <Grid container>
-                      <Grid item sm={6} xs={12}>
-                        <MaterialDatePicker
-                          required
-                          label="Start Date"
-                          floatingLabelText="Start Date *"
-                          value={this.state.startDate}
-                          onChange={this.handleChangeDate.bind(
-                            this,
-                            'startDate',
-                          )}
-                          fullWidth
-                        />
+                      <Grid container>
+                        <Grid item sm={6} xs={12}>
+                          <MaterialDatePicker
+                            required
+                            label="Start Date"
+                            floatingLabelText="Start Date *"
+                            value={this.state.startDate}
+                            onChange={this.handleChangeDate.bind(this, 'startDate')}
+                            fullWidth
+                          />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <MaterialDatePicker
+                            required
+                            label="End Date"
+                            floatingLabelText="End Date *"
+                            value={this.state.endDate}
+                            onChange={this.handleChangeDate.bind(this, 'endDate')}
+                            fullWidth
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <MaterialDatePicker
-                          required
-                          label="End Date"
-                          floatingLabelText="End Date *"
-                          value={this.state.endDate}
-                          onChange={this.handleChangeDate.bind(
-                            this,
-                            'endDate',
-                          )}
-                          fullWidth
-                        />
-                      </Grid>
-                    </Grid>
                     )}
                   </div>
 
                   {this.state.tabValue === 0 && (
-                  <div>
-                    <OneTimeRow
-                      ref="oneTimeRow"
-                      data={
-                            data
-                            && data.scheduleDetails
-                          }
-                      roomData={this.state.roomData}
-                      saveClassTimes={this.saveClassTimes}
-                      handleNoOfRow={this.handleNoOfRow}
-                      locationData={locationData}
-                      handleIsSavedState={() => { handleIsSavedState(false); }}
-                    />
-                  </div>
+                    <div>
+                      <OneTimeRow
+                        ref="oneTimeRow"
+                        data={data && data.scheduleDetails}
+                        roomData={this.state.roomData}
+                        saveClassTimes={this.saveClassTimes}
+                        handleNoOfRow={this.handleNoOfRow}
+                        locationData={locationData}
+                        handleIsSavedState={() => {
+                          handleIsSavedState(false);
+                        }}
+                      />
+                    </div>
                   )}
                   {(this.state.tabValue === 1 || this.state.tabValue === 2) && (
-                  <div>
-                    <WeekDaysRow
-                      ref="weekDaysRow"
-                      data={data && data.scheduleDetails}
-                      roomData={this.state.roomData}
-                      saveClassTimes={this.saveClassTimes}
-                      locationData={locationData}
-                      handleIsSavedState={() => { handleIsSavedState(false); }}
-                    />
-                  </div>
+                    <div>
+                      <WeekDaysRow
+                        ref="weekDaysRow"
+                        data={data && data.scheduleDetails}
+                        roomData={this.state.roomData}
+                        saveClassTimes={this.saveClassTimes}
+                        locationData={locationData}
+                        handleIsSavedState={() => {
+                          handleIsSavedState(false);
+                        }}
+                      />
+                    </div>
                   )}
                 </ClassTimeDataWrapper>
 
@@ -643,14 +661,13 @@ class ClassTimeForm extends React.Component {
                 </ListWrapper>
 
                 <Instructors>
-                    Instructors changes will show here after saving this class time.
+                  Instructors changes will show here after saving this class time.
                 </Instructors>
               </form>
             </DialogContent>
           )}
           <DialogActions classes={{ root: this.props.classes.dialogActionsRoot }}>
             {!_.isEmpty(data) && (
-
               <ButtonWrapper>
                 <FormGhostButton
                   alertColor
@@ -704,24 +721,30 @@ class ClassTimeForm extends React.Component {
           </DialogActions>
         </Dialog>
         {this.state.PackageAttachment && (
-        <PackageAttachment
-          open={this.state.PackageOpen}
-          popUp={this.props.popUp}
-          onClose={() => { this.setState({ PackageOpen: false }); }}
-          schoolId={schoolId}
-          classTypeId={parentKey}
-          classTypeName={data && data.classTypeName ? data.classTypeName : { name: parentData.name, _id: parentData._id }}
-          parentData={parentData}
-          handleIsSavedState={handleIsSavedState}
-          classTimeFormOnClose={() => {
-            if (this.state.value) {
-              this.state.classTimeFormOnClose(true);
-            } else {
-              this.state.classTimeFormOnClose();
+          <PackageAttachment
+            open={this.state.PackageOpen}
+            popUp={this.props.popUp}
+            onClose={() => {
+              this.setState({ PackageOpen: false });
+            }}
+            schoolId={schoolId}
+            classTypeId={parentKey}
+            classTypeName={
+              data && data.classTypeName
+                ? data.classTypeName
+                : { name: parentData.name, _id: parentData._id }
             }
-          }}
-          closed={this.state.closed}
-        />
+            parentData={parentData}
+            handleIsSavedState={handleIsSavedState}
+            classTimeFormOnClose={() => {
+              if (this.state.value) {
+                this.state.classTimeFormOnClose(true);
+              } else {
+                this.state.classTimeFormOnClose();
+              }
+            }}
+            closed={this.state.closed}
+          />
         )}
       </div>
     );
@@ -750,8 +773,8 @@ ClassTimeForm.defaultProps = {
 };
 export default createContainer((props) => {
   const { data } = props;
-  let instructorsData = []; let
-    userSubscription;
+  let instructorsData = [];
+  let userSubscription;
   if (!isEmpty(data ? data.instructors : [])) {
     userSubscription = Meteor.subscribe('user.getUsersFromIds', data.instructors);
     if (userSubscription && userSubscription.ready()) {
@@ -765,6 +788,4 @@ export default createContainer((props) => {
     props,
     instructorsData,
   };
-}, withStyles(styles)(
-  withPopUp(withMobileDialog()(ClassTimeForm)),
-));
+}, withStyles(styles)(withPopUp(withMobileDialog()(ClassTimeForm))));

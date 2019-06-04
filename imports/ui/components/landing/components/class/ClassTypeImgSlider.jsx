@@ -3,7 +3,7 @@ import React from 'react';
 import ImageGallery from 'react-image-gallery';
 
 const ClassTypeImgSlider = (props) => {
-  const { images, sliderClass } = props;
+  const { images } = props;
   return (
     <ImageGallery
       showPlayButton={false}

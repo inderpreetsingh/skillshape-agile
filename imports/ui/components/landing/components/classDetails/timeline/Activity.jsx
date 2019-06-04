@@ -131,12 +131,6 @@ const TimeLineNode = styled.div`
   }
 `;
 
-const ShowOnLargeScreens = styled.div`
-  @media screen and (min-width: ${helpers.tablet}px) {
-    display: none;
-  }
-`;
-
 class Activity extends PureComponent {
   render() {
     const { props } = this;
