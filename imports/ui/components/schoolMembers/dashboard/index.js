@@ -643,7 +643,7 @@ class DashBoardView extends React.Component {
 
   handleMemberDetailsToRightPanel = async (memberId, superAdminId) => {
     const {
-      isAdmin, schoolData, adminsData, purchaseByUserId, view,
+      schoolData, adminsData, purchaseByUserId, view,
     } = this.props;
     let memberInfo;
     let profile;
@@ -839,7 +839,6 @@ class DashBoardView extends React.Component {
       isAdmin,
       adminsData,
       superAdminId,
-      isLoading,
       view,
     } = this.props;
     const {

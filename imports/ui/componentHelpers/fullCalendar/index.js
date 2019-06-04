@@ -345,7 +345,6 @@ export default createContainer((props) => {
     startDate,
     endDate,
     manageMyCalendar,
-    isUserSubsReady,
     currentUser,
     manageMyCalendarFilter,
   } = props;

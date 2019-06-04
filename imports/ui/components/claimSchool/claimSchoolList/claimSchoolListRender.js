@@ -94,25 +94,6 @@ const GridWrapper = styled.div`
   }
 `;
 
-const styles = {
-  claimListingButton: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: 600,
-    borderRadius: 10,
-    backgroundColor: helpers.danger,
-    color: 'white',
-    textTransform: 'none',
-    whiteSpace: 'nowrap',
-    marginRight: helpers.rhythmDiv * 2,
-  },
-  claimListingIcon: {
-    color: 'white',
-    marginLeft: helpers.rhythmDiv,
-  },
-};
-
 const ListingButton = props => (
   <ButtonWrapper>
     <button className="danger-button" onClick={props.onClick}>
@@ -167,14 +148,14 @@ button. To create a new school, click the Add New School
       <GridWrapper>
         <GridInnerWrapper>
           {schools
-              && schools.map((school, index) => (
-                <GridItem spacing={SPACING} key={index}>
-                  <SchoolCard
-                    schoolCardData={school}
-                    handleClaimASchool={this.props.handleClaimASchool}
-                  />
-                </GridItem>
-              ))}
+            && schools.map((school, index) => (
+              <GridItem spacing={SPACING} key={index}>
+                <SchoolCard
+                  schoolCardData={school}
+                  handleClaimASchool={this.props.handleClaimASchool}
+                />
+              </GridItem>
+            ))}
         </GridInnerWrapper>
       </GridWrapper>
     </div>

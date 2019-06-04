@@ -27,12 +27,7 @@ const skillCategory = {
 };
 
 export default function () {
-  const skillType = this.props.skillType || [];
-  const {
-    classPrice,
-    monthPrice,
-    SLocation,
-  } = this.state;
+  const { classPrice, monthPrice, SLocation } = this.state;
   // console.log("skillClassFilterRender -->>",this.state)
   return (
     <div className="row " id="scr_affix">
@@ -48,11 +43,16 @@ export default function () {
                 id="location"
                 value={SLocation}
                 onChange={e => this.setState({ SLocation: e.target.value })}
-                ref={(ref) => { this.location = ref; }}
+                ref={(ref) => {
+                  this.location = ref;
+                }}
               />
               <span className="material-input" />
-              <i className="material-icons card-material-icon" title="Search around your location...">
-                          location_searching
+              <i
+                className="material-icons card-material-icon"
+                title="Search around your location..."
+              >
+                location_searching
               </i>
             </div>
           </div>
@@ -64,19 +64,27 @@ export default function () {
               style={{ width: '100%' }}
               id="gender"
               name="gender"
-              ref={(ref) => { this.gender = ref; }}
+              ref={(ref) => {
+                this.gender = ref;
+              }}
               onChange={() => this.props.onSearch(this)}
             >
-              <option defaultValue={config.gender[0].value} disabled>Select Gender</option>
-              {
-                            config.gender.map((data, index) => <option key={index} value={data.value}>{data.label}</option>)
-                        }
+              <option defaultValue={config.gender[0].value} disabled>
+                Select Gender
+              </option>
+              {config.gender.map((data, index) => (
+                <option key={index} value={data.value}>
+                  {data.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
         <div className="col-md-8 col-sm-12 col-xs-12">
           <AutoComplete
-            ref={(ref) => { this.skillCategory = ref; }}
+            ref={(ref) => {
+              this.skillCategory = ref;
+            }}
             fieldobj={skillCategory}
             className="form-control form-mandatory"
             methodname={skillCategory.method}
@@ -96,11 +104,13 @@ export default function () {
               aria-required="true"
               placeholder="School"
               autoComplete="off"
-              ref={(ref) => { this.schoolName = ref; }}
+              ref={(ref) => {
+                this.schoolName = ref;
+              }}
               onChange={() => this.props.onSearch(this)}
             />
             <i className="material-icons card-material-icon" title="Search around your location...">
-                        search
+              search
             </i>
           </div>
         </div>
@@ -110,13 +120,19 @@ export default function () {
             style={{ width: '100%' }}
             id="experienceLevel"
             name="experienceLevel"
-            ref={(ref) => { this.experienceLevel = ref; }}
+            ref={(ref) => {
+              this.experienceLevel = ref;
+            }}
             onChange={() => this.props.onSearch(this)}
           >
-            <option defaultValue={config.experienceLevel[0].value} disabled>Select Experience Level</option>
-            {
-                        config.experienceLevel.map((data, index) => <option key={index} value={data.value}>{data.label}</option>)
-                    }
+            <option defaultValue={config.experienceLevel[0].value} disabled>
+              Select Experience Level
+            </option>
+            {config.experienceLevel.map((data, index) => (
+              <option key={index} value={data.value}>
+                {data.label}
+              </option>
+            ))}
           </select>
         </div>
         <div className="col-md-2 col-sm-4">
@@ -128,19 +144,19 @@ export default function () {
             autoComplete="off"
             min="1"
             max="60"
-            ref={(ref) => { this.age = ref; }}
+            ref={(ref) => {
+              this.age = ref;
+            }}
             onChange={() => this.props.onSearch(this)}
           />
         </div>
         <div className="col-md-3 col-sm-6">
           <div className="form-group label-floating filter-price">
             <div className="col-lg-12 clearfix">
-              <div className="col-sm-7 p0 text-left">
-                  Price per Class
-              </div>
+              <div className="col-sm-7 p0 text-left">Price per Class</div>
               <div className="col-sm-5 p0 text-right">
                 <strong>
-                    $
+                  $
                   {classPrice[0]}
                   {' '}
 -
@@ -158,12 +174,10 @@ $
         <div className="col-md-3 col-sm-6">
           <div className="form-group label-floating filter-price">
             <div className="col-lg-12 clearfix">
-              <div className="col-sm-7 p0 text-left">
-                  Price per Month
-              </div>
+              <div className="col-sm-7 p0 text-left">Price per Month</div>
               <div className="col-sm-5 p0 text-right">
                 <strong>
-                    $
+                  $
                   {monthPrice[0]}
                   {' '}
 -
