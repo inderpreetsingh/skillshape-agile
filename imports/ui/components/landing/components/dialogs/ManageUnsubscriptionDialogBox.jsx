@@ -50,14 +50,7 @@ const DialogTitleWrapper = styled.div`
   width: 100%;
 `;
 
-const ContentWrapper = styled.p`
-  margin: 0;
-  font-family: ${helpers.commonFont};
-  font-size: ${helpers.baseFontSize}px;
-  font-weight: 300;
-  text-align: center;
-  margin-bottom: ${helpers.rhythmDiv * 2}px;
-`;
+
 
 const Bold = styled.span`
   font-weight: 500;

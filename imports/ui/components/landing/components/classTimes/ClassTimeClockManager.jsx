@@ -6,7 +6,6 @@ import ClassTimeNewClock from '/imports/ui/components/landing/components/classTi
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import { DAYS_IN_WEEK } from '/imports/ui/components/landing/constants/classTypeConstants';
 
-
 const Container = styled.div`
   ${helpers.flexCenter} width: 100%;
   min-height: ${props => props.minHeight}px;
@@ -30,21 +29,9 @@ const StartEndDate = Text.extend`
   text-align: center;
 `;
 
-const ClassTypeName = Text.extend`
-  font-size: ${helpers.baseFontSize * 1.25}px;
-  text-align: center;
-  text-transform: capitalize;
-`;
-
 const OuterWrapper = styled.div`
   width: ${props => props.width || 250}px;
   overflow: hidden;
-`;
-const InnerWrapper = styled.div`
-  ${helpers.flexCenter} width: 100%;
-  min-height: 160px;
-  position: relative;
-  margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
 class ClassTimeClockManager extends Component {
@@ -124,12 +111,10 @@ class ClassTimeClockManager extends Component {
   render() {
     const {
       scheduleType,
-      description,
       scheduleEndDate,
       scheduleStartDate,
       clockProps,
       formattedClassTimes,
-      classTypeName,
     } = this.props;
     const scheduleTypeLowerCase = scheduleType.toLowerCase();
     return (

@@ -376,8 +376,6 @@ function CreateNewUser(email, name, firstName, lastName, schoolId) {
 
 function findUrl(text) {
     var source = (text || '').toString();
-    var urlArray = [];
-    var url;
     var matchArray;
     // Regular expression to find FTP, HTTP(S) and email URLs.
     var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
@@ -389,7 +387,3 @@ function findUrl(text) {
     return '';
 }
 
-function getLocationTitle(locationData) {
-
-    return `${locationData.state}, ${locationData.city}, ${locationData.country}`
-}

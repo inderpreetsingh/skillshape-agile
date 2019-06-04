@@ -217,7 +217,7 @@ class SchoolCard extends Component {
   };
 
   render() {
-    const { classes, schoolCardData, toastr } = this.props;
+    const { classes, schoolCardData } = this.props;
     const name = schoolCardData.name.toLowerCase();
     const ourEmail = this.getOurEmail();
     const { bgImg } = this.state;

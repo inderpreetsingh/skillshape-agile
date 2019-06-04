@@ -200,7 +200,7 @@ class ContractDialog extends Component {
 
   render() {
     const { props } = this;
-    const { isLoading, validation, reason } = this.state;
+    const { isLoading, validation } = this.state;
     return (
       <Dialog
         open={props.open}

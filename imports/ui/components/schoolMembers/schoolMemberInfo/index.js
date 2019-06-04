@@ -25,7 +25,6 @@ import UploadAvatar from '/imports/ui/components/schoolMembers/mediaDetails/Uplo
 import ConfirmationModal from '/imports/ui/modal/confirmationModal';
 import { confirmationDialog, verifyImageURL, withPopUp } from '/imports/util';
 
-
 const styles = theme => ({
   avatarCss: {
     minWidth: '100%',
@@ -334,7 +333,7 @@ class SchoolMemberInfo extends Component {
   };
 
   saveMyNotesInMembers = (event) => {
-    const { memberInfo, view } = this.props;
+    const { memberInfo } = this.props;
     const payload = {};
 
     // if (view === 'admin' && Meteor.userId()) {
@@ -408,8 +407,7 @@ class SchoolMemberInfo extends Component {
 
   getContactNumber = () =>
     // console.info(this.props, "........... props, get contact number");
-    this.props.memberInfo && this.props.memberInfo.phone
-  ;
+    this.props.memberInfo && this.props.memberInfo.phone;
 
   componentWillMount = () => {
     const { memberInfo } = this.props;
@@ -435,8 +433,11 @@ class SchoolMemberInfo extends Component {
   };
 
   handleRemove = () => {
-    let _id; let schoolId; let to; let userName; let
-      schoolName;
+    let _id;
+    let schoolId;
+    let to;
+    let userName;
+    let schoolName;
     const { memberInfo } = this.props;
     _id = memberInfo._id;
     schoolId = memberInfo.schoolId;
@@ -616,12 +617,7 @@ class SchoolMemberInfo extends Component {
 
   render() {
     const {
-      memberInfo,
-      view,
-      classes,
-      isAdmin,
-      notClassmatePage,
-      handleDrawerToggle,
+      memberInfo, view, classes, isAdmin, notClassmatePage, handleDrawerToggle,
     } = this.props;
     const {
       showUploadAvatarModal,

@@ -286,10 +286,7 @@ const MySubscriptionRender = (props) => {
           && schoolData.map((school, index) => {
             const EXPIRED = 'expired';
             const subscriptionsData = getSubsDataBasedOnSchool(school._id, purchaseData);
-            const activeSubsData = subscriptionsData.filter(subs => subs.packageStatus != EXPIRED);
-            const expiredSubsData = subscriptionsData.filter(
-              subs => subs.packageStatus == EXPIRED || subs.status == EXPIRED,
-            );
+            const activeSubsData = subscriptionsData.filter(subs => subs.packageStatus !== EXPIRED);
 
             return (
               <ExpansionPanel

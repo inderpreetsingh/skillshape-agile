@@ -49,11 +49,6 @@ const FilterPanelAction = styled.div`
   transform: translateY(${helpers.rhythmDiv}px);
 `;
 
-const FilterPanelActionText = styled.p`
-  margin: 0;
-  margin-top: ${helpers.rhythmDiv}px;
-`;
-
 const FilterButtonArea = styled.div`
   ${helpers.flexCenter} max-width: 300px;
   margin: auto;
@@ -62,12 +57,6 @@ const FilterButtonArea = styled.div`
 
 const MaterialInputWrapper = styled.div`
   transform: translateY(-${props => (props.select ? helpers.rhythmDiv + 2 : helpers.rhythmDiv)}px);
-`;
-
-const SwitchViewWrapper = styled.div`
-  @media screen and (max-width: ${helpers.tablet + 100}px) {
-    display: ${props => (props.mapView ? 'none' : 'block')};
-  }
 `;
 
 const GridContainerWrapper = styled.div`

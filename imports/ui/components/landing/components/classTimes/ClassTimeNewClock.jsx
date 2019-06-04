@@ -508,7 +508,6 @@ class ClassTimeNewClock extends Component {
       formattedClassTimes,
     } = this.props;
     const type = totalClocks > 1 ? 'multiple' : 'single';
-    const schduleTypeLowerCase = scheduleType.toLowerCase();
 
     return (
       <Container>

@@ -84,10 +84,6 @@ const Day = Text.extend`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
 
-const Heading = Day.extend`
-  text-align: left;
-`;
-
 const Times = styled.ul`
   padding: 0;
   margin: 0;
@@ -119,7 +115,6 @@ At
       <Bold>{props.time}</Bold>
       {' '}
 for
-      {' '}
       <Bold>{props.duration}</Bold>
       {' '}
 mins
@@ -153,8 +148,7 @@ mins
 at
         <Bold>{props.time}</Bold>
         {' '}
-          for
-        {' '}
+for
         <Bold>{props.duration}</Bold>
         {' '}
 mins
@@ -214,9 +208,10 @@ mins
 
           const eventDaysUnformatted = scheduleData.key.map(schedule => schedule.label).join(', ');
           const commaIndex = eventDaysUnformatted.lastIndexOf(',');
-          const eventDaysFormatted = `${eventDaysUnformatted.substr(0, commaIndex)
-          } and ${
-            eventDaysUnformatted.substr(commaIndex + 1)}`;
+          const eventDaysFormatted = `${eventDaysUnformatted.substr(
+            0,
+            commaIndex,
+          )} and ${eventDaysUnformatted.substr(commaIndex + 1)}`;
           const noOfDays = scheduleData.key.length;
           const eventDay = scheduleData.key[0].label;
 
@@ -236,9 +231,11 @@ mins
             return (
               <Paper className={cardItemClass}>
                 {!props.inPopUp
-                  && (data.days ? <Day>{data.day}</Day> : (
+                  && (data.days ? (
+                    <Day>{data.day}</Day>
+                  ) : (
                     <Day>
-Every
+                      Every
                       {data.day}
                     </Day>
                   ))}
@@ -252,10 +249,8 @@ Every
 
     return DAYS_IN_WEEK.map((day) => {
       const scheduleData = formattedClassTimes[day];
-      const currentDay = day;
       if (!isEmpty(scheduleData)) {
         const allDatesData = [];
-        let eventData;
         scheduleData.forEach((schedule, i) => {
           const eventStartTime = new Date(schedule.startTime);
           eventDate = schedule.date;

@@ -56,12 +56,6 @@ const ContentWrapper = styled.div`
   width: 100%;
 `;
 
-const Title = SubHeading.extend`
-  font-style: italic;
-  text-align: center;
-  font-weight: 300;
-`;
-
 const StatusWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;

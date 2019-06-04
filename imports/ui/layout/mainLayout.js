@@ -119,7 +119,7 @@ class MainLayout extends React.Component {
   };
 
   render() {
-    const { currentUser, isUserSubsReady, classes } = this.props;
+    const { currentUser, isUserSubsReady } = this.props;
     return (
       <div>
         {React.cloneElement(this.props.children, {

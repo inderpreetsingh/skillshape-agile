@@ -1,23 +1,22 @@
-import React from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-import Icon from "material-ui/Icon";
-import { withStyles } from "material-ui/styles";
+import React from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
 
-import { formatDate } from "/imports/util";
-import { mobile, rhythmDiv, tablet } from "/imports/ui/components/landing/components/jss/helpers.js";
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import SchoolLocationMap from "/imports/ui/components/landing/components/map/SchoolLocationMap.jsx";
-import ActionButtons from "/imports/ui/components/landing/components/classDetails/shared/ActionButtons";
-
+import { formatDate } from '/imports/util';
+import { mobile, rhythmDiv, tablet } from '/imports/ui/components/landing/components/jss/helpers';
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import SchoolLocationMap from '/imports/ui/components/landing/components/map/SchoolLocationMap';
+import ActionButtons from '/imports/ui/components/landing/components/classDetails/shared/ActionButtons';
 
 const styles = {
   icon: {
     marginRight: rhythmDiv,
     fontSize: 18,
     width: 18,
-    height: 18
-  }
+    height: 18,
+  },
 };
 
 const Wrapper = styled.div`
@@ -84,7 +83,6 @@ const HideOnLargeScreen = styled.div`
   }
 `;
 
-
 /* prettier-ignore */
 const Time = Address = MyDate = Text.extend`
   display: flex;
@@ -93,7 +91,7 @@ const Time = Address = MyDate = Text.extend`
   font-size: 18px;
 `;
 
-const LocationDetails = props => {
+const LocationDetails = (props) => {
   // console.group("Location Details");
   // console.log(props);
   // console.groupEnd();
@@ -101,10 +99,9 @@ const LocationDetails = props => {
     address,
     classes: { icon },
     time,
-    timePeriod,
     startDate,
     locationData,
-    website
+    website,
   } = props;
 
   return (
@@ -129,10 +126,7 @@ const LocationDetails = props => {
         </LeftInnerWrapper>
       </Left>
       <Right>
-        <SchoolLocationMap
-          locationData={locationData}
-          markerDraggable={false}
-        />
+        <SchoolLocationMap locationData={locationData} markerDraggable={false} />
       </Right>
     </Wrapper>
   );
@@ -145,8 +139,8 @@ LocationDetails.propTypes = {
   address: PropTypes.string,
   locationData: PropTypes.shape({
     lat: PropTypes.number,
-    lng: PropTypes.number
-  })
+    lng: PropTypes.number,
+  }),
 };
 
 export default withStyles(styles)(LocationDetails);

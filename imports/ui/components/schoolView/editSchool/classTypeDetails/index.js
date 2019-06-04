@@ -1,10 +1,9 @@
 import React from 'react';
+import { scroller } from 'react-scroll';
 import ClassTypeDetailsRender from './classTypeDetailsRender';
 import '/imports/api/classPricing/methods';
 import ClassTimes from '/imports/api/classTimes/fields';
 import { compressImage, formatClassTimesData, withPopUp } from '/imports/util';
-import { scroller } from 'react-scroll';
-
 
 class ClassTypeDetails extends React.Component {
   constructor(props) {
@@ -14,7 +13,6 @@ class ClassTypeDetails extends React.Component {
       file: null,
     };
   }
-
 
   getChildTableData(parentData) {
     return ClassTimes.find({ classTypeId: parentData._id }).fetch();
@@ -37,7 +35,7 @@ class ClassTypeDetails extends React.Component {
       showBackgroundUpload: true,
       selectedClassTypeData: classTypeData,
     });
-  }
+  };
 
   handleImageChange = (file) => {
     this.setState({ file });
@@ -57,36 +55,30 @@ class ClassTypeDetails extends React.Component {
           for (let i = 0; i <= 1; i++) {
             allUploadPromise.push(
               new Promise((resolve, reject) => {
-                S3.upload(
-                  { files: { 0: result[i] }, path: 'compressed' },
-                  (err, res) => {
-                    if (res) {
-                      if (i == 0) {
-                        doc.medium = res.secure_url;
-                        resolve();
-                      } else {
-                        doc.low = res.secure_url;
-                        resolve();
-                      }
+                S3.upload({ files: { 0: result[i] }, path: 'compressed' }, (err, res) => {
+                  if (res) {
+                    if (i == 0) {
+                      doc.medium = res.secure_url;
+                      resolve();
+                    } else {
+                      doc.low = res.secure_url;
+                      resolve();
                     }
-                  },
-                );
+                  }
+                });
               }),
             );
           }
           Promise.all(allUploadPromise).then(() => {
             if (file && file.fileData && !file.isUrl) {
-              S3.upload(
-                { files: { 0: file.fileData }, path: 'schools' },
-                (err, res) => {
-                  if (err) {
-                  }
-                  if (res) {
-                    doc.classTypeImg = res.secure_url;
-                    this.editClassType({ doc_id: classTypeId, doc });
-                  }
-                },
-              );
+              S3.upload({ files: { 0: file.fileData }, path: 'schools' }, (err, res) => {
+                if (err) {
+                }
+                if (res) {
+                  doc.classTypeImg = res.secure_url;
+                  this.editClassType({ doc_id: classTypeId, doc });
+                }
+              });
             } else if (file && file.isUrl) {
               doc.classTypeImg = file.file;
               this.editClassType({ doc_id: classTypeId, doc });
@@ -98,17 +90,14 @@ class ClassTypeDetails extends React.Component {
         } else {
           console.log('cors');
           if (file && file.fileData && !file.isUrl) {
-            S3.upload(
-              { files: { 0: file.fileData }, path: 'schools' },
-              (err, res) => {
-                if (err) {
-                }
-                if (res) {
-                  doc.classTypeImg = res.secure_url;
-                  this.editClassType({ doc_id: classTypeId, doc });
-                }
-              },
-            );
+            S3.upload({ files: { 0: file.fileData }, path: 'schools' }, (err, res) => {
+              if (err) {
+              }
+              if (res) {
+                doc.classTypeImg = res.secure_url;
+                this.editClassType({ doc_id: classTypeId, doc });
+              }
+            });
           } else if (file && file.isUrl) {
             doc.classTypeImg = file.file;
             this.editClassType({ doc_id: classTypeId, doc });
@@ -131,7 +120,7 @@ class ClassTypeDetails extends React.Component {
       selectedClassTypeData: null,
       file: null,
     }));
-  }
+  };
 
   editClassType = ({ doc, doc_id }) => {
     const { popUp } = this.props;
@@ -157,7 +146,6 @@ class ClassTypeDetails extends React.Component {
   };
 
   _getCategoryName = (categoryId, categoryData) => {
-    const categoryName = '';
     for (let i = 0; i < categoryData.length; ++i) {
       if (categoryData[i]._id === categoryId) {
         return categoryData[i].name;
@@ -191,16 +179,15 @@ class ClassTypeDetails extends React.Component {
       return null;
     }
     return this.props.classTypeData.filter(data => data._id === classTypeId)[0] || null;
-  }
+  };
 
   cancelConfirmationModal = () => {
     this.setState({ showConfirmationModal: false });
-  }
+  };
 
   handleDeleteData = () => {
     this.setState({ isBusy: true });
     const { popUp } = this.props;
-    const { classTypeData } = this.state;
     const delAction = this.props.settings.mainTable.actions.del;
     const methodToCall = delAction.onSubmit;
     // const docObj = formData;
@@ -245,7 +232,7 @@ class ClassTypeDetails extends React.Component {
       classTypeForm: true,
       selectedClassTypeData: classTypeData,
     }));
-  }
+  };
 
   handleEditClassTimesClick = classTypeData => classTimeData => (e) => {
     e.stopPropagation();
@@ -257,7 +244,7 @@ class ClassTypeDetails extends React.Component {
       selectedClassTimeData: classTimeData,
       selectedClassTypeData: classTypeData,
     }));
-  }
+  };
 
   handleAddClassTimeClick = classTypeData => (e) => {
     e.stopPropagation();
@@ -269,7 +256,7 @@ class ClassTypeDetails extends React.Component {
       selectedClassTimeData: null,
       selectedClassTypeData: classTypeData,
     }));
-  }
+  };
 
   handleAddClassTypeClick = () => {
     this.setState(state => ({
@@ -280,7 +267,7 @@ class ClassTypeDetails extends React.Component {
       selectedClassTimeData: null,
       selectedClassTypeData: null,
     }));
-  }
+  };
 
   handleNotifyForChange = () => {
     const data = this.state.selectedClassTypeData;
@@ -308,7 +295,7 @@ class ClassTypeDetails extends React.Component {
         },
       );
     }
-  }
+  };
 
   // This is done so that we can show confirmation modal.
   handleNotifyClassTypeUpdate = (selectedClassTypeData, methodName, notifyFor) => () => {
@@ -320,7 +307,6 @@ class ClassTypeDetails extends React.Component {
     });
   };
 
-
   handleClassTimeFormClose = () => {
     this.setState(state => ({
       ...state,
@@ -330,7 +316,7 @@ class ClassTypeDetails extends React.Component {
       selectedClassTypeData: null,
       selectedClassTimeData: null,
     }));
-  }
+  };
 
   handleClassTypeFormClose = (parentId, formAction) => {
     this.setState({
@@ -341,14 +327,14 @@ class ClassTypeDetails extends React.Component {
       selectedClassTypeData: null,
       currentPanelId: parentId,
     });
-  }
+  };
 
   currentPanelIdHandler = (currentPanelId) => {
     this.setState((state) => {
       const { currentPanelId: prevCurrentPanelId } = state;
       return { currentPanelId: currentPanelId === prevCurrentPanelId ? 'fakeId' : currentPanelId };
     });
-  }
+  };
 
   render() {
     return ClassTypeDetailsRender.call(this, this.props, this.state);

@@ -262,9 +262,7 @@ class CardsReveal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      bgImg, schoolId, medium, name,
-    } = nextProps;
+    const { bgImg, medium } = nextProps;
     const img = medium || bgImg;
     if (this.state.bgImg !== img) {
       this.verifyAndUpdateImageUrl(nextProps);
@@ -274,7 +272,6 @@ class CardsReveal extends Component {
   render() {
     const {
       name,
-      classTypeImg,
       descriptionContent,
       body,
       classes,

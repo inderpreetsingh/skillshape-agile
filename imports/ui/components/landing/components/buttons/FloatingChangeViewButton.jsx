@@ -35,11 +35,6 @@ const ButtonContainer = styled.div`
   cursor: pointer;
 `;
 
-const Seperator = styled.div`
-  display: inline-block;
-  margin: 0 ${helpers.rhythmDiv}px;
-`;
-
 const Text = styled.div`
   font-family: ${helpers.specialFont};
   font-size: ${helpers.baseFontSize * 0.75}px;

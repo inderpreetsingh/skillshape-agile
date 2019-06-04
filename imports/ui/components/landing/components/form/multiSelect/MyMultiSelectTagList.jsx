@@ -49,7 +49,6 @@ class MyTagList extends React.Component {
       valueAccessor,
       ValueComponent,
       textAccessor,
-      label,
       disabled,
       focusedItem,
     } = this.props;

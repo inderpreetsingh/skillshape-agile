@@ -23,7 +23,6 @@ const SearchArea = lazy(() => import('./components/SearchArea'));
 const config = lazy(() => import('/imports/config'));
 const Events = lazy(() => import('/imports/util/events'));
 
-
 const FloatingMapButtonWrapper = styled.div`
   padding: ${helpers.rhythmDiv}px;
   position: fixed;
@@ -39,7 +38,6 @@ const FloatingMapButtonWrapper = styled.div`
   }
 `;
 
-
 const CoverWrapper = styled.div`
   position: relative;
   clip-path: ${helpers.clipPathCurve};
@@ -52,7 +50,6 @@ const CoverWrapper = styled.div`
     clip-path: ${helpers.clipPathCurve};
   }
 `;
-
 
 const FilterPanelWrapper = styled.div`
   position: relative;
@@ -162,36 +159,21 @@ class Landing extends Component {
     }
   }
 
-
   _redirectBasedOnVisitorType = () => {
     const {
-      currentUser,
-      isUserSubsReady,
-      previousLocationPathName,
-      currentLocationPathName,
-      location,
+      currentUser, isUserSubsReady, previousLocationPathName, location,
     } = this.props;
     const visitorType = localStorage.getItem('visitorType');
-    const visitorRedirected = JSON.parse(
-      localStorage.getItem('visitorRedirected'),
-    );
+    const visitorRedirected = JSON.parse(localStorage.getItem('visitorRedirected'));
     const query = get(location, 'query', {});
     // debugger;
     if (isEmpty(query)) {
       if (!visitorRedirected && previousLocationPathName === '/') {
-        if (
-          isUserSubsReady
-          && currentUser
-          && currentUser.profile.userType === 'School'
-        ) {
+        if (isUserSubsReady && currentUser && currentUser.profile.userType === 'School') {
           console.info('SETTING VISITOR REDIRECT');
           localStorage.setItem('visitorRedirected', true);
           browserHistory.push('/dashboard');
-        } else if (
-          isUserSubsReady
-          && currentUser
-          && currentUser.profile.userType !== 'School'
-        ) {
+        } else if (isUserSubsReady && currentUser && currentUser.profile.userType !== 'School') {
           console.info('SETTING VISITOR REDIRECT');
           localStorage.setItem('visitorRedirected', true);
         } else if (isUserSubsReady && !currentUser) {
@@ -362,12 +344,8 @@ class Landing extends Component {
       if (navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            positionCoords.push(
-              position.coords.latitude || config.defaultLocation[0],
-            );
-            positionCoords.push(
-              position.coords.longitude || config.defaultLocation[1],
-            );
+            positionCoords.push(position.coords.latitude || config.defaultLocation[0]);
+            positionCoords.push(position.coords.longitude || config.defaultLocation[1]);
             resolve(positionCoords);
           },
           (err) => {
@@ -490,8 +468,7 @@ class Landing extends Component {
     // Attach count with skill cateory name so that see more functionlity can work properly.
     const oldFilter = { ...this.state.filters };
     const categoryFilter = oldFilter.skillCategoryClassLimit || {};
-    categoryFilter[categoyName] = (categoryFilter[categoyName]
-        && categoryFilter[categoyName] + config.seeMoreCount)
+    categoryFilter[categoyName] = (categoryFilter[categoyName] && categoryFilter[categoyName] + config.seeMoreCount)
       || 2 * config.seeMoreCount;
     oldFilter.skillCategoryClassLimit = categoryFilter;
     this.setState({ filters: oldFilter });
@@ -682,8 +659,7 @@ class Landing extends Component {
       tempFilters={this.state.tempFilters}
       stickyPosition={this.state.sticky}
       handleToggleMapView={this.handleToggleMapView}
-      handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)
-        }
+      handleShowMoreFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
       handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
       onLocationChange={this.onLocationChange}
       locationInputChanged={this.locationInputChanged}
@@ -797,33 +773,25 @@ class Landing extends Component {
     }
     if (
       filters.skillTypeText
-        || filters.applyFilterStatus
-        || filters.locationName
-        || filters.experienceLevel
-    ) { return true; }
+      || filters.applyFilterStatus
+      || filters.locationName
+      || filters.experienceLevel
+    ) {
+      return true;
+    }
     return false;
   };
 
   getOuterWrapperPadding = () => {
-    if (
-      !this.state.mapView
-      && this.checkIfAnyFilterIsApplied()
-      && this.state.sticky
-    ) {
+    if (!this.state.mapView && this.checkIfAnyFilterIsApplied() && this.state.sticky) {
       return 96; // Size of filter bar + buttons
-    } 
-    else if (!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
+    } if (!this.state.mapView && this.checkIfAnyFilterIsApplied()) {
       return 96; // if any filter is applied
-    } 
-    else if (!this.state.mapView && this.state.sticky) {
+    } if (!this.state.mapView && this.state.sticky) {
       // size without buttons..
       return 72;
     }
-    else{
-      return 0;
-    }
-
-
+    return 0;
   };
 
   render() {
@@ -852,24 +820,18 @@ class Landing extends Component {
                     skillLevelFilter: this.skillLevelFilter,
                     perClassPriceFilter: this.perClassPriceFilter,
                     pricePerMonthFilter: this.pricePerMonthFilter,
-                    collectSelectedSkillCategories: this
-                      .collectSelectedSkillCategories,
+                    collectSelectedSkillCategories: this.collectSelectedSkillCategories,
                     collectSelectedSkillSubject: this.collectSelectedSkillSubject,
                     handleSkillTypeSearch: this.handleSkillTypeSearch,
                     skillTypeText: this.state.filters.skillTypeText,
                     handleFiltersDialogBoxState: this.handleFiltersDialogBoxState,
-                    handleFiltersDialogSaveButtonClick: this
-                      .handleFiltersDialogSaveButtonClick,
+                    handleFiltersDialogSaveButtonClick: this.handleFiltersDialogSaveButtonClick,
                   }}
                 />
               )}
               {/* Cover */}
               <CoverWrapper>
-                <Cover
-                  polytheneVerticalFlow
-                  itemScope
-                  itemType="http://schema.org/WPHeader"
-                >
+                <Cover polytheneVerticalFlow itemScope itemType="http://schema.org/WPHeader">
                   <BrandBar
                     positionStatic
                     currentUser={this.props.currentUser}
@@ -878,10 +840,8 @@ class Landing extends Component {
                   <SearchArea
                     onLocationInputChange={this.handleLocationSearch}
                     onSkillTypeChange={this.handleSkillTypeSearch}
-                    onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)
-                    }
-                    handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)
-                    }
+                    onFiltersButtonClick={() => this.handleFiltersDialogBoxState(true)}
+                    handleNoOfFiltersClick={() => this.handleFiltersDialogBoxState(true)}
                     getMyCurrentLocation={this.getMyCurrentLocation}
                     onMapViewButtonClick={this.handleToggleMapView}
                     mapView={this.state.mapView}
@@ -890,9 +850,7 @@ class Landing extends Component {
                     resetLocationInput={this.resetLocationInput}
                     onLocationChange={this.onLocationChange}
                     currentFilterState={this.state.filters}
-                    collectSelectedSkillCategories={
-                      this.collectSelectedSkillCategories
-                    }
+                    collectSelectedSkillCategories={this.collectSelectedSkillCategories}
                     collectSelectedSkillSubject={this.collectSelectedSkillSubject}
                     onSearchIconClick={() => {
                       this.getMyCurrentLocation();
@@ -916,10 +874,7 @@ class Landing extends Component {
               </FilterPanelWrapper>
 
               {/* Cards List */}
-              <Element
-                name="content-container"
-                className="element homepage-content"
-              >
+              <Element name="content-container" className="element homepage-content">
                 {/* Applied Filters */}
                 <ClassTypeCardsPush height={this.getOuterWrapperPadding()} />
                 <ClassTypeOuterWrapper padding="0">
@@ -938,8 +893,7 @@ class Landing extends Component {
                     splitByCategory
                     setSchoolIdFilter={this.setSchoolIdFilter}
                     appliedTopFilter={
-                      this.checkIfAnyFilterIsApplied()
-                      && this.showAppliedTopFilter()
+                      this.checkIfAnyFilterIsApplied() && this.showAppliedTopFilter()
                     }
                     onSearchAgainButtonClick={this.setFilters}
                     removeAllFilters={this.removeAllFilters}
@@ -950,9 +904,7 @@ class Landing extends Component {
               {!this.state.mapView && <Footer mapView={this.state.mapView} />}
               {this.state.mapView && (
                 <FloatingMapButtonWrapper>
-                  <FloatingChangeViewButton
-                    onListButtonClick={this.handleToggleMapView}
-                  />
+                  <FloatingChangeViewButton onListButtonClick={this.handleToggleMapView} />
                 </FloatingMapButtonWrapper>
               )}
             </div>

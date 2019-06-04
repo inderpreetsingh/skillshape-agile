@@ -273,14 +273,12 @@ class ManageMyCalendar extends React.Component {
     });
   };
 
-  handleChangeClassType = (parentKey, classTypeId, fieldName, childKey, event, isInputChecked) => {
+  handleChangeClassType = (parentKey, classTypeId, fieldName, childKey, isInputChecked) => {
     const data = this.state[fieldName];
     const oldFilter = { ...this.state.filter };
     const ids = _.uniq(oldFilter[childKey] || []);
     const { classTypeForInterests } = { ...this.state };
     const { managedClassTypes } = { ...this.state };
-    const { managedClassTimes } = { ...this.state };
-    const { myClassTimes } = { ...this.state };
     const { schoolClassTypes } = { ...this.state };
     // Class time Ids of Class Types:
     const classTimesIds = [...oldFilter.classTimesIds];

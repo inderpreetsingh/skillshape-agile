@@ -171,7 +171,7 @@ class EnrollmentFeeForm extends React.Component {
 
   render() {
     const {
-      fullScreen, data, classes, handleIsSavedState,
+       data, classes, handleIsSavedState,
     } = this.props;
     const { classTypeData } = this.state;
     let selectedCost;
