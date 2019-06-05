@@ -124,7 +124,7 @@ class MonthlyPriceForm extends React.Component {
           popUp.appear('alert', { title: 'Error', content: 'Please select any payment type.' });
           return;
         }
-        if (pymtType && pymtType.payUpFront) {
+        if (pymtType.payUpFront) {
           delete pymtType.payUpFront;
         }
         payload.pymtType = pymtType;

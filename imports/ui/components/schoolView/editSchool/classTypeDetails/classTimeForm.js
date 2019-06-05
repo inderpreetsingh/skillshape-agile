@@ -328,10 +328,8 @@ class ClassTimeForm extends React.Component {
   }) => {
     this.setState({ isBusy: true });
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
-      if (error) {
-      }
       if (result) {
-        if (value.addSeperateTime == false) {
+        if (value.addSeperateTime === false) {
           this.setState({
             PackageAttachment: true,
             PackageOpen: true,

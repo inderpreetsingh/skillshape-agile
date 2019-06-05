@@ -289,8 +289,7 @@ class PackageListingAttachment extends React.Component {
         'monthlyPricing.handleClassTypes',
         { classTypeId, selectedIds, diselectedIds },
         (err, res) => {
-          if (res) {
-          } else {
+          if (err) {
             console.log('err in monthlyPricing.handleClassTypes client side----->', err);
           }
         },
@@ -303,8 +302,7 @@ class PackageListingAttachment extends React.Component {
         'enrollmentFee.handleClassTypes',
         { classTypeId, selectedIds, diselectedIds },
         (err, res) => {
-          if (res) {
-          } else {
+          if (err) {
             console.log('enrollmentFee.handleClassTypes client side----->', err);
           }
         },
@@ -317,8 +315,7 @@ class PackageListingAttachment extends React.Component {
         'classPricing.handleClassTypes',
         { classTypeId, selectedIds, diselectedIds },
         (err, res) => {
-          if (res) {
-          } else {
+          if (err) {
             console.log('classPricing.handleClassTypes client side----->', err);
           }
         },
@@ -380,12 +377,12 @@ class PackageListingAttachment extends React.Component {
             </Fragment>
           )}
           <ClassDetailsText>
-Covers:
+            Covers:
             {this.getCovers(props.selectedClassType)}
           </ClassDetailsText>
           {props.packageType == 'MP' && (
             <ClassDetailsText>
-Maximum Classes:
+              Maximum Classes:
               {maximumClasses(props)}
             </ClassDetailsText>
           )}
@@ -411,10 +408,10 @@ Maximum Classes:
                   <PriceSection key={`${payment.cost}-${index}`}>
                     <Price>
                       {payment.cost
-                          && `${formatMoney(
-                            Number.parseFloat(payment.cost).toFixed(2),
-                            payment.currency ? payment.currency : props.schoolCurrency,
-                          )}`}
+                        && `${formatMoney(
+                          Number.parseFloat(payment.cost).toFixed(2),
+                          payment.currency ? payment.currency : props.schoolCurrency,
+                        )}`}
                     </Price>
                     <NoOfClasses>
                       {payment.month && `per month for ${payment.month} months`}

@@ -90,7 +90,6 @@ class ClassPrice extends Component {
         );
       } else if (res && !res.emailSent) {
         toastr.success('No Student joined your school classes yet.', 'success');
-      } else {
       }
     });
   };

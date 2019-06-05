@@ -299,7 +299,7 @@ class DashBoardView extends React.Component {
   };
 
   renderStudentAddModal = () => {
-    const {  view } = this.props;
+    const { view } = this.props;
     const currentYear = new Date().getFullYear();
     const birthYears = [];
     for (let i = 0; i < 60; i++) {
@@ -716,10 +716,7 @@ class DashBoardView extends React.Component {
     const { memberInfo } = this.state;
     memberInfo.adminNotes = event.target.value;
     memberInfo.schoolId = this.props.schoolData && this.props.schoolData._id;
-    Meteor.call('school.saveAdminNotesToMember', memberInfo, (err, res) => {
-      if (res) {
-      }
-    });
+    Meteor.call('school.saveAdminNotesToMember', memberInfo);
   };
 
   handleInput = (event) => {
@@ -733,8 +730,7 @@ class DashBoardView extends React.Component {
 
   renderSchoolMedia = (schoolData, memberInfo, slug) => {
     const school = find(schoolData, { _id: memberInfo.schoolId });
-    if (isEmpty(school)) {
-    } else {
+    if (!isEmpty(school)) {
       return (
         <SchoolMemberMedia
           showUploadImageBtn={!!slug}

@@ -2,12 +2,10 @@ import isEmpty from 'lodash/isEmpty';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import ClassTypeImgSlider from '/imports/ui/components/landing/components/class/ClassTypeImgSlider.jsx';
-import AboutSchool from '/imports/ui/components/landing/components/class/details/AboutSchool.jsx';
-import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes.jsx';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-
+import ClassTypeImgSlider from '/imports/ui/components/landing/components/class/ClassTypeImgSlider';
+import AboutSchool from '/imports/ui/components/landing/components/class/details/AboutSchool';
+import StudentNotes from '/imports/ui/components/landing/components/class/details/StudentNotes';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,7 +22,6 @@ const Wrapper = styled.div`
   @media screen and (max-width: ${helpers.mobile}px) {
     padding-bottom: 0;
   }
-
 `;
 
 const SchoolSection = styled.div`
@@ -48,7 +45,7 @@ const ImgSliderSection = styled.div`
   max-height: 500px;
   width: 100%;
   ${helpers.flexCenter}
-  align-items: ${props => props.notes ? 'flex-start' : 'center'};
+  align-items: ${props => (props.notes ? 'flex-start' : 'center')};
   padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
@@ -56,26 +53,28 @@ const ImgSliderStudentNotes = styled.div`
   padding: 0 ${helpers.rhythmDiv * 2}px;
 `;
 
-const SchoolDetails = (props) => (
+const SchoolDetails = props => (
   <Wrapper>
     <SchoolSection>
       <AboutSchool
         website={props.website}
         address={props.address}
         title={props.schoolName}
-        description={props.description}/>
-        {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
+        description={props.description}
+      />
+      {!isEmpty(props.images) && <StudentNotes notes={props.notes} />}
     </SchoolSection>
-    {!isEmpty(props.images) && !isEmpty(props.notes) && <ImgSliderSection notes={isEmpty(props.images)}>
-      {
-        !isEmpty(props.images) ?
-        <ClassTypeImgSlider images={props.images} />
-        :
-        <ImgSliderStudentNotes>
-          <StudentNotes notes={props.notes}/>
-        </ImgSliderStudentNotes>
-      }
-    </ImgSliderSection>}
+    {!isEmpty(props.images) && !isEmpty(props.notes) && (
+      <ImgSliderSection notes={isEmpty(props.images)}>
+        {!isEmpty(props.images) ? (
+          <ClassTypeImgSlider images={props.images} />
+        ) : (
+          <ImgSliderStudentNotes>
+            <StudentNotes notes={props.notes} />
+          </ImgSliderStudentNotes>
+        )}
+      </ImgSliderSection>
+    )}
   </Wrapper>
 );
 
@@ -85,7 +84,7 @@ SchoolDetails.propTypes = {
   images: PropTypes.arrayOf({
     original: PropTypes.string,
   }),
-  notes: PropTypes.oneOfType([PropTypes.string,PropTypes.element]),
-}
+  notes: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+};
 
 export default SchoolDetails;

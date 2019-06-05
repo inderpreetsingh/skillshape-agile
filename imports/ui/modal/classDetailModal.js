@@ -229,9 +229,7 @@ class ClassDetailModal extends React.Component {
   }
 
   componentWillMount() {
-    const {
-      eventData: { schoolId },
-    } = this.props;
+    const { eventData: { schoolId } = {} } = this.props;
     Meteor.call('school.findSuperAdmin', null, schoolId, (err, res) => {
       if (res) {
         if (
@@ -344,8 +342,6 @@ class ClassDetailModal extends React.Component {
       (error, res) => {
         this.setState({ isLoading: false, error });
         this.props.closeEventModal(false, null);
-        if (error) {
-        }
       },
     );
   };
@@ -687,9 +683,7 @@ class ClassDetailModal extends React.Component {
                         </Icon>
                       </div>
                       <div>
-                        <Text>
-                          {location && `${location.address}, ${location.city}, ${location.state}`}
-                        </Text>
+                        <Text>{`${location.address}, ${location.city}, ${location.state}`}</Text>
                       </div>
                     </div>
                   )}

@@ -472,7 +472,7 @@ class ClassTimesDialogBox extends React.Component {
                             </Icon>
                           </div>
                           <div className={classes.dataMargin}>
-                            <Text>{filters && filters.locationTitle && filters.locationTitle}</Text>
+                            <Text>{filters.locationTitle}</Text>
                           </div>
                         </div>
                       )}

@@ -153,8 +153,6 @@ class EnrollmentFeeForm extends React.Component {
   handleSubmit = ({ methodName, doc, doc_id }) => {
     this.props.handleIsSavedState(true);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
-      if (error) {
-      }
       if (result) {
         this.props.onClose();
       }
@@ -170,9 +168,7 @@ class EnrollmentFeeForm extends React.Component {
   cancelConfirmationModal = () => this.setState({ showConfirmationModal: false });
 
   render() {
-    const {
-       data, classes, handleIsSavedState,
-    } = this.props;
+    const { data, classes, handleIsSavedState } = this.props;
     const { classTypeData } = this.state;
     let selectedCost;
     let selectedCurrency;

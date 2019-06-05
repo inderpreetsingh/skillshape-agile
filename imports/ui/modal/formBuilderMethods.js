@@ -5,22 +5,18 @@ import '/imports/api/monthlyPricing/methods';
 import '/imports/api/classPricing/methods';
 import '/imports/api/sLocation/methods';
 
-export default methods = {
+export default (methods = {
   callMeteorMethod: ({ methodName, payload, closeModal }) => {
     Meteor.call(methodName, payload, (error, result) => {
-      if (error) {
-      }
       if (result) {
         closeModal();
       }
     });
   },
   callMeteorUpdateMethod: ({
- methodName, updateKey, payload, closeModal
- }) => {
+    methodName, updateKey, payload, closeModal,
+  }) => {
     Meteor.call(methodName, updateKey, payload, (error, result) => {
-      if (error) {
-      }
       if (result) {
         closeModal();
       }
@@ -35,23 +31,21 @@ export default methods = {
 
       getLatLong(payload, (data) => {
         if (data == null) {
-          getLatLongPayload = `${payload.city  },${  payload.zip  },${  payload.country}`;
+          getLatLongPayload = `${payload.city},${payload.zip},${payload.country}`;
 
           getLatLong(getLatLongPayload, (data) => {
-            
             if (data == null) {
-              toastr.error("Please enter valid address details", "Error");
+              toastr.error('Please enter valid address details', 'Error');
               return false;
-            } 
-              payload.geoLat = data.lat
-              payload.geoLong = data.lng
-              payload.loc = [data.lat, data.lng]
-              methods.callMeteorMethod({
-                methodName: "location.addLocation", 
-                payload: payload, 
-                closeModal
-              });
-            
+            }
+            payload.geoLat = data.lat;
+            payload.geoLong = data.lng;
+            payload.loc = [data.lat, data.lng];
+            methods.callMeteorMethod({
+              methodName: 'location.addLocation',
+              payload,
+              closeModal,
+            });
           });
         } else {
           payload.geoLat = data.lat;
@@ -68,8 +62,8 @@ export default methods = {
     }
   },
   editLocation: ({
- formPayload, props, closeModal, editByFieldValue
- }) => {
+    formPayload, props, closeModal, editByFieldValue,
+  }) => {
     if (!editByFieldValue) {
       toastr.error('Something went wrong.', 'Error');
       closeModal();
@@ -84,25 +78,23 @@ export default methods = {
 
       getLatLong(payload, (data) => {
         if (data == null) {
-          getLatLongPayload = `${payload.city  },${  payload.zip  },${  payload.country}`;
+          getLatLongPayload = `${payload.city},${payload.zip},${payload.country}`;
 
           getLatLong(getLatLongPayload, (data) => {
-            
             if (data == null) {
-              toastr.error("Please enter valid address details", "Error");
-              return
-            } 
-              payload.geoLat = data.lat
-              payload.geoLong = data.lng
-              payload.loc = [data.lat, data.lng]
-              
-              methods.callMeteorUpdateMethod({
-                methodName: "location.editLocation", 
-                payload: payload, 
-                updateKey: editByFieldValue,
-                closeModal
-              });
-            
+              toastr.error('Please enter valid address details', 'Error');
+              return;
+            }
+            payload.geoLat = data.lat;
+            payload.geoLong = data.lng;
+            payload.loc = [data.lat, data.lng];
+
+            methods.callMeteorUpdateMethod({
+              methodName: 'location.editLocation',
+              payload,
+              updateKey: editByFieldValue,
+              closeModal,
+            });
           });
         } else {
           payload.geoLat = data.lat;
@@ -121,24 +113,24 @@ export default methods = {
   },
   removeLocation: ({ formPayload }) => {
     Meteor.call('location.removeLocation', formPayload, (error, result) => {
-      if(error) {
-        toastr.error("Unable to delete.","Error");
-        
+      if (error) {
+        toastr.error('Unable to delete.', 'Error');
       }
     });
   },
   addRoom: ({ formPayload, closeModal, parentKeyValue }) => {
-    formPayload.id = Math.random().toString(36).substr(2, 16);
+    formPayload.id = Math.random()
+      .toString(36)
+      .substr(2, 16);
     Meteor.call('location.addRoom', formPayload, parentKeyValue, (error, result) => {
       if (result) {
         closeModal();
-      } else if (error) {
       }
     });
   },
-  editRoom: ({ 
-formPayload, closeModal, editByFieldValue, parentKeyValue 
-}) => {
+  editRoom: ({
+    formPayload, closeModal, editByFieldValue, parentKeyValue,
+  }) => {
     formPayload.id = editByFieldValue;
     methods.callMeteorUpdateMethod({
       methodName: 'location.editRoom',
@@ -149,9 +141,8 @@ formPayload, closeModal, editByFieldValue, parentKeyValue
   },
   removeRoom: ({ editByFieldValue, parentKeyValue }) => {
     Meteor.call('location.roomRemove', editByFieldValue, parentKeyValue, (error, result) => {
-      if(error) {
-        toastr.error("Unable to delete.","Error");
-        
+      if (error) {
+        toastr.error('Unable to delete.', 'Error');
       }
     });
   },
@@ -180,9 +171,9 @@ formPayload, closeModal, editByFieldValue, parentKeyValue
       }
     }
   },
-  updateClassType: ({ 
-formPayload, props, closeModal, editByFieldValue 
-}) => {
+  updateClassType: ({
+    formPayload, props, closeModal, editByFieldValue,
+  }) => {
     const { schoolId } = props;
     if (formPayload && editByFieldValue && schoolId) {
       formPayload.schoolId = schoolId;
@@ -191,9 +182,7 @@ formPayload, props, closeModal, editByFieldValue
           toastr.error('Please enter valid Image file', 'Error');
           return;
         }
-        S3.upload({ files: { '0': formPayload.classTypeImg }, path: 'class' }, (err, res) => {
-          if (err) {
-          }
+        S3.upload({ files: { 0: formPayload.classTypeImg }, path: 'class' }, (err, res) => {
           if (res) {
             // this.editUserCall(res)
             formPayload.classTypeImg = res.secure_url;
@@ -232,9 +221,9 @@ formPayload, props, closeModal, editByFieldValue
       closeModal,
     });
   },
-  editModule: ({ 
-formPayload, closeModal, editByFieldValue, props
- }) => {
+  editModule: ({
+    formPayload, closeModal, editByFieldValue, props,
+  }) => {
     // formPayload.id = editByFieldValue;
     const { schoolId } = props;
     formPayload.schoolId = schoolId;
@@ -261,9 +250,9 @@ formPayload, closeModal, editByFieldValue, props
       closeModal,
     });
   },
-  editMonthlyPackage: ({ 
-formPayload, closeModal, editByFieldValue, props
- }) => {
+  editMonthlyPackage: ({
+    formPayload, closeModal, editByFieldValue, props,
+  }) => {
     const { schoolId } = props;
     formPayload.schoolId = schoolId;
     methods.callMeteorUpdateMethod({
@@ -291,8 +280,8 @@ formPayload, closeModal, editByFieldValue, props
     });
   },
   editClassPackage: ({
- formPayload, closeModal, editByFieldValue, props 
-}) => {
+    formPayload, closeModal, editByFieldValue, props,
+  }) => {
     const { schoolId } = props;
     formPayload.schoolId = schoolId;
     methods.callMeteorUpdateMethod({
@@ -309,4 +298,4 @@ formPayload, closeModal, editByFieldValue, props
       closeModal,
     });
   },
-};
+});

@@ -2,7 +2,6 @@ import SchoolMemberMediaRender from './schoolMemberMediaRender';
 import SchoolMemberDetails from '/imports/api/schoolMemberDetails/fields';
 import MediaDetails from '/imports/ui/components/schoolView/editSchool/mediaDetails';
 
-
 class SchoolMemberMedia extends MediaDetails {
   constructor(props) {
     super(props);
@@ -16,9 +15,7 @@ class SchoolMemberMedia extends MediaDetails {
   componentWillReceiveProps(nextProps) {
     if (nextProps.schoolMemberDetailsFilters) {
       this.setState({
-        memberInfo:
-          nextProps.schoolMemberDetailsFilters
-          && SchoolMemberDetails.findOne(nextProps.schoolMemberDetailsFilters),
+        memberInfo: SchoolMemberDetails.findOne(nextProps.schoolMemberDetailsFilters),
       });
     }
   }

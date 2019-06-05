@@ -45,7 +45,7 @@ Meteor.methods({
       }
 
       const _id = ClassTimes.insert(doc);
-      if (doc && doc.classTypeId && doc.locationId) {
+      if (doc.classTypeId && doc.locationId) {
         Meteor.call('classType.addLocationFilter', doc.classTypeId, doc.locationId, _id, 'newTime');
       }
       return _id;

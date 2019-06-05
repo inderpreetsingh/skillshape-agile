@@ -226,12 +226,13 @@ class LocationForm extends React.Component {
                 'administrative_area_level_2',
                 addressComponents,
               ),
-              address:
-                `${this._getComponentFromCompleteAddress('route', addressComponents)
-                } ${
-                  this._getComponentFromCompleteAddress('sublocality', addressComponents)
-                } ${
-                  this._getComponentFromCompleteAddress('locality', addressComponents)}`,
+              address: `${this._getComponentFromCompleteAddress(
+                'route',
+                addressComponents,
+              )} ${this._getComponentFromCompleteAddress(
+                'sublocality',
+                addressComponents,
+              )} ${this._getComponentFromCompleteAddress('locality', addressComponents)}`,
               country: this._getComponentFromCompleteAddress('country', addressComponents),
             };
 
@@ -292,11 +293,11 @@ class LocationForm extends React.Component {
       zip,
       country,
     };
-    const sLocationDetail = `${payload.address},${payload.city},${payload.zip},${payload.country}`;
-    // debugger;
-    if (!sLocationDetail) {
+    if (!address && !city && !zip && !country) {
       return false;
     }
+    const sLocationDetail = `${address},${city},${zip},${country}`;
+    // debugger;
 
     this.setState({ isBusy: true });
     getLatLong(sLocationDetail, (data) => {
@@ -374,8 +375,6 @@ class LocationForm extends React.Component {
     this.props.handleIsSavedState(true);
     this.props.enableParentPanelToDefaultOpen && this.props.enableParentPanelToDefaultOpen();
     Meteor.call(methodName, docObj, (error, result) => {
-      if (error) {
-      }
       if (result) {
         this.props.onClose(result);
       }
@@ -400,10 +399,10 @@ class LocationForm extends React.Component {
     return (
       <DialogActions>
         <Button type="submit" form={formId} color="primary">
-            Submit
+          Submit
         </Button>
         <Button onClick={() => this.props.onClose()} color="primary">
-            Cancel
+          Cancel
         </Button>
       </DialogActions>
     );

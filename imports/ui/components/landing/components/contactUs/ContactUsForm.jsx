@@ -237,8 +237,7 @@ class ContactUsForm extends Component {
         selectedOption,
         subject,
         (error, result) => {
-          if (error) {
-          } else {
+          if (!error) {
             let data = {};
             data = {
               popUp,

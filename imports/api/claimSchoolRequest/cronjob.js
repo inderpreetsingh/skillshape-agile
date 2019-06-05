@@ -56,7 +56,7 @@ SyncedCron.add({
       pendingClaimSchoolRequest.forEach((obj) => {
         let toField;
         const requestObj = Object.assign(obj);
-        if (requestObj && requestObj.emailCount < 3) {
+        if ( requestObj.emailCount < 3) {
           requestObj.emailCount += 1;
           // This needs to be replaced with School Admin.
           if (process.env.NODE_ENV === 'development') {
@@ -65,7 +65,7 @@ SyncedCron.add({
           // Update count in `ClaimSchoolRequest`.
           ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj });
           emailSuccess = sendClaimSchoolEmail(requestObj, requestObj._id, toField);
-        } else if (requestObj && requestObj.emailCount === 3) {
+        } else if ( requestObj.emailCount === 3) {
           // To: should be Super Admin.
           requestObj.emailCount += 1;
           toField = 'help@skillshape.com';
@@ -74,7 +74,7 @@ SyncedCron.add({
           }
           ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj });
           emailSuccess = sendClaimSchoolEmail(requestObj, requestObj._id, toField);
-        } else if (requestObj && requestObj.emailCount === 10) {
+        } else if (requestObj.emailCount === 10) {
           requestObj.emailCount += 1;
           ClaimSchoolRequest.update({ _id: requestObj._id }, { $set: requestObj });
           sendEmailToRequester(requestObj.userEmail, requestObj.userName, requestObj.schoolName);

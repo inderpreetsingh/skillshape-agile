@@ -1,5 +1,4 @@
 import { isEmpty } from 'lodash';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
@@ -14,7 +13,6 @@ import {
   stripePaymentHelper,
 } from '/imports/util';
 import Events from '/imports/util/events';
-import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 
 export default class SchoolViewBase extends React.Component {
@@ -81,7 +79,8 @@ export default class SchoolViewBase extends React.Component {
     if (currentUser) {
       setTimeout(() => {
         if (checkSuperAdmin(currentUser)) {
-        } else if (
+          return '';
+        } if (
           currentUser.profile
           && currentUser.profile.schoolId
           && currentUser.profile.schoolId.length > 1
@@ -299,8 +298,6 @@ export default class SchoolViewBase extends React.Component {
 
     if (claimSchoolModal && currentUser && currentUser._id && schoolId) {
       Meteor.call('school.claimSchool', currentUser._id, schoolId, (error, result) => {
-        if (error) {
-        }
         if (result) {
           this.setState({ successModal: true, claimSchoolModal: false });
         }
@@ -315,8 +312,6 @@ export default class SchoolViewBase extends React.Component {
       };
 
       Meteor.call('addClaimRequest', payload, (error, result) => {
-        if (error) {
-        }
         if (result) {
           popUp.appear('success', {
             title: 'Success',

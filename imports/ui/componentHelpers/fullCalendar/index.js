@@ -47,12 +47,11 @@ class FullCalendar extends React.Component {
       eventSources: (start, end, timezone, callback) => {
         const startDate = new Date(start);
         const endDate = new Date(end);
-        if (!this.props.startDate && startDate) {
+        if (!this.props.startDate) {
           this.props.setDate(startDate, endDate);
         }
         if (
           this.props.startDate
-          && startDate
           && this.props.startDate.valueOf() !== startDate.valueOf()
         ) {
           this.props.setDate(startDate, endDate);
@@ -104,7 +103,7 @@ class FullCalendar extends React.Component {
   }
 
   _getNormalizedDayValue = (value) => {
-    if (value == 6) {
+    if (value === 6) {
       return 0;
     }
     return value;

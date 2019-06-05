@@ -82,7 +82,7 @@ Meteor.publish('classTimes.getclassTimesForCalendar', function ({
     }
 
     condition.$or.push({ _id: { $in: classTimeIds } });
-    if (schoolIds && schoolIds.length > 0) {
+    if (schoolIds.length > 0) {
       condition.$or.push({ schoolId: { $in: schoolIds } });
     }
     // console.log("schoolIds====>",schoolIds)

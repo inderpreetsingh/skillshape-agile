@@ -86,8 +86,7 @@ class ContactUs extends React.Component {
       // Start loading
       this.setState({ isLoading: true });
       Meteor.call('sendfeedbackToAdmin', name, email, message, selectedOption, (error, result) => {
-        if (error) {
-        } else {
+        if (!error) {
           popUp.appear('success', { content: 'Thanks for providing your feedback' });
           setTimeout(() => {
             browserHistory.push('/');

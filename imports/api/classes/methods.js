@@ -8,7 +8,7 @@ Meteor.methods({
   'classes.handleInstructors': (doc) => {
     check(doc, Object);
     const payLoad = Object.assign(doc);
-    if (payLoad && payLoad.students && !isEmpty(payLoad.students)) {
+    if (payLoad.students && !isEmpty(payLoad.students)) {
       payLoad.students.forEach((obj) => {
         const memberData = {
           activeUserId: obj.userId,
@@ -57,14 +57,14 @@ Meteor.methods({
     check(purId, String);
     check(packageType, String);
     check(from, String);
-    let filter = Object.assign(doc);
+    const filter = Object.assign(doc);
     let purchaseId = purId;
     let status = status1;
     try {
       if (from === 'purchasePackage') {
         filter.students = get(Classes.findOne({ _id: filter._id }), 'students', []);
       }
-      if (filter == null) { filter = {}; }
+      // if (filter == null) { filter = {}; }
       const obj = {
         userId: filter.userId ? filter.userId : this.userId, status, purchaseId, packageType,
       };
@@ -118,7 +118,7 @@ Meteor.methods({
           Meteor.call(methodName, { doc: data });
         }
       }
-      if (filter && filter.students && !isEmpty(filter.students)) {
+      if (filter.students && !isEmpty(filter.students)) {
         filter.students.forEach((obj1) => {
           const memberData = {
             activeUserId: obj1.userId,

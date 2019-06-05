@@ -213,6 +213,18 @@ class ClassTime extends Component {
     description: this.props.desc,
   };
 
+  componentWillMount() {
+    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
+      if (!err) {
+        this.setState({ notification: res });
+      }
+    });
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.escFunction, false);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.state.description != nextProps.desc) {
       this.setState(state => ({
@@ -222,21 +234,8 @@ class ClassTime extends Component {
     }
   }
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.escFunction, false);
-  }
-
   componentWillUnmount() {
     document.removeEventListener('keydown', this.escFunction, false);
-  }
-
-  componentWillMount() {
-    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
-      if (err) {
-      } else {
-        this.setState({ notification: res });
-      }
-    });
   }
 
   handleShowMoreLinkClick = (event) => {
@@ -589,7 +588,6 @@ and
 
 ClassTime.propTypes = {
   description: PropTypes.string.isRequired,
-  addToCalendar: PropTypes.bool.isRequired,
   scheduleType: PropTypes.string.isRequired,
   inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
   isTrending: PropTypes.bool,

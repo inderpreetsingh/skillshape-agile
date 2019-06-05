@@ -25,9 +25,6 @@ if (Meteor.isClient) {
   });
 
   Tracker.autorun(() => {
-    if (Meteor.user()) {
-    } else {
-    }
   });
   $.fn.extend({
     animateCss(animationName) {
