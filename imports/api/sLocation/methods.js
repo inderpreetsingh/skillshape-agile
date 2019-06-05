@@ -121,7 +121,7 @@ Meteor.methods({
 
       let result = await axios({
         method: 'get',
-        url: `https://maps.googleapis.com/maps/api/timezone/json?location=${loc[1]},${loc[0]}&timestamp=1331161200&key=AIzaSyBRD7SzsmEO6XUZw6CG9G_Dqtj2qn7I1-0`,
+        url: `https://maps.googleapis.com/maps/api/timezone/json?location=${loc[1]},${loc[0]}&timestamp=1331161200&key=AIzaSyDDvUNdvs1akakGd_rVFT0b8y6T87ZlqZs`,
         headers: { 'Content-Type': 'application/json' },
         timeout: 20000,
       })
