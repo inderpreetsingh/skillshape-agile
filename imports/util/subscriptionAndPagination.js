@@ -49,8 +49,8 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
       currentUser,
       loadMoreEnabled: subscription.ready(),
       pageStart: 0,
-      loadMore: (pageToLoad) => {
-        loadMore(pageToLoad);
+      loadMore: () => {
+        loadMore();
       },
       threshold: 100,
       isLoading: !subscription.ready(),
@@ -59,10 +59,6 @@ export function withSubscriptionAndPagination(WrappedComponent, params) {
   }, InfiniteScroll);
 
   return class extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
     componentDidMount() {
       // ... that takes care of the subscription...
     }

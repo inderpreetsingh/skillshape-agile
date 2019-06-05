@@ -587,7 +587,7 @@ and
 }
 
 ClassTime.propTypes = {
-  description: PropTypes.string.isRequired,
+  desc: PropTypes.string.isRequired,
   scheduleType: PropTypes.string.isRequired,
   inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
   isTrending: PropTypes.bool,

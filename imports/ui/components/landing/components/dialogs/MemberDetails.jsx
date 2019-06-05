@@ -122,10 +122,7 @@ class MemberDialogBox extends Component {
 MemberDialogBox.propTypes = {
   onModalClose: PropTypes.func,
   classes: PropTypes.object.isRequired,
-  filterPanelProps: PropTypes.object,
   open: PropTypes.bool,
-  errorText: PropTypes.string,
-  unsetError: PropTypes.func,
 };
 
 export default withMobileDialog()(withStyles(styles)(MemberDialogBox));

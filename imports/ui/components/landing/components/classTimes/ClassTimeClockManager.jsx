@@ -153,7 +153,6 @@ class ClassTimeClockManager extends Component {
 }
 
 ClassTimeClockManager.propTypes = {
-  classTimes: PropTypes.arrayOf(PropTypes.object),
   scheduleType: PropTypes.string,
 };
 

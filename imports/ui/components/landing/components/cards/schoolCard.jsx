@@ -297,7 +297,6 @@ class SchoolCard extends Component {
 
 SchoolCard.propTypes = {
   schoolCardData: PropTypes.object.isRequired,
-  height: PropTypes.number,
 };
 
 SchoolCard.defaultProps = {

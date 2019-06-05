@@ -360,7 +360,6 @@ Meteor.publish('school.getClassTypesByCategory', function ({
   // locationText is a text value that search on classType data.
   if (locationText) {
     classfilter.$or.push({ $text: { $search: locationText } });
-    const classTypeExitWithLocationFilter = ClassType.findOne(classfilter);
     // if there is not data found corresponding to locationText filter then remove this filter from classType filter.
     // if (!classTypeExitWithLocationFilter) {
     //     delete classfilter["$text"];

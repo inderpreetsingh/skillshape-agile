@@ -560,10 +560,7 @@ class ClassTimeNewClock extends Component {
 }
 
 ClassTimeNewClock.propTypes = {
-  time: PropTypes.string,
-  timePeriod: PropTypes.string,
   duration: PropTypes.number,
-  day: PropTypes.string,
 };
 
 export default ClassTimeNewClock;

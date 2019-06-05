@@ -281,7 +281,6 @@ class Optimization extends React.Component {
       schoolStatus,
       classTypeStatus,
       classTypeButtonText,
-      schoolData,
       schoolText,
       schoolRecords,
     } = this.state;

@@ -372,7 +372,7 @@ class ClassDetailModal extends React.Component {
   renderdaySchedule = (data, eventData) => {
     const type = eventData.scheduleType;
     const result = data.map((item) => {
-      const { startTime, duration } = item;
+      const { startTime } = item;
       const startDate = moment(item.startDate).format('DD:MM:YYYY');
       const endDate = moment(item.endDate).format('DD:MM:YYYY');
       // let endDate = new Date(eventData.endDate);

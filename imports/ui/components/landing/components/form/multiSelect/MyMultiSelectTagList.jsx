@@ -51,6 +51,7 @@ class MyTagList extends React.Component {
       textAccessor,
       disabled,
       focusedItem,
+      activeId,
     } = this.props;
 
     const noOfFilters = value.length - 1;

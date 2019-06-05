@@ -121,7 +121,6 @@ const SubscriptionsDetailsDialogBox = (props) => {
   };
 
   const getDatesBasedOnSubscriptions = (props) => {
-    const stringToPrint = '';
     const fee = Number(get(props, 'amount', 0)).toFixed(2);
     const currency = get(props, 'currency', '$');
 

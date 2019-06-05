@@ -576,12 +576,6 @@ ClassTimesDialogBox.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
   hideClassTypeOptions: PropTypes.bool,
-  classesData: PropTypes.arrayOf({
-    timing: PropTypes.string,
-    desc: PropTypes.string,
-    addToCalender: PropTypes.bool,
-    scheduleType: PropTypes.string,
-  }),
   errorText: PropTypes.string,
 };
 

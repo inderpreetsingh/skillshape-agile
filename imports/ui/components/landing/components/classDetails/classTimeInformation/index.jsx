@@ -1,5 +1,4 @@
 import { get } from 'lodash';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Description from './presentational/Description';
@@ -7,7 +6,6 @@ import LocationDetails from './presentational/LocationDetails';
 import NameBar from './presentational/NameBar';
 import ThinkingAboutAttending from '/imports/ui/components/landing/components/dialogs/ThinkingAboutAttending';
 import { rhythmDiv, tablet } from '/imports/ui/components/landing/components/jss/helpers';
-import { classTimeData } from '/imports/ui/components/landing/constants/classDetails/classTimeData';
 import { formatTime } from '/imports/util';
 
 const Wrapper = styled.div`
@@ -93,12 +91,8 @@ class ClassTimeInformation extends Component {
   }
 }
 
-ClassTimeInformation.defaultProps = {
-  classTimeData,
-};
+ClassTimeInformation.defaultProps = {};
 
-ClassTimeInformation.propTypes = {
-  classTimeData: PropTypes.object,
-};
+ClassTimeInformation.propTypes = {};
 
 export default ClassTimeInformation;

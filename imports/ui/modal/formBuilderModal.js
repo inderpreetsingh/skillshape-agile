@@ -78,7 +78,6 @@ export class FormBuilderModal extends React.Component {
   };
 
   getFooterButton = (type) => {
-    const { callApi } = this.props;
     const btnArray = [];
     if (type === 'Edit') {
       btnArray.push(

@@ -483,9 +483,7 @@ class SearchArea extends Component {
 SearchArea.propTypes = {
   topSection: PropTypes.element,
   middleSection: PropTypes.element,
-  middleSectionText: PropTypes.string,
   bottomSection: PropTypes.element,
-  onSearch: PropTypes.func,
   onFiltersButtonClick: PropTypes.func,
   onMapViewButtonClick: PropTypes.func,
   mapView: PropTypes.bool,
@@ -496,7 +494,6 @@ SearchAreaPanel.defaultProps = {
 };
 
 SearchArea.defaultProps = {
-  middleSectionText: 'Or',
 };
 
 export default withStyles(styles)(SearchArea);

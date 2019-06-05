@@ -101,19 +101,15 @@ class SliderControl extends Component {
 
 SliderControl.propTypes = {
   labelText: PropTypes.string,
-  defaultValue: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
   step: PropTypes.number,
   onChange: PropTypes.func,
-  onBeforeChange: PropTypes.func,
-  onAfterChange: PropTypes.func,
   defaultRange: PropTypes.arrayOf(PropTypes.number),
 };
 
 SliderControl.defaultProps = {
   labelText: 'Label',
-  defaultValue: 10,
   min: 0,
   max: 100,
   step: 1,

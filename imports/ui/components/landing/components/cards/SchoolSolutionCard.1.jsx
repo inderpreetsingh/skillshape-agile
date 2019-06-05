@@ -233,7 +233,6 @@ class SchoolSolutionCard extends Component {
 }
 
 CardDescription.propTypes = {
-  name: PropTypes.string,
   tagline: PropTypes.string,
   title: PropTypes.string,
   content: PropTypes.element,
@@ -241,14 +240,12 @@ CardDescription.propTypes = {
 };
 
 SchoolSolutionCard.propTypes = {
-  name: PropTypes.string,
   classes: PropTypes.object.isRequired,
   content: PropTypes.string,
   tagline: PropTypes.string,
   title: PropTypes.string,
   bgImage: PropTypes.string,
   cardBgColor: PropTypes.string,
-  marginTop: PropTypes.string,
   onCardClick: PropTypes.func,
 };
 
@@ -257,7 +254,6 @@ SchoolSolutionCard.defaultProps = {
   tagline: "Highlights your school and it's offerings",
   content:
     'And makes it easy for students to search by times, skill levels, location, and other parameters to find the class that truly meets their needs.',
-  marginTop: 0,
 };
 
 export default withStyles(styles)(SchoolSolutionCard);

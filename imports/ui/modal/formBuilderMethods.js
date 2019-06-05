@@ -158,8 +158,6 @@ export default (methods = {
           return;
         }
         S3.upload({ files: { 0: payload.classTypeImg }, path: 'class' }, (err, res) => {
-          if (err) {
-          }
           if (res) {
             payload.classTypeImg = res.secure_url;
             methods.callMeteorMethod({ methodName: 'classType.addClassType', payload, closeModal });

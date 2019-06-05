@@ -568,7 +568,6 @@ export default createContainer((props) => {
   let monthlySubscription;
   let schoolDataSubscription;
   let schoolData;
-  const isBusy = true;
   let enrollmentFee = [];
   let enrollmentSubscription;
   let classPricingSubscription;

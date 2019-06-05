@@ -68,8 +68,6 @@ class UploadMedia extends React.Component {
           Promise.all(allUploadPromise).then(() => {
             if (file && file.fileData && !file.isUrl) {
               S3.upload({ files: { 0: file.fileData }, path: 'schools' }, (err, res) => {
-                if (err) {
-                }
                 if (res) {
                   doc.classTypeImg = res.secure_url;
                   this.editClassType({ doc_id: classTypeId, doc });
@@ -87,8 +85,6 @@ class UploadMedia extends React.Component {
           console.log('cors');
           if (file && file.fileData && !file.isUrl) {
             S3.upload({ files: { 0: file.fileData }, path: 'schools' }, (err, res) => {
-              if (err) {
-              }
               if (res) {
                 doc.classTypeImg = res.secure_url;
                 this.editClassType({ doc_id: classTypeId, doc });
@@ -113,8 +109,6 @@ class UploadMedia extends React.Component {
     const { popUp } = this.props;
     Meteor.call('classType.editClassType', { doc, doc_id }, (error, result) => {
       this.setState({ isBusy: false });
-      if (error) {
-      }
       if (result) {
         popUp.appear('success', {
           title: 'Message',
@@ -195,8 +189,6 @@ class UploadMedia extends React.Component {
   handleSubmit = (doc) => {
     const data = doc;
     Meteor.call('editSchool', this.props.schoolId, data, (error, result) => {
-      if (error) {
-      }
       this.setState({ isBusy: false });
       this.props.onClose();
     });
