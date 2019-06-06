@@ -247,7 +247,7 @@ Mongo.Collection.prototype.publishJoinedCursors = function (cursor, options, pub
   for (const key in filters) {
     const filter = filters[key];
     if (filter && filter.collection && filter.filter) {
-      if (filter && filter.filter && filter.filter._id && filter.filter._id.$in) {
+      if (filter.filter._id && filter.filter._id.$in) {
         if (typeof filter.filter._id.$in[0] === 'object') {
           filter.filter._id.$in = filter.filter._id.$in[0] || [];
         }
