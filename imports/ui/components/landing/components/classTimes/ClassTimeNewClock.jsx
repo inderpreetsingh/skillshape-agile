@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import SliderDots from '/imports/ui/components/landing/components/helpers/SliderDots';

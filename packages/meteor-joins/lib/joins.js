@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { Mongo } = Package.mongo;
 
 const globalContext = this;

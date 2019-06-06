@@ -107,16 +107,10 @@ Meteor.methods({
               };
               let data = {};
               try {
-                const slocation_detail = `${sLocationDoc.address
-                },${
-                  sLocationDoc.city
-                },${
+                const slocation_detail = `${sLocationDoc.address},${sLocationDoc.city},${
                   sLocationDoc.state
-                },${
-                  sLocationDoc.zip}`;
-                const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${
-                  slocation_detail
-                }&key=AIzaSyB4i-jEGFJrySIptyaTh6Hnz9Wq4q1uoNw `;
+                },${sLocationDoc.zip}`;
+                const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${slocation_detail}&key=AIzaSyB4i-jEGFJrySIptyaTh6Hnz9Wq4q1uoNw `;
                 data = Meteor.http.call('GET', url);
                 data = JSON.parse(data.content);
                 if (
@@ -422,14 +416,12 @@ function CreateNewUser(email, name, firstName, lastName, schoolId) {
 
 function findUrl(text) {
   const source = (text || '').toString();
-  let matchArray;
   // Regular expression to find FTP, HTTP(S) and email URLs.
   const regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
   // Iterate through any URLs in the text.
-  // eslint-disable-next-line no-cond-assign
-  while ((matchArray = regexToken.exec(source)) !== null) {
-    const token = matchArray[0];
-    return token;
+  const result = regexToken.exec(source);
+  if (result !== null) {
+    return result[0];
   }
   return '';
 }

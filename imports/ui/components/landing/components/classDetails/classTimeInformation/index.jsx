@@ -44,7 +44,7 @@ class ClassTimeInformation extends Component {
     } = classData || {};
     const eventStartTime = formatTime(startTime, timeZone);
     const { thinkingAboutAttending } = this.state;
-    locationName = () => `${get(selectedLocation, 'address', '')}, ${get(selectedLocation, 'city', '')}, ${get(
+    const locationName = () => `${get(selectedLocation, 'address', '')}, ${get(selectedLocation, 'city', '')}, ${get(
       selectedLocation,
       'state',
       '',

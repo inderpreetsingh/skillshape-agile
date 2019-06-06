@@ -103,7 +103,7 @@ const getIconForButton = (props) => {
   const CustomIcon = props.customIcon;
   if (CustomIcon && props.icon) {
     return <CustomIcon className={props.classes.skillShapeButtonCustomIcon} />;
-  } if (props.icon) {
+  }else if (props.icon) {
     return <Icon className={props.classes.skillShapeButtonIcon}>{props.iconName}</Icon>;
   }
 
