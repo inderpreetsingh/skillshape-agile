@@ -230,7 +230,7 @@ class ClassDetailModal extends React.Component {
 
   componentWillMount() {
     const { eventData } = this.props;
-    const { schoolId } = eventData;
+    const { schoolId } = eventData || {};
     Meteor.call('school.findSuperAdmin', null, schoolId, (err, res) => {
       if (res) {
         if (

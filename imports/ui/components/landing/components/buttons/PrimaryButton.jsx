@@ -75,7 +75,7 @@ const getIconForButton = (props) => {
   const CustomIcon = props.customIcon;
   if (CustomIcon && props.icon) {
     return <CustomIcon className={props.classes.customIcon} />;
-  } if (props.icon) {
+  } else if (props.icon) {
     return <Icon className={props.classes.icon}>{props.iconName}</Icon>;
   }
 

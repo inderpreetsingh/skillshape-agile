@@ -284,13 +284,13 @@ class ClassTimesDialogBox extends React.Component {
       startDate = moment(new Date(data.startDate)).format(dateFormat);
       endDate = moment(new Date(data.endDate)).format(dateFormat);
       // debugger;
-      if (startDate == 'Invalid date') {
+      if (startDate === 'Invalid date') {
         return `Recurring ending on ${endDate}`;
-      } if (endDate == 'Invalid date') {
+      } else if (endDate === 'Invalid date') {
         return `Recurring starting from ${startDate}`;
       }
       return `Recurring from ${startDate} to ${endDate}`;
-    } if (scheduleType === 'ongoing') {
+    } else if (scheduleType === 'ongoing') {
       return 'Ongoing';
     }
     startDate = moment(new Date(scheduleDetails.oneTime.startDate)).format(dateFormat);

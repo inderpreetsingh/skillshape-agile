@@ -26,7 +26,7 @@ class UploadMedia extends React.Component {
     if (file) {
       if (file.type.match('image/*')) {
         return 'Image';
-      } if (file.type.match('video/*') || file.type.match('audio/*')) {
+      }else if (file.type.match('video/*') || file.type.match('audio/*')) {
         return 'Media';
       }
       return 'Document';

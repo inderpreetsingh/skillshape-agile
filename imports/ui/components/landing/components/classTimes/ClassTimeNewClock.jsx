@@ -560,7 +560,6 @@ class ClassTimeNewClock extends Component {
 }
 
 ClassTimeNewClock.propTypes = {
-  duration: PropTypes.number,
 };
 
 export default ClassTimeNewClock;

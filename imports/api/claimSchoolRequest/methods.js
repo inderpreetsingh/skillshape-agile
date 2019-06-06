@@ -110,8 +110,6 @@ Meteor.methods({
       delete schoolData._id;
       let approveRequest = false;
       if (status && status.keepMeSuperAdmin) {
-        // Just keep me as a Super Admin.
-        schoolData.superAdmin = this.userId;
         // Make requester as an admin.
         const existingAdmins = schoolData.admins && schoolData.admins.length > 0
           ? schoolData.admins

@@ -80,7 +80,7 @@ export default class SchoolViewBase extends React.Component {
       setTimeout(() => {
         if (checkSuperAdmin(currentUser)) {
           return '';
-        } if (
+        }else if (
           currentUser.profile
           && currentUser.profile.schoolId
           && currentUser.profile.schoolId.length > 1
@@ -98,7 +98,7 @@ export default class SchoolViewBase extends React.Component {
             );
             return;
           }
-          if (schoolData.claimed == 'Y') {
+          else if (schoolData.claimed == 'Y') {
             this.setState({ claimRequestModal: true });
             // show modal over here
             return;

@@ -3,7 +3,7 @@ import Icon from 'material-ui/Icon';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
 const styles = {
@@ -60,7 +60,7 @@ const getIconForButton = (props) => {
   const CustomIcon = props.customIcon;
   if (CustomIcon && props.icon) {
     return <CustomIcon className={props.classes.customIcon} />;
-  } if (props.icon) {
+  }else if (props.icon) {
     return <Icon className={props.classes.icon}>{props.iconName}</Icon>;
   }
 

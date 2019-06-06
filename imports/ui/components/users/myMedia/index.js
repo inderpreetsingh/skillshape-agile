@@ -1,10 +1,7 @@
 import get from 'lodash/get';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Card, { CardContent } from 'material-ui/Card';
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from 'material-ui/ExpansionPanel';
+import ExpansionPanel, { ExpansionPanelDetails, ExpansionPanelSummary } from 'material-ui/ExpansionPanel';
 import { FormControl, FormControlLabel } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Radio, { RadioGroup } from 'material-ui/Radio';
@@ -12,7 +9,6 @@ import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import React from 'react';
 import DocumentTitle from 'react-document-title';
-import styled from 'styled-components';
 import MediaContent from './MediaContent';
 import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
 import Preloader from '/imports/ui/components/landing/components/Preloader';

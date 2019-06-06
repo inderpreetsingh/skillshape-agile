@@ -121,22 +121,22 @@ class CardsList extends Component {
   shouldComponentUpdate = (nextProps) => {
     if (this.props.title !== nextProps.title) {
       return true;
-    } if (this.props.mapView !== nextProps.mapView) {
+    }else if (this.props.mapView !== nextProps.mapView) {
       return true;
-    } if (this.props.cardsData.length !== nextProps.cardsData.length) {
+    }else if (this.props.cardsData.length !== nextProps.cardsData.length) {
       return true;
-    } if (
+    }else if (
       this.props.classTimesData
       && this.props.classTimesData.length !== nextProps.classTimesData.length
     ) {
       return true;
-    } if (
+    }else if (
       this.props.classInterestData
       && nextProps.classInterestData
       && this.props.classInterestData.length !== nextProps.classInterestData.length
     ) {
       return true;
-    } if (
+    }else if (
       this.props.reviewsData
       && nextProps.reviewsData
       && this.props.reviewsData.length !== nextProps.reviewsData.length

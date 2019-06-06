@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { get } from 'lodash';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import Card from 'material-ui/Card';

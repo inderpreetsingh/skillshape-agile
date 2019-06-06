@@ -1,11 +1,10 @@
-import Button from "material-ui/Button";
-import Icon from "material-ui/Icon";
-import { withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
-import React from "react";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
-
+/* eslint-disable */
+import Button from 'material-ui/Button';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
 const styles = {
@@ -16,138 +15,131 @@ const styles = {
     fontSize: helpers.baseFontSize,
     backgroundColor: helpers.primary,
     color: helpers.lightTextColor,
-    textTransform: "none",
-    "&:hover": {
-      backgroundColor: helpers.primary
-    }
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor: helpers.primary,
+    },
   },
   lightLabelColor: {
     color: helpers.lightTextColor,
-    textTransform: "none"
+    textTransform: 'none',
   },
   darkLabelColor: {
     color: helpers.textColor,
-    textTransform: "none"
+    textTransform: 'none',
   },
   fullWidth: {
-    width: "100%"
+    width: '100%',
   },
   noMarginBottom: {
-    marginBottom: 0
+    marginBottom: 0,
   },
   skillShapeButtonIcon: {
-    display: "inline-block",
-    marginRight: "5px",
-    fontSize: "inherit"
+    display: 'inline-block',
+    marginRight: '5px',
+    fontSize: 'inherit',
   },
   skillShapeButtonCustomIcon: {
-    display: "inline-block",
-    fontSize: "inherit"
+    display: 'inline-block',
+    fontSize: 'inherit',
   },
   primary: {
     backgroundColor: helpers.primaryColor,
-    "&:hover": {
-      backgroundColor: helpers.primaryColor
-    }
+    '&:hover': {
+      backgroundColor: helpers.primaryColor,
+    },
   },
   action: {
     backgroundColor: helpers.action,
-    "&:hover": {
-      backgroundColor: helpers.action
-    }
+    '&:hover': {
+      backgroundColor: helpers.action,
+    },
   },
   caution: {
     backgroundColor: helpers.caution,
-    "&:hover": {
-      backgroundColor: helpers.caution
-    }
+    '&:hover': {
+      backgroundColor: helpers.caution,
+    },
   },
   information: {
     backgroundColor: helpers.information,
-    "&:hover": {
-      backgroundColor: helpers.information
-    }
+    '&:hover': {
+      backgroundColor: helpers.information,
+    },
   },
   danger: {
     backgroundColor: helpers.danger,
-    "&:hover": {
-      backgroundColor: helpers.danger
-    }
+    '&:hover': {
+      backgroundColor: helpers.danger,
+    },
   },
   cancel: {
     backgroundColor: helpers.cancel,
-    "&:hover": {
-      backgroundColor: helpers.cancel
-    }
+    '&:hover': {
+      backgroundColor: helpers.cancel,
+    },
   },
   black: {
     backgroundColor: helpers.black,
-    "&:hover": {
-      backgroundColor: helpers.black
-    }
+    '&:hover': {
+      backgroundColor: helpers.black,
+    },
   },
   white: {
     border: `1px solid ${helpers.black}`,
     backgroundColor: 'white',
-    "&:hover": {
-      backgroundColor: "white"
-    }
+    '&:hover': {
+      backgroundColor: 'white',
+    },
   },
-  ["@media (max-width:" + helpers.mobile + "px)"]: {
+  [`@media (max-width:${helpers.mobile}px)`]: {
     skillShapeButton: {
-      width: "100%"
-    }
-  }
+      width: '100%',
+    },
+  },
 };
 
-const getIconForButton = props => {
+const getIconForButton = (props) => {
   const CustomIcon = props.customIcon;
   if (CustomIcon && props.icon) {
     return <CustomIcon className={props.classes.skillShapeButtonCustomIcon} />;
-  } else if (props.icon) {
-    return (
-      <Icon className={props.classes.skillShapeButtonIcon}>
-        {props.iconName}
-      </Icon>
-    );
+  } if (props.icon) {
+    return <Icon className={props.classes.skillShapeButtonIcon}>{props.iconName}</Icon>;
   }
 
-  return "";
+  return '';
 };
 
 const getColor = (props, rootClass) => {
-  if (props.action) return rootClass + " " + props.classes.action;
-  else if (props.primary) return rootClass + " " + props.classes.primary;
-  else if (props.information)
-    return rootClass + " " + props.classes.information;
-  else if (props.danger) return rootClass + " " + props.classes.danger;
-  else if (props.caution) return rootClass + " " + props.classes.caution;
-  else if (props.cancel) return rootClass + " " + props.classes.cancel;
-  else if (props.black) return rootClass + " " + props.classes.black;
-  else if (props.white) return rootClass + " " + props.classes.white;
-  else return rootClass + " " + props.classes.action;
+  if (props.action) return `${rootClass} ${ props.classes.action}`;
+  if (props.primary) return `${rootClass} ${props.classes.primary}`;
+  if (props.information) return `${rootClass} ${props.classes.information}`;
+  if (props.danger) return `${rootClass} ${props.classes.danger}`;
+  if (props.caution) return `${rootClass } ${props.classes.caution}`;
+  if (props.cancel) return `${rootClass } ${props.classes.cancel}`;
+  if (props.black) return `${rootClass } ${props.classes.black}`;
+  if (props.white) return `${rootClass } ${props.classes.white}`;
+  return `${rootClass } ${props.classes.action}`;
 };
 
 const getLabelColor = (props, labelClass) => {
-  if (props.caution || props.white) return labelClass + " " + props.classes.darkLabelColor;
-  else return labelClass;
+  if (props.caution || props.white) return `${labelClass} ${props.classes.darkLabelColor}`;
+  return labelClass;
 };
 
-const SkillShapeButton = props => {
-  let rootClass = ``;
+const SkillShapeButton = (props) => {
+  let rootClass = '';
   let labelClass = props.classes.skillShapeButton;
 
   // console.log(CustomIcon,"Custom Icon")
   if (props.fullWidth && props.noMarginBottom) {
     rootClass = `${props.classes.skillShapeButton} ${props.classes.fullWidth} ${
       props.classes.noMarginBottom
-      }`;
+    }`;
   } else if (props.fullWidth) {
     rootClass = `${props.classes.skillShapeButton} ${props.classes.fullWidth}`;
   } else if (props.noMarginBottom) {
-    rootClass = `${props.classes.skillShapeButton} ${
-      props.classes.noMarginBottom
-      }`;
+    rootClass = `${props.classes.skillShapeButton} ${props.classes.noMarginBottom}`;
   } else {
     rootClass = props.classes.skillShapeButton;
   }
@@ -160,7 +152,7 @@ const SkillShapeButton = props => {
     <Button
       classes={{
         root: rootClass,
-        label: labelClass
+        label: labelClass,
       }}
       itemScope={props.itemScope}
       itemType={props.itemType}
@@ -170,7 +162,7 @@ const SkillShapeButton = props => {
     >
       {getIconForButton(props)}
 
-      {props.label ? props.label : "Submit"}
+      {props.label ? props.label : 'Submit'}
     </Button>
   );
 };
@@ -192,7 +184,7 @@ SkillShapeButton.propTypes = {
   danger: PropTypes.bool,
   cancel: PropTypes.bool,
   black: PropTypes.bool,
-  itemType: PropTypes.string
+  itemType: PropTypes.string,
 };
 
 SkillShapeButton.defaultProps = {};

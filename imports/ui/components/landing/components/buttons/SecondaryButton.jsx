@@ -1,11 +1,10 @@
-import Button from "material-ui/Button";
-import Icon from "material-ui/Icon";
-import { withStyles } from "material-ui/styles";
-import PropTypes from "prop-types";
-import React from "react";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-
-
+/* eslint-disable */
+import Button from 'material-ui/Button';
+import Icon from 'material-ui/Icon';
+import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
 const styles = {
@@ -15,50 +14,50 @@ const styles = {
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
     backgroundColor: helpers.panelColor,
-    "&:hover": {
-      backgroundColor: helpers.lightTextColor
-    }
+    '&:hover': {
+      backgroundColor: helpers.lightTextColor,
+    },
   },
   secondaryButtonLabel: {
     color: helpers.textColor,
-    textTransform: "none"
+    textTransform: 'none',
   },
   fullWidth: {
-    width: "100%"
+    width: '100%',
   },
   noMarginBottom: {
-    marginBottom: 0
+    marginBottom: 0,
   },
   secondaryButtonIcon: {
-    display: "inline-block",
-    marginRight: "5px",
-    fontSize: "inherit"
+    display: 'inline-block',
+    marginRight: '5px',
+    fontSize: 'inherit',
   },
   searchBarHeight: {
-    height: 48
+    height: 48,
   },
   searchBarShadow: {
-    boxShadow: `2px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) , 0px 3px 1px -2px rgba(0, 0, 0, 0.12)`
+    boxShadow: '2px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) , 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
   },
-  ["@media (max-width:" + helpers.mobile + "px)"]: {
+  [`@media (max-width:${helpers.mobile}px)`]: {
     secondaryButton: {
-      width: "100%"
-    }
+      width: '100%',
+    },
   },
   noMinWidth: {
-    minWidth: 0
-  }
+    minWidth: 0,
+  },
 };
 
-const getLabel = props => {
+const getLabel = (props) => {
   if (props.noLabel) {
-    return "";
+    return '';
   }
-  return props.label ? props.label : "Submit";
+  return props.label ? props.label : 'Submit';
 };
 
-const SecondaryButton = props => {
-  let rootClass = ``;
+const SecondaryButton = (props) => {
+  let rootClass = '';
   if (props.fullWidth && props.noMarginBottom) {
     rootClass = `${props.classes.secondaryButton} ${props.classes.fullWidth} ${
       props.classes.noMarginBottom
@@ -66,40 +65,34 @@ const SecondaryButton = props => {
   } else if (props.fullWidth) {
     rootClass = `${props.classes.secondaryButton} ${props.classes.fullWidth}`;
   } else if (props.noMarginBottom) {
-    rootClass = `${props.classes.secondaryButton} ${
-      props.classes.noMarginBottom
-    }`;
+    rootClass = `${props.classes.secondaryButton} ${props.classes.noMarginBottom}`;
   } else {
     rootClass = props.classes.secondaryButton;
   }
 
   if (props.increaseHeight) {
-    rootClass = rootClass + " " + props.classes.searchBarHeight;
+    rootClass = `${rootClass} ${props.classes.searchBarHeight}`;
   }
 
   if (props.boxShadow) {
-    rootClass = rootClass + " " + props.classes.searchBarShadow;
+    rootClass = `${rootClass} ${props.classes.searchBarShadow}`;
   }
 
   if (props.noLabel) {
-    rootClass = rootClass + " " + props.classes.noMinWidth;
+    rootClass = `${rootClass} ${props.classes.noMinWidth}`;
   }
 
   return (
     <Button
       classes={{
         root: rootClass,
-        label: props.classes.secondaryButtonLabel
+        label: props.classes.secondaryButtonLabel,
       }}
       itemScope={props.itemScope}
       itemType={props.itemType}
       onClick={props.onClick}
     >
-      {props.icon && (
-        <Icon className={props.classes.secondaryButtonIcon}>
-          {props.iconName}
-        </Icon>
-      )}
+      {props.icon && <Icon className={props.classes.secondaryButtonIcon}>{props.iconName}</Icon>}
 
       {getLabel(props)}
     </Button>
@@ -116,11 +109,11 @@ SecondaryButton.propTypes = {
   classes: PropTypes.object.isRequired,
   itemScope: PropTypes.string,
   itemProp: PropTypes.string,
-  noLabel: PropTypes.bool
+  noLabel: PropTypes.bool,
 };
 
 SecondaryButton.defaultProps = {
-  noLabel: false
+  noLabel: false,
 };
 
 export default withStyles(styles)(SecondaryButton);

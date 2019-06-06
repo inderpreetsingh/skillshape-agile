@@ -29,7 +29,7 @@ class MyTagList extends React.Component {
     valueAccessor: PropTypes.func.isRequired,
     textAccessor: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    valueComponent: PropTypes.func,
+    ValueComponent: PropTypes.func,
     disabled: CustomPropTypes.disabled.acceptsArray,
   };
 
