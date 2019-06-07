@@ -2,7 +2,7 @@
   "Comment":
     "Some secrets are of production so need to replace production secrets with development secrets ",
   "public": {
-    "googleAppId":"696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com",
+    "googleAppId":"1002818755932-i90g8n6jf599b0amv50cl7tbmrvs45ag.apps.googleusercontent.com",
     "stripe": {
       "PUBLIC_KEY": "pk_test_H4lPRQDWnD4bsNESjJ6oTnIF"
     },
@@ -37,9 +37,9 @@
   "google": {
     "auth": {
       "appId":
-        "696642172475-7bvf1h48domaoobbv69qktk9sq66597k.apps.googleusercontent.com",
+        "1002818755932-i90g8n6jf599b0amv50cl7tbmrvs45ag.apps.googleusercontent.com",
       "loginStyle": "popup",
-      "secret": "yspUqSye1D0y0IHaDYIl1G4q"
+      "secret": "A3Re4oVY8azDa4flq1Vx_QcJ"
     }
   },
   "platform": "local"
