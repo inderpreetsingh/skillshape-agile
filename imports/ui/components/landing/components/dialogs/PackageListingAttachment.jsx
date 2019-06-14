@@ -31,6 +31,15 @@ const Wrapper = styled.div`
   }
 `;
 
+const DialogTitleWrapper = styled.div`
+  ${helpers.flexHorizontalSpaceBetween}
+  width: 100%;
+`;
+
+const RightSection = styled.div`
+  ${helpers.flexCenter};
+`;
+
 const OuterWrapper = styled.div`
   ${props => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
@@ -461,7 +470,7 @@ class PackageListingAttachment extends React.Component {
 
   render() {
     let {
-      monthlyPackageData, schoolData, enrollmentFee, perClass,
+      monthlyPackageData, schoolData, enrollmentFee, perClass, isLoading,
     } = this.props;
     monthlyPackageData = normalizeMonthlyPricingData(monthlyPackageData);
     let noPackage = false;
@@ -475,7 +484,7 @@ class PackageListingAttachment extends React.Component {
           onRequestClose={this.props.onModalClose}
           aria-labelledby="Package Listing"
         >
-          {this.props.isLoading && <ContainerLoader />}
+          {isLoading && <ContainerLoader />}
           <DialogTitle style={{ backgroundColor: '#e1e1e1' }}>
             <DialogTitleWrapper>
               {noPackage && !isLoading ? (
@@ -563,19 +572,15 @@ class PackageListingAttachment extends React.Component {
 
 export default createContainer((props) => {
   const { schoolId } = props;
-  isLoading = true;
+  let isLoading = true;
   let monthlyPackageData = [];
-  let monthlySubscription;
-  let schoolDataSubscription;
   let schoolData;
   let enrollmentFee = [];
-  let enrollmentSubscription;
-  let classPricingSubscription;
   let perClass = [];
-  monthlySubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricing', { schoolId });
-  schoolDataSubscription = Meteor.subscribe('school.getSchoolBySchoolId', schoolId);
-  enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFee', { schoolId });
-  classPricingSubscription = Meteor.subscribe('classPricing.getClassPricing', { schoolId });
+  const monthlySubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricing', { schoolId });
+  const schoolDataSubscription = Meteor.subscribe('school.getSchoolBySchoolId', schoolId);
+  const enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFee', { schoolId });
+  const classPricingSubscription = Meteor.subscribe('classPricing.getClassPricing', { schoolId });
   const subscriptionChecks = schoolDataSubscription
     && schoolDataSubscription.ready()
     && monthlySubscription
