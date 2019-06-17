@@ -99,14 +99,11 @@ class SchoolDetails extends React.Component {
 
   // This is used to set Content into `About School` editor.
   aboutSchoolTREOnChange = (value) => {
-    console.log('TCL: aboutSchoolTREOnChange -> value', value);
-    this.props.handleIsSavedState(false);
     this.setState({ aboutHtml: value });
   };
 
   // This is used to set Content into `Notes for Students` editor.
   studentNotesTREOnChange = (value) => {
-    this.props.handleIsSavedState(false);
     this.setState({ studentNotesHtml: value });
   };
 
