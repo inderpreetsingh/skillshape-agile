@@ -49,6 +49,7 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   line-height: 1;
   margin: 0;
+  margin-top:5px;
 `;
 
 const Reviews = styled.a`
