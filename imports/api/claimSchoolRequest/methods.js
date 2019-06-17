@@ -24,7 +24,7 @@ Meteor.methods({
     // Claim request status is pending OR rejected.
     if (pendingClaimRequest) {
       return { pendingRequest: true };
-    } else if (rejectedClaimRequest) {
+    } if (rejectedClaimRequest) {
       return { alreadyRejected: true };
     }
     // No school email exists then just Make the user Admin of that school by System.
@@ -91,7 +91,7 @@ Meteor.methods({
     status,
   ) => {
     check(claimRequestId, String);
-    check(status, String);
+    check(status, Object);
     if (!this.userId) {
       throw new Meteor.Error(
         'You need to login as a super admin of this school to approve the request',
@@ -99,7 +99,7 @@ Meteor.methods({
     }
     const claimRequestRec = ClaimSchoolRequest.findOne(claimRequestId);
     const schoolData = School.findOne(claimRequestRec.schoolId);
-    const {superAdmin} = schoolData; 
+    const { superAdmin } = schoolData;
     if (superAdmin !== this.userId) {
       throw new Meteor.Error(
         'You need to login as a super admin of this school to approve the request',
