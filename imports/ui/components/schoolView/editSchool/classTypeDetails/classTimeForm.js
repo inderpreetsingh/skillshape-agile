@@ -480,6 +480,7 @@ class ClassTimeForm extends React.Component {
                 this.setState({ showRoomForm: false });
               }}
               from="classTime"
+              handleIsSavedState={handleIsSavedState}
             />
           )}
 

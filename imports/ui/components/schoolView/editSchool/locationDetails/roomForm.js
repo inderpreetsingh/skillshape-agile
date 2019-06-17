@@ -92,7 +92,8 @@ class RoomForm extends React.Component {
     methodName, data, locationId, nextTab,
   }) => {
     Meteor.call(methodName, { locationId, data }, (error, result) => {
-      this.props.handleIsSavedState(true);
+      const { handleIsSavedState } = this.props;
+      handleIsSavedState && handleIsSavedState(true);
       const stateObj = { isBusy: false };
       if (error) {
         stateObj.error = error.reason || error.message;
@@ -109,7 +110,8 @@ class RoomForm extends React.Component {
   };
 
   handleDataChange = name => (event) => {
-    this.props.handleIsSavedState(false);
+    const { handleIsSavedState } = this.props;
+    handleIsSavedState && handleIsSavedState(true);
     const { value } = event.target;
     this.setState({
       [name]: value,
@@ -195,7 +197,7 @@ class RoomForm extends React.Component {
                 type="button"
                 color="dark-grey"
                 onClick={() => {
-                  handleIsSavedState(true);
+                  handleIsSavedState && handleIsSavedState(true);
                   this.props.onClose();
                 }}
                 label="Cancel"
