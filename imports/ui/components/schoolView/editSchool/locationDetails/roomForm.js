@@ -42,7 +42,8 @@ class RoomForm extends React.Component {
   }
 
   initializeState = (props) => {
-    this.props.handleIsSavedState(true);
+    const { handleIsSavedState } = this.props;
+    handleIsSavedState && handleIsSavedState(true);
     const state = {
       isBusy: false,
       name: get(props, 'data.name', 'Main Room'),
