@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import ProgressiveImage from "react-progressive-image";
-import * as helpers from '../../jss/helpers.js';
-import { classTypeImgSrc } from '../../../site-settings.js';
+import ProgressiveImage from 'react-progressive-image';
+import * as helpers from '../../jss/helpers';
+import { classTypeImgSrc } from '../../../site-settings';
 
 const CoverDiv = styled.div`
     ${helpers.coverBg}
@@ -27,47 +27,53 @@ const CoverDiv = styled.div`
       z-index: 0;
     }
 
-    ${props => props.isEdit ? `@media screen and (max-width: ${helpers.tablet}px) {
+    ${props => (props.isEdit ? `@media screen and (max-width: ${helpers.tablet}px) {
       &:after {
         width: 0;
         height: 0;
         opacity: 0;
         background-color: transparent;
       }
-    }` : ''};
+    }` : '')};
 `;
 
 const ClassTypeCover = (props) => {
-    if(props.itemScope && props.itemType) {
-        return(
-          <ProgressiveImage
-          src={props.coverSrc}
-          placeholder={config.blurImage}>
-          {(src) => <CoverDiv coverSrc={src} itemScope itemType={props.itemType} isEdit={props.isEdit}>
-            {props.children}
-          </CoverDiv> }
-        </ProgressiveImage>
-         
-        )
-    }
-    return(
+  if (props.itemScope && props.itemType) {
+    return (
       <ProgressiveImage
-      src={props.coverSrc}
-      placeholder={config.blurImage}>
-      {(src) =>  <CoverDiv coverSrc={src} isEdit={props.isEdit}>
-        {props.children}
-      </CoverDiv>}
-    </ProgressiveImage>
-     
-    )
+        src={props.coverSrc}
+        placeholder={config.blurImage}
+      >
+        {src => (
+          <CoverDiv coverSrc={src} itemScope itemType={props.itemType} isEdit={props.isEdit}>
+                {props.children}
+              </CoverDiv>
+        ) }
+      </ProgressiveImage>
+
+    );
   }
+  return (
+    <ProgressiveImage
+      src={props.coverSrc}
+      placeholder={config.blurImage}
+    >
+      {src => (
+        <CoverDiv coverSrc={src} isEdit={props.isEdit}>
+            {props.children}
+          </CoverDiv>
+      )}
+    </ProgressiveImage>
+
+  );
+};
 
 ClassTypeCover.propTypes = {
   coverSrc: PropTypes.string,
-}
+};
 
 ClassTypeCover.defaultProps = {
-  coverSrc: classTypeImgSrc
-}
+  coverSrc: classTypeImgSrc,
+};
 
 export default ClassTypeCover;
