@@ -151,11 +151,13 @@ class MonthlyPriceForm extends React.Component {
   handleSubmit = ({ methodName, doc, doc_id }) => {
     this.props.handleIsSavedState(true);
     Meteor.call(methodName, { doc, doc_id }, (error, result) => {
+      console.log('TCL: MonthlyPriceForm -> handleSubmit -> error', error);
       if (result) {
         console.log(result);
         this.props.onClose();
       } else {
-        this.setState({ isBusy: false, error });
+        const { error: errorTitle, message } = error;
+        this.setState({ isBusy: false, error: errorTitle || message || 'Something went wrong' });
       }
     });
   };
