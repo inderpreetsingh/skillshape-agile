@@ -25,7 +25,7 @@ Meteor.methods({
     try {
       let amount;
       let currency;
-      const user = Meteor.users.findOne(this.userId);
+      const user = Meteor.users.findOne({ _id: this.userId });
       if (
         checkMyAccess({
           user,
