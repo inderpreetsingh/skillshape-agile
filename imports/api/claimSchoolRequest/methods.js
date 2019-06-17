@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import { check } from 'meteor/check';
 import ClaimSchoolRequest from './fields';
 import { sendClaimASchoolEmail, sendConfirmationEmail } from '/imports/api/email';
@@ -86,10 +87,10 @@ Meteor.methods({
     sendConfirmationEmail(currentUser, schoolData);
     return { emailSuccess: true };
   },
-  'claimSchoolRequest.approveSchoolClaimRequest': (
+  'claimSchoolRequest.approveSchoolClaimRequest': function (
     claimRequestId,
     status,
-  ) => {
+  ) {
     check(claimRequestId, String);
     check(status, Object);
     if (!this.userId) {
