@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import SliderDots from '/imports/ui/components/landing/components/helpers/SliderDots';
@@ -508,7 +507,6 @@ class ClassTimeNewClock extends Component {
       formattedClassTimes,
     } = this.props;
     const type = totalClocks > 1 ? 'multiple' : 'single';
-    const schduleTypeLowerCase = scheduleType.toLowerCase();
 
     return (
       <Container>
@@ -561,10 +559,6 @@ class ClassTimeNewClock extends Component {
 }
 
 ClassTimeNewClock.propTypes = {
-  time: PropTypes.string,
-  timePeriod: PropTypes.string,
-  duration: PropTypes.number,
-  day: PropTypes.string,
 };
 
 export default ClassTimeNewClock;

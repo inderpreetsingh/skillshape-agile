@@ -417,8 +417,6 @@ class SignUpDialogBox extends Component {
 
 SignUpDialogBox.propTypes = {
   onModalClose: PropTypes.func,
-  onLoginButtonClick: PropTypes.func,
-  onSignUpButtonClick: PropTypes.func,
   onSignUpWithGoogleButtonClick: PropTypes.func,
   onSignUpWithFacebookButtonClick: PropTypes.func,
   classes: PropTypes.object.isRequired,

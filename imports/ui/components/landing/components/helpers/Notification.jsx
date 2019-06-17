@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
-import ClearIcon from "material-ui-icons/Clear";
-import { withStyles } from "material-ui/styles";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import ClearIcon from 'material-ui-icons/Clear';
+import { withStyles } from 'material-ui/styles';
 
-import { Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
-import FormGhostButton from "/imports/ui/components/landing/components/buttons/FormGhostButton.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
+import { Text } from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
+import FormGhostButton from '/imports/ui/components/landing/components/buttons/FormGhostButton';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 const styles = {
   icon: {
-    position: "absolute",
+    position: 'absolute',
     right: helpers.rhythmDiv,
     top: helpers.rhythmDiv,
-    color: "white",
-    cursor: "pointer",
+    color: 'white',
+    cursor: 'pointer',
     height: helpers.baseFontSize,
-    width: helpers.baseFontSize
-  }
+    width: helpers.baseFontSize,
+  },
 };
 
 const Wrapper = styled.div`
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   transition: 0.25s ease-in max-height, 0.25s linear opacity,
     0.05s linear padding 0.1s;
   opacity: 1;
-  ${props => (!props.show ? `max-height: 0; opacity: 0; padding: 0` : "")};
+  ${props => (!props.show ? 'max-height: 0; opacity: 0; padding: 0' : '')};
 
   @media screen and (max-width: ${helpers.mobile}px) {
     // padding: ${helpers.rhythmDiv * 2}px;
@@ -51,13 +51,13 @@ const NotificationInnerWrapper = styled.div`
 `;
 
 const NotificationContent = Text.extend`
-  font-size: ${props => props.smallText ? helpers.baseFontSize : helpers.baseFontSize * 1.25}px;
+  font-size: ${props => (props.smallText ? helpers.baseFontSize : helpers.baseFontSize * 1.25)}px;
   margin-right: ${helpers.rhythmDiv}px;
   margin-bottom: 0;
   color: white;
 
   @media screen and (max-width: ${helpers.mobile}px) {
-    font-size: ${props => props.smallText ? helpers.baseFontSize : 18}px;
+    font-size: ${props => (props.smallText ? helpers.baseFontSize : 18)}px;
     margin-bottom: ${helpers.rhythmDiv}px;
   }
 `;
@@ -68,15 +68,15 @@ const ButtonWrapper = styled.div`
 
 class Notification extends Component {
   state = {
-    show: true
+    show: true,
   };
+
   handleNotificationState = state => () => {
-    this.setState(() => {
-      return {
-        show: state
-      };
-    });
+    this.setState(() => ({
+      show: state,
+    }));
   };
+
   render() {
     const {
       bgColor,
@@ -85,24 +85,22 @@ class Notification extends Component {
       onButtonClick,
       actionButton,
       smallText,
-      withCloseIcon, 
-      notificationContent
+      withCloseIcon,
+      notificationContent,
     } = this.props;
     return (
       <Wrapper bgColor={bgColor} show={this.state.show}>
-        {withCloseIcon && <ClearIcon
-          classes={{ root: classes.icon }}
-          onClick={this.handleNotificationState(false)}
-        />}
+        {withCloseIcon && (
+          <ClearIcon
+            classes={{ root: classes.icon }}
+            onClick={this.handleNotificationState(false)}
+          />
+        )}
         <NotificationInnerWrapper>
           <NotificationContent smallText={smallText}>{notificationContent}</NotificationContent>
           {actionButton || (
             <ButtonWrapper>
-              <FormGhostButton
-                whiteColor
-                label={buttonLabel}
-                onClick={onButtonClick}
-              />
+              <FormGhostButton whiteColor label={buttonLabel} onClick={onButtonClick} />
             </ButtonWrapper>
           )}
         </NotificationInnerWrapper>
@@ -113,16 +111,15 @@ class Notification extends Component {
 
 Notification.propTypes = {
   bgColor: PropTypes.string,
-  onPurchaseButtonClick: PropTypes.func,
   actionButton: PropTypes.element,
   withCloseIcon: PropTypes.bool,
-  notificationContent: PropTypes.string
+  notificationContent: PropTypes.string,
 };
 
 Notification.defaultProps = {
   bgColor: helpers.alertColor,
   withCloseIcon: true,
-  notificationContent: "sample notification text"
+  notificationContent: 'sample notification text',
 };
 
 export default withStyles(styles)(Notification);

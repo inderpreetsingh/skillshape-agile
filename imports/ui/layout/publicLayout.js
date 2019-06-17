@@ -48,7 +48,6 @@ class PublicLayout extends React.Component {
   setPasswordDialogBoxSubmit = (payload, event) => {
     event.preventDefault();
     let errorMessage;
-    const { token } = this.props.params;
     const { password, confirmPassword } = payload;
     const { currentUser } = this.props;
 

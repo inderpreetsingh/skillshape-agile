@@ -338,16 +338,10 @@ class SchoolMemberInfo extends Component {
     // 		}
     // 	};
     // }
-    Meteor.call(
-      'schoolMemberDetails.editSchoolMemberDetails',
-      { doc_id: memberInfo.memberId, doc: payload },
-      (err, res) => {
-        if (res) {
-        }
-        if (err) {
-        }
-      },
-    );
+    Meteor.call('schoolMemberDetails.editSchoolMemberDetails', {
+      doc_id: memberInfo.memberId,
+      doc: payload,
+    });
   };
 
   // Handle call button for member's view.

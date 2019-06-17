@@ -31,6 +31,15 @@ const Wrapper = styled.div`
   }
 `;
 
+const DialogTitleWrapper = styled.div`
+  ${helpers.flexHorizontalSpaceBetween}
+  width: 100%;
+`;
+
+const RightSection = styled.div`
+  ${helpers.flexCenter};
+`;
+
 const OuterWrapper = styled.div`
   ${props => (props.forIframes ? `box-shadow: ${helpers.inputBoxShadow}` : '')};
   padding: ${helpers.rhythmDiv * 2}px ${helpers.rhythmDiv * 3}px;
@@ -289,8 +298,7 @@ class PackageListingAttachment extends React.Component {
         'monthlyPricing.handleClassTypes',
         { classTypeId, selectedIds, diselectedIds },
         (err, res) => {
-          if (res) {
-          } else {
+          if (err) {
             console.log('err in monthlyPricing.handleClassTypes client side----->', err);
           }
         },
@@ -303,8 +311,7 @@ class PackageListingAttachment extends React.Component {
         'enrollmentFee.handleClassTypes',
         { classTypeId, selectedIds, diselectedIds },
         (err, res) => {
-          if (res) {
-          } else {
+          if (err) {
             console.log('enrollmentFee.handleClassTypes client side----->', err);
           }
         },
@@ -317,8 +324,7 @@ class PackageListingAttachment extends React.Component {
         'classPricing.handleClassTypes',
         { classTypeId, selectedIds, diselectedIds },
         (err, res) => {
-          if (res) {
-          } else {
+          if (err) {
             console.log('classPricing.handleClassTypes client side----->', err);
           }
         },
@@ -380,12 +386,12 @@ class PackageListingAttachment extends React.Component {
             </Fragment>
           )}
           <ClassDetailsText>
-Covers:
+            Covers:
             {this.getCovers(props.selectedClassType)}
           </ClassDetailsText>
           {props.packageType == 'MP' && (
             <ClassDetailsText>
-Maximum Classes:
+              Maximum Classes:
               {maximumClasses(props)}
             </ClassDetailsText>
           )}
@@ -411,10 +417,10 @@ Maximum Classes:
                   <PriceSection key={`${payment.cost}-${index}`}>
                     <Price>
                       {payment.cost
-                          && `${formatMoney(
-                            Number.parseFloat(payment.cost).toFixed(2),
-                            payment.currency ? payment.currency : props.schoolCurrency,
-                          )}`}
+                        && `${formatMoney(
+                          Number.parseFloat(payment.cost).toFixed(2),
+                          payment.currency ? payment.currency : props.schoolCurrency,
+                        )}`}
                     </Price>
                     <NoOfClasses>
                       {payment.month && `per month for ${payment.month} months`}
@@ -464,7 +470,7 @@ Maximum Classes:
 
   render() {
     let {
-      monthlyPackageData, schoolData, enrollmentFee, perClass,
+      monthlyPackageData, schoolData, enrollmentFee, perClass, isLoading,
     } = this.props;
     monthlyPackageData = normalizeMonthlyPricingData(monthlyPackageData);
     let noPackage = false;
@@ -478,7 +484,7 @@ Maximum Classes:
           onRequestClose={this.props.onModalClose}
           aria-labelledby="Package Listing"
         >
-          {this.props.isLoading && <ContainerLoader />}
+          {isLoading && <ContainerLoader />}
           <DialogTitle style={{ backgroundColor: '#e1e1e1' }}>
             <DialogTitleWrapper>
               {noPackage && !isLoading ? (
@@ -566,20 +572,15 @@ Maximum Classes:
 
 export default createContainer((props) => {
   const { schoolId } = props;
-  isLoading = true;
+  let isLoading = true;
   let monthlyPackageData = [];
-  let monthlySubscription;
-  let schoolDataSubscription;
   let schoolData;
-  const isBusy = true;
   let enrollmentFee = [];
-  let enrollmentSubscription;
-  let classPricingSubscription;
   let perClass = [];
-  monthlySubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricing', { schoolId });
-  schoolDataSubscription = Meteor.subscribe('school.getSchoolBySchoolId', schoolId);
-  enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFee', { schoolId });
-  classPricingSubscription = Meteor.subscribe('classPricing.getClassPricing', { schoolId });
+  const monthlySubscription = Meteor.subscribe('monthlyPricing.getMonthlyPricing', { schoolId });
+  const schoolDataSubscription = Meteor.subscribe('school.getSchoolBySchoolId', schoolId);
+  const enrollmentSubscription = Meteor.subscribe('enrollmentFee.getEnrollmentFee', { schoolId });
+  const classPricingSubscription = Meteor.subscribe('classPricing.getClassPricing', { schoolId });
   const subscriptionChecks = schoolDataSubscription
     && schoolDataSubscription.ready()
     && monthlySubscription

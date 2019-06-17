@@ -97,17 +97,6 @@ const MembersScreenWrapper = SplitScreenWrapper.extend`
   flex-direction: column;
 `;
 
-const style = {
-  w211: {
-    width: 211,
-  },
-  w100: {
-    width: 100,
-  },
-  w150: {
-    width: 150,
-  },
-};
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -310,7 +299,7 @@ class DashBoardView extends React.Component {
   };
 
   renderStudentAddModal = () => {
-    const { isAdmin, view } = this.props;
+    const { view } = this.props;
     const currentYear = new Date().getFullYear();
     const birthYears = [];
     for (let i = 0; i < 60; i++) {
@@ -643,7 +632,7 @@ class DashBoardView extends React.Component {
 
   handleMemberDetailsToRightPanel = async (memberId, superAdminId) => {
     const {
-      isAdmin, schoolData, adminsData, purchaseByUserId, view,
+      schoolData, adminsData, purchaseByUserId, view,
     } = this.props;
     let memberInfo;
     let profile;
@@ -727,10 +716,7 @@ class DashBoardView extends React.Component {
     const { memberInfo } = this.state;
     memberInfo.adminNotes = event.target.value;
     memberInfo.schoolId = this.props.schoolData && this.props.schoolData._id;
-    Meteor.call('school.saveAdminNotesToMember', memberInfo, (err, res) => {
-      if (res) {
-      }
-    });
+    Meteor.call('school.saveAdminNotesToMember', memberInfo);
   };
 
   handleInput = (event) => {
@@ -744,8 +730,7 @@ class DashBoardView extends React.Component {
 
   renderSchoolMedia = (schoolData, memberInfo, slug) => {
     const school = find(schoolData, { _id: memberInfo.schoolId });
-    if (isEmpty(school)) {
-    } else {
+    if (!isEmpty(school)) {
       return (
         <SchoolMemberMedia
           showUploadImageBtn={!!slug}
@@ -839,7 +824,6 @@ class DashBoardView extends React.Component {
       isAdmin,
       adminsData,
       superAdminId,
-      isLoading,
       view,
     } = this.props;
     const {

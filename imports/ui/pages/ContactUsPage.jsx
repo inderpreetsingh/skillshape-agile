@@ -95,10 +95,6 @@ const MapContainer = styled.div`
 
 const ContentWrapper = styled.div``;
 
-const MyMap = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 const styles = theme => ({
   dialogTitleRoot: {
     padding: `${helpers.rhythmDiv * 3}px ${helpers.rhythmDiv * 3}px 0 ${helpers.rhythmDiv * 3}px`,
@@ -132,10 +128,6 @@ const styles = theme => ({
 });
 class ContactUs extends Component {
   state = {};
-
-  componentDidMount = () => {};
-
-  componentDidUpdate = () => {};
 
   render() {
     const { props } = this;

@@ -150,8 +150,6 @@ FiltersDialogBox.propTypes = {
   filtersForSuggestion: PropTypes.bool,
   onGiveSuggestion: PropTypes.func,
   open: PropTypes.bool,
-  errorText: PropTypes.string,
-  unsetError: PropTypes.func,
 };
 
 FiltersDialogBox.defaultProps = {

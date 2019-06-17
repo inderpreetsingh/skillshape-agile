@@ -43,8 +43,6 @@ class MapView extends SkillClassListBase {
 }
 
 export default createContainer((props) => {
-  const { query } = props.location;
-  let subscription;
   const sLocation = SLocation.find().fetch();
   return {
     ...props,

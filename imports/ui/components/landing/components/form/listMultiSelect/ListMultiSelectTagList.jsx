@@ -29,7 +29,7 @@ class ListMultiSelectList extends React.Component {
     valueAccessor: PropTypes.func.isRequired,
     textAccessor: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    valueComponent: PropTypes.func,
+    ValueComponent: PropTypes.func,
     disabled: CustomPropTypes.disabled.acceptsArray,
   };
 
@@ -63,6 +63,7 @@ class ListMultiSelectList extends React.Component {
       textAccessor,
       disabled,
       focusedItem,
+      activeId,
     } = this.props;
 
     const noOfFilters = value.length - 1;
@@ -107,7 +108,6 @@ class ListMultiSelectList extends React.Component {
       valueAccessor,
       ValueComponent,
       textAccessor,
-      label,
       disabled,
       focusedItem,
     } = this.props;

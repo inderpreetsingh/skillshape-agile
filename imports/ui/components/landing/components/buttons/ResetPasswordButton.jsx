@@ -29,7 +29,7 @@ class ResetPasswordButton extends Component {
   };
 
   onSubmit = (event) => {
-    const { email, error } = this.state;
+    const { email } = this.state;
     event.preventDefault();
     const stateObj = { ...this.state };
     if (email) {

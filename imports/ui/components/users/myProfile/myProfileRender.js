@@ -33,9 +33,9 @@ const ButtonsWrapper = styled.div`
   }
 `;
 const ButtonWrapper = styled.div`
-   margin: 10px 5px 10px 5px;
-   width: fit-content;
-   @media screen and (max-width: 400px) {
+  margin: 10px 5px 10px 5px;
+  width: fit-content;
+  @media screen and (max-width: 400px) {
     min-width: 185px;
   }
 `;
@@ -71,28 +71,29 @@ export default function () {
   } = this.state;
   if (isLoading) return <Loading />;
 
-  if (!currentUser && !isLoading) {
+  if (!currentUser) {
     return (
       <Typography type="display2" gutterBottom align="center">
         User Not Found!!!
       </Typography>
     );
   }
-  const pic = currentUser.profile && currentUser.profile.medium ? currentUser.profile.medium
-    : currentUser.profile && currentUser.profile.pic ? currentUser.profile.pic : config.defaultProfilePicOptimized;
+  const pic = currentUser.profile && currentUser.profile.medium
+    ? currentUser.profile.medium
+    : currentUser.profile && currentUser.profile.pic
+      ? currentUser.profile.pic
+      : config.defaultProfilePicOptimized;
   if (this.validateUser()) {
     return (
       <DocumentTitle title={this.props.route.name}>
         <GridWrapper>
-          {currentUser && changePasswordDialogBox
-          && (
-          <ChangePasswordDialogBox
-            open={changePasswordDialogBox}
-            onModalClose={() => this.setState({ changePasswordDialogBox: false })}
-            hideChangePassword={this.passwordChangeMsg}
-          />
-          )
-        }
+          {changePasswordDialogBox && (
+            <ChangePasswordDialogBox
+              open={changePasswordDialogBox}
+              onModalClose={() => this.setState({ changePasswordDialogBox: false })}
+              hideChangePassword={this.passwordChangeMsg}
+            />
+          )}
           <Grid container>
             {this.state.isBusy && <ContainerLoader />}
             <Grid item xs={12} sm={12}>
@@ -105,10 +106,7 @@ export default function () {
                       className={classnames(classes.expand, {
                         [classes.expandOpen]: this.state.profileExpanded,
                       })}
-                      onClick={this.handleExpandClick.bind(
-                        this,
-                        'profileExpanded',
-                      )}
+                      onClick={this.handleExpandClick.bind(this, 'profileExpanded')}
                       aria-expanded={this.state.profileExpanded}
                       aria-label="Show more"
                     >
@@ -116,11 +114,7 @@ export default function () {
                     </IconButton>
 )}
                 />
-                <Collapse
-                  in={this.state.profileExpanded}
-                  timeout="auto"
-                  unmountOnExit
-                >
+                <Collapse in={this.state.profileExpanded} timeout="auto" unmountOnExit>
                   <CardContent>
                     <Grid container>
                       <Grid item xs={12} sm={12} md={4}>
@@ -137,26 +131,16 @@ export default function () {
                           <IconInput
                             labelText="First Name"
                             value={firstName}
-                            onChange={this.handleTextChange.bind(
-                              this,
-                              'firstName',
-                            )}
+                            onChange={this.handleTextChange.bind(this, 'firstName')}
                           />
                           <IconInput
                             labelText="Last Name"
                             value={lastName}
-                            onChange={this.handleTextChange.bind(
-                              this,
-                              'lastName',
-                            )}
+                            onChange={this.handleTextChange.bind(this, 'lastName')}
                           />
-                          <Typography
-                            className={classes.inputCaption}
-                            type="caption"
-                          >
-                            Your public profile only shows first name. When you
-                            join a school, your instructors will see your first
-                            and last name.
+                          <Typography className={classes.inputCaption} type="caption">
+                            Your public profile only shows first name. When you join a school, your
+                            instructors will see your first and last name.
                           </Typography>
                           <FormControl fullWidth margin="dense">
                             <InputLabel htmlFor="gender">I Am</InputLabel>
@@ -169,21 +153,14 @@ export default function () {
                               style={{ fontWeight: 600 }}
                             >
                               {config.gender.map((data, index) => (
-                                <MenuItem
-                                  key={`${index}-${data.value}`}
-                                  value={data.value}
-                                >
+                                <MenuItem key={`${index}-${data.value}`} value={data.value}>
                                   {data.label}
                                 </MenuItem>
                               ))}
                             </Select>
                           </FormControl>
-                          <Typography
-                            className={classes.inputCaption}
-                            type="caption"
-                          >
-                            We use this data for analysis and never share it with
-                            other users.
+                          <Typography className={classes.inputCaption} type="caption">
+                            We use this data for analysis and never share it with other users.
                           </Typography>
                           <InputLabel fullWidth margin="dense">
                             <MaterialDatePicker
@@ -199,13 +176,9 @@ export default function () {
                               style={{ fontWeight: 600 }}
                             />
                           </InputLabel>
-                          <Typography
-                            className={classes.inputCaption}
-                            type="caption"
-                          >
-                            The wonderful day you took your first breath. We use
-                            this data to help you find classes and never share it
-                            with other users.
+                          <Typography className={classes.inputCaption} type="caption">
+                            The wonderful day you took your first breath. We use this data to help
+                            you find classes and never share it with other users.
                           </Typography>
                           <IconInput
                             type="email"
@@ -214,12 +187,8 @@ export default function () {
                             labelText="Email Address"
                             iconName="email"
                           />
-                          <Typography
-                            className={classes.inputCaption}
-                            type="caption"
-                          >
-                            We won't be share your private email address with
-                            other Members.
+                          <Typography className={classes.inputCaption} type="caption">
+                            We won't be share your private email address with other Members.
                           </Typography>
                           {/* <IconInput
                           type="tel"
@@ -237,17 +206,12 @@ export default function () {
                             containerStyle={{ marginTop: '10px' }}
                             disableAreaCodes
                           />
-                          <Typography
-                            className={classes.inputCaption}
-                            type="caption"
-                          >
-                            This is only shared with Administrators of a school
-                            you have enrolled in.
+                          <Typography className={classes.inputCaption} type="caption">
+                            This is only shared with Administrators of a school you have enrolled
+                            in.
                           </Typography>
                           <FormControl fullWidth margin="dense">
-                            <InputLabel htmlFor="currency">
-                              Preferred Currency
-                            </InputLabel>
+                            <InputLabel htmlFor="currency">Preferred Currency</InputLabel>
                             <Select
                               input={<Input id="currency" />}
                               value={this.state.currency}
@@ -257,10 +221,7 @@ export default function () {
                               style={{ fontWeight: 600 }}
                             >
                               {config.currency.map((data, index) => (
-                                <MenuItem
-                                  key={`${index}-${data.value}`}
-                                  value={data.value}
-                                >
+                                <MenuItem key={`${index}-${data.value}`} value={data.value}>
                                   {data.label}
                                 </MenuItem>
                               ))}
@@ -291,29 +252,26 @@ export default function () {
                                   onClick={this.calendarConformation}
                                   fullWidth
                                 />
-                              )
-                                : (
-                                  <FormGhostButton
-                                    alertColor
-                                    label="Cancel Google Sync"
-                                    onClick={this.confirmationRemoveGoogleSync}
-                                    fullWidth
-                                  />
-                                )}
+                              ) : (
+                                <FormGhostButton
+                                  alertColor
+                                  label="Cancel Google Sync"
+                                  onClick={this.confirmationRemoveGoogleSync}
+                                  fullWidth
+                                />
+                              )}
                             </ButtonWrapper>
                             <ButtonWrapper>
                               <FormGhostButton
                                 label="Change Password"
-                                onClick={() => { this.setState({ changePasswordDialogBox: true }); }}
+                                onClick={() => {
+                                  this.setState({ changePasswordDialogBox: true });
+                                }}
                                 fullWidth
                               />
                             </ButtonWrapper>
                             <ButtonWrapper>
-                              <FormGhostButton
-                                type="submit"
-                                label="Save"
-                                fullWidth
-                              />
+                              <FormGhostButton type="submit" label="Save" fullWidth />
                             </ButtonWrapper>
                           </ButtonsWrapper>
                           {this.state.errorText && (
@@ -335,7 +293,7 @@ export default function () {
   }
   return (
     <Typography type="display2" gutterBottom align="center">
-        Access Denied!!!
+      Access Denied!!!
     </Typography>
   );
 }

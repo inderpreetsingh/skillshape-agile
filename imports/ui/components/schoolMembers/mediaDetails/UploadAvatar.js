@@ -123,10 +123,6 @@ class UploadAvatar extends React.Component {
       Meteor.call(
         'schoolMemberDetails.editSchoolMemberDetails', { doc_id: memberData._id, doc: payload },
         (err, res) => {
-          if (res) {
-          }
-          if (err) {
-          }
           // Stop loading and close modal.
           this.setState({ isLoading: false });
           this.props.onClose();

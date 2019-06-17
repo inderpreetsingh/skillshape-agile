@@ -1,5 +1,5 @@
-import UserStripeData from "../fields.js";
+import UserStripeData from '../fields';
 
-Meteor.publish("stripe.stripExistingAccount", function() {
-  const result = UserStripeData.findOne({ userId: this.userId });
+Meteor.publish('stripe.stripExistingAccount', function () {
+  UserStripeData.findOne({ userId: this.userId });
 });

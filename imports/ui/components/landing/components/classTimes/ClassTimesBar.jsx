@@ -44,7 +44,7 @@ const ClassTimesWrapper = styled.div`
 `;
 
 const GridContainer = styled.div`
-  ${helpers.flexCenter} justify-content: flex-start;
+  ${helpers.flexCenter} justify-content: center;
   flex-wrap: wrap;
 `;
 

@@ -1,96 +1,120 @@
 import { get, isEmpty } from 'lodash';
 import { createContainer } from 'meteor/react-meteor-data';
-import React, { Component, lazy, Suspense } from "react";
-import Classes from "/imports/api/classes/fields";
-import ClassTime from '/imports/api/classTimes/fields.js';
+import React, { Component, lazy, Suspense } from 'react';
+import Classes from '/imports/api/classes/fields';
+import ClassTime from '/imports/api/classTimes/fields';
 import ClassType from '/imports/api/classType/fields';
-import School from "/imports/api/school/fields";
-import { classTypeImgSrc } from "/imports/ui/components/landing/site-settings.js";
-import { ContainerLoader } from "/imports/ui/loading/container";
-import { withPopUp,redirectToHome } from '/imports/util';
-const ClassDetails = lazy(() => import("/imports/ui/components/landing/components/classDetails/index.jsx"))
+import School from '/imports/api/school/fields';
+import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings';
+import { ContainerLoader } from '/imports/ui/loading/container';
+import { withPopUp, redirectToHome } from '/imports/util';
 import { Loading } from '/imports/ui/loading';
 import ClassInterest from '/imports/api/classInterest/fields';
+
+const ClassDetails = lazy(() => import('/imports/ui/components/landing/components/classDetails/index'));
 
 class ClassDetailsContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    }
+    this.state = {};
   }
+
   getBgImage() {
     const { school, classTypeData } = this.props;
-    return get(classTypeData, 'classTypeImg', get(classTypeData, 'medium', get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc))));
+    return get(
+      classTypeData,
+      'classTypeImg',
+      get(
+        classTypeData,
+        'medium',
+        get(school, 'mainImage', get(school, 'mainImageMedium', classTypeImgSrc)),
+      ),
+    );
   }
 
   getLogoImage() {
     const { school } = this.props;
-    return get(school, 'logoImg', get(school, "logoImgMedium", ""));
+    return get(school, 'logoImg', get(school, 'logoImgMedium', ''));
   }
-  componentWillReceiveProps(nextProps){
-    if(!isEmpty(nextProps.classTypeData) && Meteor.userId()){
-      const {_id:classTypeId} = nextProps.classTypeData;
-      let filter = { classTypeId, userId: Meteor.userId() };
-      Meteor.call("classPricing.signInHandler", filter, (err, res) => {
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEmpty(nextProps.classTypeData) && Meteor.userId()) {
+      const { _id: classTypeId } = nextProps.classTypeData;
+      const filter = { classTypeId, userId: Meteor.userId() };
+      Meteor.call('classPricing.signInHandler', filter, (err, res) => {
         if (!isEmpty(res)) {
-          let { epStatus, purchased ,noPackageRequired} = res;
-          if (epStatus && !isEmpty(purchased) || noPackageRequired) {
-            this.setState({ notification: false ,loginUserPurchases:res});
-          }
-          else if (!epStatus) {
-            this.setState({ packagesRequired: 'enrollment',notification: true })
-          }
-          else {
-            this.setState({ packagesRequired: 'perClassAndMonthly',notification: true })
+          const { epStatus, purchased, noPackageRequired } = res;
+          if ((epStatus && !isEmpty(purchased)) || noPackageRequired) {
+            this.setState({ notification: false, loginUserPurchases: res });
+          } else if (!epStatus) {
+            this.setState({ packagesRequired: 'enrollment', notification: true });
+          } else {
+            this.setState({ packagesRequired: 'perClassAndMonthly', notification: true });
           }
         }
-      })
+      });
     }
   }
-  shouldComponentUpdate(nextProps){
-    if(nextProps.error){
+
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.error) {
       return true;
     }
-    return !nextProps.isBusy ;
+    return !nextProps.isBusy;
   }
+
   render() {
-    const {error, currentUser, classTimeData,isUserSubsReady, classData, instructorsData, popUp, instructorsIds, classTypeData, isBusy,schoolData ,classInterestData} = this.props;
-    if(error){
+    const {
+      error,
+      currentUser,
+      classTimeData,
+      isUserSubsReady,
+      classData,
+      instructorsData,
+      popUp,
+      instructorsIds,
+      classTypeData,
+      isBusy,
+      schoolData,
+      classInterestData,
+    } = this.props;
+    if (error) {
       redirectToHome();
     }
     if (isBusy || isEmpty(schoolData)) {
-      return  <ContainerLoader/>
+      return <ContainerLoader />;
     }
-    const {scheduled_date:startTime} = classData;
-    let currentView ;
-    let params ;
-    if(!isEmpty(schoolData)){
-      params = {slug:schoolData.slug};
-      currentView =  checkIsAdmin({user:currentUser,schoolData}) ? "instructorsView" : "studentsView";
+    let currentView;
+    let params;
+    if (!isEmpty(schoolData)) {
+      params = { slug: schoolData.slug };
+      currentView = checkIsAdmin({ user: currentUser, schoolData })
+        ? 'instructorsView'
+        : 'studentsView';
     }
     return (
-      <Suspense fallback={<Loading/>}>
+      <Suspense fallback={<Loading />}>
         <ClassDetails
-      classTypeData = {classTypeData}
-        topSearchBarProps={{
-          currentUser,
-          isUserSubsReady
-        }}
-        headerProps={{
-          bgImg: this.getBgImage(),
-          logoImg: this.getLogoImage()
-        }}
-        classTimeInformationProps={{ ...classTimeData }}
-        classData={classData}
-        instructorsData={instructorsData}
-        popUp={popUp}
-        instructorsIds={instructorsIds}
-        schoolData={schoolData}
-        currentView={currentView}
-        params= {params}
-        classInterestData = {classInterestData}
-        {...this.state}
-      />
+          classTypeData={classTypeData}
+          topSearchBarProps={{
+            currentUser,
+            isUserSubsReady,
+          }}
+          headerProps={{
+            bgImg: this.getBgImage(),
+            logoImg: this.getLogoImage(),
+          }}
+          classTimeInformationProps={{ ...classTimeData }}
+          classData={classData}
+          instructorsData={instructorsData}
+          popUp={popUp}
+          instructorsIds={instructorsIds}
+          schoolData={schoolData}
+          currentView={currentView}
+          params={params}
+          classInterestData={classInterestData}
+          {...this.state}
+        />
       </Suspense>
     );
   }
@@ -98,38 +122,52 @@ class ClassDetailsContainer extends Component {
 
 export default createContainer((props) => {
   const { classId } = props.params || {};
-  let classesSubscription, classData, classTypeSub, classTimeSubscription, classTimeData, schoolData,classInterestData;
-  let instructorsIds = []
-  let instructorsData = []
-  let filter = { _id: classId };
+  let classesSubscription;
+  let classData;
+  let classTypeSub;
+  let classTimeSubscription;
+  let classTimeData;
+  let schoolData;
+  let classInterestData;
+  let instructorsIds = [];
+  let instructorsData = [];
+  const filter = { _id: classId };
   let classTypeData = {};
   let isBusy = true;
   let error = false;
-  
-  if(!classId){
-      error = true;
+
+  if (!classId) {
+    error = true;
   }
   classesSubscription = Meteor.subscribe('classes.getClassesData', filter);
   if (classesSubscription && classesSubscription.ready()) {
     classData = Classes.findOne();
-    if(isEmpty(classData)){
+    if (isEmpty(classData)) {
       error = true;
-    }
-    else{
-      let { classTypeId, classTimeId, schoolId, instructors: classInstructors } = classData;
+    } else {
+      const {
+        classTypeId, classTimeId, schoolId, instructors: classInstructors,
+      } = classData;
       instructorsIds = classInstructors;
       if (schoolId) {
-        let schoolSub = Meteor.subscribe("school.findSchoolByIds", [schoolId]);
+        const schoolSub = Meteor.subscribe('school.findSchoolByIds', [schoolId]);
         if (schoolSub && schoolSub.ready()) {
           schoolData = School.findOne();
         }
-        let classInterestSub = Meteor.subscribe("classInterest.getClassInterest",classTimeId,schoolId,classTypeId);
-        if(classInterestSub && classInterestSub.ready()){
+        const classInterestSub = Meteor.subscribe(
+          'classInterest.getClassInterest',
+          classTimeId,
+          schoolId,
+          classTypeId,
+        );
+        if (classInterestSub && classInterestSub.ready()) {
           classInterestData = ClassInterest.findOne();
         }
       }
       if (classTypeId) {
-        classTypeSub = Meteor.subscribe("classType.getClassTypeWithIds", { classTypeIds: [classTypeId] });
+        classTypeSub = Meteor.subscribe('classType.getClassTypeWithIds', {
+          classTypeIds: [classTypeId],
+        });
         if (classTypeSub && classTypeSub.ready()) {
           classTypeData = ClassType.findOne({});
         }
@@ -138,24 +176,22 @@ export default createContainer((props) => {
         classTimeSubscription = Meteor.subscribe('classTime.getClassTimeById', classTimeId);
         if (classTimeSubscription && classTimeSubscription.ready()) {
           classTimeData = ClassTime.findOne();
-          const { instructors: classTimeInstructors } = classTimeData
+          const { instructors: classTimeInstructors } = classTimeData;
           instructorsIds = isEmpty(classInstructors) ? classTimeInstructors : classInstructors;
         }
       }
       if (!isEmpty(instructorsIds)) {
-        let userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
+        const userSubscription = Meteor.subscribe('user.getUsersFromIds', instructorsIds);
         if (userSubscription && userSubscription.ready()) {
           isBusy = false;
           instructorsData = Meteor.users.find({ _id: { $in: instructorsIds } }).fetch();
         }
-      }
-      else {
+      } else {
         isBusy = false;
       }
     }
   }
-  
-  
+
   return {
     isBusy,
     classData,
@@ -165,7 +201,6 @@ export default createContainer((props) => {
     classTimeData,
     schoolData,
     error,
-    classInterestData
+    classInterestData,
   };
 }, withPopUp(ClassDetailsContainer));
-

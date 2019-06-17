@@ -49,6 +49,7 @@ const Description = styled.p`
   font-family: ${helpers.specialFont};
   line-height: 1;
   margin: 0;
+  margin-top:5px;
 `;
 
 const Reviews = styled.a`
@@ -99,21 +100,20 @@ const ClassTypeDescription = (props) => {
           {!isEdit && PublishStatusButton && <PublishStatusButton />}
         </Title>
       )}
-
+      {noOfReviews > 0 && (
       <ReviewsWrapper>
         {noOfStars && <StarsBar noOfStars={noOfStars} />}
 
         <NoOfReviews>
-          {noOfReviews > 0 && (
           <Reviews href="#">
-(
+            (
             {noOfReviews}
-            {' '}
-Reviews)
+            Reviews)
           </Reviews>
-          )}
         </NoOfReviews>
       </ReviewsWrapper>
+      )}
+
 
       <Description>{description && ReactHtmlParser(description)}</Description>
     </Wrapper>

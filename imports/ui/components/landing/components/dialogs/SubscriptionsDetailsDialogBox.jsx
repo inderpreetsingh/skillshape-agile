@@ -56,12 +56,6 @@ const ContentWrapper = styled.div`
   width: 100%;
 `;
 
-const Title = SubHeading.extend`
-  font-style: italic;
-  text-align: center;
-  font-weight: 300;
-`;
-
 const StatusWrapper = styled.div`
   margin-bottom: ${helpers.rhythmDiv * 2}px;
 `;
@@ -127,7 +121,6 @@ const SubscriptionsDetailsDialogBox = (props) => {
   };
 
   const getDatesBasedOnSubscriptions = (props) => {
-    const stringToPrint = '';
     const fee = Number(get(props, 'amount', 0)).toFixed(2);
     const currency = get(props, 'currency', '$');
 

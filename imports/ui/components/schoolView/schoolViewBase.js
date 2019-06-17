@@ -1,5 +1,4 @@
 import { isEmpty } from 'lodash';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
@@ -8,12 +7,13 @@ import ClassPricing from '/imports/api/classPricing/fields';
 import ClassType from '/imports/api/classType/fields';
 import SLocation from '/imports/api/sLocation/fields';
 import {
- capitalizeString, checkSuperAdmin, createMarkersOnMap, stripePaymentHelper 
+  capitalizeString,
+  checkSuperAdmin,
+  createMarkersOnMap,
+  stripePaymentHelper,
 } from '/imports/util';
 import Events from '/imports/util/events';
-import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
-
 
 export default class SchoolViewBase extends React.Component {
   constructor(props) {
@@ -40,421 +40,435 @@ export default class SchoolViewBase extends React.Component {
     }
   }
 
+  validateString = (value) => {
+    if (value) return value;
+    return '';
+  };
 
-	validateString = (value) => {
-	  if (value) return value;
-	  return '';
-	};
+  // checkUserAccess = (currentUser,schoolId) => {
+  //   return checkMyAccess({user: currentUser,schoolId});
+  // }
 
-	// checkUserAccess = (currentUser,schoolId) => {
-	//   return checkMyAccess({user: currentUser,schoolId});
-	// }
+  handleGiveReview = () => {
+    // const { toastr } = this.props;
+    if (Meteor.userId()) {
+      this.handleDialogState('giveReviewDialog', true);
+    } else {
+      this.handleDefaultDialogBox('Login to give review', true);
+    }
+  };
 
-	handleGiveReview = () => {
-	  // const { toastr } = this.props;
-	  if (Meteor.userId()) {
-	    this.handleDialogState('giveReviewDialog', true);
-	  } else {
-	    this.handleDefaultDialogBox('Login to give review', true);
-	  }
-	};
+  getReviewTitle = name => `Give review for ${capitalizeString(name)}`;
 
-	getReviewTitle = (name) => `Give review for ${capitalizeString(name)}`;
+  handleDialogState = (dialogName, state) => {
+    const currentState = { ...this.state };
+    currentState[dialogName] = state;
+    this.setState(currentState);
+  };
 
-	handleDialogState = (dialogName, state) => {
-	  const currentState = { ...this.state };
-	  currentState[dialogName] = state;
-	  this.setState(currentState);
-	};
+  handleDefaultDialogBox = (title, state) => {
+    const newState = {
+      ...state,
+      defaultDialogBoxTitle: title,
+      nonUserDefaultDialog: state,
+    };
+    this.setState(newState);
+  };
 
-	handleDefaultDialogBox = (title, state) => {
-	  const newState = {
-	    ...state,
-	    defaultDialogBoxTitle: title,
-	    nonUserDefaultDialog: state,
-	  };
-	  this.setState(newState);
-	};
+  claimASchool = (currentUser, schoolData) => {
+    if (currentUser) {
+      setTimeout(() => {
+        if (checkSuperAdmin(currentUser)) {
+          return '';
+        }else if (
+          currentUser.profile
+          && currentUser.profile.schoolId
+          && currentUser.profile.schoolId.length > 1
+        ) {
+          toastr.error(
+            'You already manage a school. You cannot claim another School. Please contact admin for more details',
+            'Error',
+          );
+        } else {
+          const claimRequest = ClaimRequest.find().fetch();
+          if (claimRequest && claimRequest.length > 0) {
+            toastr.info(
+              'We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.',
+              '',
+            );
+            return;
+          }
+          else if (schoolData.claimed == 'Y') {
+            this.setState({ claimRequestModal: true });
+            // show modal over here
+            return;
+          }
+          this.setState({ claimSchoolModal: true });
 
-	claimASchool = (currentUser, schoolData) => {
-	  if (currentUser) {
-	    setTimeout(() => {
-				if (checkSuperAdmin(currentUser)) {
-				} else {
-					if (
-						currentUser.profile &&
-						currentUser.profile.schoolId &&
-						currentUser.profile.schoolId.length > 1
-					) {
-						toastr.error(
-							'You already manage a school. You cannot claim another School. Please contact admin for more details',
-							'Error'
-						);
-					} else {
-						let claimRequest = ClaimRequest.find().fetch();
-						if (claimRequest && claimRequest.length > 0) {
-							toastr.info(
-								'We are in the process of resolving your claim. We will contact you as soon as we reach a verdict or need more information. Thanks for your patience.',
-								''
-							);
-							return;
-						}
-						if (schoolData.claimed == 'Y') {
-							this.setState({ claimRequestModal: true });
-							// show modal over here
-							return;
-						} 
-							this.setState({ claimSchoolModal: true });
-							return;
-							// show modal over here
-						
-					}
-				}
-			}, 1000);
-	  } else {
-	    toastr.error('Please register yourself as an individual member before claiming your school', 'Error');
-	    Meteor.setTimeout(() => {
-	      Events.trigger('join_school', {
-	        studentRegister: false,
-	        schoolRegister: true,
-	      });
-	    }, 1000);
-	  }
-	};
+          // show modal over here
+        }
+      }, 1000);
+    } else {
+      toastr.error(
+        'Please register yourself as an individual member before claiming your school',
+        'Error',
+      );
+      Meteor.setTimeout(() => {
+        Events.trigger('join_school', {
+          studentRegister: false,
+          schoolRegister: true,
+        });
+      }, 1000);
+    }
+  };
 
-	claimBtnCSS = (currentUser, claimed) => {
-		if (
-			currentUser &&
-			currentUser.profile &&
-			currentUser.profile.schoolId &&
-			currentUser.profile.schoolId.length > 1
-		) {
-			return 'btn-default';
-		} else if (claimed === 'Y') {
-			return 'btn-danger';
-		} else {
-			return 'btn-success';
-		}
-	};
+  claimBtnCSS = (currentUser, claimed) => {
+    if (
+      currentUser
+      && currentUser.profile
+      && currentUser.profile.schoolId
+      && currentUser.profile.schoolId.length > 1
+    ) {
+      return 'btn-default';
+    }
+    if (claimed === 'Y') {
+      return 'btn-danger';
+    }
+    return 'btn-success';
+  };
 
-	handleIDealResult = (source) => {
-	  console.log('TCL: handleIDealResult -> source', source);
-	  document.location.href = source.redirect.url;
-	}
+  handleIDealResult = (source) => {
+    console.log('TCL: handleIDealResult -> source', source);
+    document.location.href = source.redirect.url;
+  };
 
-	getClassImageUrl = (classType, classImagePath) => {
-		let image = ClassType.findOne({ _id: classType }).classTypeImg;
-		if (image && image.length) {
-			return image;
-		} else if (classImagePath && classImagePath.length > 1) {
-			return classImagePath;
-		} else {
-			return 'http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg';
-		}
-	};
+  getClassImageUrl = (classType, classImagePath) => {
+    const image = ClassType.findOne({ _id: classType }).classTypeImg;
+    if (image && image.length) {
+      return image;
+    }
+    if (classImagePath && classImagePath.length > 1) {
+      return classImagePath;
+    }
+    return 'http://img.freepik.com/free-icon/high-school_318-137014.jpg?size=338c&ext=jpg';
+  };
 
-	viewSchedule = (skillclass) => {
-	  let str = '';
-	  if (skillclass.isRecurring == 'true' && skillclass.repeats) {
-	    const repeats = JSON.parse(skillclass.repeats);
-	    const repeat_details = repeats.repeat_details || [];
-	    str = `Start from ${  repeats.start_date  }</br>`;
-	    for (let i = 0; i < repeat_details.length; i++) {
-	      const classLocation = SLocation.findOne({
-	        _id: repeat_details[i].location,
-	      });
-	      str
-					+= `<b>${ 
-					repeat_details[i].day 
-					}</b> ${ 
-					repeat_details[i].start_time 
-					} to ${ 
-					repeat_details[i].end_time 
-					} at ${ 
-					this.validateString(classLocation.neighbourhood) 
-					}, ${ 
-					classLocation.city 
-					}</br>`;
-	    }
-	  } else {
-	    const classLocation = SLocation.findOne({ _id: skillclass.locationId });
-	    str =				`Start from ${ 
-				this.validateString(skillclass.plannedStart) 
-				}  to ${ 
-				this.validateString(skillclass.plannedEnd) 
-				}</br>${ 
-				this.validateString(skillclass.planEndTime) 
-				} to ${ 
-				this.validateString(skillclass.planStartTime) 
-				} at ${ 
-				this.validateString(classLocation.neighbourhood) 
-				}, ${ 
-				classLocation.city}`;
-	  }
-	  return str;
-	};
+  viewSchedule = (skillclass) => {
+    let str = '';
+    if (skillclass.isRecurring == 'true' && skillclass.repeats) {
+      const repeats = JSON.parse(skillclass.repeats);
+      const repeat_details = repeats.repeat_details || [];
+      str = `Start from ${repeats.start_date}</br>`;
+      for (let i = 0; i < repeat_details.length; i++) {
+        const classLocation = SLocation.findOne({
+          _id: repeat_details[i].location,
+        });
+        str += `<b>${repeat_details[i].day}</b> ${repeat_details[i].start_time} to ${
+          repeat_details[i].end_time
+        } at ${this.validateString(classLocation.neighbourhood)}, ${classLocation.city}</br>`;
+      }
+    } else {
+      const classLocation = SLocation.findOne({ _id: skillclass.locationId });
+      str = `Start from ${this.validateString(skillclass.plannedStart)}  to ${this.validateString(
+        skillclass.plannedEnd,
+      )}</br>${this.validateString(skillclass.planEndTime)} to ${this.validateString(
+        skillclass.planStartTime,
+      )} at ${this.validateString(classLocation.neighbourhood)}, ${classLocation.city}`;
+    }
+    return str;
+  };
 
-	getClassPrice = (classTypeId) => {
-	  const classPrice = ClassPricing.findOne({
-	    classTypeId: { $regex: `${  classTypeId  }`, $options: 'i' },
-	  });
-	  if (classPrice && classPrice.cost) {
-	    return `$${classPrice.cost}/Month`;
-	  }
-	  return '';
-	};
+  getClassPrice = (classTypeId) => {
+    const classPrice = ClassPricing.findOne({
+      classTypeId: { $regex: `${classTypeId}`, $options: 'i' },
+    });
+    if (classPrice && classPrice.cost) {
+      return `$${classPrice.cost}/Month`;
+    }
+    return '';
+  };
 
-	getClassName = (classTypeId) => {
-		if (_.isArray(classTypeId)) {
-			let str_name = [];
-			// let classTypeIds = classTypeId.split(",")
-			let classTypeList = ClassType.find({ _id: { $in: classTypeId } }).fetch();
-			classTypeList.map((a) => {
-				str_name.push(a.name);
-			});
-			return str_name.join(',');
-		} 
-			return '';
-		
-	};
+  getClassName = (classTypeId) => {
+    if (_.isArray(classTypeId)) {
+      const str_name = [];
+      // let classTypeIds = classTypeId.split(",")
+      const classTypeList = ClassType.find({ _id: { $in: classTypeId } }).fetch();
+      classTypeList.map((a) => {
+        str_name.push(a.name);
+      });
+      return str_name.join(',');
+    }
+    return '';
+  };
 
-	getImageMediaList = (mediaList, type) => {
-		if (!mediaList) {
-			return [];
-		} 
-			let size = 1;
-			let imageList = [];
-			let return_list = [];
+  getImageMediaList = (mediaList, type) => {
+    if (!mediaList) {
+      return [];
+    }
+    const size = 1;
+    const imageList = [];
+    const return_list = [];
 
-			if (type == 'Image') {
-				mediaList.map((a) => {
-					if (a && a.mediaType) {
-						if (a.mediaType.toLowerCase() == 'Image'.toLowerCase()) {
-							imageList.push(a);
-						}
-					}
-				});
-			} else {
-				mediaList.map((a) => {
-					if (a && a.mediaType) {
-						if (a.mediaType.toLowerCase() != 'Image'.toLowerCase()) {
-							imageList.push(a);
-						}
-					}
-				});
-			}
+    if (type == 'Image') {
+      mediaList.map((a) => {
+        if (a && a.mediaType) {
+          if (a.mediaType.toLowerCase() == 'Image'.toLowerCase()) {
+            imageList.push(a);
+          }
+        }
+      });
+    } else {
+      mediaList.map((a) => {
+        if (a && a.mediaType) {
+          if (a.mediaType.toLowerCase() != 'Image'.toLowerCase()) {
+            imageList.push(a);
+          }
+        }
+      });
+    }
 
-			for (var i = 0; i < imageList.length; i += size) {
-				var smallarray = imageList.slice(i, i + size);
-				return_list.push({ item: smallarray });
-			}
-			return return_list;
-		
-	};
+    for (let i = 0; i < imageList.length; i += size) {
+      const smallarray = imageList.slice(i, i + size);
+      return_list.push({ item: smallarray });
+    }
+    return return_list;
+  };
 
-	checkClaim = (currentUser, schoolId) => {
-	  if (currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId) return false;
-	  return true;
-	};
+  checkClaim = (currentUser, schoolId) => {
+    if (currentUser && currentUser.profile && currentUser.profile.schoolId === schoolId) return false;
+    return true;
+  };
 
+  handlePublishStatus = (schoolId, event) => {
+    const { popUp } = this.props;
+    if (schoolId) {
+      const isPublish = event.target.checked;
+      this.setState({ isLoading: true });
 
-	handlePublishStatus = (schoolId, event) => {
-	  const { popUp } = this.props;
-	  if (schoolId) {
-	    const isPublish = event.target.checked;
-	    this.setState({ isLoading: true });
+      Meteor.call('school.publishSchool', { schoolId, isPublish }, (error, result) => {
+        this.setState({ isLoading: false }, (_) => {
+          if (error) {
+            popUp.appear('alert', { title: 'Error', content: error.reason || error.message });
+          }
+          if (result) {
+            let msg;
+            if (isPublish) {
+              msg = 'This School and all his Class Types of this has been published.';
+            } else {
+              msg = 'This School and all his Class Types of this has been unpublished.';
+            }
+            popUp.appear('success', { title: 'Success', content: msg });
+          }
+        });
+      });
+    } else {
+      popUp.appear('alert', {
+        title: 'Error',
+        content: 'Something went wrong. Please try after sometime!',
+      });
+    }
+  };
 
-	    Meteor.call('school.publishSchool', { schoolId, isPublish }, (error, result) => {
-	      this.setState({ isLoading: false }, (_) => {
-	        if (error) {
-	          popUp.appear('alert', { title: 'Error', content: error.reason || error.message });
-	        }
-	        if (result) {
-	          let msg;
-	          if (isPublish) {
-	            msg = 'This School and all his Class Types of this has been published.';
-	          } else {
-	            msg = 'This School and all his Class Types of this has been unpublished.';
-	          }
-	          popUp.appear('success', { title: 'Success', content: msg });
-	        }
-	      });
-	    });
-	  } else {
-	    popUp.appear('alert', { title: 'Error', content: 'Something went wrong. Please try after sometime!' });
-	  }
-	};
+  getClaimSchoolModalTitle = () => {
+    const { claimSchoolModal, claimRequestModal, successModal } = this.state;
+    if (claimSchoolModal) {
+      return 'Are you sure You Claim this school?';
+    }
+    if (claimRequestModal) {
+      return 'This school is already claimed. Do you want to continue?';
+    }
+    if (successModal) {
+      return 'Claim Status';
+    }
+  };
 
-	getClaimSchoolModalTitle = () => {
-		const { claimSchoolModal, claimRequestModal, successModal } = this.state;
-		if (claimSchoolModal) {
-			return 'Are you sure You Claim this school?';
-		} else if (claimRequestModal) {
-			return 'This school is already claimed. Do you want to continue?';
-		} else if (successModal) {
-			return 'Claim Status';
-		}
-	};
+  modalClose = () => {
+    this.setState({
+      claimRequestModal: false,
+      claimSchoolModal: false,
+      successModal: false,
+    });
+  };
 
-	modalClose = () => {
-	  this.setState({
-	    claimRequestModal: false,
-	    claimSchoolModal: false,
-	    successModal: false,
-	  });
-	};
+  modalSubmit = () => {
+    const { claimSchoolModal, claimRequestModal, successModal } = this.state;
+    const {
+      currentUser, schoolId, schoolData, popUp,
+    } = this.props;
 
-	modalSubmit = () => {
-	  const { claimSchoolModal, claimRequestModal, successModal } = this.state;
-	  const {
- currentUser, schoolId, schoolData, popUp 
-} = this.props;
+    if (claimSchoolModal && currentUser && currentUser._id && schoolId) {
+      Meteor.call('school.claimSchool', currentUser._id, schoolId, (error, result) => {
+        if (result) {
+          this.setState({ successModal: true, claimSchoolModal: false });
+        }
+      });
+    } else if (claimRequestModal && currentUser && currentUser._id && schoolId && schoolData) {
+      const payload = {
+        userId: currentUser._id,
+        schoolId,
+        currentUserId: schoolData.userId,
+        schoolName: schoolData.name,
+        Status: 'new',
+      };
 
-	  if (claimSchoolModal && currentUser && currentUser._id && schoolId) {
-	    Meteor.call('school.claimSchool', currentUser._id, schoolId, (error, result) => {
-	      if (error) {
-	      }
-	      if (result) {
-	        this.setState({ successModal: true, claimSchoolModal: false });
-	      }
-	    });
-	  } else if (claimRequestModal && currentUser && currentUser._id && schoolId && schoolData) {
-	    const payload = {
-	      userId: currentUser._id,
-	      schoolId,
-	      currentUserId: schoolData.userId,
-	      schoolName: schoolData.name,
-	      Status: 'new',
-	    };
+      Meteor.call('addClaimRequest', payload, (error, result) => {
+        if (result) {
+          popUp.appear('success', {
+            title: 'Success',
+            content:
+              'You have requested to manage a school that has already been claimed. We will investigate this double claim and inform you as soon as a decision has been made. If you are found to be the rightful manager of the listing, you will be able to edit the school listing.',
+          });
+        }
+      });
+    } else if (successModal && schoolId) {
+      this.setState({ successModal: false });
+      browserHistory.push(`/schoolAdmin/${schoolId}/edit`);
+    }
+  };
 
-	    Meteor.call('addClaimRequest', payload, (error, result) => {
-	      if (error) {
-	      }
-	      if (result) {
-	        popUp.appear('success', { title: 'Success', content: 'You have requested to manage a school that has already been claimed. We will investigate this double claim and inform you as soon as a decision has been made. If you are found to be the rightful manager of the listing, you will be able to edit the school listing.' });
-	      }
-	    });
-	  } else if (successModal && schoolId) {
-	    this.setState({ successModal: false });
-	    browserHistory.push(`/schoolAdmin/${schoolId}/edit`);
-	  }
-	};
+  checkOwnerAccess = (currentUser, userId) => {
+    if (currentUser) return currentUser._id == userId;
+    return false;
+  };
 
-	checkOwnerAccess = (currentUser, userId) => {
-	  if (currentUser) return currentUser._id == userId;
-	  return false;
-	};
+  checkForJoin = (currentUser, classId) => {
+    if (currentUser && currentUser.profile && currentUser.profile.classIds) {
+      return currentUser.profile.classIds.includes(classId);
+    }
+    return false;
+  };
 
-	checkForJoin = (currentUser, classId) => {
-	  if (currentUser && currentUser.profile && currentUser.profile.classIds) {return currentUser.profile.classIds.includes(classId);}
-	  return false;
-	};
+  scrollToTop = (ref) => {
+    const node = ReactDOM.findDOMNode(ref);
+    node.scrollIntoView({ behavior: 'smooth' });
+  };
+  // ADDING A NEW FLOW FOR REQUEST PRICING
+  // // This function is used to Open pricing info request Modal
+  // handlePricingInfoRequestModal = () => {
+  //     // Set state for opening Price info Request Modal.
+  //     this.setState({
+  //         showConfirmationModal: true,
+  //     });
+  // }
 
-	scrollToTop = (ref) => {
-	  const node = ReactDOM.findDOMNode(ref);
-	  node.scrollIntoView({ behavior: 'smooth' });
-	};
-	// ADDING A NEW FLOW FOR REQUEST PRICING
-	// // This function is used to Open pricing info request Modal
-	// handlePricingInfoRequestModal = () => {
-	//     // Set state for opening Price info Request Modal.
-	//     this.setState({
-	//         showConfirmationModal: true,
-	//     });
-	// }
+  getOurEmail = () => this.props.schoolData.email;
 
-	getOurEmail = () => this.props.schoolData.email;
+  cancelConfirmationModal = () => this.setState({ showConfirmationModal: false });
 
-	cancelConfirmationModal = () => this.setState({ showConfirmationModal: false });
+  handleRequest = (text = 'pricing') => {
+    const { schoolData } = this.props;
 
-	handleRequest = (text = 'pricing') => {
-	  const { toastr, schoolData } = this.props;
+    if (!isEmpty(schoolData)) {
+      let emailBody = '';
+      const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+      const subject = '';
+      emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text
+        || pricing}%3F %0D%0A%0D%0A Thanks`;
+      const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
 
-	  if (!isEmpty(schoolData)) {
-	    let emailBody = '';
-	    const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
-	    const subject = '';
-				let message = '';
-	    const currentUserName = getUserFullName(Meteor.user());
-	    emailBody = `Hi %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend. Can you update your ${text || pricing}%3F %0D%0A%0D%0A Thanks`;
-	    const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+      // const mailToNormalized = encodeURI(mailTo);
+      // window.location.href = mailToNormalized;
+      openMailToInNewTab(mailTo);
+    }
+  };
 
-	    // const mailToNormalized = encodeURI(mailTo);
-	    // window.location.href = mailToNormalized;
-	    openMailToInNewTab(mailTo);
-	  }
-	};
+  handlePricingRequest = () => {
+    const { popUp, schoolData } = this.props;
+    if (!Meteor.userId()) {
+      this.handleDialogState('manageRequestsDialog', true);
+    } else {
+      const data = {
+        schoolId: schoolData._id,
+      };
 
-	handlePricingRequest = () => {
-	  const { popUp, schoolData } = this.props;
-	  if (!Meteor.userId()) {
-	    this.handleDialogState('manageRequestsDialog', true);
-	  } else {
-	    const data = {
-	      schoolId: schoolData._id,
-	    };
+      Meteor.call('pricingRequest.addRequest', data, 'save', (err, res) => {
+        this.setState({ isBusy: false }, () => {
+          if (err) {
+            popUp.appear('alert', { title: 'Error', content: err.reason || err.message });
+          } else if (res && res.message) {
+            popUp.appear('alert', { content: res.message, title: 'Error' });
+          } else if (res) {
+            popUp.appear('success', {
+              content: 'Your request has been processed',
+              title: 'Success',
+            });
+            this.handleRequest('pricing');
+          }
+        });
+      });
+    }
+  };
 
-	    Meteor.call('pricingRequest.addRequest', data, 'save', (err, res) => {
-	      this.setState({ isBusy: false }, () => {
-	        if (err) {
-	          popUp.appear('alert', { title: 'Error', content: err.reason || err.message });
-	        } else if (res && res.message) {
-	          popUp.appear('alert', { content: res.message, title: 'Error' });
-	        } else if (res) {
-	          popUp.appear('success', { content: 'Your request has been processed', title: 'Success' });
-	          this.handleRequest('pricing');
-	        }
-	      });
-	    });
-	  }
-	};
+  // Request Pricing info using this function
+  requestPricingInfo = (schoolData) => {
+    this.setState({ showConfirmationModal: false });
+    if (!isEmpty(schoolData)) {
+      let emailBody = '';
+      const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
+      const subject = '';
+      emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend.%0D%0A%0D%0ACan you update your pricing%3F %0D%0A%0D%0A Thanks`;
+      const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
+      const mailToNormalized = mailTo;
+      // window.location.href = mailToNormalized;
+      openMailToInNewTab(mailToNormalized);
+    }
+    // Close Modal and Do request for pricing info.
+    // const { toastr } = this.props;
+    // Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
+    //   // Check sucess method in response and send confirmation to user using a toastr.
+    //     if(err) {
+    //       toastr.error(err.reason || err.message, "Error")
+    //     }
+    //     if(res && res.emailSent) {
+    //       toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
+    //     }
+    // });
+  };
 
-	// Request Pricing info using this function
-	requestPricingInfo = (schoolData) => {
-	  this.setState({ showConfirmationModal: false });
-	  if (!isEmpty(schoolData)) {
-	    let emailBody = '';
-	    const url = `${Meteor.absoluteUrl()}schools/${schoolData.slug}`;
-	    const subject = '';
-				let message = '';
-	    const currentUserName = getUserFullName(Meteor.user());
-	    emailBody = `Hi, %0D%0A%0D%0A I saw your listing on SkillShape.com ${url} and would like to attend.%0D%0A%0D%0ACan you update your pricing%3F %0D%0A%0D%0A Thanks`;
-	    const mailTo = `mailto:${this.getOurEmail()}?subject=${subject}&body=${emailBody}`;
-	    const mailToNormalized = mailTo;
-	    // window.location.href = mailToNormalized;
-	    openMailToInNewTab(mailToNormalized);
-	  }
-	  // Close Modal and Do request for pricing info.
-	  // const { toastr } = this.props;
-	  // Meteor.call('school.requestPricingInfo',schoolData, (err,res)=> {
-	  //   // Check sucess method in response and send confirmation to user using a toastr.
-	  //     if(err) {
-	  //       toastr.error(err.reason || err.message, "Error")
-	  //     }
-	  //     if(res && res.emailSent) {
-	  //       toastr.success('Your request for pricing info has been sent. We will notify you when we will update Pricing for our school','success')
-	  //     }
-	  // });
-	};
+  // whenever user click cart button request come here.
+  handlePurchasePackage = async (
+    packageType,
+    packageId,
+    schoolId,
+    packageName,
+    amount,
+    monthlyPymtDetails,
+    expDuration,
+    expPeriod,
+    noClasses,
+    planId,
+    currency,
+    pymtType,
+  ) => {
+    try {
+      stripePaymentHelper.call(
+        this,
+        packageType,
+        packageId,
+        schoolId,
+        packageName,
+        amount,
+        monthlyPymtDetails,
+        expDuration,
+        expPeriod,
+        noClasses,
+        planId,
+        currency,
+        pymtType,
+      );
+    } catch (error) {
+      console.log('Error in handlePurchasePackage', error);
+    }
+  };
 
-	// whenever user click cart button request come here.
-	handlePurchasePackage = async (packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType,
-	) => {
-	  try {
-	    stripePaymentHelper.call(this, packageType, packageId, schoolId, packageName, amount, monthlyPymtDetails, expDuration, expPeriod, noClasses, planId, currency, pymtType);
-	  } catch (error) {
-	    console.log('Error in handlePurchasePackage', error);
-	  }
-	};
+  purchasedSuccessfully = () => {
+    this.setState({ enrollmentPackagesDialog: false });
+  };
 
-	purchasedSuccessfully = () => {
-	  this.setState({ enrollmentPackagesDialog: false });
-	  }
-
-	checkForHtmlCode = (data) => {
-	  if (data && data != '<p><br></p>') {
-	    return true;
-	  }
-	  return false;
-	};
+  checkForHtmlCode = (data) => {
+    if (data && data != '<p><br></p>') {
+      return true;
+    }
+    return false;
+  };
 }

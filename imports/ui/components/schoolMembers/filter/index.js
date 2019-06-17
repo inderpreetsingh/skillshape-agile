@@ -57,7 +57,7 @@ class SchoolMemberFilter extends Component {
 
   render() {
     const {
-      stickyPosition, isAdmin, view, classes, cardsView,
+      stickyPosition, view, classes, cardsView,
     } = this.props;
 
     return (

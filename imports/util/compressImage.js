@@ -8,8 +8,8 @@ import imageCompression from 'browser-image-compression';
     // decode base64
     let imageContent = await atob(b64);
     // create an ArrayBuffer and a view (as unsigned 8-bit)
-    let buffer =await new ArrayBuffer(imageContent.length);
-    let view = await new Uint8Array(buffer);
+    let buffer = new ArrayBuffer(imageContent.length);
+    let view =  new Uint8Array(buffer);
     // fill the view, using the decoded base64
     for(let n = 0; n < imageContent.length; n++) {
       view[n] = imageContent.charCodeAt(n);

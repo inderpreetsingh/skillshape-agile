@@ -222,16 +222,16 @@ class MyTransaction extends React.Component {
     const filterValueOriginal = get(event.target, 'value', null);
     let filterValue = filterValueOriginal;
     let reg = false;
-    if (filterName == 'packageName' || filterName == 'userName') {
+    if (filterName === 'packageName' || filterName === 'userName') {
       reg = true;
     }
     this.setState(
       (state) => {
         const { filter, allSchoolIds } = state;
-        if (filterValue && typeof filterValue === 'number' && filterName != 'schoolId') filterValue = 0;
+        if (filterValue && typeof filterValue === 'number' && filterName !== 'schoolId') filterValue = 0;
         if (filterValue && filterName) {
-          if (filterName == 'schoolId' && filterValue) {
-            if (filterValue == 1) {
+          if (filterName === 'schoolId') {
+            if (filterValue === 1) {
               filter[filterName] = allSchoolIds;
             } else filter[filterName] = [filterValue];
           } else filter[filterName] = !reg ? filterValue : new RegExp(`.*${filterValue}.*`, 'i');

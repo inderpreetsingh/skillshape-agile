@@ -104,7 +104,7 @@ export default (config = Object.freeze({
       ? "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
       : "6LeRJE8UAAAAAEtZBraHTNfUe3VD8k5QgJ0oM1J3", // production key
 
-  MAP_KEY: "AIzaSyAwvMS92aRXG_5i0n1fTSe_wBsnpLGAaj8",
+  MAP_KEY: "AIzaSyDDvUNdvs1akakGd_rVFT0b8y6T87ZlqZs",
   // Need to show these default classes to `Users` if no class type data found for User's current location.
   defaultClassType: [
     { skillType: "Judo", location: "Toyko" },

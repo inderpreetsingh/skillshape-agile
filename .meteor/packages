@@ -25,7 +25,7 @@ todda00:friendly-slugs
 accounts-base@1.4.3
 accounts-password@1.5.1
 alethes:pages
-lepozepo:s3
+lepozepo:s3@=5.2.8
 alanning:roles
 email@1.2.3
 session@1.2.0

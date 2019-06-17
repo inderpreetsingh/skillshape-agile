@@ -209,13 +209,12 @@ PaymentAndStatus = (props) => {
   if (epStatus && isEmpty(purchased)) {
     packageRequired = 'perClassAndMonthly';
   }
-  const pos = -1;
   let show = true;
-  if (purchased.length == 1) {
+  if (purchased.length === 1) {
     show = false;
   } else {
     purchased.map((obj) => {
-      if (obj.noClasses == null && obj.packageType == 'MP') {
+      if (obj.noClasses === null && obj.packageType === 'MP') {
         show = false;
       }
     });

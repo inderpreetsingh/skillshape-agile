@@ -140,8 +140,6 @@ const ClassTimeButton = props => {
     rootClass = `${props.classes.classTimeButton} ${
       props.classes.noMarginBottom
     }`;
-  } else {
-    rootClass = props.classes.classTimeButton;
   }
 
   if (props.ghost) {

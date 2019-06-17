@@ -32,7 +32,7 @@ Meteor.startup(() => {
     SkillSubject.remove({});
     SkillCategory.remove({});
 
-    for (var key in _skillCategoryObj) {
+    for (let key in _skillCategoryObj) {
       key = key.trim();
       const objId = SkillCategory.insert({ name: key, _mig_: 1 });
       _skillCategoryObj[key].forEach((f) => {
@@ -45,7 +45,7 @@ Meteor.startup(() => {
       });
     }
   } else {
-    for (var key in _skillCategoryObj) {
+    for (let key in _skillCategoryObj) {
       key = key.trim();
       const skillCategoryData = SkillCategory.findOne({ name: key, _mig_: 1 });
       if (isEmpty(skillCategoryData)) {
@@ -120,11 +120,17 @@ if (Meteor.isServer) {
         user.name = `${user.profile.firstName} ${user.profile.lastName}`;
         user.emails = [{ address: email, verified: true }];
         const existingUser = Meteor.users.findOne({ 'emails.address': email });
-        if (!existingUser) { return user; }
+        if (!existingUser) {
+          return user;
+        }
 
         // precaution, these will exist from accounts-password if used
-        if (!existingUser.services) { existingUser.services = { resume: { loginTokens: [] } }; }
-        if (!existingUser.services.resume) { existingUser.services.resume = { loginTokens: [] }; }
+        if (!existingUser.services) {
+          existingUser.services = { resume: { loginTokens: [] } };
+        }
+        if (!existingUser.services.resume) {
+          existingUser.services.resume = { loginTokens: [] };
+        }
 
         // copy across new service info
         existingUser.services[service] = user.services[service];
@@ -136,7 +142,8 @@ if (Meteor.isServer) {
         // even worse hackery
         Meteor.users.remove({ _id: existingUser._id }); // remove existing record
         return existingUser;
-      } else if (service === 'google') {
+      }
+      if (service === 'google') {
         const { email } = user.services[service];
         user.profile = user.profile || {};
         user.profile.firstName = user.services.google.given_name;
@@ -145,11 +152,17 @@ if (Meteor.isServer) {
         user.emails = [{ address: email, verified: true }];
 
         const existingUser = Meteor.users.findOne({ 'emails.address': email });
-        if (!existingUser) { return user; }
+        if (!existingUser) {
+          return user;
+        }
 
         // precaution, these will exist from accounts-password if used
-        if (!existingUser.services) { existingUser.services = { resume: { loginTokens: [] } }; }
-        if (!existingUser.services.resume) { existingUser.services.resume = { loginTokens: [] }; }
+        if (!existingUser.services) {
+          existingUser.services = { resume: { loginTokens: [] } };
+        }
+        if (!existingUser.services.resume) {
+          existingUser.services.resume = { loginTokens: [] };
+        }
 
         // copy across new service info
         existingUser.services[service] = user.services[service];
@@ -196,9 +209,7 @@ if (Meteor.isServer) {
   //     });
   // }
 
-
   Meteor.publish('roles', () => Meteor.roles.find({}));
-
 
   Meteor.methods({
     sendVerificationLink() {

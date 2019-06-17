@@ -143,17 +143,7 @@ class ClassTypeExpansion extends Component {
   //   });
   // }
 
-  componentDidMount() {}
-
-  componentDidUpdate() {}
-
   render() {
-    const {
-      classTypeData, isLoading, schoolId, locationData, moveToNextTab,
-    } = this.props;
-
-    // debugger;
-
     return (
       <Fragment>
         <ClassTypeExpansionRender

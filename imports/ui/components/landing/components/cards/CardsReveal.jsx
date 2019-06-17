@@ -240,9 +240,7 @@ class CardsReveal extends Component {
   };
 
   verifyAndUpdateImageUrl(data) {
-    const {
-      bgImg, schoolId, medium, name,
-    } = data;
+    const { bgImg, schoolId, medium } = data;
     const img = medium || bgImg;
     if (img == '/images/classtype/classtype-cover.jpg') {
       this.setSchoolImage(schoolId);
@@ -262,9 +260,7 @@ class CardsReveal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      bgImg, schoolId, medium, name,
-    } = nextProps;
+    const { bgImg, medium } = nextProps;
     const img = medium || bgImg;
     if (this.state.bgImg !== img) {
       this.verifyAndUpdateImageUrl(nextProps);
@@ -274,7 +270,6 @@ class CardsReveal extends Component {
   render() {
     const {
       name,
-      classTypeImg,
       descriptionContent,
       body,
       classes,

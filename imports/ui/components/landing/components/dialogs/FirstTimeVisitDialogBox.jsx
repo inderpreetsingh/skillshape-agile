@@ -169,7 +169,6 @@ class FirstTimeVisitDialogBox extends Component {
   };
 
   handleIamSchoolClick = () => {
-    const { isUserSubsReady, currentUser } = this.props;
     localStorage.setItem('visitorRedirected', true);
     localStorage.setItem('visitorType', 'school');
     // this._closeModal();

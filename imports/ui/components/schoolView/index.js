@@ -89,7 +89,8 @@ class SchoolView extends SchoolViewBase {
 }
 
 export default createContainer((props) => {
-  let { schoolId, slug } = props.params;
+  let { schoolId } = props.params;
+  const { slug } = props.params;
   let schoolData;
   let reviewsData;
   let classPricing;
@@ -99,7 +100,6 @@ export default createContainer((props) => {
   let enrollmentFee;
   let showLoading = true;
   let subscription;
-  let reviewsSubscriptions;
   let classTimesData;
   let currency;
 
@@ -112,7 +112,7 @@ export default createContainer((props) => {
     // showLoading = false;
     schoolData = School.findOne({ slug });
     schoolId = schoolData && schoolData._id;
-    reviewsSubscriptions = Meteor.subscribe('review.getReviews', {
+    Meteor.subscribe('review.getReviews', {
       reviewForId: schoolId,
     });
     currency = schoolData && schoolData.currency ? schoolData.currency : config.defaultCurrency;

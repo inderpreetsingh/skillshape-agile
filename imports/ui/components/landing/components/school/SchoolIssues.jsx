@@ -42,17 +42,6 @@ const Wrapper = styled.div`
 
 `;
 
-const SolutionBoxWrapper = styled.div`
-  position: relative;
-  max-width: 600px;
-  min-height: 512px;
-  width: 100%;
-
-  @media screen and (max-width: ${helpers.tablet + 50}px) {
-    max-width: 100%;
-  }
-`;
-
 const Avatar = styled.div`
   position: absolute;
   bottom: 8px;
@@ -116,7 +105,7 @@ class SchoolIssues extends Component {
   _getAvatar = (index, smallScreen) => {
     if (index === 0) {
       return smallScreen ? <Boy height="50px" /> : <Boy />;
-    } else if (index === 1) {
+    }else if (index === 1) {
       return smallScreen ? <Girl height="50px" /> : <Girl />;
     }else if (index === 2) {
       return smallScreen ? <Desk height="50px" /> : <Desk />;

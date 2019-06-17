@@ -43,7 +43,7 @@ export class OneTimeRow extends React.Component {
 
   initializeFields = () => {
     let state;
-    const { data, parentData } = this.props;
+    const { data } = this.props;
     if (_.isEmpty(data)) {
       state = {
         row: [

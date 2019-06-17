@@ -36,7 +36,6 @@ class SchoolMediaGalleryView extends React.Component {
   }
 
   render() {
-    const { schoolId } = this.props;
     // Get media gallery data of any School on the basis of filters.
     const filters = { schoolId: this.props.schoolId };
     return (

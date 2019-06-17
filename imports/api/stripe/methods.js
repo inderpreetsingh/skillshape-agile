@@ -474,7 +474,6 @@ Meteor.methods({
       let recordId;
       emailId = user.emails[0].address;
       userName = user.profile.firstName || user.profile.name;
-      paymentMethod = data.paymentMethod;
       status = 'succeeded';
       if (packageType == 'EP') {
         const enrollmentData = EnrollmentFees.findOne({ _id: packageId });

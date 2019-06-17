@@ -30,7 +30,7 @@ const styles = theme => ({
 class PanelHeader extends Component {
   render() {
     const {
-      classes, settings, onAddButtonClicked, title, btnText, caption, icon,
+      classes, onAddButtonClicked, title, btnText, caption, icon,
     } = this.props;
     return (
       <Paper elevation={1} className={classes.headerContainer}>

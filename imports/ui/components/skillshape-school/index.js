@@ -128,11 +128,6 @@ const MainContentWrapper = styled.div`
   padding: 30px;
 `;
 
-const TitleWrapper = styled.div`
-  margin-left: 40px;
-  margin-top: 10px;
-`;
-
 const MainContainer = styled.div``;
 
 const SkillShapeSchool = props => (

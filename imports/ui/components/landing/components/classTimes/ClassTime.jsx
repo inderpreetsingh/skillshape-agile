@@ -213,6 +213,18 @@ class ClassTime extends Component {
     description: this.props.desc,
   };
 
+  componentWillMount() {
+    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
+      if (!err) {
+        this.setState({ notification: res });
+      }
+    });
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.escFunction, false);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.state.description != nextProps.desc) {
       this.setState(state => ({
@@ -222,21 +234,8 @@ class ClassTime extends Component {
     }
   }
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.escFunction, false);
-  }
-
   componentWillUnmount() {
     document.removeEventListener('keydown', this.escFunction, false);
-  }
-
-  componentWillMount() {
-    Meteor.call('classTypeLocationRequest.getUserRecord', this.props.classTypeId, (err, res) => {
-      if (err) {
-      } else {
-        this.setState({ notification: res });
-      }
-    });
   }
 
   handleShowMoreLinkClick = (event) => {
@@ -287,9 +286,7 @@ class ClassTime extends Component {
   }
 
   getScheduleTypeFormatted = () => {
-    const {
-      startDate, endDate, scheduleType, addToCalendar,
-    } = this.props;
+    const { scheduleType, addToCalendar } = this.props;
     const classScheduleType = scheduleType.toLowerCase();
 
     if (classScheduleType === 'recurring') {
@@ -298,7 +295,7 @@ class ClassTime extends Component {
       return (
         <Fragment>
           <ScheduleType>
-            {addToCalendar == 'closed'
+            {addToCalendar === 'closed'
               ? this.returnClickableLink(strAsDesc, 'This is closed series.')
               : 'This is a series class time.'}
             {' '}
@@ -313,7 +310,7 @@ class ClassTime extends Component {
 
       return (
         <ScheduleType>
-          {addToCalendar == 'closed'
+          {addToCalendar === 'closed'
             ? this.returnClickableLink(strAsDesc, 'This is closed single/set.')
             : 'This is a single/set class time.'}
           {' '}
@@ -330,24 +327,19 @@ class ClassTime extends Component {
 
   getDotColor = addToCalendar => (addToCalendar ? helpers.primaryColor : helpers.cancel);
 
-  getCalenderButton = (addToCalender, formattedClassTimesDetails) => {
-    const iconName = addToCalender ? 'add_circle_outline' : 'delete';
-    // const label = addToCalender ? "Remove from Calender" :  "Add to my Calendar";
-
-    return (
-      <div style={{ display: 'flex' }}>
-        <FormGhostButton
-          onClick={() => {
-            this.setState({
-              thinkingAboutAttending: true,
-              addToCalendar: addToCalender,
-            });
-          }}
-          label="Thinking About Attending"
-        />
-      </div>
-    );
-  };
+  getCalenderButton = (addToCalender, formattedClassTimesDetails) => (
+    <div style={{ display: 'flex' }}>
+      <FormGhostButton
+        onClick={() => {
+          this.setState({
+            thinkingAboutAttending: true,
+            addToCalendar: addToCalender,
+          });
+        }}
+        label="Thinking About Attending"
+      />
+    </div>
+  );
 
   scrollTo(name) {
     scroller.scrollTo(name || 'content-container', {
@@ -595,8 +587,7 @@ and
 }
 
 ClassTime.propTypes = {
-  description: PropTypes.string.isRequired,
-  addToCalendar: PropTypes.bool.isRequired,
+  desc: PropTypes.string.isRequired,
   scheduleType: PropTypes.string.isRequired,
   inPopUp: PropTypes.bool, // True => the class time cards are present inside of pop up in homepage,  false => are on the classtype page
   isTrending: PropTypes.bool,

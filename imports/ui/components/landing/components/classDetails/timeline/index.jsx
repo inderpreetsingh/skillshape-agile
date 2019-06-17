@@ -1,18 +1,21 @@
-import { Meteor } from "meteor/meteor";
-import moment from "moment";
-import React, { PureComponent } from "react";
-import styled from "styled-components";
-import Activity from "./Activity.jsx";
-import * as helpers from "/imports/ui/components/landing/components/jss/helpers.js";
-import { Heading, Italic, Text } from "/imports/ui/components/landing/components/jss/sharedStyledComponents.js";
+import { Meteor } from 'meteor/meteor';
+import moment from 'moment';
+import React, { PureComponent } from 'react';
+import styled from 'styled-components';
+import Activity from './Activity';
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
+import {
+  Heading,
+  Italic,
+  Text,
+} from '/imports/ui/components/landing/components/jss/sharedStyledComponents';
 
-
-const calculateElapsedTime = startTime => {
+const calculateElapsedTime = (startTime) => {
   // startTime is expected to be a date Obj with proper Time information stored in it
   if (startTime) {
-    const startTimeMoment = moment(new Date()).add(75, "m");
+    const startTimeMoment = moment(new Date()).add(75, 'm');
     const currentTimeMoment = moment(new Date());
-    return startTimeMoment.diff(currentTimeMoment, "minutes");
+    return startTimeMoment.diff(currentTimeMoment, 'minutes');
   }
 
   return -1;
@@ -74,8 +77,8 @@ class TimeLineContainer extends PureComponent {
     const elapsedTime = calculateElapsedTime(startTime);
 
     this.state = {
-      elapsedTime: elapsedTime,
-      eventCompleted: elapsedTime > totalEventTime ? true : false
+      elapsedTime,
+      eventCompleted: elapsedTime > totalEventTime,
     };
   }
 
@@ -85,15 +88,13 @@ class TimeLineContainer extends PureComponent {
 
     this.timeLineCounter = Meteor.setInterval(() => {
       const elapsedTime = (this.state.elapsedTime || eventElapsedTime) + 1;
-      const eventCompleted = elapsedTime > totalEventTime ? true : false;
+      const eventCompleted = elapsedTime > totalEventTime;
 
-      this.setState(state => {
-        return {
-          ...state,
-          elapsedTime,
-          eventCompleted
-        };
-      });
+      this.setState(state => ({
+        ...state,
+        elapsedTime,
+        eventCompleted,
+      }));
     }, 1000);
   };
 
@@ -115,8 +116,8 @@ class TimeLineContainer extends PureComponent {
 
   getClassModulesActivites = () => {
     const { totalEventTime, classModulesData } = this.props;
-    let { elapsedTime,  } = this.state;
-    if(classModulesData){
+    let { elapsedTime } = this.state;
+    if (classModulesData) {
       return classModulesData.map((moduleData, index) => {
         let currentActivityTimeElapsed = 0;
         if (elapsedTime >= totalEventTime) {
@@ -125,23 +126,19 @@ class TimeLineContainer extends PureComponent {
         } else if (elapsedTime < 0) {
           currentActivityTimeElapsed = 0;
           elapsedTime = -1;
-        } else if (
-          elapsedTime > moduleData.time &&
-          elapsedTime < totalEventTime
-        ) {
+        } else if (elapsedTime > moduleData.time && elapsedTime < totalEventTime) {
           currentActivityTimeElapsed = moduleData.time;
           elapsedTime -= moduleData.time;
         } else {
           currentActivityTimeElapsed = elapsedTime;
           elapsedTime = 0;
         }
-  
+
         // Getting the sizes in percent;
         const totalActivityLength = (moduleData.time / totalEventTime) * 100;
-        const currentActivityNodeLength =
-          (currentActivityTimeElapsed / moduleData.time) * 100;
+        const currentActivityNodeLength = (currentActivityTimeElapsed / moduleData.time) * 100;
         const even = index % 2 == 0;
-  
+
         return (
           <Activity
             {...moduleData}
@@ -157,7 +154,7 @@ class TimeLineContainer extends PureComponent {
   };
 
   render() {
-    const { totalEventTime, startTime,durationAndTimeunits } = this.props;
+    const { totalEventTime, durationAndTimeunits } = this.props;
     return (
       <Wrapper>
         <Title>

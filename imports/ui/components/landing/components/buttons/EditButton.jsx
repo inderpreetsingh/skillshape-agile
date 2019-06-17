@@ -3,25 +3,23 @@ import Icon from 'material-ui/Icon';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import * as helpers from '/imports/ui/components/landing/components/jss/helpers.js';
-
-
+import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 
 /* Because we are extending a material ui button, it us jss instead of styled Components */
 const styles = {
   primaryButton: {
-    marginRight:helpers.rhythmDiv,
-    marginBottom:helpers.rhythmDiv,
+    marginRight: helpers.rhythmDiv,
+    marginBottom: helpers.rhythmDiv,
     marginTop: '10px',
     fontFamily: helpers.specialFont,
     fontSize: helpers.baseFontSize,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     fontWeight: 400,
-    minWidth:"0px",
-    border: "1px solid",
+    minWidth: '0px',
+    border: '1px solid',
     borderColor: helpers.primaryColor,
-    borderRadius: "41px",
-    textTransform: "none",
+    borderRadius: '41px',
+    textTransform: 'none',
     '&:hover': {
       backgroundColor: helpers.primaryColor,
     },
@@ -31,72 +29,74 @@ const styles = {
     textTransform: 'none',
   },
   fullWidth: {
-    width: '100%'
+    width: '100%',
   },
   noMarginBottom: {
-    marginBottom: 0
+    marginBottom: 0,
   },
   icon: {
     display: 'inline-block',
     marginRight: '5px',
-    fontSize: 'inherit'
+    fontSize: 'inherit',
   },
   customIcon: {
     display: 'inline-block',
-    fontSize: 'inherit'
+    fontSize: 'inherit',
   },
   searchBarHeight: {
-    height: 48
+    height: 48,
   },
   searchBarShadow: {
-    boxShadow: `2px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) , 0px 3px 1px -2px rgba(0, 0, 0, 0.12)`
+    boxShadow: '2px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) , 0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
   },
-  ['@media (max-width:'+helpers.mobile+'px)']: {
+  [`@media (max-width:${helpers.mobile}px)`]: {
     primaryButton: {
-      width: '100%'
-    }
-  }
+      width: '100%',
+    },
+  },
 };
 
 const getIconForButton = (props) => {
   const CustomIcon = props.customIcon;
-  if(CustomIcon && props.icon) {
-    return <CustomIcon className={props.classes.customIcon} />
+  if (CustomIcon && props.icon) {
+    return <CustomIcon className={props.classes.customIcon} />;
   }else if (props.icon) {
-    return <Icon className={props.classes.icon}>{props.iconName}</Icon>
+    return <Icon className={props.classes.icon}>{props.iconName}</Icon>;
   }
 
   return '';
-}
+};
 
-const EditButton= (props) => {
-    let rootClass = ``;
-    // console.log(CustomIcon,"Custom Icon")
-    if(props.fullWidth && props.noMarginBottom) {
-      rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${props.classes.noMarginBottom}`;
-    }else if(props.fullWidth) {
-      rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;
-    }else if(props.noMarginBottom) {
-      rootClass = `${props.classes.primaryButton} ${props.classes.noMarginBottom}`;
-    }
-    else{
-      rootClass = props.classes.primaryButton;
-    }
+const EditButton = (props) => {
+  let rootClass = '';
+  // console.log(CustomIcon,"Custom Icon")
+  if (props.fullWidth && props.noMarginBottom) {
+    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth} ${
+      props.classes.noMarginBottom
+    }`;
+  } else if (props.fullWidth) {
+    rootClass = `${props.classes.primaryButton} ${props.classes.fullWidth}`;
+  } else if (props.noMarginBottom) {
+    rootClass = `${props.classes.primaryButton} ${props.classes.noMarginBottom}`;
+  } else {
+    rootClass = props.classes.primaryButton;
+  }
 
-    // These classes are very specific to the filter button in the searchBar
-    if(props.increaseHeight) {
-      rootClass = rootClass + ' ' + props.classes.searchBarHeight;
-    }
+  // These classes are very specific to the filter button in the searchBar
+  if (props.increaseHeight) {
+    rootClass = `${rootClass} ${props.classes.searchBarHeight}`;
+  }
 
-    if(props.boxShadow) {
-      rootClass = rootClass + ' ' + props.classes.searchBarShadow;
-    }
+  if (props.boxShadow) {
+    rootClass = `${rootClass} ${props.classes.searchBarShadow}`;
+  }
 
-    if(props.itemScope && props.itemType) {
-      return(<Button
+  if (props.itemScope && props.itemType) {
+    return (
+      <Button
         classes={{
           root: rootClass,
-          label: props.classes.primaryButtonLabel
+          label: props.classes.primaryButtonLabel,
         }}
         onClick={props.onClick}
         disabled={props.disabled}
@@ -105,50 +105,49 @@ const EditButton= (props) => {
         formId={props.formId}
         type={props.type}
       >
-          {getIconForButton(props)}
+        {getIconForButton(props)}
 
-          {props.label ? props.label : 'Submit'}
-        </Button>
-      )
-    }
-
-    return (
-
-      <Button
-        classes={{
-          root: rootClass,
-          label: props.classes.primaryButtonLabel
-        }}
-        onClick={props.onClick}
-        disabled={props.disabled}
-        type={props.type}
-        formId={props.formId}
-      >
-          {getIconForButton(props)}
-
-          {props.label ? props.label : 'Submit'}
+        {props.label ? props.label : 'Submit'}
       </Button>
-    )
-}
+    );
+  }
+
+  return (
+    <Button
+      classes={{
+        root: rootClass,
+        label: props.classes.primaryButtonLabel,
+      }}
+      onClick={props.onClick}
+      disabled={props.disabled}
+      type={props.type}
+      formId={props.formId}
+    >
+      {getIconForButton(props)}
+
+      {props.label ? props.label : 'Submit'}
+    </Button>
+  );
+};
 
 EditButton.propTypes = {
-    onClick: PropTypes.func,
-    icon: PropTypes.bool,
-    customIcon: PropTypes.element,
-    iconName: PropTypes.string,
-    label: PropTypes.string,
-    fullWidth: PropTypes.bool,
-    noMarginBottom: PropTypes.bool,
-    increaseHeight: PropTypes.bool,
-    classes: PropTypes.object.isRequired,
-    disabled: PropTypes.bool,
-    itemScope: PropTypes.bool,
-    boxShadow: PropTypes.bool,
-    itemType: PropTypes.string,
-}
+  onClick: PropTypes.func,
+  icon: PropTypes.bool,
+  customIcon: PropTypes.element,
+  iconName: PropTypes.string,
+  label: PropTypes.string,
+  fullWidth: PropTypes.bool,
+  noMarginBottom: PropTypes.bool,
+  increaseHeight: PropTypes.bool,
+  classes: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
+  itemScope: PropTypes.bool,
+  boxShadow: PropTypes.bool,
+  itemType: PropTypes.string,
+};
 
 EditButton.defaultProps = {
-  disabled: false
-}
+  disabled: false,
+};
 
 export default withStyles(styles)(EditButton);

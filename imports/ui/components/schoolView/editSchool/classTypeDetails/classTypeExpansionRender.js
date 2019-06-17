@@ -204,7 +204,6 @@ const ClassTypeExpansionRender = (props) => {
     classTypeData,
     classes: {
       expansionPanelDetails,
-      expansionPanelSummaryContent,
       expansionPanelRoot,
       paperRoot,
       barIcon,

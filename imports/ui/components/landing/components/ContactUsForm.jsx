@@ -58,12 +58,6 @@ const FormHeaderText = styled.h1`
   margin: 0;
 `;
 
-const FormText = styled.p`
-  color: ${helpers.textColor};
-  text-align: center;
-  margin: 0;
-`;
-
 const FormHeader = styled.div`
   margin-bottom: ${helpers.rhythmDiv}px;
 `;
@@ -162,7 +156,7 @@ class ContactUsForm extends Component {
 
   render() {
     const {
-      fullWidth, width, classes, headerText, onSubmitButtonClick,
+      fullWidth, width, classes, headerText,
     } = this.props;
     return (
       <ContactUsFormWrapper fullWidth={fullWidth} width={width}>

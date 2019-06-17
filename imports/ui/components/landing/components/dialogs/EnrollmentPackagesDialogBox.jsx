@@ -219,7 +219,7 @@ export default withStyles(styles)(
     const isLoading = false;
     const {
       epData,
-      currentPackageData: { packageType, packageId, currency },
+      currentPackageData: { packageType, packageId },
     } = props;
     const classTypeWithNoEp = [];
     const classTypeWithEp = [];

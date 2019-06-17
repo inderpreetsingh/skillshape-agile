@@ -1,11 +1,6 @@
-const breakCards = true;
-const searchVisible = 0;
 let transparent = true;
-const transparentDemo = true;
-const fixedTop = false;
 let mobile_menu_visible = 0;
 let mobile_menu_initialized = false;
-let toggle_initialized = false;
 let bootstrap_nav_initialized = false;
 let seq = 0; let delays = 80; let
   durations = 500;

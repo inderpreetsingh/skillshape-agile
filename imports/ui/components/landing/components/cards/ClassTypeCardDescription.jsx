@@ -164,7 +164,7 @@ Reviews
 
               {cardRevealInfo.gender && (
                 <Text>
-                  {cardRevealInfo.gender && cardRevealInfo.gender !== 'All' && (
+                  {cardRevealInfo.gender !== 'All' && (
                     <div>
                       <b>Gender:</b>
                       {' '}

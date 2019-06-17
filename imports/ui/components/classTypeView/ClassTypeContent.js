@@ -1,4 +1,4 @@
-import { isEmpty, get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import Typography from 'material-ui/Typography';
 import React, { Component, Fragment } from 'react';
 import { Element, scroller } from 'react-scroll';
@@ -11,14 +11,13 @@ import PackagesList from '/imports/ui/components/landing/components/class/packag
 import ReviewsManager from '/imports/ui/components/landing/components/class/reviews/ReviewsManager';
 import ClassTimesBoxes from '/imports/ui/components/landing/components/classTimes/ClassTimesBoxes';
 import {
-  EmailUsDialogBox,
   CallUsDialogBox,
+  EmailUsDialogBox,
+  EnrollmentPackagesDialogBox,
   GiveReviewDialogBox,
   ManageRequestsDialogBox,
-  EnrollmentPackagesDialogBox,
   NonUserDefaultDialogBox,
 } from '/imports/ui/components/landing/components/dialogs/';
-
 import * as helpers from '/imports/ui/components/landing/components/jss/helpers';
 import Preloader from '/imports/ui/components/landing/components/Preloader';
 import { classTypeImgSrc } from '/imports/ui/components/landing/site-settings';
@@ -28,11 +27,10 @@ import {
   capitalizeString,
   formatClassTimesData,
   getAverageNoOfRatings,
-  withPopUp,
-  stripePaymentHelper,
   normalizeMonthlyPricingData,
+  stripePaymentHelper,
+  withPopUp,
 } from '/imports/util';
-import { getUserFullName } from '/imports/util/getUserData';
 import { openMailToInNewTab } from '/imports/util/openInNewTabHelpers';
 import withImageExists from '/imports/util/withImageExists';
 

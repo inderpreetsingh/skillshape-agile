@@ -45,8 +45,6 @@ class SchoolDetails extends React.Component {
     const imageFile = this.refs.schoolImage.files[0];
     if (imageFile) {
       S3.upload({ files: { 0: imageFile }, path: 'schools' }, (err, res) => {
-        if (err) {
-        }
         if (res) {
           this.editSchoolCall(res);
         }
@@ -62,7 +60,7 @@ class SchoolDetails extends React.Component {
 
     const schoolObj = { ...this.state };
     if (this.props.schoolData && this.props.schoolData.mainImage) {
-      schoolObj.mainImage = this.props.schoolData && this.props.schoolData.mainImage;
+      schoolObj.mainImage = this.props.schoolData.mainImage;
     }
     if (!schoolObj.email) {
       popUp.appear('alert', { content: 'Email is Required' });
@@ -101,14 +99,11 @@ class SchoolDetails extends React.Component {
 
   // This is used to set Content into `About School` editor.
   aboutSchoolTREOnChange = (value) => {
-    console.log('TCL: aboutSchoolTREOnChange -> value', value);
-    this.props.handleIsSavedState(false);
     this.setState({ aboutHtml: value });
   };
 
   // This is used to set Content into `Notes for Students` editor.
   studentNotesTREOnChange = (value) => {
-    this.props.handleIsSavedState(false);
     this.setState({ studentNotesHtml: value });
   };
 

@@ -19,25 +19,6 @@ const themeGreen = {
   rgba: 'rgba(157, 193, 97, 0.54)',
 };
 
-const themeRed = {
-  50: '#FCEDE9',
-  100: '#F8DBD7',
-  200: '#F4C9C5',
-  300: '#F0B7B3',
-  400: '#ECA5A1',
-  500: '#E8938F',
-  600: '#E4817D',
-  700: '#E06F6B',
-  800: '#DC5D59',
-  900: '#D84B47',
-  A100: '#D84B47',
-  A200: '#D84B47',
-  A400: '#D84B47',
-  A700: '#D84B47',
-  contrastDefaultColor: 'dark',
-  rgba: 'rgba(216, 75, 71, 0.54)',
-};
-
 const themeYellow = {
   50: '#FBF8ED',
   100: '#F9F1DA',
@@ -86,8 +67,8 @@ export const material_ui_next_theme = {
     themeColor3: themeYellow,
   },
   typography: {
-    	button: {
-    		fontWeight: 300,
-    	},
+    button: {
+      fontWeight: 300,
+    },
   },
 };

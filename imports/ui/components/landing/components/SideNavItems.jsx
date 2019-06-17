@@ -8,17 +8,16 @@ import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { browserHistory } from 'react-router';
-import styled from 'styled-components';
 import LoginButton from './buttons/LoginButton';
-import { flexCenter, specialFont } from './jss/helpers';
+import { specialFont } from './jss/helpers';
 import NestedNavItems from './NestedNavItems';
-import SchoolSubMenu from './schoolSubMenu';
 import SchoolsIAttend from './schoolsIAttend';
+import SchoolSubMenu from './schoolSubMenu';
 import SecondaryButton from '/imports/ui/components/landing/components/buttons/SecondaryButton';
 import { OnBoardingDialogBox } from '/imports/ui/components/landing/components/dialogs';
+import ContactUsPage from '/imports/ui/pages/ContactUsPage';
 import { checkSuperAdmin, logoutUser } from '/imports/util';
 import { getUserFullName } from '/imports/util/getUserData';
-import ContactUsPage from '/imports/ui/pages/ContactUsPage';
 
 const styles = theme => ({
   drawerList: {
