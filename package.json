@@ -33,7 +33,7 @@
     "json2csv": "3.11.5",
     "lodash": "^4.17.11",
     "lodash.get": "4.4.2",
-    "lodash.merge": "4.6.0",
+    "lodash.merge": "4.6.2",
     "material-ui": "1.0.0-beta.26",
     "material-ui-chip-input": "0.18.3",
     "material-ui-icons": "1.0.0-beta.17",
